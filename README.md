@@ -1,3 +1,7 @@
+## License
+
+© Jonas Eriksson. This work is licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](LICENSE).
+
 # Agile iteration method (aim)
 
 Agile iteration method (AIM) is a structured way of using an AI coding agent in explicit roles, with clear handoffs and controlled scope, so you converge to working software without chaotic looping.
