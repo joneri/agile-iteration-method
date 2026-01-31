@@ -1,3 +1,5 @@
+AIM is a role-based workflow for using AI in real Agile delivery: PO → TDO → Dev → Reviewer with gates, documentation rules, and end-to-end Done Increments.
+
 ## License
 
 © Jonas Eriksson. This work is licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](LICENSE).
