@@ -1,7 +1,7 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 1.1 release notes (publish draft)
+# AIM 1.1 release notes
 
 ## Release summary
 
