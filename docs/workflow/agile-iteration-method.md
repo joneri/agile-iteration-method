@@ -4,6 +4,10 @@
 
 # Agile iteration method
 
+## Version
+
+This document describes **AIM 1.1**.
+
 ## Overview
 
 Agile iteration method is a structured way of using AI agents as explicit roles
@@ -23,12 +27,25 @@ evaluated by users, while keeping full human control over scope, quality and dir
 The method is inspired by the “Ralph Wiggum loop”, but adapted to real product
 development and renamed to reflect its Agile nature.
 
+### AIM 1.1 updates
+
+- Core AIM roles and gate semantics are unchanged.
+- Feature documentation path is `docs/features/`.
+- A new optional Copilot layer can provide a faster command interface
+  without changing method semantics.
+- Commit-after-increment can be used as a team policy, but is not mandatory
+  for the method itself.
+
 ---
 
 ## Core idea
 
 The entire development process is treated as one continuous Agile loop,
 driven by roles and guarded by explicit approvals.
+
+Kickoff contract:
+- PO creates the Epic from desired user outcome.
+- TDO creates the next Done Increment from that Epic.
 
 1. The **Product owner (PO)** defines the problem and desired outcome.
 2. The **PO** defines an **Epic** that represents a complete piece of user value, with input from the TDO when needed.
@@ -65,7 +82,7 @@ During delegated execution:
 - The loop must stop and escalate to the PO if:
   - scope needs to change
   - the Epic intent is unclear or contradicted
-  - runbook rules conflict
+  - Epic-doc rules conflict
   - a blocking issue requires a value judgment
   - a new Done Increment would materially change direction
 
@@ -238,7 +255,7 @@ Gates are reporting checkpoints (A–E). They are mandatory to report, but the l
 
 Stop and ask for input if:
 - scope must expand beyond what was agreed at Gate B
-- Epic intent or runbook rules are unclear or contradictory
+- Epic intent or Epic-doc rules are unclear or contradictory
 - acceptance checks cannot be met without new assumptions
 - there is risk to trust, data correctness or user-facing meaning
 
@@ -297,6 +314,20 @@ Instead, the method relies on:
 
 `AGENTS.md` contains the master prompt that enforces this behavior.
 
+## Optional Copilot layer
+
+AIM can also run through a GitHub Copilot custom-agent layer.
+
+This layer is optional and must not change core AIM behaviour:
+- Gate B remains a meaningful approval gate
+- soft gates (C, D) remain non-blocking unless escalation conditions apply
+- explicit role order remains: PO → TDO → Dev → Reviewer → TDO → PO
+
+Setup and usage are documented in:
+- `docs/workflow/copilot-layer.md`
+- `.github/agents/`
+- `.github/prompts/`
+
 ---
 
 ## Why the method is not fully autonomous
@@ -327,8 +358,9 @@ At that point, the EPIC is complete.
 
 - `AGENTS.md` defines operational rules, gates and escalation behaviour for Codex runs.
 - `CONTRIBUTING.md` defines coding standards, PR rules and local commands.
-- `docs/features-explanations/` explains non-obvious feature behaviour, contracts and fallbacks.
-- Runbooks in `docs/runbooks/` define feature-specific truth and operational steps.
+- `docs/workflow/copilot-layer.md` defines the optional Copilot custom-agent interface.
+- `docs/features/` explains non-obvious feature behaviour, contracts and fallbacks.
+- Epic docs in `docs/epics/` define feature-specific truth and operational steps.
 
 Together, these documents form a complete system for structured AI-assisted development.
 

@@ -31,4 +31,4 @@ As a new user, I can try the product immediately and I know what to do next.
 - Notes on what is shown in each empty state
 
 ## Related docs
-- docs/features-explanations/onboarding.md
+- docs/features/onboarding.md

@@ -1,50 +1,94 @@
-AIM is a role-based workflow for using AI in real Agile delivery: PO → TDO → Dev → Reviewer with gates, documentation rules, and end-to-end Done Increments.
+AIM is a role-based workflow for using AI in real Agile delivery: PO → TDO → Dev → Reviewer → TDO → PO, with gates, documentation rules, and end-to-end Done Increments.
 
 ## License
 
 © Jonas Eriksson. This work is licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](LICENSE).
 
-# Agile iteration method (aim)
+# Agile iteration method (AIM)
 
-Agile iteration method (AIM) is a structured way of using an AI coding agent in explicit roles, with clear handoffs and controlled scope, so you converge to working software without chaotic looping.
+Agile iteration method (AIM) is a structured way of using AI coding agents in explicit roles, with clear handoffs and controlled scope, so you converge to working software without chaotic looping.
+
+## AIM 1.1 highlights
+- Core method stays the same (roles, gates, escalation, scope control).
+- Feature docs path is now `docs/features/`.
+- New optional Copilot layer for faster setup and command-driven operation.
+- Commit-after-increment is optional policy, not a forced rule.
+
+## What's new in 1.1 (promoted)
+- Copilot custom-agent support with canonical specs in `.github/agents/`.
+- Handoff UI buttons for faster flow control in Copilot chat:
+  `Approve`, `Request changes`, `Replan`, `Status`, `Continue`.
+- Prompt-file commands for setup/start/migration in `.github/prompts/`.
+- Epic-first kickoff contract:
+  PO defines Epic from desired outcome, TDO defines Done Increment from Epic.
+- Migration path from AIM 1.0 to 1.1 via:
+  `/migrate-aim-1.0-to-1.1` or `docs/workflow/migrate-aim-1.0-to-1.1.md`.
 
 ## Why this exists
-AIM is meant to solve these common problems when using AI for development:
-- The agent flip-flops between theories (frontend vs backend, data vs UI) without proving anything
-- Scope keeps drifting and you lose control over what is actually being built
-- Work gets split into tiny steps that do not deliver usable value
-- Debugging becomes guesswork instead of evidence and contracts
+AIM is meant to solve common problems when using AI for development:
+- The agent flip-flops between theories without proving anything.
+- Scope drifts and you lose control over what is built.
+- Work gets split into tiny steps that do not deliver usable value.
+- Debugging becomes guesswork instead of evidence and contracts.
 
 ## What AIM enforces
 - Explicit roles: PO → TDO → Dev → Reviewer → TDO → PO
-- Done increments: each increment is shippable and can be evaluated end to end
+- Epic kickoff: PO writes the Epic from desired outcome/user value
+- Increment planning: TDO writes the next Done Increment from that Epic
+- Done Increments: each increment is shippable and can be evaluated end to end
 - Gates: A (Epic), B (increment scope), E (acceptance) are the only approvals that matter
 - Evidence over guessing: prove contracts with input/output, not opinions
 
-## How to use in 5 minutes
-1. Open this repo in VS Code
-2. Open your AI agent chat (Codex) for the workspace
-3. Copy the “Master prompt” from `AGENTS.md` and paste it once
-4. Paste your problem using the short prompt in `AGENTS.md`
-5. Only reply with:
-   - `approve`
-   - `change: ...`
+## Quick start
+### Codex mode (manual)
+1. Open this repo in VS Code.
+2. Open Codex chat for the workspace.
+3. Paste the “Master prompt” from `AGENTS.md` once.
+4. Start with `EPIC: <desired outcome>`, then paste your problem using the short prompt in `AGENTS.md`.
+5. Reply with `approve` or `change: ...` at gates.
+
+### Copilot layer (optional)
+1. Open `docs/workflow/copilot-layer.md`.
+2. Install the agent templates from `.github/agents/` and prompt templates from `.github/prompts/`.
+3. In Copilot Chat, use one of:
+   - `Install AIM`
+   - `Start working according to AIM`
+   - `/aim start "EPIC: ..."`
+4. Use handoff buttons in chat for fast control:
+   - `Approve`
+   - `Request changes`
+   - `Replan`
+   - `Status`
+   - `Continue`
+
+### Migration from AIM 1.0
+- Run `/migrate-aim-1.0-to-1.1` (from `.github/prompts/migrate-aim-1.0-to-1.1.prompt.md`).
+- Or use `docs/workflow/migrate-aim-1.0-to-1.1.md` in any AI chat.
 
 ## Files
 - `AGENTS.md`  
-  Operational rules for running AIM in one continuous run (roles, gates, stop conditions)
-- `agile-iteration-method.md`  
-  The explanation: the mindset and why the method works
+  Operational AIM rules for Codex runs.
+- `docs/workflow/agile-iteration-method.md`  
+  Method explanation and principles.
+- `docs/workflow/copilot-layer.md`  
+  Copilot-specific interface layer and setup.
+- `.github/agents/`  
+  AIM Copilot custom-agent templates (canonical source).
+- `.github/prompts/`  
+  AIM prompt-file templates for quick commands (canonical source).
+- `docs/features/`  
+  Feature docs: non-obvious behavior, contracts, fallbacks, debugging notes.
+- `docs/epics/`  
+  Epic docs: desired outcome, trust rules, and acceptance context used by PO and TDO.
 - `CONTRIBUTING.md`  
-  Dev rules, commands, PR discipline
-- `docs/features-explanations/`  
-  Feature docs: non-obvious behaviors, contracts, fallbacks and debugging notes
-- `docs/runbooks/`  
-  Runbooks: the “truth” for a feature while implementing changes
-
-## License
-This work is licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).  
-See `LICENSE`.
+  Contribution and consistency rules.
+- `CONTRIBUTORS.md`  
+  Creator and contributor acknowledgments.
+- `docs/workflow/release-aim-1.1.md`  
+  Publish-ready release notes draft for AIM 1.1.
 
 ## Attribution
 Created by Jonas Eriksson.
+
+## Contributors
+- [@liamwears](https://github.com/liamwears) - Copilot-layer direction, agent UX ideas, command-driven AIM workflow input.

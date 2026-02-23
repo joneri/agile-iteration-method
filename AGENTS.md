@@ -4,6 +4,9 @@
 
 # AGENTS.md
 
+## Version
+This file defines **AIM 1.1** operational behavior.
+
 ## Purpose
 This repo uses “Agile iteration method” with Codex acting in explicit roles and doing structured handoffs. The goal is to avoid bouncing between random theories and instead converge fast with small, shippable increments.
 
@@ -30,6 +33,27 @@ Follow the gates in order. When in doubt:
 4. Paste the specific problem statement (what is broken, expected behaviour, links to files if known).
 5. Then only respond with: `approve` or `change: ...` at each gate.
 
+Optional Epic-doc-first variant:
+1. Start from an Epic doc in `docs/epics/` and clarify trust rules first.
+2. Ask PO to write the Epic from the desired outcome in that Epic doc.
+3. Continue with normal gates.
+
+Kickoff contract (AIM 1.1):
+1. PO creates the Epic from what should be achieved.
+2. TDO creates the next Done Increment based on that Epic.
+
+## Optional Copilot layer (AIM 1.1)
+
+If your team uses GitHub Copilot custom agents, you can add the optional Copilot layer documented in `docs/workflow/copilot-layer.md`.
+
+Quick start phrases:
+- `Install AIM`
+- `Start working according to AIM`
+- `/aim start "EPIC: ..."`
+- `/migrate-aim-1.0-to-1.1`
+
+This layer improves UX and speed, but must preserve this file’s gate and escalation semantics.
+
 ## Roles and handoffs
 
 Roles are simulated inside one Codex run and repeat for each **Done Increment** of the same Epic.
@@ -51,7 +75,7 @@ Roles are simulated inside one Codex run and repeat for each **Done Increment** 
 
 - **PO**  
   Accepts the Done Increment or requests changes.  
-  Unless explicitly stated otherwise, PO approval at Gate E is implicit when all acceptance checks are met, no escalation conditions were triggered, and the scope still matches the Epic and the runbook.
+  Unless explicitly stated otherwise, PO approval at Gate E is implicit when all acceptance checks are met, no escalation conditions were triggered, and the scope still matches the Epic and Epic doc.
 
 ---
 
@@ -88,7 +112,7 @@ Roles are simulated inside one Codex run and repeat for each **Done Increment** 
   - no duplicate variable declarations
   - no duplicate object keys
   - no obvious syntax errors in the diff
-- Logic follows runbooks and uses correct data sources  
+- Logic follows Epic docs and uses correct data sources  
   (for example totalValue instead of cash).
 - Core data structures are consistent  
   (no duplicated timelines or double-counted values).
@@ -137,12 +161,12 @@ Manual verification alone must NOT be treated as a blocking condition.
 - Respect the scope approved at Gate B. If the implementation requires more than was agreed, follow the Scope expansion rule.
 - Do not over-invest in log formatting. Use one clear per-request log only when needed, then remove or guard it behind a debug flag.
 
-## Documentation policy (feature explanations)
+## Documentation policy (feature docs)
 
 When a change introduces a new behaviour, a new data contract, a new fallback, or a non-obvious rule, we must document it.
 
 ### Read-before-change rule
-Before proposing or implementing a fix, the agent must check whether a relevant feature explanation exists in docs/features-explanations/.
+Before proposing or implementing a fix, the agent must check whether a relevant feature explanation exists in docs/features/.
 If it exists, the agent must:
 - restate the intended behaviour from the doc
 - explain exactly what is broken and why (with evidence)
@@ -157,12 +181,12 @@ Create or update a feature explanation when:
 
 ### Where to write it
 Add a short doc in:
-docs/features-explanations/<feature-name>.md
+docs/features/<feature-name>.md
 
 Examples:
-- docs/features-explanations/value-series-trading-days.md
-- docs/features-explanations/value-series-provisional-points.md
-- docs/features-explanations/autopost-kpis.md
+- docs/features/value-series-trading-days.md
+- docs/features/value-series-provisional-points.md
+- docs/features/autopost-kpis.md
 
 ### Required contents
 Keep it short and concrete:
@@ -205,7 +229,7 @@ At each Gate, the agent must clearly report:
 The agent must stop and explicitly ask for input only if one or more of the following occur:
 
 - Scope must expand beyond what was defined at Gate B
-- Epic or runbook intent is unclear or contradictory
+- Epic or Epic-doc intent is unclear or contradictory
 - Acceptance checks cannot be met without new assumptions
 - There is a risk to trust, data correctness, or user-facing meaning
 - Required files, APIs, or data sources cannot be found
@@ -248,7 +272,7 @@ When I approve Gate B for a Done Increment:
 At Gate C or Gate D you must stop and wait for my input if:
 
 - The Done Increment needs to change scope beyond what was agreed at Gate B.
-- You discover that the Epic intent or runbook rules are unclear or contradictory.
+- You discover that the Epic intent or Epic-doc rules are unclear or contradictory.
 - Acceptance checks cannot be met without new assumptions.
 - You believe the change could break trust, data correctness or user value.
 - You are unsure if this is still a valid Done Increment for this Epic.
@@ -311,7 +335,7 @@ In those cases, the PO can enable auto-approve mode for Gate B.
 
 When the PO states something like:
 
-> For this Epic: treat Gate B as auto-approved as long as the Done Increment spec satisfies the Gate B checklist and stays within the Epic scope defined in the runbook.
+> For this Epic: treat Gate B as auto-approved as long as the Done Increment spec satisfies the Gate B checklist and stays within the Epic scope defined in the Epic doc.
 
 the following rules apply:
 
@@ -323,8 +347,8 @@ the following rules apply:
 
 Auto-approve at Gate B must NOT be used if:
 
-- the TDO is unsure about the Epic interpretation or runbook intent
-- the increment requires expanding scope beyond what the Epic or runbook describes
+- the TDO is unsure about the Epic interpretation or Epic-doc intent
+- the increment requires expanding scope beyond what the Epic or Epic doc describes
 - the increment touches areas that could affect trust, safety, or system stability
 
 In those cases, the TDO must stop at Gate B and explicitly ask the PO for a decision, even if auto-approve mode is active.

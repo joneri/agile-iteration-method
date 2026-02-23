@@ -3,6 +3,10 @@
 This folder contains short, concrete explanations of non-obvious features.
 The goal is to make future debugging and changes faster and safer.
 
+Path note:
+- In AIM 1.1 this folder is `docs/features/`.
+- Older references to `docs/features-explanations/` should be treated as the same concept.
+
 ## When to add or update a doc
 Create or update a feature explanation when:
 - a feature is introduced or significantly changed
@@ -12,7 +16,7 @@ Create or update a feature explanation when:
 
 ## Where to put it
 - One feature, one file:
-  docs/features-explanations/<feature-name>.md
+  docs/features/<feature-name>.md
 
 Examples:
 - value-series-trading-days.md
@@ -20,7 +24,7 @@ Examples:
 - dividends-reconciliation.md
 
 ## Required sections
-Use docs/features-explanations/_template.md.
+Use docs/features/_template.md.
 
 Keep it short, concrete and actionable.
 

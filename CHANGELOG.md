@@ -1,5 +1,21 @@
 # Changelog
 
+## 2026-02-23 - AIM 1.1
+- Added optional Copilot layer documentation: `docs/workflow/copilot-layer.md`.
+- Added Copilot custom-agent templates in `.github/agents/`.
+- Added Copilot prompt templates in `.github/prompts/` for faster setup/start.
+- Added Copilot handoff UI buttons in `aim` agent flow (`Approve`, `Request changes`, `Replan`, `Status`, `Continue`).
+- Updated feature documentation path from `docs/features-explanations/` to `docs/features/`.
+- Updated Epic documentation path from `docs/runbooks/` to `docs/epics/`.
+- Clarified kickoff contract: PO creates Epic from desired outcome, TDO creates Done Increment from Epic.
+- Added migration prompt: `.github/prompts/migrate-aim-1.0-to-1.1.prompt.md`.
+- Added migration guide: `docs/workflow/migrate-aim-1.0-to-1.1.md`.
+- Added publish draft: `docs/workflow/release-aim-1.1.md`.
+- Updated AIM docs and templates to use `docs/features/`.
+- Updated Copilot orchestrator flow to keep Gate A and Gate B explicit.
+- Commit-after-increment changed from required to optional policy.
+- Added contributor acknowledgment for `@liamwears` in `CONTRIBUTORS.md`.
+
 ## 2026-01-30 – Autopost v3 stabilisering
 - Bankade drafts kan raderas utan fel i delete‑route.
 - Autopost använder senaste trading‑day close för effectiveDate och close‑vs‑close‑beräkning.

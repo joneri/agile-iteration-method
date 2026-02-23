@@ -3,39 +3,47 @@
 Thanks for contributing to **Agile iteration method (AIM)**.
 
 This repo is both:
-1) a public description of the method, and  
-2) a working set of repo files you can copy into your own project.
+1) the public method definition, and
+2) a copyable implementation kit for real projects.
 
-If you want to *use* AIM in another repo, start with `AGENTS.md`.
+## Versioning policy (AIM 1.1)
+- This repository is the source of truth for AIM.
+- Documentation updates here are method updates.
+- AIM changes should be proposed and reviewed using AIM itself.
+- Keep changes incremental: one coherent method change per PR.
 
 ---
 
 ## What this repo contains
 
-- `workflow/agile-iteration-method.md`  
-  The method, mindset and why it exists.
-
+- `docs/workflow/agile-iteration-method.md`  
+  The method and principles.
 - `AGENTS.md`  
-  The operational rules and the Codex “master prompt” for VS Code.
-
-- `docs/runbooks/_template.md`  
-  Template for runbooks (feature truth + how to change safely).
-
-- `docs/features-explanations/_template.md`  
-  Template for feature explanations (contracts, rules, fallbacks).
+  Operational rules for Codex execution.
+- `docs/workflow/copilot-layer.md`  
+  Optional Copilot custom-agent layer.
+- `docs/workflow/migrate-aim-1.0-to-1.1.md`  
+  Reusable migration prompt for upgrading older AIM repos.
+- `docs/workflow/release-aim-1.1.md`  
+  Release messaging draft for publishing AIM 1.1.
+- `docs/epics/_template.md`  
+  Epic template (feature truth + safe changes).
+- `docs/features/_template.md`  
+  Feature explanation template (contracts, rules, fallbacks).
+- `CONTRIBUTORS.md`  
+  Creator and contributors acknowledgment.
 
 ---
 
 ## Contribution goals
 
 Contributions should improve one of these:
+- clarity
+- correctness
+- usability
+- examples
 
-- clarity (people understand the method faster)
-- correctness (rules align, no contradictions)
-- usability (copy-paste works and the loop is easier to run)
-- examples (small, generic examples people can reuse)
-
-Avoid adding large “frameworks” or opinionated extras.
+Avoid large frameworks or opinionated extras unless explicitly requested.
 
 ---
 
@@ -46,32 +54,42 @@ Avoid adding large “frameworks” or opinionated extras.
 - Avoid drive-by refactors.
 
 ### Keep documents consistent
-If you change a rule in one place, update the other place if needed:
+If you change a rule in one place, update the others if needed:
 - `AGENTS.md` (operational)
-- `workflow/agile-iteration-method.md` (explanation)
+- `docs/workflow/agile-iteration-method.md` (explanation)
+- `docs/workflow/copilot-layer.md` (Copilot interface, if relevant)
 
 ### Examples must be generic
-Avoid referencing personal apps, internal systems or proprietary setups.
+Avoid personal apps, internal systems, or proprietary setups.
 
-### Avoid heavy logging guidance
-AIM is about ownership, gates and small increments.  
-Logging can be mentioned, but keep it practical and minimal.
+### Logging guidance must stay lightweight
+AIM is about ownership, gates, and increments.
+Mention logging only when it helps verify a hypothesis.
 
 ---
 
-## Adding or updating documentation
+## Documentation updates
 
-### When to add a feature explanation
-Add/update a file in `docs/features-explanations/` when a change introduces:
-- a new behaviour or user-visible rule
-- a non-obvious fallback or constraint
-- a contract change (inputs/outputs, semantics)
+### Feature explanations
+Add/update a file in `docs/features/` when a change introduces:
+- new user-visible behavior or rule
+- non-obvious fallback or constraint
+- contract changes (inputs/outputs/semantics)
 
-### When to add or update a runbook
-Add/update a file in `docs/runbooks/` when you introduce or change:
-- a workflow for delivering a feature safely
-- acceptance checks that should stay stable over time
-- “how we avoid misleading output” type rules
+### Epic docs
+Add/update a file in `docs/epics/` when a change affects:
+- safe implementation workflow
+- stable acceptance checks
+- trust or “silent instead of wrong” rules
+
+### Copilot layer
+Update `docs/workflow/copilot-layer.md` and `.github/agents/` when:
+- command flow changes
+- gate handling changes
+- setup/install UX changes
+
+Canonical source:
+- `.github/agents/` and `.github/prompts/` are the only operational specs.
 
 ---
 
@@ -79,15 +97,18 @@ Add/update a file in `docs/runbooks/` when you introduce or change:
 
 ### Small edits
 Open a PR with:
-- what you changed
-- why it improves clarity/correctness/usability
-- what file(s) were touched
+- what changed
+- why it improves AIM
+- files touched
 
-### Bigger changes
+If the change is substantial and from a new contributor:
+- add/update `CONTRIBUTORS.md` in the same PR.
+
+### Larger method changes
 Open an issue first describing:
-- the problem you see
-- the smallest change that would solve it
-- what you are *not* trying to change
+- the problem
+- the smallest viable fix
+- explicit non-goals
 
 ---
 
@@ -96,12 +117,12 @@ Open an issue first describing:
 No build is required.
 
 Before submitting:
-- spell check the changed sections
-- ensure headings and terminology match existing style
-- confirm there are no contradictions between `AGENTS.md` and `workflow/agile-iteration-method.md`
+- spell-check changed sections
+- keep terms consistent (Epic, Done Increment, Gate A-E)
+- confirm no contradictions between `AGENTS.md` and `docs/workflow/agile-iteration-method.md`
 
 ---
 
 ## License
 
-By contributing, you agree that your contribution is licensed under **CC BY 4.0** (same as this repository).
+By contributing, you agree your contribution is licensed under **CC BY 4.0** (same as this repository).

@@ -1,5 +1,9 @@
-# Runbook: <feature> v<version>
-(Read more in docs/features-explanations/<feature>.md)
+# Epic: <feature> v<version>
+(Read more in docs/features/<feature>.md)
+
+Kickoff contract:
+- PO owns this Epic and defines desired outcome.
+- TDO derives the next Done Increment from this Epic.
 
 ## purpose
 Explain why this exists in user terms. What problem it solves and what “good” looks like.
@@ -56,7 +60,7 @@ Only list if helpful. Keep it short.
 
 ## documentation update rule
 Before starting:
-- read: docs/features-explanations/<feature>.md
+- read: docs/features/<feature>.md
 
 After finishing:
 - update the same file with:
