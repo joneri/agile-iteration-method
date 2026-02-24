@@ -6,7 +6,7 @@ This repo is both:
 1) the public method definition, and
 2) a copyable implementation kit for real projects.
 
-## Versioning policy (AIM 1.1)
+## Versioning policy (AIM 1.2)
 - This repository is the source of truth for AIM.
 - Documentation updates here are method updates.
 - AIM changes should be proposed and reviewed using AIM itself.
@@ -24,6 +24,8 @@ This repo is both:
   Optional Copilot custom-agent layer.
 - `docs/workflow/migrate-aim-1.0-to-1.1.md`  
   Reusable migration prompt for upgrading older AIM repos.
+- `docs/workflow/migrate-aim-1.1-to-1.2.md`  
+  Reusable migration prompt for upgrading AIM 1.1 repos to AIM 1.2.
 - `docs/workflow/release-aim-1.1.md`  
   Release messaging draft for publishing AIM 1.1.
 - `docs/epics/_template.md`  

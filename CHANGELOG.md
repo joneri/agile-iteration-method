@@ -10,6 +10,10 @@
 - Added Swedish short trigger support:
   `Starta en AIM-loop med denna EPIC: ...`.
 - Updated workflow and Copilot-layer docs for Codex/Copilot parity and repository-aware loading.
+- Added migration assets for AIM 1.1 -> 1.2:
+  `.github/prompts/migrate-aim-1.1-to-1.2.prompt.md` and
+  `docs/workflow/migrate-aim-1.1-to-1.2.md`.
+- Updated planner/builder/reviewer subagent docs to include canonical-role and mode-context guidance.
 
 ## 2026-02-23 - AIM 1.1
 - Added optional Copilot layer documentation: `docs/workflow/copilot-layer.md`.

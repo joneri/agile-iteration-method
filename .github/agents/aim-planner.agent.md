@@ -10,6 +10,10 @@ model: ["GPT-5.3-Codex (copilot)", "Claude Sonnet 4.5 (copilot)"]
 
 This role runs in one of two modes provided by the orchestrator.
 
+Canonical role rule:
+- Report as `Role: PO` or `Role: TDO` in gate outputs.
+- Avoid replacing canonical role names with aliases.
+
 ## Mode: PO
 
 Create/update `.aim/epic.md` with:
@@ -27,6 +31,7 @@ Create/update `.aim/plan.md` for exactly one next Done Increment with:
 - files to touch
 - risks
 - verification plan
+- execution mode context (`Strict` or `Auto`) and any mode-specific constraints
 
 ## Gate B checklist (mandatory)
 

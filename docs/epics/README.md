@@ -1,6 +1,6 @@
 # Epic docs
 
-In AIM 1.1, this folder is the kickoff artifact.
+In AIM 1.2, this folder is the kickoff artifact.
 
 ## Rule
 - PO writes the Epic from desired outcome and trust expectations.

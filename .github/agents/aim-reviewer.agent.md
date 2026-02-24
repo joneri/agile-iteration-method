@@ -22,6 +22,7 @@ Review the increment against Epic intent and increment acceptance.
 Gate D is a soft gate.
 Do not request `approve` at Gate D.
 If manual verification is needed, list steps and mark ready for Gate E.
+- Always include current execution mode context (`Strict` or `Auto`) in review framing.
 
 ## Feature doc rule
 

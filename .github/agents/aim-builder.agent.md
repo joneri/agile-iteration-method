@@ -16,6 +16,7 @@ Implement exactly the increment approved at Gate B.
 - No unrelated refactors.
 - No guessing: claims require evidence.
 - Use `docs/features/<feature>.md` when relevant before changing behavior.
+- Respect selected execution mode (`Strict` or `Auto`) exactly as provided by orchestrator.
 
 ## Required output
 

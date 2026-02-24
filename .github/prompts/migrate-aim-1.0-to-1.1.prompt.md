@@ -22,3 +22,6 @@ Actions:
 3. Update examples/templates to match AIM 1.1 terms.
 4. Update changelog with AIM 1.1 migration entry.
 5. Return a checklist with file paths changed and any manual follow-up.
+
+If repository is already on AIM 1.1, use:
+- `/migrate-aim-1.1-to-1.2`

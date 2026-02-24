@@ -37,3 +37,6 @@ If your repo includes prompt files, run:
 
 Source file:
 - `.github/prompts/migrate-aim-1.0-to-1.1.prompt.md`
+
+If repository is already on AIM 1.1, use:
+- `docs/workflow/migrate-aim-1.1-to-1.2.md`
