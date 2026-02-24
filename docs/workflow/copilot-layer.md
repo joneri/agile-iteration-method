@@ -79,10 +79,6 @@ Then provide:
 2. Run:
    - `/aim start "EPIC: ..."`
 
-### Option D: migration start (AIM 1.0 -> 1.1)
-- Run `/migrate-aim-1.0-to-1.1`.
-- Or use `docs/workflow/migrate-aim-1.0-to-1.1.md` in chat.
-
 ### Option C: Epic-doc-first start
 If you want to start from desired outcome and trust rules first, ask:
 - `Install AIM and start from Epic-doc-first mode`
@@ -91,6 +87,12 @@ Then provide:
 - the Epic doc path (`docs/epics/<feature>.md`)
 - trust rules
 - acceptance criteria
+
+### Option D: migration start
+- Run `/migrate-aim-1.0-to-1.1`.
+- Or use `docs/workflow/migrate-aim-1.0-to-1.1.md` in chat.
+- Run `/migrate-aim-1.1-to-1.2`.
+- Or use `docs/workflow/migrate-aim-1.1-to-1.2.md` in chat.
 
 ## Recommended default operating mode
 
@@ -144,3 +146,4 @@ Expected fix:
 - `.github/agents/aim.agent.md`
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/migrate-aim-1.0-to-1.1.prompt.md`
+- `.github/prompts/migrate-aim-1.1-to-1.2.prompt.md`

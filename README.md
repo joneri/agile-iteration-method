@@ -30,8 +30,9 @@ Agile iteration method (AIM) is a structured way of using AI coding agents in ex
   `PO`, `TDO`, `Dev`, `Reviewer` (aliases are non-canonical).
 - Short trigger support includes:
   `Starta en AIM-loop med denna EPIC: ...`.
-- Migration path from AIM 1.0 to 1.1 via:
-  `/migrate-aim-1.0-to-1.1` or `docs/workflow/migrate-aim-1.0-to-1.1.md`.
+- Migration paths:
+  - AIM 1.0 -> 1.1: `/migrate-aim-1.0-to-1.1` or `docs/workflow/migrate-aim-1.0-to-1.1.md`.
+  - AIM 1.1 -> 1.2: `/migrate-aim-1.1-to-1.2` or `docs/workflow/migrate-aim-1.1-to-1.2.md`.
 
 ## Why this exists
 AIM is meant to solve common problems when using AI for development:
@@ -74,9 +75,11 @@ AIM is meant to solve common problems when using AI for development:
    - `Status`
    - `Continue`
 
-### Migration from AIM 1.0
+### Migration paths
 - Run `/migrate-aim-1.0-to-1.1` (from `.github/prompts/migrate-aim-1.0-to-1.1.prompt.md`).
 - Or use `docs/workflow/migrate-aim-1.0-to-1.1.md` in any AI chat.
+- Run `/migrate-aim-1.1-to-1.2` (from `.github/prompts/migrate-aim-1.1-to-1.2.prompt.md`).
+- Or use `docs/workflow/migrate-aim-1.1-to-1.2.md` in any AI chat.
 
 ## Files
 - `AGENTS.md`  
@@ -97,8 +100,8 @@ AIM is meant to solve common problems when using AI for development:
   Contribution and consistency rules.
 - `CONTRIBUTORS.md`  
   Creator and contributor acknowledgments.
-- `docs/workflow/release-aim-1.1.md`  
-  Publish-ready release notes draft for AIM 1.1.
+- `docs/workflow/release-aim-1.2.md`  
+  Publish-ready release notes draft for AIM 1.2.
 
 ## Attribution
 Created by Jonas Eriksson.

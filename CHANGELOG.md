@@ -13,6 +13,8 @@
 - Added migration assets for AIM 1.1 -> 1.2:
   `.github/prompts/migrate-aim-1.1-to-1.2.prompt.md` and
   `docs/workflow/migrate-aim-1.1-to-1.2.md`.
+- Added AIM 1.2 release draft:
+  `docs/workflow/release-aim-1.2.md`.
 - Updated planner/builder/reviewer subagent docs to include canonical-role and mode-context guidance.
 
 ## 2026-02-23 - AIM 1.1

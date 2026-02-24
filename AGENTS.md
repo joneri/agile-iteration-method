@@ -53,6 +53,7 @@ Quick start phrases:
 - `/aim start "EPIC: ..."`
 - `Starta en AIM-loop med denna EPIC: ...`
 - `/migrate-aim-1.0-to-1.1`
+- `/migrate-aim-1.1-to-1.2`
 
 This layer improves UX and speed, but must preserve this file’s gate and escalation semantics.
 

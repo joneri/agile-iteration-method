@@ -26,8 +26,8 @@ This repo is both:
   Reusable migration prompt for upgrading older AIM repos.
 - `docs/workflow/migrate-aim-1.1-to-1.2.md`  
   Reusable migration prompt for upgrading AIM 1.1 repos to AIM 1.2.
-- `docs/workflow/release-aim-1.1.md`  
-  Release messaging draft for publishing AIM 1.1.
+- `docs/workflow/release-aim-1.2.md`  
+  Release messaging draft for publishing AIM 1.2.
 - `docs/epics/_template.md`  
   Epic template (feature truth + safe changes).
 - `docs/features/_template.md`  
