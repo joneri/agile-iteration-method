@@ -13,6 +13,17 @@ Main outcomes:
 - explicit execution modes (`Strict`, `Auto`) with guardrails
 - canonical role naming locked to `PO`, `TDO`, `Dev`, `Reviewer`
 
+## Why teams will care immediately
+
+- You get speed without chaos:
+  natural-language kickoff, command kickoff, and Copilot button flow all align to the same method behavior.
+- You get consistency across tools:
+  Codex and Copilot now run from the same repo-defined rules and role semantics.
+- You get safer autonomy:
+  `Auto` mode increases throughput, but AIM still enforces role flow, gate logic, traceability, and final full review.
+- You get less onboarding friction:
+  migration paths are explicit and copy-paste ready for both 1.0 and 1.1 repositories.
+
 ## Promoted features
 
 ### 1) Repository-aware execution model
@@ -54,6 +65,19 @@ What is new:
 - mode model (`Strict`/`Auto`) with visible execution context
 - canonical role naming across docs, prompts, and agents
 - migration path from AIM 1.1 to AIM 1.2
+
+## Suggested publish text (promoted)
+
+AIM 1.2 is the most complete operational version of AIM so far.
+
+Why this release stands out:
+- one repository-driven behavior model across Codex and Copilot
+- canonical roles locked (`PO`, `TDO`, `Dev`, `Reviewer`) to eliminate role-name drift
+- execution modes built for real-world tradeoffs:
+  `Strict` for controlled delivery, `Auto` for high-velocity Epic execution with full trace and final review
+- copy-paste migration paths for both legacy tracks (`1.0 -> 1.1`, `1.1 -> 1.2`)
+
+If your team wants fast AI delivery with clear ownership and stable method semantics, AIM 1.2 is the release to adopt.
 
 ## Suggested publish checklist
 

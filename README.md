@@ -9,13 +9,26 @@ AIM is a role-based workflow for using AI in real Agile delivery: PO → TDO →
 Agile iteration method (AIM) is a structured way of using AI coding agents in explicit roles, with clear handoffs and controlled scope, so you converge to working software without chaotic looping.
 
 ## AIM 1.2 highlights
-- Core method stays the same (roles, gates, escalation, scope control).
-- Feature docs path is now `docs/features/`.
-- Epic docs path is `docs/epics/`.
-- Repository profile and load-order semantics are first-class.
-- Execution modes are explicit: `Strict` and `Auto`.
-- Optional Copilot layer for faster setup and command-driven operation.
-- Commit-after-increment is optional policy, not a forced rule.
+- Same AIM core loop, but with much stronger operational control.
+- Repository profile is first-class, so each repo can define stack/testing/role constraints safely.
+- Layered execution is explicit and predictable:
+  AIM base -> `AGENTS.md` -> `.github/agents/aim*.agent.md`.
+- `Strict` and `Auto` modes are explicit and always visible in output.
+- Codex and Copilot now share the same startup behavior and role semantics.
+- Copilot layer includes UI handoff buttons and command-driven shortcuts.
+- Commit-after-increment remains optional policy (team choice, not forced method behavior).
+
+## Why AIM 1.2 is a big upgrade
+- Faster kickoff:
+  users can start from natural language or `/aim start "EPIC: ..."` with the same role flow.
+- Less confusion:
+  canonical roles are locked to `PO`, `TDO`, `Dev`, `Reviewer` across docs, prompts, and agents.
+- Better trust:
+  mode visibility and explicit layering reduce hidden behavior and role drift.
+- More throughput:
+  `Auto` mode enables rapid Epic progress without removing gates or final review.
+- Easier adoption:
+  migration exists for both legacy paths (`1.0 -> 1.1` and `1.1 -> 1.2`).
 
 ## What's new in 1.2 (promoted)
 - Copilot custom-agent support with canonical specs in `.github/agents/`.
