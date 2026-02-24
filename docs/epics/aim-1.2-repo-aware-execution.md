@@ -1,5 +1,5 @@
 # Epic: AIM 1.2 repo-aware execution and modes
-(Read more in docs/features/<feature>.md)
+(Read more in docs/features/aim-1.2-repo-aware-execution.md)
 
 Kickoff contract:
 - PO owns this Epic and defines desired outcome.
@@ -53,11 +53,18 @@ Where the data comes from and which source wins if they disagree.
 
 ## acceptance criteria
 Write as observable outcomes.
-- [ ] AIM 1.2 defines repository profile as a required concept and defines load/override order.
-- [ ] AIM 1.2 defines canonical roles (`PO`, `TDO`, `Dev`, `Reviewer`) and alias mapping rules.
-- [ ] AIM 1.2 defines execution modes (`Strict`, `Auto`) with explicit mode visibility and startup selection.
-- [ ] Auto mode supports Epic-level auto-approve with transparent Done Increment traces and final full review before Epic completion.
-- [ ] Codex and Copilot startup paths are documented to use the same repository-driven behavior.
+- [x] AIM 1.2 defines repository profile as a required concept and defines load/override order.
+- [x] AIM 1.2 defines canonical roles (`PO`, `TDO`, `Dev`, `Reviewer`) and alias mapping rules.
+- [x] AIM 1.2 defines execution modes (`Strict`, `Auto`) with explicit mode visibility and startup selection.
+- [x] Auto mode supports Epic-level auto-approve with transparent Done Increment traces and final full review before Epic completion.
+- [x] Codex and Copilot startup paths are documented to use the same repository-driven behavior.
+
+## completion evidence (2026-02-24)
+- Repository profile and explicit layer order are documented in `AGENTS.md` and `docs/workflow/agile-iteration-method.md`.
+- Canonical role naming and alias mapping are documented in `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, and `.github/agents/aim*.agent.md`.
+- Execution mode semantics (`Strict`, `Auto`) and gate behavior are documented in `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, and `docs/workflow/copilot-layer.md`.
+- Startup and migration parity across Codex/Copilot is documented in `README.md`, `docs/workflow/copilot-layer.md`, and `.github/prompts/`.
+- Consolidated feature contract is documented in `docs/features/aim-1.2-repo-aware-execution.md`.
 
 ## debug and verification
 Minimum steps to prove it works.

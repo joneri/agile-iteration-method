@@ -16,6 +16,9 @@
 - Added AIM 1.2 release draft:
   `docs/workflow/release-aim-1.2.md`.
 - Updated planner/builder/reviewer subagent docs to include canonical-role and mode-context guidance.
+- Added AIM 1.2 feature contract and Epic closure evidence:
+  `docs/features/aim-1.2-repo-aware-execution.md` and
+  `docs/epics/aim-1.2-repo-aware-execution.md`.
 
 ## 2026-02-23 - AIM 1.1
 - Added optional Copilot layer documentation: `docs/workflow/copilot-layer.md`.
