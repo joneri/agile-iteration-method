@@ -48,10 +48,18 @@ Treat all of these as start intents:
 - `Install AIM`
 - `Start working according to AIM`
 - `/aim start "EPIC: ..."`
+- `Starta en AIM-loop med denna EPIC: ...`
 
 Kickoff contract:
 - PO defines the Epic first (desired outcome).
 - TDO defines the next Done Increment from that Epic.
+
+Repository-aware loading order:
+1. AIM base semantics
+2. repository `AGENTS.md`
+3. repository `.github/agents/aim*.agent.md`
+
+If instructions conflict, escalate.
 
 ## Commands
 
@@ -60,6 +68,7 @@ Kickoff contract:
 - `/aim status` - show current state
 - `/aim replan` - return to Gate B planning
 - `/aim commit-mode optional|required` - set commit policy
+- `/aim mode strict|auto` - set execution mode for current Epic
 
 ## Core constraints
 
@@ -67,6 +76,8 @@ Kickoff contract:
 - Approvals are meaningful only at Gate A, B, E
 - Gate C and D auto-proceed unless escalation conditions apply
 - Gate D must not ask for approval
+- Mode must be visible in gate outputs: `Strict` or `Auto`
+- Canonical role names are `PO`, `TDO`, `Dev`, `Reviewer`
 
 ## State files
 
@@ -85,6 +96,7 @@ Suggested state shape:
   "status": "awaiting_approval",
   "epic_id": "epic-YYYYMMDD-HHMMSS",
   "increment": 1,
+  "execution_mode": "strict",
   "commit_mode": "optional",
   "last_updated": "ISO-8601"
 }
@@ -95,6 +107,7 @@ Suggested state shape:
 1. If `.aim/state.json` exists and not complete, show status and stop.
 2. Create `.aim/` and `.aim/increments/`.
 3. Create initial state at Gate A with `commit_mode: optional`.
+   Also set `execution_mode: strict` unless user explicitly chooses auto.
 4. Run `aim-planner` in `mode: PO` to create `.aim/epic.md`.
 5. Run `aim-planner` in `mode: TDO` to draft `.aim/plan.md` for Increment 1.
 6. Present Gate A only (Epic approval). Do not auto-approve Gate B.
@@ -140,6 +153,13 @@ Route by `state.gate` and user intent (`approve` or `change:`):
   - rerun builder with feedback
   - rerun reviewer
   - re-present Gate E
+
+Execution-mode behavior:
+- `strict`: wait at hard gates as normal.
+- `auto` (Epic flag `Auto-approve until Epic complete`):
+  - report hard gates but do not pause between Done Increments unless escalation occurs
+  - require final full review before marking Epic complete
+  - keep transparent trace of all Done Increments
 
 ## Commit policy (optional)
 

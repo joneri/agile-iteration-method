@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-02-24 - AIM 1.2 foundation
+- Added AIM 1.2 Epic: `docs/epics/aim-1.2-repo-aware-execution.md`.
+- Added repository-profile and load-order rules to `AGENTS.md`.
+- Added execution mode model (`Strict`, `Auto`) with explicit Epic flag:
+  `Auto-approve until Epic complete`.
+- Added mode visibility and final full-review requirement for Auto mode.
+- Locked canonical role names to `PO`, `TDO`, `Dev`, `Reviewer` and documented alias mapping.
+- Added Swedish short trigger support:
+  `Starta en AIM-loop med denna EPIC: ...`.
+- Updated workflow and Copilot-layer docs for Codex/Copilot parity and repository-aware loading.
+
 ## 2026-02-23 - AIM 1.1
 - Added optional Copilot layer documentation: `docs/workflow/copilot-layer.md`.
 - Added Copilot custom-agent templates in `.github/agents/`.

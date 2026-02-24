@@ -6,7 +6,7 @@
 
 ## Version
 
-This document describes **AIM 1.1**.
+This document describes **AIM 1.2**.
 
 ## Overview
 
@@ -27,12 +27,15 @@ evaluated by users, while keeping full human control over scope, quality and dir
 The method is inspired by the “Ralph Wiggum loop”, but adapted to real product
 development and renamed to reflect its Agile nature.
 
-### AIM 1.1 updates
+### AIM 1.2 updates
 
 - Core AIM roles and gate semantics are unchanged.
 - Feature documentation path is `docs/features/`.
-- A new optional Copilot layer can provide a faster command interface
-  without changing method semantics.
+- Epic docs path is `docs/epics/`.
+- Repository profile is a first-class concept with explicit layer order.
+- Execution modes are explicit: `Strict` and `Auto`.
+- Canonical role names are locked: `PO`, `TDO`, `Dev`, `Reviewer`.
+- Optional Copilot layer provides faster commands without changing method semantics.
 - Commit-after-increment can be used as a team policy, but is not mandatory
   for the method itself.
 
@@ -63,6 +66,46 @@ In short, the PO owns the Epic and the TDO owns the Done Increment.
 The AI never changes direction on its own.
 Execution may proceed autonomously within an explicitly approved Done Increment but must stop and ask for guidance if scope, intent or assumptions change.
 
+## Repository profile and layering
+
+Each repository defines its own profile in `AGENTS.md`:
+- stack and runtime assumptions
+- verification/testing strategy
+- role behavior constraints for `PO`, `TDO`, `Dev`, and `Reviewer`
+
+Layer order:
+1. AIM base semantics
+2. repository `AGENTS.md`
+3. repository `.github/agents/aim*.agent.md`
+
+If layers conflict, escalate instead of guessing.
+
+Required repository files:
+- `AGENTS.md`
+- `.github/agents/aim.agent.md`
+- `.github/agents/aim-planner.agent.md`
+- `.github/agents/aim-builder.agent.md`
+- `.github/agents/aim-reviewer.agent.md`
+
+Startup triggers (no manual bootstrap expected):
+- `Install AIM`
+- `Start working according to AIM`
+- `Starta en AIM-loop med denna EPIC: ...`
+- `/aim start "EPIC: ..."`
+
+## Execution modes
+
+Two execution modes are defined:
+- `Strict` (default): manual approvals per Done Increment at hard gates.
+- `Auto` (optional): `Auto-approve until Epic complete`.
+
+In Auto mode:
+- roles and gates still execute and are reported
+- current mode is shown in gate output (`Mode: Strict` or `Mode: Auto`)
+- manual pauses between Done Increments are skipped unless escalation is required
+- final full review is required before Epic completion
+- all generated Done Increments must remain traceable
+
 ## Delegated execution
 
 After the PO has approved:
@@ -88,6 +131,20 @@ During delegated execution:
 
 Delegated execution accelerates delivery,
 but **never replaces PO ownership of value or acceptance**.
+
+## Canonical roles and aliases
+
+Canonical AIM role names are:
+- `PO`
+- `TDO`
+- `Dev`
+- `Reviewer`
+
+Aliases may exist in tooling but are non-canonical:
+- `Planner` maps to `TDO` (or a `PO+TDO` wrapper)
+- `Builder` maps to `Dev`
+
+Method-level docs and gate reporting should use canonical names.
 
 ## Roles and responsibilities
 
@@ -322,6 +379,7 @@ This layer is optional and must not change core AIM behaviour:
 - Gate B remains a meaningful approval gate
 - soft gates (C, D) remain non-blocking unless escalation conditions apply
 - explicit role order remains: PO → TDO → Dev → Reviewer → TDO → PO
+- the same repository profile and layer-order rules apply in Codex and Copilot
 
 Setup and usage are documented in:
 - `docs/workflow/copilot-layer.md`

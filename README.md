@@ -8,19 +8,28 @@ AIM is a role-based workflow for using AI in real Agile delivery: PO → TDO →
 
 Agile iteration method (AIM) is a structured way of using AI coding agents in explicit roles, with clear handoffs and controlled scope, so you converge to working software without chaotic looping.
 
-## AIM 1.1 highlights
+## AIM 1.2 highlights
 - Core method stays the same (roles, gates, escalation, scope control).
 - Feature docs path is now `docs/features/`.
-- New optional Copilot layer for faster setup and command-driven operation.
+- Epic docs path is `docs/epics/`.
+- Repository profile and load-order semantics are first-class.
+- Execution modes are explicit: `Strict` and `Auto`.
+- Optional Copilot layer for faster setup and command-driven operation.
 - Commit-after-increment is optional policy, not a forced rule.
 
-## What's new in 1.1 (promoted)
+## What's new in 1.2 (promoted)
 - Copilot custom-agent support with canonical specs in `.github/agents/`.
+- Codex/Copilot parity via repository-aware load order:
+  AIM base -> `AGENTS.md` -> `.github/agents/aim*.agent.md`.
 - Handoff UI buttons for faster flow control in Copilot chat:
   `Approve`, `Request changes`, `Replan`, `Status`, `Continue`.
 - Prompt-file commands for setup/start/migration in `.github/prompts/`.
 - Epic-first kickoff contract:
   PO defines Epic from desired outcome, TDO defines Done Increment from Epic.
+- Canonical role names locked to:
+  `PO`, `TDO`, `Dev`, `Reviewer` (aliases are non-canonical).
+- Short trigger support includes:
+  `Starta en AIM-loop med denna EPIC: ...`.
 - Migration path from AIM 1.0 to 1.1 via:
   `/migrate-aim-1.0-to-1.1` or `docs/workflow/migrate-aim-1.0-to-1.1.md`.
 
@@ -45,7 +54,8 @@ AIM is meant to solve common problems when using AI for development:
 2. Open Codex chat for the workspace.
 3. Paste the “Master prompt” from `AGENTS.md` once.
 4. Start with `EPIC: <desired outcome>`, then paste your problem using the short prompt in `AGENTS.md`.
-5. Reply with `approve` or `change: ...` at gates.
+5. Choose mode: `Strict` (default) or `Auto`.
+6. Reply with `approve` or `change: ...` at gates.
 
 ### Copilot layer (optional)
 1. Open `docs/workflow/copilot-layer.md`.
@@ -53,8 +63,11 @@ AIM is meant to solve common problems when using AI for development:
 3. In Copilot Chat, use one of:
    - `Install AIM`
    - `Start working according to AIM`
+   - `Starta en AIM-loop med denna EPIC: ...`
    - `/aim start "EPIC: ..."`
-4. Use handoff buttons in chat for fast control:
+4. Include mode in kickoff:
+   - `Mode: Strict` or `Mode: Auto`
+5. Use handoff buttons in chat for fast control:
    - `Approve`
    - `Request changes`
    - `Replan`

@@ -16,6 +16,9 @@ Core AIM rules still come from:
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
 
+Parity rule:
+- Copilot and Codex must execute the same repository-driven AIM behavior.
+
 ## What this layer must preserve
 
 - Explicit role order: `PO → TDO → Dev → Reviewer → TDO → PO`
@@ -23,6 +26,17 @@ Core AIM rules still come from:
 - Gate D is soft and must not request approval
 - Escalation rules for scope, intent, trust, and missing inputs
 - Scope expansion only with explicit stop-and-ask
+- Execution mode visibility (`Strict` or `Auto`) at all gates
+- Canonical role reporting (`PO`, `TDO`, `Dev`, `Reviewer`)
+
+## Repository-aware loading
+
+Load behavior is layered in this order:
+1. AIM base semantics
+2. repository `AGENTS.md`
+3. repository `.github/agents/aim*.agent.md`
+
+If layers conflict, escalate to PO.
 
 ## Files used by the Copilot layer
 
@@ -54,9 +68,11 @@ These are configured in:
 In Copilot Chat, ask:
 - `Install AIM`
 - `Start working according to AIM`
+- `Starta en AIM-loop med denna EPIC: ...`
 
 Then provide:
 - `EPIC: ...` (desired outcome in one line)
+- `Mode: Strict` or `Mode: Auto`
 
 ### Option B: command start
 1. Select `aim` in the Copilot agent dropdown.
@@ -80,7 +96,8 @@ Then provide:
 
 - Start with PO Epic creation (`EPIC: ...`).
 - Let TDO define the first Done Increment from that Epic before coding.
-- Keep Gate B as manual approval (unless PO explicitly enables Gate B auto-approve).
+- Keep `Strict` mode as default.
+- Use `Auto` only with explicit Epic flag: `Auto-approve until Epic complete`.
 - Keep commit-after-Gate-E optional.
 - Use `/aim status` and `/aim replan` for control.
 
@@ -94,6 +111,17 @@ Suggested state field in `.aim/state.json`:
 Behavior:
 - `required`: enforce commit before moving to next increment
 - `optional`: ask whether to commit, do not block progression
+
+## Auto mode guardrails
+
+When Epic is started with:
+- `Auto-approve until Epic complete`
+
+then:
+- hard gates are still reported
+- manual pauses between Done Increments are skipped unless escalation is triggered
+- all Done Increments must remain visible in trace artifacts
+- a final full review is required before Epic completion
 
 ## Debugging and verification
 

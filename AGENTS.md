@@ -5,7 +5,7 @@
 # AGENTS.md
 
 ## Version
-This file defines **AIM 1.1** operational behavior.
+This file defines **AIM 1.2** operational behavior.
 
 ## Purpose
 This repo uses “Agile iteration method” with Codex acting in explicit roles and doing structured handoffs. The goal is to avoid bouncing between random theories and instead converge fast with small, shippable increments.
@@ -32,17 +32,18 @@ Follow the gates in order. When in doubt:
 3. Paste the “Master prompt” below once.
 4. Paste the specific problem statement (what is broken, expected behaviour, links to files if known).
 5. Then only respond with: `approve` or `change: ...` at each gate.
+6. Choose execution mode at Epic start: `Strict` (default) or `Auto`.
 
 Optional Epic-doc-first variant:
 1. Start from an Epic doc in `docs/epics/` and clarify trust rules first.
 2. Ask PO to write the Epic from the desired outcome in that Epic doc.
 3. Continue with normal gates.
 
-Kickoff contract (AIM 1.1):
+Kickoff contract (AIM 1.2):
 1. PO creates the Epic from what should be achieved.
 2. TDO creates the next Done Increment based on that Epic.
 
-## Optional Copilot layer (AIM 1.1)
+## Optional Copilot layer (AIM 1.2)
 
 If your team uses GitHub Copilot custom agents, you can add the optional Copilot layer documented in `docs/workflow/copilot-layer.md`.
 
@@ -50,9 +51,51 @@ Quick start phrases:
 - `Install AIM`
 - `Start working according to AIM`
 - `/aim start "EPIC: ..."`
+- `Starta en AIM-loop med denna EPIC: ...`
 - `/migrate-aim-1.0-to-1.1`
 
 This layer improves UX and speed, but must preserve this file’s gate and escalation semantics.
+
+## Repository profile (required)
+
+Each repository must define a repository profile in `AGENTS.md` that states:
+- stack and runtime assumptions
+- verification/testing strategy
+- role-specific behavioral constraints for `PO`, `TDO`, `Dev`, and `Reviewer`
+
+Required file structure:
+- `AGENTS.md`
+- `.github/agents/aim.agent.md`
+- `.github/agents/aim-planner.agent.md`
+- `.github/agents/aim-builder.agent.md`
+- `.github/agents/aim-reviewer.agent.md`
+
+Layering and override order:
+1. AIM base semantics (internal skill baseline)
+2. repository `AGENTS.md`
+3. repository `.github/agents/aim*.agent.md`
+
+If layered instructions conflict and cannot be resolved safely, escalate to PO.
+
+Role impact rule:
+- `PO`: value boundaries, acceptance intent, trust constraints
+- `TDO`: increment scope limits, layering interpretation, release validation
+- `Dev`: implementation and verification behavior within approved Gate B
+- `Reviewer`: correctness/risk checks and final readiness signal
+
+## Execution modes (AIM 1.2)
+
+Mode must be selected when starting an Epic and shown in all gate outputs.
+
+- `Strict` (default):
+  - Manual `approve`/`change:` flow per Done Increment.
+  - Hard gates pause at `A`, `B`, `E`.
+- `Auto` (optional, aka Vibe mode):
+  - Enabled with Epic flag: `Auto-approve until Epic complete`.
+  - AIM still runs all roles and gate logic.
+  - AIM does not pause for manual approvals between Done Increments unless escalation occurs.
+  - A final full review is required before Epic completion is accepted.
+  - All generated Done Increments must be clearly traceable.
 
 ## Roles and handoffs
 
@@ -76,6 +119,13 @@ Roles are simulated inside one Codex run and repeat for each **Done Increment** 
 - **PO**  
   Accepts the Done Increment or requests changes.  
   Unless explicitly stated otherwise, PO approval at Gate E is implicit when all acceptance checks are met, no escalation conditions were triggered, and the scope still matches the Epic and Epic doc.
+
+Canonical role rule (AIM 1.2):
+- Canonical names are only: `PO`, `TDO`, `Dev`, `Reviewer`.
+- Alias labels are non-canonical and must map explicitly:
+  - `Planner` -> `TDO` (or `PO+TDO` wrapper in tooling)
+  - `Builder` -> `Dev`
+- New top-level role names must not be introduced without explicit AIM spec change.
 
 ---
 
@@ -160,6 +210,7 @@ Manual verification alone must NOT be treated as a blocking condition.
 - One change set per increment. Keep it small.
 - Respect the scope approved at Gate B. If the implementation requires more than was agreed, follow the Scope expansion rule.
 - Do not over-invest in log formatting. Use one clear per-request log only when needed, then remove or guard it behind a debug flag.
+- Keep canonical role names (`PO`, `TDO`, `Dev`, `Reviewer`) in method-level docs and outputs.
 
 ## Documentation policy (feature docs)
 
@@ -220,6 +271,7 @@ At each Gate, the agent must clearly report:
 
 ### Default behavior
 
+- Default execution mode is `Strict` unless PO sets `Auto` at Epic start.
 - The agent must continue through the full loop **in one continuous run**
   (PO → TDO → Dev → Reviewer → TDO → PO)
 - The agent must **not pause or ask for approval** at any Gate unless an escalation condition is met.
@@ -317,6 +369,7 @@ General constraints:
 
 Output format rules:
 - Always start each phase with: “Role: PO” (or TDO/Dev/Reviewer)
+- Always show current execution mode: `Mode: Strict` or `Mode: Auto`
 - End each phase with a short “handoff” section stating what the next role must do.
 - At gates, output only:
   1) what you decided
@@ -324,9 +377,23 @@ Output format rules:
   3) exact files you will touch
   4) acceptance checks
 Then:
-- At hard gates (A, B, E): wait for `approve` or `change: …`.
+- At hard gates (A, B, E): in `Strict` mode wait for `approve` or `change: …`.
+- In `Auto` mode: report hard gates but do not pause between Done Increments unless escalation occurs; require final full-review pause before Epic completion.
 - At soft gates (C, D): only wait for my reply if an escalation condition is met.
   Otherwise, continue automatically to the next role.
+
+### Epic-level Auto mode (optional)
+
+PO may set Epic flag:
+
+> Auto-approve until Epic complete
+
+When this flag is active:
+- AIM continues through Done Increments without manual pause between increments.
+- Gate logic and role sequence still run and must be reported.
+- Escalation rules are unchanged and still force a stop.
+- Before marking the Epic complete, run and present a final full review.
+- Keep transparent trace of all Done Increments generated in Auto mode.
 
 ### PO auto-approve mode for Gate B
 
