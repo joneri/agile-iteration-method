@@ -60,6 +60,12 @@ AIM is meant to solve common problems when using AI for development:
 - Safe fallback: unsupported capability must degrade safely instead of changing the method silently
 
 ## Quick start
+Preferred production paths:
+- Codex:
+  - `[$agile-iteration-method](...) Start new AIM Loop with "EPIC: ..."`
+- Copilot:
+  - `/aim start "EPIC: ..."`
+
 ### Codex mode (manual)
 1. Open this repo in VS Code.
 2. Open Codex chat for the workspace.
@@ -124,6 +130,9 @@ The practical scenario guides are documented in:
 
 Concrete step examples are documented in:
 - `docs/workflow/aim-1.3-interaction-examples.md`
+
+Document map:
+- `docs/workflow/aim-1.3-doc-map.md`
 
 ## Files
 - `AGENTS.md`  

@@ -66,7 +66,7 @@ AIM starts a new Epic when you expected resume behavior.
 ## Validator issues
 
 ### Symptom
-Validation reports `recoverable`, `blocked`, or `contradictory`.
+Validation reports `healthy`, `recoverable`, `blocked`, or `contradictory`.
 
 ### Check
 - compare validator output with `.aim/state.json`
@@ -74,6 +74,7 @@ Validation reports `recoverable`, `blocked`, or `contradictory`.
 - compare current repo-aware instructions with the normalized runtime expectations
 
 ### Expected AIM 1.3 behavior
+- `healthy` means the runtime checkpoint is coherent enough to trust for continuation
 - `recoverable` means the main AIM thread can repair the gap without trust loss
 - `blocked` means explicit user input is required
 - `contradictory` means authoritative artifacts disagree and escalation is required

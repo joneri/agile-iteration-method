@@ -60,6 +60,16 @@ Adapter-specific entrypoints live in:
 - Codex skill packaging outside the repo
 - Copilot `.github/agents/` and `.github/prompts/` files inside the repo
 
+## `.aim` commit and ignore guidance
+
+Recommended default for a normal team repository:
+- ignore live `.aim/` runtime state
+- commit only intentionally curated examples or templates
+
+Recommended default for the official AIM repository:
+- ignore live `.aim/` runtime state
+- publish the contract in docs instead of treating the live working directory as release material
+
 ## Recommended installation flow
 
 ### Codex

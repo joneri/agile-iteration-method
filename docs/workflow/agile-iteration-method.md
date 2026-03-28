@@ -6,7 +6,8 @@
 
 ## Version
 
-This document describes **AIM 1.2**.
+This document describes **AIM 1.3**.
+It retains the AIM 1.2 core method while defining the AIM 1.3 runtime, packaging, and operational additions.
 
 ## Overview
 
@@ -339,7 +340,7 @@ The validator should check:
 ### Result classes
 
 Validator results should be reported using one of these classes:
-- `valid`
+- `healthy`
   - safe to continue
 - `recoverable`
   - safe to repair automatically or with a reported assumption

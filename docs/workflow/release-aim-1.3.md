@@ -1,7 +1,7 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 1.3 release notes
+# AIM 1.3 release and production checklist
 
 ## Release summary
 
@@ -50,13 +50,17 @@ Main outcomes:
 - `docs/features/aim-1.3-migration-support.md`
 - `docs/features/aim-1.3-platform-adapters-and-parity.md`
 
-## Operator checklist
+## Production readiness checklist
 
-1. Confirm `README.md` presents AIM 1.3 as the current model.
-2. Confirm `AGENTS.md` reflects AIM 1.3 runtime ownership and fallback rules.
-3. Confirm the official `.aim` workspace contract is documented.
-4. Confirm bootstrap, resume, validator, migration, and parity docs are present.
-5. Confirm `CHANGELOG.md` includes the AIM 1.3 entry.
+1. Confirm `README.md` presents AIM 1.3 as the current public front door.
+2. Confirm `README.md` and `docs/workflow/quick-start-aim-1.3.md` each show one preferred start path for Codex and one for Copilot.
+3. Confirm `AGENTS.md` and `docs/workflow/agile-iteration-method.md` distinguish retained AIM 1.2 core semantics from AIM 1.3 runtime additions.
+4. Confirm `docs/workflow/aim-1.3-doc-map.md` clearly separates public, reference, and internal material.
+5. Confirm the official `.aim` workspace contract is documented.
+6. Confirm `.aim` commit-ignore guidance is documented for the official AIM repo and normal team repos.
+7. Confirm bootstrap, resume, validator, migration, and parity docs are present and cross-linked.
+8. Confirm support boundaries and planned capability labels are explicit in adapter docs.
+9. Confirm `CHANGELOG.md` includes the AIM 1.3 entry.
 
 ## Suggested publish text (short)
 

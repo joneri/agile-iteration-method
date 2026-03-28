@@ -15,9 +15,9 @@ Natural-language equivalent:
 
 Adapter-specific discovery:
 - Codex:
-  - invoke the `agile-iteration-method` skill and provide the Epic candidate directly
+  - preferred production start is invoking the `agile-iteration-method` skill and providing the Epic candidate directly
 - Copilot:
-  - use the `aim` agent plus `/aim start "EPIC: ..."` when the optional Copilot layer is installed
+  - preferred production start is using the `aim` agent plus `/aim start "EPIC: ..."` when the optional Copilot layer is installed
 
 If you already have a strong Epic candidate:
 - provide it directly

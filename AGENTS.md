@@ -5,7 +5,7 @@
 # AGENTS.md
 
 ## Version
-This file defines **AIM 1.2** operational behavior.
+This file defines **AIM 1.3** operational behavior while retaining the AIM 1.2 core loop semantics.
 
 ## Purpose
 This repo uses “Agile iteration method” with Codex acting in explicit roles and doing structured handoffs. The goal is to avoid bouncing between random theories and instead converge fast with small, shippable increments.
@@ -45,11 +45,11 @@ Optional Epic-doc-first variant:
 2. Ask PO to write the Epic from the desired outcome in that Epic doc.
 3. Continue with normal gates.
 
-Kickoff contract (AIM 1.2):
+Kickoff contract (AIM 1.3):
 1. PO creates the Epic from what should be achieved.
 2. TDO creates the next Done Increment based on that Epic.
 
-## Optional Copilot layer (AIM 1.2)
+## Optional Copilot layer (AIM 1.3)
 
 If your team uses GitHub Copilot custom agents, you can add the optional Copilot layer documented in `docs/workflow/copilot-layer.md`.
 
@@ -276,7 +276,7 @@ Validator scope:
 - ownership-rule violations in shared state or subagent output locations
 
 Validator result classes:
-- `valid`
+- `healthy`
   - runtime state is coherent and safe to continue
 - `recoverable`
   - runtime state has gaps that can be repaired without trust loss
