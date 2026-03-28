@@ -14,6 +14,7 @@ Use these first:
 - `docs/workflow/troubleshoot-aim-1.3.md`
 - `docs/workflow/migrate-aim-1.2-to-1.3.md`
 - `docs/workflow/example-aim-1.3-reference-run.md`
+- `docs/workflow/aim-1.3-interaction-examples.md`
 
 These docs answer:
 - what AIM is
@@ -30,6 +31,8 @@ Use these when deeper behavior or contracts matter:
 - `docs/workflow/agile-iteration-method.md`
 - `docs/features/`
 - `docs/workflow/copilot-layer.md`
+- `.github/agents/`
+- `.github/prompts/`
 
 These docs define:
 - operational rules
@@ -37,6 +40,7 @@ These docs define:
 - adapter boundaries
 - validation and fallback behavior
 - role interaction behavior
+- adapter packaging and entrypoint wiring
 
 ## Internal planning and historical material
 

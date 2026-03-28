@@ -32,7 +32,7 @@ Request creation/update of `docs/features/<name>.md` when behavior or contract c
 
 ## Required output
 
-Write `.aim/increments/review-{increment:03d}.md` including:
+Write `.aim/reviews/review-{increment:03d}.md` including:
 - findings with `file:line`
 - completed and remaining Epic criteria
 - concrete change list

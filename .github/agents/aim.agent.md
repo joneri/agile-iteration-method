@@ -86,36 +86,52 @@ If instructions conflict, escalate.
 
 ## State files
 
-Persist in `.aim/`:
+Official AIM 1.3 runtime artifacts in `.aim/`:
 - `.aim/state.json`
 - `.aim/epic.md`
+- `.aim/increments/`
+- `.aim/decisions/`
+- `.aim/reviews/`
+
+Optional adapter helper artifacts:
 - `.aim/plan.md`
-- `.aim/decision-log.md`
-- `.aim/increments/*.md`
+- `.aim/runtime-context.md`
+
+Authoritative rule:
+- `.aim/state.json` is the shared runtime checkpoint
+- helper files may support Copilot UX, but must not redefine gate, role, increment, or acceptance state
 
 Suggested state shape:
 
 ```json
 {
-  "gate": "A",
-  "status": "awaiting_approval",
-  "epic_id": "epic-YYYYMMDD-HHMMSS",
-  "increment": 1,
-  "execution_mode": "strict",
-  "commit_mode": "optional",
-  "last_updated": "ISO-8601"
+  "aimVersion": "1.3",
+  "mode": "Strict",
+  "epicId": "EPIC-YYYYMMDD-001",
+  "epicStatus": "gate_a_pending",
+  "activeIncrementId": null,
+  "currentRole": "PO",
+  "lastGatePassed": null,
+  "platform": "copilot",
+  "parallelSupport": {
+    "available": false,
+    "enabled": false,
+    "policy": "sequential_fallback"
+  },
+  "commitMode": "optional",
+  "updatedAt": "ISO-8601"
 }
 ```
 
 ## `/aim start` behavior
 
-1. If `.aim/state.json` exists and not complete, show status and stop.
-2. Create `.aim/` and `.aim/increments/`.
-3. Create initial state at Gate A with `commit_mode: optional`.
-   Also set `execution_mode: strict` unless user explicitly chooses auto.
+1. If `.aim/state.json` exists and points to an incomplete Epic, show status and resume that Epic instead of creating a parallel session.
+2. Create missing official runtime artifacts in `.aim/` before continuing.
+3. Create initial state at Gate A with `commitMode: optional`.
+   Also set `mode: Strict` unless user explicitly chooses `Auto`.
 4. Run `aim-planner` in `mode: PO` to create `.aim/epic.md`.
-5. Run `aim-planner` in `mode: TDO` to draft `.aim/plan.md` for Increment 1.
-6. Present Gate A only (Epic approval). Do not auto-approve Gate B.
+5. Run `aim-planner` in `mode: TDO` to draft `.aim/plan.md` only as an optional helper for the next increment.
+6. Present Gate A only (Epic approval). Do not auto-approve Gate B unless PO policy explicitly allows it.
 
 Epic candidate rule:
 - if the user provides a valid Epic candidate, accept it with light normalization instead of forcing a full rewrite
@@ -124,36 +140,35 @@ Epic candidate rule:
 
 ## `/aim continue` behavior
 
-Route by `state.gate` and user intent (`approve` or `change:`):
+Route by the current AIM checkpoint and user intent (`approve`, `change:`, or explicit command intent):
 
-### Gate A (`awaiting_approval`)
+### Gate A (`gate_a_pending`)
 
 - If user says `approve`:
-  - set gate to `B`, status `awaiting_approval`
-  - present `.aim/plan.md` + Gate B checklist
-  - stop and wait
+  - set the runtime checkpoint to Gate B pending
+  - present the next single Done Increment plan
 - If `change:`:
   - rerun `aim-planner` in PO mode and re-present Gate A
 
-### Gate B (`awaiting_approval`)
+### Gate B (`gate_b_pending`)
 
 - If user says `approve`:
-  - append decision log entry for Gate B approval
+  - record the increment decision in `.aim/decisions/`
   - continue to Gate C -> Gate D -> Gate E automatically
 - If `change:`:
   - rerun `aim-planner` in TDO mode and re-present Gate B
 
-### Gate C (`building`)
+### Gate C (`increment_in_progress`)
 
 - Run `aim-builder` and write `.aim/increments/{increment:03d}-wip.md`
 - Then proceed to Gate D
 
-### Gate D (`reviewing`)
+### Gate D (`review_in_progress`)
 
-- Run `aim-reviewer` and write `.aim/increments/review-{increment:03d}.md`
+- Run `aim-reviewer` and write `.aim/reviews/review-{increment:03d}.md`
 - Then proceed to Gate E
 
-### Gate E (`awaiting_approval`)
+### Gate E (`po_approval_pending`)
 
 - If `approve`:
   - mark increment done
@@ -229,7 +244,7 @@ Validation results should be described using the same runtime classes as AIM 1.3
 
 ## Commit policy (optional)
 
-Do not enforce commits unless `commit_mode` is `required`.
+Do not enforce commits unless `commitMode` is `required`.
 
 - `required`: propose Conventional Commit, confirm with user, then commit before next increment
 - `optional`: ask user whether to commit now; do not block continuation

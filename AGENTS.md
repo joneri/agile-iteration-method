@@ -558,11 +558,14 @@ PO → TDO → Dev → Reviewer → TDO → PO.
 
 Gates (A–E) are **mandatory reporting checkpoints**, not mandatory pause points.
 
-At each Gate, the agent must clearly report:
-1) what you decided  
-2) what will change  
-3) exact files you will touch  
-4) acceptance checks  
+At each hard gate, the agent must make these four things clear conceptually:
+1) what decision was made or is being proposed  
+2) what will change or was changed  
+3) exact files touched or planned  
+4) how the user should evaluate the step  
+
+These are conceptual minimums, not mandatory visible section headings.
+Role-specific response shape takes precedence over any older boilerplate interpretation.
 
 ### Default behavior
 
@@ -683,6 +686,7 @@ Then:
 
 Visible AIM responses must be step-aware.
 They must not all reuse the same approval-oriented template.
+This role-specific contract overrides any older reading that every gate should use the same visible section layout.
 
 Required role/step patterns:
 - `PO` at Gate A:
@@ -832,6 +836,8 @@ Constraints:
 - Must not add new dependencies: yes/no
 
 ## Suggested acceptance checks template
+This is a helper checklist pattern, not a required visible response template.
+
 - API: returns expected series points for a known range.
 - Frontend: chart renders and includes expected dates.
 - No regression: 1y, 2y, 1w behave consistently.

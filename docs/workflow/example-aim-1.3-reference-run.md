@@ -33,8 +33,8 @@ Runtime assumptions:
 
 1. Open the repo in VS Code.
 2. Open Codex chat for the workspace.
-3. Start AIM from the repo instructions.
-4. Provide the Epic and choose `Mode: Strict`.
+3. Invoke `[$agile-iteration-method](...)` and provide the Epic candidate directly.
+4. Make mode explicit, for example `Mode: Strict`.
 
 Expected behavior:
 - AIM detects repo root
@@ -80,12 +80,12 @@ If the checkpoint is contradictory:
 ## Step 4: Compare Codex and Copilot
 
 Codex reference:
-- uses the repo instructions and the available Codex runtime/tool surface
+- uses the AIM skill together with the repo instructions and the available Codex runtime/tool surface
 - may expose bounded parallel capability where runtime support exists
 
 Copilot reference:
 - uses `.github/agents/aim*.agent.md` and `.github/prompts/` as interface packaging
-- uses `/aim start` and `/aim continue` as entry helpers
+- uses the `aim` agent plus `/aim start` and `/aim continue` as entry helpers
 
 Shared behavior:
 - same conceptual bootstrap order
@@ -103,6 +103,9 @@ Best files to inspect:
 - `AGENTS.md`
 - `.aim/state.json`
 - `.aim/epic.md`
+- the newest file in `.aim/increments/`
+- the newest file in `.aim/reviews/`
+- the newest file in `.aim/decisions/`
 - `docs/workflow/agile-iteration-method.md`
 - `docs/features/aim-1.3-runtime-workspace.md`
 - `docs/features/aim-1.3-bootstrap-and-resume.md`
@@ -112,6 +115,7 @@ Best files to inspect:
 What “good” looks like:
 - one active authoritative checkpoint
 - gate and role align with increment, review, and decision artifacts
+- helper files, if present, remain clearly secondary to the official runtime artifacts
 - Codex and Copilot docs describe the same conceptual flow
 - the visible checkpoints also make clear who is speaking, what decision is needed now, and what happens next
 

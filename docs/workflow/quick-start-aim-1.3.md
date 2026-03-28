@@ -7,17 +7,17 @@ Use this guide if you want the shortest correct path into AIM.
 
 ## One obvious way to start
 
-Preferred start:
-- `/aim start "EPIC: ..."`
-
-Natural-language equivalent:
-- `Start working according to AIM`
-
-Adapter-specific discovery:
+Preferred production starts:
 - Codex:
-  - preferred production start is invoking the `agile-iteration-method` skill and providing the Epic candidate directly
+  - invoke `[$agile-iteration-method](...)` and provide `EPIC: ...`
 - Copilot:
-  - preferred production start is using the `aim` agent plus `/aim start "EPIC: ..."` when the optional Copilot layer is installed
+  - select the `aim` agent and run `/aim start "EPIC: ..."`
+
+Secondary starts:
+- Codex:
+  - a natural-language AIM start is acceptable when the intent is explicit
+- Copilot:
+  - `Install AIM` or `Start working according to AIM` remain valid when the optional Copilot layer is installed
 
 If you already have a strong Epic candidate:
 - provide it directly
@@ -106,7 +106,7 @@ If you provide increment ideas up front:
 - `/aim upgrade 1.2-to-1.3`
 
 If slash commands are not available in the current adapter:
-- use the equivalent natural-language intent
+- use the documented secondary natural-language intent
 - or use the relevant workflow doc directly
 
 Next guide:

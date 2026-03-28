@@ -26,7 +26,10 @@ Do not define a planned list of future increments.
 
 ## Mode: TDO
 
-Create/update `.aim/plan.md` for exactly one next Done Increment with:
+Create/update `.aim/plan.md` only as an optional helper artifact for exactly one next Done Increment.
+It must not become the authoritative owner of gate or acceptance state.
+
+The increment plan should make clear:
 - increment scope and limits
 - files to touch
 - risks

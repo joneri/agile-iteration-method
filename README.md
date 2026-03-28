@@ -62,17 +62,25 @@ AIM is meant to solve common problems when using AI for development:
 ## Quick start
 Preferred production paths:
 - Codex:
-  - `[$agile-iteration-method](...) Start new AIM Loop with "EPIC: ..."`
+  - invoke `[$agile-iteration-method](...)` and provide `EPIC: ...` plus `Mode: Strict` or `Mode: Auto`
 - Copilot:
-  - `/aim start "EPIC: ..."`
+  - select the `aim` agent and run `/aim start "EPIC: ..."` with `Mode: Strict` or `Mode: Auto`
 
-### Codex mode (manual)
+Secondary paths:
+- Codex:
+  - natural-language AIM start is acceptable when the AIM intent is explicit
+- Copilot:
+  - natural-language starts such as `Install AIM` or `Start working according to AIM` remain supported when the optional layer is installed
+
+### Codex production path
 1. Open this repo in VS Code.
 2. Open Codex chat for the workspace.
-3. Paste the “Master prompt” from `AGENTS.md` once.
-4. Start with `EPIC: <desired outcome>`, then paste your problem using the short prompt in `AGENTS.md`.
-5. Choose mode: `Strict` (default) or `Auto`.
-6. Reply with `approve` or `change: ...` at gates.
+3. Invoke `[$agile-iteration-method](...)` and provide `EPIC: <desired outcome>`.
+4. Set `Mode: Strict` (default) or `Mode: Auto`.
+5. Let AIM create or resume `.aim` and enter Gate A.
+
+Advanced manual fallback:
+- use the `AGENTS.md` master prompt directly only when the skill entrypoint is unavailable
 
 Preferred quick-start reference:
 - `docs/workflow/quick-start-aim-1.3.md`
@@ -116,11 +124,11 @@ Preferred quick-start reference:
 
 Use this mental model:
 - Codex:
-  - invoke the AIM skill and provide `EPIC: ...`
-  - natural language start is also valid when it clearly expresses AIM intent
+  - preferred production path is invoking the AIM skill and providing `EPIC: ...`
+  - natural-language start is a secondary fallback when AIM intent is explicit
 - Copilot:
-  - use `/aim start "EPIC: ..."` when slash commands are available
-  - use `Install AIM` or `Start working according to AIM` when using the optional Copilot layer
+  - preferred production path is selecting `aim` and using `/aim start "EPIC: ..."`
+  - natural-language starts are secondary fallbacks in the optional Copilot layer
 
 The shortest operator path is documented in:
 - `docs/workflow/quick-start-aim-1.3.md`

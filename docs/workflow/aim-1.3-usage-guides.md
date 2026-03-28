@@ -11,8 +11,10 @@ Use when:
 - the user already has a strong Epic candidate
 
 Recommended start:
-- `/aim start "EPIC: ..."`
-- or the Codex AIM skill with the Epic candidate inline
+- Codex:
+  - invoke `[$agile-iteration-method](...)` with the Epic candidate inline
+- Copilot:
+  - select `aim` and run `/aim start "EPIC: ..."`
 
 Expected AIM behavior:
 - `PO` validates the Epic candidate
@@ -146,7 +148,7 @@ If you are unsure where to begin:
 
 Adapter reminders:
 - Codex discoverability usually starts with the AIM skill and repo docs
-- Copilot discoverability usually starts with slash commands, prompt files, and the `aim` agent
+- Copilot discoverability usually starts with the `aim` agent and the documented slash-command surface
 
 ## 9. Know what to do at each checkpoint
 

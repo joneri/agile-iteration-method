@@ -58,9 +58,11 @@ Main outcomes:
 4. Confirm `docs/workflow/aim-1.3-doc-map.md` clearly separates public, reference, and internal material.
 5. Confirm the official `.aim` workspace contract is documented.
 6. Confirm `.aim` commit-ignore guidance is documented for the official AIM repo and normal team repos.
-7. Confirm bootstrap, resume, validator, migration, and parity docs are present and cross-linked.
-8. Confirm support boundaries and planned capability labels are explicit in adapter docs.
-9. Confirm `CHANGELOG.md` includes the AIM 1.3 entry.
+7. Confirm role-specific interaction rules explicitly override any older generic visible gate-template interpretation.
+8. Confirm bootstrap, resume, validator, migration, and parity docs are present and cross-linked.
+9. Confirm support boundaries, planned capability labels, and out-of-contract behavior are explicit in adapter docs.
+10. Confirm Copilot packaging describes official `.aim` artifacts as authoritative and helper files as secondary.
+11. Confirm `CHANGELOG.md` includes the AIM 1.3 entry.
 
 ## Suggested publish text (short)
 

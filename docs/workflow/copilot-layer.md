@@ -110,26 +110,24 @@ These are configured in:
 
 ## Quick start
 
-### Option A: natural-language start
-In Copilot Chat, ask:
-- `Install AIM`
-- `Start working according to AIM`
-- `Starta en AIM-loop med denna EPIC: ...`
-
-Then provide:
-- `EPIC: ...` (desired outcome in one line)
-- `Mode: Strict` or `Mode: Auto`
-
-### Option B: command start
+### Preferred production path
 1. Select `aim` in the Copilot agent dropdown.
-2. Run:
-   - `/aim start "EPIC: ..."`
+2. Run `/aim start "EPIC: ..."`
+3. Make mode explicit:
+   - `Mode: Strict`
+   - `Mode: Auto`
 
 Behavior:
 - if there is no active incomplete Epic, initialize AIM and present Gate A
 - if an active incomplete Epic already exists in `.aim/state.json`, show status and resume that Epic instead of creating a parallel session
 
-### Option C: Epic-doc-first start
+### Secondary starts
+Natural-language starts remain valid when the optional layer is installed:
+- `Install AIM`
+- `Start working according to AIM`
+- `Starta en AIM-loop med denna EPIC: ...`
+
+Epic-doc-first start is also supported as an advanced path:
 If you want to start from desired outcome and trust rules first, ask:
 - `Install AIM and start from Epic-doc-first mode`
 
@@ -138,7 +136,7 @@ Then provide:
 - trust rules
 - acceptance criteria
 
-### Option D: migration start
+Migration start remains a secondary specialized path:
 - Run `/migrate-aim-1.0-to-1.1`.
 - Or use `docs/workflow/migrate-aim-1.0-to-1.1.md` in chat.
 - Run `/migrate-aim-1.1-to-1.2`.
@@ -146,7 +144,7 @@ Then provide:
 - AIM 1.2 to AIM 1.3 migration is currently documented in `docs/workflow/migrate-aim-1.2-to-1.3.md`.
 - A dedicated Copilot prompt file is packaged as `.github/prompts/upgrade-aim-1.2-to-1.3.prompt.md`.
 
-### Option E: help and diagnostics
+Help and diagnostics entrypoints:
 Use these commands when the user needs orientation instead of immediate execution:
 - `/aim help`
 - `/aim status`
@@ -169,6 +167,7 @@ Use these parity labels when comparing Copilot with Codex:
 - `codex_only`
 - `copilot_only`
 - `planned`
+- `not_in_release_contract`
 
 Current Copilot-layer interpretation:
 - shared:
@@ -182,6 +181,8 @@ Current Copilot-layer interpretation:
   - template rendering and prompt packaging
 - planned:
   - bounded parallel subagent behavior matching Codex runtime capability
+
+Anything classified as `planned` or `not_in_release_contract` must not be presented as guaranteed production support.
 
 Copilot must not treat `planned` as silently supported.
 It must preserve the policy intent and fall back safely.
@@ -222,8 +223,8 @@ then:
 If behavior is wrong, check in this order:
 1. `.aim/state.json` gate + status
 2. `.aim/epic.md` acceptance criteria
-3. `.aim/plan.md` increment scope
-4. `.aim/increments/*.md` implementation and review outputs
+3. the newest live increment, review, and decision artifacts
+4. optional helper files such as `.aim/plan.md` only after the official artifacts are checked
 
 Shared startup checks:
 - confirm both Codex and Copilot docs describe the same conceptual startup order
@@ -237,6 +238,10 @@ Shared diagnostics checks:
 - confirm `/aim config` names the source of effective rules instead of implying hidden defaults
 - confirm `/aim validate` uses the shared validator result classes: healthy, recoverable, blocked, contradictory
 - confirm install and upgrade prompts match the files actually packaged in `.github/prompts/`
+
+State contract checks:
+- confirm official runtime artifacts are `.aim/state.json`, `.aim/epic.md`, `.aim/increments/`, `.aim/decisions/`, and `.aim/reviews/`
+- confirm helper files such as `.aim/plan.md` are treated as optional Copilot aids, not as authoritative gate state
 
 Most common failure:
 - Gate A approval not transitioning to Gate B plan presentation.

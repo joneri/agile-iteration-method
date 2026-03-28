@@ -6,6 +6,7 @@
 Use this document to see what the most important AIM checkpoints should feel like.
 
 These are examples of interaction shape, not rigid copy-and-paste templates.
+The required gate information is conceptual; the examples show how role-specific wording can satisfy it without forcing one visible section layout.
 
 ## 1. `PO` at Gate A
 
@@ -19,6 +20,7 @@ Good shape:
 - clear decision now:
   - approve Epic
   - request Epic changes
+- clear next step if the Epic is approved
 
 ## 2. `TDO` before development
 
@@ -32,6 +34,7 @@ Good shape:
 - clear decision now:
   - approve increment
   - adjust increment
+- clear next step if the increment is approved
 
 ## 3. `Dev` implementation update
 
@@ -75,6 +78,7 @@ Good shape:
 - clear decision now:
   - accept increment
   - request adjustment
+- clear next step after either decision
 
 ## 6. `PO` after accepted increment
 
@@ -112,6 +116,7 @@ Prefer:
 Avoid:
 - unclear `you`
 - repeating the same section headers for every role when the step does not need them
+- turning the conceptual gate minimums into a universal visible template
 
 ## Related documents
 - `docs/features/aim-1.3-role-specific-interaction-model.md`
