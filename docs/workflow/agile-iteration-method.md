@@ -918,6 +918,9 @@ At minimum, the matrix must classify:
 
 AIM 1.3 allows controlled parallelism only when the runtime supports it and repo-aware policy permits it.
 
+Controlled parallelism is one of the practical upgrades in AIM 1.3.
+It allows AIM to speed up analysis, discovery and verification in the right situations without weakening central ownership of shared state, gates or acceptance decisions.
+
 The safety rule is simple:
 - only the main AIM thread may advance gates or change shared runtime state
 

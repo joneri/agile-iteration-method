@@ -37,7 +37,7 @@ The core loop stays stable. The runtime becomes explicit.
 - `.aim/state.json` is the durable checkpoint for start, resume, and gate tracking
 - Codex and Copilot can share one conceptual runtime contract
 - adapter limitations are treated as limitations, not silent method drift
-- controlled parallelism is allowed only when runtime support and repo policy allow it
+- Controlled parallelism lets AIM use bounded subagents for faster analysis, discovery and verification when the runtime and repo policy allow it, while keeping shared state, gate progression and acceptance centrally owned.
 
 ## Why teams care now
 
@@ -47,6 +47,8 @@ This release makes AIM much easier to trust, explain, and adopt:
 - you can use Codex and Copilot with one shared conceptual model
 - you can delegate bounded work without losing ownership of gates or acceptance
 - you can install AIM into a real repo without turning the repo into an experiment
+- Faster where it helps:
+  AIM can use bounded subagents for analysis, discovery and verification in complex repos, while still keeping one central runtime state and one clear decision path.
 
 ## From Prompt Pattern To Runtime Model
 
