@@ -54,6 +54,7 @@ AIM is meant to solve common problems when using AI for development:
 - Increment planning: TDO writes the next Done Increment from that Epic
 - Done Increments: each increment is shippable and can be evaluated end to end
 - Gates: A (Epic), B (increment scope), E (acceptance) are the only approvals that matter
+- Interaction clarity: each visible step should make the speaker, decision, and next step obvious
 - Evidence over guessing: prove contracts with input/output, not opinions
 - Runtime transparency: `.aim` is inspectable and `state.json` is authoritative for resume
 - Safe fallback: unsupported capability must degrade safely instead of changing the method silently
@@ -98,7 +99,9 @@ Preferred quick-start reference:
 - Inspect current runtime state in `.aim/state.json`.
 - Inspect active Epic intent in `.aim/epic.md`.
 - Use `docs/features/aim-1.3-command-surface-and-onboarding.md` for the AIM 1.3.x command surface and Epic candidate model.
+- Use `docs/features/aim-1.3-role-specific-interaction-model.md` for the role-specific interaction contract.
 - Use `docs/workflow/aim-1.3-usage-guides.md` for practical frontend, documentation, reviewer-tool, resume, upgrade, and parallel-assistance workflows.
+- Use `docs/workflow/aim-1.3-interaction-examples.md` for concrete PO/TDO/Dev/Reviewer checkpoint examples.
 - Use `docs/workflow/example-aim-1.3-reference-run.md` for one concrete AIM 1.3 reference flow across Codex and Copilot.
 - Use `docs/workflow/troubleshoot-aim-1.3.md` for startup, resume, validator, parity, and fallback issues.
 - Use `docs/workflow/release-aim-1.3.md` for publish-ready AIM 1.3 release guidance.
@@ -118,6 +121,9 @@ The shortest operator path is documented in:
 
 The practical scenario guides are documented in:
 - `docs/workflow/aim-1.3-usage-guides.md`
+
+Concrete step examples are documented in:
+- `docs/workflow/aim-1.3-interaction-examples.md`
 
 ## Files
 - `AGENTS.md`  

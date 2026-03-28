@@ -60,9 +60,10 @@ Kickoff contract:
 5. A **Developer (Dev)** implements exactly that Done Increment.
 6. A **Reviewer** checks correctness, edge cases and technical risk.
 7. The **TDO** validates the increment against the Epic and the increment acceptance criteria.
-8. The **PO** accepts the increment or provides feedback.
-9. Feedback is carried into the next Done Increment.
-10. The loop repeats until the Epic is complete.
+8. The **TDO** presents the increment as a demo, test, and feedback checkpoint and asks whether the increment should be accepted or adjusted.
+9. The **PO** decides whether the Epic should continue, close, or split new scope into a separate Epic.
+10. Feedback is carried into the next Done Increment when the Epic continues.
+11. The loop repeats until the Epic is complete.
 
 In short, the PO owns the Epic and the TDO owns the Done Increment.
 
@@ -484,6 +485,83 @@ During delegated execution:
 Delegated execution accelerates delivery,
 but **never replaces PO ownership of value or acceptance**.
 
+## Interaction model
+
+AIM 1.3.x replaces the generic visible approval template with a role-specific, step-specific interaction model.
+
+Core method stays the same:
+- role order stays the same
+- gate order stays the same
+- one active Done Increment at a time stays the same
+
+What changes is the visible response shape.
+Each role should sound like that role and should ask only for the decision that belongs at that step.
+
+### Role-specific response patterns
+
+- `PO` at Gate A:
+  - frames the Epic
+  - explains why the Epic exists and what is being approved now
+- `TDO` before development:
+  - proposes the next single Done Increment
+  - explains why this is the right slice now
+- `Dev`:
+  - reports what was implemented and verified
+  - defaults to an informational handoff
+- `Reviewer`:
+  - reports findings, risk, and verification status
+  - defaults to an informational handoff
+- `TDO` after review:
+  - turns implementation and review into a practical demo, test, and feedback checkpoint
+- `PO` after accepted increment:
+  - decides whether the Epic continues, closes, or should split new scope into a new Epic
+
+### Step-specific approval semantics
+
+Different approvals mean different things:
+- Epic approval:
+  - approve Epic framing and scope
+- increment approval:
+  - approve the next single Done Increment
+- increment acceptance:
+  - accept the demonstrated increment or request adjustment
+- Epic continuation:
+  - continue the Epic, close it, or separate new scope
+
+Dev and Reviewer should not feel like approval gates in normal flows.
+They provide evidence and readiness signals unless escalation is required.
+
+### Language clarity
+
+Visible responses should:
+- make the current speaker explicit
+- explain what happened in the previous step when that context matters
+- explain what the user is expected to do now
+- explain what AIM will do next if the user continues
+
+Prefer explicit actors over ambiguous pronouns when clarity would otherwise suffer.
+Use `you` only when the meaning is obvious.
+
+### Response minimalism
+
+Do not force every response into the same section list.
+Include only what is necessary for the current step.
+
+For example:
+- `Dev` usually needs:
+  - what changed
+  - what was verified
+  - any open risk or escalation
+- `Reviewer` usually needs:
+  - findings
+  - what is already verified
+  - any recommended user test
+- post-review `TDO` usually needs:
+  - practical summary of the increment
+  - what was already verified
+  - how the user can test or demo it now
+  - what decision is needed next
+
 ## Canonical roles and aliases
 
 Canonical AIM role names are:
@@ -508,7 +586,8 @@ The PO owns the Epic.
 The PO:
 - defines the Epic and its user-visible value
 - sets scope and non-goals
-- accepts or rejects Done Increments
+- decides whether the Epic continues or closes after accepted increments
+- updates Epic-level completion markers only when outcomes are demonstrably fulfilled
 - decides when the Epic is complete
 
 The PO does not design technical solutions or break work into increments.
@@ -669,6 +748,10 @@ Stop and ask for input if:
 - there is risk to trust, data correctness or user-facing meaning
 
 Approval is only semantically meaningful at Gate A, Gate B and Gate E.
+
+At Gate E, the visible interaction should still distinguish two decisions:
+- increment acceptance after TDO demo, test, and feedback framing
+- Epic continuation or closure after the increment is accepted
 
 ---
 

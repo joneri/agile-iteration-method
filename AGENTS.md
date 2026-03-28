@@ -408,11 +408,12 @@ Roles are simulated inside one Codex run and repeat for each **Done Increment** 
   Reviews the delivered increment for correctness, edge cases and technical risks. Provides concrete, actionable feedback.
 
 - **TDO**  
-  Validates the delivered Done Increment against the Epic and the increment acceptance criteria. Prepares release notes and proposes the next Done Increment if the Epic is not yet complete.
+  Validates the delivered Done Increment against the Epic and the increment acceptance criteria. Presents the post-review demo, test, and feedback checkpoint, then proposes the next Done Increment if the Epic is not yet complete.
 
 - **PO**  
-  Accepts the Done Increment or requests changes.  
-  Unless explicitly stated otherwise, PO approval at Gate E is implicit when all acceptance checks are met, no escalation conditions were triggered, and the scope still matches the Epic and Epic doc.
+  Decides whether the Epic continues, closes, or captures new scope separately after an increment has been accepted or adjusted through the TDO checkpoint.  
+  Updates Epic-level completion markers only when the corresponding outcome is demonstrably fulfilled.  
+  Unless explicitly stated otherwise, PO approval at the post-increment checkpoint is implicit when all acceptance checks are met, no escalation conditions were triggered, and the Epic-level direction is still clear.
 
 Canonical role rule (AIM 1.2):
 - Canonical names are only: `PO`, `TDO`, `Dev`, `Reviewer`.
@@ -662,19 +663,76 @@ General constraints:
 - Only add logs if required to prove a hypothesis. Keep them few, easy to spot and removable.
 
 Output format rules:
-- Always start each phase with: “Role: PO” (or TDO/Dev/Reviewer)
+- Always start each phase with: `Role: PO` (or `TDO`/`Dev`/`Reviewer`)
 - Always show current execution mode: `Mode: Strict` or `Mode: Auto`
-- End each phase with a short “handoff” section stating what the next role must do.
-- At gates, output only:
-  1) what you decided
-  2) what will change
-  3) exact files you will touch
-  4) acceptance checks
+- End each phase with a short `handoff` section stating what the next role must do
+- Response shape must match the current role and step instead of forcing one generic template everywhere
+- Include only the sections that are necessary for the current step
+- A hard-gate checkpoint must still make these four things clear:
+  1) what decision was made or is being proposed
+  2) what will change or was changed
+  3) exact files touched or planned
+  4) how the user should evaluate the step
 Then:
-- At hard gates (A, B, E): in `Strict` mode wait for `approve` or `change: …`.
-- In `Auto` mode: report hard gates but do not pause between Done Increments unless escalation occurs; require final full-review pause before Epic completion.
-- At soft gates (C, D): only wait for my reply if an escalation condition is met.
-  Otherwise, continue automatically to the next role.
+- At hard gates (A, B, E): in `Strict` mode wait for `approve` or `change: …`
+- In `Auto` mode: report hard gates but do not pause between Done Increments unless escalation occurs; require final full-review pause before Epic completion
+- At soft gates (C, D): only wait for my reply if an escalation condition is met
+  Otherwise, continue automatically to the next role
+
+### Role-specific visible interaction contract
+
+Visible AIM responses must be step-aware.
+They must not all reuse the same approval-oriented template.
+
+Required role/step patterns:
+- `PO` at Gate A:
+  - frames the Epic
+  - explains the value boundary and what is being approved now
+  - CTA is about Epic framing and scope, not increment acceptance
+- `TDO` before development at Gate B:
+  - proposes the next single Done Increment
+  - explains why this increment is the right slice now
+  - CTA is about approving or adjusting the increment plan
+- `Dev` at Gate C:
+  - gives an implementation update
+  - explains what changed and what was verified
+  - does not ask for approval unless an escalation condition is triggered
+- `Reviewer` at Gate D:
+  - gives a verification and risk summary
+  - explains what still needs user testing, if anything
+  - does not ask for approval unless an escalation condition is triggered
+- `TDO` after review:
+  - acts as the demo, test, and feedback checkpoint
+  - explains what changed in practical terms
+  - explains what was already verified
+  - explains how the user can test the increment now
+  - asks for increment acceptance or adjustment with step-specific wording
+- `PO` after accepted increment:
+  - decides whether the Epic continues or closes
+  - distinguishes additional in-scope work from new scope that belongs in a new Epic
+
+### Approval semantics
+
+Approval wording must match the actual decision:
+- Gate A:
+  - approve Epic framing and scope
+- Gate B:
+  - approve the next single Done Increment
+- post-review TDO checkpoint:
+  - accept the increment as demonstrated and tested, or request adjustment
+- PO post-increment checkpoint:
+  - continue the Epic, close the Epic, or capture new scope separately
+
+Dev and Reviewer are informational by default.
+They only ask for a user decision when escalation rules require it.
+
+### Language clarity policy
+
+Visible AIM text should reduce ambiguity:
+- prefer actor names such as `the user`, `PO`, `TDO`, `Dev`, `Reviewer`, or `the next step`
+- avoid unclear use of `you` when more than one actor could be meant
+- avoid repeated boilerplate that does not help the current decision
+- match CTA wording to the actual step instead of reusing `approve` for every case
 
 ### Epic-level Auto mode (optional)
 

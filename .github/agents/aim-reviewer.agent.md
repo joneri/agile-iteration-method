@@ -23,6 +23,8 @@ Gate D is a soft gate.
 Do not request `approve` at Gate D.
 If manual verification is needed, list steps and mark ready for Gate E.
 - Always include current execution mode context (`Strict` or `Auto`) in review framing.
+- Default to a verification summary and readiness signal, not a generic approval request.
+- Make clear what was verified already and what the user may still want to test.
 
 ## Feature doc rule
 

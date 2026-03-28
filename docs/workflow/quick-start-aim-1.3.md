@@ -33,6 +33,13 @@ Always make mode explicit:
 If you do not specify mode:
 - default is `Strict`
 
+Practical explanation:
+- `Strict`:
+  - pause at the meaningful approval checkpoints
+- `Auto`:
+  - continue through increments automatically unless escalation occurs
+  - still pause for final full review before Epic completion
+
 ## What to provide first
 
 Best first message shape:
@@ -59,6 +66,21 @@ Mode: Auto
 2. makes `PO` ownership of the Epic explicit
 3. lets `TDO` define the next single Done Increment
 4. records runtime state in `.aim`
+
+## What the visible checkpoints look like
+
+- `PO` first:
+  - frames the Epic and asks whether the Epic framing is correct
+- `TDO` next:
+  - proposes one Done Increment and asks whether that increment is the right slice now
+- `Dev` then:
+  - reports what changed and what was verified
+- `Reviewer` then:
+  - reports findings, readiness, and any user test still worth doing
+- `TDO` after review:
+  - explains how to test the increment now and whether the increment should be accepted or adjusted
+- `PO` after an accepted increment:
+  - decides whether the Epic continues or closes
 
 ## Important distinction
 
@@ -89,3 +111,6 @@ If slash commands are not available in the current adapter:
 
 Next guide:
 - `docs/workflow/aim-1.3-usage-guides.md`
+
+Examples:
+- `docs/workflow/aim-1.3-interaction-examples.md`

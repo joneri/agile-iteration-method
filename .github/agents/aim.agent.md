@@ -82,6 +82,7 @@ If instructions conflict, escalate.
 - Gate D must not ask for approval
 - Mode must be visible in gate outputs: `Strict` or `Auto`
 - Canonical role names are `PO`, `TDO`, `Dev`, `Reviewer`
+- Visible interaction should be role-specific and step-specific, not one generic approval template
 
 ## State files
 
@@ -169,6 +170,25 @@ Execution-mode behavior:
   - report hard gates but do not pause between Done Increments unless escalation occurs
   - require final full review before marking Epic complete
   - keep transparent trace of all Done Increments
+
+## Interaction model expectations
+
+The orchestrator should preserve one explicit speaker per step.
+
+- `PO` at Gate A:
+  - frame the Epic and ask for Epic approval
+- `TDO` before development:
+  - frame the next single Done Increment and ask for increment approval
+- `Dev`:
+  - report implementation and verification progress without asking for approval by default
+- `Reviewer`:
+  - report findings, risk, and readiness without asking for approval by default
+- `TDO` after review:
+  - explain demo, test, feedback, and increment acceptance next
+- `PO` after accepted increment:
+  - decide whether the Epic continues or closes
+
+CTA wording should match the actual decision instead of reusing one generic `approve` everywhere.
 
 ## Status, config, and validation expectations
 

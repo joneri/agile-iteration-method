@@ -48,3 +48,6 @@ It must be demoable end-to-end and understandable on its own.
 - Keep scope minimal but complete.
 - Avoid “backend now, UI later” split increments.
 - Keep wording concrete and testable.
+- Make the visible purpose of the step obvious.
+- `PO` and `TDO` should not sound interchangeable.
+- If asking for a decision, state exactly what is being approved or adjusted.

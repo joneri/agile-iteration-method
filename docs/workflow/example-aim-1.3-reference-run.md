@@ -54,6 +54,12 @@ After Gate A and Gate B approval:
 - soft gates do not require extra approval unless escalation conditions are met
 - `.aim/state.json` reflects the active gate and role
 
+Visible interaction expectation:
+- `Dev` reports implementation and verification progress
+- `Reviewer` reports findings and readiness
+- post-review `TDO` explains how to test the increment and whether it should be accepted or adjusted
+- `PO` then decides whether the Epic continues or closes
+
 Inspect during progress:
 - `.aim/increments/`
 - `.aim/reviews/`
@@ -107,6 +113,7 @@ What “good” looks like:
 - one active authoritative checkpoint
 - gate and role align with increment, review, and decision artifacts
 - Codex and Copilot docs describe the same conceptual flow
+- the visible checkpoints also make clear who is speaking, what decision is needed now, and what happens next
 
 ## Step 6: Handle failure cases
 
@@ -130,6 +137,7 @@ If bounded parallel capability is missing:
 - `README.md`
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
+- `docs/workflow/aim-1.3-interaction-examples.md`
 - `docs/workflow/copilot-layer.md`
 - `docs/workflow/troubleshoot-aim-1.3.md`
 - `docs/features/aim-1.3-runtime-workspace.md`

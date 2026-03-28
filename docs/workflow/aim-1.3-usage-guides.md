@@ -20,6 +20,10 @@ Expected AIM behavior:
 - if increment ideas are included, AIM preserves them as planning notes
 - `TDO` still defines the next single Done Increment
 
+What the user should expect next:
+- `TDO` will propose one increment, not a full increment list
+- the visible CTA should be about approving or adjusting that increment
+
 ## 2. Frontend implementation with reviewer verification
 
 Use when:
@@ -30,7 +34,8 @@ Recommended flow:
 2. let `TDO` define one end-to-end Done Increment
 3. implement within the approved increment scope
 4. let `Reviewer` specify browser or manual verification steps when needed
-5. keep Gate D soft; final acceptance still belongs at Gate E
+5. use the post-review `TDO` checkpoint to explain what changed, what was already verified, and how the user can test now
+6. let `PO` decide whether the Epic continues after the increment is accepted
 
 Reviewer-tool examples:
 - Playwright CLI when the repo prefers terminal-driven browser checks
@@ -45,7 +50,8 @@ Recommended flow:
 1. write the Epic in user-facing terms
 2. let `TDO` choose one documentation slice that is understandable on its own
 3. keep each Done Increment scoped to one coherent contract or operator concern
-4. review for contradictions, drift, and overclaiming
+4. let `Dev` and `Reviewer` use informational handoffs, not generic approval asks
+5. use the post-review `TDO` checkpoint to invite practical doc review or testing when useful
 
 Good targets:
 - onboarding
@@ -68,6 +74,9 @@ Expected AIM behavior:
 - do not silently create a second active Epic
 - validate contradictions before continuing
 
+Visible interaction reminder:
+- resumed steps should still sound like the current role and step, not like a generic restart message
+
 ## 5. Configure reviewer tooling
 
 Use when:
@@ -88,6 +97,9 @@ The effective rule should be inspectable through:
 - `.github/agents/aim*.agent.md`
 - `/aim config`
 
+Visible interaction reminder:
+- `Reviewer` should describe the configured verification expectations without sounding like a final approval gate
+
 ## 6. Upgrade to a new AIM version
 
 Use when:
@@ -102,6 +114,9 @@ Expected result:
 - official `.aim` workspace handling
 - explicit command-surface expectations
 - adapter differences documented as adapter differences
+
+Visible interaction reminder:
+- upgrade guidance should explain the next action and fallback clearly, not just dump file lists
 
 ## 7. Use controlled parallel subagents safely
 
@@ -132,3 +147,19 @@ If you are unsure where to begin:
 Adapter reminders:
 - Codex discoverability usually starts with the AIM skill and repo docs
 - Copilot discoverability usually starts with slash commands, prompt files, and the `aim` agent
+
+## 9. Know what to do at each checkpoint
+
+Use this shorthand:
+- `PO` first:
+  - approve or adjust the Epic framing
+- `TDO` before development:
+  - approve or adjust the next single Done Increment
+- `Dev`:
+  - read the implementation update; no approval is normally needed
+- `Reviewer`:
+  - read the verification summary; no approval is normally needed
+- `TDO` after review:
+  - test now, accept increment, or request adjustment
+- `PO` after accepted increment:
+  - continue Epic, close Epic, or capture new scope separately
