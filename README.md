@@ -67,6 +67,9 @@ AIM is meant to solve common problems when using AI for development:
 5. Choose mode: `Strict` (default) or `Auto`.
 6. Reply with `approve` or `change: ...` at gates.
 
+Preferred quick-start reference:
+- `docs/workflow/quick-start-aim-1.3.md`
+
 ### Copilot layer (optional)
 1. Open `docs/workflow/copilot-layer.md`.
 2. Install the agent templates from `.github/agents/` and prompt templates from `.github/prompts/`.
@@ -94,9 +97,27 @@ AIM is meant to solve common problems when using AI for development:
 ### Inspect and troubleshoot
 - Inspect current runtime state in `.aim/state.json`.
 - Inspect active Epic intent in `.aim/epic.md`.
+- Use `docs/features/aim-1.3-command-surface-and-onboarding.md` for the AIM 1.3.x command surface and Epic candidate model.
+- Use `docs/workflow/aim-1.3-usage-guides.md` for practical frontend, documentation, reviewer-tool, resume, upgrade, and parallel-assistance workflows.
 - Use `docs/workflow/example-aim-1.3-reference-run.md` for one concrete AIM 1.3 reference flow across Codex and Copilot.
 - Use `docs/workflow/troubleshoot-aim-1.3.md` for startup, resume, validator, parity, and fallback issues.
 - Use `docs/workflow/release-aim-1.3.md` for publish-ready AIM 1.3 release guidance.
+
+## Command and entrypoint discovery
+
+Use this mental model:
+- Codex:
+  - invoke the AIM skill and provide `EPIC: ...`
+  - natural language start is also valid when it clearly expresses AIM intent
+- Copilot:
+  - use `/aim start "EPIC: ..."` when slash commands are available
+  - use `Install AIM` or `Start working according to AIM` when using the optional Copilot layer
+
+The shortest operator path is documented in:
+- `docs/workflow/quick-start-aim-1.3.md`
+
+The practical scenario guides are documented in:
+- `docs/workflow/aim-1.3-usage-guides.md`
 
 ## Files
 - `AGENTS.md`  

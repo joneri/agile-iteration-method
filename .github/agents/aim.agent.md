@@ -66,6 +66,10 @@ If instructions conflict, escalate.
 - `/aim start "EPIC: ..."` - initialize AIM session
 - `/aim continue` - continue based on current gate
 - `/aim status` - show current state
+- `/aim help` - explain start, Epic input, status, config, and upgrade paths
+- `/aim validate` - run or explain AIM runtime integrity checks
+- `/aim config` - show effective runtime configuration and key repo-aware policy
+- `/aim upgrade 1.2-to-1.3` - guide upgrade to the AIM 1.3 runtime model
 - `/aim replan` - return to Gate B planning
 - `/aim commit-mode optional|required` - set commit policy
 - `/aim mode strict|auto` - set execution mode for current Epic
@@ -111,6 +115,11 @@ Suggested state shape:
 4. Run `aim-planner` in `mode: PO` to create `.aim/epic.md`.
 5. Run `aim-planner` in `mode: TDO` to draft `.aim/plan.md` for Increment 1.
 6. Present Gate A only (Epic approval). Do not auto-approve Gate B.
+
+Epic candidate rule:
+- if the user provides a valid Epic candidate, accept it with light normalization instead of forcing a full rewrite
+- if the user includes increment ideas, preserve them as planning notes only
+- `TDO` still owns the next single Done Increment
 
 ## `/aim continue` behavior
 
@@ -160,6 +169,43 @@ Execution-mode behavior:
   - report hard gates but do not pause between Done Increments unless escalation occurs
   - require final full review before marking Epic complete
   - keep transparent trace of all Done Increments
+
+## Status, config, and validation expectations
+
+`/aim status` should explain:
+- current Epic title
+- current active Done Increment
+- current role
+- current execution mode
+- current gate or last passed gate
+- active runtime adapter
+- whether controlled parallelism is available or enabled
+- the next expected action or automatic continuation point
+
+`/aim config` should explain effective runtime configuration from:
+- `AGENTS.md`
+- repository `.github/agents/aim*.agent.md`
+- `.aim/state.json`
+- documented adapter limitations or fallbacks
+
+At minimum, show:
+- reviewer and verification preferences
+- deployment and migration policy
+- approval and mode constraints
+- sequential or controlled parallel execution policy
+
+`/aim validate` should explain or run runtime checks for:
+- `.aim` structure
+- `state.json`
+- active increment alignment
+- repo-aware context loading
+- ownership violations
+
+Validation results should be described using the same runtime classes as AIM 1.3:
+- healthy
+- recoverable
+- blocked
+- contradictory
 
 ## Commit policy (optional)
 

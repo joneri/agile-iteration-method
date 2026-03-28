@@ -57,3 +57,22 @@ Actions:
 - AIM 1.3 keeps AIM core semantics from AIM 1.2.
 - The migration is runtime-focused, not a rewrite of the role loop.
 - If legacy runtime artifacts contradict the official checkpoint or current repo policy, escalate instead of guessing.
+
+## Command-surface changes to verify
+
+After migration, the repository should document and expose these AIM 1.3 commands or their explicit adapter-equivalent entrypoints:
+- `/aim start "EPIC: ..."`
+- `/aim continue`
+- `/aim status`
+- `/aim help`
+- `/aim validate`
+- `/aim config`
+- `/aim upgrade 1.2-to-1.3`
+
+Migration check:
+- if a command is conceptually supported but not packaged in one adapter, document the fallback clearly instead of implying silent support
+
+Related install and operator docs:
+- `docs/workflow/install-aim-1.3.md`
+- `docs/workflow/quick-start-aim-1.3.md`
+- `docs/features/aim-1.3-installation-status-and-configuration.md`

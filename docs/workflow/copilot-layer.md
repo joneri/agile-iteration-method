@@ -88,7 +88,9 @@ Fallback rule:
 - `.github/agents/aim-builder.agent.md`
 - `.github/agents/aim-reviewer.agent.md`
 - `.github/prompts/install-aim.prompt.md`
+- `.github/prompts/help-aim.prompt.md`
 - `.github/prompts/start-aim.prompt.md`
+- `.github/prompts/upgrade-aim-1.2-to-1.3.prompt.md`
 
 Canonical rule:
 - `.github/agents/` and `.github/prompts/` are source of truth for Copilot entrypoints and UX wiring.
@@ -142,7 +144,22 @@ Then provide:
 - Run `/migrate-aim-1.1-to-1.2`.
 - Or use `docs/workflow/migrate-aim-1.1-to-1.2.md` in chat.
 - AIM 1.2 to AIM 1.3 migration is currently documented in `docs/workflow/migrate-aim-1.2-to-1.3.md`.
-- A dedicated Copilot prompt file for AIM 1.2 to AIM 1.3 migration is planned, not currently packaged in this repo.
+- A dedicated Copilot prompt file is packaged as `.github/prompts/upgrade-aim-1.2-to-1.3.prompt.md`.
+
+### Option E: help and diagnostics
+Use these commands when the user needs orientation instead of immediate execution:
+- `/aim help`
+- `/aim status`
+- `/aim validate`
+- `/aim config`
+- `/aim upgrade 1.2-to-1.3`
+
+Expected behavior:
+- `/aim help` explains the command surface, Epic versus Done Increment, mode choice, and where AIM state lives
+- `/aim status` summarizes current Epic, increment, role, mode, gate, adapter, and parallel capability
+- `/aim validate` checks `.aim`, `state.json`, runtime coherence, and ownership boundaries
+- `/aim config` explains effective configuration from repo policy, runtime state, and adapter limits
+- `/aim upgrade 1.2-to-1.3` points to the shared migration workflow and packaged migration prompt
 
 ## Adapter support levels
 
@@ -164,7 +181,6 @@ Current Copilot-layer interpretation:
   - reviewer tooling and verification execution
   - template rendering and prompt packaging
 - planned:
-  - packaged AIM 1.2 to AIM 1.3 migration prompt support
   - bounded parallel subagent behavior matching Codex runtime capability
 
 Copilot must not treat `planned` as silently supported.
@@ -216,6 +232,12 @@ Shared startup checks:
 - confirm both adapters describe the same normalized repo-aware context areas
 - confirm parity differences are documented as adapter differences, not method differences
 
+Shared diagnostics checks:
+- confirm `/aim status` reports role, mode, gate, adapter, and active increment consistently with `.aim/state.json`
+- confirm `/aim config` names the source of effective rules instead of implying hidden defaults
+- confirm `/aim validate` uses the shared validator result classes: healthy, recoverable, blocked, contradictory
+- confirm install and upgrade prompts match the files actually packaged in `.github/prompts/`
+
 Most common failure:
 - Gate A approval not transitioning to Gate B plan presentation.
 
@@ -231,5 +253,7 @@ Expected fix:
 - `docs/features/aim-1.3-platform-adapters-and-parity.md`
 - `.github/agents/aim.agent.md`
 - `.github/prompts/start-aim.prompt.md`
+- `.github/prompts/help-aim.prompt.md`
+- `.github/prompts/upgrade-aim-1.2-to-1.3.prompt.md`
 - `.github/prompts/migrate-aim-1.0-to-1.1.prompt.md`
 - `.github/prompts/migrate-aim-1.1-to-1.2.prompt.md`
