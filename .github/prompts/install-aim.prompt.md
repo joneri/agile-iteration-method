@@ -2,7 +2,7 @@
 mode: agent
 ---
 
-Install AIM in this workspace using the optional Copilot layer.
+Install AIM 1.3 in this workspace using the optional Copilot layer.
 
 Actions:
 1. Verify these files exist and create missing ones from templates:
@@ -36,3 +36,5 @@ After setup, suggest:
 - `/aim upgrade 1.2-to-1.3`
 - `/migrate-aim-1.0-to-1.1`
 - `/migrate-aim-1.1-to-1.2`
+
+Make clear that the packaged Copilot surface is expected to expose the AIM 1.3 runtime contract.

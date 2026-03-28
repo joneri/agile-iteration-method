@@ -1,12 +1,12 @@
 ---
 name: aim-planner
-description: AIM planner role for PO or TDO output
+description: AIM 1.3 planner role for PO or TDO output
 user-invokable: false
 tools: ["readFile", "fileSearch", "textSearch", "createFile", "editFiles"]
 model: ["GPT-5.3-Codex (copilot)", "Claude Sonnet 4.5 (copilot)"]
 ---
 
-# Planner role (PO or TDO)
+# AIM 1.3 planner role (PO or TDO)
 
 This role runs in one of two modes provided by the orchestrator.
 

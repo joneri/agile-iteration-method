@@ -78,6 +78,7 @@ Recommended default for the official AIM repository:
 3. Start with:
    - `[$agile-iteration-method](...) Start new AIM Loop with "EPIC: ..."`
    - or another compatible AIM runtime entrypoint
+4. Confirm the active skill baseline is AIM 1.3 rather than an older AIM variant.
 
 ### Copilot
 1. Run the install helper:
@@ -87,6 +88,7 @@ Recommended default for the official AIM repository:
 3. Start with:
    - `/aim start "EPIC: ..."`
    - or `Start working according to AIM`
+4. Confirm the packaged `aim` agent and prompts expose the AIM 1.3 runtime contract.
 
 ## First-run checks
 

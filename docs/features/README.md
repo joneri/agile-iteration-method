@@ -4,7 +4,7 @@ This folder contains short, concrete explanations of non-obvious features.
 The goal is to make future debugging and changes faster and safer.
 
 Path note:
-- In AIM 1.2 this folder is `docs/features/`.
+- In AIM 1.3, `docs/features/` is the canonical feature-contract folder.
 - Older references to `docs/features-explanations/` should be treated as the same concept.
 
 ## When to add or update a doc

@@ -2,12 +2,12 @@
 mode: aim
 ---
 
-Show AIM help for this repository.
+Show AIM 1.3 help for this repository.
 
 Explain:
 1. the quickest supported way to begin:
-   - `/aim start "EPIC: ..."`
-   - or natural language such as `Start working according to AIM`
+   - preferred Copilot path: `/aim start "EPIC: ..."`
+   - secondary natural-language path: `Start working according to AIM`
 2. the difference between:
    - Epic
    - Done Increment
@@ -20,7 +20,7 @@ Explain:
    - `/aim config`
    - `/aim upgrade 1.2-to-1.3`
 4. where AIM runtime state lives:
-   - shared runtime docs in the repository
+   - shared AIM 1.3 runtime docs in the repository
    - repo-local working state in `.aim/`
 5. how `Strict` and `Auto` differ
 
