@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-03-28 - AIM 1.3 runtime and operator model
+- Added AIM 1.3 Epic: `docs/epics/aim-1.3-unified-runtime.md`.
+- Added AIM 1.3 runtime architecture split across core, runtime, repo-aware policy, and platform adapters.
+- Added official `.aim` workspace contract and `state.json` checkpoint model.
+- Added shared bootstrap and resume model for Codex and Copilot.
+- Added canonical AIM 1.3 state transition model.
+- Added normalized repo-aware runtime context contract.
+- Added validator support contract and quick-check result classes.
+- Added AIM 1.2 -> 1.3 migration guide and migration support contract.
+- Added explicit Codex/Copilot adapter contract and parity matrix.
+- Updated `README.md` to present AIM 1.3 as the current operator-facing model.
+- Added AIM 1.3 operator docs:
+  `docs/workflow/release-aim-1.3.md` and
+  `docs/workflow/troubleshoot-aim-1.3.md`.
+
 ## 2026-02-24 - AIM 1.2 foundation
 - Added AIM 1.2 Epic: `docs/epics/aim-1.2-repo-aware-execution.md`.
 - Added repository-profile and load-order rules to `AGENTS.md`.

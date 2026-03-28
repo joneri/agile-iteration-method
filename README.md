@@ -8,44 +8,38 @@ AIM is a role-based workflow for using AI in real Agile delivery: PO → TDO →
 
 Agile iteration method (AIM) is a structured way of using AI coding agents in explicit roles, with clear handoffs and controlled scope, so you converge to working software without chaotic looping.
 
-## AIM 1.2 highlights
-- Same AIM core loop, but with much stronger operational control.
-- Repository profile is first-class, so each repo can define stack/testing/role constraints safely.
-- Layered execution is explicit and predictable:
-  AIM base -> `AGENTS.md` -> `.github/agents/aim*.agent.md`.
-- `Strict` and `Auto` modes are explicit and always visible in output.
-- Codex and Copilot now share the same startup behavior and role semantics.
-- Copilot layer includes UI handoff buttons and command-driven shortcuts.
-- Commit-after-increment remains optional policy (team choice, not forced method behavior).
+## AIM 1.3 at a glance
+- Same AIM core loop, now with an explicit runtime model.
+- `.aim` is the official repo-local AIM workspace.
+- `state.json` is the durable checkpoint for startup, resume, and gate tracking.
+- Codex and Copilot share one conceptual runtime contract where parity is possible.
+- Adapter differences and fallback behavior are documented explicitly.
+- Controlled parallelism is bounded by centralized ownership of shared state and gates.
+- Migration from AIM 1.2 to AIM 1.3 is documented.
 
-## Why AIM 1.2 is a big upgrade
-- Faster kickoff:
-  users can start from natural language or `/aim start "EPIC: ..."` with the same role flow.
-- Less confusion:
-  canonical roles are locked to `PO`, `TDO`, `Dev`, `Reviewer` across docs, prompts, and agents.
-- Better trust:
-  mode visibility and explicit layering reduce hidden behavior and role drift.
-- More throughput:
-  `Auto` mode enables rapid Epic progress without removing gates or final review.
-- Easier adoption:
-  migration exists for both legacy paths (`1.0 -> 1.1` and `1.1 -> 1.2`).
+## Why AIM 1.3 matters
+- Less mystery:
+  AIM is no longer just a prompt plus conventions. The repo documents core, runtime, repo-aware policy, and adapters separately.
+- Better continuity:
+  `.aim` and `state.json` make active Epic state visible and resumable across sessions.
+- Safer parity:
+  Codex and Copilot share one runtime model, while differences are treated as adapter differences instead of hidden method drift.
+- Easier troubleshooting:
+  validator, fallback, migration, and parity behavior are now inspectable in docs and repo state.
+- Better future base:
+  AIM 1.3 is a clearer foundation for validator tooling, example repos, CI checks, and packaging later.
 
-## What's new in 1.2 (promoted)
-- Copilot custom-agent support with canonical specs in `.github/agents/`.
-- Codex/Copilot parity via repository-aware load order:
-  AIM base -> `AGENTS.md` -> `.github/agents/aim*.agent.md`.
-- Handoff UI buttons for faster flow control in Copilot chat:
-  `Approve`, `Request changes`, `Replan`, `Status`, `Continue`.
-- Prompt-file commands for setup/start/migration in `.github/prompts/`.
-- Epic-first kickoff contract:
-  PO defines Epic from desired outcome, TDO defines Done Increment from Epic.
-- Canonical role names locked to:
-  `PO`, `TDO`, `Dev`, `Reviewer` (aliases are non-canonical).
-- Short trigger support includes:
-  `Starta en AIM-loop med denna EPIC: ...`.
-- Migration paths:
-  - AIM 1.0 -> 1.1: `/migrate-aim-1.0-to-1.1` or `docs/workflow/migrate-aim-1.0-to-1.1.md`.
-  - AIM 1.1 -> 1.2: `/migrate-aim-1.1-to-1.2` or `docs/workflow/migrate-aim-1.1-to-1.2.md`.
+## Reference implementation
+
+This repository is the reference documentation implementation for AIM 1.3.
+
+Use it to understand:
+- the AIM core loop
+- the AIM runtime and `.aim` workspace
+- startup and resume behavior
+- validator and migration behavior
+- Codex and Copilot adapter differences
+- how to inspect and troubleshoot runtime state
 
 ## Why this exists
 AIM is meant to solve common problems when using AI for development:
@@ -61,6 +55,8 @@ AIM is meant to solve common problems when using AI for development:
 - Done Increments: each increment is shippable and can be evaluated end to end
 - Gates: A (Epic), B (increment scope), E (acceptance) are the only approvals that matter
 - Evidence over guessing: prove contracts with input/output, not opinions
+- Runtime transparency: `.aim` is inspectable and `state.json` is authoritative for resume
+- Safe fallback: unsupported capability must degrade safely instead of changing the method silently
 
 ## Quick start
 ### Codex mode (manual)
@@ -93,6 +89,14 @@ AIM is meant to solve common problems when using AI for development:
 - Or use `docs/workflow/migrate-aim-1.0-to-1.1.md` in any AI chat.
 - Run `/migrate-aim-1.1-to-1.2` (from `.github/prompts/migrate-aim-1.1-to-1.2.prompt.md`).
 - Or use `docs/workflow/migrate-aim-1.1-to-1.2.md` in any AI chat.
+- Use `docs/workflow/migrate-aim-1.2-to-1.3.md` to adopt the AIM 1.3 runtime contract.
+
+### Inspect and troubleshoot
+- Inspect current runtime state in `.aim/state.json`.
+- Inspect active Epic intent in `.aim/epic.md`.
+- Use `docs/workflow/example-aim-1.3-reference-run.md` for one concrete AIM 1.3 reference flow across Codex and Copilot.
+- Use `docs/workflow/troubleshoot-aim-1.3.md` for startup, resume, validator, parity, and fallback issues.
+- Use `docs/workflow/release-aim-1.3.md` for publish-ready AIM 1.3 release guidance.
 
 ## Files
 - `AGENTS.md`  
@@ -113,8 +117,12 @@ AIM is meant to solve common problems when using AI for development:
   Contribution and consistency rules.
 - `CONTRIBUTORS.md`  
   Creator and contributor acknowledgments.
-- `docs/workflow/release-aim-1.2.md`  
-  Publish-ready release notes draft for AIM 1.2.
+- `docs/workflow/release-aim-1.3.md`  
+  Publish-ready release notes draft for AIM 1.3.
+- `docs/workflow/example-aim-1.3-reference-run.md`  
+  Concrete AIM 1.3 reference example for start, resume, inspect, and adapter-aware operation.
+- `docs/workflow/troubleshoot-aim-1.3.md`  
+  Operator-facing troubleshooting guide for AIM 1.3 runtime behavior.
 
 ## Attribution
 Created by Jonas Eriksson.
