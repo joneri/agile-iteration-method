@@ -498,6 +498,27 @@ Core method stays the same:
 What changes is the visible response shape.
 Each role should sound like that role and should ask only for the decision that belongs at that step.
 
+### Interaction authority
+
+For visible output, the role-specific, step-specific interaction model is authoritative.
+
+That means:
+- visible output should match the current role and checkpoint
+- visible output should include only the information needed for that step
+- AIM should not force all checkpoints into one reusable visible approval template
+- the user should not have to infer meaning from repeated boilerplate when the role context can say it directly
+
+### Hard-gate conceptual minimums
+
+At a hard gate, AIM still needs four things to be clear:
+- what decision is being proposed or has been made
+- what will change or has changed
+- which files are relevant
+- how the step should be evaluated
+
+These are conceptual minimums, not mandatory universal section headings.
+The visible response may satisfy them through role-specific wording instead of fixed labels.
+
 ### Role-specific response patterns
 
 - `PO` at Gate A:
@@ -547,6 +568,9 @@ Use `you` only when the meaning is obvious.
 
 Do not force every response into the same section list.
 Include only what is necessary for the current step.
+
+This does not weaken the gate contract.
+It means the gate contract is satisfied through the information made clear, not through one fixed visible layout.
 
 For example:
 - `Dev` usually needs:
