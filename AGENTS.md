@@ -37,7 +37,8 @@ Follow the gates in order. When in doubt:
 2. Open Codex chat for this workspace.
 3. Paste the “Master prompt” below once.
 4. Paste the specific problem statement (what is broken, expected behaviour, links to files if known).
-5. Then only respond with: `approve` or `change: ...` at each gate.
+5. At hard gates, you may use short control replies such as `approve` or `change: ...` for the fastest path.
+   These are transport shortcuts, not a requirement that AIM display the same visible CTA wording at every checkpoint.
 6. Choose execution mode at Epic start: `Strict` (default) or `Auto`.
 
 Optional Epic-doc-first variant:
@@ -668,14 +669,16 @@ General constraints:
 Output format rules:
 - Always start each phase with: `Role: PO` (or `TDO`/`Dev`/`Reviewer`)
 - Always show current execution mode: `Mode: Strict` or `Mode: Auto`
-- End each phase with a short `handoff` section stating what the next role must do
+- End each phase with a short next-step note.
+  Use a visible `handoff` label only when it adds clarity; do not force it into every checkpoint.
 - Response shape must match the current role and step instead of forcing one generic template everywhere
 - Include only the sections that are necessary for the current step
 - A hard-gate checkpoint must still make these four things clear:
-  1) what decision was made or is being proposed
-  2) what will change or was changed
-  3) exact files touched or planned
-  4) how the user should evaluate the step
+  1) what decision was made or is being proposed  
+  2) what will change or was changed  
+  3) exact files touched or planned  
+  4) how the user should evaluate the step  
+These are conceptual minimums, not a reusable visible response wrapper.
 Then:
 - At hard gates (A, B, E): in `Strict` mode wait for `approve` or `change: …`
 - In `Auto` mode: report hard gates but do not pause between Done Increments unless escalation occurs; require final full-review pause before Epic completion
@@ -843,7 +846,9 @@ This is a helper checklist pattern, not a required visible response template.
 - No regression: 1y, 2y, 1w behave consistently.
 - Debug: any temporary logs removed or gated.
 
-## Example control replies you use at gates
+## Example control replies you can still use at hard gates
+These are fast transport replies, not the required visible CTA wording for every checkpoint.
+
 - `approve`
 - `change: keep scope smaller, only touch route.ts`
 - `change: do not add polling, only fix the data contract`

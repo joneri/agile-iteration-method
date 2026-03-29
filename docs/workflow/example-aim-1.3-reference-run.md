@@ -47,18 +47,18 @@ Inspect after start:
 - `.aim/epic.md`
 - `.aim/state.json`
 
-## Step 2: Approve and progress
+## Step 2: Move from Epic approval to increment flow
 
-After Gate A and Gate B approval:
-- the main AIM thread proceeds through Dev, Reviewer, and TDO
+After the Epic is approved at Gate A and the next Done Increment is approved at Gate B:
+- the main AIM thread proceeds through `Dev`, `Reviewer`, and post-review `TDO`
 - soft gates do not require extra approval unless escalation conditions are met
 - `.aim/state.json` reflects the active gate and role
 
 Visible interaction expectation:
 - `Dev` reports implementation and verification progress
 - `Reviewer` reports findings and readiness
-- post-review `TDO` explains how to test the increment and whether it should be accepted or adjusted
-- `PO` then decides whether the Epic continues or closes
+- post-review `TDO` turns the increment into a demo, test, and feedback checkpoint and explains whether it should be accepted or adjusted
+- `PO` then makes the Epic-level decision to continue, close, or separate new scope
 
 Inspect during progress:
 - `.aim/increments/`

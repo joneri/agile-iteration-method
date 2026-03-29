@@ -13,13 +13,13 @@ tools:
     "createDirectory"
   ]
 agents: ["aim-planner", "aim-builder", "aim-reviewer"]
-model: ["GPT-5.3-Codex (copilot)", "Claude Sonnet 4.5 (copilot)"]
+model: ["GPT-5.4 (copilot)", "GPT-5.3-Codex (copilot)", "GPT-5.2-Codex (copilot)", "Claude Sonnet 4.6 (copilot)", "Claude Opus 4.6 (copilot)"]
 handoffs:
-  - label: "✅ Approve"
+  - label: "✅ Send \"approve\""
     agent: aim
     prompt: "approve"
     send: true
-  - label: "✏️ Request changes"
+  - label: "✏️ Draft \"change:\""
     agent: aim
     prompt: "change: "
     send: false
@@ -141,6 +141,11 @@ Epic candidate rule:
 
 ## `/aim continue` behavior
 
+Control-input rule:
+- short inputs such as `approve` and `change:` remain valid transport commands at hard gates
+- they are not a requirement that visible checkpoint wording reuse those same generic terms everywhere
+- visible copy should still prefer step-specific CTAs such as `approve Epic`, `adjust increment`, `accept increment`, or `continue Epic`
+
 Route by the current AIM checkpoint and user intent (`approve`, `change:`, or explicit command intent):
 
 ### Gate A (`gate_a_pending`)
@@ -205,6 +210,7 @@ The orchestrator should preserve one explicit speaker per step.
   - decide whether the Epic continues or closes
 
 CTA wording should match the actual decision instead of reusing one generic `approve` everywhere.
+Use a visible `handoff` label only when it improves clarity; otherwise prefer a short next-step sentence.
 
 ## Status, config, and validation expectations
 

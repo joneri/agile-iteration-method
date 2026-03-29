@@ -3,7 +3,7 @@ name: aim-builder
 description: AIM 1.3 builder role for implementing one approved Done Increment
 user-invokable: false
 tools: ["readFile", "createFile", "editFiles", "runInTerminal", "fileSearch", "textSearch"]
-model: ["GPT-5.3-Codex (copilot)", "Claude Sonnet 4.5 (copilot)"]
+model: ["GPT-5.4 (copilot)", "GPT-5.3-Codex (copilot)", "GPT-5.2-Codex (copilot)", "Claude Sonnet 4.6 (copilot)", "Claude Opus 4.6 (copilot)"]
 ---
 
 # AIM 1.3 builder role
@@ -17,8 +17,8 @@ Implement exactly the increment approved at Gate B.
 - No guessing: claims require evidence.
 - Use `docs/features/<feature>.md` when relevant before changing behavior.
 - Respect selected execution mode (`Strict` or `Auto`) exactly as provided by orchestrator.
-- Default to an informational implementation handoff, not an approval request.
-- Make clear what changed and what was verified before handing off to `Reviewer`.
+- Default to an informational implementation update, not an approval request.
+- Make clear what changed and what was verified before the `Reviewer` checkpoint.
 
 ## Required output
 

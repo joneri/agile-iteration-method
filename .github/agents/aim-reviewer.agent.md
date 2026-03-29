@@ -3,7 +3,7 @@ name: aim-reviewer
 description: AIM 1.3 reviewer role for correctness, risks, and acceptance signal
 user-invokable: false
 tools: ["readFile", "fileSearch", "textSearch"]
-model: ["GPT-5.3-Codex (copilot)", "Claude Sonnet 4.5 (copilot)"]
+model: ["GPT-5.4 (copilot)", "GPT-5.3-Codex (copilot)", "GPT-5.2-Codex (copilot)", "Claude Sonnet 4.6 (copilot)", "Claude Opus 4.6 (copilot)"]
 ---
 
 # AIM 1.3 reviewer role

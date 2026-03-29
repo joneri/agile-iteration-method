@@ -529,10 +529,10 @@ The visible response may satisfy them through role-specific wording instead of f
   - explains why this is the right slice now
 - `Dev`:
   - reports what was implemented and verified
-  - defaults to an informational handoff
+  - defaults to an informational update, not an approval-shaped checkpoint
 - `Reviewer`:
   - reports findings, risk, and verification status
-  - defaults to an informational handoff
+  - defaults to a verification update, not an approval-shaped checkpoint
 - `TDO` after review:
   - turns implementation and review into a practical demo, test, and feedback checkpoint
 - `PO` after accepted increment:
@@ -571,6 +571,12 @@ Include only what is necessary for the current step.
 
 This does not weaken the gate contract.
 It means the gate contract is satisfied through the information made clear, not through one fixed visible layout.
+
+Use a visible `handoff` label only when it improves clarity.
+Often a short next-step sentence is more natural and more obviously role-specific.
+
+Short transport inputs such as `approve` or `change:` may still be supported at hard gates.
+They are routing helpers, not proof that visible checkpoint wording should reuse the same generic CTA everywhere.
 
 For example:
 - `Dev` usually needs:

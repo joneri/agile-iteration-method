@@ -99,11 +99,16 @@ Canonical rule:
 ## UI handoff buttons
 
 The `aim` agent defines handoff buttons to reduce typing and speed up gate flow:
-- `Approve`
-- `Request changes`
+- `Send "approve"`
+- `Draft "change:"`
 - `Replan`
 - `Status`
 - `Continue`
+
+Important:
+- these buttons are transport helpers, not the visible AIM checkpoint contract
+- the quoted labels are intentional and make it clear that the buttons send control inputs rather than define the step-specific CTA wording
+- the meaning of the decision still comes from the current checkpoint text (`approve Epic`, `accept increment`, `continue Epic`, and so on)
 
 These are configured in:
 - `.github/agents/aim.agent.md`

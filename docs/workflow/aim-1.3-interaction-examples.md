@@ -50,6 +50,34 @@ Good shape:
 Bad shape:
 - generic `approve or change` request when no decision is actually needed
 
+Before:
+
+```text
+Role: Dev
+Mode: Auto
+Decision: implementation complete
+What changed: updated the operational docs
+Files: AGENTS.md, examples
+Acceptance checks: docs read
+Reply with approve or change.
+Handoff: Reviewer should review the change.
+```
+
+After:
+
+```text
+Role: Dev
+Mode: Auto
+I removed the strongest legacy template traces from the operational contract and examples.
+
+Verified:
+- AGENTS.md now treats `approve` and `change:` as control inputs, not as the visible CTA model
+- the examples now show role-specific before/after behavior for Dev, Reviewer, TDO post-review, and PO post-increment
+
+Next step:
+Reviewer checks whether any wording still makes the flow feel approval-shaped when no decision is actually needed.
+```
+
 ## 4. `Reviewer` verification summary
 
 Purpose:
@@ -63,6 +91,36 @@ Good shape:
 
 Bad shape:
 - sounding like a second PO approval gate
+
+Before:
+
+```text
+Role: Reviewer
+Mode: Auto
+Review result: ready
+Files reviewed: AGENTS.md, examples
+Reply approve to continue.
+Handoff: TDO should prepare the next gate.
+```
+
+After:
+
+```text
+Role: Reviewer
+Mode: Auto
+No blocking findings in the selected operational files.
+
+What I verified:
+- Dev and Reviewer are described as informational by default
+- visible `handoff` labels are no longer treated as mandatory everywhere
+- the examples reinforce checkpoint-specific CTAs instead of one repeated approval rhythm
+
+Optional user test:
+- read the new Dev and Reviewer examples and check that they no longer sound like hidden approval gates
+
+Next step:
+TDO turns this into a practical demo, test, and feedback checkpoint.
+```
 
 ## 5. Post-review `TDO`
 
@@ -80,6 +138,43 @@ Good shape:
   - request adjustment
 - clear next step after either decision
 
+Before:
+
+```text
+Role: TDO
+Mode: Auto
+Decision: increment ready
+What changed: updated wording in operational docs
+Files: AGENTS.md, workflow docs, examples
+Acceptance checks: completed
+Reply with approve or change.
+Handoff: PO should decide.
+```
+
+After:
+
+```text
+Role: TDO
+Mode: Auto
+This increment changes how AIM sounds in real operation.
+The main effect is that Dev and Reviewer now read like evidence checkpoints, while post-review TDO and post-increment PO use more natural checkpoint-specific language.
+
+Already verified:
+- core operational rules now treat `approve` and `change:` as transport shortcuts rather than universal visible CTAs
+- the example guide now shows concrete before/after cleanup for the four highest-risk checkpoints
+
+How to test now:
+- read the before/after examples for Dev, Reviewer, post-review TDO, and post-increment PO
+- check that each updated version sounds like a distinct role with a distinct purpose
+
+Decision now:
+- accept increment
+- request adjustment
+
+Next step after acceptance:
+PO decides whether this Epic is complete or whether another cleanup increment is still needed.
+```
+
 ## 6. `PO` after accepted increment
 
 Purpose:
@@ -93,6 +188,34 @@ Good shape:
   - continue Epic
   - close Epic
   - capture new scope separately
+
+Before:
+
+```text
+Role: PO
+Mode: Auto
+Decision needed: approve next step
+What changed: interaction wording updated
+Reply with approve or change.
+Handoff: TDO should continue planning.
+```
+
+After:
+
+```text
+Role: PO
+Mode: Auto
+The most visible AIM 1.2-style template traces are now removed from the core operational contract and the example guide.
+This Epic goal was to make lived AIM behavior match the role-specific AIM 1.3 interaction model, and this increment fulfills that outcome for the highest-impact files.
+
+Epic decision now:
+- continue Epic
+- close Epic
+- capture new scope separately
+
+If the Epic continues:
+TDO selects the next cleanup target that still feels mechanically template-shaped.
+```
 
 ## 7. Mode choice explanation
 

@@ -52,7 +52,7 @@ Recommended flow:
 1. write the Epic in user-facing terms
 2. let `TDO` choose one documentation slice that is understandable on its own
 3. keep each Done Increment scoped to one coherent contract or operator concern
-4. let `Dev` and `Reviewer` use informational handoffs, not generic approval asks
+4. let `Dev` and `Reviewer` use informational checkpoints, not generic approval asks
 5. use the post-review `TDO` checkpoint to invite practical doc review or testing when useful
 
 Good targets:
@@ -154,9 +154,9 @@ Adapter reminders:
 
 Use this shorthand:
 - `PO` first:
-  - approve or adjust the Epic framing
+  - approve Epic or request Epic changes
 - `TDO` before development:
-  - approve or adjust the next single Done Increment
+  - approve increment or adjust increment
 - `Dev`:
   - read the implementation update; no approval is normally needed
 - `Reviewer`:
