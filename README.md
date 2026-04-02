@@ -1,4 +1,4 @@
-# Agile Iteration Method (AIM) v1.3
+# Agile Iteration Method (AIM) v1.4
 
 AIM is a release-ready operating system for agentic software delivery.
 
@@ -27,15 +27,16 @@ Without a method, agentic development usually breaks in predictable ways:
 
 AIM fixes that with explicit roles, explicit gates, and explicit ownership.
 
-## What is new in v1.3
+## What is new in v1.4
 
-AIM 1.3 is the release where AIM stops feeling like a clever prompt pattern and starts feeling like a real operating model.
+AIM 1.4 is the release where AIM 1.3 gains first-class Claude Code support and a clearer multi-adapter product story.
 
-The core loop stays stable. The runtime becomes explicit.
+The core loop stays stable. The runtime stays explicit. The adapter story gets stronger.
 
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume, and gate tracking
 - Codex, Copilot, and Claude Code can share one conceptual runtime contract
+- Claude Code is now documented as a first-class AIM adapter with `CLAUDE.md`, `.claude/commands/`, and `.claude/agents/` as the bridge/helper layer
 - adapter limitations are treated as limitations, not silent method drift
 - Controlled parallelism lets AIM use bounded subagents for faster analysis, discovery and verification when the runtime and repo policy allow it, while keeping shared state, gate progression and acceptance centrally owned.
 
@@ -45,23 +46,36 @@ This release makes AIM much easier to trust, explain, and adopt:
 - you can resume real work instead of re-explaining context every session
 - you can inspect runtime state instead of guessing what the agent thinks is happening
 - you can use Codex, Copilot, and Claude Code with one shared conceptual model
+- you can explain Claude Code support without inventing a second AIM method
 - you can delegate bounded work without losing ownership of gates or acceptance
 - you can install AIM into a real repo without turning the repo into an experiment
 - Faster where it helps:
   AIM can use bounded subagents for analysis, discovery and verification in complex repos, while still keeping one central runtime state and one clear decision path.
 
+## Why This Release Stands Out
+
+- One AIM, three adapter surfaces:
+  Codex, Copilot, and Claude Code now fit under the same `core + runtime + repo-aware policy + platform adapters` model.
+- Claude support without method drift:
+  `CLAUDE.md` and `.claude/` helpers are documented as adapter layers, not as a replacement for `AGENTS.md`.
+- Same ownership rules everywhere:
+  the main AIM thread still owns `.aim/state.json`, gate progression, and acceptance regardless of adapter.
+- Better sales story:
+  AIM is now easier to position as a cross-environment operating model instead of a Codex/Copilot-only workflow.
+
 ## From Prompt Pattern To Runtime Model
 
 Before AIM 1.3, the method was strong but the runtime story was too implicit.
 
-With AIM 1.3:
+With AIM 1.4:
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume, and gate tracking
 - startup, resume, validation, and fallback behavior are documented
 - repo-aware policy is a first-class part of the method
 - platform adapters are explicit instead of hidden
+- Claude Code is part of the supported adapter story, not an afterthought
 
-That is the big upgrade: AIM 1.3 makes agentic delivery operational, not mystical.
+That is the big upgrade: AIM 1.4 makes agentic delivery operational, portable, and easier to sell across environments.
 
 ## Start Here
 
@@ -70,7 +84,7 @@ Choose the path that matches your situation:
 1. Starting a new repository with AIM
 2. Installing AIM into an existing repository
 
-## Starting A New Repo With AIM v1.3
+## Starting A New Repo With AIM v1.4
 
 Use this path when the repository does not exist yet, or when you want to bootstrap a new repo around AIM from day one.
 
@@ -277,7 +291,7 @@ Use `Auto` when the Epic is clear and you want faster throughput with the same g
 
 ## Platform Adapters
 
-AIM 1.3 explicitly separates:
+AIM 1.4 explicitly separates:
 - AIM core
 - AIM runtime
 - repo-aware policy
@@ -306,7 +320,7 @@ If you are installing AIM in a repo:
 
 If you are upgrading from an older AIM version:
 1. `docs/workflow/migrate-aim-1.2-to-1.3.md`
-2. `docs/workflow/release-aim-1.3.md`
+2. `docs/workflow/release-aim-1.4.md`
 
 ## Repository Map
 
@@ -322,6 +336,8 @@ If you are upgrading from an older AIM version:
   Minimum viable installation guidance.
 - `docs/workflow/copilot-layer.md`
   Optional GitHub Copilot packaging and workflow layer.
+- `docs/workflow/release-aim-1.4.md`
+  Release note and publish checklist for the current version.
 - `docs/workflow/migrate-aim-1.2-to-1.3.md`
   Upgrade guidance for existing AIM repos.
 - `docs/workflow/troubleshoot-aim-1.3.md`

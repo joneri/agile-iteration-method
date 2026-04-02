@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-04-02 - AIM 1.4 Claude Code adapter release
+- Promoted Claude Code to a first-class AIM platform adapter in the public docs.
+- Added the Claude bridge contract in `CLAUDE.md`.
+- Updated `README.md` to present AIM 1.4 as the current release and to sell AIM as a Codex/Copilot/Claude Code operating model.
+- Added AIM 1.4 release notes:
+  `docs/workflow/release-aim-1.4.md`.
+- Updated the AIM 1.3 document map to include the new release note.
+
 ## 2026-03-28 - AIM 1.3 runtime and operator model
 - Added AIM 1.3 Epic: `docs/epics/aim-1.3-unified-runtime.md`.
 - Added AIM 1.3 runtime architecture split across core, runtime, repo-aware policy, and platform adapters.

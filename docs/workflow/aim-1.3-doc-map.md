@@ -9,6 +9,7 @@ Use this guide to understand which AIM 1.3 documents are public front-door docs,
 
 Use these first:
 - `README.md`
+- `docs/workflow/release-aim-1.4.md`
 - `docs/workflow/quick-start-aim-1.3.md`
 - `docs/workflow/install-aim-1.3.md`
 - `docs/workflow/troubleshoot-aim-1.3.md`
@@ -58,9 +59,10 @@ These docs are useful for maintainers, but they are not the recommended first st
 
 For a new user:
 1. `README.md`
-2. `docs/workflow/quick-start-aim-1.3.md`
-3. `docs/workflow/install-aim-1.3.md`
-4. `docs/workflow/troubleshoot-aim-1.3.md`
+2. `docs/workflow/release-aim-1.4.md`
+3. `docs/workflow/quick-start-aim-1.3.md`
+4. `docs/workflow/install-aim-1.3.md`
+5. `docs/workflow/troubleshoot-aim-1.3.md`
 
 For a maintainer or adapter implementer:
 1. `AGENTS.md`
