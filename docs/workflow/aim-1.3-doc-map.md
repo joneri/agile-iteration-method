@@ -28,11 +28,14 @@ These docs answer:
 
 Use these when deeper behavior or contracts matter:
 - `AGENTS.md`
+- `CLAUDE.md`
 - `docs/workflow/agile-iteration-method.md`
 - `docs/features/`
 - `docs/workflow/copilot-layer.md`
 - `.github/agents/`
 - `.github/prompts/`
+- `.claude/commands/`
+- `.claude/agents/`
 
 These docs define:
 - operational rules
@@ -41,6 +44,7 @@ These docs define:
 - validation and fallback behavior
 - role interaction behavior
 - adapter packaging and entrypoint wiring
+- Claude Code bridge and helper-layer boundaries
 
 ## Internal planning and historical material
 
@@ -61,5 +65,6 @@ For a new user:
 For a maintainer or adapter implementer:
 1. `AGENTS.md`
 2. `docs/workflow/agile-iteration-method.md`
-3. relevant files in `docs/features/`
-4. `docs/workflow/copilot-layer.md`
+3. `CLAUDE.md` when working on Claude Code support
+4. relevant files in `docs/features/`
+5. `docs/workflow/copilot-layer.md`

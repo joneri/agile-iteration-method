@@ -38,7 +38,7 @@ development and renamed to reflect its Agile nature.
 - Repository profile is a first-class concept with explicit layer order.
 - Execution modes are explicit: `Strict` and `Auto`.
 - Canonical role names are locked: `PO`, `TDO`, `Dev`, `Reviewer`.
-- Optional Copilot layer provides faster commands without changing method semantics.
+- Optional Copilot and Claude Code layers provide faster commands without changing method semantics.
 - Controlled parallelism is allowed only when runtime support exists and ownership remains centralized.
 - Commit-after-increment can be used as a team policy, but is not mandatory
   for the method itself.
@@ -90,7 +90,7 @@ AIM 1.3 separates the method from the machinery that runs it.
   - repository-specific verification, deployment, migration, and tool rules
   - any repository restrictions on automation or parallel execution
 - `platform adapters`:
-  - Codex, Copilot, or another compatible environment
+  - Codex, Copilot, Claude Code, or another compatible environment
   - entry behavior and capability differences
   - fallback behavior when exact parity is impossible
 
@@ -282,7 +282,13 @@ After loading repo files, the runtime must normalize them into one shared repo-a
 The context is built in this order:
 1. AIM base semantics
 2. repository `AGENTS.md`
-3. repository `.github/agents/aim*.agent.md`
+3. active adapter helper files
+   - Copilot:
+     - repository `.github/agents/aim*.agent.md`
+   - Claude Code:
+     - repository `CLAUDE.md`
+     - repository `.claude/agents/*`
+     - repository `.claude/commands/*`
 
 Later layers may refine earlier ones, but they must not silently change AIM core semantics.
 
@@ -309,7 +315,7 @@ The normalized runtime context should expose, at minimum:
 The runtime and adapters should read from the normalized context, not directly from scattered repo files during each decision.
 
 This means:
-- startup uses the same context shape in Codex and Copilot
+- startup uses the same context shape in Codex, Copilot, and Claude Code
 - resume uses the same context shape when deciding whether execution can continue
 - verification, deployment, migration, reviewer, and parallel rules are interpreted once, then reused consistently
 
@@ -382,13 +388,15 @@ AIM 1.3 must define a practical upgrade path for repositories that already use A
   - the official AIM 1.3 workspace contract becomes the authoritative runtime layout
 - Codex-only repository:
   - the repo can adopt AIM 1.3 runtime behavior without also adopting the optional Copilot layer
+- Claude Code repository:
+  - the repo can adopt AIM 1.3 runtime behavior with `AGENTS.md` plus `CLAUDE.md` and optional `.claude/` helpers
 - Copilot-layer repository:
   - existing `.github/agents/aim*.agent.md` files may remain, but they must align with the shared AIM 1.3 runtime contract
 
 ### Upgrade checklist
 
 A safe AIM 1.2 to AIM 1.3 migration should:
-- keep the repository profile in `AGENTS.md` and `.github/agents/aim*.agent.md` readable through the accepted layer order
+- keep the repository profile in `AGENTS.md` and any active adapter helper files readable through the accepted layer order
 - create or normalize the official `.aim` workspace
 - make `state.json` the durable runtime checkpoint for startup and resume
 - update documentation so AIM core, AIM runtime, repo-aware policy, and platform adapters are separated explicitly
@@ -430,22 +438,39 @@ Each repository defines its own profile in `AGENTS.md`:
 Layer order:
 1. AIM base semantics
 2. repository `AGENTS.md`
-3. repository `.github/agents/aim*.agent.md`
+3. active adapter helper files
+   - Copilot:
+     - repository `.github/agents/aim*.agent.md`
+   - Claude Code:
+     - repository `CLAUDE.md`
+     - repository `.claude/agents/*`
+     - repository `.claude/commands/*`
 
 If layers conflict, escalate instead of guessing.
 
 Required repository files:
 - `AGENTS.md`
-- `.github/agents/aim.agent.md`
-- `.github/agents/aim-planner.agent.md`
-- `.github/agents/aim-builder.agent.md`
-- `.github/agents/aim-reviewer.agent.md`
+- `docs/workflow/agile-iteration-method.md`
+
+Optional adapter files:
+- Copilot:
+  - `.github/agents/aim.agent.md`
+  - `.github/agents/aim-planner.agent.md`
+  - `.github/agents/aim-builder.agent.md`
+  - `.github/agents/aim-reviewer.agent.md`
+- Claude Code:
+  - `CLAUDE.md`
+  - `.claude/agents/`
+  - `.claude/commands/`
 
 Startup triggers (no manual bootstrap expected):
 - `Install AIM`
 - `Start working according to AIM`
 - `Starta en AIM-loop med denna EPIC: ...`
 - `/aim start "EPIC: ..."`
+- explicit Claude Code AIM start with:
+  - `EPIC: <desired outcome>`
+  - `Mode: Strict` or `Mode: Auto`
 
 ## Execution modes
 
@@ -839,13 +864,15 @@ AIM 1.3 prefers one shared conceptual flow across platforms:
 
 Parity classes used by AIM 1.3:
 - `shared`
-  - same conceptual behavior and same runtime contract in both adapters
+  - same conceptual behavior and same runtime contract across supported adapters
 - `shared_with_adapter_differences`
   - same runtime contract, but different commands, tools, or UX surfaces
 - `codex_only`
   - currently documented only in Codex
 - `copilot_only`
   - currently documented only in Copilot
+- `claude_code_only`
+  - currently documented only in Claude Code
 - `planned`
   - intentionally not yet treated as supported shared behavior
 
@@ -874,6 +901,34 @@ In Codex, AIM runs through repository instructions plus the available Codex tool
   - if an adapter-specific tool is unavailable, the runtime falls back to the shared contract instead of inventing different gate semantics
 
 `AGENTS.md` contains the operational rules for Codex runs.
+
+### Claude Code adapter
+
+In Claude Code, AIM runs through `AGENTS.md`, `CLAUDE.md`, and any repo-defined `.claude/` helper files.
+
+- shared goal:
+  - preserve the same AIM core and repo-aware policy interpretation as other adapters
+- supported capability areas:
+  - start and resume AIM through the shared runtime flow
+  - create and read `.aim`
+  - update shared runtime state through the main AIM thread
+  - use repository-defined Claude commands or helpers without taking ownership of gates or acceptance
+- adapter differences:
+  - the interaction surface is Claude Code plus `CLAUDE.md` and optional `.claude/commands/`
+  - `.claude/agents/` may provide bounded helper agents for analysis, discovery, verification, or option generation
+  - helper agents must remain subordinate to the shared runtime contract and repo-aware policy
+- `.aim` behavior:
+  - if `.aim` does not exist when AIM starts or resumes, AIM-in-Claude-Code must create it automatically before entering the role loop
+  - this is AIM runtime behavior exposed through the Claude Code adapter, not a built-in Claude Code guarantee outside AIM
+  - if `.aim/state.json` contains an incomplete Epic, AIM-in-Claude-Code must resume that Epic rather than silently starting a new one
+- fallback:
+  - if a Claude helper command or helper agent is missing, the repo must fall back to the documented explicit AIM start without changing method semantics
+  - if bounded helper capability is unavailable, AIM runs sequentially in one main thread
+
+Setup and usage are documented in:
+- `CLAUDE.md`
+- `.claude/agents/`
+- `.claude/commands/`
 
 ### Copilot adapter
 
@@ -917,7 +972,7 @@ At minimum, the matrix must classify:
 - database migration orchestration
 - validation
 - template rendering
-- parallel analysis subagents
+- bounded helper agents
 - parallel verification subagents
 
 ## Controlled parallelism

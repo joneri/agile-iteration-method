@@ -15,7 +15,7 @@ AIM 1.3 has four parts:
 - repo-aware policy:
   - repository-specific verification, deployment, migration, reviewer, and approval rules
 - platform adapter:
-  - Codex or Copilot entrypoints and packaging
+  - Codex, Copilot, or Claude Code entrypoints and packaging
 
 `.aim/` is repo-local runtime state.
 It is created on first valid AIM start or resume if it does not already exist.
@@ -42,6 +42,15 @@ Recommended for Copilot:
 - `.github/prompts/help-aim.prompt.md`
 - `.github/prompts/upgrade-aim-1.2-to-1.3.prompt.md`
 
+Recommended for Claude Code support:
+- `CLAUDE.md`
+- `.claude/agents/`
+- `.claude/commands/`
+
+Claude Code rule:
+- `AGENTS.md` remains the canonical AIM repo contract
+- `CLAUDE.md` and `.claude/` files are adapter helpers, not replacements for the shared runtime contract
+
 ## What lives where
 
 Shared runtime guidance lives in repo docs:
@@ -59,6 +68,7 @@ Repo-local working state lives in:
 Adapter-specific entrypoints live in:
 - Codex skill packaging outside the repo
 - Copilot `.github/agents/` and `.github/prompts/` files inside the repo
+- Claude Code `CLAUDE.md`, `.claude/agents/`, and `.claude/commands/` inside the repo
 
 ## `.aim` commit and ignore guidance
 
@@ -89,6 +99,16 @@ Recommended default for the official AIM repository:
    - `/aim start "EPIC: ..."`
    - or `Start working according to AIM`
 4. Confirm the packaged `aim` agent and prompts expose the AIM 1.3 runtime contract.
+
+### Claude Code
+1. Ensure `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, and `CLAUDE.md` are present.
+2. Add `.claude/commands/` and `.claude/agents/` if the repo wants Claude-specific entrypoints or helpers.
+3. Start with either:
+   - a repository AIM command exposed through `.claude/commands/`
+   - or an explicit start prompt:
+     - `EPIC: <desired outcome>`
+     - `Mode: Strict` or `Mode: Auto`
+4. Confirm the Claude-specific files point back to the shared AIM runtime contract instead of redefining gates, ownership, or acceptance.
 
 ## First-run checks
 

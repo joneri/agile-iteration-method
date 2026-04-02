@@ -12,12 +12,17 @@ Preferred production starts:
   - invoke `[$agile-iteration-method](...)` and provide `EPIC: ...`
 - Copilot:
   - select the `aim` agent and run `/aim start "EPIC: ..."`
+- Claude Code:
+  - use a repository AIM command from `.claude/commands/` if present
+  - or start explicitly with `EPIC: ...`
 
 Secondary starts:
 - Codex:
   - a natural-language AIM start is acceptable when the intent is explicit
 - Copilot:
   - `Install AIM` or `Start working according to AIM` remain valid when the optional Copilot layer is installed
+- Claude Code:
+  - explicit `EPIC: ...` plus `Mode: Strict` or `Mode: Auto` is the safe fallback when no Claude command wrapper exists
 
 If you already have a strong Epic candidate:
 - provide it directly
@@ -57,6 +62,13 @@ Codex-oriented equivalent:
 
 ```text
 [$agile-iteration-method](...) Start new AIM Loop with "EPIC: Make AIM easier for new users to start and understand"
+Mode: Auto
+```
+
+Claude Code-oriented equivalent:
+
+```text
+EPIC: Make AIM easier for new users to start and understand
 Mode: Auto
 ```
 
@@ -107,6 +119,7 @@ If you provide increment ideas up front:
 
 If slash commands are not available in the current adapter:
 - use the documented secondary natural-language intent
+- or use the adapter bridge and helper files (`CLAUDE.md`, `.claude/commands/`, `.claude/agents/`) when the repo provides them
 - or use the relevant workflow doc directly
 
 Next guide:

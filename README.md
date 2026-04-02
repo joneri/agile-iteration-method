@@ -35,7 +35,7 @@ The core loop stays stable. The runtime becomes explicit.
 
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume, and gate tracking
-- Codex and Copilot can share one conceptual runtime contract
+- Codex, Copilot, and Claude Code can share one conceptual runtime contract
 - adapter limitations are treated as limitations, not silent method drift
 - Controlled parallelism lets AIM use bounded subagents for faster analysis, discovery and verification when the runtime and repo policy allow it, while keeping shared state, gate progression and acceptance centrally owned.
 
@@ -44,7 +44,7 @@ The core loop stays stable. The runtime becomes explicit.
 This release makes AIM much easier to trust, explain, and adopt:
 - you can resume real work instead of re-explaining context every session
 - you can inspect runtime state instead of guessing what the agent thinks is happening
-- you can use Codex and Copilot with one shared conceptual model
+- you can use Codex, Copilot, and Claude Code with one shared conceptual model
 - you can delegate bounded work without losing ownership of gates or acceptance
 - you can install AIM into a real repo without turning the repo into an experiment
 - Faster where it helps:
@@ -97,6 +97,11 @@ If you want GitHub Copilot support too, also copy:
 - `.github/prompts/help-aim.prompt.md`
 - `.github/prompts/upgrade-aim-1.2-to-1.3.prompt.md`
 
+If you want Claude Code support too, also copy:
+- `CLAUDE.md`
+- `.claude/agents/`
+- `.claude/commands/`
+
 ### 2. Ignore live AIM runtime state
 
 Add this to `.gitignore` if it is not already there:
@@ -134,6 +139,15 @@ In Copilot:
 Mode: Strict
 ```
 
+In Claude Code:
+
+```text
+EPIC: <desired user outcome>
+Mode: Strict
+```
+
+If the repo defines a Claude Code AIM command in `.claude/commands/`, you can use that entrypoint instead of an explicit start prompt.
+
 If you want automatic continuation between increments, use `Mode: Auto` instead of `Mode: Strict`.
 
 ## Installing AIM On An Existing Repo
@@ -151,6 +165,11 @@ Add the AIM files:
 Add Copilot packaging too if needed:
 - `.github/agents/`
 - `.github/prompts/`
+
+Add Claude Code packaging too if needed:
+- `CLAUDE.md`
+- `.claude/agents/`
+- `.claude/commands/`
 
 ### 2. Make `AGENTS.md` repo-aware
 
@@ -199,8 +218,9 @@ If someone lands on this repo and wants the shortest possible path, this is it:
 1. Copy `AGENTS.md` and `docs/workflow/agile-iteration-method.md` into the target repo.
 2. Add `/.aim` to `.gitignore`.
 3. If using Copilot, copy `.github/agents/` and `.github/prompts/`.
-4. Open the repo in Codex or Copilot.
-5. Start with `EPIC: <desired outcome>` and `Mode: Strict` or `Mode: Auto`.
+4. If using Claude Code, add `CLAUDE.md` and the recommended `.claude/` helper directories.
+5. Open the repo in Codex, Copilot, or Claude Code.
+6. Start with `EPIC: <desired outcome>` and `Mode: Strict` or `Mode: Auto`.
 
 ## Why This Feels Different From Normal AI Coding
 
@@ -255,7 +275,7 @@ The meaningful approval points are:
 Use `Strict` by default for new teams or high-trust-sensitive work.
 Use `Auto` when the Epic is clear and you want faster throughput with the same gate logic.
 
-## Codex And Copilot
+## Platform Adapters
 
 AIM 1.3 explicitly separates:
 - AIM core
@@ -263,7 +283,7 @@ AIM 1.3 explicitly separates:
 - repo-aware policy
 - platform adapters
 
-That matters because Codex and Copilot do not always expose the same runtime capabilities.
+That matters because Codex, Copilot, and Claude Code do not always expose the same runtime capabilities.
 
 The rule is simple:
 - same method where parity is possible
@@ -291,7 +311,9 @@ If you are upgrading from an older AIM version:
 ## Repository Map
 
 - `AGENTS.md`
-  Operational AIM rules for Codex-style execution.
+  Canonical repository AIM contract across adapters.
+- `CLAUDE.md`
+  Claude Code bridge layer that maps AIM onto Claude Code without changing the shared runtime contract.
 - `docs/workflow/agile-iteration-method.md`
   The method and runtime explanation.
 - `docs/workflow/quick-start-aim-1.3.md`

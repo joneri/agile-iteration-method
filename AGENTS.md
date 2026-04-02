@@ -8,7 +8,7 @@
 This file defines **AIM 1.3** operational behavior while retaining the AIM 1.2 core loop semantics.
 
 ## Purpose
-This repo uses “Agile iteration method” with Codex acting in explicit roles and doing structured handoffs. The goal is to avoid bouncing between random theories and instead converge fast with small, shippable increments.
+This repo uses “Agile iteration method” with explicit AI roles and structured handoffs. The goal is to avoid bouncing between random theories and instead converge fast with small, shippable increments across supported adapters such as Codex, Copilot, and Claude Code.
 
 For AIM 1.3, this repo distinguishes between:
 - AIM core
@@ -33,13 +33,14 @@ Follow the gates in order. When in doubt:
 - otherwise continue to Gate E.
 
 ## How to start a run
-1. Open VS Code.
-2. Open Codex chat for this workspace.
-3. Paste the “Master prompt” below once.
-4. Paste the specific problem statement (what is broken, expected behaviour, links to files if known).
-5. At hard gates, you may use short control replies such as `approve` or `change: ...` for the fastest path.
+1. Open the repository in the chosen AIM adapter.
+2. Ensure `AGENTS.md` and the primary AIM workflow docs are present.
+3. If using Claude Code, also ensure `CLAUDE.md` is present.
+4. Paste the “Master prompt” below once when using an explicit chat-based start surface.
+5. Paste the specific problem statement (what is broken, expected behaviour, links to files if known).
+6. At hard gates, you may use short control replies such as `approve` or `change: ...` for the fastest path.
    These are transport shortcuts, not a requirement that AIM display the same visible CTA wording at every checkpoint.
-6. Choose execution mode at Epic start: `Strict` (default) or `Auto`.
+7. Choose execution mode at Epic start: `Strict` (default) or `Auto`.
 
 Optional Epic-doc-first variant:
 1. Start from an Epic doc in `docs/epics/` and clarify trust rules first.
@@ -50,9 +51,17 @@ Kickoff contract (AIM 1.3):
 1. PO creates the Epic from what should be achieved.
 2. TDO creates the next Done Increment based on that Epic.
 
-## Optional Copilot layer (AIM 1.3)
+## Optional adapter layers (AIM 1.3)
 
-If your team uses GitHub Copilot custom agents, you can add the optional Copilot layer documented in `docs/workflow/copilot-layer.md`.
+Optional adapter layers may improve UX and discoverability, but they must preserve this file's gate and escalation semantics.
+
+Copilot layer:
+- documented in `docs/workflow/copilot-layer.md`
+
+Claude Code layer:
+- uses `CLAUDE.md` as the project instruction bridge
+- may add `.claude/commands/` for AIM command entrypoints
+- may add `.claude/agents/` for AIM-aligned Claude helpers
 
 Quick start phrases:
 - `Install AIM`
@@ -62,7 +71,7 @@ Quick start phrases:
 - `/migrate-aim-1.0-to-1.1`
 - `/migrate-aim-1.1-to-1.2`
 
-This layer improves UX and speed, but must preserve this file’s gate and escalation semantics.
+These layers improve UX and speed, but must preserve this file's gate and escalation semantics.
 
 ## Repository profile (required)
 
@@ -71,17 +80,31 @@ Each repository must define a repository profile in `AGENTS.md` that states:
 - verification/testing strategy
 - role-specific behavioral constraints for `PO`, `TDO`, `Dev`, and `Reviewer`
 
-Required file structure:
+Required AIM file structure:
 - `AGENTS.md`
-- `.github/agents/aim.agent.md`
-- `.github/agents/aim-planner.agent.md`
-- `.github/agents/aim-builder.agent.md`
-- `.github/agents/aim-reviewer.agent.md`
+- `docs/workflow/agile-iteration-method.md`
+
+Optional adapter file structure:
+- Copilot:
+  - `.github/agents/aim.agent.md`
+  - `.github/agents/aim-planner.agent.md`
+  - `.github/agents/aim-builder.agent.md`
+  - `.github/agents/aim-reviewer.agent.md`
+- Claude Code:
+  - `CLAUDE.md`
+  - `.claude/commands/`
+  - `.claude/agents/`
 
 Layering and override order:
 1. AIM base semantics (internal skill baseline)
 2. repository `AGENTS.md`
-3. repository `.github/agents/aim*.agent.md`
+3. active adapter helper files
+   - Copilot:
+     - repository `.github/agents/aim*.agent.md`
+   - Claude Code:
+     - repository `CLAUDE.md`
+     - repository `.claude/agents/*`
+     - repository `.claude/commands/*`
 
 If layered instructions conflict and cannot be resolved safely, escalate to PO.
 
@@ -110,7 +133,7 @@ The method and the runtime are related but not the same thing.
   - verification, deployment, migration, and tool constraints defined by the repo
   - any repo-specific rules for allowing or forbidding controlled parallel work
 - `platform adapters`:
-  - environment-specific entrypoints and tool bindings for Codex, Copilot, or another AIM-compatible runtime
+  - environment-specific entrypoints and tool bindings for Codex, Copilot, Claude Code, or another AIM-compatible runtime
 
 Ownership rule:
 - AIM core stays tool-agnostic.
@@ -122,12 +145,12 @@ Ownership rule:
 
 `.aim` is the repo-local AIM runtime workspace.
 
-- It is an AIM runtime concept, not a Codex-only or Copilot-only feature.
+- It is an AIM runtime concept, not a Codex-only, Copilot-only, or Claude Code-only feature.
 - It stores active Epic state and trace artifacts needed to resume work safely.
 - The main AIM thread owns gate progression and acceptance state.
 - Subagents, when allowed by the runtime and repo policy, may only produce scoped outputs and must not advance gates or rewrite shared runtime state.
 - If `.aim` is missing when AIM starts or resumes, the AIM runtime must create it before continuing.
-- In Codex, this creation is performed by AIM running inside Codex, not by the Codex app as a standalone product feature.
+- In Codex or Claude Code, this creation is performed by AIM running inside the active adapter, not by the host product as a standalone AIM feature.
 
 Official AIM 1.3 workspace contract:
 - required artifacts:
@@ -188,7 +211,13 @@ After repository files are loaded, the runtime must normalize them into one repo
 Precedence order:
 1. AIM base semantics
 2. repository `AGENTS.md`
-3. repository `.github/agents/aim*.agent.md`
+3. active adapter helper files
+   - Copilot:
+     - repository `.github/agents/aim*.agent.md`
+   - Claude Code:
+     - repository `CLAUDE.md`
+     - repository `.claude/agents/*`
+     - repository `.claude/commands/*`
 
 Canonical context fields:
 - `verification`
@@ -306,6 +335,8 @@ Supported migration scenarios:
   - make the official AIM 1.3 workspace contract authoritative going forward
 - Codex-only setup:
   - adopt the shared AIM 1.3 runtime model without requiring optional Copilot-layer usage
+- Claude Code setup:
+  - adopt the shared AIM 1.3 runtime model without replacing `AGENTS.md` with `CLAUDE.md`
 - Copilot-layer setup:
   - keep `.github/agents/aim*.agent.md`, but align them to the shared AIM 1.3 runtime contract instead of adapter-only behavior
 
@@ -342,13 +373,15 @@ AIM 1.3 must document platform adapters explicitly instead of leaving parity to 
 
 Parity classification:
 - `shared`
-  - same conceptual behavior and same runtime contract in Codex and Copilot
+  - same conceptual behavior and same runtime contract across supported adapters
 - `shared_with_adapter_differences`
   - same runtime contract, but different entrypoints, tools, or interface mechanics
 - `codex_only`
   - currently documented only for the Codex adapter
 - `copilot_only`
   - currently documented only for the Copilot adapter
+- `claude_code_only`
+  - currently documented only for the Claude Code adapter
 - `planned`
   - intentionally not yet treated as a supported shared capability
 
@@ -360,6 +393,11 @@ Adapter rules:
 - Copilot:
   - uses `.github/agents/aim*.agent.md` and `.github/prompts/` as interface packaging
   - may differ in command routing, handoff UI, and prompt-file availability
+  - must still preserve the shared runtime contract and repo-aware policy interpretation
+- Claude Code:
+  - uses `AGENTS.md` as the canonical repository contract and `CLAUDE.md` as the Claude bridge layer
+  - may expose repository-defined entrypoints through `.claude/commands/` and helper agents through `.claude/agents/`
+  - may use bounded Claude helpers for analysis, discovery, verification, or option generation only
   - must still preserve the shared runtime contract and repo-aware policy interpretation
 
 Fallback rule:
@@ -394,7 +432,7 @@ Controlled parallel work is optional and runtime-dependent.
 
 ## Roles and handoffs
 
-Roles are simulated inside one Codex run and repeat for each **Done Increment** of the same Epic.
+Roles are simulated inside one AIM adapter session and repeat for each **Done Increment** of the same Epic.
 
 - **PO (product owner)**  
   Owns the Epic. Defines value, scope, non-goals and acceptance criteria. Decides when the Epic is complete.
