@@ -1,19 +1,19 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 1.3 reference run
+# AIM 1.4 reference run
 
-Use this document as the concrete reference example for how AIM 1.3 works in this repository.
+Use this document as the concrete reference example for how AIM 1.4 works in this repository.
 
 ## Goal
 
-Show one coherent AIM 1.3 flow that covers:
+Show one coherent AIM 1.4 flow that covers:
 - start
 - resume
 - inspect
 - adapter-aware behavior in Codex and Copilot
 
-This is an example of the accepted AIM 1.3 contracts in practice.
+This is an example of the accepted AIM 1.4 contracts in practice.
 It does not define a second runtime model.
 
 ## Reference scenario
@@ -22,7 +22,7 @@ Repository:
 - this repository
 
 Epic example:
-- `AIM 1.3 unified runtime, shared state, and cross-platform parity`
+- `AIM 1.4 unified runtime, shared state, and cross-platform parity`
 
 Runtime assumptions:
 - `AGENTS.md` is the repo profile entrypoint
@@ -107,10 +107,10 @@ Best files to inspect:
 - the newest file in `.aim/reviews/`
 - the newest file in `.aim/decisions/`
 - `docs/workflow/agile-iteration-method.md`
-- `docs/features/aim-1.3-runtime-workspace.md`
-- `docs/features/aim-1.3-bootstrap-and-resume.md`
-- `docs/features/aim-1.3-validator-support.md`
-- `docs/features/aim-1.3-platform-adapters-and-parity.md`
+- `docs/features/aim-1.4-runtime-workspace.md`
+- `docs/features/aim-1.4-bootstrap-and-resume.md`
+- `docs/features/aim-1.4-validator-support.md`
+- `docs/features/aim-1.4-platform-adapters-and-parity.md`
 
 What “good” looks like:
 - one active authoritative checkpoint
@@ -141,11 +141,11 @@ If bounded parallel capability is missing:
 - `README.md`
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
-- `docs/workflow/aim-1.3-interaction-examples.md`
+- `docs/workflow/aim-1.4-interaction-examples.md`
 - `docs/workflow/copilot-layer.md`
-- `docs/workflow/troubleshoot-aim-1.3.md`
-- `docs/features/aim-1.3-runtime-workspace.md`
-- `docs/features/aim-1.3-bootstrap-and-resume.md`
-- `docs/features/aim-1.3-validator-support.md`
-- `docs/features/aim-1.3-migration-support.md`
-- `docs/features/aim-1.3-platform-adapters-and-parity.md`
+- `docs/workflow/troubleshoot-aim-1.4.md`
+- `docs/features/aim-1.4-runtime-workspace.md`
+- `docs/features/aim-1.4-bootstrap-and-resume.md`
+- `docs/features/aim-1.4-validator-support.md`
+- `docs/features/aim-1.4-migration-support.md`
+- `docs/features/aim-1.4-platform-adapters-and-parity.md`

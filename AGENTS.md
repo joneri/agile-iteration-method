@@ -5,16 +5,20 @@
 # AGENTS.md
 
 ## Version
-This file defines **AIM 1.3** operational behavior while retaining the AIM 1.2 core loop semantics.
+This file defines **AIM 1.4** operational behavior while retaining the AIM 1.2 core loop semantics and the established AIM 1.3 runtime model.
 
 ## Purpose
 This repo uses “Agile iteration method” with explicit AI roles and structured handoffs. The goal is to avoid bouncing between random theories and instead converge fast with small, shippable increments across supported adapters such as Codex, Copilot, and Claude Code.
 
-For AIM 1.3, this repo distinguishes between:
+For AIM 1.4, this repo distinguishes between:
 - AIM core
 - AIM runtime
 - repo-aware policy
 - platform adapters
+
+Release-line note:
+- AIM 1.4 keeps the accepted AIM 1.3 runtime architecture stable.
+- AIM 1.4 makes that runtime easier to adopt, package, and explain across Codex, Copilot, and Claude Code.
 
 Important: runtime capabilities differ by environment. AIM must prefer shared behavior first. If controlled parallel subagents are unavailable or disallowed by repo policy, the runtime must fall back to sequential execution without changing core gate semantics or ownership rules.
 For coding standards, PR rules and local commands, read CONTRIBUTING.md first.
@@ -47,11 +51,11 @@ Optional Epic-doc-first variant:
 2. Ask PO to write the Epic from the desired outcome in that Epic doc.
 3. Continue with normal gates.
 
-Kickoff contract (AIM 1.3):
+Kickoff contract (AIM 1.4):
 1. PO creates the Epic from what should be achieved.
 2. TDO creates the next Done Increment based on that Epic.
 
-## Optional adapter layers (AIM 1.3)
+## Optional adapter layers (AIM 1.4)
 
 Optional adapter layers may improve UX and discoverability, but they must preserve this file's gate and escalation semantics.
 
@@ -67,6 +71,7 @@ Quick start phrases:
 - `Install AIM`
 - `Start working according to AIM`
 - `/aim start "EPIC: ..."`
+- `/aim upgrade 1.2-to-1.4`
 - `Starta en AIM-loop med denna EPIC: ...`
 - `/migrate-aim-1.0-to-1.1`
 - `/migrate-aim-1.1-to-1.2`
@@ -114,7 +119,7 @@ Role impact rule:
 - `Dev`: implementation and verification behavior within approved Gate B
 - `Reviewer`: correctness/risk checks and final readiness signal
 
-## AIM 1.3 architecture split
+## AIM 1.4 architecture split
 
 The method and the runtime are related but not the same thing.
 
@@ -141,7 +146,7 @@ Ownership rule:
 - Repo-aware policy constrains what the runtime may do.
 - Platform adapters expose capabilities, but do not redefine AIM core semantics.
 
-## `.aim` workspace (AIM 1.3 architectural contract)
+## `.aim` workspace (AIM 1.4 architectural contract)
 
 `.aim` is the repo-local AIM runtime workspace.
 
@@ -152,7 +157,7 @@ Ownership rule:
 - If `.aim` is missing when AIM starts or resumes, the AIM runtime must create it before continuing.
 - In Codex or Claude Code, this creation is performed by AIM running inside the active adapter, not by the host product as a standalone AIM feature.
 
-Official AIM 1.3 workspace contract:
+Official AIM 1.4 workspace contract:
 - required artifacts:
   - `.aim/epic.md`
   - `.aim/state.json`
@@ -183,7 +188,7 @@ Housekeeping rules:
 - stale logs or analysis artifacts may be removed or archived once their decision value is captured elsewhere
 - secrets, credentials, tokens, and unrelated product data must never be stored in `.aim`
 
-## Bootstrap and resume flow (AIM 1.3)
+## Bootstrap and resume flow (AIM 1.4)
 
 All adapters must follow the same conceptual startup flow:
 1. detect repo root
@@ -204,7 +209,7 @@ Fallback rule:
 - if `.aim/state.json` conflicts with available artifacts or repo policy, stop and ask before continuing
 - if platform capability is unavailable, continue sequentially without changing the runtime contract
 
-## Normalized repo-aware runtime context (AIM 1.3)
+## Normalized repo-aware runtime context (AIM 1.4)
 
 After repository files are loaded, the runtime must normalize them into one repo-aware context object.
 
@@ -245,7 +250,7 @@ Failure handling:
 - if layers contradict each other on a trust-affecting rule, stop and escalate
 - if a repo policy requests a capability the platform cannot support, preserve the policy in context and fall back safely at execution time
 
-## State transition model (AIM 1.3)
+## State transition model (AIM 1.4)
 
 `state.json` must represent one durable runtime state at a time.
 
@@ -293,7 +298,7 @@ Ownership rules for transitions:
 - `TDO` owns transition synthesis before Gate E
 - `PO` owns acceptance decisions that lead to `done_increment_accepted` or `epic_complete`
 
-## Validator support (AIM 1.3)
+## Validator support (AIM 1.4)
 
 The AIM runtime should support one quick integrity check over the active runtime state.
 
@@ -322,30 +327,30 @@ Ownership rule:
 - validator output may explain recommended repair actions
 - only the main AIM thread may perform repairs that mutate shared runtime state
 
-## Migration support (AIM 1.3)
+## Migration support (AIM 1.4)
 
-AIM 1.3 must remain adoptable by repositories that already use AIM 1.2.
+AIM 1.4 must remain adoptable by repositories that already use AIM 1.2.
 
 Supported migration scenarios:
 - no `.aim` exists yet:
-  - create the official `.aim` workspace at first AIM 1.3 startup
+  - create the official `.aim` workspace at first AIM 1.4 startup
   - initialize `.aim/epic.md` and `.aim/state.json` from the active Epic context
 - informal `.aim` already exists:
   - preserve useful legacy helper artifacts during migration
-  - make the official AIM 1.3 workspace contract authoritative going forward
+  - make the official AIM 1.4 workspace contract authoritative going forward
 - Codex-only setup:
-  - adopt the shared AIM 1.3 runtime model without requiring optional Copilot-layer usage
+  - adopt the shared AIM 1.4 runtime model without requiring optional Copilot-layer usage
 - Claude Code setup:
-  - adopt the shared AIM 1.3 runtime model without replacing `AGENTS.md` with `CLAUDE.md`
+  - adopt the shared AIM 1.4 runtime model without replacing `AGENTS.md` with `CLAUDE.md`
 - Copilot-layer setup:
-  - keep `.github/agents/aim*.agent.md`, but align them to the shared AIM 1.3 runtime contract instead of adapter-only behavior
+  - keep `.github/agents/aim*.agent.md`, but align them to the shared AIM 1.4 runtime contract instead of adapter-only behavior
 
 Upgrade checklist:
 - confirm the repository profile still loads through `AGENTS.md` and `.github/agents/aim*.agent.md`
 - add or normalize the official `.aim` workspace contract
 - ensure `state.json` becomes the durable runtime checkpoint
 - update docs to distinguish AIM core, AIM runtime, repo-aware policy, and platform adapters
-- keep startup, resume, and validator behavior consistent with the AIM 1.3 runtime docs
+- keep startup, resume, and validator behavior consistent with the AIM 1.4 runtime docs
 
 Legacy artifact policy:
 - tolerated temporarily:
@@ -359,7 +364,7 @@ Legacy artifact policy:
   - stale logs, analysis notes, or superseded helper artifacts once their decision value is captured elsewhere
 - removed or replaced:
   - legacy files that pretend to own current gate, role, or acceptance state outside `.aim/state.json`
-  - stale instructions that contradict AIM 1.3 runtime ownership or bootstrap rules
+  - stale instructions that contradict AIM 1.4 runtime ownership or bootstrap rules
 
 Migration and runtime integrity:
 - migration must preserve startup and resume continuity
@@ -367,9 +372,9 @@ Migration and runtime integrity:
 - recoverable migration gaps may be repaired by the main AIM thread
 - contradictory legacy state or contradictory repo instructions must be escalated instead of guessed through
 
-## Platform adapters and parity (AIM 1.3)
+## Platform adapters and parity (AIM 1.4)
 
-AIM 1.3 must document platform adapters explicitly instead of leaving parity to implication.
+AIM 1.4 must document platform adapters explicitly instead of leaving parity to implication.
 
 Parity classification:
 - `shared`
@@ -404,7 +409,7 @@ Fallback rule:
 - if a capability is not available in one adapter, the adapter must preserve the intended policy, report the limitation, and fall back safely instead of silently redefining the method
 - regardless of parity level, only the main AIM thread may own `.aim/state.json`, gate progression, or acceptance decisions
 
-## Execution modes (AIM 1.3 architecture, AIM 1.2 core semantics preserved)
+## Execution modes (AIM 1.4 architecture, AIM 1.2 core semantics preserved)
 
 Mode must be selected when starting an Epic and shown in all gate outputs.
 
@@ -418,7 +423,7 @@ Mode must be selected when starting an Epic and shown in all gate outputs.
   - A final full review is required before Epic completion is accepted.
   - All generated Done Increments must be clearly traceable.
 
-## Controlled parallelism (AIM 1.3)
+## Controlled parallelism (AIM 1.4)
 
 Controlled parallel work is optional and runtime-dependent.
 

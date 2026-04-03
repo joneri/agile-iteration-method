@@ -90,7 +90,7 @@ Fallback rule:
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
 - `.github/prompts/start-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.2-to-1.3.prompt.md`
+- `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`
 
 Canonical rule:
 - `.github/agents/` and `.github/prompts/` are source of truth for Copilot entrypoints and UX wiring.
@@ -146,8 +146,8 @@ Migration start remains a secondary specialized path:
 - Or use `docs/workflow/migrate-aim-1.0-to-1.1.md` in chat.
 - Run `/migrate-aim-1.1-to-1.2`.
 - Or use `docs/workflow/migrate-aim-1.1-to-1.2.md` in chat.
-- AIM 1.2 to AIM 1.3 migration is currently documented in `docs/workflow/migrate-aim-1.2-to-1.3.md`.
-- A dedicated Copilot prompt file is packaged as `.github/prompts/upgrade-aim-1.2-to-1.3.prompt.md`.
+- AIM 1.2 to AIM 1.4 migration is currently documented in `docs/workflow/migrate-aim-1.2-to-1.4.md`.
+- A dedicated Copilot prompt file is packaged as `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`.
 
 Help and diagnostics entrypoints:
 Use these commands when the user needs orientation instead of immediate execution:
@@ -155,14 +155,14 @@ Use these commands when the user needs orientation instead of immediate executio
 - `/aim status`
 - `/aim validate`
 - `/aim config`
-- `/aim upgrade 1.2-to-1.3`
+- `/aim upgrade 1.2-to-1.4`
 
 Expected behavior:
 - `/aim help` explains the command surface, Epic versus Done Increment, mode choice, and where AIM state lives
 - `/aim status` summarizes current Epic, increment, role, mode, gate, adapter, and parallel capability
 - `/aim validate` checks `.aim`, `state.json`, runtime coherence, and ownership boundaries
 - `/aim config` explains effective configuration from repo policy, runtime state, and adapter limits
-- `/aim upgrade 1.2-to-1.3` points to the shared migration workflow and packaged migration prompt
+- `/aim upgrade 1.2-to-1.4` points to the shared migration workflow and packaged migration prompt
 
 ## Adapter support levels
 
@@ -258,12 +258,12 @@ Expected fix:
 
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
-- `docs/features/aim-1.3-bootstrap-and-resume.md`
-- `docs/features/aim-1.3-repo-aware-runtime-context.md`
-- `docs/features/aim-1.3-platform-adapters-and-parity.md`
+- `docs/features/aim-1.4-bootstrap-and-resume.md`
+- `docs/features/aim-1.4-repo-aware-runtime-context.md`
+- `docs/features/aim-1.4-platform-adapters-and-parity.md`
 - `.github/agents/aim.agent.md`
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.2-to-1.3.prompt.md`
+- `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`
 - `.github/prompts/migrate-aim-1.0-to-1.1.prompt.md`
 - `.github/prompts/migrate-aim-1.1-to-1.2.prompt.md`

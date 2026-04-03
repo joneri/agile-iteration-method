@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-04-03 - AIM 1.4.1 release alignment and packaging cleanup
+- Renamed the active workflow doc family from `1.3` to `1.4`, including quick start, install, troubleshoot, doc map, migration, usage guides, interaction examples, and the reference run.
+- Renamed the active feature-contract doc family from `aim-1.3-*` to `aim-1.4-*`.
+- Updated `AGENTS.md` and `docs/workflow/agile-iteration-method.md` so AIM 1.4 is the active operational framing while keeping explicit lineage notes for AIM 1.2 core semantics and the accepted AIM 1.3 runtime model.
+- Updated Copilot agent and prompt packaging to present AIM 1.4 as the current packaged surface.
+- Moved the packaged upgrade path from `1.2-to-1.3` to `1.2-to-1.4`.
+- Kept Claude Code support as a first-class adapter layer with `AGENTS.md` still canonical.
+
 ## 2026-04-02 - AIM 1.4 Claude Code adapter release
 - Promoted Claude Code to a first-class AIM platform adapter in the public docs.
 - Added the Claude bridge contract in `CLAUDE.md`.

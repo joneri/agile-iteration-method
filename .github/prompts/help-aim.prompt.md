@@ -2,7 +2,7 @@
 mode: aim
 ---
 
-Show AIM 1.3 help for this repository.
+Show AIM 1.4 help for this repository.
 
 Explain:
 1. the quickest supported way to begin:
@@ -18,9 +18,9 @@ Explain:
    - `/aim status`
    - `/aim validate`
    - `/aim config`
-   - `/aim upgrade 1.2-to-1.3`
+   - `/aim upgrade 1.2-to-1.4`
 4. where AIM runtime state lives:
-   - shared AIM 1.3 runtime docs in the repository
+   - shared AIM 1.4 runtime docs in the repository
    - repo-local working state in `.aim/`
 5. how `Strict` and `Auto` differ
 

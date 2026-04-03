@@ -5,7 +5,7 @@
 
 ## Release summary
 
-AIM 1.4 keeps the AIM 1.3 core/runtime model stable and turns Claude Code support into a first-class release outcome.
+AIM 1.4 keeps the established AIM core/runtime model stable and turns Claude Code support into a first-class release outcome.
 
 Main outcomes:
 - AIM is still documented as `core + runtime + repo-aware policy + platform adapters`
@@ -13,6 +13,7 @@ Main outcomes:
 - `state.json` remains the durable startup and resume checkpoint
 - Codex, Copilot, and Claude Code now share one explicit adapter story where parity is possible
 - Claude Code bridge and helper layers are documented without weakening the shared ownership model
+- this repository now ships a minimal Claude starter layer for real user onboarding
 
 ## Why teams will care immediately
 
@@ -31,31 +32,33 @@ Main outcomes:
 
 ### 1) Claude Code as a first-class adapter
 - `CLAUDE.md`
-- `docs/features/aim-1.3-platform-adapters-and-parity.md`
+- `docs/features/aim-1.4-platform-adapters-and-parity.md`
 - `docs/workflow/agile-iteration-method.md`
 
 ### 2) Shared runtime story across three adapters
 - `README.md`
 - `AGENTS.md`
-- `docs/features/aim-1.3-runtime-architecture.md`
+- `docs/features/aim-1.4-runtime-architecture.md`
 
 ### 3) Claude-aware install and quick-start guidance
-- `docs/workflow/install-aim-1.3.md`
-- `docs/workflow/quick-start-aim-1.3.md`
-- `docs/features/aim-1.3-command-surface-and-onboarding.md`
+- `docs/workflow/install-aim-1.4.md`
+- `docs/workflow/quick-start-aim-1.4.md`
+- `docs/features/aim-1.4-command-surface-and-onboarding.md`
+- `.claude/commands/`
+- `.claude/agents/`
 
 ### 4) Preserved ownership and acceptance boundaries
 - `CLAUDE.md`
 - `AGENTS.md`
-- `docs/features/aim-1.3-repo-aware-runtime-context.md`
+- `docs/features/aim-1.4-repo-aware-runtime-context.md`
 
 ## Production readiness checklist
 
 1. Confirm `README.md` presents AIM 1.4 as the current public front door.
 2. Confirm `README.md` selling points explicitly include Claude Code support.
-3. Confirm `README.md`, `docs/workflow/install-aim-1.3.md`, and `docs/workflow/quick-start-aim-1.3.md` each describe Claude Code as a supported adapter.
+3. Confirm `README.md`, `docs/workflow/install-aim-1.4.md`, and `docs/workflow/quick-start-aim-1.4.md` each describe Claude Code as a supported adapter.
 4. Confirm `AGENTS.md` and `CLAUDE.md` make `AGENTS.md` canonical and `CLAUDE.md` adapter-specific.
-5. Confirm `docs/workflow/agile-iteration-method.md` and `docs/features/aim-1.3-platform-adapters-and-parity.md` document Claude Code without changing AIM core or AIM runtime semantics.
+5. Confirm `docs/workflow/agile-iteration-method.md` and `docs/features/aim-1.4-platform-adapters-and-parity.md` document Claude Code without changing AIM core or AIM runtime semantics.
 6. Confirm Claude helper boundaries explicitly preserve main-thread ownership of `.aim/state.json`, gates, and acceptance.
 7. Confirm `CHANGELOG.md` includes the AIM 1.4 entry.
 

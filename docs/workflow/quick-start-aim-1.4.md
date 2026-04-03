@@ -1,9 +1,20 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# Quick start AIM 1.3.x
+# Quick start AIM 1.4
 
 Use this guide if you want the shortest correct path into AIM.
+
+## Choose your adapter
+
+- Codex:
+  use the AIM skill and the repo docs.
+- Copilot:
+  use the packaged `aim` agent and prompts.
+- Claude Code:
+  use `CLAUDE.md` plus the shipped starter files in `.claude/commands/` and `.claude/agents/`.
+
+This repository now ships a minimal Claude starter layer so the Claude path is concrete instead of only documented in theory.
 
 ## One obvious way to start
 
@@ -13,7 +24,7 @@ Preferred production starts:
 - Copilot:
   - select the `aim` agent and run `/aim start "EPIC: ..."`
 - Claude Code:
-  - use a repository AIM command from `.claude/commands/` if present
+  - use the shipped repository AIM command from `.claude/commands/start-aim.md` when command-file routing is available
   - or start explicitly with `EPIC: ...`
 
 Secondary starts:
@@ -115,15 +126,15 @@ If you provide increment ideas up front:
 - `/aim validate`
 - `/aim config`
 - `/aim mode strict|auto`
-- `/aim upgrade 1.2-to-1.3`
+- `/aim upgrade 1.2-to-1.4`
 
 If slash commands are not available in the current adapter:
 - use the documented secondary natural-language intent
-- or use the adapter bridge and helper files (`CLAUDE.md`, `.claude/commands/`, `.claude/agents/`) when the repo provides them
+- or use the adapter bridge and shipped helper files (`CLAUDE.md`, `.claude/commands/start-aim.md`, `.claude/agents/aim.md`)
 - or use the relevant workflow doc directly
 
 Next guide:
-- `docs/workflow/aim-1.3-usage-guides.md`
+- `docs/workflow/aim-1.4-usage-guides.md`
 
 Examples:
-- `docs/workflow/aim-1.3-interaction-examples.md`
+- `docs/workflow/aim-1.4-interaction-examples.md`

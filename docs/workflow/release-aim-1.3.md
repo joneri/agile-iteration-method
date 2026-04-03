@@ -32,30 +32,30 @@ Main outcomes:
 ### 1) Explicit runtime model
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
-- `docs/features/aim-1.3-runtime-architecture.md`
+- `docs/features/aim-1.4-runtime-architecture.md`
 
 ### 2) Official `.aim` workspace and durable checkpoint
-- `docs/features/aim-1.3-runtime-workspace.md`
-- `docs/features/aim-1.3-state-transition-model.md`
+- `docs/features/aim-1.4-runtime-workspace.md`
+- `docs/features/aim-1.4-state-transition-model.md`
 
 ### 3) Shared startup, resume, and validator behavior
-- `docs/features/aim-1.3-bootstrap-and-resume.md`
-- `docs/features/aim-1.3-validator-support.md`
+- `docs/features/aim-1.4-bootstrap-and-resume.md`
+- `docs/features/aim-1.4-validator-support.md`
 
 ### 4) Shared repo-aware policy model
-- `docs/features/aim-1.3-repo-aware-runtime-context.md`
+- `docs/features/aim-1.4-repo-aware-runtime-context.md`
 
 ### 5) Migration and parity coverage
-- `docs/workflow/migrate-aim-1.2-to-1.3.md`
-- `docs/features/aim-1.3-migration-support.md`
-- `docs/features/aim-1.3-platform-adapters-and-parity.md`
+- `docs/workflow/migrate-aim-1.2-to-1.4.md`
+- `docs/features/aim-1.4-migration-support.md`
+- `docs/features/aim-1.4-platform-adapters-and-parity.md`
 
 ## Production readiness checklist
 
 1. Confirm `README.md` presents AIM 1.3 as the current public front door.
-2. Confirm `README.md` and `docs/workflow/quick-start-aim-1.3.md` each show one preferred start path for Codex and one for Copilot.
+2. Confirm `README.md` and `docs/workflow/quick-start-aim-1.4.md` each show one preferred start path for Codex and one for Copilot.
 3. Confirm `AGENTS.md` and `docs/workflow/agile-iteration-method.md` distinguish retained AIM 1.2 core semantics from AIM 1.3 runtime additions.
-4. Confirm `docs/workflow/aim-1.3-doc-map.md` clearly separates public, reference, and internal material.
+4. Confirm `docs/workflow/aim-1.4-doc-map.md` clearly separates public, reference, and internal material.
 5. Confirm the official `.aim` workspace contract is documented.
 6. Confirm `.aim` commit-ignore guidance is documented for the official AIM repo and normal team repos.
 7. Confirm `AGENTS.md` and `docs/workflow/agile-iteration-method.md` both state that hard-gate requirements are conceptual minimums, not mandatory visible section headings.

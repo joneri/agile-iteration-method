@@ -1,7 +1,7 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 1.3.x usage guides
+# AIM 1.4 usage guides
 
 Use this guide when you already understand the basics and want the fastest correct pattern for common AIM work.
 
@@ -108,11 +108,11 @@ Use when:
 - the repository still carries earlier AIM wording or older helper packaging
 
 Recommended path:
-- `/aim upgrade 1.2-to-1.3`
-- or `docs/workflow/migrate-aim-1.2-to-1.3.md`
+- `/aim upgrade 1.2-to-1.4`
+- or `docs/workflow/migrate-aim-1.2-to-1.4.md`
 
 Expected result:
-- shared AIM 1.3 runtime terminology
+- shared AIM 1.4 runtime terminology
 - official `.aim` workspace handling
 - explicit command-surface expectations
 - adapter differences documented as adapter differences
@@ -142,7 +142,7 @@ Not allowed by default:
 ## 8. Discover commands quickly
 
 If you are unsure where to begin:
-- use `docs/workflow/quick-start-aim-1.3.md`
+- use `docs/workflow/quick-start-aim-1.4.md`
 - use `/aim help`
 - inspect `.github/agents/aim.agent.md`
 

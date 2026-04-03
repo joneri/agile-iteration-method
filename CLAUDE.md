@@ -52,6 +52,12 @@ Recommended Claude Code helper packaging:
 - `.claude/commands/`
 - `.claude/agents/`
 
+This repository now ships a minimal Claude starter layer:
+- `.claude/commands/start-aim.md`
+- `.claude/commands/install-aim.md`
+- `.claude/commands/continue-aim.md`
+- `.claude/agents/aim.md`
+
 Start with either:
 - a repository AIM command exposed through `.claude/commands/`
 - or an explicit start message such as:
@@ -67,3 +73,5 @@ or:
 EPIC: <desired outcome>
 Mode: Auto
 ```
+
+If command-file invocation differs in the current Claude Code environment, use the explicit `EPIC: ...` fallback and keep the shipped command files as the discoverability layer.

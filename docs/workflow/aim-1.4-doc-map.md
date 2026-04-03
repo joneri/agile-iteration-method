@@ -1,21 +1,21 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 1.3 document map
+# AIM 1.4 document map
 
-Use this guide to understand which AIM 1.3 documents are public front-door docs, which are reference specifications, and which are internal planning material.
+Use this guide to understand which AIM 1.4 documents are public front-door docs, which are reference specifications, and which are internal planning material.
 
 ## Public product docs
 
 Use these first:
 - `README.md`
 - `docs/workflow/release-aim-1.4.md`
-- `docs/workflow/quick-start-aim-1.3.md`
-- `docs/workflow/install-aim-1.3.md`
-- `docs/workflow/troubleshoot-aim-1.3.md`
-- `docs/workflow/migrate-aim-1.2-to-1.3.md`
-- `docs/workflow/example-aim-1.3-reference-run.md`
-- `docs/workflow/aim-1.3-interaction-examples.md`
+- `docs/workflow/quick-start-aim-1.4.md`
+- `docs/workflow/install-aim-1.4.md`
+- `docs/workflow/troubleshoot-aim-1.4.md`
+- `docs/workflow/migrate-aim-1.2-to-1.4.md`
+- `docs/workflow/example-aim-1.4-reference-run.md`
+- `docs/workflow/aim-1.4-interaction-examples.md`
 
 These docs answer:
 - what AIM is
@@ -46,6 +46,7 @@ These docs define:
 - role interaction behavior
 - adapter packaging and entrypoint wiring
 - Claude Code bridge and helper-layer boundaries
+- shipped Claude starter surfaces for real user onboarding
 
 ## Internal planning and historical material
 
@@ -60,9 +61,9 @@ These docs are useful for maintainers, but they are not the recommended first st
 For a new user:
 1. `README.md`
 2. `docs/workflow/release-aim-1.4.md`
-3. `docs/workflow/quick-start-aim-1.3.md`
-4. `docs/workflow/install-aim-1.3.md`
-5. `docs/workflow/troubleshoot-aim-1.3.md`
+3. `docs/workflow/quick-start-aim-1.4.md`
+4. `docs/workflow/install-aim-1.4.md`
+5. `docs/workflow/troubleshoot-aim-1.4.md`
 
 For a maintainer or adapter implementer:
 1. `AGENTS.md`

@@ -1,7 +1,7 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 1.3.x interaction examples
+# AIM 1.4 interaction examples
 
 Use this document to see what the most important AIM checkpoints should feel like.
 
@@ -206,7 +206,7 @@ After:
 Role: PO
 Mode: Auto
 The most visible AIM 1.2-style template traces are now removed from the core operational contract and the example guide.
-This Epic goal was to make lived AIM behavior match the role-specific AIM 1.3 interaction model, and this increment fulfills that outcome for the highest-impact files.
+This Epic goal was to make lived AIM behavior match the role-specific AIM 1.4 interaction model, and this increment fulfills that outcome for the highest-impact files.
 
 Epic decision now:
 - continue Epic
@@ -242,7 +242,7 @@ Avoid:
 - turning the conceptual gate minimums into a universal visible template
 
 ## Related documents
-- `docs/features/aim-1.3-role-specific-interaction-model.md`
-- `docs/workflow/quick-start-aim-1.3.md`
-- `docs/workflow/aim-1.3-usage-guides.md`
-- `docs/workflow/example-aim-1.3-reference-run.md`
+- `docs/features/aim-1.4-role-specific-interaction-model.md`
+- `docs/workflow/quick-start-aim-1.4.md`
+- `docs/workflow/aim-1.4-usage-guides.md`
+- `docs/workflow/example-aim-1.4-reference-run.md`

@@ -29,7 +29,7 @@ AIM fixes that with explicit roles, explicit gates, and explicit ownership.
 
 ## What is new in v1.4
 
-AIM 1.4 is the release where AIM 1.3 gains first-class Claude Code support and a clearer multi-adapter product story.
+AIM 1.4 is the release where AIM becomes a clearer three-adapter product story with first-class Claude Code support.
 
 The core loop stays stable. The runtime stays explicit. The adapter story gets stronger.
 
@@ -84,6 +84,17 @@ Choose the path that matches your situation:
 1. Starting a new repository with AIM
 2. Installing AIM into an existing repository
 
+## Choose Your Adapter
+
+- Codex:
+  use the AIM skill entrypoint and the repo docs.
+- Copilot:
+  use the packaged `aim` agent and prompt layer in `.github/`.
+- Claude Code:
+  use `CLAUDE.md` plus the shipped starter files in `.claude/commands/` and `.claude/agents/`.
+
+This repo now ships a minimal Claude starter layer so Claude Code users are not limited to abstract helper-directory guidance.
+
 ## Starting A New Repo With AIM v1.4
 
 Use this path when the repository does not exist yet, or when you want to bootstrap a new repo around AIM from day one.
@@ -95,10 +106,10 @@ Required:
 - `docs/workflow/agile-iteration-method.md`
 
 Recommended:
-- `docs/workflow/quick-start-aim-1.3.md`
-- `docs/workflow/install-aim-1.3.md`
-- `docs/workflow/migrate-aim-1.2-to-1.3.md`
-- `docs/workflow/troubleshoot-aim-1.3.md`
+- `docs/workflow/quick-start-aim-1.4.md`
+- `docs/workflow/install-aim-1.4.md`
+- `docs/workflow/migrate-aim-1.2-to-1.4.md`
+- `docs/workflow/troubleshoot-aim-1.4.md`
 - `examples/epics/example-epic.md`
 
 If you want GitHub Copilot support too, also copy:
@@ -109,12 +120,14 @@ If you want GitHub Copilot support too, also copy:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.2-to-1.3.prompt.md`
+- `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`
 
 If you want Claude Code support too, also copy:
 - `CLAUDE.md`
-- `.claude/agents/`
-- `.claude/commands/`
+- `.claude/agents/aim.md`
+- `.claude/commands/start-aim.md`
+- `.claude/commands/install-aim.md`
+- `.claude/commands/continue-aim.md`
 
 ### 2. Ignore live AIM runtime state
 
@@ -160,7 +173,13 @@ EPIC: <desired user outcome>
 Mode: Strict
 ```
 
-If the repo defines a Claude Code AIM command in `.claude/commands/`, you can use that entrypoint instead of an explicit start prompt.
+This repository also ships a minimal Claude starter layer:
+- `.claude/commands/start-aim.md`
+- `.claude/commands/install-aim.md`
+- `.claude/commands/continue-aim.md`
+- `.claude/agents/aim.md`
+
+If Claude Code exposes repo command files directly in your environment, use the shipped start command as the preferred entrypoint. Otherwise use the explicit start prompt above.
 
 If you want automatic continuation between increments, use `Mode: Auto` instead of `Mode: Strict`.
 
@@ -182,8 +201,10 @@ Add Copilot packaging too if needed:
 
 Add Claude Code packaging too if needed:
 - `CLAUDE.md`
-- `.claude/agents/`
-- `.claude/commands/`
+- `.claude/agents/aim.md`
+- `.claude/commands/start-aim.md`
+- `.claude/commands/install-aim.md`
+- `.claude/commands/continue-aim.md`
 
 ### 2. Make `AGENTS.md` repo-aware
 
@@ -308,18 +329,18 @@ The rule is simple:
 
 If you are evaluating AIM:
 1. `README.md`
-2. `docs/workflow/quick-start-aim-1.3.md`
+2. `docs/workflow/quick-start-aim-1.4.md`
 3. `docs/workflow/agile-iteration-method.md`
-4. `docs/workflow/install-aim-1.3.md`
+4. `docs/workflow/install-aim-1.4.md`
 
 If you are installing AIM in a repo:
-1. `docs/workflow/install-aim-1.3.md`
+1. `docs/workflow/install-aim-1.4.md`
 2. `AGENTS.md`
-3. `docs/workflow/quick-start-aim-1.3.md`
-4. `docs/workflow/troubleshoot-aim-1.3.md`
+3. `docs/workflow/quick-start-aim-1.4.md`
+4. `docs/workflow/troubleshoot-aim-1.4.md`
 
 If you are upgrading from an older AIM version:
-1. `docs/workflow/migrate-aim-1.2-to-1.3.md`
+1. `docs/workflow/migrate-aim-1.2-to-1.4.md`
 2. `docs/workflow/release-aim-1.4.md`
 
 ## Repository Map
@@ -330,20 +351,20 @@ If you are upgrading from an older AIM version:
   Claude Code bridge layer that maps AIM onto Claude Code without changing the shared runtime contract.
 - `docs/workflow/agile-iteration-method.md`
   The method and runtime explanation.
-- `docs/workflow/quick-start-aim-1.3.md`
+- `docs/workflow/quick-start-aim-1.4.md`
   The shortest correct start path.
-- `docs/workflow/install-aim-1.3.md`
+- `docs/workflow/install-aim-1.4.md`
   Minimum viable installation guidance.
 - `docs/workflow/copilot-layer.md`
   Optional GitHub Copilot packaging and workflow layer.
 - `docs/workflow/release-aim-1.4.md`
   Release note and publish checklist for the current version.
-- `docs/workflow/migrate-aim-1.2-to-1.3.md`
+- `docs/workflow/migrate-aim-1.2-to-1.4.md`
   Upgrade guidance for existing AIM repos.
-- `docs/workflow/troubleshoot-aim-1.3.md`
+- `docs/workflow/troubleshoot-aim-1.4.md`
   Startup, resume, validator, and fallback troubleshooting.
-- `docs/workflow/example-aim-1.3-reference-run.md`
-  Concrete example of an AIM 1.3 run.
+- `docs/workflow/example-aim-1.4-reference-run.md`
+  Concrete example of an AIM 1.4 run.
 - `examples/epics/example-epic.md`
   Example Epic input.
 

@@ -1,6 +1,6 @@
 ---
 name: aim
-description: AIM 1.3 orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO with Gate A/B/E approvals
+description: AIM 1.4 orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO with Gate A/B/E approvals
 tools:
   [
     "agent",
@@ -37,11 +37,11 @@ handoffs:
     send: true
 ---
 
-# AIM 1.3 orchestrator (Copilot layer)
+# AIM 1.4 orchestrator (Copilot layer)
 
 This file is an optional Copilot UX layer for AIM.
 Core method semantics come from `AGENTS.md`.
-This packaging is expected to expose the AIM 1.3 contract, not an older AIM variant.
+This packaging is expected to expose the AIM 1.4 contract, not an older AIM variant.
 
 ## Accepted starts
 
@@ -70,7 +70,7 @@ If instructions conflict, escalate.
 - `/aim help` - explain start, Epic input, status, config, and upgrade paths
 - `/aim validate` - run or explain AIM runtime integrity checks
 - `/aim config` - show effective runtime configuration and key repo-aware policy
-- `/aim upgrade 1.2-to-1.3` - guide upgrade to the AIM 1.3 runtime model
+- `/aim upgrade 1.2-to-1.4` - guide upgrade to the AIM 1.4 runtime model
 - `/aim replan` - return to Gate B planning
 - `/aim commit-mode optional|required` - set commit policy
 - `/aim mode strict|auto` - set execution mode for current Epic
@@ -87,7 +87,7 @@ If instructions conflict, escalate.
 
 ## State files
 
-Official AIM 1.3 runtime artifacts in `.aim/`:
+Official AIM 1.4 runtime artifacts in `.aim/`:
 - `.aim/state.json`
 - `.aim/epic.md`
 - `.aim/increments/`
@@ -106,7 +106,7 @@ Suggested state shape:
 
 ```json
 {
-  "aimVersion": "1.3",
+  "aimVersion": "1.4",
   "mode": "Strict",
   "epicId": "EPIC-YYYYMMDD-001",
   "epicStatus": "gate_a_pending",
@@ -243,7 +243,7 @@ At minimum, show:
 - repo-aware context loading
 - ownership violations
 
-Validation results should be described using the same runtime classes as AIM 1.3:
+Validation results should be described using the same runtime classes as AIM 1.4:
 - healthy
 - recoverable
 - blocked
