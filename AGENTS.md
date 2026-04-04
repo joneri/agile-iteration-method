@@ -88,13 +88,17 @@ Each repository must define a repository profile in `AGENTS.md` that states:
 Required AIM file structure:
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
+- `.github/agents/aim.agent.md`
+- `.github/agents/aim-planner.agent.md`
+- `.github/agents/aim-builder.agent.md`
+- `.github/agents/aim-reviewer.agent.md`
 
 Optional adapter file structure:
-- Copilot:
-  - `.github/agents/aim.agent.md`
-  - `.github/agents/aim-planner.agent.md`
-  - `.github/agents/aim-builder.agent.md`
-  - `.github/agents/aim-reviewer.agent.md`
+- Copilot prompt helpers:
+  - `.github/prompts/start-aim.prompt.md`
+  - `.github/prompts/install-aim.prompt.md`
+  - `.github/prompts/help-aim.prompt.md`
+  - `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`
 - Claude Code:
   - `CLAUDE.md`
   - `.claude/commands/`
@@ -103,13 +107,19 @@ Optional adapter file structure:
 Layering and override order:
 1. AIM base semantics (internal skill baseline)
 2. repository `AGENTS.md`
-3. active adapter helper files
+3. repository `.github/agents/aim*.agent.md`
+4. active adapter helper files
    - Copilot:
-     - repository `.github/agents/aim*.agent.md`
+     - repository `.github/prompts/*`
    - Claude Code:
      - repository `CLAUDE.md`
      - repository `.claude/agents/*`
      - repository `.claude/commands/*`
+
+Installation boundary:
+- `.github/agents/aim*.agent.md` are part of the AIM repository instruction layer, not Copilot-only decoration.
+- In Copilot, those same files also act as native custom-agent files.
+- `.github/prompts/` are optional Copilot-style prompt helpers, not the canonical AIM contract.
 
 If layered instructions conflict and cannot be resolved safely, escalate to PO.
 
@@ -216,9 +226,10 @@ After repository files are loaded, the runtime must normalize them into one repo
 Precedence order:
 1. AIM base semantics
 2. repository `AGENTS.md`
-3. active adapter helper files
+3. repository `.github/agents/aim*.agent.md`
+4. active adapter helper files
    - Copilot:
-     - repository `.github/agents/aim*.agent.md`
+     - repository `.github/prompts/*`
    - Claude Code:
      - repository `CLAUDE.md`
      - repository `.claude/agents/*`
@@ -396,7 +407,8 @@ Adapter rules:
   - may expose bounded subagent capability where runtime support exists
   - may expose adapter-specific tools such as MCP-backed browser automation
 - Copilot:
-  - uses `.github/agents/aim*.agent.md` and `.github/prompts/` as interface packaging
+  - uses `.github/agents/aim*.agent.md` as both shared instruction-layer input and native Copilot agent packaging
+  - uses `.github/prompts/` as optional Copilot command-entry helpers
   - may differ in command routing, handoff UI, and prompt-file availability
   - must still preserve the shared runtime contract and repo-aware policy interpretation
 - Claude Code:

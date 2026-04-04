@@ -25,19 +25,17 @@ It is created on first valid AIM start or resume if it does not already exist.
 Required in the repository:
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
+- `.github/agents/aim.agent.md`
+- `.github/agents/aim-planner.agent.md`
+- `.github/agents/aim-builder.agent.md`
+- `.github/agents/aim-reviewer.agent.md`
 - `.aim/` created automatically when AIM starts if missing
 
 Required for Codex:
 - access to the `agile-iteration-method` skill or another compatible AIM runtime adapter
 
-Required for Copilot:
-- `.github/agents/aim.agent.md`
-- `.github/agents/aim-planner.agent.md`
-- `.github/agents/aim-builder.agent.md`
-- `.github/agents/aim-reviewer.agent.md`
+Optional Copilot prompt helpers:
 - `.github/prompts/start-aim.prompt.md`
-
-Recommended for Copilot:
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
 - `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`
@@ -51,6 +49,7 @@ Recommended for Claude Code support:
 
 Claude Code rule:
 - `AGENTS.md` remains the canonical AIM repo contract
+- `.github/agents/aim*.agent.md` remain part of the shared AIM instruction layer
 - `CLAUDE.md` and `.claude/` files are adapter helpers, not replacements for the shared runtime contract
 
 ## What lives where
@@ -69,14 +68,15 @@ Repo-local working state lives in:
 
 Adapter-specific entrypoints live in:
 - Codex skill packaging outside the repo
-- Copilot `.github/agents/` and `.github/prompts/` files inside the repo
+- repository `.github/agents/aim*.agent.md` as shared AIM instruction-layer files
+- Copilot `.github/prompts/` files as optional Copilot entry helpers
 - Claude Code `CLAUDE.md`, `.claude/agents/`, and `.claude/commands/` inside the repo
 
 Recommended user-facing adapter choice:
 - Codex:
   - use the AIM skill
 - Copilot:
-  - use the packaged `aim` agent and prompt helpers
+  - use the packaged `aim` agent and add prompt helpers when you want Copilot-style command entrypoints
 - Claude Code:
   - use `CLAUDE.md` plus the shipped starter files under `.claude/`
 
@@ -104,11 +104,12 @@ Recommended default for the official AIM repository:
 1. Run the install helper:
    - `Install AIM`
    - or `.github/prompts/install-aim.prompt.md`
-2. Verify the `aim` agent and prompt files exist.
-3. Start with:
+2. Verify the required `.github/agents/aim*.agent.md` files exist.
+3. Add `.github/prompts/` if you want packaged Copilot prompt entrypoints.
+4. Start with:
    - `/aim start "EPIC: ..."`
    - or `Start working according to AIM`
-4. Confirm the packaged `aim` agent and prompts expose the AIM 1.4 runtime contract.
+5. Confirm the packaged `aim` agent exposes the AIM 1.4 runtime contract and the prompt files remain optional helpers.
 
 ### Claude Code
 1. Ensure `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, and `CLAUDE.md` are present.

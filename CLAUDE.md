@@ -9,11 +9,17 @@ This file maps that contract onto Claude Code's instruction and command surface 
 
 1. AIM base semantics
 2. repository `AGENTS.md`
-3. repository `CLAUDE.md`
-4. repository `.claude/agents/*`
-5. repository `.claude/commands/*`
+3. repository `.github/agents/aim*.agent.md`
+4. repository `CLAUDE.md`
+5. repository `.claude/agents/*`
+6. repository `.claude/commands/*`
 
 Later Claude-specific layers may refine execution for Claude Code, but they must not silently contradict the shared AIM runtime contract.
+
+Important:
+- `.github/agents/aim*.agent.md` remain part of the shared AIM instruction layer.
+- Claude-specific files extend the Claude adapter surface on top of that layer.
+- `.github/prompts/` remain optional Copilot-style command helpers rather than part of the Claude adapter contract.
 
 ## Claude Code adapter rules
 

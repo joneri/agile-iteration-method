@@ -2,24 +2,24 @@
 mode: agent
 ---
 
-Install AIM 1.4 in this workspace using the optional Copilot layer.
+Install AIM 1.4 in this workspace and add the optional Copilot prompt layer when needed.
 
 Actions:
 1. Verify these files exist and create missing ones from templates:
+   - `AGENTS.md`
+   - `docs/workflow/agile-iteration-method.md`
    - `.github/agents/aim.agent.md`
    - `.github/agents/aim-planner.agent.md`
    - `.github/agents/aim-builder.agent.md`
    - `.github/agents/aim-reviewer.agent.md`
-2. Verify prompt files exist:
+2. Verify optional Copilot prompt files exist when packaged command entrypoints are desired:
    - `.github/prompts/install-aim.prompt.md`
    - `.github/prompts/start-aim.prompt.md`
    - `.github/prompts/help-aim.prompt.md`
    - `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`
    - `.github/prompts/migrate-aim-1.0-to-1.1.prompt.md`
    - `.github/prompts/migrate-aim-1.1-to-1.2.prompt.md`
-3. Confirm AIM docs are present:
-   - `AGENTS.md`
-   - `docs/workflow/agile-iteration-method.md`
+3. Confirm supporting AIM docs are present:
    - `docs/workflow/install-aim-1.4.md`
    - `docs/workflow/copilot-layer.md`
    - `docs/workflow/migrate-aim-1.2-to-1.4.md`
@@ -37,4 +37,4 @@ After setup, suggest:
 - `/migrate-aim-1.0-to-1.1`
 - `/migrate-aim-1.1-to-1.2`
 
-Make clear that the packaged Copilot surface is expected to expose the AIM 1.4 runtime contract.
+Make clear that `.github/agents/aim*.agent.md` are required AIM instruction-layer files and `.github/prompts/` are optional Copilot prompt helpers.

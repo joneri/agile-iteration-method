@@ -282,9 +282,10 @@ After loading repo files, the runtime must normalize them into one shared repo-a
 The context is built in this order:
 1. AIM base semantics
 2. repository `AGENTS.md`
-3. active adapter helper files
+3. repository `.github/agents/aim*.agent.md`
+4. active adapter helper files
    - Copilot:
-     - repository `.github/agents/aim*.agent.md`
+     - repository `.github/prompts/*`
    - Claude Code:
      - repository `CLAUDE.md`
      - repository `.claude/agents/*`
@@ -438,9 +439,10 @@ Each repository defines its own profile in `AGENTS.md`:
 Layer order:
 1. AIM base semantics
 2. repository `AGENTS.md`
-3. active adapter helper files
+3. repository `.github/agents/aim*.agent.md`
+4. active adapter helper files
    - Copilot:
-     - repository `.github/agents/aim*.agent.md`
+     - repository `.github/prompts/*`
    - Claude Code:
      - repository `CLAUDE.md`
      - repository `.claude/agents/*`
@@ -451,17 +453,23 @@ If layers conflict, escalate instead of guessing.
 Required repository files:
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
+- `.github/agents/aim.agent.md`
+- `.github/agents/aim-planner.agent.md`
+- `.github/agents/aim-builder.agent.md`
+- `.github/agents/aim-reviewer.agent.md`
 
 Optional adapter files:
-- Copilot:
-  - `.github/agents/aim.agent.md`
-  - `.github/agents/aim-planner.agent.md`
-  - `.github/agents/aim-builder.agent.md`
-  - `.github/agents/aim-reviewer.agent.md`
+- Copilot prompt helpers:
+  - `.github/prompts/`
 - Claude Code:
   - `CLAUDE.md`
   - `.claude/agents/`
   - `.claude/commands/`
+
+Installation note:
+- `.github/agents/aim*.agent.md` are part of the repository instruction layer for AIM itself.
+- In Copilot, the same files also act as native custom-agent files.
+- `.github/prompts/` are optional Copilot-style command helpers rather than the canonical AIM contract.
 
 Startup triggers (no manual bootstrap expected):
 - `Install AIM`

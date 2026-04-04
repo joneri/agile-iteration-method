@@ -93,7 +93,8 @@ Fallback rule:
 - `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`
 
 Canonical rule:
-- `.github/agents/` and `.github/prompts/` are source of truth for Copilot entrypoints and UX wiring.
+- `.github/agents/aim*.agent.md` are part of the shared AIM instruction layer and also act as native Copilot agent files.
+- `.github/prompts/` are source of truth for Copilot-specific entrypoints and UX wiring.
 - The shared AIM runtime contract still comes from `AGENTS.md` and `docs/workflow/agile-iteration-method.md`.
 
 ## UI handoff buttons

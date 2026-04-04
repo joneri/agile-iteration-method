@@ -22,6 +22,10 @@ Explain:
 4. where AIM runtime state lives:
    - shared AIM 1.4 runtime docs in the repository
    - repo-local working state in `.aim/`
-5. how `Strict` and `Auto` differ
+5. how installation layers differ:
+   - required shared AIM files: `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, `.github/agents/aim*.agent.md`
+   - optional Copilot prompt helpers: `.github/prompts/`
+   - optional Claude adapter bridge: `CLAUDE.md` plus `.claude/`
+6. how `Strict` and `Auto` differ
 
 If no active Epic exists, end by telling me the exact next start command to run.

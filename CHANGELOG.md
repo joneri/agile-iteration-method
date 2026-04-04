@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-04-04 - AIM 1.4.2 adapter installation and layering clarification
+- Clarified that `.github/agents/aim*.agent.md` are required AIM instruction-layer files rather than Copilot-only decoration.
+- Clarified that `.github/prompts/` are optional Copilot prompt helpers rather than the canonical AIM contract.
+- Updated `README.md`, `AGENTS.md`, and `docs/workflow/agile-iteration-method.md` to align installation guidance and instruction-layer precedence.
+- Updated installation, quick-start, Copilot-layer, Claude bridge, and helper prompt docs to keep Codex, Copilot, and Claude Code explanations consistent.
+- Kept Claude Code as a separate adapter layer that extends AIM without replacing `AGENTS.md`.
+
 ## 2026-04-03 - AIM 1.4.1 release alignment and packaging cleanup
 - Renamed the active workflow doc family from `1.3` to `1.4`, including quick start, install, troubleshoot, doc map, migration, usage guides, interaction examples, and the reference run.
 - Renamed the active feature-contract doc family from `aim-1.3-*` to `aim-1.4-*`.

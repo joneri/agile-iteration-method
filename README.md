@@ -89,11 +89,15 @@ Choose the path that matches your situation:
 - Codex:
   use the AIM skill entrypoint and the repo docs.
 - Copilot:
-  use the packaged `aim` agent and prompt layer in `.github/`.
+  use the packaged `aim` agent in `.github/agents/` and add `.github/prompts/` when you want Copilot-style command helpers.
 - Claude Code:
   use `CLAUDE.md` plus the shipped starter files in `.claude/commands/` and `.claude/agents/`.
 
 This repo now ships a minimal Claude starter layer so Claude Code users are not limited to abstract helper-directory guidance.
+
+Important installation rule:
+- `.github/agents/aim*.agent.md` are part of the AIM instruction layer, not just Copilot decoration.
+- `.github/prompts/` are optional Copilot prompt helpers.
 
 ## Starting A New Repo With AIM v1.4
 
@@ -101,9 +105,13 @@ Use this path when the repository does not exist yet, or when you want to bootst
 
 ### 1. Copy the AIM files into the new repo
 
-Required:
+Required for AIM:
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
+- `.github/agents/aim.agent.md`
+- `.github/agents/aim-planner.agent.md`
+- `.github/agents/aim-builder.agent.md`
+- `.github/agents/aim-reviewer.agent.md`
 
 Recommended:
 - `docs/workflow/quick-start-aim-1.4.md`
@@ -112,11 +120,7 @@ Recommended:
 - `docs/workflow/troubleshoot-aim-1.4.md`
 - `examples/epics/example-epic.md`
 
-If you want GitHub Copilot support too, also copy:
-- `.github/agents/aim.agent.md`
-- `.github/agents/aim-planner.agent.md`
-- `.github/agents/aim-builder.agent.md`
-- `.github/agents/aim-reviewer.agent.md`
+Optional GitHub Copilot prompt files:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
@@ -128,6 +132,13 @@ If you want Claude Code support too, also copy:
 - `.claude/commands/start-aim.md`
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`
+
+Why this matters:
+- `AGENTS.md` defines the canonical repo-aware AIM behavior.
+- `.github/agents/aim*.agent.md` are part of the AIM instruction layer and affect behavior in both Codex and Copilot.
+- in Copilot, those same files also act as native custom-agent files.
+- `.github/prompts/` are optional prompt-entry helpers, mainly useful for Copilot-style command flows.
+- Claude Code uses `CLAUDE.md` and `.claude/` as its adapter layer, but does not replace `AGENTS.md`.
 
 ### 2. Ignore live AIM runtime state
 
@@ -191,12 +202,15 @@ Use this path when the product, codebase, tests, and CI already exist and you wa
 
 You do not need to restructure the application first.
 
-Add the AIM files:
+Add the core AIM files:
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
+- `.github/agents/aim.agent.md`
+- `.github/agents/aim-planner.agent.md`
+- `.github/agents/aim-builder.agent.md`
+- `.github/agents/aim-reviewer.agent.md`
 
-Add Copilot packaging too if needed:
-- `.github/agents/`
+Add optional Copilot prompt files if you want packaged Copilot entrypoints too:
 - `.github/prompts/`
 
 Add Claude Code packaging too if needed:
@@ -205,6 +219,10 @@ Add Claude Code packaging too if needed:
 - `.claude/commands/start-aim.md`
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`
+
+Important:
+`.github/agents/aim*.agent.md` are not Copilot-only.
+In AIM, they are part of the repository instruction layer and should be installed for proper AIM behavior in both Codex and Copilot.
 
 ### 2. Make `AGENTS.md` repo-aware
 
@@ -251,11 +269,12 @@ Mode: Strict
 If someone lands on this repo and wants the shortest possible path, this is it:
 
 1. Copy `AGENTS.md` and `docs/workflow/agile-iteration-method.md` into the target repo.
-2. Add `/.aim` to `.gitignore`.
-3. If using Copilot, copy `.github/agents/` and `.github/prompts/`.
-4. If using Claude Code, add `CLAUDE.md` and the recommended `.claude/` helper directories.
-5. Open the repo in Codex, Copilot, or Claude Code.
-6. Start with `EPIC: <desired outcome>` and `Mode: Strict` or `Mode: Auto`.
+2. Copy `.github/agents/aim*.agent.md` into the target repo.
+3. Add `/.aim` to `.gitignore`.
+4. Optionally copy `.github/prompts/` if you want packaged Copilot prompt entrypoints too.
+5. Optionally add `CLAUDE.md` and `.claude/` if you want Claude Code support too.
+6. Open the repo in Codex, Copilot, or Claude Code.
+7. Start with `EPIC: <desired outcome>` and `Mode: Strict` or `Mode: Auto`.
 
 ## Why This Feels Different From Normal AI Coding
 
@@ -324,6 +343,26 @@ The rule is simple:
 - same method where parity is possible
 - explicit fallback where parity is not possible
 - no silent redefinition of gates, ownership, or acceptance
+
+### Instruction layering in practice
+
+AIM uses layered repository instructions:
+
+1. AIM base semantics
+2. repository `AGENTS.md`
+3. repository `.github/agents/aim*.agent.md`
+
+This means `.github/agents/` files are part of AIM behavior in practice, not just optional Copilot decoration.
+
+In Copilot, they also act as native custom-agent files.
+In Codex, AIM reads and uses them as part of the repository instruction layer.
+
+Claude Code uses a separate adapter bridge:
+- `CLAUDE.md`
+- `.claude/agents/`
+- `.claude/commands/`
+
+These files extend the Claude adapter surface, but they do not replace `AGENTS.md` as the canonical AIM contract.
 
 ## Recommended Reading Order
 

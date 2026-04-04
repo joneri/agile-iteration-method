@@ -4,6 +4,7 @@ Use this command to start a new AIM loop in Claude Code for this repository.
 
 Before starting:
 - load `AGENTS.md`
+- load `.github/agents/aim*.agent.md` when present as part of the shared AIM instruction layer
 - load `CLAUDE.md`
 - load `docs/workflow/agile-iteration-method.md`
 - preserve `.aim` as the official AIM runtime workspace
@@ -18,6 +19,7 @@ Command behavior:
 - keep canonical role order:
   - `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
 - keep `AGENTS.md` canonical
+- keep `.github/agents/aim*.agent.md` as shared repository instruction-layer input when present
 - keep the main AIM thread as the only owner of `.aim/state.json`, gate progression, and acceptance
 
 Safe fallback:

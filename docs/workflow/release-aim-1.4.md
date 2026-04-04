@@ -14,6 +14,7 @@ Main outcomes:
 - Codex, Copilot, and Claude Code now share one explicit adapter story where parity is possible
 - Claude Code bridge and helper layers are documented without weakening the shared ownership model
 - this repository now ships a minimal Claude starter layer for real user onboarding
+- AIM installation guidance now makes `.github/agents/aim*.agent.md` explicit as shared instruction-layer files while keeping `.github/prompts/` optional Copilot helpers
 
 ## Why teams will care immediately
 

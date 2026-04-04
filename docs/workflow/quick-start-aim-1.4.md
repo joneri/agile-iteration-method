@@ -10,11 +10,15 @@ Use this guide if you want the shortest correct path into AIM.
 - Codex:
   use the AIM skill and the repo docs.
 - Copilot:
-  use the packaged `aim` agent and prompts.
+  use the packaged `aim` agent and add prompt helpers when you want Copilot-style command entrypoints.
 - Claude Code:
   use `CLAUDE.md` plus the shipped starter files in `.claude/commands/` and `.claude/agents/`.
 
 This repository now ships a minimal Claude starter layer so the Claude path is concrete instead of only documented in theory.
+
+Shared install note:
+- `.github/agents/aim*.agent.md` are part of the AIM instruction layer generally.
+- `.github/prompts/` are optional Copilot prompt helpers.
 
 ## One obvious way to start
 
