@@ -20,6 +20,8 @@ Use these first:
 These docs answer:
 - what AIM is
 - how to start
+- what the Codex skill is and when it helps
+- when the repo alone is enough
 - how to resume
 - how to inspect `.aim`
 - how to troubleshoot
@@ -60,9 +62,9 @@ These docs are useful for maintainers, but they are not the recommended first st
 
 For a new user:
 1. `README.md`
-2. `docs/workflow/release-aim-1.4.md`
+2. `docs/workflow/install-aim-1.4.md`
 3. `docs/workflow/quick-start-aim-1.4.md`
-4. `docs/workflow/install-aim-1.4.md`
+4. `docs/workflow/release-aim-1.4.md`
 5. `docs/workflow/troubleshoot-aim-1.4.md`
 
 For a maintainer or adapter implementer:

@@ -52,7 +52,7 @@ This release makes AIM much easier to trust, explain, and adopt:
 - Faster where it helps:
   AIM can use bounded subagents for analysis, discovery and verification in complex repos, while still keeping one central runtime state and one clear decision path.
 
-## Why This Release Stands Out
+## What Makes This Release Different
 
 - One AIM, three adapter surfaces:
   Codex, Copilot, and Claude Code now fit under the same `core + runtime + repo-aware policy + platform adapters` model.
@@ -87,7 +87,7 @@ Choose the path that matches your situation:
 ## Choose Your Adapter
 
 - Codex:
-  use the AIM skill entrypoint and the repo docs.
+  the repo is the AIM contract. The Codex skill adds the `/aim` launcher plus bootstrap help.
 - Copilot:
   use the packaged `aim` agent in `.github/agents/` and add `.github/prompts/` when you want Copilot-style command helpers.
 - Claude Code:
@@ -98,6 +98,20 @@ This repo now ships a minimal Claude starter layer so Claude Code users are not 
 Important installation rule:
 - `.github/agents/aim*.agent.md` are part of the AIM instruction layer, not just Copilot decoration.
 - `.github/prompts/` are optional Copilot prompt helpers.
+
+## Codex In Plain Language
+
+- The repository is the canonical AIM contract.
+- The Codex skill is a bootstrap and convenience layer.
+- `/aim` is the normal Codex start path when the AIM skill is installed and enabled.
+- A fully AIM-aware repo can still be used in Codex without the skill if you start with explicit AIM intent in plain language.
+- The skill is still useful in a prepared repo because it gives you the clean `/aim` entrypoint plus status, help, config, validate, and upgrade helpers.
+
+| Adapter | Canonical contract | Convenience layer | Normal start path | Required for best experience |
+| --- | --- | --- | --- | --- |
+| Codex | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | Codex AIM skill | `/aim start "EPIC: ..."` | Skill enabled for `/aim`; repo alone can still work with explicit AIM intent |
+| Copilot | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `.github/prompts/` | select `aim` and run `/aim start "EPIC: ..."` | `.github/agents/aim*.agent.md`; prompts optional |
+| Claude Code | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` + `CLAUDE.md` | `.claude/commands/` and `.claude/agents/` | repo Claude command or explicit `EPIC: ...` | `CLAUDE.md`; `.claude/` helpers recommended |
 
 ## Starting A New Repo With AIM v1.4
 
@@ -133,7 +147,7 @@ If you want Claude Code support too, also copy:
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`
 
-Why this matters:
+What these files do:
 - `AGENTS.md` defines the canonical repo-aware AIM behavior.
 - `.github/agents/aim*.agent.md` are part of the AIM instruction layer and affect behavior in both Codex and Copilot.
 - in Copilot, those same files also act as native custom-agent files.
@@ -165,7 +179,14 @@ This is what makes AIM behave like your repo instead of a generic chatbot.
 In Codex:
 
 ```text
-[$agile-iteration-method](...) Start new AIM loop with:
+/aim start "EPIC: <desired user outcome>"
+Mode: Strict
+```
+
+`/aim` is the normal Codex start path when the AIM skill is installed and enabled.
+If the repo already contains the AIM contract but the skill is not available, start with:
+
+```text
 EPIC: <desired user outcome>
 Mode: Strict
 ```
@@ -274,7 +295,7 @@ If someone lands on this repo and wants the shortest possible path, this is it:
 4. Optionally copy `.github/prompts/` if you want packaged Copilot prompt entrypoints too.
 5. Optionally add `CLAUDE.md` and `.claude/` if you want Claude Code support too.
 6. Open the repo in Codex, Copilot, or Claude Code.
-7. Start with `EPIC: <desired outcome>` and `Mode: Strict` or `Mode: Auto`.
+7. Start with `/aim start "EPIC: <desired outcome>"` when the Codex skill or another slash-command adapter surface is available. Otherwise start with `EPIC: <desired outcome>` and `Mode: Strict` or `Mode: Auto`.
 
 ## Why This Feels Different From Normal AI Coding
 

@@ -8,7 +8,7 @@ Use this guide if you want the shortest correct path into AIM.
 ## Choose your adapter
 
 - Codex:
-  use the AIM skill and the repo docs.
+  the repo is the AIM contract and the skill adds the `/aim` launcher.
 - Copilot:
   use the packaged `aim` agent and add prompt helpers when you want Copilot-style command entrypoints.
 - Claude Code:
@@ -20,11 +20,18 @@ Shared install note:
 - `.github/agents/aim*.agent.md` are part of the AIM instruction layer generally.
 - `.github/prompts/` are optional Copilot prompt helpers.
 
+## Codex skill versus repo-aware AIM
+
+- The repo is the canonical AIM contract.
+- The Codex skill is the cleanest way to expose `/aim`.
+- `/aim` depends on the skill being installed and enabled.
+- A prepared AIM repo can still work in Codex without the skill when you start with explicit AIM language.
+
 ## One obvious way to start
 
 Preferred production starts:
 - Codex:
-  - invoke `[$agile-iteration-method](...)` and provide `EPIC: ...`
+  - use `/aim start "EPIC: ..."` when the AIM skill is installed and enabled
 - Copilot:
   - select the `aim` agent and run `/aim start "EPIC: ..."`
 - Claude Code:
@@ -33,7 +40,7 @@ Preferred production starts:
 
 Secondary starts:
 - Codex:
-  - a natural-language AIM start is acceptable when the intent is explicit
+  - in a fully prepared AIM repo, a plain-language AIM start is acceptable when the skill is not available and the intent is explicit
 - Copilot:
   - `Install AIM` or `Start working according to AIM` remain valid when the optional Copilot layer is installed
 - Claude Code:
@@ -73,10 +80,10 @@ Good example:
 Mode: Auto
 ```
 
-Codex-oriented equivalent:
+Repo-aware Codex fallback:
 
 ```text
-[$agile-iteration-method](...) Start new AIM Loop with "EPIC: Make AIM easier for new users to start and understand"
+EPIC: Make AIM easier for new users to start and understand
 Mode: Auto
 ```
 

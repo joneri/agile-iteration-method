@@ -15,6 +15,7 @@ Main outcomes:
 - Claude Code bridge and helper layers are documented without weakening the shared ownership model
 - this repository now ships a minimal Claude starter layer for real user onboarding
 - AIM installation guidance now makes `.github/agents/aim*.agent.md` explicit as shared instruction-layer files while keeping `.github/prompts/` optional Copilot helpers
+- Codex docs now make the product model explicit: the repo is the AIM contract, the skill is the bootstrap layer, and `/aim` is the normal start path when the skill is enabled
 
 ## Why teams will care immediately
 
@@ -57,11 +58,13 @@ Main outcomes:
 
 1. Confirm `README.md` presents AIM 1.4 as the current public front door.
 2. Confirm `README.md` selling points explicitly include Claude Code support.
-3. Confirm `README.md`, `docs/workflow/install-aim-1.4.md`, and `docs/workflow/quick-start-aim-1.4.md` each describe Claude Code as a supported adapter.
-4. Confirm `AGENTS.md` and `CLAUDE.md` make `AGENTS.md` canonical and `CLAUDE.md` adapter-specific.
-5. Confirm `docs/workflow/agile-iteration-method.md` and `docs/features/aim-1.4-platform-adapters-and-parity.md` document Claude Code without changing AIM core or AIM runtime semantics.
-6. Confirm Claude helper boundaries explicitly preserve main-thread ownership of `.aim/state.json`, gates, and acceptance.
-7. Confirm `CHANGELOG.md` includes the AIM 1.4 entry.
+3. Confirm `README.md`, `docs/workflow/install-aim-1.4.md`, and `docs/workflow/quick-start-aim-1.4.md` explain the Codex skill as a bootstrap layer rather than the canonical AIM contract.
+4. Confirm those same docs say `/aim` is the normal Codex start path when the skill is enabled and explain the repo-aware fallback when it is not.
+5. Confirm `README.md`, `docs/workflow/install-aim-1.4.md`, and `docs/workflow/quick-start-aim-1.4.md` each describe Claude Code as a supported adapter.
+6. Confirm `AGENTS.md` and `CLAUDE.md` make `AGENTS.md` canonical and `CLAUDE.md` adapter-specific.
+7. Confirm `docs/workflow/agile-iteration-method.md` and `docs/features/aim-1.4-platform-adapters-and-parity.md` document Claude Code without changing AIM core or AIM runtime semantics.
+8. Confirm Claude helper boundaries explicitly preserve main-thread ownership of `.aim/state.json`, gates, and acceptance.
+9. Confirm `CHANGELOG.md` includes the current AIM 1.4.x patch entry.
 
 ## Suggested publish text (short)
 
@@ -72,15 +75,16 @@ What is new:
 - updated install and quick-start guidance for Codex, Copilot, and Claude Code
 - explicit Claude bridge/helper layer that keeps `AGENTS.md` canonical
 - stronger public positioning for AIM as a cross-environment operating model
+- clearer Codex product model where the repo is canonical, the skill is the convenience layer, and `/aim` is the normal start when the skill is enabled
 
 ## Suggested publish text (promoted)
 
 AIM 1.4 makes AIM easier to explain, adopt, and trust across modern agent environments.
 
-Why this release stands out:
+What stands out in this patch:
 - Claude Code is now part of the supported AIM adapter story, not bolted on afterward
 - Codex, Copilot, and Claude Code fit under one shared runtime and ownership model
 - the main AIM thread still owns `.aim/state.json`, gate progression, and acceptance everywhere
-- the install, quick-start, and public front-door docs now sell AIM as one portable operating model
+- the install, quick-start, and public front-door docs now explain the Codex skill, repo-aware AIM, and `/aim` without mixed signals
 
 If your team wants AIM to work and read like a cross-environment product instead of a one-tool workflow, AIM 1.4 is the release to use.

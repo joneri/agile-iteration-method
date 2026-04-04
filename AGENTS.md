@@ -120,6 +120,8 @@ Installation boundary:
 - `.github/agents/aim*.agent.md` are part of the AIM repository instruction layer, not Copilot-only decoration.
 - In Copilot, those same files also act as native custom-agent files.
 - `.github/prompts/` are optional Copilot-style prompt helpers, not the canonical AIM contract.
+- In Codex, the repository remains the canonical AIM contract.
+- In Codex, `/aim` depends on the AIM skill or another compatible runtime entrypoint and should be treated as a launcher surface rather than the source of method authority.
 
 If layered instructions conflict and cannot be resolved safely, escalate to PO.
 

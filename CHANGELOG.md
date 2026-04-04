@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-04-04 - AIM 1.4.3 Codex skill and installation authority clarification
+- Fixed the public Codex startup docs so `/aim start "EPIC: ..."` is the normal path when the AIM skill is installed and enabled.
+- Clarified that the repository is the canonical AIM contract while the Codex skill is the bootstrap and convenience layer.
+- Clarified when a fully prepared repo can still run repo-aware AIM in Codex without the skill by using explicit AIM start intent.
+- Updated `README.md`, install docs, quick-start docs, onboarding docs, and release docs so required AIM files, optional Copilot helpers, and Claude adapter files stay clearly separated.
+- Kept `.github/agents/aim*.agent.md` in the shared AIM instruction layer and kept `.github/prompts/` as optional Copilot helpers.
+
 ## 2026-04-04 - AIM 1.4.2 adapter installation and layering clarification
 - Clarified that `.github/agents/aim*.agent.md` are required AIM instruction-layer files rather than Copilot-only decoration.
 - Clarified that `.github/prompts/` are optional Copilot prompt helpers rather than the canonical AIM contract.

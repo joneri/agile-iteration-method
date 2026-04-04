@@ -470,6 +470,8 @@ Installation note:
 - `.github/agents/aim*.agent.md` are part of the repository instruction layer for AIM itself.
 - In Copilot, the same files also act as native custom-agent files.
 - `.github/prompts/` are optional Copilot-style command helpers rather than the canonical AIM contract.
+- In Codex, the repository remains the canonical AIM contract.
+- In Codex, `/aim` depends on the AIM skill or another compatible runtime entrypoint and acts as the launcher surface rather than hidden authority.
 
 Startup triggers (no manual bootstrap expected):
 - `Install AIM`

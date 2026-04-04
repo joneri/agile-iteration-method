@@ -31,8 +31,11 @@ Required in the repository:
 - `.github/agents/aim-reviewer.agent.md`
 - `.aim/` created automatically when AIM starts if missing
 
-Required for Codex:
-- access to the `agile-iteration-method` skill or another compatible AIM runtime adapter
+Required for `/aim` in Codex:
+- the `agile-iteration-method` skill installed and enabled
+
+Repo-aware Codex without the skill:
+- the repo can still operate as AIM in Codex when the required AIM files are present and the user starts with explicit AIM intent in plain language
 
 Optional Copilot prompt helpers:
 - `.github/prompts/start-aim.prompt.md`
@@ -74,11 +77,19 @@ Adapter-specific entrypoints live in:
 
 Recommended user-facing adapter choice:
 - Codex:
-  - use the AIM skill
+  - use the AIM skill when you want the `/aim` command surface
 - Copilot:
   - use the packaged `aim` agent and add prompt helpers when you want Copilot-style command entrypoints
 - Claude Code:
   - use `CLAUDE.md` plus the shipped starter files under `.claude/`
+
+## Codex product model
+
+- The repository is the source of truth for repo-aware AIM.
+- The Codex skill is a bootstrap and convenience layer.
+- `/aim` is the normal Codex start path when the skill is available.
+- A prepared repo can still run AIM in Codex without the skill, but that path should use explicit AIM start language instead of `/aim`.
+- The skill stays valuable even in a prepared repo because it gives a cleaner launcher plus help, status, config, validate, and upgrade entrypoints.
 
 ## `.aim` commit and ignore guidance
 
@@ -93,12 +104,14 @@ Recommended default for the official AIM repository:
 ## Recommended installation flow
 
 ### Codex
-1. Confirm the AIM skill is available.
-2. Confirm the repository AIM docs are present.
+1. Install or enable the AIM skill if you want `/aim`.
+2. Confirm the repository AIM docs and `.github/agents/aim*.agent.md` are present.
 3. Start with:
-   - `[$agile-iteration-method](...) Start new AIM Loop with "EPIC: ..."`
-   - or another compatible AIM runtime entrypoint
-4. Confirm the active skill baseline is AIM 1.4 rather than an older AIM variant.
+   - `/aim start "EPIC: ..."`
+4. If the skill is unavailable but the repo already carries the full AIM contract, start with:
+   - `EPIC: <desired outcome>`
+   - `Mode: Strict` or `Mode: Auto`
+5. Confirm the repo remains the source of truth and the skill acts as the launcher rather than hidden authority.
 
 ### Copilot
 1. Run the install helper:
