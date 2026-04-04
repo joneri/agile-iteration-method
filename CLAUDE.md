@@ -3,7 +3,7 @@
 This file is the Claude Code instruction bridge for AIM.
 
 `AGENTS.md` remains the canonical repository AIM contract.
-This file maps that contract onto Claude Code's instruction and command surface without redefining AIM core, AIM runtime, repo-aware policy, gates, ownership, or acceptance.
+This file maps that contract onto Claude Code's instruction and command surface. It does not redefine AIM core, AIM runtime, repo-aware policy, gates, ownership or acceptance.
 
 ## Recommended layer order
 
@@ -14,9 +14,9 @@ This file maps that contract onto Claude Code's instruction and command surface 
 5. repository `.claude/agents/*`
 6. repository `.claude/commands/*`
 
-Later Claude-specific layers may refine execution for Claude Code, but they must not silently contradict the shared AIM runtime contract.
+Later Claude-specific layers may refine execution for Claude Code, but they must not contradict the shared AIM runtime contract.
 
-Important:
+Keep in mind:
 - `.github/agents/aim*.agent.md` remain part of the shared AIM instruction layer.
 - Claude-specific files extend the Claude adapter surface on top of that layer.
 - `.github/prompts/` remain optional Copilot-style command helpers rather than part of the Claude adapter contract.
@@ -47,7 +47,7 @@ They must not:
 - redefine acceptance semantics
 - replace `AGENTS.md` as the repo contract
 
-## Practical Claude Code start
+## Starting AIM in Claude Code
 
 Before starting AIM in Claude Code, ensure these files are present:
 - `AGENTS.md`
@@ -58,7 +58,7 @@ Recommended Claude Code helper packaging:
 - `.claude/commands/`
 - `.claude/agents/`
 
-This repository now ships a minimal Claude starter layer:
+This repository now ships a small Claude starter layer:
 - `.claude/commands/start-aim.md`
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`

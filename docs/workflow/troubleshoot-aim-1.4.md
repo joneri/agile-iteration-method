@@ -3,14 +3,14 @@
 
 # Troubleshoot AIM 1.4
 
-Use this guide when AIM 1.4 does not start, resume, validate, or behave consistently across adapters.
+Use this guide when AIM 1.4 does not start, resume, validate or behave consistently across adapters.
 
 ## Fast checks
 
 Check these first:
 1. `.aim/state.json`
 2. `.aim/epic.md`
-3. the newest files in `.aim/increments/`, `.aim/reviews/`, and `.aim/decisions/`
+3. the newest files in `.aim/increments/`, `.aim/reviews/` and `.aim/decisions/`
 4. `AGENTS.md`
 5. `docs/workflow/agile-iteration-method.md`
 
@@ -37,7 +37,7 @@ AIM starts a new Epic when you expected resume behavior.
 ### Check
 - inspect `.aim/state.json`
 - verify whether it points to an incomplete Epic
-- verify that `current_role`, `gate`, and increment state match the newest runtime artifacts
+- verify that `current_role`, `gate` and increment state match the newest runtime artifacts
 
 ### Expected AIM 1.4 behavior
 - if `.aim/state.json` describes an incomplete Epic, AIM resumes from that checkpoint
@@ -60,17 +60,17 @@ AIM starts a new Epic when you expected resume behavior.
 
 ### Expected AIM 1.4 behavior
 - `state.json` is the durable runtime checkpoint
-- helper artifacts may exist, but must remain secondary
+- helper artifacts may exist but must remain secondary
 - only the main AIM thread owns shared runtime state
 
 ## Validator issues
 
 ### Symptom
-Validation reports `healthy`, `recoverable`, `blocked`, or `contradictory`.
+Validation reports `healthy`, `recoverable`, `blocked` or `contradictory`.
 
 ### Check
 - compare validator output with `.aim/state.json`
-- compare the active increment with the newest increment, review, and decision artifacts
+- compare the active increment with the newest increment, review and decision artifacts
 - compare current repo-aware instructions with the normalized runtime expectations
 
 ### Expected AIM 1.4 behavior
@@ -105,7 +105,7 @@ Parallel capability is missing or inconsistent.
 - confirm no parallel path is writing `.aim/state.json` or advancing gates
 
 ### Expected AIM 1.4 behavior
-- only the main AIM thread owns `state.json`, gate progression, and acceptance
+- only the main AIM thread owns `state.json`, gate progression and acceptance
 - if bounded parallel capability is unavailable, AIM falls back to sequential execution
 - deployment and database migration are not parallel by default
 
@@ -116,7 +116,7 @@ An AIM 1.2 repo does not migrate cleanly to AIM 1.4.
 
 ### Check
 - compare the repo against `docs/workflow/migrate-aim-1.2-to-1.4.md`
-- confirm legacy artifacts are classified as tolerated, migrated, archived, or removed
+- confirm legacy artifacts are classified as tolerated, migrated, archived or removed
 - confirm `.aim/epic.md` and `.aim/state.json` are treated as authoritative after migration
 
 ### Expected AIM 1.4 behavior

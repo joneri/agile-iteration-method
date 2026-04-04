@@ -3,7 +3,7 @@
 
 # AIM 1.4 document map
 
-Use this guide to understand which AIM 1.4 documents are public front-door docs, which are reference specifications, and which are internal planning material.
+Use this guide to understand which AIM 1.4 documents are public front-door docs, which are reference specifications and which are internal planning material.
 
 ## Public product docs
 
@@ -56,7 +56,7 @@ Use these when working on AIM itself rather than just using AIM:
 - `docs/epics/`
 - `.aim/`
 
-These docs are useful for maintainers, but they are not the recommended first stop for a new user.
+These docs are useful for maintainers but they are not the recommended first stop for a new user.
 
 ## Recommended production reading order
 

@@ -11,32 +11,29 @@ It retains the AIM 1.2 core method and keeps the accepted AIM 1.3 runtime model 
 
 ## Overview
 
-Agile iteration method is a structured way of using AI agents as explicit roles
-in an Agile way of working.
+Agile iteration method uses AI agents as clear roles inside one delivery loop.
 
-Instead of treating AI as a single assistant that jumps between ideas,
-the method enforces:
+Instead of treating AI as one assistant that jumps between ideas,
+the method uses:
 
-- explicit roles
+- clear roles
 - real Done Increments (not micro steps)
 - clear handoffs
 - hard approval gates
 
-The goal is to converge towards working software that can be meaningfully
-evaluated by users, while keeping full human control over scope, quality and direction.
+The goal is to move toward working software that users can evaluate while keeping human control over scope, quality and direction.
 
-The method is inspired by the “Ralph Wiggum loop”, but adapted to real product
-development and renamed to reflect its Agile nature.
+The method is inspired by the “Ralph Wiggum loop”, adapted to real product development and renamed to reflect its Agile nature.
 
-### AIM 1.4 architecture foundation
+### AIM 1.4 basics
 
 - Core AIM roles and gate semantics are unchanged.
 - AIM is defined as `core + runtime + repo-aware policy + platform adapters`.
 - `.aim` is treated as official repo-local runtime state.
 - Feature documentation path is `docs/features/`.
 - Epic docs path is `docs/epics/`.
-- Repository profile is a first-class concept with explicit layer order.
-- Execution modes are explicit: `Strict` and `Auto`.
+- Repository profile is a first-class concept with a defined layer order.
+- Execution modes are `Strict` and `Auto`.
 - Canonical role names are locked: `PO`, `TDO`, `Dev`, `Reviewer`.
 - Optional Copilot and Claude Code layers provide faster commands without changing method semantics.
 - Controlled parallelism is allowed only when runtime support exists and ownership remains centralized.
@@ -47,8 +44,7 @@ development and renamed to reflect its Agile nature.
 
 ## Core idea
 
-The entire development process is treated as one continuous Agile loop,
-driven by roles and guarded by explicit approvals.
+The whole development process is one continuous Agile loop, driven by roles and guarded by approvals.
 
 Kickoff contract:
 - PO creates the Epic from desired user outcome.
@@ -61,8 +57,8 @@ Kickoff contract:
 5. A **Developer (Dev)** implements exactly that Done Increment.
 6. A **Reviewer** checks correctness, edge cases and technical risk.
 7. The **TDO** validates the increment against the Epic and the increment acceptance criteria.
-8. The **TDO** presents the increment as a demo, test, and feedback checkpoint and asks whether the increment should be accepted or adjusted.
-9. The **PO** decides whether the Epic should continue, close, or split new scope into a separate Epic.
+8. The **TDO** presents the increment as a demo, test and feedback checkpoint and asks whether the increment should be accepted or adjusted.
+9. The **PO** decides whether the Epic should continue, close or split new scope into a separate Epic.
 10. Feedback is carried into the next Done Increment when the Epic continues.
 11. The loop repeats until the Epic is complete.
 
@@ -87,10 +83,10 @@ AIM 1.4 separates the method from the machinery that runs it.
   - persistent state and gate bookkeeping
   - validation and fallback behavior
 - `repo-aware policy`:
-  - repository-specific verification, deployment, migration, and tool rules
+  - repository-specific verification, deployment, migration and tool rules
   - any repository restrictions on automation or parallel execution
 - `platform adapters`:
-  - Codex, Copilot, Claude Code, or another compatible environment
+  - Codex, Copilot, Claude Code or another compatible environment
   - entry behavior and capability differences
   - fallback behavior when exact parity is impossible
 
@@ -108,11 +104,11 @@ It exists so AIM state is visible and resumable across sessions and, where suppo
 
 At the architectural level, users should be able to trust that:
 - `.aim` belongs to AIM runtime, not to one vendor-specific integration
-- the current Epic, active increment, gate, and mode can be inspected there
+- the current Epic, active increment, gate and mode can be inspected there
 - gate progression and acceptance decisions are owned by the main AIM thread
 - auxiliary or parallel work, when allowed, produces scoped outputs only and does not take ownership of shared state
 
-The full `.aim` file contract, schema, and lifecycle rules belong to the runtime specification.
+The full `.aim` file contract, schema and lifecycle rules belong to the runtime specification.
 
 ### Official `.aim` contract
 
@@ -138,7 +134,7 @@ The runtime must keep ownership explicit:
 - only the main AIM thread may update `.aim/state.json`
 - only the main AIM thread may advance gates or change increment or Epic status
 - `PO` owns Epic intent updates
-- `TDO` owns planning, synthesis, and decision records
+- `TDO` owns planning, synthesis and decision records
 - `Dev` owns implementation trace artifacts
 - `Reviewer` owns review findings and readiness signals
 - subagents may write only scoped outputs in allowed analysis locations
@@ -147,7 +143,7 @@ The runtime must also keep `.aim` clean enough to inspect:
 - active artifacts stay in place while the increment is in progress
 - completed or stale artifacts may move to `.aim/archive/` when they are no longer active working context
 - logs and analysis notes are temporary unless they remain useful for audit or resume
-- secrets, credentials, and unrelated application data must never be stored in `.aim`
+- secrets, credentials and unrelated application data must never be stored in `.aim`
 
 ### Active state model
 
@@ -267,7 +263,7 @@ It makes the runtime meaning of those gates durable:
 
 Resume behavior must read the persisted runtime state, not infer status from partial artifacts alone.
 
-What this means:
+Resume cases:
 - if `state.json` says `blocked`, AIM resumes in blocked mode and asks for input
 - if `state.json` says `epic_paused`, AIM resumes as paused until the main thread reactivates the Epic
 - if `state.json` says `po_approval_pending`, AIM resumes at Gate E rather than replaying earlier steps
@@ -315,10 +311,10 @@ The normalized runtime context should expose, at minimum:
 
 The runtime and adapters should read from the normalized context, not directly from scattered repo files during each decision.
 
-This means:
-- startup uses the same context shape in Codex, Copilot, and Claude Code
+Across adapters:
+- startup uses the same context shape in Codex, Copilot and Claude Code
 - resume uses the same context shape when deciding whether execution can continue
-- verification, deployment, migration, reviewer, and parallel rules are interpreted once, then reused consistently
+- verification, deployment, migration, reviewer and parallel rules are interpreted once, then reused consistently
 
 ### Missing or contradictory policy
 
@@ -340,7 +336,7 @@ The validator should check:
 - `.aim` structure
 - required versus optional runtime artifacts
 - `state.json` syntax and semantic coherence
-- active increment alignment with increment, review, and decision artifacts
+- active increment alignment with increment, review and decision artifacts
 - normalized repo-aware context availability
 - ownership-rule violations, especially around shared state and subagent outputs
 
@@ -405,7 +401,7 @@ A safe AIM 1.2 to AIM 1.4 migration should:
 
 ### Legacy artifact handling
 
-Legacy artifacts should be classified explicitly:
+Legacy artifacts should be classified like this:
 - tolerated temporarily:
   - helper files such as `.aim/plan.md`
   - adapter helper files that remain secondary to the official runtime contract
@@ -423,7 +419,7 @@ Legacy artifacts should be classified explicitly:
 
 Migration does not create a second runtime path.
 
-What this means:
+During migration:
 - startup follows the same shared bootstrap sequence during and after migration
 - resume still trusts the active official checkpoint instead of guessing from scattered legacy artifacts
 - validator quick checks should distinguish recoverable legacy gaps from contradictory legacy state
@@ -434,7 +430,7 @@ What this means:
 Each repository defines its own profile in `AGENTS.md`:
 - stack and runtime assumptions
 - verification/testing strategy
-- role behavior constraints for `PO`, `TDO`, `Dev`, and `Reviewer`
+- role behavior constraints for `PO`, `TDO`, `Dev` and `Reviewer`
 
 Layer order:
 1. AIM base semantics
@@ -566,12 +562,12 @@ The visible response may satisfy them through role-specific wording instead of f
   - reports what was implemented and verified
   - defaults to an informational update, not an approval-shaped checkpoint
 - `Reviewer`:
-  - reports findings, risk, and verification status
+  - reports findings, risk and verification status
   - defaults to a verification update, not an approval-shaped checkpoint
 - `TDO` after review:
-  - turns implementation and review into a practical demo, test, and feedback checkpoint
+  - turns implementation and review into a demo, test and feedback checkpoint
 - `PO` after accepted increment:
-  - decides whether the Epic continues, closes, or should split new scope into a new Epic
+  - decides whether the Epic continues, closes or should split new scope into a new Epic
 
 ### Step-specific approval semantics
 
@@ -583,12 +579,12 @@ Different approvals mean different things:
 - increment acceptance:
   - accept the demonstrated increment or request adjustment
 - Epic continuation:
-  - continue the Epic, close it, or separate new scope
+  - continue the Epic, close it or separate new scope
 
 Dev and Reviewer should not feel like approval gates in normal flows.
 They provide evidence and readiness signals unless escalation is required.
 
-### Language clarity
+### Language
 
 Visible responses should:
 - make the current speaker explicit
@@ -607,7 +603,7 @@ Include only what is necessary for the current step.
 This does not weaken the gate contract.
 It means the gate contract is satisfied through the information made clear, not through one fixed visible layout.
 
-Use a visible `handoff` label only when it improves clarity.
+Use a visible `handoff` label only when it helps.
 Often a short next-step sentence is more natural and more obviously role-specific.
 
 Short transport inputs such as `approve` or `change:` may still be supported at hard gates.

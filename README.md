@@ -1,10 +1,10 @@
 # Agile Iteration Method (AIM) v1.4
 
-AIM is a release-ready operating system for agentic software delivery.
+AIM is a way to run agentic software delivery without losing the thread.
 
-It gives AI work a real Agile shape instead of a chaotic prompt spiral.
+It gives AI work a clear Agile loop instead of a prompt spiral.
 
-One explicit loop:
+One loop:
 
 `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
 
@@ -15,9 +15,9 @@ That means:
 - review happens before acceptance
 - the work is always judged as end-to-end user value, not random partial progress
 
-If you want agentic magic without agentic chaos, this is the point.
+If you want AI work to stay scoped and reviewable, that is the point.
 
-## Why AIM exists
+## Why AIM
 
 Without a method, agentic development usually breaks in predictable ways:
 - the agent jumps between theories without proving anything
@@ -25,57 +25,50 @@ Without a method, agentic development usually breaks in predictable ways:
 - "progress" becomes a pile of partial edits instead of a shippable slice
 - no one knows what the next approval actually means
 
-AIM fixes that with explicit roles, explicit gates, and explicit ownership.
+AIM fixes that with clear roles, gates and ownership.
 
-## What is new in v1.4
+## What's new in v1.4
 
-AIM 1.4 is the release where AIM becomes a clearer three-adapter product story with first-class Claude Code support.
-
-The core loop stays stable. The runtime stays explicit. The adapter story gets stronger.
+AIM 1.4 keeps the core loop and makes the adapter story easier to understand.
 
 - `.aim/` is the official repo-local AIM workspace
-- `.aim/state.json` is the durable checkpoint for start, resume, and gate tracking
-- Codex, Copilot, and Claude Code can share one conceptual runtime contract
-- Claude Code is now documented as a first-class AIM adapter with `CLAUDE.md`, `.claude/commands/`, and `.claude/agents/` as the bridge/helper layer
+- `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
+- Codex, Copilot and Claude Code can share one conceptual runtime contract
+- Claude Code is now part of the AIM adapter model with `CLAUDE.md`, `.claude/commands/` and `.claude/agents/` as the bridge/helper layer
 - adapter limitations are treated as limitations, not silent method drift
-- Controlled parallelism lets AIM use bounded subagents for faster analysis, discovery and verification when the runtime and repo policy allow it, while keeping shared state, gate progression and acceptance centrally owned.
+- Controlled parallelism lets AIM use bounded subagents for faster analysis, discovery and verification when the runtime and repo policy allow it while keeping shared state, gate progression and acceptance centrally owned.
 
-## Why teams care now
+## Why teams use it
 
-This release makes AIM much easier to trust, explain, and adopt:
+This release is easier to trust, explain and adopt:
 - you can resume real work instead of re-explaining context every session
 - you can inspect runtime state instead of guessing what the agent thinks is happening
-- you can use Codex, Copilot, and Claude Code with one shared conceptual model
+- you can use Codex, Copilot and Claude Code with one shared conceptual model
 - you can explain Claude Code support without inventing a second AIM method
 - you can delegate bounded work without losing ownership of gates or acceptance
 - you can install AIM into a real repo without turning the repo into an experiment
 - Faster where it helps:
-  AIM can use bounded subagents for analysis, discovery and verification in complex repos, while still keeping one central runtime state and one clear decision path.
+  AIM can use bounded subagents for analysis, discovery and verification in complex repos while still keeping one central runtime state and one clear decision path.
 
-## What Makes This Release Different
+## What changed in 1.4
 
-- One AIM, three adapter surfaces:
-  Codex, Copilot, and Claude Code now fit under the same `core + runtime + repo-aware policy + platform adapters` model.
-- Claude support without method drift:
-  `CLAUDE.md` and `.claude/` helpers are documented as adapter layers, not as a replacement for `AGENTS.md`.
-- Same ownership rules everywhere:
-  the main AIM thread still owns `.aim/state.json`, gate progression, and acceptance regardless of adapter.
-- Better sales story:
-  AIM is now easier to position as a cross-environment operating model instead of a Codex/Copilot-only workflow.
+- Codex, Copilot and Claude Code now fit under the same `core + runtime + repo-aware policy + platform adapters` model.
+- `CLAUDE.md` and `.claude/` helpers are documented as adapter layers. They do not replace `AGENTS.md`.
+- the main AIM thread still owns `.aim/state.json`, gate progression and acceptance regardless of adapter.
 
-## From Prompt Pattern To Runtime Model
+## From prompt pattern to runtime
 
-Before AIM 1.3, the method was strong but the runtime story was too implicit.
+Before AIM 1.3, the method was there but the runtime story was too loose.
 
 With AIM 1.4:
 - `.aim/` is the official repo-local AIM workspace
-- `.aim/state.json` is the durable checkpoint for start, resume, and gate tracking
-- startup, resume, validation, and fallback behavior are documented
+- `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
+- startup, resume, validation and fallback behavior are documented
 - repo-aware policy is a first-class part of the method
 - platform adapters are explicit instead of hidden
 - Claude Code is part of the supported adapter story, not an afterthought
 
-That is the big upgrade: AIM 1.4 makes agentic delivery operational, portable, and easier to sell across environments.
+That is the main upgrade: AIM 1.4 makes the runtime easier to inspect, resume and explain.
 
 ## Start Here
 
@@ -93,19 +86,19 @@ Choose the path that matches your situation:
 - Claude Code:
   use `CLAUDE.md` plus the shipped starter files in `.claude/commands/` and `.claude/agents/`.
 
-This repo now ships a minimal Claude starter layer so Claude Code users are not limited to abstract helper-directory guidance.
+This repo now ships a small Claude starter layer so Claude Code users can start from real files instead of abstract directory guidance.
 
 Important installation rule:
 - `.github/agents/aim*.agent.md` are part of the AIM instruction layer, not just Copilot decoration.
 - `.github/prompts/` are optional Copilot prompt helpers.
 
-## Codex In Plain Language
+## Codex model
 
 - The repository is the canonical AIM contract.
 - The Codex skill is a bootstrap and convenience layer.
 - `/aim` is the normal Codex start path when the AIM skill is installed and enabled.
 - A fully AIM-aware repo can still be used in Codex without the skill if you start with explicit AIM intent in plain language.
-- The skill is still useful in a prepared repo because it gives you the clean `/aim` entrypoint plus status, help, config, validate, and upgrade helpers.
+- The skill is still useful in a prepared repo because it gives you the clean `/aim` entrypoint plus status, help, config, validate and upgrade helpers.
 
 | Adapter | Canonical contract | Convenience layer | Normal start path | Required for best experience |
 | --- | --- | --- | --- | --- |
@@ -115,7 +108,7 @@ Important installation rule:
 
 ## Starting A New Repo With AIM v1.4
 
-Use this path when the repository does not exist yet, or when you want to bootstrap a new repo around AIM from day one.
+Use this path when the repository does not exist yet or when you want to bootstrap a new repo around AIM from day one.
 
 ### 1. Copy the AIM files into the new repo
 
@@ -147,12 +140,12 @@ If you want Claude Code support too, also copy:
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`
 
-What these files do:
+What each file is for:
 - `AGENTS.md` defines the canonical repo-aware AIM behavior.
 - `.github/agents/aim*.agent.md` are part of the AIM instruction layer and affect behavior in both Codex and Copilot.
 - in Copilot, those same files also act as native custom-agent files.
 - `.github/prompts/` are optional prompt-entry helpers, mainly useful for Copilot-style command flows.
-- Claude Code uses `CLAUDE.md` and `.claude/` as its adapter layer, but does not replace `AGENTS.md`.
+- Claude Code uses `CLAUDE.md` and `.claude/` as its adapter layer but does not replace `AGENTS.md`.
 
 ### 2. Ignore live AIM runtime state
 
@@ -170,7 +163,7 @@ Before the first run, make sure your repo profile is real, not generic. At minim
 - stack and runtime assumptions
 - verification and testing strategy
 - deployment and migration constraints
-- role-specific constraints for `PO`, `TDO`, `Dev`, and `Reviewer`
+- role-specific constraints for `PO`, `TDO`, `Dev` and `Reviewer`
 
 This is what makes AIM behave like your repo instead of a generic chatbot.
 
@@ -205,19 +198,19 @@ EPIC: <desired user outcome>
 Mode: Strict
 ```
 
-This repository also ships a minimal Claude starter layer:
+This repository also ships a small Claude starter layer:
 - `.claude/commands/start-aim.md`
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`
 - `.claude/agents/aim.md`
 
-If Claude Code exposes repo command files directly in your environment, use the shipped start command as the preferred entrypoint. Otherwise use the explicit start prompt above.
+If Claude Code exposes repo command files directly in your environment, use the shipped start command. Otherwise use the explicit start prompt above.
 
 If you want automatic continuation between increments, use `Mode: Auto` instead of `Mode: Strict`.
 
 ## Installing AIM On An Existing Repo
 
-Use this path when the product, codebase, tests, and CI already exist and you want AIM to become the operating model on top of that repo.
+Use this path when the product, codebase, tests and CI already exist and you want AIM to become the operating model on top of that repo.
 
 ### 1. Keep your product code. Add AIM around it.
 
@@ -260,7 +253,7 @@ If these rules stay vague, AIM will stay vague.
 
 ### 3. Preserve your existing engineering standards
 
-AIM does not replace your tests, CI, review standards, or release process.
+AIM does not replace your tests, CI, review standards or release process.
 
 It adds:
 - role discipline
@@ -294,14 +287,14 @@ If someone lands on this repo and wants the shortest possible path, this is it:
 3. Add `/.aim` to `.gitignore`.
 4. Optionally copy `.github/prompts/` if you want packaged Copilot prompt entrypoints too.
 5. Optionally add `CLAUDE.md` and `.claude/` if you want Claude Code support too.
-6. Open the repo in Codex, Copilot, or Claude Code.
+6. Open the repo in Codex, Copilot or Claude Code.
 7. Start with `/aim start "EPIC: <desired outcome>"` when the Codex skill or another slash-command adapter surface is available. Otherwise start with `EPIC: <desired outcome>` and `Mode: Strict` or `Mode: Auto`.
 
-## Why This Feels Different From Normal AI Coding
+## Why AIM Feels Different
 
-Most AI coding workflows optimize for speed of output.
+Most AI coding workflows chase speed of output.
 
-AIM optimizes for:
+AIM aims for:
 - correctness you can explain
 - scope you can control
 - increments you can actually ship
@@ -331,7 +324,7 @@ For each Done Increment, AIM runs this sequence:
 1. `PO` frames the Epic
 2. `TDO` proposes the next single Done Increment
 3. `Dev` implements that increment
-4. `Reviewer` checks correctness, risk, and readiness
+4. `Reviewer` checks correctness, risk and readiness
 5. `TDO` presents the increment as a demo/test checkpoint
 6. `PO` decides whether the Epic continues or closes
 
@@ -358,12 +351,12 @@ AIM 1.4 explicitly separates:
 - repo-aware policy
 - platform adapters
 
-That matters because Codex, Copilot, and Claude Code do not always expose the same runtime capabilities.
+That matters because Codex, Copilot and Claude Code do not always expose the same runtime capabilities.
 
 The rule is simple:
 - same method where parity is possible
 - explicit fallback where parity is not possible
-- no silent redefinition of gates, ownership, or acceptance
+- no silent redefinition of gates, ownership or acceptance
 
 ### Instruction layering in practice
 
@@ -383,7 +376,7 @@ Claude Code uses a separate adapter bridge:
 - `.claude/agents/`
 - `.claude/commands/`
 
-These files extend the Claude adapter surface, but they do not replace `AGENTS.md` as the canonical AIM contract.
+These files extend the Claude adapter surface but they do not replace `AGENTS.md` as the canonical AIM contract.
 
 ## Recommended Reading Order
 
@@ -422,7 +415,7 @@ If you are upgrading from an older AIM version:
 - `docs/workflow/migrate-aim-1.2-to-1.4.md`
   Upgrade guidance for existing AIM repos.
 - `docs/workflow/troubleshoot-aim-1.4.md`
-  Startup, resume, validator, and fallback troubleshooting.
+  Startup, resume, validator and fallback troubleshooting.
 - `docs/workflow/example-aim-1.4-reference-run.md`
   Concrete example of an AIM 1.4 run.
 - `examples/epics/example-epic.md`
@@ -432,7 +425,7 @@ If you are upgrading from an older AIM version:
 
 Use AIM to improve AIM.
 
-See `CONTRIBUTING.md` for consistency rules, scope rules, and documentation expectations.
+See `CONTRIBUTING.md` for consistency rules, scope rules and documentation expectations.
 
 ## License
 

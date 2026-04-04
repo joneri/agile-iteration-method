@@ -3,7 +3,7 @@
 
 # Quick start AIM 1.4
 
-Use this guide if you want the shortest correct path into AIM.
+Use this guide for the shortest correct path into AIM.
 
 ## Choose your adapter
 
@@ -27,7 +27,7 @@ Shared install note:
 - `/aim` depends on the skill being installed and enabled.
 - A prepared AIM repo can still work in Codex without the skill when you start with explicit AIM language.
 
-## One obvious way to start
+## How to start
 
 Preferred production starts:
 - Codex:
@@ -60,7 +60,7 @@ Always make mode explicit:
 If you do not specify mode:
 - default is `Strict`
 
-Practical explanation:
+How the modes differ:
 - `Strict`:
   - pause at the meaningful approval checkpoints
 - `Auto`:
@@ -110,13 +110,13 @@ Mode: Auto
 - `Dev` then:
   - reports what changed and what was verified
 - `Reviewer` then:
-  - reports findings, readiness, and any user test still worth doing
+  - reports findings, readiness and any user test still worth doing
 - `TDO` after review:
   - explains how to test the increment now and whether the increment should be accepted or adjusted
 - `PO` after an accepted increment:
   - decides whether the Epic continues or closes
 
-## Important distinction
+## Epic vs Done Increment
 
 - Epic:
   - owned by `PO`

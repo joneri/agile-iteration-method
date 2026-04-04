@@ -3,19 +3,19 @@
 
 # Install AIM 1.4
 
-Use this guide when you want the minimum viable AIM 1.4 setup in a repository.
+Use this guide for the minimum viable AIM 1.4 setup in a repository.
 
-## One shared mental model
+## AIM has four parts
 
 AIM 1.4 has four parts:
 - AIM core:
   - the role loop and gate semantics
 - AIM runtime:
-  - `.aim`, startup, resume, validation, and state transitions
+  - `.aim`, startup, resume, validation and state transitions
 - repo-aware policy:
-  - repository-specific verification, deployment, migration, reviewer, and approval rules
+  - repository-specific verification, deployment, migration, reviewer and approval rules
 - platform adapter:
-  - Codex, Copilot, or Claude Code entrypoints and packaging
+  - Codex, Copilot or Claude Code entrypoints and packaging
 
 `.aim/` is repo-local runtime state.
 It is created on first valid AIM start or resume if it does not already exist.
@@ -73,9 +73,9 @@ Adapter-specific entrypoints live in:
 - Codex skill packaging outside the repo
 - repository `.github/agents/aim*.agent.md` as shared AIM instruction-layer files
 - Copilot `.github/prompts/` files as optional Copilot entry helpers
-- Claude Code `CLAUDE.md`, `.claude/agents/`, and `.claude/commands/` inside the repo
+- Claude Code `CLAUDE.md`, `.claude/agents/` and `.claude/commands/` inside the repo
 
-Recommended user-facing adapter choice:
+## Adapter choice
 - Codex:
   - use the AIM skill when you want the `/aim` command surface
 - Copilot:
@@ -83,13 +83,13 @@ Recommended user-facing adapter choice:
 - Claude Code:
   - use `CLAUDE.md` plus the shipped starter files under `.claude/`
 
-## Codex product model
+## Codex model
 
 - The repository is the source of truth for repo-aware AIM.
 - The Codex skill is a bootstrap and convenience layer.
 - `/aim` is the normal Codex start path when the skill is available.
-- A prepared repo can still run AIM in Codex without the skill, but that path should use explicit AIM start language instead of `/aim`.
-- The skill stays valuable even in a prepared repo because it gives a cleaner launcher plus help, status, config, validate, and upgrade entrypoints.
+- A prepared repo can still run AIM in Codex without the skill. That path should use explicit AIM start language instead of `/aim`.
+- The skill stays valuable even in a prepared repo because it gives a cleaner launcher plus help, status, config, validate and upgrade entrypoints.
 
 ## `.aim` commit and ignore guidance
 
@@ -101,7 +101,7 @@ Recommended default for the official AIM repository:
 - ignore live `.aim/` runtime state
 - publish the contract in docs instead of treating the live working directory as release material
 
-## Recommended installation flow
+## Install flow
 
 ### Codex
 1. Install or enable the AIM skill if you want `/aim`.
@@ -125,7 +125,7 @@ Recommended default for the official AIM repository:
 5. Confirm the packaged `aim` agent exposes the AIM 1.4 runtime contract and the prompt files remain optional helpers.
 
 ### Claude Code
-1. Ensure `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, and `CLAUDE.md` are present.
+1. Ensure `AGENTS.md`, `docs/workflow/agile-iteration-method.md` and `CLAUDE.md` are present.
 2. Confirm the shipped Claude starter files exist:
    - `.claude/commands/start-aim.md`
    - `.claude/commands/install-aim.md`
@@ -136,7 +136,7 @@ Recommended default for the official AIM repository:
    - or an explicit start prompt:
      - `EPIC: <desired outcome>`
      - `Mode: Strict` or `Mode: Auto`
-4. Confirm the Claude-specific files point back to the shared AIM runtime contract instead of redefining gates, ownership, or acceptance.
+4. Confirm the Claude-specific files point back to the shared AIM runtime contract instead of redefining gates, ownership or acceptance.
 
 ## First-run checks
 
@@ -166,9 +166,9 @@ After installation, a user should be able to:
 - what the current runtime checkpoint says
 - which adapter limits apply
 
-## If installation is imperfect
+## If setup is incomplete
 
-Friendly fallback rule:
+Fallback rules:
 - if the user starts AIM in recognizable language, treat it as a start intent
 - if a helper prompt is missing, explain the equivalent manual command
 - if `.aim` is missing, create it before continuing

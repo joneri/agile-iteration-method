@@ -3,10 +3,10 @@
 
 # AIM Copilot layer (optional)
 
-## Purpose
+## What it does
 
 The Copilot layer is an interface adapter for AIM.
-It makes AIM faster to start and easier to operate in VS Code with:
+It makes AIM easier to start and use in VS Code with:
 - custom agents
 - handoff buttons
 - slash commands via prompt files
@@ -20,7 +20,7 @@ Parity rule:
 - Copilot and Codex must execute the same repository-driven AIM behavior.
 - Where parity is impossible, Copilot must document the difference explicitly and fall back safely instead of silently changing the method.
 
-## What this layer must preserve
+## What it must preserve
 
 - Explicit role order: `PO → TDO → Dev → Reviewer → TDO → PO`
 - Gate semantics: approvals matter at `A`, `B`, `E`
@@ -54,7 +54,7 @@ Minimum context areas:
 - `parallel`
 
 Copilot-specific rule:
-- command routing and handoff UI may differ, but those differences must consume the same normalized context rather than inventing a second policy model
+- command routing and handoff UI may differ, but they must still use the same normalized context instead of inventing a second policy model
 
 Failure handling:
 - if repository layers contradict each other on a trust-affecting rule, stop and escalate
@@ -97,7 +97,7 @@ Canonical rule:
 - `.github/prompts/` are source of truth for Copilot-specific entrypoints and UX wiring.
 - The shared AIM runtime contract still comes from `AGENTS.md` and `docs/workflow/agile-iteration-method.md`.
 
-## UI handoff buttons
+## Handoff buttons
 
 The `aim` agent defines handoff buttons to reduce typing and speed up gate flow:
 - `Send "approve"`
@@ -116,7 +116,7 @@ These are configured in:
 
 ## Quick start
 
-### Preferred production path
+### Preferred path
 1. Select `aim` in the Copilot agent dropdown.
 2. Run `/aim start "EPIC: ..."`
 3. Make mode explicit:
@@ -127,7 +127,7 @@ Behavior:
 - if there is no active incomplete Epic, initialize AIM and present Gate A
 - if an active incomplete Epic already exists in `.aim/state.json`, show status and resume that Epic instead of creating a parallel session
 
-### Secondary starts
+### Other valid starts
 Natural-language starts remain valid when the optional layer is installed:
 - `Install AIM`
 - `Start working according to AIM`
@@ -150,7 +150,7 @@ Migration start remains a secondary specialized path:
 - AIM 1.2 to AIM 1.4 migration is currently documented in `docs/workflow/migrate-aim-1.2-to-1.4.md`.
 - A dedicated Copilot prompt file is packaged as `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`.
 
-Help and diagnostics entrypoints:
+Help and diagnostics:
 Use these commands when the user needs orientation instead of immediate execution:
 - `/aim help`
 - `/aim status`
@@ -193,7 +193,7 @@ Anything classified as `planned` or `not_in_release_contract` must not be presen
 Copilot must not treat `planned` as silently supported.
 It must preserve the policy intent and fall back safely.
 
-## Recommended default operating mode
+## Default operating mode
 
 - Start with PO Epic creation (`EPIC: ...`).
 - Let TDO define the first Done Increment from that Epic before coding.
@@ -202,7 +202,7 @@ It must preserve the policy intent and fall back safely.
 - Keep commit-after-Gate-E optional.
 - Use `/aim status` and `/aim replan` for control.
 
-## Optional commit policy
+## Commit policy
 
 Commit policy is team-level, not AIM-core.
 

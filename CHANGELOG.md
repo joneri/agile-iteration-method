@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-04-04 - AIM 1.4.4 documentation style cleanup
+- Rewrote the most visible AIM 1.4 docs in plainer language without changing the method or runtime model.
+- Cut down AI-writing tells in the front-door docs, install docs, quick-start docs, release docs, adapter docs and the main workflow guide.
+- Reduced stock headings, salesy framing and repetitive wording while keeping the same AIM meaning.
+- Kept the Codex, Copilot and Claude Code adapter model intact.
+
 ## 2026-04-04 - AIM 1.4.3 Codex skill and installation authority clarification
 - Fixed the public Codex startup docs so `/aim start "EPIC: ..."` is the normal path when the AIM skill is installed and enabled.
 - Clarified that the repository is the canonical AIM contract while the Codex skill is the bootstrap and convenience layer.
