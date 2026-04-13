@@ -33,6 +33,7 @@ Use these when deeper behavior or contracts matter:
 - `AGENTS.md`
 - `CLAUDE.md`
 - `docs/workflow/agile-iteration-method.md`
+- `docs/workflow/aim-adapter-guidance.md`
 - `docs/features/`
 - `docs/workflow/copilot-layer.md`
 - `.github/agents/`
@@ -70,6 +71,7 @@ For a new user:
 For a maintainer or adapter implementer:
 1. `AGENTS.md`
 2. `docs/workflow/agile-iteration-method.md`
-3. `CLAUDE.md` when working on Claude Code support
-4. relevant files in `docs/features/`
-5. `docs/workflow/copilot-layer.md`
+3. `docs/workflow/aim-adapter-guidance.md`
+4. `CLAUDE.md` when working on Claude Code support
+5. relevant files in `docs/features/`
+6. `docs/workflow/copilot-layer.md`

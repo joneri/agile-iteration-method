@@ -22,6 +22,8 @@ This repo is both:
   Operational rules for Codex execution.
 - `docs/workflow/copilot-layer.md`  
   Optional Copilot custom-agent layer.
+- `docs/workflow/aim-adapter-guidance.md`
+  Adapter entrypoints, parity labels and helper-file boundaries.
 - `docs/workflow/migrate-aim-1.0-to-1.1.md`  
   Reusable migration prompt for upgrading older AIM repos.
 - `docs/workflow/migrate-aim-1.1-to-1.2.md`  

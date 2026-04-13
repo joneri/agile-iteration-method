@@ -52,9 +52,12 @@ Minimum context areas:
 - `environment`
 - `approval`
 - `parallel`
+- `modularity`
 
 Copilot-specific rule:
 - command routing and handoff UI may differ, but they must still use the same normalized context instead of inventing a second policy model
+- Gate B planning must treat small increments as small behavioral scope, not minimal file count, and must ask whether focused files reduce future context load.
+- Builder and reviewer agents should prefer cohesive files and clear module boundaries when they preserve behavior, while rejecting broad rewrites, arbitrary splitting, or context hogs.
 
 Failure handling:
 - if repository layers contradict each other on a trust-affecting rule, stop and escalate

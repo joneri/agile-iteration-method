@@ -58,25 +58,12 @@ Kickoff contract (AIM 1.4):
 ## Optional adapter layers (AIM 1.4)
 
 Optional adapter layers may improve UX and discoverability, but they must preserve this file's gate and escalation semantics.
+Adapter-specific entrypoints, optional helper files, parity labels, and fallback details live in `docs/workflow/aim-adapter-guidance.md`.
 
-Copilot layer:
-- documented in `docs/workflow/copilot-layer.md`
-
-Claude Code layer:
-- uses `CLAUDE.md` as the project instruction bridge
-- may add `.claude/commands/` for AIM command entrypoints
-- may add `.claude/agents/` for AIM-aligned Claude helpers
-
-Quick start phrases:
-- `Install AIM`
-- `Start working according to AIM`
-- `/aim start "EPIC: ..."`
-- `/aim upgrade 1.2-to-1.4`
-- `Starta en AIM-loop med denna EPIC: ...`
-- `/migrate-aim-1.0-to-1.1`
-- `/migrate-aim-1.1-to-1.2`
-
-These layers improve UX and speed, but must preserve this file's gate and escalation semantics.
+Canonical rule:
+- adapters may expose faster commands or helper files
+- adapters must not redefine AIM core, runtime ownership, gate meaning, role order, or acceptance
+- if adapter guidance conflicts with this file, escalate to PO
 
 ## Repository profile (required)
 
@@ -94,15 +81,7 @@ Required AIM file structure:
 - `.github/agents/aim-reviewer.agent.md`
 
 Optional adapter file structure:
-- Copilot prompt helpers:
-  - `.github/prompts/start-aim.prompt.md`
-  - `.github/prompts/install-aim.prompt.md`
-  - `.github/prompts/help-aim.prompt.md`
-  - `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`
-- Claude Code:
-  - `CLAUDE.md`
-  - `.claude/commands/`
-  - `.claude/agents/`
+- documented in `docs/workflow/aim-adapter-guidance.md`
 
 Layering and override order:
 1. AIM base semantics (internal skill baseline)
@@ -252,6 +231,8 @@ Canonical context fields:
   - execution-mode constraints, commit policy, and any gate-specific approval rules
 - `parallel`
   - whether parallel work is allowed, restricted, or disabled and where subagent outputs may go
+- `modularity`
+  - file-boundary, responsibility, and future context-efficiency guidance for planning, implementation, and review
 
 Normalization rules:
 - later layers may refine earlier layers, but must not silently contradict accepted AIM core semantics
@@ -387,41 +368,15 @@ Migration and runtime integrity:
 
 ## Platform adapters and parity (AIM 1.4)
 
-AIM 1.4 must document platform adapters explicitly instead of leaving parity to implication.
+AIM 1.4 documents platform adapters explicitly instead of leaving parity to implication.
 
-Parity classification:
-- `shared`
-  - same conceptual behavior and same runtime contract across supported adapters
-- `shared_with_adapter_differences`
-  - same runtime contract, but different entrypoints, tools, or interface mechanics
-- `codex_only`
-  - currently documented only for the Codex adapter
-- `copilot_only`
-  - currently documented only for the Copilot adapter
-- `claude_code_only`
-  - currently documented only for the Claude Code adapter
-- `planned`
-  - intentionally not yet treated as a supported shared capability
+Adapter-specific parity labels, capability notes, entrypoint examples, and optional helper-file details live in `docs/workflow/aim-adapter-guidance.md`.
 
-Adapter rules:
-- Codex:
-  - uses repository instructions plus the available Codex tool surface
-  - may expose bounded subagent capability where runtime support exists
-  - may expose adapter-specific tools such as MCP-backed browser automation
-- Copilot:
-  - uses `.github/agents/aim*.agent.md` as both shared instruction-layer input and native Copilot agent packaging
-  - uses `.github/prompts/` as optional Copilot command-entry helpers
-  - may differ in command routing, handoff UI, and prompt-file availability
-  - must still preserve the shared runtime contract and repo-aware policy interpretation
-- Claude Code:
-  - uses `AGENTS.md` as the canonical repository contract and `CLAUDE.md` as the Claude bridge layer
-  - may expose repository-defined entrypoints through `.claude/commands/` and helper agents through `.claude/agents/`
-  - may use bounded Claude helpers for analysis, discovery, verification, or option generation only
-  - must still preserve the shared runtime contract and repo-aware policy interpretation
-
-Fallback rule:
-- if a capability is not available in one adapter, the adapter must preserve the intended policy, report the limitation, and fall back safely instead of silently redefining the method
-- regardless of parity level, only the main AIM thread may own `.aim/state.json`, gate progression, or acceptance decisions
+Canonical adapter rules retained here:
+- adapters must preserve the shared AIM runtime contract and repo-aware policy interpretation
+- adapters may differ in command routing, handoff UI, tools, or helper-file availability
+- if a capability is unavailable, preserve the intended policy and fall back safely instead of silently redefining the method
+- only the main AIM thread may own `.aim/state.json`, gate progression, or acceptance decisions
 
 ## Execution modes (AIM 1.4 architecture, AIM 1.2 core semantics preserved)
 
@@ -505,6 +460,7 @@ Canonical role rule (AIM 1.2):
 - Scope is explicitly limited.
 - Risks and a basic test or verification plan are stated.
 - Files to be touched are explicit.
+- File boundaries are chosen for clear responsibility and future context efficiency, not for the lowest possible file count.
 - If requested by PO, the increment is constrained to one file only.
 
 ---
@@ -521,6 +477,8 @@ Canonical role rule (AIM 1.2):
   (no duplicated timelines or double-counted values).
 - Minimal tests or verifications are described and possible to run.
 - No unrelated refactors or cleanup.
+- Within the approved Gate B scope, Dev may extract cohesive presentation, hooks, helpers, domain logic, or service modules when that preserves behavior and makes the increment easier to understand, review, and change later.
+- Dev must not create a giant file or keep unrelated responsibilities together just to make the diff look smaller.
 - If uncertain about correctness or scope, Dev must ask before Gate C.
 
 ---
@@ -535,6 +493,7 @@ Canonical role rule (AIM 1.2):
   - edge cases
   - performance or data integrity risks
   - confusing or misleading behavior
+- Checks whether the changed file and module boundaries reduce future context load without needless fragmentation.
 - Produces a short, concrete change list.
 - If there are signs of syntactic issues  
   (duplicate declarations, duplicate keys, obviously broken diff), the Reviewer must block the increment and send it back to Dev before TDO can proceed.
@@ -560,8 +519,11 @@ Manual verification alone must NOT be treated as a blocking condition.
 - No guessing. If unsure, inspect code and show the exact file and function involved.
 - No scope creep. If something is outside scope, propose it as a later increment.
 - No “frontend vs backend” flip-flopping. Prove with data: input, output, contract.
-- One change set per increment. Keep it small.
+- One change set per increment. Keep behavioral scope small and shippable.
 - Respect the scope approved at Gate B. If the implementation requires more than was agreed, follow the Scope expansion rule.
+- Do not use “few files touched” as a proxy for good scope. More focused files can be better when each file has one clear responsibility.
+- Avoid context hogs: oversized route files, components, services, docs, or helpers that mix stable responsibilities and become expensive to inspect.
+- Split by responsibility and ownership when it reduces cognitive load and preserves the approved behavior. Do not split arbitrarily by line count.
 - Do not over-invest in log formatting. Use one clear per-request log only when needed, then remove or guard it behind a debug flag.
 - Keep canonical role names (`PO`, `TDO`, `Dev`, `Reviewer`) in method-level docs and outputs.
 
@@ -850,6 +812,16 @@ All other gates exist to surface risk, not to request permission.
 A Done Increment may touch multiple files **if and only if**:
 - the files are required to deliver a coherent, end-to-end user experience
 - the scope matches what was approved at Gate B
+- the extra files create clearer responsibility boundaries or reduce future context cost for humans and AI agents
+
+Small increment means small behavioral scope, not necessarily minimal file count.
+No scope creep means no extra behavior, not “no new files”.
+The best increment is easy to review now and cheaper to change later.
+
+Gate B planning must ask whether the proposed file boundaries:
+- keep cohesive responsibilities together
+- avoid creating or enlarging context hogs
+- improve future comprehension without broad rewrites or arbitrary fragmentation
 
 If, during implementation or review, it becomes clear that:
 - additional files are needed beyond what was specified at Gate B, or

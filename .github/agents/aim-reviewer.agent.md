@@ -16,6 +16,7 @@ Review the increment against Epic intent and increment acceptance.
 - edge cases
 - risk (performance/data integrity/security)
 - misleading user behavior
+- whether the increment improved comprehension and context efficiency without needless fragmentation
 
 ## Gate D behavior
 
@@ -36,4 +37,5 @@ Write `.aim/reviews/review-{increment:03d}.md` including:
 - findings with `file:line`
 - completed and remaining Epic criteria
 - concrete change list
+- file-boundary signal: clearer cohesive modules, acceptable unchanged structure, or needless fragmentation/context hog risk
 - recommendation signal for Gate E

@@ -306,6 +306,8 @@ The normalized runtime context should expose, at minimum:
   - execution mode, gate approval constraints, and optional commit policy
 - `parallel`
   - whether parallel work is allowed and what restrictions apply
+- `modularity`
+  - file-boundary, responsibility, and future context-efficiency guidance for planning, implementation, and review
 
 ### Runtime behavior
 
@@ -681,8 +683,10 @@ The Dev:
 - avoids unrelated refactors
 - ensures the increment works end to end
 - documents how the increment can be verified
+- extracts cohesive presentation, hooks, helpers, domain logic, or service modules when the approved scope is clearer and safer with focused boundaries
 
 The Dev never expands scope without approval.
+Small scope means small behavioral scope, not necessarily the fewest files.
 
 ---
 
@@ -694,6 +698,7 @@ The Reviewer:
 - checks logic, edge cases and assumptions
 - verifies acceptance criteria
 - flags risky or misleading behavior
+- checks whether the change is easier to understand without needless fragmentation
 - produces a short, actionable change list
 
 If the increment is syntactically broken or clearly unsafe,
@@ -729,6 +734,26 @@ A Done Increment is the smallest unit that:
 
 A Done Increment is **not** a partial fix, polish step or internal improvement
 unless it clearly changes the user experience as a whole.
+
+### Behavioral scope and file boundaries
+
+AIM optimizes for increments that are easy to review now and cheaper to change later.
+That means small behavioral scope, not necessarily minimal file count.
+
+More files can be better when each file has one clear responsibility.
+Agents should split by stable responsibility and ownership, not by arbitrary line counts.
+
+Within an approved Done Increment, it is acceptable to create focused components, hooks,
+helpers, domain modules, service modules, or short supporting docs when they:
+- preserve the approved behavior
+- make the increment easier to understand and verify
+- reduce future context cost for humans and AI agents
+
+Do not create context hogs: oversized route files, components, services, docs, or helpers
+that mix responsibilities just to keep the diff in fewer files.
+No scope creep means no extra behavior, not “no new files”.
+This guidance does not allow broad rewrites or arbitrary splitting; file changes still
+must be explicit at Gate B and justified by a clearer boundary.
 
 ## Example: Auto-post epic and a real Done Increment
 
@@ -828,6 +853,7 @@ If any item fails, the increment is too small and must be bundled or reworked.
 - [ ] Does this increment embody a meaningful part of the Epic end to end?
 - [ ] Would a user notice and understand the change without explanation?
 - [ ] Can this be demoed as a complete behavior, not just a detail?
+- [ ] Is the scope behavioral rather than defined by minimizing file count?
 
 ### Skateboard test
 
@@ -842,6 +868,13 @@ Ask the question:
 
 - [ ] Can a user give meaningful feedback on this increment?
 - [ ] Is the feedback about overall behavior, not just wording or colors?
+
+### File boundaries and context efficiency
+
+- [ ] Are proposed files split around stable responsibilities and ownership?
+- [ ] Do the boundaries reduce future context load for humans and AI agents?
+- [ ] Are any new files focused helpers, components, hooks, domain modules, services, or docs that preserve the approved behavior?
+- [ ] Does the plan avoid broad rewrites, arbitrary fragmentation, and giant files created only to keep the diff looking small?
 
 ### Anti-patterns (automatic stop)
 
@@ -1034,6 +1067,7 @@ At that point, the EPIC is complete.
 ## Relationship to other documents
 
 - `AGENTS.md` defines operational rules, gates and escalation behaviour for Codex runs.
+- `docs/workflow/aim-adapter-guidance.md` collects adapter-specific entrypoints, parity labels, helper-file boundaries, and fallback notes so canonical files stay focused.
 - `docs/features/aim-1.4-runtime-architecture.md` defines the architectural split between core, runtime, repo-aware policy, and adapters.
 - `docs/features/aim-1.4-runtime-workspace.md` defines the official `.aim` workspace contract and runtime checkpoint model.
 - `docs/features/aim-1.4-bootstrap-and-resume.md` defines the shared startup and resume flow across adapters.

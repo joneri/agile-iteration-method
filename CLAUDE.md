@@ -27,6 +27,9 @@ Keep in mind:
 - Use `docs/workflow/agile-iteration-method.md` for the method and runtime explanation.
 - Treat `.aim/` as the official AIM runtime workspace.
 - Treat `.aim/state.json` as the authoritative runtime checkpoint.
+- Treat small increments as small behavioral scope, not minimal file count.
+- Prefer cohesive files and clear module boundaries when they reduce future context cost and preserve the approved behavior.
+- Do not create context hogs or arbitrary file splits just to satisfy a superficial diff-size goal.
 - Keep the main AIM thread as the only owner of:
   - `.aim/state.json`
   - gate progression
