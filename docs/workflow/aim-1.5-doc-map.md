@@ -48,6 +48,7 @@ These docs answer:
 - what AIM is now
 - how to install and start
 - why 1.5 treats small scope as behavioral scope instead of minimal file count
+- why AIM 1.5 avoids context hogs by preferring cohesive boundaries over oversized all-in-one files
 - how adapters differ without changing the method
 - how to resume, inspect, troubleshoot, and upgrade
 

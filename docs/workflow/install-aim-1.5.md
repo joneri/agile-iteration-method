@@ -14,7 +14,7 @@ Use [AIM 1.5 document map](aim-1.5-doc-map.md) if you need the broader front-doo
 AIM 1.5 keeps the accepted AIM core and runtime model from 1.4.
 The main public change is how AIM explains and uses file boundaries:
 - a small Done Increment means small behavioral scope, not minimal file count
-- focused files are allowed when they keep responsibilities clearer and future changes cheaper
+- focused files are allowed when they keep responsibilities clearer, avoid context hogs, and make future changes cheaper
 - adapter guidance and onboarding now make that behavior visible to users, not just maintainers
 
 ## AIM still has four parts

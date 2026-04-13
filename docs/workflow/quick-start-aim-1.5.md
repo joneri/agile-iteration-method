@@ -14,6 +14,7 @@ If you need the broader front-door route first, use [AIM 1.5 document map](aim-1
 AIM 1.5 keeps the same core loop and runtime model, but it is clearer about one important point:
 - small scope means small behavior, not artificially few files
 - a Done Increment may touch more focused files when that keeps responsibilities readable, reviewable, and cheaper to change later
+- the goal is to avoid context hogs and mixed-responsibility files, not to defend one-file diffs as a virtue
 - the public onboarding path now makes that rule visible from the start
 
 ## Quick route
@@ -69,7 +70,7 @@ If you do not specify mode:
 2. makes `PO` ownership of the Epic explicit
 3. lets `TDO` define the next single Done Increment
 4. records runtime state in `.aim`
-5. keeps the behavioral scope small even when clearer file boundaries require more than one file
+5. keeps the behavioral scope small even when clearer file boundaries require more than one file and avoids turning one file into a context hog
 
 ## What the visible checkpoints look like
 
@@ -97,6 +98,7 @@ If you do not specify mode:
 
 In AIM 1.5, the slice stays small by behavior and user value.
 It does not have to minimize file count if a few focused files are the clearer result.
+The rule of thumb is simple: avoid context hogs and keep each file responsible for one coherent part of the increment.
 
 ## Common follow-up commands
 

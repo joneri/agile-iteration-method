@@ -35,6 +35,7 @@ AIM 1.5 keeps the accepted core loop and runtime model and makes the latest deli
 - `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
 - small Done Increments are defined by behavioral scope, not by artificially few files
 - focused file boundaries are treated as part of product quality and future context efficiency
+- context hogs are treated as a real delivery problem, not as proof that scope stayed small
 - Codex, Copilot and Claude Code still share one conceptual runtime contract
 - the front-door docs now expose the latest adapter and onboarding story as one clear release path
 
@@ -44,7 +45,7 @@ This release is easier to trust, explain and adopt:
 - you can resume real work instead of re-explaining context every session
 - you can inspect runtime state instead of guessing what the agent thinks is happening
 - you can use Codex, Copilot and Claude Code with one shared conceptual model
-- you can use more focused files without pretending that fewer files always means smaller scope
+- you can use more focused files when that avoids context hogs and keeps boundaries cohesive
 - you can delegate bounded work without losing ownership of gates or acceptance
 - you can install AIM into a real repo without turning the repo into an experiment
 - the public docs make the latest version easier to start, inspect, and explain
@@ -54,6 +55,10 @@ This release is easier to trust, explain and adopt:
 - AIM 1.5 keeps the accepted `core + runtime + repo-aware policy + platform adapters` model.
 - file-boundary discipline is now part of the visible release story, not just internal guidance.
 - the newest install, quick-start, doc-map, troubleshoot, and upgrade docs now point to one latest-version surface.
+
+In practice, AIM 1.5 would rather keep one user-facing change spread across a few cohesive files than force it into one oversized file.
+Small scope is about the behavior being shipped.
+Oversized files and mixed responsibilities are context hogs, not proof of good scope control.
 
 ## From prompt pattern to runtime
 
