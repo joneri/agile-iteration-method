@@ -65,6 +65,7 @@ This repository now ships a small Claude starter layer:
 - `.claude/commands/start-aim.md`
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`
+- `.claude/commands/upgrade-aim-1.4-to-1.5.md`
 - `.claude/agents/aim.md`
 
 Start with either:

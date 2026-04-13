@@ -54,7 +54,7 @@ These phrases are valid adapter entrypoint hints when the matching layer support
 - `Install AIM`
 - `Start working according to AIM`
 - `/aim start "EPIC: ..."`
-- `/aim upgrade 1.2-to-1.4`
+- `/aim upgrade 1.4-to-1.5`
 - `Starta en AIM-loop med denna EPIC: ...`
 - `/migrate-aim-1.0-to-1.1`
 - `/migrate-aim-1.1-to-1.2`
@@ -68,7 +68,7 @@ Copilot prompt helpers:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`
+- `.github/prompts/upgrade-aim-1.4-to-1.5.prompt.md`
 
 Claude Code:
 - `CLAUDE.md`

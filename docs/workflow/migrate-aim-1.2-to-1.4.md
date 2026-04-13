@@ -73,6 +73,6 @@ Migration check:
 - if a command is conceptually supported but not packaged in one adapter, document the fallback clearly instead of implying silent support
 
 Related install and operator docs:
-- `docs/workflow/install-aim-1.4.md`
-- `docs/workflow/quick-start-aim-1.4.md`
-- `docs/features/aim-1.4-installation-status-and-configuration.md`
+- [Install AIM 1.4](install-aim-1.4.md)
+- [Quick start AIM 1.4](quick-start-aim-1.4.md)
+- [AIM 1.4 document map](aim-1.4-doc-map.md)

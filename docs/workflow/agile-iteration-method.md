@@ -6,8 +6,8 @@
 
 ## Version
 
-This document describes **AIM 1.4**.
-It retains the AIM 1.2 core method and keeps the accepted AIM 1.3 runtime model stable while making AIM 1.4 the active release framing.
+This document describes **AIM 1.5**.
+It retains the AIM 1.2 core method and keeps the accepted AIM 1.4 runtime model stable while making AIM 1.5 the active release framing.
 
 ## Overview
 
@@ -25,11 +25,13 @@ The goal is to move toward working software that users can evaluate while keepin
 
 The method is inspired by the “Ralph Wiggum loop”, adapted to real product development and renamed to reflect its Agile nature.
 
-### AIM 1.4 basics
+### AIM 1.5 basics
 
 - Core AIM roles and gate semantics are unchanged.
 - AIM is defined as `core + runtime + repo-aware policy + platform adapters`.
 - `.aim` is treated as official repo-local runtime state.
+- Small Done Increments are defined by behavioral scope, not by minimal file count.
+- Focused file boundaries are valid when they preserve the approved behavior and reduce future context cost.
 - Feature documentation path is `docs/features/`.
 - Epic docs path is `docs/epics/`.
 - Repository profile is a first-class concept with a defined layer order.
@@ -67,9 +69,9 @@ In short, the PO owns the Epic and the TDO owns the Done Increment.
 The AI never changes direction on its own.
 Execution may proceed autonomously within an explicitly approved Done Increment but must stop and ask for guidance if scope, intent or assumptions change.
 
-## AIM 1.4 architecture
+## AIM 1.5 architecture
 
-AIM 1.4 separates the method from the machinery that runs it.
+AIM 1.5 keeps the same architecture split and makes the modularity guidance more explicit in the public release story.
 
 - `AIM core`:
   - the canonical role sequence

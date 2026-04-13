@@ -5,20 +5,20 @@
 # AGENTS.md
 
 ## Version
-This file defines **AIM 1.4** operational behavior while retaining the AIM 1.2 core loop semantics and the established AIM 1.3 runtime model.
+This file defines **AIM 1.5** operational behavior while retaining the AIM 1.2 core loop semantics and the accepted AIM 1.4 runtime model.
 
 ## Purpose
 This repo uses “Agile iteration method” with explicit AI roles and structured handoffs. The goal is to avoid bouncing between random theories and instead converge fast with small, shippable increments across supported adapters such as Codex, Copilot, and Claude Code.
 
-For AIM 1.4, this repo distinguishes between:
+For AIM 1.5, this repo distinguishes between:
 - AIM core
 - AIM runtime
 - repo-aware policy
 - platform adapters
 
 Release-line note:
-- AIM 1.4 keeps the accepted AIM 1.3 runtime architecture stable.
-- AIM 1.4 makes that runtime easier to adopt, package, and explain across Codex, Copilot, and Claude Code.
+- AIM 1.5 keeps the accepted AIM 1.4 runtime architecture stable.
+- AIM 1.5 makes modularity, context efficiency, and the front-door onboarding path more visible without redesigning the method.
 
 Important: runtime capabilities differ by environment. AIM must prefer shared behavior first. If controlled parallel subagents are unavailable or disallowed by repo policy, the runtime must fall back to sequential execution without changing core gate semantics or ownership rules.
 For coding standards, PR rules and local commands, read CONTRIBUTING.md first.
@@ -51,11 +51,11 @@ Optional Epic-doc-first variant:
 2. Ask PO to write the Epic from the desired outcome in that Epic doc.
 3. Continue with normal gates.
 
-Kickoff contract (AIM 1.4):
+Kickoff contract (AIM 1.5):
 1. PO creates the Epic from what should be achieved.
 2. TDO creates the next Done Increment based on that Epic.
 
-## Optional adapter layers (AIM 1.4)
+## Optional adapter layers (AIM 1.5)
 
 Optional adapter layers may improve UX and discoverability, but they must preserve this file's gate and escalation semantics.
 Adapter-specific entrypoints, optional helper files, parity labels, and fallback details live in `docs/workflow/aim-adapter-guidance.md`.
@@ -110,7 +110,7 @@ Role impact rule:
 - `Dev`: implementation and verification behavior within approved Gate B
 - `Reviewer`: correctness/risk checks and final readiness signal
 
-## AIM 1.4 architecture split
+## AIM 1.5 architecture split
 
 The method and the runtime are related but not the same thing.
 
@@ -137,7 +137,7 @@ Ownership rule:
 - Repo-aware policy constrains what the runtime may do.
 - Platform adapters expose capabilities, but do not redefine AIM core semantics.
 
-## `.aim` workspace (AIM 1.4 architectural contract)
+## `.aim` workspace (AIM 1.5 architectural contract)
 
 `.aim` is the repo-local AIM runtime workspace.
 
@@ -148,7 +148,7 @@ Ownership rule:
 - If `.aim` is missing when AIM starts or resumes, the AIM runtime must create it before continuing.
 - In Codex or Claude Code, this creation is performed by AIM running inside the active adapter, not by the host product as a standalone AIM feature.
 
-Official AIM 1.4 workspace contract:
+Official AIM 1.5 workspace contract:
 - required artifacts:
   - `.aim/epic.md`
   - `.aim/state.json`
@@ -179,7 +179,7 @@ Housekeeping rules:
 - stale logs or analysis artifacts may be removed or archived once their decision value is captured elsewhere
 - secrets, credentials, tokens, and unrelated product data must never be stored in `.aim`
 
-## Bootstrap and resume flow (AIM 1.4)
+## Bootstrap and resume flow (AIM 1.5)
 
 All adapters must follow the same conceptual startup flow:
 1. detect repo root
@@ -200,7 +200,7 @@ Fallback rule:
 - if `.aim/state.json` conflicts with available artifacts or repo policy, stop and ask before continuing
 - if platform capability is unavailable, continue sequentially without changing the runtime contract
 
-## Normalized repo-aware runtime context (AIM 1.4)
+## Normalized repo-aware runtime context (AIM 1.5)
 
 After repository files are loaded, the runtime must normalize them into one repo-aware context object.
 
@@ -244,7 +244,7 @@ Failure handling:
 - if layers contradict each other on a trust-affecting rule, stop and escalate
 - if a repo policy requests a capability the platform cannot support, preserve the policy in context and fall back safely at execution time
 
-## State transition model (AIM 1.4)
+## State transition model (AIM 1.5)
 
 `state.json` must represent one durable runtime state at a time.
 
@@ -292,7 +292,7 @@ Ownership rules for transitions:
 - `TDO` owns transition synthesis before Gate E
 - `PO` owns acceptance decisions that lead to `done_increment_accepted` or `epic_complete`
 
-## Validator support (AIM 1.4)
+## Validator support (AIM 1.5)
 
 The AIM runtime should support one quick integrity check over the active runtime state.
 
@@ -321,7 +321,7 @@ Ownership rule:
 - validator output may explain recommended repair actions
 - only the main AIM thread may perform repairs that mutate shared runtime state
 
-## Migration support (AIM 1.4)
+## Migration support (AIM 1.5)
 
 AIM 1.4 must remain adoptable by repositories that already use AIM 1.2.
 
@@ -366,7 +366,7 @@ Migration and runtime integrity:
 - recoverable migration gaps may be repaired by the main AIM thread
 - contradictory legacy state or contradictory repo instructions must be escalated instead of guessed through
 
-## Platform adapters and parity (AIM 1.4)
+## Platform adapters and parity (AIM 1.5)
 
 AIM 1.4 documents platform adapters explicitly instead of leaving parity to implication.
 
@@ -378,7 +378,7 @@ Canonical adapter rules retained here:
 - if a capability is unavailable, preserve the intended policy and fall back safely instead of silently redefining the method
 - only the main AIM thread may own `.aim/state.json`, gate progression, or acceptance decisions
 
-## Execution modes (AIM 1.4 architecture, AIM 1.2 core semantics preserved)
+## Execution modes (AIM 1.5 architecture, AIM 1.2 core semantics preserved)
 
 Mode must be selected when starting an Epic and shown in all gate outputs.
 
@@ -392,7 +392,7 @@ Mode must be selected when starting an Epic and shown in all gate outputs.
   - A final full review is required before Epic completion is accepted.
   - All generated Done Increments must be clearly traceable.
 
-## Controlled parallelism (AIM 1.4)
+## Controlled parallelism (AIM 1.5)
 
 Controlled parallel work is optional and runtime-dependent.
 

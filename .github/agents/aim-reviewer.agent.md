@@ -1,12 +1,12 @@
 ---
 name: aim-reviewer
-description: AIM 1.4 reviewer role for correctness, risks, and acceptance signal
+description: AIM 1.5 reviewer role for correctness, risks, and acceptance signal
 user-invokable: false
 tools: ["readFile", "fileSearch", "textSearch"]
 model: ["GPT-5.4 (copilot)", "GPT-5.3-Codex (copilot)", "GPT-5.2-Codex (copilot)", "Claude Sonnet 4.6 (copilot)", "Claude Opus 4.6 (copilot)"]
 ---
 
-# AIM 1.4 reviewer role
+# AIM 1.5 reviewer role
 
 Review the increment against Epic intent and increment acceptance.
 

@@ -1,4 +1,4 @@
-# Agile Iteration Method (AIM) v1.4
+# Agile Iteration Method (AIM) v1.5
 
 AIM is a way to run agentic software delivery without losing the thread.
 
@@ -27,16 +27,16 @@ Without a method, agentic development usually breaks in predictable ways:
 
 AIM fixes that with clear roles, gates and ownership.
 
-## What's new in v1.4
+## What's new in v1.5
 
-AIM 1.4 keeps the core loop and makes the adapter story easier to understand.
+AIM 1.5 keeps the accepted core loop and runtime model and makes the latest delivery guidance visible in the public product story.
 
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
-- Codex, Copilot and Claude Code can share one conceptual runtime contract
-- Claude Code is now part of the AIM adapter model with `CLAUDE.md`, `.claude/commands/` and `.claude/agents/` as the bridge/helper layer
-- adapter limitations are treated as limitations, not silent method drift
-- Controlled parallelism lets AIM use bounded subagents for faster analysis, discovery and verification when the runtime and repo policy allow it while keeping shared state, gate progression and acceptance centrally owned.
+- small Done Increments are defined by behavioral scope, not by artificially few files
+- focused file boundaries are treated as part of product quality and future context efficiency
+- Codex, Copilot and Claude Code still share one conceptual runtime contract
+- the front-door docs now expose the latest adapter and onboarding story as one clear release path
 
 ## Why teams use it
 
@@ -44,38 +44,54 @@ This release is easier to trust, explain and adopt:
 - you can resume real work instead of re-explaining context every session
 - you can inspect runtime state instead of guessing what the agent thinks is happening
 - you can use Codex, Copilot and Claude Code with one shared conceptual model
-- you can explain Claude Code support without inventing a second AIM method
+- you can use more focused files without pretending that fewer files always means smaller scope
 - you can delegate bounded work without losing ownership of gates or acceptance
 - you can install AIM into a real repo without turning the repo into an experiment
-- Faster where it helps:
-  AIM can use bounded subagents for analysis, discovery and verification in complex repos while still keeping one central runtime state and one clear decision path.
+- the public docs make the latest version easier to start, inspect, and explain
 
-## What changed in 1.4
+## What changed in 1.5
 
-- Codex, Copilot and Claude Code now fit under the same `core + runtime + repo-aware policy + platform adapters` model.
-- `CLAUDE.md` and `.claude/` helpers are documented as adapter layers. They do not replace `AGENTS.md`.
-- the main AIM thread still owns `.aim/state.json`, gate progression and acceptance regardless of adapter.
+- AIM 1.5 keeps the accepted `core + runtime + repo-aware policy + platform adapters` model.
+- file-boundary discipline is now part of the visible release story, not just internal guidance.
+- the newest install, quick-start, doc-map, troubleshoot, and upgrade docs now point to one latest-version surface.
 
 ## From prompt pattern to runtime
 
 Before AIM 1.3, the method was there but the runtime story was too loose.
 
-With AIM 1.4:
+With AIM 1.4, the runtime became inspectable and adapter-aware.
+
+With AIM 1.5:
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
-- startup, resume, validation and fallback behavior are documented
-- repo-aware policy is a first-class part of the method
-- platform adapters are explicit instead of hidden
-- Claude Code is part of the supported adapter story, not an afterthought
+- small scope is defined by behavior and user value, not by lowest possible file count
+- the public onboarding path makes the latest guidance obvious to new users
+- adapter guidance, packaging, and upgrade docs now read as one current release surface
 
-That is the main upgrade: AIM 1.4 makes the runtime easier to inspect, resume and explain.
+That is the main upgrade: AIM 1.5 makes the accepted runtime easier to use, review, and explain in real delivery work.
 
 ## Start Here
 
-Choose the path that matches your situation:
+Use the front-door path that matches your goal:
 
-1. Starting a new repository with AIM
-2. Installing AIM into an existing repository
+- Evaluate AIM:
+  - [Quick start AIM 1.5](docs/workflow/quick-start-aim-1.5.md)
+  - [AIM 1.5 interaction examples](docs/workflow/aim-1.5-interaction-examples.md)
+  - [AIM 1.5 document map](docs/workflow/aim-1.5-doc-map.md)
+- Install AIM in a repository:
+  - [Install AIM 1.5](docs/workflow/install-aim-1.5.md)
+  - [Quick start AIM 1.5](docs/workflow/quick-start-aim-1.5.md)
+  - [Troubleshoot AIM 1.5](docs/workflow/troubleshoot-aim-1.5.md)
+- Upgrade an AIM 1.4 repository:
+  - [Migrate AIM 1.4 to AIM 1.5](docs/workflow/migrate-aim-1.4-to-1.5.md)
+  - [Quick start AIM 1.5](docs/workflow/quick-start-aim-1.5.md)
+  - [AIM 1.5 document map](docs/workflow/aim-1.5-doc-map.md)
+
+What each front-door doc is for:
+- `README.md` explains the product and helps you choose a path.
+- `install-aim-1.5.md` is for repository setup and adapter packaging.
+- `quick-start-aim-1.5.md` is for the first Epic and the first visible AIM loop.
+- `aim-1.5-doc-map.md` is for finding the next document without dropping into the reference/spec layer too early.
 
 ## Choose Your Adapter
 
@@ -106,7 +122,7 @@ Important installation rule:
 | Copilot | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `.github/prompts/` | select `aim` and run `/aim start "EPIC: ..."` | `.github/agents/aim*.agent.md`; prompts optional |
 | Claude Code | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` + `CLAUDE.md` | `.claude/commands/` and `.claude/agents/` | repo Claude command or explicit `EPIC: ...` | `CLAUDE.md`; `.claude/` helpers recommended |
 
-## Starting A New Repo With AIM v1.4
+## Starting A New Repo With AIM v1.5
 
 Use this path when the repository does not exist yet or when you want to bootstrap a new repo around AIM from day one.
 
@@ -121,17 +137,17 @@ Required for AIM:
 - `.github/agents/aim-reviewer.agent.md`
 
 Recommended:
-- `docs/workflow/quick-start-aim-1.4.md`
-- `docs/workflow/install-aim-1.4.md`
-- `docs/workflow/migrate-aim-1.2-to-1.4.md`
-- `docs/workflow/troubleshoot-aim-1.4.md`
+- `docs/workflow/quick-start-aim-1.5.md`
+- `docs/workflow/install-aim-1.5.md`
+- `docs/workflow/migrate-aim-1.4-to-1.5.md`
+- `docs/workflow/troubleshoot-aim-1.5.md`
 - `examples/epics/example-epic.md`
 
 Optional GitHub Copilot prompt files:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.2-to-1.4.prompt.md`
+- `.github/prompts/upgrade-aim-1.4-to-1.5.prompt.md`
 
 If you want Claude Code support too, also copy:
 - `CLAUDE.md`
@@ -345,7 +361,7 @@ Use `Auto` when the Epic is clear and you want faster throughput with the same g
 
 ## Platform Adapters
 
-AIM 1.4 explicitly separates:
+AIM 1.5 explicitly separates:
 - AIM core
 - AIM runtime
 - repo-aware policy
@@ -380,21 +396,23 @@ These files extend the Claude adapter surface but they do not replace `AGENTS.md
 
 ## Recommended Reading Order
 
-If you are evaluating AIM:
-1. `README.md`
-2. `docs/workflow/quick-start-aim-1.4.md`
-3. `docs/workflow/agile-iteration-method.md`
-4. `docs/workflow/install-aim-1.4.md`
+If you want to use AIM:
+1. [README.md](README.md)
+2. [Install AIM 1.5](docs/workflow/install-aim-1.5.md) when you need repo setup
+3. [Quick start AIM 1.5](docs/workflow/quick-start-aim-1.5.md) for the first run
+4. [AIM 1.5 document map](docs/workflow/aim-1.5-doc-map.md) for the rest of the public path
 
-If you are installing AIM in a repo:
-1. `docs/workflow/install-aim-1.4.md`
-2. `AGENTS.md`
-3. `docs/workflow/quick-start-aim-1.4.md`
-4. `docs/workflow/troubleshoot-aim-1.4.md`
+If you want to upgrade an existing AIM repo:
+1. [Migrate AIM 1.4 to AIM 1.5](docs/workflow/migrate-aim-1.4-to-1.5.md)
+2. [Quick start AIM 1.5](docs/workflow/quick-start-aim-1.5.md)
+3. [Troubleshoot AIM 1.5](docs/workflow/troubleshoot-aim-1.5.md)
 
-If you are upgrading from an older AIM version:
-1. `docs/workflow/migrate-aim-1.2-to-1.4.md`
-2. `docs/workflow/release-aim-1.4.md`
+If you are implementing AIM itself:
+1. [AGENTS.md](AGENTS.md)
+2. [Agile iteration method](docs/workflow/agile-iteration-method.md)
+3. [AIM adapter guidance](docs/workflow/aim-adapter-guidance.md)
+
+Do not start with `AGENTS.md` when the goal is just to install or run AIM in a repository.
 
 ## Repository Map
 
@@ -404,20 +422,22 @@ If you are upgrading from an older AIM version:
   Claude Code bridge layer that maps AIM onto Claude Code without changing the shared runtime contract.
 - `docs/workflow/agile-iteration-method.md`
   The method and runtime explanation.
-- `docs/workflow/quick-start-aim-1.4.md`
+- `docs/workflow/quick-start-aim-1.5.md`
   The shortest correct start path.
-- `docs/workflow/install-aim-1.4.md`
+- `docs/workflow/install-aim-1.5.md`
   Minimum viable installation guidance.
+- `docs/workflow/aim-1.5-doc-map.md`
+  Route map for the public docs and the correct next read.
 - `docs/workflow/copilot-layer.md`
   Optional GitHub Copilot packaging and workflow layer.
-- `docs/workflow/release-aim-1.4.md`
+- `docs/workflow/release-aim-1.5.md`
   Release note and publish checklist for the current version.
-- `docs/workflow/migrate-aim-1.2-to-1.4.md`
+- `docs/workflow/migrate-aim-1.4-to-1.5.md`
   Upgrade guidance for existing AIM repos.
-- `docs/workflow/troubleshoot-aim-1.4.md`
+- `docs/workflow/troubleshoot-aim-1.5.md`
   Startup, resume, validator and fallback troubleshooting.
-- `docs/workflow/example-aim-1.4-reference-run.md`
-  Concrete example of an AIM 1.4 run.
+- `docs/workflow/example-aim-1.5-reference-run.md`
+  Concrete example of an AIM 1.5 run.
 - `examples/epics/example-epic.md`
   Example Epic input.
 

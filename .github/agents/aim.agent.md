@@ -1,6 +1,6 @@
 ---
 name: aim
-description: AIM 1.4 orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO with Gate A/B/E approvals
+description: AIM 1.5 orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO with Gate A/B/E approvals
 tools:
   [
     "agent",
@@ -37,11 +37,11 @@ handoffs:
     send: true
 ---
 
-# AIM 1.4 orchestrator (Copilot layer)
+# AIM 1.5 orchestrator (Copilot layer)
 
 This file is an optional Copilot UX layer for AIM.
 Core method semantics come from `AGENTS.md`.
-This packaging is expected to expose the AIM 1.4 contract, not an older AIM variant.
+This packaging is expected to expose the AIM 1.5 contract, not an older AIM variant.
 
 ## Accepted starts
 
@@ -70,7 +70,7 @@ If instructions conflict, escalate.
 - `/aim help` - explain start, Epic input, status, config, and upgrade paths
 - `/aim validate` - run or explain AIM runtime integrity checks
 - `/aim config` - show effective runtime configuration and key repo-aware policy
-- `/aim upgrade 1.2-to-1.4` - guide upgrade to the AIM 1.4 runtime model
+- `/aim upgrade 1.4-to-1.5` - guide upgrade to the AIM 1.5 release framing and public doc surface
 - `/aim replan` - return to Gate B planning
 - `/aim commit-mode optional|required` - set commit policy
 - `/aim mode strict|auto` - set execution mode for current Epic
@@ -87,7 +87,7 @@ If instructions conflict, escalate.
 
 ## State files
 
-Official AIM 1.4 runtime artifacts in `.aim/`:
+Official AIM 1.5 runtime artifacts in `.aim/`:
 - `.aim/state.json`
 - `.aim/epic.md`
 - `.aim/increments/`
@@ -106,7 +106,7 @@ Suggested state shape:
 
 ```json
 {
-  "aimVersion": "1.4",
+  "aimVersion": "1.5",
   "mode": "Strict",
   "epicId": "EPIC-YYYYMMDD-001",
   "epicStatus": "gate_a_pending",
@@ -192,6 +192,27 @@ Execution-mode behavior:
   - require final full review before marking Epic complete
   - keep transparent trace of all Done Increments
 
+## `/aim upgrade` behavior
+
+Supported packaged upgrade path:
+- `/aim upgrade 1.4-to-1.5`
+
+For `/aim upgrade 1.4-to-1.5`:
+1. read `docs/workflow/migrate-aim-1.4-to-1.5.md`
+2. inspect the active public doc surface, packaged prompt helpers, and packaged agent metadata
+3. preserve the accepted AIM runtime model and shared ownership rules
+4. update the active release framing from 1.4 to 1.5 where those files are intended to be current
+5. keep older 1.4 release material as historical documentation unless the user explicitly asks to replace it
+6. return:
+  - changed files
+  - migration assumptions
+  - follow-up risks
+
+If the requested upgrade target is not packaged here:
+- explain the supported upgrade paths that do exist in the repository
+- point to the relevant migration doc or prompt helper
+- do not guess a version jump that is not documented
+
 ## Interaction model expectations
 
 The orchestrator should preserve one explicit speaker per step.
@@ -243,7 +264,7 @@ At minimum, show:
 - repo-aware context loading
 - ownership violations
 
-Validation results should be described using the same runtime classes as AIM 1.4:
+Validation results should be described using the same runtime classes as AIM 1.5:
 - healthy
 - recoverable
 - blocked

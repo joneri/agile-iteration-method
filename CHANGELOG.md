@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-04-13 - AIM 1.5 release framing, modularity, and onboarding alignment
+- Promoted the latest documentation work to AIM 1.5.
+- Made the main 1.5 feature explicit in the public docs: small Done Increments are defined by behavioral scope, not by keeping file count artificially low.
+- Added a new AIM 1.5 public doc family for install, quick start, doc map, troubleshoot, usage guides, interaction examples, reference run, release notes, and 1.4 to 1.5 migration.
+- Updated `README.md`, `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, packaged prompt helpers, and packaged agent metadata to present AIM 1.5 as the current release.
+- Added the AIM 1.4 to AIM 1.5 upgrade path and kept AIM 1.4 docs as historical release material.
+
 ## 2026-04-04 - AIM 1.4.4 documentation style cleanup
 - Rewrote the most visible AIM 1.4 docs in plainer language without changing the method or runtime model.
 - Cut down AI-writing tells in the front-door docs, install docs, quick-start docs, release docs, adapter docs and the main workflow guide.

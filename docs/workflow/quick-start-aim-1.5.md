@@ -1,13 +1,20 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# Quick start AIM 1.4
+# Quick start AIM 1.5
 
 Use this guide for the shortest correct path into AIM.
 
 Use this after the repository already contains the AIM files.
-If you still need to copy files, choose adapter packaging, or make the repo setup real, start with [Install AIM 1.4](install-aim-1.4.md).
-If you need the broader front-door route first, use [AIM 1.4 document map](aim-1.4-doc-map.md).
+If you still need to copy files, choose adapter packaging, or make the repo setup real, start with [Install AIM 1.5](install-aim-1.5.md).
+If you need the broader front-door route first, use [AIM 1.5 document map](aim-1.5-doc-map.md).
+
+## Why 1.5 feels different
+
+AIM 1.5 keeps the same core loop and runtime model, but it is clearer about one important point:
+- small scope means small behavior, not artificially few files
+- a Done Increment may touch more focused files when that keeps responsibilities readable, reviewable, and cheaper to change later
+- the public onboarding path now makes that rule visible from the start
 
 ## Quick route
 
@@ -24,18 +31,9 @@ If you need the broader front-door route first, use [AIM 1.4 document map](aim-1
 - Claude Code:
   use `CLAUDE.md` plus the shipped starter files in `.claude/commands/` and `.claude/agents/`.
 
-This repository now ships a minimal Claude starter layer so the Claude path is concrete instead of only documented in theory.
-
 Shared install note:
 - `.github/agents/aim*.agent.md` are part of the AIM instruction layer generally.
 - `.github/prompts/` are optional Copilot prompt helpers.
-
-## Codex skill versus repo-aware AIM
-
-- The repo is the canonical AIM contract.
-- The Codex skill is the cleanest way to expose `/aim`.
-- `/aim` depends on the skill being installed and enabled.
-- A prepared AIM repo can still work in Codex without the skill when you start with explicit AIM language.
 
 ## How to start
 
@@ -56,11 +54,6 @@ Secondary starts:
 - Claude Code:
   - explicit `EPIC: ...` plus `Mode: Strict` or `Mode: Auto` is the safe fallback when no Claude command wrapper exists
 
-If you already have a strong Epic candidate:
-- provide it directly
-- AIM should validate it and normalize lightly if needed
-- `PO` may accept it without a full rewrite
-
 ## Choose mode
 
 Always make mode explicit:
@@ -70,46 +63,13 @@ Always make mode explicit:
 If you do not specify mode:
 - default is `Strict`
 
-How the modes differ:
-- `Strict`:
-  - pause at the meaningful approval checkpoints
-- `Auto`:
-  - continue through increments automatically unless escalation occurs
-  - still pause for final full review before Epic completion
-
-## What to provide first
-
-Best first message shape:
-- `EPIC: <desired outcome>`
-- `Mode: Strict` or `Mode: Auto`
-
-Good example:
-
-```text
-/aim start "EPIC: Make AIM easier for new users to start and understand"
-Mode: Auto
-```
-
-Repo-aware Codex fallback:
-
-```text
-EPIC: Make AIM easier for new users to start and understand
-Mode: Auto
-```
-
-Claude Code-oriented equivalent:
-
-```text
-EPIC: Make AIM easier for new users to start and understand
-Mode: Auto
-```
-
 ## What AIM does next
 
 1. validates or normalizes the Epic candidate
 2. makes `PO` ownership of the Epic explicit
 3. lets `TDO` define the next single Done Increment
 4. records runtime state in `.aim`
+5. keeps the behavioral scope small even when clearer file boundaries require more than one file
 
 ## What the visible checkpoints look like
 
@@ -135,9 +95,8 @@ Mode: Auto
   - owned by `TDO`
   - defines the next single shippable slice
 
-If you provide increment ideas up front:
-- AIM may preserve them as planning notes
-- they do not replace `TDO` ownership of the next single Done Increment
+In AIM 1.5, the slice stays small by behavior and user value.
+It does not have to minimize file count if a few focused files are the clearer result.
 
 ## Common follow-up commands
 
@@ -147,7 +106,7 @@ If you provide increment ideas up front:
 - `/aim validate`
 - `/aim config`
 - `/aim mode strict|auto`
-- `/aim upgrade 1.2-to-1.4`
+- `/aim upgrade 1.4-to-1.5`
 
 If slash commands are not available in the current adapter:
 - use the documented secondary natural-language intent
@@ -155,7 +114,7 @@ If slash commands are not available in the current adapter:
 - or use the relevant workflow doc directly
 
 Next docs:
-- [AIM 1.4 usage guides](aim-1.4-usage-guides.md)
-- [AIM 1.4 interaction examples](aim-1.4-interaction-examples.md)
-- [AIM 1.4 document map](aim-1.4-doc-map.md)
-- [Install AIM 1.4](install-aim-1.4.md) if setup is still incomplete
+- [AIM 1.5 usage guides](aim-1.5-usage-guides.md)
+- [AIM 1.5 interaction examples](aim-1.5-interaction-examples.md)
+- [AIM 1.5 document map](aim-1.5-doc-map.md)
+- [Install AIM 1.5](install-aim-1.5.md) if setup is still incomplete
