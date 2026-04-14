@@ -7,7 +7,7 @@ Command behavior:
 - inspect the current public docs, packaged prompt helpers, and packaged agent metadata
 - keep `AGENTS.md` canonical and preserve the accepted AIM runtime model
 - update the files that represent the active release surface to AIM 1.5
-- keep older AIM 1.4 release material as historical documentation unless the user explicitly asks to replace it
+- do not require older AIM 1.4 release material to stay in the repo once the active 1.5 surface is complete
 
 Return:
 - changed files

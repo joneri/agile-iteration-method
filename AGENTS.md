@@ -323,28 +323,29 @@ Ownership rule:
 
 ## Migration support (AIM 1.5)
 
-AIM 1.4 must remain adoptable by repositories that already use AIM 1.2.
+AIM 1.5 must remain adoptable by repositories that already use the accepted AIM 1.4 runtime model.
+The active repository surface keeps the current 1.4-to-1.5 upgrade bridge; older migration hops may live outside the active file set.
 
 Supported migration scenarios:
 - no `.aim` exists yet:
-  - create the official `.aim` workspace at first AIM 1.4 startup
+  - create the official `.aim` workspace at first AIM 1.5 startup
   - initialize `.aim/epic.md` and `.aim/state.json` from the active Epic context
 - informal `.aim` already exists:
   - preserve useful legacy helper artifacts during migration
-  - make the official AIM 1.4 workspace contract authoritative going forward
+  - make the official AIM 1.5 workspace contract authoritative going forward
 - Codex-only setup:
-  - adopt the shared AIM 1.4 runtime model without requiring optional Copilot-layer usage
+  - adopt the shared AIM 1.5 runtime model without requiring optional Copilot-layer usage
 - Claude Code setup:
-  - adopt the shared AIM 1.4 runtime model without replacing `AGENTS.md` with `CLAUDE.md`
+  - adopt the shared AIM 1.5 runtime model without replacing `AGENTS.md` with `CLAUDE.md`
 - Copilot-layer setup:
-  - keep `.github/agents/aim*.agent.md`, but align them to the shared AIM 1.4 runtime contract instead of adapter-only behavior
+  - keep `.github/agents/aim*.agent.md`, but align them to the shared AIM 1.5 runtime contract instead of adapter-only behavior
 
 Upgrade checklist:
 - confirm the repository profile still loads through `AGENTS.md` and `.github/agents/aim*.agent.md`
 - add or normalize the official `.aim` workspace contract
 - ensure `state.json` becomes the durable runtime checkpoint
 - update docs to distinguish AIM core, AIM runtime, repo-aware policy, and platform adapters
-- keep startup, resume, and validator behavior consistent with the AIM 1.4 runtime docs
+- keep startup, resume, and validator behavior consistent with the AIM 1.5 runtime docs
 
 Legacy artifact policy:
 - tolerated temporarily:
@@ -353,12 +354,12 @@ Legacy artifact policy:
 - migrated:
   - active Epic intent into `.aim/epic.md`
   - active runtime checkpoint into `.aim/state.json`
-  - repository docs that still describe AIM 1.2-only runtime behavior
+  - repository docs that still describe older runtime behavior
 - archived:
   - stale logs, analysis notes, or superseded helper artifacts once their decision value is captured elsewhere
 - removed or replaced:
   - legacy files that pretend to own current gate, role, or acceptance state outside `.aim/state.json`
-  - stale instructions that contradict AIM 1.4 runtime ownership or bootstrap rules
+  - stale instructions that contradict AIM 1.5 runtime ownership or bootstrap rules
 
 Migration and runtime integrity:
 - migration must preserve startup and resume continuity
@@ -368,7 +369,7 @@ Migration and runtime integrity:
 
 ## Platform adapters and parity (AIM 1.5)
 
-AIM 1.4 documents platform adapters explicitly instead of leaving parity to implication.
+AIM 1.5 documents platform adapters explicitly instead of leaving parity to implication.
 
 Adapter-specific parity labels, capability notes, entrypoint examples, and optional helper-file details live in `docs/workflow/aim-adapter-guidance.md`.
 

@@ -16,7 +16,7 @@ It makes three things more visible and operational:
 ## Migration checklist
 
 - update active public docs from 1.4 to 1.5 naming where the repository treats them as the current release surface
-- keep older 1.4 release and migration docs as historical references
+- remove or archive older 1.4 release material when the repository should expose only current AIM 1.5 files
 - update README, install, quick-start, doc map, troubleshoot, usage, interaction-example, and reference-run docs to point to the 1.5 surface
 - update prompt helpers and packaged agent metadata so they present AIM 1.5 consistently
 - confirm the modularity guidance is visible in public docs, not only in internal guidance

@@ -72,7 +72,8 @@ Use these when deeper behavior or contracts matter:
 Use these when working on AIM itself rather than just using AIM:
 - `docs/epics/`
 - `.aim/`
-- older release notes and migration docs
+- `CHANGELOG.md`
+- current release and migration docs in `docs/workflow/`
 
 ## Recommended production reading order
 

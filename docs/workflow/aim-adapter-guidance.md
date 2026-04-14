@@ -56,8 +56,6 @@ These phrases are valid adapter entrypoint hints when the matching layer support
 - `/aim start "EPIC: ..."`
 - `/aim upgrade 1.4-to-1.5`
 - `Starta en AIM-loop med denna EPIC: ...`
-- `/migrate-aim-1.0-to-1.1`
-- `/migrate-aim-1.1-to-1.2`
 
 Transport shortcuts and command surfaces are adapter UX.
 They do not define the AIM checkpoint contract.

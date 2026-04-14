@@ -377,7 +377,8 @@ This means:
 
 ## Migration support
 
-AIM 1.4 must define a practical upgrade path for repositories that already use AIM 1.2.
+AIM 1.5 must define a practical upgrade path for repositories that already use the accepted AIM 1.4 runtime model.
+The active repository surface keeps the current 1.4-to-1.5 bridge; older migration hops may live outside the active file set.
 
 ### Supported migration scenarios
 
@@ -386,17 +387,17 @@ AIM 1.4 must define a practical upgrade path for repositories that already use A
   - the runtime initializes `.aim/epic.md` and `.aim/state.json` from the active Epic context
 - informal `.aim` already in use:
   - legacy helper artifacts may remain temporarily
-  - the official AIM 1.4 workspace contract becomes the authoritative runtime layout
+  - the official AIM 1.5 workspace contract becomes the authoritative runtime layout
 - Codex-only repository:
-  - the repo can adopt AIM 1.4 runtime behavior without also adopting the optional Copilot layer
+  - the repo can adopt AIM 1.5 runtime behavior without also adopting the optional Copilot layer
 - Claude Code repository:
-  - the repo can adopt AIM 1.4 runtime behavior with `AGENTS.md` plus `CLAUDE.md` and optional `.claude/` helpers
+  - the repo can adopt AIM 1.5 runtime behavior with `AGENTS.md` plus `CLAUDE.md` and optional `.claude/` helpers
 - Copilot-layer repository:
-  - existing `.github/agents/aim*.agent.md` files may remain, but they must align with the shared AIM 1.4 runtime contract
+  - existing `.github/agents/aim*.agent.md` files may remain, but they must align with the shared AIM 1.5 runtime contract
 
 ### Upgrade checklist
 
-A safe AIM 1.2 to AIM 1.4 migration should:
+A safe AIM 1.4 to AIM 1.5 migration should:
 - keep the repository profile in `AGENTS.md` and any active adapter helper files readable through the accepted layer order
 - create or normalize the official `.aim` workspace
 - make `state.json` the durable runtime checkpoint for startup and resume
@@ -412,7 +413,7 @@ Legacy artifacts should be classified like this:
 - migrated:
   - active Epic context into `.aim/epic.md`
   - active runtime checkpoint into `.aim/state.json`
-  - AIM 1.2-only runtime wording in repo docs into AIM 1.4 terminology
+  - older runtime wording in repo docs into AIM 1.5 terminology
 - archived:
   - stale logs, analysis notes, and superseded helper artifacts after their decision value is preserved elsewhere
 - removed or replaced:
@@ -998,8 +999,8 @@ Setup and usage are documented in:
 
 ### Feature parity matrix
 
-Use the dedicated adapter/parity doc as the detailed source of truth:
-- `docs/features/aim-1.4-platform-adapters-and-parity.md`
+Use the adapter guidance as the detailed source of truth:
+- `docs/workflow/aim-adapter-guidance.md`
 
 At minimum, the matrix must classify:
 - start AIM session
@@ -1018,9 +1019,9 @@ At minimum, the matrix must classify:
 
 ## Controlled parallelism
 
-AIM 1.4 allows controlled parallelism only when the runtime supports it and repo-aware policy permits it.
+AIM 1.5 allows controlled parallelism only when the runtime supports it and repo-aware policy permits it.
 
-Controlled parallelism is one of the practical upgrades in AIM 1.4.
+Controlled parallelism remains one of the practical runtime capabilities in AIM 1.5.
 It allows AIM to speed up analysis, discovery and verification in the right situations without weakening central ownership of shared state, gates or acceptance decisions.
 
 The safety rule is simple:
@@ -1070,13 +1071,9 @@ At that point, the EPIC is complete.
 
 - `AGENTS.md` defines operational rules, gates and escalation behaviour for Codex runs.
 - `docs/workflow/aim-adapter-guidance.md` collects adapter-specific entrypoints, parity labels, helper-file boundaries, and fallback notes so canonical files stay focused.
-- `docs/features/aim-1.4-runtime-architecture.md` defines the architectural split between core, runtime, repo-aware policy, and adapters.
-- `docs/features/aim-1.4-runtime-workspace.md` defines the official `.aim` workspace contract and runtime checkpoint model.
-- `docs/features/aim-1.4-bootstrap-and-resume.md` defines the shared startup and resume flow across adapters.
-- `docs/features/aim-1.4-repo-aware-runtime-context.md` defines the normalized repo-aware context that runtime and adapters consume.
-- `docs/features/aim-1.4-validator-support.md` defines validator scope, quick-check behavior, and result classes.
-- `docs/features/aim-1.4-migration-support.md` defines AIM 1.2 to AIM 1.4 migration scenarios, upgrade checklist, and legacy artifact policy.
-- `docs/features/aim-1.4-platform-adapters-and-parity.md` defines adapter contracts, support levels, and the feature parity matrix.
+- `docs/features/aim-modularity-context-efficiency.md` defines AIM 1.5 file-boundary and context-efficiency behavior.
+- `docs/workflow/install-aim-1.5.md`, `docs/workflow/quick-start-aim-1.5.md`, and `docs/workflow/aim-1.5-doc-map.md` define the current public onboarding path.
+- `docs/workflow/migrate-aim-1.4-to-1.5.md` defines the supported current upgrade bridge.
 - `CONTRIBUTING.md` defines coding standards, PR rules and local commands.
 - `docs/workflow/copilot-layer.md` defines the optional Copilot custom-agent interface.
 - `docs/features/` explains non-obvious feature behaviour, contracts and fallbacks.

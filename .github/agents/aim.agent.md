@@ -202,7 +202,7 @@ For `/aim upgrade 1.4-to-1.5`:
 2. inspect the active public doc surface, packaged prompt helpers, and packaged agent metadata
 3. preserve the accepted AIM runtime model and shared ownership rules
 4. update the active release framing from 1.4 to 1.5 where those files are intended to be current
-5. keep older 1.4 release material as historical documentation unless the user explicitly asks to replace it
+5. do not require older 1.4 release material to stay in the repo once the active 1.5 surface is complete
 6. return:
   - changed files
   - migration assumptions

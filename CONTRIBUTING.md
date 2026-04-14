@@ -6,7 +6,7 @@ This repo is both:
 1) the public method definition, and
 2) a copyable implementation kit for real projects.
 
-## Versioning policy (AIM 1.2)
+## Versioning policy (AIM 1.5)
 - This repository is the source of truth for AIM.
 - Documentation updates here are method updates.
 - AIM changes should be proposed and reviewed using AIM itself.
@@ -24,12 +24,16 @@ This repo is both:
   Optional Copilot custom-agent layer.
 - `docs/workflow/aim-adapter-guidance.md`
   Adapter entrypoints, parity labels and helper-file boundaries.
-- `docs/workflow/migrate-aim-1.0-to-1.1.md`  
-  Reusable migration prompt for upgrading older AIM repos.
-- `docs/workflow/migrate-aim-1.1-to-1.2.md`  
-  Reusable migration prompt for upgrading AIM 1.1 repos to AIM 1.2.
-- `docs/workflow/release-aim-1.2.md`  
-  Release messaging draft for publishing AIM 1.2.
+- `docs/workflow/install-aim-1.5.md`
+  Current installation guide.
+- `docs/workflow/quick-start-aim-1.5.md`
+  Current first-run guide.
+- `docs/workflow/aim-1.5-doc-map.md`
+  Current navigation map.
+- `docs/workflow/migrate-aim-1.4-to-1.5.md`
+  Current supported upgrade bridge for older AIM 1.4 repositories.
+- `docs/workflow/release-aim-1.5.md`
+  Current release notes.
 - `docs/epics/_template.md`  
   Epic template (feature truth + safe changes).
 - `docs/features/_template.md`  
@@ -62,6 +66,7 @@ If you change a rule in one place, update the others if needed:
 - `AGENTS.md` (operational)
 - `docs/workflow/agile-iteration-method.md` (explanation)
 - `docs/workflow/copilot-layer.md` (Copilot interface, if relevant)
+- `.github/agents/aim*.agent.md` and `.github/prompts/` (adapter packaging, if relevant)
 
 ### Examples must be generic
 Avoid personal apps, internal systems, or proprietary setups.
@@ -93,7 +98,8 @@ Update `docs/workflow/copilot-layer.md` and `.github/agents/` when:
 - setup/install UX changes
 
 Canonical source:
-- `.github/agents/` and `.github/prompts/` are the only operational specs.
+- `AGENTS.md` and `docs/workflow/agile-iteration-method.md` define AIM behavior.
+- `.github/agents/` and `.github/prompts/` package Copilot entrypoints.
 
 ---
 
