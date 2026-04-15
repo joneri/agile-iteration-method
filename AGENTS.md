@@ -19,6 +19,7 @@ For AIM 1.6, this repo distinguishes between:
 Release-line note:
 - AIM 1.6 keeps the accepted AIM 1.4 runtime architecture stable.
 - AIM 1.6 makes cost control explicit without weakening gates, ownership, or escalation.
+- AIM 1.6 makes the public front door lighter: start, continue, or validate first; deeper method detail stays available behind the docs.
 - AIM 1.5 modularity and context-efficiency guidance remains active.
 
 Important: runtime capabilities differ by environment. AIM must prefer shared behavior first. If controlled parallel subagents are unavailable or disallowed by repo policy, the runtime must fall back to sequential execution without changing core gate semantics or ownership rules.
@@ -38,6 +39,12 @@ Follow the gates in order. When in doubt:
 - otherwise continue to Gate E.
 
 ## How to start a run
+The front door should be thin.
+Before showing the full method, route the user to one of:
+- start a new AIM run
+- continue an existing AIM run
+- validate the AIM setup
+
 1. Open the repository in the chosen AIM adapter.
 2. Ensure `AGENTS.md` and the primary AIM workflow docs are present.
 3. If using Claude Code, also ensure `CLAUDE.md` is present.

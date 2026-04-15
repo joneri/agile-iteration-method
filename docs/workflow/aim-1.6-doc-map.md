@@ -3,7 +3,14 @@
 
 # AIM 1.6 document map
 
-Use this guide to understand which AIM 1.6 documents are public front-door docs, which are reference specifications and which are internal planning material.
+Use this guide only when the first three choices are not enough.
+
+The light front door is:
+- start: [Quick start AIM 1.6](quick-start-aim-1.6.md)
+- continue or check setup: [Troubleshoot AIM 1.6](troubleshoot-aim-1.6.md)
+- install or upgrade: [Install AIM 1.6](install-aim-1.6.md)
+
+This map explains the broader public docs, reference specifications, and internal planning material.
 
 ## Choose your path
 
@@ -62,6 +69,7 @@ Use these when deeper behavior or contracts matter:
 - [AIM adapter guidance](aim-adapter-guidance.md)
 - [docs/features/](../features/README.md)
 - [AIM Cost Control Mode](../features/aim-cost-control-mode.md)
+- [AIM Light Front Door](../features/aim-light-front-door.md)
 - [AIM modularity and context efficiency](../features/aim-modularity-context-efficiency.md)
 - [Copilot layer](copilot-layer.md)
 - `.github/agents/`
@@ -91,6 +99,7 @@ For a maintainer or adapter implementer:
 2. [Agile iteration method](agile-iteration-method.md)
 3. [AIM adapter guidance](aim-adapter-guidance.md)
 4. [AIM Cost Control Mode](../features/aim-cost-control-mode.md)
-5. [AIM modularity and context efficiency](../features/aim-modularity-context-efficiency.md)
-6. [CLAUDE.md](../../CLAUDE.md) when working on Claude Code support
-7. [Copilot layer](copilot-layer.md)
+5. [AIM Light Front Door](../features/aim-light-front-door.md)
+6. [AIM modularity and context efficiency](../features/aim-modularity-context-efficiency.md)
+7. [CLAUDE.md](../../CLAUDE.md) when working on Claude Code support
+8. [Copilot layer](copilot-layer.md)

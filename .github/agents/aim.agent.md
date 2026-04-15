@@ -67,7 +67,7 @@ If instructions conflict, escalate.
 - `/aim start "EPIC: ..."` - initialize AIM session
 - `/aim continue` - continue based on current gate
 - `/aim status` - show current state
-- `/aim help` - explain start, Epic input, status, config, and upgrade paths
+- `/aim help` - show the thin front door: start, continue, validate, and the next command
 - `/aim validate` - run or explain AIM runtime integrity checks
 - `/aim config` - show effective runtime configuration and key repo-aware policy
 - `/aim upgrade 1.5-to-1.6` - guide upgrade to the AIM 1.6 release framing and public doc surface
@@ -133,6 +133,7 @@ Suggested state shape:
 3. Create initial state at Gate A with `commitMode: optional`.
    Also set `mode: Strict` unless user explicitly chooses `Auto`.
    Also set `costProfile: Standard` unless user explicitly chooses `Cost Control` or `Deep`.
+   The thin front door may suggest `Cost Control` for ordinary low-risk work, but omitted cost profile still resolves to `Standard`.
 4. Run `aim-planner` in `mode: PO` to create `.aim/epic.md`.
 5. Run `aim-planner` in `mode: TDO` to draft `.aim/plan.md` only as an optional helper for the next increment.
 6. Present Gate A only (Epic approval). Do not auto-approve Gate B unless PO policy explicitly allows it.
@@ -201,6 +202,18 @@ Cost-profile behavior:
 - `deep`: use broader context and stronger review evidence for high-risk work
 
 If Cost Control discovers trust, data correctness, user-facing meaning, migration, deployment, security, API, or unclear acceptance risk, move to Standard or Deep before continuing.
+
+## `/aim help` behavior
+
+Keep help short by default.
+
+Show:
+- start new work: `/aim start "EPIC: ..."`
+- continue current work: `/aim continue`
+- check setup: `/aim validate`
+- recommended lightweight start: `Mode: Strict` and `Cost profile: Cost Control`
+
+Do not explain the full method, adapter layering, or every runtime artifact unless the user asks for deeper help.
 
 ## `/aim upgrade` behavior
 

@@ -31,6 +31,7 @@ The method is inspired by the “Ralph Wiggum loop”, adapted to real product d
 - AIM is defined as `core + runtime + repo-aware policy + platform adapters`.
 - Cost profiles are explicit: `Standard`, `Cost Control`, and `Deep`.
 - Cost profile controls runtime depth, not approval semantics.
+- The public front door is thin: start, continue, or validate first; read deeper only when needed.
 - `.aim` is treated as official repo-local runtime state.
 - Small Done Increments are defined by behavioral scope, not by minimal file count.
 - Focused file boundaries are valid when they preserve the approved behavior and reduce future context cost.
@@ -489,6 +490,11 @@ Startup triggers (no manual bootstrap expected):
 - explicit Claude Code AIM start with:
   - `EPIC: <desired outcome>`
   - `Mode: Strict` or `Mode: Auto`
+
+Front-door rule:
+- show the user the next action before the full method
+- first route to start, continue, or validate
+- keep adapter details, runtime internals, and full gate explanations behind help or reference docs unless needed
 
 ## Execution modes
 

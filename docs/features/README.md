@@ -19,6 +19,7 @@ Create or update a feature explanation when:
 
 Examples:
 - aim-cost-control-mode.md
+- aim-light-front-door.md
 - aim-modularity-context-efficiency.md
 - value-series-trading-days.md
 - autopost-kpis.md

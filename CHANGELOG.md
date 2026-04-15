@@ -4,6 +4,7 @@
 - Added explicit cost profiles: `Standard`, `Cost Control`, and `Deep`.
 - Clarified that cost profile controls runtime depth while `Strict` and `Auto` still control approval flow.
 - Documented Cost Control as full AIM with narrower context, compact checkpoints, no subagents by default, and escalation to Standard or Deep when risk appears.
+- Added `docs/features/aim-light-front-door.md` and updated onboarding so first-run users choose start, continue, or validate before reading deeper docs.
 - Updated README, AGENTS, workflow docs, feature docs, prompt helpers, Copilot metadata, and Claude bridge files to present AIM 1.6.
 
 ## 2026-04-14 - AIM 1.5 repository surface cleanup

@@ -41,7 +41,7 @@ AIM 1.6 keeps the accepted core loop and runtime model and makes AIM budget-awar
 - focused file boundaries are treated as part of product quality and future context efficiency
 - context hogs are treated as a real delivery problem, not as proof that scope stayed small
 - Codex, Copilot and Claude Code still share one conceptual runtime contract
-- the front-door docs now expose the latest adapter and onboarding story as one clear release path
+- the front door is lighter: start, continue, or validate first; read deeper only when needed
 
 ## Why teams use it
 
@@ -77,32 +77,30 @@ With AIM 1.6:
 - runtime depth is explicit through cost profiles
 - normal AIM loads context progressively instead of treating every run as a full reread
 - the public onboarding path makes the latest guidance obvious to new users
+- the front door starts with three simple choices instead of the full method
 - adapter guidance, packaging, and upgrade docs now read as one current release surface
 
 That is the main upgrade: AIM 1.6 makes the accepted runtime easier to afford without weakening ownership, gates, or escalation.
 
 ## Start Here
 
-Use the front-door path that matches your goal:
+Choose one:
 
-- Evaluate AIM:
-  - [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md)
-  - [AIM 1.6 interaction examples](docs/workflow/aim-1.6-interaction-examples.md)
-  - [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md)
-- Install AIM in a repository:
-  - [Install AIM 1.6](docs/workflow/install-aim-1.6.md)
-  - [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md)
-  - [Troubleshoot AIM 1.6](docs/workflow/troubleshoot-aim-1.6.md)
-- Upgrade an AIM 1.5 repository:
-  - [Migrate AIM 1.5 to AIM 1.6](docs/workflow/migrate-aim-1.5-to-1.6.md)
-  - [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md)
-  - [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md)
+1. [Start AIM](docs/workflow/quick-start-aim-1.6.md)
+2. [Continue or troubleshoot AIM](docs/workflow/troubleshoot-aim-1.6.md)
+3. [Install or upgrade AIM](docs/workflow/install-aim-1.6.md)
 
-What each front-door doc is for:
-- `README.md` explains the product and helps you choose a path.
-- `install-aim-1.6.md` is for repository setup and adapter packaging.
-- `quick-start-aim-1.6.md` is for the first Epic and the first visible AIM loop.
-- `aim-1.6-doc-map.md` is for finding the next document without dropping into the reference/spec layer too early.
+Fast start:
+
+```text
+/aim start "EPIC: <desired user outcome>"
+Mode: Strict
+Cost profile: Cost Control
+```
+
+Use `Cost Control` for ordinary low-risk work. Use `Deep` when the work touches trust, data correctness, deployment, migration, security, or public APIs.
+
+Need the full map? Use [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md).
 
 ## Choose Your Adapter
 
@@ -312,7 +310,7 @@ Cost profile: Standard
 
 ## The Fastest Way To Get Agentic Value
 
-If someone lands on this repo and wants the shortest possible path, this is it:
+If someone wants the shortest path, this is it:
 
 1. Copy `AGENTS.md` and `docs/workflow/agile-iteration-method.md` into the target repo.
 2. Copy `.github/agents/aim*.agent.md` into the target repo.
@@ -320,7 +318,8 @@ If someone lands on this repo and wants the shortest possible path, this is it:
 4. Optionally copy `.github/prompts/` if you want packaged Copilot prompt entrypoints too.
 5. Optionally add `CLAUDE.md` and `.claude/` if you want Claude Code support too.
 6. Open the repo in Codex, Copilot or Claude Code.
-7. Start with `/aim start "EPIC: <desired outcome>"` when the Codex skill or another slash-command adapter surface is available. Otherwise start with `EPIC: <desired outcome>`, `Mode: Strict` or `Mode: Auto`, and an optional `Cost profile`.
+7. Start with `/aim start "EPIC: <desired outcome>"`.
+8. If slash commands are unavailable, start with `EPIC: <desired outcome>`, `Mode: Strict`, and `Cost profile: Cost Control`.
 
 ## Why AIM Feels Different
 
@@ -427,9 +426,9 @@ These files extend the Claude adapter surface but they do not replace `AGENTS.md
 
 If you want to use AIM:
 1. [README.md](README.md)
-2. [Install AIM 1.6](docs/workflow/install-aim-1.6.md) when you need repo setup
-3. [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md) for the first run
-4. [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md) for the rest of the public path
+2. [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md) for the first run
+3. [Install AIM 1.6](docs/workflow/install-aim-1.6.md) when setup is missing
+4. [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md) only when you need the broader path
 
 If you want to upgrade an existing AIM repo:
 1. [Migrate AIM 1.5 to AIM 1.6](docs/workflow/migrate-aim-1.5-to-1.6.md)

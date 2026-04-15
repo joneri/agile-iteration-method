@@ -7,7 +7,7 @@ Use this guide for the shortest correct path into AIM.
 
 Use this after the repository already contains the AIM files.
 If you still need to copy files, choose adapter packaging, or make the repo setup real, start with [Install AIM 1.6](install-aim-1.6.md).
-If you need the broader front-door route first, use [AIM 1.6 document map](aim-1.6-doc-map.md).
+If you need the broader route, use [AIM 1.6 document map](aim-1.6-doc-map.md).
 
 ## Why 1.6 feels different
 
@@ -21,10 +21,29 @@ AIM 1.6 keeps the same core loop and runtime model, but adds a cost-aware runtim
 
 ## Quick route
 
-1. Confirm installation is complete.
-2. Pick the adapter start path below.
-3. Send one Epic plus one execution mode.
-4. Choose a cost profile when resource use matters.
+Choose one:
+
+1. Start new work:
+
+   ```text
+   /aim start "EPIC: <desired user outcome>"
+   Mode: Strict
+   Cost profile: Cost Control
+   ```
+
+2. Continue existing work:
+
+   ```text
+   /aim continue
+   ```
+
+3. Check the setup:
+
+   ```text
+   /aim validate
+   ```
+
+If slash commands are not available, write the same intent in plain language.
 
 ## Choose your adapter
 
@@ -58,6 +77,17 @@ Secondary starts:
 - Claude Code:
   - explicit `EPIC: ...` plus `Mode: Strict` or `Mode: Auto` is the safe fallback when no Claude command wrapper exists
 
+## Defaults
+
+For the first run, use:
+
+```text
+Mode: Strict
+Cost profile: Cost Control
+```
+
+`Strict` keeps approvals visible. `Cost Control` keeps the runtime light for normal low-risk work.
+
 ## Choose mode
 
 Always make mode explicit:
@@ -77,7 +107,7 @@ Use one of:
 If you do not specify a cost profile:
 - default is `Standard`
 
-Use `Cost Control` for low-risk cleanup, documentation maintenance, narrow reversible fixes, and small adapter helper changes.
+Use `Cost Control` for normal low-risk work, cleanup, documentation maintenance, narrow reversible fixes, and small adapter helper changes.
 
 Use `Deep` for trust-sensitive, data correctness, deployment, migration, security, API, or broad public-method work.
 
