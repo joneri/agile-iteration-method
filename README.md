@@ -1,4 +1,4 @@
-# Agile Iteration Method (AIM) v1.5
+# Agile Iteration Method (AIM) v1.6
 
 AIM is a way to run agentic software delivery without losing the thread.
 
@@ -27,10 +27,14 @@ Without a method, agentic development usually breaks in predictable ways:
 
 AIM fixes that with clear roles, gates and ownership.
 
-## What's new in v1.5
+## What's new in v1.6
 
-AIM 1.5 keeps the accepted core loop and runtime model and makes the latest delivery guidance visible in the public product story.
+AIM 1.6 keeps the accepted core loop and runtime model and makes AIM budget-aware.
 
+- Cost profiles are now explicit: `Standard`, `Cost Control`, and `Deep`
+- `Cost Control` keeps AIM gates and escalation rules while reducing context, output, and verification depth for low-risk work
+- `Standard` AIM now uses progressive context loading by default instead of rereading every method document
+- `Deep` is available for high-risk work where broader inspection and stronger review are worth the spend
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
 - small Done Increments are defined by behavioral scope, not by artificially few files
@@ -50,15 +54,15 @@ This release is easier to trust, explain and adopt:
 - you can install AIM into a real repo without turning the repo into an experiment
 - the public docs make the latest version easier to start, inspect, and explain
 
-## What changed in 1.5
+## What changed in 1.6
 
-- AIM 1.5 keeps the accepted `core + runtime + repo-aware policy + platform adapters` model.
-- file-boundary discipline is now part of the visible release story, not just internal guidance.
-- the newest install, quick-start, doc-map, troubleshoot, and upgrade docs now point to one latest-version surface.
+- AIM 1.6 adds a cost-profile axis without changing the role loop or approval semantics.
+- `Strict` and `Auto` still control approvals; `Standard`, `Cost Control`, and `Deep` control runtime depth.
+- Regular AIM gets cheaper through progressive context loading, compact gates, cheap validation first, and risk-scaled review.
+- File-boundary discipline from AIM 1.5 remains part of the visible release story.
 
-In practice, AIM 1.5 would rather keep one user-facing change spread across a few cohesive files than force it into one oversized file.
-Small scope is about the behavior being shipped.
-Oversized files and mixed responsibilities are context hogs, not proof of good scope control.
+In practice, AIM 1.6 should spend attention where risk justifies it.
+Low-risk cleanup can run in Cost Control, while trust-sensitive product work can stay Standard or move to Deep.
 
 ## From prompt pattern to runtime
 
@@ -66,37 +70,39 @@ Before AIM 1.3, the method was there but the runtime story was too loose.
 
 With AIM 1.4, the runtime became inspectable and adapter-aware.
 
-With AIM 1.5:
+With AIM 1.6:
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
 - small scope is defined by behavior and user value, not by lowest possible file count
+- runtime depth is explicit through cost profiles
+- normal AIM loads context progressively instead of treating every run as a full reread
 - the public onboarding path makes the latest guidance obvious to new users
 - adapter guidance, packaging, and upgrade docs now read as one current release surface
 
-That is the main upgrade: AIM 1.5 makes the accepted runtime easier to use, review, and explain in real delivery work.
+That is the main upgrade: AIM 1.6 makes the accepted runtime easier to afford without weakening ownership, gates, or escalation.
 
 ## Start Here
 
 Use the front-door path that matches your goal:
 
 - Evaluate AIM:
-  - [Quick start AIM 1.5](docs/workflow/quick-start-aim-1.5.md)
-  - [AIM 1.5 interaction examples](docs/workflow/aim-1.5-interaction-examples.md)
-  - [AIM 1.5 document map](docs/workflow/aim-1.5-doc-map.md)
+  - [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md)
+  - [AIM 1.6 interaction examples](docs/workflow/aim-1.6-interaction-examples.md)
+  - [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md)
 - Install AIM in a repository:
-  - [Install AIM 1.5](docs/workflow/install-aim-1.5.md)
-  - [Quick start AIM 1.5](docs/workflow/quick-start-aim-1.5.md)
-  - [Troubleshoot AIM 1.5](docs/workflow/troubleshoot-aim-1.5.md)
-- Upgrade an AIM 1.4 repository:
-  - [Migrate AIM 1.4 to AIM 1.5](docs/workflow/migrate-aim-1.4-to-1.5.md)
-  - [Quick start AIM 1.5](docs/workflow/quick-start-aim-1.5.md)
-  - [AIM 1.5 document map](docs/workflow/aim-1.5-doc-map.md)
+  - [Install AIM 1.6](docs/workflow/install-aim-1.6.md)
+  - [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md)
+  - [Troubleshoot AIM 1.6](docs/workflow/troubleshoot-aim-1.6.md)
+- Upgrade an AIM 1.5 repository:
+  - [Migrate AIM 1.5 to AIM 1.6](docs/workflow/migrate-aim-1.5-to-1.6.md)
+  - [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md)
+  - [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md)
 
 What each front-door doc is for:
 - `README.md` explains the product and helps you choose a path.
-- `install-aim-1.5.md` is for repository setup and adapter packaging.
-- `quick-start-aim-1.5.md` is for the first Epic and the first visible AIM loop.
-- `aim-1.5-doc-map.md` is for finding the next document without dropping into the reference/spec layer too early.
+- `install-aim-1.6.md` is for repository setup and adapter packaging.
+- `quick-start-aim-1.6.md` is for the first Epic and the first visible AIM loop.
+- `aim-1.6-doc-map.md` is for finding the next document without dropping into the reference/spec layer too early.
 
 ## Choose Your Adapter
 
@@ -127,7 +133,7 @@ Important installation rule:
 | Copilot | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `.github/prompts/` | select `aim` and run `/aim start "EPIC: ..."` | `.github/agents/aim*.agent.md`; prompts optional |
 | Claude Code | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` + `CLAUDE.md` | `.claude/commands/` and `.claude/agents/` | repo Claude command or explicit `EPIC: ...` | `CLAUDE.md`; `.claude/` helpers recommended |
 
-## Starting A New Repo With AIM v1.5
+## Starting A New Repo With AIM v1.6
 
 Use this path when the repository does not exist yet or when you want to bootstrap a new repo around AIM from day one.
 
@@ -142,17 +148,17 @@ Required for AIM:
 - `.github/agents/aim-reviewer.agent.md`
 
 Recommended:
-- `docs/workflow/quick-start-aim-1.5.md`
-- `docs/workflow/install-aim-1.5.md`
-- `docs/workflow/migrate-aim-1.4-to-1.5.md`
-- `docs/workflow/troubleshoot-aim-1.5.md`
+- `docs/workflow/quick-start-aim-1.6.md`
+- `docs/workflow/install-aim-1.6.md`
+- `docs/workflow/migrate-aim-1.5-to-1.6.md`
+- `docs/workflow/troubleshoot-aim-1.6.md`
 - `examples/epics/example-epic.md`
 
 Optional GitHub Copilot prompt files:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.4-to-1.5.prompt.md`
+- `.github/prompts/upgrade-aim-1.5-to-1.6.prompt.md`
 
 If you want Claude Code support too, also copy:
 - `CLAUDE.md`
@@ -195,6 +201,7 @@ In Codex:
 ```text
 /aim start "EPIC: <desired user outcome>"
 Mode: Strict
+Cost profile: Standard
 ```
 
 `/aim` is the normal Codex start path when the AIM skill is installed and enabled.
@@ -203,6 +210,7 @@ If the repo already contains the AIM contract but the skill is not available, st
 ```text
 EPIC: <desired user outcome>
 Mode: Strict
+Cost profile: Cost Control
 ```
 
 In Copilot:
@@ -210,6 +218,7 @@ In Copilot:
 ```text
 /aim start "EPIC: <desired user outcome>"
 Mode: Strict
+Cost profile: Standard
 ```
 
 In Claude Code:
@@ -217,6 +226,7 @@ In Claude Code:
 ```text
 EPIC: <desired user outcome>
 Mode: Strict
+Cost profile: Standard
 ```
 
 This repository also ships a small Claude starter layer:
@@ -295,6 +305,7 @@ Good start:
 ```text
 EPIC: Make the onboarding flow understandable for first-time users without breaking existing signup behavior
 Mode: Strict
+Cost profile: Standard
 ```
 
 `PO` owns the outcome. `TDO` owns the next single Done Increment.
@@ -309,7 +320,7 @@ If someone lands on this repo and wants the shortest possible path, this is it:
 4. Optionally copy `.github/prompts/` if you want packaged Copilot prompt entrypoints too.
 5. Optionally add `CLAUDE.md` and `.claude/` if you want Claude Code support too.
 6. Open the repo in Codex, Copilot or Claude Code.
-7. Start with `/aim start "EPIC: <desired outcome>"` when the Codex skill or another slash-command adapter surface is available. Otherwise start with `EPIC: <desired outcome>` and `Mode: Strict` or `Mode: Auto`.
+7. Start with `/aim start "EPIC: <desired outcome>"` when the Codex skill or another slash-command adapter surface is available. Otherwise start with `EPIC: <desired outcome>`, `Mode: Strict` or `Mode: Auto`, and an optional `Cost profile`.
 
 ## Why AIM Feels Different
 
@@ -364,9 +375,22 @@ The meaningful approval points are:
 Use `Strict` by default for new teams or high-trust-sensitive work.
 Use `Auto` when the Epic is clear and you want faster throughput with the same gate logic.
 
+## Cost Profiles
+
+Cost profile controls runtime depth, not approval flow.
+
+- `Cost profile: Standard`
+  Normal AIM, now cheaper through progressive context loading and compact gates.
+- `Cost profile: Cost Control`
+  Use for low-risk, reversible cleanup or narrow documentation and adapter maintenance. Gates and escalation rules still apply.
+- `Cost profile: Deep`
+  Use for trust-sensitive, data correctness, deployment, migration, security, public API, or broad method changes.
+
+Cost Control is not weaker AIM. It is AIM with a smaller runtime budget and a clear rule to escalate when risk appears.
+
 ## Platform Adapters
 
-AIM 1.5 explicitly separates:
+AIM 1.6 explicitly separates:
 - AIM core
 - AIM runtime
 - repo-aware policy
@@ -403,14 +427,14 @@ These files extend the Claude adapter surface but they do not replace `AGENTS.md
 
 If you want to use AIM:
 1. [README.md](README.md)
-2. [Install AIM 1.5](docs/workflow/install-aim-1.5.md) when you need repo setup
-3. [Quick start AIM 1.5](docs/workflow/quick-start-aim-1.5.md) for the first run
-4. [AIM 1.5 document map](docs/workflow/aim-1.5-doc-map.md) for the rest of the public path
+2. [Install AIM 1.6](docs/workflow/install-aim-1.6.md) when you need repo setup
+3. [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md) for the first run
+4. [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md) for the rest of the public path
 
 If you want to upgrade an existing AIM repo:
-1. [Migrate AIM 1.4 to AIM 1.5](docs/workflow/migrate-aim-1.4-to-1.5.md)
-2. [Quick start AIM 1.5](docs/workflow/quick-start-aim-1.5.md)
-3. [Troubleshoot AIM 1.5](docs/workflow/troubleshoot-aim-1.5.md)
+1. [Migrate AIM 1.5 to AIM 1.6](docs/workflow/migrate-aim-1.5-to-1.6.md)
+2. [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md)
+3. [Troubleshoot AIM 1.6](docs/workflow/troubleshoot-aim-1.6.md)
 
 If you are implementing AIM itself:
 1. [AGENTS.md](AGENTS.md)
@@ -427,22 +451,22 @@ Do not start with `AGENTS.md` when the goal is just to install or run AIM in a r
   Claude Code bridge layer that maps AIM onto Claude Code without changing the shared runtime contract.
 - `docs/workflow/agile-iteration-method.md`
   The method and runtime explanation.
-- `docs/workflow/quick-start-aim-1.5.md`
+- `docs/workflow/quick-start-aim-1.6.md`
   The shortest correct start path.
-- `docs/workflow/install-aim-1.5.md`
+- `docs/workflow/install-aim-1.6.md`
   Minimum viable installation guidance.
-- `docs/workflow/aim-1.5-doc-map.md`
+- `docs/workflow/aim-1.6-doc-map.md`
   Route map for the public docs and the correct next read.
 - `docs/workflow/copilot-layer.md`
   Optional GitHub Copilot packaging and workflow layer.
-- `docs/workflow/release-aim-1.5.md`
+- `docs/workflow/release-aim-1.6.md`
   Release note and publish checklist for the current version.
-- `docs/workflow/migrate-aim-1.4-to-1.5.md`
+- `docs/workflow/migrate-aim-1.5-to-1.6.md`
   Upgrade guidance for existing AIM repos.
-- `docs/workflow/troubleshoot-aim-1.5.md`
+- `docs/workflow/troubleshoot-aim-1.6.md`
   Startup, resume, validator and fallback troubleshooting.
-- `docs/workflow/example-aim-1.5-reference-run.md`
-  Concrete example of an AIM 1.5 run.
+- `docs/workflow/example-aim-1.6-reference-run.md`
+  Concrete example of an AIM 1.6 run.
 - `examples/epics/example-epic.md`
   Example Epic input.
 

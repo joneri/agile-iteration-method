@@ -1,7 +1,7 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 1.5 interaction examples
+# AIM 1.6 interaction examples
 
 Use this document to see what the most important AIM checkpoints should feel like.
 
@@ -41,11 +41,12 @@ Example:
 ```text
 Role: Dev
 Mode: Strict
+Cost profile: Cost Control
 I kept the onboarding change to one user-facing behavior, but split the work across README, quick-start, and the doc map so each file keeps one clear responsibility.
 
 Verified:
 - the front-door path now points to the same latest-version docs
-- the release note and changelog describe the same 1.5 story
+- the release note and changelog describe the same 1.6 story
 - the upgrade path no longer points users back to the 1.4 front door
 
 Next step:
@@ -65,12 +66,13 @@ Example:
 ```text
 Role: Reviewer
 Mode: Strict
+Cost profile: Cost Control
 No blocking findings in the selected documentation files.
 
 What I verified:
 - the increment stayed focused on one release outcome
 - multiple files were used to clarify ownership, not to expand behavior
-- the new 1.5 public docs point to each other cleanly
+- the new 1.6 public docs point to each other cleanly
 
 Optional user test:
 - follow the README -> install -> quick-start path and confirm that the next step is obvious at each stop
@@ -106,3 +108,11 @@ Good shape:
 Use `Strict` when the approvals matter more than speed.
 Use `Auto` when the Epic is clear and the risk of silent scope drift is low.
 The visible checkpoints should still sound like the current role, not like one repeated template.
+
+## 8. Cost profile reminder
+
+Use `Standard` for normal AIM.
+Use `Cost Control` for low-risk, reversible work where concise output and narrow context are enough.
+Use `Deep` when trust, data correctness, migration, deployment, security, API, or broad method semantics justify stronger evidence.
+
+Cost profile changes runtime depth, not approval meaning.

@@ -28,6 +28,7 @@ Parity rule:
 - Escalation rules for scope, intent, trust, and missing inputs
 - Scope expansion only with explicit stop-and-ask
 - Execution mode visibility (`Strict` or `Auto`) at all gates
+- Cost profile visibility when not `Standard` or when resource use matters
 - Canonical role reporting (`PO`, `TDO`, `Dev`, `Reviewer`)
 
 ## Repository-aware loading
@@ -51,6 +52,7 @@ Minimum context areas:
 - `reviewer`
 - `environment`
 - `approval`
+- `cost`
 - `parallel`
 - `modularity`
 
@@ -93,7 +95,7 @@ Fallback rule:
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
 - `.github/prompts/start-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.4-to-1.5.prompt.md`
+- `.github/prompts/upgrade-aim-1.5-to-1.6.prompt.md`
 
 Canonical rule:
 - `.github/agents/aim*.agent.md` are part of the shared AIM instruction layer and also act as native Copilot agent files.
@@ -146,8 +148,8 @@ Then provide:
 - acceptance criteria
 
 Upgrade start remains a secondary specialized path:
-- Run `/aim upgrade 1.4-to-1.5`.
-- Or use `docs/workflow/migrate-aim-1.4-to-1.5.md` in chat.
+- Run `/aim upgrade 1.5-to-1.6`.
+- Or use `docs/workflow/migrate-aim-1.5-to-1.6.md` in chat.
 
 Help and diagnostics:
 Use these commands when the user needs orientation instead of immediate execution:
@@ -155,14 +157,16 @@ Use these commands when the user needs orientation instead of immediate executio
 - `/aim status`
 - `/aim validate`
 - `/aim config`
-- `/aim upgrade 1.4-to-1.5`
+- `/aim cost standard|control|deep`
+- `/aim upgrade 1.5-to-1.6`
 
 Expected behavior:
 - `/aim help` explains the command surface, Epic versus Done Increment, mode choice, and where AIM state lives
 - `/aim status` summarizes current Epic, increment, role, mode, gate, adapter, and parallel capability
 - `/aim validate` checks `.aim`, `state.json`, runtime coherence, and ownership boundaries
 - `/aim config` explains effective configuration from repo policy, runtime state, and adapter limits
-- `/aim upgrade 1.4-to-1.5` points to the shared migration workflow and packaged migration prompt
+- `/aim cost standard|control|deep` sets runtime depth without changing approval semantics
+- `/aim upgrade 1.5-to-1.6` points to the shared migration workflow and packaged migration prompt
 
 ## Adapter support levels
 
@@ -258,9 +262,10 @@ Expected fix:
 
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
+- `docs/features/aim-cost-control-mode.md`
 - `docs/features/aim-modularity-context-efficiency.md`
 - `docs/workflow/aim-adapter-guidance.md`
 - `.github/agents/aim.agent.md`
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.4-to-1.5.prompt.md`
+- `.github/prompts/upgrade-aim-1.5-to-1.6.prompt.md`

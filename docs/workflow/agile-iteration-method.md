@@ -6,8 +6,8 @@
 
 ## Version
 
-This document describes **AIM 1.5**.
-It retains the AIM 1.2 core method and keeps the accepted AIM 1.4 runtime model stable while making AIM 1.5 the active release framing.
+This document describes **AIM 1.6**.
+It retains the AIM 1.2 core method and keeps the accepted AIM 1.4 runtime model stable while making AIM cost-aware.
 
 ## Overview
 
@@ -25,10 +25,12 @@ The goal is to move toward working software that users can evaluate while keepin
 
 The method is inspired by the “Ralph Wiggum loop”, adapted to real product development and renamed to reflect its Agile nature.
 
-### AIM 1.5 basics
+### AIM 1.6 basics
 
 - Core AIM roles and gate semantics are unchanged.
 - AIM is defined as `core + runtime + repo-aware policy + platform adapters`.
+- Cost profiles are explicit: `Standard`, `Cost Control`, and `Deep`.
+- Cost profile controls runtime depth, not approval semantics.
 - `.aim` is treated as official repo-local runtime state.
 - Small Done Increments are defined by behavioral scope, not by minimal file count.
 - Focused file boundaries are valid when they preserve the approved behavior and reduce future context cost.
@@ -69,9 +71,9 @@ In short, the PO owns the Epic and the TDO owns the Done Increment.
 The AI never changes direction on its own.
 Execution may proceed autonomously within an explicitly approved Done Increment but must stop and ask for guidance if scope, intent or assumptions change.
 
-## AIM 1.5 architecture
+## AIM 1.6 architecture
 
-AIM 1.5 keeps the same architecture split and makes the modularity guidance more explicit in the public release story.
+AIM 1.6 keeps the same architecture split and adds an explicit runtime-depth layer.
 
 - `AIM core`:
   - the canonical role sequence
@@ -79,6 +81,11 @@ AIM 1.5 keeps the same architecture split and makes the modularity guidance more
   - Epic-first execution
   - Done Increment discipline
   - `Strict` and `Auto` mode semantics
+- `AIM runtime depth`:
+  - `Standard`, `Cost Control`, and `Deep` cost profiles
+  - progressive context loading
+  - compact gate reporting
+  - risk-scaled verification
 - `AIM runtime`:
   - startup and resume flow
   - `.aim` workspace ownership
@@ -377,8 +384,8 @@ This means:
 
 ## Migration support
 
-AIM 1.5 must define a practical upgrade path for repositories that already use the accepted AIM 1.4 runtime model.
-The active repository surface keeps the current 1.4-to-1.5 bridge; older migration hops may live outside the active file set.
+AIM 1.6 must define a practical upgrade path for repositories that already use the accepted AIM 1.4 runtime model.
+The active repository surface keeps the current 1.5-to-1.6 bridge; older migration hops may live outside the active file set.
 
 ### Supported migration scenarios
 
@@ -387,17 +394,17 @@ The active repository surface keeps the current 1.4-to-1.5 bridge; older migrati
   - the runtime initializes `.aim/epic.md` and `.aim/state.json` from the active Epic context
 - informal `.aim` already in use:
   - legacy helper artifacts may remain temporarily
-  - the official AIM 1.5 workspace contract becomes the authoritative runtime layout
+  - the official AIM 1.6 workspace contract becomes the authoritative runtime layout
 - Codex-only repository:
-  - the repo can adopt AIM 1.5 runtime behavior without also adopting the optional Copilot layer
+  - the repo can adopt AIM 1.6 runtime behavior without also adopting the optional Copilot layer
 - Claude Code repository:
-  - the repo can adopt AIM 1.5 runtime behavior with `AGENTS.md` plus `CLAUDE.md` and optional `.claude/` helpers
+  - the repo can adopt AIM 1.6 runtime behavior with `AGENTS.md` plus `CLAUDE.md` and optional `.claude/` helpers
 - Copilot-layer repository:
-  - existing `.github/agents/aim*.agent.md` files may remain, but they must align with the shared AIM 1.5 runtime contract
+  - existing `.github/agents/aim*.agent.md` files may remain, but they must align with the shared AIM 1.6 runtime contract
 
 ### Upgrade checklist
 
-A safe AIM 1.4 to AIM 1.5 migration should:
+A safe AIM 1.5 to AIM 1.6 migration should:
 - keep the repository profile in `AGENTS.md` and any active adapter helper files readable through the accepted layer order
 - create or normalize the official `.aim` workspace
 - make `state.json` the durable runtime checkpoint for startup and resume
@@ -413,7 +420,7 @@ Legacy artifacts should be classified like this:
 - migrated:
   - active Epic context into `.aim/epic.md`
   - active runtime checkpoint into `.aim/state.json`
-  - older runtime wording in repo docs into AIM 1.5 terminology
+  - older runtime wording in repo docs into AIM 1.6 terminology
 - archived:
   - stale logs, analysis notes, and superseded helper artifacts after their decision value is preserved elsewhere
 - removed or replaced:
@@ -495,6 +502,47 @@ In Auto mode:
 - manual pauses between Done Increments are skipped unless escalation is required
 - final full review is required before Epic completion
 - all generated Done Increments must remain traceable
+
+## Cost profiles
+
+Cost profile is separate from execution mode.
+
+- execution mode controls whether AIM pauses for manual approvals
+- cost profile controls how much context, narration, verification, and parallel help AIM spends
+
+Defined cost profiles:
+
+- `Standard`:
+  - default AIM behavior
+  - progressive context loading instead of broad rereads
+  - compact gates unless risk requires detail
+  - validator and direct evidence before manual artifact sweeps
+- `Cost Control`:
+  - lower-cost AIM for low-risk, reversible work
+  - same roles, gates, acceptance, and escalation rules
+  - no subagents by default
+  - narrow file reads and short visible checkpoints
+  - expand to `Standard` or `Deep` if risk appears
+- `Deep`:
+  - high-assurance AIM for trust, data correctness, migration, deployment, security, API, or broad public-method changes
+  - broader context loading and stronger review evidence are expected
+
+Cost Control is not "AIM Lite".
+It is full AIM with a smaller runtime budget.
+
+Safe Cost Control candidates:
+- docs cleanup
+- spelling or wording fixes
+- low-risk copyable-kit maintenance
+- narrow adapter helper updates
+- reversible local changes with obvious verification
+
+Do not stay in Cost Control when work affects:
+- trust or user-facing meaning
+- data correctness
+- deployment or migration
+- public API or security behavior
+- unclear Epic intent or uncertain acceptance
 
 ## Delegated execution
 
@@ -1019,9 +1067,9 @@ At minimum, the matrix must classify:
 
 ## Controlled parallelism
 
-AIM 1.5 allows controlled parallelism only when the runtime supports it and repo-aware policy permits it.
+AIM 1.6 allows controlled parallelism only when the runtime supports it and repo-aware policy permits it.
 
-Controlled parallelism remains one of the practical runtime capabilities in AIM 1.5.
+Controlled parallelism remains one of the practical runtime capabilities in AIM 1.6.
 It allows AIM to speed up analysis, discovery and verification in the right situations without weakening central ownership of shared state, gates or acceptance decisions.
 
 The safety rule is simple:
@@ -1071,9 +1119,10 @@ At that point, the EPIC is complete.
 
 - `AGENTS.md` defines operational rules, gates and escalation behaviour for Codex runs.
 - `docs/workflow/aim-adapter-guidance.md` collects adapter-specific entrypoints, parity labels, helper-file boundaries, and fallback notes so canonical files stay focused.
-- `docs/features/aim-modularity-context-efficiency.md` defines AIM 1.5 file-boundary and context-efficiency behavior.
-- `docs/workflow/install-aim-1.5.md`, `docs/workflow/quick-start-aim-1.5.md`, and `docs/workflow/aim-1.5-doc-map.md` define the current public onboarding path.
-- `docs/workflow/migrate-aim-1.4-to-1.5.md` defines the supported current upgrade bridge.
+- `docs/features/aim-cost-control-mode.md` defines AIM 1.6 cost profiles and escalation rules for runtime depth.
+- `docs/features/aim-modularity-context-efficiency.md` defines AIM 1.6 file-boundary and context-efficiency behavior.
+- `docs/workflow/install-aim-1.6.md`, `docs/workflow/quick-start-aim-1.6.md`, and `docs/workflow/aim-1.6-doc-map.md` define the current public onboarding path.
+- `docs/workflow/migrate-aim-1.5-to-1.6.md` defines the supported current upgrade bridge.
 - `CONTRIBUTING.md` defines coding standards, PR rules and local commands.
 - `docs/workflow/copilot-layer.md` defines the optional Copilot custom-agent interface.
 - `docs/features/` explains non-obvious feature behaviour, contracts and fallbacks.

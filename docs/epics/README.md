@@ -1,6 +1,6 @@
 # Epic docs
 
-In AIM 1.5, this folder remains the canonical Epic-doc location.
+In AIM 1.6, this folder remains the canonical Epic-doc location.
 Keep this folder focused on reusable templates and active, current AIM Epic material.
 
 ## Rule

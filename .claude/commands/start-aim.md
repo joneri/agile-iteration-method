@@ -12,6 +12,7 @@ Before starting:
 Expected input:
 - `EPIC: <desired outcome>`
 - `Mode: Strict` or `Mode: Auto`
+- `Cost profile: Standard`, `Cost profile: Cost Control`, or `Cost profile: Deep` when resource use matters
 
 Command behavior:
 - if `.aim/state.json` describes an incomplete Epic, resume it instead of silently starting a parallel Epic
@@ -28,6 +29,7 @@ Safe fallback:
 ```text
 EPIC: <desired outcome>
 Mode: Strict
+Cost profile: Cost Control
 ```
 
 or:
@@ -35,4 +37,5 @@ or:
 ```text
 EPIC: <desired outcome>
 Mode: Auto
+Cost profile: Standard
 ```

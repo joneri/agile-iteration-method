@@ -1,17 +1,18 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 1.5 reference run
+# AIM 1.6 reference run
 
-Use this document as the concrete reference example for how AIM 1.5 works in this repository.
+Use this document as the concrete reference example for how AIM 1.6 works in this repository.
 
 ## Goal
 
-Show one coherent AIM 1.5 flow that covers:
+Show one coherent AIM 1.6 flow that covers:
 - start
 - resume
 - inspect
 - adapter-aware behavior in Codex, Copilot, and Claude Code
+- cost profile selection
 - the 1.5 rule that a small increment may use several focused files without expanding behavioral scope
 
 ## Reference scenario
@@ -20,7 +21,7 @@ Repository:
 - this repository
 
 Epic example:
-- `Make AIM 1.5 feel finished in the public onboarding path without redesigning the method`
+- `Make AIM 1.6 feel finished in the public onboarding path without redesigning the method`
 
 Runtime assumptions:
 - `AGENTS.md` is the repo profile entrypoint
@@ -34,6 +35,7 @@ Runtime assumptions:
 3. Otherwise use explicit AIM intent:
    - `EPIC: <desired outcome>`
    - `Mode: Strict`
+   - `Cost profile: Standard`
 
 Expected behavior:
 - AIM detects repo root
@@ -49,9 +51,26 @@ After Gate A and Gate B are approved:
 - soft gates do not require extra approval unless escalation conditions are met
 - `.aim/state.json` reflects the active gate and role
 
-AIM 1.5 expectation:
+AIM 1.6 expectation:
 - the increment stays small by behavior
+- the selected cost profile matches the risk
 - the implementation may use several focused files if that reduces context load and preserves the approved behavior
+
+## Step 2a: Use Cost Control when appropriate
+
+For low-risk docs cleanup or narrow reversible maintenance:
+
+```text
+EPIC: Remove stale setup references so users only see the current AIM path.
+Mode: Strict
+Cost profile: Cost Control
+```
+
+Expected behavior:
+- gates and role ownership remain unchanged
+- output is compact
+- context loading stays narrow
+- AIM escalates to `Standard` or `Deep` if trust, data, migration, deployment, API, security, or unclear acceptance risk appears
 
 ## Step 3: Resume safely
 
@@ -84,6 +103,7 @@ Best files to inspect:
 - the newest file in `.aim/reviews/`
 - the newest file in `.aim/decisions/`
 - `docs/workflow/agile-iteration-method.md`
+- `docs/features/aim-cost-control-mode.md`
 - `docs/features/aim-modularity-context-efficiency.md`
 - `docs/workflow/aim-adapter-guidance.md`
 
@@ -96,7 +116,8 @@ What good looks like:
 ## Related documents
 
 - [README.md](../../README.md)
-- [Quick start AIM 1.5](quick-start-aim-1.5.md)
-- [AIM 1.5 interaction examples](aim-1.5-interaction-examples.md)
-- [Troubleshoot AIM 1.5](troubleshoot-aim-1.5.md)
+- [Quick start AIM 1.6](quick-start-aim-1.6.md)
+- [AIM 1.6 interaction examples](aim-1.6-interaction-examples.md)
+- [Troubleshoot AIM 1.6](troubleshoot-aim-1.6.md)
+- [AIM Cost Control Mode](../features/aim-cost-control-mode.md)
 - [AIM modularity and context efficiency](../features/aim-modularity-context-efficiency.md)

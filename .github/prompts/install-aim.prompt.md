@@ -2,7 +2,7 @@
 mode: agent
 ---
 
-Install AIM 1.5 in this workspace and add the optional Copilot prompt layer when needed.
+Install AIM 1.6 in this workspace and add the optional Copilot prompt layer when needed.
 
 Actions:
 1. Verify these files exist and create missing ones from templates:
@@ -16,11 +16,11 @@ Actions:
    - `.github/prompts/install-aim.prompt.md`
    - `.github/prompts/start-aim.prompt.md`
    - `.github/prompts/help-aim.prompt.md`
-   - `.github/prompts/upgrade-aim-1.4-to-1.5.prompt.md`
+   - `.github/prompts/upgrade-aim-1.5-to-1.6.prompt.md`
 3. Confirm supporting AIM docs are present:
-   - `docs/workflow/install-aim-1.5.md`
+   - `docs/workflow/install-aim-1.6.md`
    - `docs/workflow/copilot-layer.md`
-   - `docs/workflow/migrate-aim-1.4-to-1.5.md`
+   - `docs/workflow/migrate-aim-1.5-to-1.6.md`
 4. Return a short checklist and tell me the next command to run.
 
 After setup, suggest:
@@ -29,6 +29,7 @@ After setup, suggest:
 - `/aim status`
 - `/aim validate`
 - `/aim config`
-- `/aim upgrade 1.4-to-1.5`
+- `/aim cost standard|control|deep`
+- `/aim upgrade 1.5-to-1.6`
 
 Make clear that `.github/agents/aim*.agent.md` are required AIM instruction-layer files and `.github/prompts/` are optional Copilot prompt helpers.

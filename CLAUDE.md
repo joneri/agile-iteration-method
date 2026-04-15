@@ -28,6 +28,8 @@ Keep in mind:
 - Treat `.aim/` as the official AIM runtime workspace.
 - Treat `.aim/state.json` as the authoritative runtime checkpoint.
 - Treat small increments as small behavioral scope, not minimal file count.
+- Treat cost profile as runtime depth, not approval semantics.
+- Use `Cost profile: Cost Control` for low-risk reversible work and escalate to `Standard` or `Deep` when risk appears.
 - Prefer cohesive files and clear module boundaries when they reduce future context cost and preserve the approved behavior.
 - Do not create context hogs or arbitrary file splits just to satisfy a superficial diff-size goal.
 - Keep the main AIM thread as the only owner of:
@@ -65,7 +67,7 @@ This repository now ships a small Claude starter layer:
 - `.claude/commands/start-aim.md`
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`
-- `.claude/commands/upgrade-aim-1.4-to-1.5.md`
+- `.claude/commands/upgrade-aim-1.5-to-1.6.md`
 - `.claude/agents/aim.md`
 
 Start with either:
@@ -75,6 +77,7 @@ Start with either:
 ```text
 EPIC: <desired outcome>
 Mode: Strict
+Cost profile: Cost Control
 ```
 
 or:
@@ -82,6 +85,7 @@ or:
 ```text
 EPIC: <desired outcome>
 Mode: Auto
+Cost profile: Standard
 ```
 
 If command-file invocation differs in the current Claude Code environment, use the explicit `EPIC: ...` fallback and keep the shipped command files as the discoverability layer.

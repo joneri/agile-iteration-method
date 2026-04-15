@@ -1,25 +1,28 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# Install AIM 1.5
+# Install AIM 1.6
 
-Use this guide for the minimum viable AIM 1.5 setup in a repository.
+Use this guide for the minimum viable AIM 1.6 setup in a repository.
 
 This guide is about repository setup.
-Use [Quick start AIM 1.5](quick-start-aim-1.5.md) for the first Epic once the files are in place.
-Use [AIM 1.5 document map](aim-1.5-doc-map.md) if you need the broader front-door reading path.
+Use [Quick start AIM 1.6](quick-start-aim-1.6.md) for the first Epic once the files are in place.
+Use [AIM 1.6 document map](aim-1.6-doc-map.md) if you need the broader front-door reading path.
 
-## What is new in 1.5
+## What is new in 1.6
 
-AIM 1.5 keeps the accepted AIM core and runtime model from 1.4.
-The main public change is how AIM explains and uses file boundaries:
+AIM 1.6 keeps the accepted AIM core and runtime model from 1.4.
+The main public change is that AIM becomes budget-aware:
+- `Standard` is normal AIM with progressive context loading
+- `Cost Control` keeps gates and ownership intact while reducing runtime depth
+- `Deep` is available when higher risk justifies broader inspection
 - a small Done Increment means small behavioral scope, not minimal file count
 - focused files are allowed when they keep responsibilities clearer, avoid context hogs, and make future changes cheaper
-- adapter guidance and onboarding now make that behavior visible to users, not just maintainers
+- adapter guidance and onboarding now make cost profile selection visible to users
 
 ## AIM still has four parts
 
-AIM 1.5 still uses these four parts:
+AIM 1.6 still uses these four parts:
 - AIM core:
   - the role loop and gate semantics
 - AIM runtime:
@@ -53,7 +56,7 @@ Optional Copilot prompt helpers:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.4-to-1.5.prompt.md`
+- `.github/prompts/upgrade-aim-1.5-to-1.6.prompt.md`
 
 Recommended for Claude Code support:
 - `CLAUDE.md`
@@ -61,7 +64,7 @@ Recommended for Claude Code support:
 - `.claude/commands/start-aim.md`
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`
-- `.claude/commands/upgrade-aim-1.4-to-1.5.md`
+- `.claude/commands/upgrade-aim-1.5-to-1.6.md`
 
 Claude Code rule:
 - `AGENTS.md` remains the canonical AIM repo contract
@@ -73,8 +76,9 @@ Claude Code rule:
 Shared runtime guidance lives in repo docs:
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
+- `docs/features/aim-cost-control-mode.md`
 - `docs/features/aim-modularity-context-efficiency.md`
-- AIM 1.5 public workflow docs
+- AIM 1.6 public workflow docs
 
 Repo-local working state lives in:
 - `.aim/epic.md`
@@ -112,7 +116,7 @@ Adapter-specific entrypoints live in:
 2. Verify the required `.github/agents/aim*.agent.md` files exist.
 3. Add `.github/prompts/` if you want packaged Copilot prompt entrypoints.
 4. Start with `/aim start "EPIC: ..."` or `Start working according to AIM`.
-5. Confirm the packaged `aim` agent exposes the AIM 1.5 runtime contract and the prompt files remain optional helpers.
+5. Confirm the packaged `aim` agent exposes the AIM 1.6 runtime contract and the prompt files remain optional helpers.
 
 ### Claude Code
 1. Ensure `AGENTS.md`, `docs/workflow/agile-iteration-method.md` and `CLAUDE.md` are present.
@@ -120,7 +124,7 @@ Adapter-specific entrypoints live in:
 3. Start with the shipped Claude starter command or the explicit `EPIC: <desired outcome>` fallback.
 4. Confirm the Claude-specific files point back to the shared AIM runtime contract instead of redefining gates, ownership or acceptance.
 
-After the files and adapter packaging are in place, continue with [Quick start AIM 1.5](quick-start-aim-1.5.md) for the first run.
+After the files and adapter packaging are in place, continue with [Quick start AIM 1.6](quick-start-aim-1.6.md) for the first run.
 
 ## First-run checks
 
@@ -131,10 +135,11 @@ After installation, a user should be able to:
 - inspect config with `/aim config`
 - validate runtime state with `/aim validate`
 - read help with `/aim help`
-- start upgrade guidance with `/aim upgrade 1.4-to-1.5`
+- select runtime depth with `/aim cost standard|control|deep`
+- start upgrade guidance with `/aim upgrade 1.5-to-1.6`
 
 Claude Code parity note:
-- when repository command-file routing is available, the packaged Claude upgrade helper should expose the same `1.4-to-1.5` upgrade path explicitly
+- when repository command-file routing is available, the packaged Claude upgrade helper should expose the same `1.5-to-1.6` upgrade path explicitly
 
 ## If setup is incomplete
 
@@ -146,7 +151,7 @@ Fallback rules:
 
 ## Next documents
 
-- [Quick start AIM 1.5](quick-start-aim-1.5.md)
-- [AIM 1.5 document map](aim-1.5-doc-map.md)
-- [Troubleshoot AIM 1.5](troubleshoot-aim-1.5.md)
-- [Migrate AIM 1.4 to AIM 1.5](migrate-aim-1.4-to-1.5.md)
+- [Quick start AIM 1.6](quick-start-aim-1.6.md)
+- [AIM 1.6 document map](aim-1.6-doc-map.md)
+- [Troubleshoot AIM 1.6](troubleshoot-aim-1.6.md)
+- [Migrate AIM 1.5 to AIM 1.6](migrate-aim-1.5-to-1.6.md)

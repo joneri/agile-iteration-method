@@ -4,7 +4,7 @@ This folder contains short, concrete explanations of non-obvious features.
 The goal is to make future debugging and changes faster and safer.
 
 Path note:
-- In AIM 1.5, `docs/features/` is the canonical feature-contract folder.
+- In AIM 1.6, `docs/features/` is the canonical feature-contract folder.
 
 ## When to add or update a doc
 Create or update a feature explanation when:
@@ -18,6 +18,8 @@ Create or update a feature explanation when:
   docs/features/<feature-name>.md
 
 Examples:
+- aim-cost-control-mode.md
+- aim-modularity-context-efficiency.md
 - value-series-trading-days.md
 - autopost-kpis.md
 - dividends-reconciliation.md
