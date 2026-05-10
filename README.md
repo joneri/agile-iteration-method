@@ -105,7 +105,7 @@ Need the full map? Use [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md).
 ## Choose Your Adapter
 
 - Codex:
-  the repo is the AIM contract. The Codex skill adds the `/aim` launcher plus bootstrap help.
+  the repo is the AIM contract. The shipped Codex skill adds the `/aim` launcher plus bootstrap help.
 - Copilot:
   use the packaged `aim` agent in `.github/agents/` and add `.github/prompts/` when you want Copilot-style command helpers.
 - Claude Code:
@@ -120,14 +120,23 @@ Important installation rule:
 ## Codex model
 
 - The repository is the canonical AIM contract.
-- The Codex skill is a bootstrap and convenience layer.
+- The shipped Codex skill in `adapters/codex/agile-iteration-method/SKILL.md` is a bootstrap and convenience layer.
 - `/aim` is the normal Codex start path when the AIM skill is installed and enabled.
 - A fully AIM-aware repo can still be used in Codex without the skill if you start with explicit AIM intent in plain language.
 - The skill is still useful in a prepared repo because it gives you the clean `/aim` entrypoint plus status, help, config, validate and upgrade helpers.
 
+60-second local Codex skill install:
+
+```sh
+mkdir -p ~/.codex/skills/agile-iteration-method
+cp adapters/codex/agile-iteration-method/SKILL.md ~/.codex/skills/agile-iteration-method/SKILL.md
+```
+
+The skill is copyable adapter packaging. It must point back to the repository contract instead of becoming a second method definition.
+
 | Adapter | Canonical contract | Convenience layer | Normal start path | Required for best experience |
 | --- | --- | --- | --- | --- |
-| Codex | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | Codex AIM skill | `/aim start "EPIC: ..."` | Skill enabled for `/aim`; repo alone can still work with explicit AIM intent |
+| Codex | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `adapters/codex/agile-iteration-method/SKILL.md` | `/aim start "EPIC: ..."` | Shipped skill enabled for `/aim`; repo alone can still work with explicit AIM intent |
 | Copilot | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `.github/prompts/` | select `aim` and run `/aim start "EPIC: ..."` | `.github/agents/aim*.agent.md`; prompts optional |
 | Claude Code | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` + `CLAUDE.md` | `.claude/commands/` and `.claude/agents/` | repo Claude command or explicit `EPIC: ...` | `CLAUDE.md`; `.claude/` helpers recommended |
 
@@ -158,6 +167,9 @@ Optional GitHub Copilot prompt files:
 - `.github/prompts/help-aim.prompt.md`
 - `.github/prompts/upgrade-aim-1.5-to-1.6.prompt.md`
 
+Optional Codex skill packaging:
+- `adapters/codex/agile-iteration-method/SKILL.md`
+
 If you want Claude Code support too, also copy:
 - `CLAUDE.md`
 - `.claude/agents/aim.md`
@@ -170,6 +182,7 @@ What each file is for:
 - `.github/agents/aim*.agent.md` are part of the AIM instruction layer and affect behavior in both Codex and Copilot.
 - in Copilot, those same files also act as native custom-agent files.
 - `.github/prompts/` are optional prompt-entry helpers, mainly useful for Copilot-style command flows.
+- `adapters/codex/agile-iteration-method/SKILL.md` is the copyable Codex launcher/runtime guide for `/aim`.
 - Claude Code uses `CLAUDE.md` and `.claude/` as its adapter layer but does not replace `AGENTS.md`.
 
 ### 2. Ignore live AIM runtime state
@@ -315,11 +328,12 @@ If someone wants the shortest path, this is it:
 1. Copy `AGENTS.md` and `docs/workflow/agile-iteration-method.md` into the target repo.
 2. Copy `.github/agents/aim*.agent.md` into the target repo.
 3. Add `/.aim` to `.gitignore`.
-4. Optionally copy `.github/prompts/` if you want packaged Copilot prompt entrypoints too.
-5. Optionally add `CLAUDE.md` and `.claude/` if you want Claude Code support too.
-6. Open the repo in Codex, Copilot or Claude Code.
-7. Start with `/aim start "EPIC: <desired outcome>"`.
-8. If slash commands are unavailable, start with `EPIC: <desired outcome>`, `Mode: Strict`, and `Cost profile: Cost Control`.
+4. For Codex `/aim`, copy `adapters/codex/agile-iteration-method/SKILL.md` into `~/.codex/skills/agile-iteration-method/SKILL.md`.
+5. Optionally copy `.github/prompts/` if you want packaged Copilot prompt entrypoints too.
+6. Optionally add `CLAUDE.md` and `.claude/` if you want Claude Code support too.
+7. Open the repo in Codex, Copilot or Claude Code.
+8. Start with `/aim start "EPIC: <desired outcome>"`.
+9. If slash commands are unavailable, start with `EPIC: <desired outcome>`, `Mode: Strict`, and `Cost profile: Cost Control`.
 
 ## Why AIM Feels Different
 
@@ -458,6 +472,8 @@ Do not start with `AGENTS.md` when the goal is just to install or run AIM in a r
   Route map for the public docs and the correct next read.
 - `docs/workflow/copilot-layer.md`
   Optional GitHub Copilot packaging and workflow layer.
+- `adapters/codex/agile-iteration-method/SKILL.md`
+  Copyable Codex skill that exposes `/aim` as a launcher/runtime guide.
 - `docs/workflow/release-aim-1.6.md`
   Release note and publish checklist for the current version.
 - `docs/workflow/migrate-aim-1.5-to-1.6.md`

@@ -468,6 +468,8 @@ Required repository files:
 - `.github/agents/aim-reviewer.agent.md`
 
 Optional adapter files:
+- Codex skill:
+  - `adapters/codex/agile-iteration-method/SKILL.md`
 - Copilot prompt helpers:
   - `.github/prompts/`
 - Claude Code:
@@ -480,7 +482,7 @@ Installation note:
 - In Copilot, the same files also act as native custom-agent files.
 - `.github/prompts/` are optional Copilot-style command helpers rather than the canonical AIM contract.
 - In Codex, the repository remains the canonical AIM contract.
-- In Codex, `/aim` depends on the AIM skill or another compatible runtime entrypoint and acts as the launcher surface rather than hidden authority.
+- In Codex, `/aim` depends on the shipped AIM skill at `adapters/codex/agile-iteration-method/SKILL.md` or another compatible runtime entrypoint and acts as the launcher surface rather than hidden authority.
 
 Startup triggers (no manual bootstrap expected):
 - `Install AIM`
@@ -978,6 +980,9 @@ In Codex, AIM runs through repository instructions plus the available Codex tool
 
 - shared goal:
   - preserve the same AIM core and repo-aware policy interpretation as other adapters
+- recommended launcher:
+  - install or enable the shipped `agile-iteration-method` skill from `adapters/codex/agile-iteration-method/SKILL.md` when `/aim` command routing is wanted
+  - keep the skill as a launcher/runtime guide that points back to the repository contract, not a second source of method truth
 - supported capability areas:
   - start and resume AIM through the shared runtime flow
   - create and read `.aim`

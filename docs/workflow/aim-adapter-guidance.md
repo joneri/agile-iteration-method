@@ -45,6 +45,7 @@ Claude Code layer:
 
 Codex layer:
 - uses repository instructions plus the available Codex tool surface
+- may use the shipped Codex skill at `adapters/codex/agile-iteration-method/SKILL.md` as the canonical copyable launcher/runtime guide
 - may expose bounded subagent capability where runtime support exists
 - treats `/aim`, when available, as a launcher surface rather than the source of method authority
 
@@ -62,6 +63,9 @@ They do not define the AIM checkpoint contract.
 
 ## Optional adapter file structure
 
+Codex skill:
+- `adapters/codex/agile-iteration-method/SKILL.md`
+
 Copilot prompt helpers:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
@@ -74,6 +78,7 @@ Claude Code:
 - `.claude/agents/`
 
 Installation boundary:
+- `adapters/codex/agile-iteration-method/SKILL.md` is the shipped Codex convenience layer; copy it into the local Codex skills directory when `/aim` support is wanted.
 - `.github/agents/aim*.agent.md` are part of the AIM repository instruction layer, not Copilot-only decoration.
 - `.github/prompts/` are optional Copilot-style prompt helpers, not the canonical AIM contract.
 - `CLAUDE.md` bridges canonical AIM behavior into Claude Code; it does not replace `AGENTS.md`.
@@ -98,6 +103,7 @@ Use these labels when comparing adapter behavior:
 
 Codex:
 - uses repository instructions plus the available Codex tool surface
+- uses the shipped `agile-iteration-method` skill as the recommended `/aim` launcher when the skill is installed and enabled
 - may expose bounded subagent capability where runtime support exists
 - may expose adapter-specific tools such as MCP-backed browser automation
 

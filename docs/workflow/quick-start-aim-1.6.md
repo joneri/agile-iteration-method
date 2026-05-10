@@ -48,7 +48,7 @@ If slash commands are not available, write the same intent in plain language.
 ## Choose your adapter
 
 - Codex:
-  the repo is the AIM contract and the skill adds the `/aim` launcher.
+  the repo is the AIM contract and the shipped skill at `adapters/codex/agile-iteration-method/SKILL.md` adds the `/aim` launcher.
 - Copilot:
   use the packaged `aim` agent and add prompt helpers when you want Copilot-style command entrypoints.
 - Claude Code:
@@ -62,7 +62,7 @@ Shared install note:
 
 Preferred production starts:
 - Codex:
-  - use `/aim start "EPIC: ..."` when the AIM skill is installed and enabled
+  - use `/aim start "EPIC: ..."` when the shipped AIM skill is installed and enabled
 - Copilot:
   - select the `aim` agent and run `/aim start "EPIC: ..."`
 - Claude Code:

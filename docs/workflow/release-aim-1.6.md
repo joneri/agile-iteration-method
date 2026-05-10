@@ -36,7 +36,7 @@ Best supporting reference:
 - AIM 1.5 file-boundary discipline remains active
 - adapter guidance is easier to inspect without bloating `AGENTS.md`
 - Claude Code remains part of the supported adapter story
-- the Codex skill is still positioned as a launcher layer rather than hidden authority
+- the Codex skill is now shipped as copyable adapter packaging and remains positioned as a launcher layer rather than hidden authority
 - README, install, quick-start, and the doc map now form one explicit path for new users
 - the packaged agent and prompt surfaces now describe the same latest version
 
@@ -82,6 +82,7 @@ The first visible choice should be start, continue, or validate. Full method and
 7. Confirm prompt helpers expose `/aim cost standard|control|deep`.
 8. Confirm prompt helpers and upgrade guidance expose `/aim upgrade 1.5-to-1.6`.
 9. Confirm `CHANGELOG.md` includes the AIM 1.6 release entry.
+10. Confirm `adapters/codex/agile-iteration-method/SKILL.md` matches the documented Codex install path and still points back to the repository contract.
 
 ## Suggested publish text
 
