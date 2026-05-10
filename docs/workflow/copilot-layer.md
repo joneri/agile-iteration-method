@@ -138,15 +138,6 @@ Natural-language starts remain valid when the optional layer is installed:
 - `Start working according to AIM`
 - `Starta en AIM-loop med denna EPIC: ...`
 
-Epic-doc-first start is also supported as an advanced path:
-If you want to start from desired outcome and trust rules first, ask:
-- `Install AIM and start from Epic-doc-first mode`
-
-Then provide:
-- the Epic doc path (`docs/epics/<feature>.md`)
-- trust rules
-- acceptance criteria
-
 Upgrade start remains a secondary specialized path:
 - Run `/aim upgrade 1.5-to-1.6`.
 - Or use `docs/workflow/migrate-aim-1.5-to-1.6.md` in chat.

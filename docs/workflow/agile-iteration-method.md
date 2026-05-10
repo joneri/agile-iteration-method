@@ -36,7 +36,7 @@ The method is inspired by the “Ralph Wiggum loop”, adapted to real product d
 - Small Done Increments are defined by behavioral scope, not by minimal file count.
 - Focused file boundaries are valid when they preserve the approved behavior and reduce future context cost.
 - Feature documentation path is `docs/features/`.
-- Epic docs path is `docs/epics/`.
+- Active Epic runtime state lives in `.aim/epic.md`.
 - Repository profile is a first-class concept with a defined layer order.
 - Execution modes are `Strict` and `Auto`.
 - Canonical role names are locked: `PO`, `TDO`, `Dev`, `Reviewer`.
@@ -571,7 +571,7 @@ During delegated execution:
 - The loop must stop and escalate to the PO if:
   - scope needs to change
   - the Epic intent is unclear or contradicted
-  - Epic-doc rules conflict
+  - feature-doc rules or runtime context conflict
   - a blocking issue requires a value judgment
   - a new Done Increment would materially change direction
 
@@ -889,7 +889,7 @@ Gates are reporting checkpoints (A–E). They are mandatory to report, but the l
 
 Stop and ask for input if:
 - scope must expand beyond what was agreed at Gate B
-- Epic intent or Epic-doc rules are unclear or contradictory
+- Epic intent, runtime context, or feature-doc rules are unclear or contradictory
 - acceptance checks cannot be met without new assumptions
 - there is risk to trust, data correctness or user-facing meaning
 
@@ -1137,7 +1137,7 @@ At that point, the EPIC is complete.
 - `CONTRIBUTING.md` defines coding standards, PR rules and local commands.
 - `docs/workflow/copilot-layer.md` defines the optional Copilot custom-agent interface.
 - `docs/features/` explains non-obvious feature behaviour, contracts and fallbacks.
-- Epic docs in `docs/epics/` define feature-specific truth and operational steps.
+- Active Epic state lives in `.aim/epic.md`; stable feature truth belongs in `docs/features/`.
 
 Together, these documents form a complete system for structured AI-assisted development.
 

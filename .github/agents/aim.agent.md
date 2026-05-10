@@ -305,7 +305,7 @@ Do not enforce commits unless `commitMode` is `required`.
 
 Stop and ask user if:
 - scope expands beyond Gate B approval
-- Epic/Epic-doc intent is unclear or contradictory
+- Epic intent, runtime context, or feature-doc rules are unclear or contradictory
 - acceptance checks need new assumptions
 - trust/data correctness/user meaning risk is detected
 - required file/API/data source cannot be found

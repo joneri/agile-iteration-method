@@ -55,11 +55,6 @@ Before showing the full method, route the user to one of:
 7. Choose execution mode at Epic start: `Strict` (default) or `Auto`.
 8. Choose cost profile when resource use matters: `Standard` (default), `Cost Control`, or `Deep`.
 
-Optional Epic-doc-first variant:
-1. Start from an Epic doc in `docs/epics/` and clarify trust rules first.
-2. Ask PO to write the Epic from the desired outcome in that Epic doc.
-3. Continue with normal gates.
-
 Kickoff contract (AIM 1.6):
 1. PO creates the Epic from what should be achieved.
 2. TDO creates the next Done Increment based on that Epic.
@@ -515,7 +510,7 @@ Canonical role rule (AIM 1.2):
   - no duplicate variable declarations
   - no duplicate object keys
   - no obvious syntax errors in the diff
-- Logic follows Epic docs and uses correct data sources  
+- Logic follows the active Epic, feature docs, and correct data sources
   (for example totalValue instead of cash).
 - Core data structures are consistent  
   (no duplicated timelines or double-counted values).
@@ -643,7 +638,7 @@ Role-specific response shape takes precedence over any older boilerplate interpr
 The agent must stop and explicitly ask for input only if one or more of the following occur:
 
 - Scope must expand beyond what was defined at Gate B
-- Epic or Epic-doc intent is unclear or contradictory
+- Epic intent or runtime context is unclear or contradictory
 - Acceptance checks cannot be met without new assumptions
 - There is a risk to trust, data correctness, or user-facing meaning
 - Required files, APIs, or data sources cannot be found
@@ -686,7 +681,7 @@ When I approve Gate B for a Done Increment:
 At Gate C or Gate D you must stop and wait for my input if:
 
 - The Done Increment needs to change scope beyond what was agreed at Gate B.
-- You discover that the Epic intent or Epic-doc rules are unclear or contradictory.
+- You discover that the Epic intent, runtime context, or feature-doc rules are unclear or contradictory.
 - Acceptance checks cannot be met without new assumptions.
 - You believe the change could break trust, data correctness or user value.
 - You are unsure if this is still a valid Done Increment for this Epic.
@@ -825,7 +820,7 @@ In those cases, the PO can enable auto-approve mode for Gate B.
 
 When the PO states something like:
 
-> For this Epic: treat Gate B as auto-approved as long as the Done Increment spec satisfies the Gate B checklist and stays within the Epic scope defined in the Epic doc.
+> For this Epic: treat Gate B as auto-approved as long as the Done Increment spec satisfies the Gate B checklist and stays within the active Epic scope.
 
 the following rules apply:
 
@@ -837,8 +832,8 @@ the following rules apply:
 
 Auto-approve at Gate B must NOT be used if:
 
-- the TDO is unsure about the Epic interpretation or Epic-doc intent
-- the increment requires expanding scope beyond what the Epic or Epic doc describes
+- the TDO is unsure about the Epic interpretation or runtime context
+- the increment requires expanding scope beyond what the active Epic describes
 - the increment touches areas that could affect trust, safety, or system stability
 
 In those cases, the TDO must stop at Gate B and explicitly ask the PO for a decision, even if auto-approve mode is active.

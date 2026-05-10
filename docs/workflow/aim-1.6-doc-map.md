@@ -80,7 +80,6 @@ Use these when deeper behavior or contracts matter:
 ## Internal planning and historical material
 
 Use these when working on AIM itself rather than just using AIM:
-- `docs/epics/`
 - `.aim/`
 - `CHANGELOG.md`
 - current release and migration docs in `docs/workflow/`

@@ -9,7 +9,7 @@ If no Epic is provided yet:
 - default to `Mode: Strict`
 - suggest `Cost profile: Cost Control` for ordinary low-risk work
 - mention that `Deep` is available for trust, data, deployment, migration, security, or API risk
-- offer Epic-doc-first mode only if I mention an Epic doc or ask for it
+- use `.aim/epic.md` for active Epic state when AIM starts or resumes
 
 If Epic is provided:
 - select the `aim` agent flow

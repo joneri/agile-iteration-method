@@ -34,8 +34,6 @@ This repo is both:
   Current supported upgrade bridge for older AIM 1.5 repositories.
 - `docs/workflow/release-aim-1.6.md`
   Current release notes.
-- `docs/epics/_template.md`  
-  Epic template (feature truth + safe changes).
 - `docs/features/_template.md`  
   Feature explanation template (contracts, rules, fallbacks).
 - `CONTRIBUTORS.md`  
@@ -85,11 +83,9 @@ Add/update a file in `docs/features/` when a change introduces:
 - non-obvious fallback or constraint
 - contract changes (inputs/outputs/semantics)
 
-### Epic docs
-Add/update a file in `docs/epics/` when a change affects:
-- safe implementation workflow
-- stable acceptance checks
-- trust or “silent instead of wrong” rules
+### Active Epic state
+AIM stores the active Epic in `.aim/epic.md`.
+Do not add committed Epic folders under `docs/`; stable feature contracts belong in `docs/features/`.
 
 ### Copilot layer
 Update `docs/workflow/copilot-layer.md` and `.github/agents/` when:
