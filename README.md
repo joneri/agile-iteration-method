@@ -1,4 +1,4 @@
-# Agile Iteration Method (AIM) v1.6
+# Agile Iteration Method (AIM) v1.6.1
 
 AIM is a way to run agentic software delivery without losing the thread.
 
@@ -78,6 +78,7 @@ With AIM 1.6:
 - normal AIM loads context progressively instead of treating every run as a full reread
 - the public onboarding path makes the latest guidance obvious to new users
 - the front door starts with three simple choices instead of the full method
+- Codex users can see and install the repo-bundled AIM skill from the first AIM 1.6 command
 - adapter guidance, packaging, and upgrade docs now read as one current release surface
 
 That is the main upgrade: AIM 1.6 makes the accepted runtime easier to afford without weakening ownership, gates, or escalation.
@@ -105,7 +106,7 @@ Need the full map? Use [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md).
 ## Choose Your Adapter
 
 - Codex:
-  the repo is the AIM contract. The shipped Codex skill adds the `/aim` launcher plus bootstrap help.
+  the repo is the AIM contract. The shipped Codex skill at `adapters/codex/agile-iteration-method/SKILL.md` adds the `/aim` launcher plus bootstrap help.
 - Copilot:
   use the packaged `aim` agent in `.github/agents/` and add `.github/prompts/` when you want Copilot-style command helpers.
 - Claude Code:
@@ -124,12 +125,19 @@ Important installation rule:
 - `/aim` is the normal Codex start path when the AIM skill is installed and enabled.
 - A fully AIM-aware repo can still be used in Codex without the skill if you start with explicit AIM intent in plain language.
 - The skill is still useful in a prepared repo because it gives you the clean `/aim` entrypoint plus status, help, config, validate and upgrade helpers.
+- On the first AIM 1.6 command in Codex, AIM should make the bundled skill path and local install target visible.
 
 60-second local Codex skill install:
 
 ```sh
 mkdir -p ~/.codex/skills/agile-iteration-method
 cp adapters/codex/agile-iteration-method/SKILL.md ~/.codex/skills/agile-iteration-method/SKILL.md
+```
+
+Local Codex skill target:
+
+```text
+~/.codex/skills/agile-iteration-method/SKILL.md
 ```
 
 The skill is copyable adapter packaging. It must point back to the repository contract instead of becoming a second method definition.

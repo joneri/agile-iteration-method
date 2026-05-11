@@ -26,6 +26,23 @@ Attribution: based on Agile Iteration Method 1.6 by Jonas Eriksson, licensed as 
 
 Stop and ask only when an escalation condition applies: scope expansion beyond Gate B, unclear or contradictory Epic intent, unmet acceptance checks without new assumptions, trust/data/user-facing risk, missing required files/APIs/data, or contradictory repo policy.
 
+## Codex Skill Install Check
+
+When the user runs any AIM 1.6 command in Codex for the first time in a repository, make the bundled skill path obvious before continuing:
+
+- repo-bundled skill: `adapters/codex/agile-iteration-method/SKILL.md`
+- local Codex install path: `~/.codex/skills/agile-iteration-method/SKILL.md`
+
+If the local Codex skill is missing or appears older than the repo-bundled skill, state that AIM can continue from the repository contract for this run, but `/aim` works best after installing the bundled skill:
+
+```sh
+mkdir -p ~/.codex/skills/agile-iteration-method
+cp adapters/codex/agile-iteration-method/SKILL.md ~/.codex/skills/agile-iteration-method/SKILL.md
+```
+
+For `Install AIM`, `/aim validate`, `/aim status`, `/aim config`, and first-run `/aim start` or `/aim continue`, include this install status in the visible output when Codex is the active platform.
+Do not treat a missing local skill as a blocker when the repository already contains the AIM contract; report the fallback and continue unless another escalation condition applies.
+
 ## Commands
 
 Treat these as AIM intents when the current adapter supports them or when the user writes the equivalent in plain language:
@@ -156,12 +173,5 @@ Optional runtime artifacts:
 - `.aim/runtime-context.md`
 - `.aim/analysis/`
 
-Use `scripts/validate_aim_runtime.py <repo-root>` for `/aim validate`, resume checks, and troubleshooting. The script reports a result class and best next action without mutating runtime state.
-
-## References
-
-Read these only as needed:
-
-- `references/aim-core.md`: roles, gates, execution modes, escalation, Done Increment rules, visible output.
-- `references/runtime-contract.md`: `.aim` workspace, state model, bootstrap/resume, validation, migration.
-- `references/repo-context-adapters.md`: repo-aware context, adapter layers, controlled parallelism, fallback rules.
+For `/aim validate`, resume checks, and troubleshooting, inspect the required `.aim` artifacts and repository AIM files directly unless the repository provides a validator script.
+Validation reports should classify the result as `healthy`, `recoverable`, `blocked`, or `contradictory`, name the failed artifact or rule, and avoid mutating runtime state.

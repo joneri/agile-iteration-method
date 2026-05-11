@@ -48,6 +48,7 @@ Codex layer:
 - may use the shipped Codex skill at `adapters/codex/agile-iteration-method/SKILL.md` as the canonical copyable launcher/runtime guide
 - may expose bounded subagent capability where runtime support exists
 - treats `/aim`, when available, as a launcher surface rather than the source of method authority
+- on the first AIM 1.6 command in Codex, should make the bundled skill path and local install target visible so new and existing users know which skill to use
 
 ## Quick start phrases
 
@@ -79,6 +80,7 @@ Claude Code:
 
 Installation boundary:
 - `adapters/codex/agile-iteration-method/SKILL.md` is the shipped Codex convenience layer; copy it into the local Codex skills directory when `/aim` support is wanted.
+- The local Codex target is `~/.codex/skills/agile-iteration-method/SKILL.md`; if that file is missing or stale, Codex may continue from the repo contract but should surface the install command before relying on `/aim` routing.
 - `.github/agents/aim*.agent.md` are part of the AIM repository instruction layer, not Copilot-only decoration.
 - `.github/prompts/` are optional Copilot-style prompt helpers, not the canonical AIM contract.
 - `CLAUDE.md` bridges canonical AIM behavior into Claude Code; it does not replace `AGENTS.md`.
@@ -104,6 +106,7 @@ Use these labels when comparing adapter behavior:
 Codex:
 - uses repository instructions plus the available Codex tool surface
 - uses the shipped `agile-iteration-method` skill as the recommended `/aim` launcher when the skill is installed and enabled
+- reports bundled-skill install status during first-run AIM commands, validation, status, config, and install flows
 - may expose bounded subagent capability where runtime support exists
 - may expose adapter-specific tools such as MCP-backed browser automation
 

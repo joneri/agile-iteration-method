@@ -3,6 +3,16 @@
 
 # AIM 1.6 release and production checklist
 
+## AIM 1.6.1 patch
+
+AIM 1.6.1 adds Codex bundled skill onboarding.
+
+Patch outcome:
+- Codex users see the repo-bundled skill path and local install target on first-run AIM commands.
+- The bundled Codex skill no longer points to missing helper scripts or reference docs.
+- The repository remains the AIM source of truth; the Codex skill remains a launcher and runtime guide.
+- `docs/epics/` has been removed from the committed repository surface; active Epic state belongs in `.aim/epic.md`.
+
 ## Release summary
 
 AIM 1.6 keeps the accepted core and runtime model and makes AIM budget-aware.

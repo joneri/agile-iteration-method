@@ -20,6 +20,10 @@ The main public change is that AIM becomes budget-aware:
 - focused files are allowed when they keep responsibilities clearer, avoid context hogs, and make future changes cheaper
 - adapter guidance and onboarding now make cost profile selection visible to users
 
+AIM 1.6.1 onboarding improvement:
+- Codex users should see the repo-bundled skill path and local install path the first time they run an AIM 1.6 command
+- if the local Codex skill is missing or stale, AIM should explain the exact install command and continue from the repository contract when the repo is otherwise AIM-ready
+
 ## AIM still has four parts
 
 AIM 1.6 still uses these four parts:
@@ -111,6 +115,13 @@ Adapter-specific entrypoints live in:
 3. Start with `/aim start "EPIC: ..."`.
 4. If the skill is unavailable but the repo already carries the full AIM contract, start with `EPIC: <desired outcome>` and `Mode: Strict` or `Mode: Auto`.
 5. Confirm the repo remains the source of truth and the skill acts as the launcher rather than hidden authority.
+
+First-run Codex behavior:
+- any AIM 1.6 command should make this path visible when Codex is the platform:
+  - `adapters/codex/agile-iteration-method/SKILL.md`
+- the local Codex install target is:
+  - `~/.codex/skills/agile-iteration-method/SKILL.md`
+- if the local skill is missing or older, install the repo-bundled skill before relying on `/aim` command routing
 
 60-second local Codex skill install:
 

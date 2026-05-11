@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-05-11 - AIM 1.6.1 Codex bundled skill onboarding
+- Added first-run Codex guidance so AIM 1.6 commands surface the repo-bundled skill path and local Codex install target.
+- Updated the bundled Codex skill to explain how to install or refresh `~/.codex/skills/agile-iteration-method/SKILL.md` from `adapters/codex/agile-iteration-method/SKILL.md`.
+- Added `docs/features/aim-codex-bundled-skill-onboarding.md` as the feature contract for the Codex skill onboarding behavior.
+- Removed stale packaged-skill references to missing helper scripts and reference docs so the repo-bundled skill is usable as a single copied skill file.
+
 ## 2026-04-15 - AIM 1.6 cost control and budget-aware runtime depth
 - Added explicit cost profiles: `Standard`, `Cost Control`, and `Deep`.
 - Clarified that cost profile controls runtime depth while `Strict` and `Auto` still control approval flow.
