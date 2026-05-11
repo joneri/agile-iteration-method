@@ -338,7 +338,7 @@ If someone wants the shortest path, this is it:
 1. Copy `AGENTS.md` and `docs/workflow/agile-iteration-method.md` into the target repo.
 2. Copy `.github/agents/aim*.agent.md` into the target repo.
 3. Add `/.aim` to `.gitignore`.
-4. For Codex `/aim`, copy `adapters/codex/agile-iteration-method/SKILL.md` into `~/.codex/skills/agile-iteration-method/SKILL.md`.
+4. For Codex `/aim`, copy `adapters/codex/agile-iteration-method/` into `~/.codex/skills/agile-iteration-method/`.
 5. Optionally copy `.github/prompts/` if you want packaged Copilot prompt entrypoints too.
 6. Optionally add `CLAUDE.md` and `.claude/` if you want Claude Code support too.
 7. Open the repo in Codex, Copilot or Claude Code.
