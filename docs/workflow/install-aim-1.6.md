@@ -21,7 +21,7 @@ The main public change is that AIM becomes budget-aware:
 - adapter guidance and onboarding now make cost profile selection visible to users
 
 AIM 1.6.1 onboarding improvement:
-- Codex users should see the repo-bundled skill path and local install path the first time they run an AIM 1.6 command
+- Codex users should see the repo-bundled skill path and local install path the first time they run an AIM 1.6.1 command
 - if the local Codex skill is missing or stale, AIM should explain the exact install command and continue from the repository contract when the repo is otherwise AIM-ready
 
 ## AIM still has four parts
@@ -117,7 +117,7 @@ Adapter-specific entrypoints live in:
 5. Confirm the repo remains the source of truth and the skill acts as the launcher rather than hidden authority.
 
 First-run Codex behavior:
-- any AIM 1.6 command should make this path visible when Codex is the platform:
+- any AIM 1.6.1 command should make this path visible when Codex is the platform:
   - `adapters/codex/agile-iteration-method/SKILL.md`
 - the local Codex install target is:
   - `~/.codex/skills/agile-iteration-method/SKILL.md`
@@ -127,8 +127,10 @@ First-run Codex behavior:
 
 ```sh
 mkdir -p ~/.codex/skills/agile-iteration-method
-cp adapters/codex/agile-iteration-method/SKILL.md ~/.codex/skills/agile-iteration-method/SKILL.md
+cp -R adapters/codex/agile-iteration-method/. ~/.codex/skills/agile-iteration-method/
 ```
+
+Copy the whole directory, not just `SKILL.md`. Codex may read the visible skill-card name and description from package metadata such as `agents/openai.yaml`.
 
 After copying the skill, reopen or refresh Codex if your environment requires it, then use `/aim start "EPIC: ..."`.
 

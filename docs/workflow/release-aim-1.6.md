@@ -9,6 +9,8 @@ AIM 1.6.1 adds Codex bundled skill onboarding.
 
 Patch outcome:
 - Codex users see the repo-bundled skill path and local install target on first-run AIM commands.
+- Codex users install the full skill package, including picker metadata such as `agents/openai.yaml`, instead of copying only `SKILL.md`.
+- The Codex skill picker presents AIM 1.6.1 instead of stale older labels after the package is refreshed and Codex reloads metadata.
 - The bundled Codex skill no longer points to missing helper scripts or reference docs.
 - The repository remains the AIM source of truth; the Codex skill remains a launcher and runtime guide.
 - `docs/epics/` has been removed from the committed repository surface; active Epic state belongs in `.aim/epic.md`.
@@ -93,6 +95,8 @@ The first visible choice should be start, continue, or validate. Full method and
 8. Confirm prompt helpers and upgrade guidance expose `/aim upgrade 1.5-to-1.6`.
 9. Confirm `CHANGELOG.md` includes the AIM 1.6 release entry.
 10. Confirm `adapters/codex/agile-iteration-method/SKILL.md` matches the documented Codex install path and still points back to the repository contract.
+11. Confirm `adapters/codex/agile-iteration-method/agents/openai.yaml` declares the current AIM 1.6.1 picker name and description.
+12. Confirm Codex install guidance copies the whole `adapters/codex/agile-iteration-method/` directory so metadata and the skill body stay in sync.
 
 ## Suggested publish text
 

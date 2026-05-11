@@ -49,7 +49,7 @@ If slash commands are not available, write the same intent in plain language.
 
 - Codex:
   the repo is the AIM contract and the shipped skill at `adapters/codex/agile-iteration-method/SKILL.md` adds the `/aim` launcher.
-  On the first AIM 1.6 command, Codex should show whether that bundled skill is installed at `~/.codex/skills/agile-iteration-method/SKILL.md`.
+  On the first AIM 1.6.1 command, Codex should show whether that bundled skill is installed at `~/.codex/skills/agile-iteration-method/SKILL.md`.
 - Copilot:
   use the packaged `aim` agent and add prompt helpers when you want Copilot-style command entrypoints.
 - Claude Code:
@@ -64,7 +64,8 @@ Shared install note:
 Preferred production starts:
 - Codex:
   - use `/aim start "EPIC: ..."` when the shipped AIM skill is installed and enabled
-  - if `/aim` is unavailable or the installed skill is stale, copy the repo-bundled skill from `adapters/codex/agile-iteration-method/SKILL.md` to `~/.codex/skills/agile-iteration-method/SKILL.md`
+  - if `/aim` is unavailable or the installed skill is stale, copy the repo-bundled skill package from `adapters/codex/agile-iteration-method/` to `~/.codex/skills/agile-iteration-method/`
+  - copy the whole directory so Codex also gets picker metadata such as `agents/openai.yaml`
 - Copilot:
   - select the `aim` agent and run `/aim start "EPIC: ..."`
 - Claude Code:

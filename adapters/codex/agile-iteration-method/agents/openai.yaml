@@ -1,0 +1,4 @@
+interface:
+  display_name: "AIM 1.6.1"
+  short_description: "Run repo-aware AIM 1.6.1 loops with `.aim`, cost profiles, and adapter-aware layering"
+  default_prompt: "Use $agile-iteration-method to start or continue an AIM loop with: EPIC: <desired outcome>. Mode: Strict or Mode: Auto."

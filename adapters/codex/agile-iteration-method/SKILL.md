@@ -1,14 +1,14 @@
 ---
 name: agile-iteration-method
-description: Run Agile Iteration Method (AIM) 1.6 workflows in Codex or another compatible adapter. Use when the user asks to start, continue, resume, validate, install, upgrade, troubleshoot, control cost, select Cost Control or Deep, or operate an AIM loop; uses `/aim`-style commands; provides an EPIC, mode, or cost profile; mentions AIM, Agile Iteration Method, Gate A-E, Done Increment, PO, TDO, Dev, Reviewer, Cost Control, Standard, or Deep; or wants AI delivery work governed by AIM 1.6 roles, gates, `.aim` runtime state, repo-aware policy, adapter fallback rules, and runtime-depth profiles.
+description: Run Agile Iteration Method (AIM) 1.6.1 workflows in Codex or another compatible adapter. Use when the user asks to start, continue, resume, validate, install, upgrade, troubleshoot, control cost, select Cost Control or Deep, or operate an AIM loop; uses `/aim`-style commands; provides an EPIC, mode, or cost profile; mentions AIM, Agile Iteration Method, Gate A-E, Done Increment, PO, TDO, Dev, Reviewer, Cost Control, Standard, or Deep; or wants AI delivery work governed by AIM 1.6.1 roles, gates, `.aim` runtime state, repo-aware policy, adapter fallback rules, and runtime-depth profiles.
 ---
 
 # Agile Iteration Method
 
-Use this skill to operate AIM 1.6 as a continuous role-and-gate delivery loop.
+Use this skill to operate AIM 1.6.1 as a continuous role-and-gate delivery loop.
 AIM is `core + runtime + repo-aware policy + platform adapters`; the repository remains the source of truth and this skill is the launcher/runtime guide.
 
-Attribution: based on Agile Iteration Method 1.6 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into Codex skill form.
+Attribution: based on Agile Iteration Method 1.6.1 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into Codex skill form.
 
 ## First Response
 
@@ -28,7 +28,7 @@ Stop and ask only when an escalation condition applies: scope expansion beyond G
 
 ## Codex Skill Install Check
 
-When the user runs any AIM 1.6 command in Codex for the first time in a repository, make the bundled skill path obvious before continuing:
+When the user runs any AIM 1.6.1 command in Codex for the first time in a repository, make the bundled skill path obvious before continuing:
 
 - repo-bundled skill: `adapters/codex/agile-iteration-method/SKILL.md`
 - local Codex install path: `~/.codex/skills/agile-iteration-method/SKILL.md`
@@ -37,8 +37,10 @@ If the local Codex skill is missing or appears older than the repo-bundled skill
 
 ```sh
 mkdir -p ~/.codex/skills/agile-iteration-method
-cp adapters/codex/agile-iteration-method/SKILL.md ~/.codex/skills/agile-iteration-method/SKILL.md
+cp -R adapters/codex/agile-iteration-method/. ~/.codex/skills/agile-iteration-method/
 ```
+
+The Codex skill package may include app metadata such as `agents/openai.yaml`. Copy the whole directory, not only `SKILL.md`, so the Codex skill picker shows the current AIM version and description.
 
 For `Install AIM`, `/aim validate`, `/aim status`, `/aim config`, and first-run `/aim start` or `/aim continue`, include this install status in the visible output when Codex is the active platform.
 Do not treat a missing local skill as a blocker when the repository already contains the AIM contract; report the fallback and continue unless another escalation condition applies.

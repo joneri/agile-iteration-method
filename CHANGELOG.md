@@ -2,7 +2,9 @@
 
 ## 2026-05-11 - AIM 1.6.1 Codex bundled skill onboarding
 - Added first-run Codex guidance so AIM 1.6 commands surface the repo-bundled skill path and local Codex install target.
-- Updated the bundled Codex skill to explain how to install or refresh `~/.codex/skills/agile-iteration-method/SKILL.md` from `adapters/codex/agile-iteration-method/SKILL.md`.
+- Updated the bundled Codex skill to explain how to install or refresh the full local package at `~/.codex/skills/agile-iteration-method/` from `adapters/codex/agile-iteration-method/`.
+- Added Codex picker metadata at `adapters/codex/agile-iteration-method/agents/openai.yaml` so the app card presents AIM 1.6.1 instead of stale older labels.
+- Documented the stale picker case where `SKILL.md` is current but `agents/openai.yaml` still shows an older AIM version.
 - Added `docs/features/aim-codex-bundled-skill-onboarding.md` as the feature contract for the Codex skill onboarding behavior.
 - Removed stale packaged-skill references to missing helper scripts and reference docs so the repo-bundled skill is usable as a single copied skill file.
 
