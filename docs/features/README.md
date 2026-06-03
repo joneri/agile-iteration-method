@@ -19,6 +19,10 @@ Create or update a feature explanation when:
 
 Examples:
 - aim-cost-control-mode.md
+- aim-cost-review-checklist.md
+- aim-cost-saving-method.md
+- aim-github-copilot-cost-reduction-playbook.md
+- aim-vendor-cost-baseline-june-2026.md
 - aim-light-front-door.md
 - aim-modularity-context-efficiency.md
 - value-series-trading-days.md

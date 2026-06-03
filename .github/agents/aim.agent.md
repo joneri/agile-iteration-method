@@ -1,6 +1,6 @@
 ---
 name: aim
-description: AIM 1.6 orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO with Gate A/B/E approvals
+description: AIM 1.7 orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO with Gate A/B/E approvals
 tools:
   [
     "agent",
@@ -37,11 +37,11 @@ handoffs:
     send: true
 ---
 
-# AIM 1.6 orchestrator (Copilot layer)
+# AIM 1.7 orchestrator (Copilot layer)
 
 This file is an optional Copilot UX layer for AIM.
 Core method semantics come from `AGENTS.md`.
-This packaging is expected to expose the AIM 1.6 contract, not an older AIM variant.
+This packaging is expected to expose the AIM 1.7 release line on top of the stable runtime contract, not an older AIM variant.
 
 ## Accepted starts
 

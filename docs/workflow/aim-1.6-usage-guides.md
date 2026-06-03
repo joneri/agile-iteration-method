@@ -4,6 +4,7 @@
 # AIM 1.6 usage guides
 
 Use this guide when you already understand the basics and want the fastest correct pattern for common AIM work.
+In the AIM 1.7 release line, this remains the deeper stable runtime-family usage guide beneath the newer 1.7 front door.
 
 ## 1. Start from a user-written Epic
 
@@ -62,6 +63,62 @@ Expected AIM behavior:
 - review evidence should be stronger
 - verification should match the blast radius
 - scope still cannot expand without Gate B approval
+
+## 4a. Use Deep for vendor-billing and AI-credit investigations
+
+Use when:
+- the Epic depends on current external pricing, billing units, token accounting, or plan allowances
+- the work needs to explain current spend in Codex, Claude Code, GitHub Copilot, or another vendor surface
+- users are reporting unexpectedly high cost and stale pricing assumptions could mislead the fix
+
+Recommended AIM behavior:
+- verify current official vendor docs before planning the increment
+- state the exact effective date when billing changed
+- treat anecdotes, screenshots, and older plan names as non-authoritative until confirmed
+- keep the first increment focused on one trustworthy baseline or one concrete cost-control behavior, not the whole pricing story at once
+
+Current example:
+- GitHub Copilot moved to usage-based billing on June 1, 2026, so current work should reason in AI credits and token-priced usage rather than premium requests.
+
+Best reference:
+- [AIM Vendor Cost Baseline (June 2026)](../features/aim-vendor-cost-baseline-june-2026.md)
+- [AIM Cost Review Checklist](../features/aim-cost-review-checklist.md)
+
+## 4b. Run a cost review at Gate B and Gate E
+
+Use when:
+- the team is explicitly trying to reduce spend
+- GitHub Copilot AI Credits, Codex token usage, or Claude Code session cost are part of the decision
+- the work feels more expensive than its user value
+
+At Gate B, ask:
+- is this one narrow Done Increment or an expensive vague exploration?
+- do current billing facts need their own increment first?
+- is `Deep` truly necessary, or is this work cheap enough for `Cost Control` or `Standard`?
+
+At Gate E, ask:
+- did this increment justify the cost?
+- what single change would make the next similar increment cheaper?
+- did we use a more expensive surface or session shape than necessary?
+
+Best reference:
+- [AIM Cost Review Checklist](../features/aim-cost-review-checklist.md)
+
+## 4c. Use a GitHub Copilot-specific playbook when AI Credits are the main problem
+
+Use when:
+- GitHub Copilot is the main paid agent surface
+- AI Credits are the main budget concern
+- code review, cloud agent, or paid overage may be driving cost
+
+Recommended AIM behavior:
+- choose the cheapest Copilot surface that still fits the job
+- treat Copilot code review as a double-cost workflow because it may use both AI Credits and GitHub Actions minutes
+- set or review user-level budgets before simply allowing more paid usage
+- separate pricing research from implementation so one session does not pay for both
+
+Best reference:
+- [AIM GitHub Copilot cost reduction playbook](../features/aim-github-copilot-cost-reduction-playbook.md)
 
 ## 5. Documentation written iteratively with AIM
 

@@ -1,5 +1,7 @@
 # AIM Codex Bundled Skill Onboarding
 
+This feature remains part of the stable runtime-family support story underneath the AIM 1.7 public release line.
+
 ## Purpose
 
 Make it obvious for Codex users that AIM ships a repository-bundled Codex skill and that `/aim` works best when that skill is installed locally.

@@ -4,6 +4,7 @@
 # Quick start AIM 1.6
 
 Use this guide for the shortest correct path into AIM.
+In the AIM 1.7 release line, this remains the deeper stable runtime-family quick-start guide beneath the newer 1.7 front door.
 
 Use this after the repository already contains the AIM files.
 If you still need to copy files, choose adapter packaging, or make the repo setup real, start with [Install AIM 1.6](install-aim-1.6.md).

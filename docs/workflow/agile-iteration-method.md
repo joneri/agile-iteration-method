@@ -6,8 +6,8 @@
 
 ## Version
 
-This document describes **AIM 1.6**.
-It retains the AIM 1.2 core method and keeps the accepted AIM 1.4 runtime model stable while making AIM cost-aware.
+This document describes the **AIM 1.7** release line.
+It retains the AIM 1.2 core method and keeps the accepted AIM 1.6 runtime model stable while making AIM's cost-saving operator story explicit.
 
 ## Overview
 
@@ -25,7 +25,7 @@ The goal is to move toward working software that users can evaluate while keepin
 
 The method is inspired by the “Ralph Wiggum loop”, adapted to real product development and renamed to reflect its Agile nature.
 
-### AIM 1.6 basics
+### Stable runtime basics
 
 - Core AIM roles and gate semantics are unchanged.
 - AIM is defined as `core + runtime + repo-aware policy + platform adapters`.
@@ -72,7 +72,7 @@ In short, the PO owns the Epic and the TDO owns the Done Increment.
 The AI never changes direction on its own.
 Execution may proceed autonomously within an explicitly approved Done Increment but must stop and ask for guidance if scope, intent or assumptions change.
 
-## AIM 1.6 architecture
+## Stable runtime architecture
 
 AIM 1.6 keeps the same architecture split and adds an explicit runtime-depth layer.
 

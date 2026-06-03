@@ -4,6 +4,7 @@
 # AIM 1.6 document map
 
 Use this guide only when the first three choices are not enough.
+In the AIM 1.7 release line, this remains the deeper stable runtime-family map beneath the newer 1.7 front door.
 
 The light front door is:
 - start: [Quick start AIM 1.6](quick-start-aim-1.6.md)

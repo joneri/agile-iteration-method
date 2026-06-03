@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-06-03 - AIM 1.7 cost-saving front door
+- Promoted the public release line to AIM 1.7 while keeping the accepted AIM runtime contract stable.
+- Repositioned AIM unapologetically as the cost-saving method for GitHub Copilot, Codex, Claude Code, and similar coding-agent platforms.
+- Added a dedicated cost-saving method doc and new 1.7 front-door docs for install, quick start, release framing, and document routing.
+- Made GitHub Copilot AI Credits after the June 1, 2026 billing change a first-class part of the operator story.
+
 ## 2026-05-11 - AIM 1.6.1 Codex bundled skill onboarding
 - Added first-run Codex guidance so AIM 1.6 commands surface the repo-bundled skill path and local Codex install target.
 - Updated the bundled Codex skill to explain how to install or refresh the full local package at `~/.codex/skills/agile-iteration-method/` from `adapters/codex/agile-iteration-method/`.

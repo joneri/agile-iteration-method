@@ -4,6 +4,7 @@
 # Install AIM 1.6
 
 Use this guide for the minimum viable AIM 1.6 setup in a repository.
+In the AIM 1.7 release line, this remains the deeper stable runtime-family install guide beneath the newer 1.7 front door.
 
 This guide is about repository setup.
 Use [Quick start AIM 1.6](quick-start-aim-1.6.md) for the first Epic once the files are in place.

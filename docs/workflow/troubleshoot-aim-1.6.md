@@ -4,6 +4,7 @@
 # Troubleshoot AIM 1.6
 
 Use this guide when AIM 1.6 does not start, resume, validate, or behave consistently across adapters.
+In the AIM 1.7 release line, this remains the deeper stable runtime-family troubleshooting guide beneath the newer 1.7 front door.
 
 ## Fast checks
 
@@ -14,6 +15,7 @@ Check these first:
 4. `AGENTS.md`
 5. `docs/workflow/agile-iteration-method.md`
 6. `docs/features/aim-modularity-context-efficiency.md` when the issue is about file boundaries or increment size
+7. `scripts/validate_aim_runtime.py .`
 
 ## Startup issues
 

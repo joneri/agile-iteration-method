@@ -3,6 +3,8 @@
 
 # AIM 1.6 release and production checklist
 
+This file remains the stable runtime-family release note under the AIM 1.7 public release line.
+
 ## AIM 1.6.1 patch
 
 AIM 1.6.1 adds Codex bundled skill onboarding.

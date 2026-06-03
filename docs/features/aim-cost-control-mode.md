@@ -4,6 +4,8 @@
 
 Make AIM budget-aware so users can reduce agent resource use without weakening role ownership, gate semantics, or escalation rules.
 
+In AIM 1.7, this feature becomes part of the explicit public cost-saving promise rather than a quiet internal optimization.
+
 ## How it works
 
 AIM 1.6 separates approval flow from runtime depth:

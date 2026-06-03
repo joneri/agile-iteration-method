@@ -1,8 +1,8 @@
-# Agile Iteration Method (AIM) v1.6.1
+# Agile Iteration Method (AIM) v1.7
 
-AIM is a way to run agentic software delivery without losing the thread.
+AIM 1.7 is the cost-saving method for GitHub Copilot, Codex, Claude Code, and other coding-agent platforms.
 
-It gives AI work a clear Agile loop instead of a prompt spiral.
+It gives AI work a clear Agile loop instead of a prompt spiral, and it does that in a way that is deliberately designed to reduce wasted tokens, wasted AI credits, and wasted agent passes.
 
 One loop:
 
@@ -27,14 +27,16 @@ Without a method, agentic development usually breaks in predictable ways:
 
 AIM fixes that with clear roles, gates and ownership.
 
-## What's new in v1.6
+## What's new in v1.7
 
-AIM 1.6 keeps the accepted core loop and runtime model and makes AIM budget-aware.
+AIM 1.7 keeps the accepted core loop and stable runtime contract, but turns cost savings into the main public promise.
 
 - Cost profiles are now explicit: `Standard`, `Cost Control`, and `Deep`
 - `Cost Control` keeps AIM gates and escalation rules while reducing context, output, and verification depth for low-risk work
 - `Standard` AIM now uses progressive context loading by default instead of rereading every method document
 - `Deep` is available for high-risk work where broader inspection and stronger review are worth the spend
+- the public front door now says the quiet part out loud: AIM is for cutting unnecessary spend in GitHub Copilot and other coding-agent platforms
+- GitHub Copilot AI Credits are treated as a first-class operator concern after the June 1, 2026 billing change
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
 - small Done Increments are defined by behavioral scope, not by artificially few files
@@ -45,23 +47,39 @@ AIM 1.6 keeps the accepted core loop and runtime model and makes AIM budget-awar
 
 ## Why teams use it
 
-This release is easier to trust, explain and adopt:
+Teams use AIM 1.7 because it saves money without turning agentic work into chaos:
 - you can resume real work instead of re-explaining context every session
 - you can inspect runtime state instead of guessing what the agent thinks is happening
 - you can use Codex, Copilot and Claude Code with one shared conceptual model
 - you can use more focused files when that avoids context hogs and keeps boundaries cohesive
 - you can delegate bounded work without losing ownership of gates or acceptance
 - you can install AIM into a real repo without turning the repo into an experiment
-- the public docs make the latest version easier to start, inspect, and explain
+- the public docs now explain how to spend less on AI Credits and tokens without weakening trust or review
 
-## What changed in 1.6
+## Why 1.7 and not 2.0
 
-- AIM 1.6 adds a cost-profile axis without changing the role loop or approval semantics.
-- `Strict` and `Auto` still control approvals; `Standard`, `Cost Control`, and `Deep` control runtime depth.
-- Regular AIM gets cheaper through progressive context loading, compact gates, cheap validation first, and risk-scaled review.
-- File-boundary discipline from AIM 1.5 remains part of the visible release story.
+This is a strong new release line, not a broken-compatibility reset.
 
-In practice, AIM 1.6 should spend attention where risk justifies it.
+- the core loop is still `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
+- the accepted runtime contract and `.aim` ownership model stay intact
+- the big change is the public promise and operator guidance: AIM is now positioned explicitly as the method for cost-saving agentic delivery
+
+`2.0` would imply a method break. This release is sharper than that, not more chaotic.
+
+## How AIM saves money
+
+AIM 1.7 reduces spend in ways that are concrete, not mystical:
+
+- it prevents uncontrolled retries by forcing one approved Done Increment at a time
+- it keeps low-risk work in `Cost Control` instead of burning `Deep`-style context and review everywhere
+- it makes normal work cheaper through progressive context loading instead of full-method rereads
+- it limits waste from oversized sessions, bloated prompts, and accidental scope creep
+- it separates pricing investigations from implementation work so teams do not pay premium agent costs just to rediscover billing facts
+- it tells teams when to stop guessing and check official vendor billing behavior first
+
+That matters even more after GitHub Copilot moved to AI-credit billing on June 1, 2026.
+
+In practice, AIM should spend attention only where risk justifies it.
 Low-risk cleanup can run in Cost Control, while trust-sensitive product work can stay Standard or move to Deep.
 
 ## From prompt pattern to runtime
@@ -70,7 +88,7 @@ Before AIM 1.3, the method was there but the runtime story was too loose.
 
 With AIM 1.4, the runtime became inspectable and adapter-aware.
 
-With AIM 1.6:
+With AIM 1.7:
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
 - small scope is defined by behavior and user value, not by lowest possible file count
@@ -78,18 +96,18 @@ With AIM 1.6:
 - normal AIM loads context progressively instead of treating every run as a full reread
 - the public onboarding path makes the latest guidance obvious to new users
 - the front door starts with three simple choices instead of the full method
-- Codex users can see and install the repo-bundled AIM skill from the first AIM 1.6.1 command
+- Codex users can see and install the repo-bundled AIM skill from the first AIM 1.7 command
 - adapter guidance, packaging, and upgrade docs now read as one current release surface
 
-That is the main upgrade: AIM 1.6 makes the accepted runtime easier to afford without weakening ownership, gates, or escalation.
+That is the main upgrade: AIM 1.7 makes the accepted runtime easier to afford without weakening ownership, gates, or escalation.
 
 ## Start Here
 
 Choose one:
 
-1. [Start AIM](docs/workflow/quick-start-aim-1.6.md)
+1. [Start AIM](docs/workflow/quick-start-aim-1.7.md)
 2. [Continue or troubleshoot AIM](docs/workflow/troubleshoot-aim-1.6.md)
-3. [Install or upgrade AIM](docs/workflow/install-aim-1.6.md)
+3. [Install or upgrade AIM](docs/workflow/install-aim-1.7.md)
 
 Fast start:
 
@@ -101,7 +119,7 @@ Cost profile: Cost Control
 
 Use `Cost Control` for ordinary low-risk work. Use `Deep` when the work touches trust, data correctness, deployment, migration, security, or public APIs.
 
-Need the full map? Use [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md).
+Need the full map? Use [AIM 1.7 document map](docs/workflow/aim-1.7-doc-map.md).
 
 ## Choose Your Adapter
 
@@ -125,7 +143,7 @@ Important installation rule:
 - `/aim` is the normal Codex start path when the AIM skill is installed and enabled.
 - A fully AIM-aware repo can still be used in Codex without the skill if you start with explicit AIM intent in plain language.
 - The skill is still useful in a prepared repo because it gives you the clean `/aim` entrypoint plus status, help, config, validate and upgrade helpers.
-- On the first AIM 1.6.1 command in Codex, AIM should make the bundled skill path and local install target visible.
+- On the first AIM 1.7 command in Codex, AIM should make the bundled skill path and local install target visible.
 
 60-second local Codex skill install:
 

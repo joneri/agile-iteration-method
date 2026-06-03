@@ -5,21 +5,21 @@
 # AGENTS.md
 
 ## Version
-This file defines **AIM 1.6** operational behavior while retaining the AIM 1.2 core loop semantics and the accepted AIM 1.4 runtime model.
+This file defines the **AIM 1.7** release line while retaining the AIM 1.2 core loop semantics and the accepted AIM 1.6 runtime architecture.
 
 ## Purpose
 This repo uses “Agile iteration method” with explicit AI roles and structured handoffs. The goal is to avoid bouncing between random theories and instead converge fast with small, shippable increments across supported adapters such as Codex, Copilot, and Claude Code.
 
-For AIM 1.6, this repo distinguishes between:
+For AIM 1.7, this repo distinguishes between:
 - AIM core
 - AIM runtime
 - repo-aware policy
 - platform adapters
 
 Release-line note:
-- AIM 1.6 keeps the accepted AIM 1.4 runtime architecture stable.
-- AIM 1.6 makes cost control explicit without weakening gates, ownership, or escalation.
-- AIM 1.6 makes the public front door lighter: start, continue, or validate first; deeper method detail stays available behind the docs.
+- AIM 1.7 keeps the accepted AIM 1.6 runtime architecture stable.
+- AIM 1.7 markets cost savings explicitly without weakening gates, ownership, or escalation.
+- AIM 1.7 makes GitHub Copilot AI Credits and token control across adapters part of the public operator story.
 - AIM 1.5 modularity and context-efficiency guidance remains active.
 
 Important: runtime capabilities differ by environment. AIM must prefer shared behavior first. If controlled parallel subagents are unavailable or disallowed by repo policy, the runtime must fall back to sequential execution without changing core gate semantics or ownership rules.
@@ -38,6 +38,9 @@ Follow the gates in order. When in doubt:
 - stop only if an escalation condition is met
 - otherwise continue to Gate E.
 
+Use the front door and the gate table first.
+Treat the rest of this file as reference material for the active step, not as startup instructions to apply all at once.
+
 ## How to start a run
 The front door should be thin.
 Before showing the full method, route the user to one of:
@@ -55,11 +58,13 @@ Before showing the full method, route the user to one of:
 7. Choose execution mode at Epic start: `Strict` (default) or `Auto`.
 8. Choose cost profile when resource use matters: `Standard` (default), `Cost Control`, or `Deep`.
 
-Kickoff contract (AIM 1.6):
+If the user activates AIM without providing a problem statement or Epic description, present only the three routing options above and wait. Do not begin Gate A or generate an Epic until the PO supplies a problem description.
+
+Kickoff contract (AIM 1.7 release line):
 1. PO creates the Epic from what should be achieved.
 2. TDO creates the next Done Increment based on that Epic.
 
-## Optional adapter layers (AIM 1.6)
+## Optional adapter layers (stable AIM 1.6 runtime)
 
 Optional adapter layers may improve UX and discoverability, but they must preserve this file's gate and escalation semantics.
 Adapter-specific entrypoints, optional helper files, parity labels, and fallback details live in `docs/workflow/aim-adapter-guidance.md`.
@@ -201,6 +206,7 @@ All adapters must follow the same conceptual startup flow:
 
 Resume rule:
 - if `.aim/state.json` exists and describes an incomplete Epic, the runtime must resume from that checkpoint instead of silently starting a new Epic
+- if the execution mode or cost profile in `.aim/state.json` differs from the mode or profile specified at session start, surface the conflict to the PO and ask which setting should govern the resumed session before continuing
 - if no active checkpoint exists, the runtime starts a new Epic at Gate A
 
 Fallback rule:
@@ -401,7 +407,7 @@ Mode must be selected when starting an Epic and shown in all gate outputs.
   - Enabled with Epic flag: `Auto-approve until Epic complete`.
   - AIM still runs all roles and gate logic.
   - AIM does not pause for manual approvals between Done Increments unless escalation occurs.
-  - A final full review is required before Epic completion is accepted.
+  - Before the Epic is marked complete in Auto mode, the Reviewer must perform a review covering all Done Increments accepted during the Auto session, producing a consolidated risk and correctness summary. TDO must confirm aggregate acceptance criteria are met. PO must explicitly approve Epic completion.
   - All generated Done Increments must be clearly traceable.
 
 ## Cost profiles (AIM 1.6)
@@ -424,7 +430,9 @@ Cost profile controls runtime depth. It does not change AIM gates, role ownershi
   - allow broader inspection, stronger verification, and fuller review evidence
 
 Escalation rule:
-- if Cost Control discovers trust, data correctness, user-facing meaning, migration, deployment, or scope risk, move to `Standard` or `Deep` before continuing
+- if Cost Control discovers trust, data correctness, user-facing meaning, or scope risk, escalate to `Standard`
+- if Cost Control discovers migration, deployment, public API, or security risk, escalate to `Deep`
+- report the escalation reason and new profile before continuing
 - if Standard work becomes unusually broad or uncertain, move to `Deep` before final acceptance
 
 Cost profiles are orthogonal to execution modes:
@@ -447,6 +455,8 @@ Controlled parallel work is optional and runtime-dependent.
 
 Roles are simulated inside one AIM adapter session and repeat for each **Done Increment** of the same Epic.
 
+When simulating a role, the model must reason and output only as that role and must not act on authority belonging to another role, even though all roles run in the same session. Treat role ownership as a reasoning constraint, not a runtime permission system.
+
 - **PO (product owner)**  
   Owns the Epic. Defines value, scope, non-goals and acceptance criteria. Decides when the Epic is complete.
 
@@ -465,7 +475,7 @@ Roles are simulated inside one AIM adapter session and repeat for each **Done In
 - **PO**  
   Decides whether the Epic continues, closes, or captures new scope separately after an increment has been accepted or adjusted through the TDO checkpoint.  
   Updates Epic-level completion markers only when the corresponding outcome is demonstrably fulfilled.  
-  Unless explicitly stated otherwise, PO approval at the post-increment checkpoint is implicit when all acceptance checks are met, no escalation conditions were triggered, and the Epic-level direction is still clear.
+  In `Auto` mode only, and unless explicitly stated otherwise, PO approval at the post-increment checkpoint may be implicit when all acceptance checks are met, no escalation conditions were triggered, and the Epic-level direction is still clear. In `Strict` mode, Gate E requires an explicit PO reply.
 
 Canonical role rule (AIM 1.2):
 - Canonical names are only: `PO`, `TDO`, `Dev`, `Reviewer`.
@@ -626,14 +636,20 @@ At each hard gate, the agent must make these four things clear conceptually:
 These are conceptual minimums, not mandatory visible section headings.
 Role-specific response shape takes precedence over any older boilerplate interpretation.
 
-### Default behavior
+### Gate decision table
 
-- Default execution mode is `Strict` unless PO sets `Auto` at Epic start.
-- The agent must continue through the full loop **in one continuous run**
-  (PO → TDO → Dev → Reviewer → TDO → PO)
-- The agent must **not pause or ask for approval** at any Gate unless an escalation condition is met.
+Default execution mode is `Strict` unless PO sets `Auto` at Epic start.
+The role order remains `PO → TDO → Dev → Reviewer → TDO → PO` for each Done Increment.
 
-### When the agent MUST stop and wait
+| Gate | Primary actor | `Strict` normal | `Auto` normal | Escalation condition | Required output |
+| --- | --- | --- | --- | --- | --- |
+| A | `PO` | report and pause for `approve` or `change:` | report and pause for `approve` or `change:` | Epic intent or runtime context is unclear or contradictory | Epic framing, value boundary, files expected, and how the PO should evaluate the Epic framing |
+| B | `TDO` | report and pause for `approve` or `change:` unless PO enabled Gate B auto-approve for this Epic | report and continue after the TDO performs the Gate B checklist; stop only on escalation | scope expansion, unclear intent, trust/safety/stability concern, or Gate B checklist not satisfied | next Done Increment, exact planned files, scope limits, verification plan, and how the PO should evaluate the increment plan |
+| C | `Dev` | report and continue | report and continue | stop and wait if scope must expand, intent/context/docs are contradictory, acceptance checks need new assumptions, trust/data correctness/user value risk appears, or required files/APIs/data are missing | implementation update, exact changed files, verification run, and what the next role should examine |
+| D | `Reviewer` | report and continue | report and continue | same escalation conditions as Gate C | review findings, exact files reviewed, residual risks, and manual verification steps if needed; Gate D never asks for approval |
+| E | `TDO` then `PO` | TDO reports the demo/test checkpoint, then pause for explicit `approve` or `change:` from PO | TDO reports the checkpoint and continue unless escalation occurs; PO may be implicit for increment acceptance, but Epic completion still requires explicit PO approval | stop and wait if acceptance requires scope changes, revised assumptions, or Epic-level direction is unclear | acceptance summary, exact files changed, what was already verified, how the PO/operator should test now, and whether the Epic continues or closes |
+
+### Stop-and-wait rule
 
 The agent must stop and explicitly ask for input only if one or more of the following occur:
 
@@ -650,44 +666,20 @@ When stopping, the agent must:
 
 ### Approval semantics
 
-- Approval is only **semantically meaningful** at:
-  - Gate A (Epic definition)
-  - Gate B (scope of the Done Increment)
-  - Gate E (acceptance / completion)
-- All other Gates exist to surface risk, evidence, and context — **not to request permission**.
+Approval is only **semantically meaningful** at:
+- Gate A (Epic definition)
+- Gate B (scope of the Done Increment)
+- Gate E (acceptance / completion)
 
-### Gate D clarification
+All other Gates exist to surface risk, evidence, and context — **not to request permission**.
+
+When Gate B is approved for a Done Increment, AIM may run `TDO → Dev → Reviewer → TDO` without waiting at Gate C or Gate D unless an escalation condition is triggered.
 
 Gate D is always a soft gate.
-
 - The Reviewer must never require an `approve` at Gate D.
 - If manual verification is required (for example UI testing in a browser), the Reviewer must:
   - clearly list the manual steps to verify
   - state that no further code changes are expected in this Done Increment unless PO decides otherwise at Gate E
-
-Gate D exists to surface risk and verification steps, not to request permission.
-All approvals happen at Gate E, not at Gate D.
-
-### Delegated execution between Gate B and Gate E
-
-When I approve Gate B for a Done Increment:
-
-- You may run TDO → Dev → Reviewer → TDO for this Done Increment without waiting for me at Gate C or Gate D.
-- You must still output each role and each gate, but you do not pause for `approve` at C or D.
-- You must stop and ask me if any escalation condition is met.
-
-### Escalation conditions for soft gates
-
-At Gate C or Gate D you must stop and wait for my input if:
-
-- The Done Increment needs to change scope beyond what was agreed at Gate B.
-- You discover that the Epic intent, runtime context, or feature-doc rules are unclear or contradictory.
-- Acceptance checks cannot be met without new assumptions.
-- You believe the change could break trust, data correctness or user value.
-- You are unsure if this is still a valid Done Increment for this Epic.
-
-If none of these conditions apply, you proceed automatically to the next role
-and finally stop at Gate E for my approval.
 
 ### Gate B – Done Increment sanity check (mandatory)
 
@@ -739,16 +731,14 @@ Output format rules:
   4) how the user should evaluate the step  
 These are conceptual minimums, not a reusable visible response wrapper.
 Then:
-- At hard gates (A, B, E): in `Strict` mode wait for `approve` or `change: …`
-- In `Auto` mode: report hard gates but do not pause between Done Increments unless escalation occurs; require final full-review pause before Epic completion
-- At soft gates (C, D): only wait for my reply if an escalation condition is met
-  Otherwise, continue automatically to the next role
+- follow the gate decision table above for whether to pause or continue at each gate
+- if an escalation condition is triggered at any gate, stop, explain the reason, propose options, and wait for PO instruction
 
 ### Role-specific visible interaction contract
 
 Visible AIM responses must be step-aware.
 They must not all reuse the same approval-oriented template.
-This role-specific contract overrides any older reading that every gate should use the same visible section layout.
+This role-specific contract overrides any older reading that every gate should use the same visible section layout, but it does not replace the gate decision table or the approval semantics above.
 
 Required role/step patterns:
 - `PO` at Gate A:
@@ -777,17 +767,15 @@ Required role/step patterns:
   - decides whether the Epic continues or closes
   - distinguishes additional in-scope work from new scope that belongs in a new Epic
 
-### Approval semantics
-
 Approval wording must match the actual decision:
 - Gate A:
   - approve Epic framing and scope
 - Gate B:
   - approve the next single Done Increment
-- post-review TDO checkpoint:
-  - accept the increment as demonstrated and tested, or request adjustment
-- PO post-increment checkpoint:
-  - continue the Epic, close the Epic, or capture new scope separately
+- Gate E TDO checkpoint:
+  - present the increment as demonstrated and tested, or explain what adjustment is being requested
+- Gate E PO checkpoint:
+  - accept the increment, request adjustment, continue the Epic, close the Epic, or capture new scope separately
 
 Dev and Reviewer are informational by default.
 They only ask for a user decision when escalation rules require it.
@@ -795,10 +783,12 @@ They only ask for a user decision when escalation rules require it.
 ### Language clarity policy
 
 Visible AIM text should reduce ambiguity:
-- prefer actor names such as `the user`, `PO`, `TDO`, `Dev`, `Reviewer`, or `the next step`
+- prefer actor names such as `the operator`, `the human PO`, `PO`, `TDO`, `Dev`, `Reviewer`, or `the next step`
 - avoid unclear use of `you` when more than one actor could be meant
 - avoid repeated boilerplate that does not help the current decision
 - match CTA wording to the actual step instead of reusing `approve` for every case
+
+In AIM context, the human interacting with the agent is the PO or operator. Reserve `end user` for the product's external consumer.
 
 ### Epic-level Auto mode (optional)
 
@@ -810,7 +800,7 @@ When this flag is active:
 - AIM continues through Done Increments without manual pause between increments.
 - Gate logic and role sequence still run and must be reported.
 - Escalation rules are unchanged and still force a stop.
-- Before marking the Epic complete, run and present a final full review.
+- Before marking the Epic complete, the Reviewer must review all Done Increments accepted during the Auto session and produce a consolidated risk and correctness summary. TDO must confirm aggregate acceptance criteria are met. PO must explicitly approve Epic completion.
 - Keep transparent trace of all Done Increments generated in Auto mode.
 
 ### PO auto-approve mode for Gate B
@@ -846,6 +836,8 @@ Mental model: approvals only matter at Gate A (Epic), Gate B (scope), and Gate E
 The Reviewer does not grant or withhold approval.
 The Reviewer provides signal; the PO decides at Gate E.
 All other gates exist to surface risk, not to request permission.
+
+If PO responds with `change:` at Gate E and the change alters the accepted scope of the current increment, the TDO must re-enter Gate B with the revised scope, explicitly state the delta from the original Gate B spec, and obtain approval before Dev resumes.
 
 ### Scope expansion rule
 
