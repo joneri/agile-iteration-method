@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-06-03 - AIM 1.7 GitHub Pages website update
+- Updated the GitHub Pages website on `gh-pages` from AIM v1.6.1 to AIM v1.7 messaging.
+- Added the AIM 1.7 cost-discipline story, GitHub Copilot AI Credits angle, and Cost Comparison link to the site.
+- Corrected stale website copy about Claude Code helper files.
+
+## 2026-06-03 - AIM 1.7 cost-comparison evidence
+- Added a public cost-comparison feature doc explaining why AIM 1.7 should reduce waste versus AIM 1.6-style normal use and undisciplined vibe coding.
+- Linked the comparison from the README, 1.7 quick start, document map, and cost-saving method doc.
+- Kept the comparison qualitative and behavior-based instead of inventing exact savings percentages or token counts.
+
+## 2026-06-03 - AIM 1.7 release-surface hardening
+- Aligned active README, contribution, Copilot role, and prompt-helper surfaces so they present AIM 1.7 as the current release.
+- Corrected Claude Code packaging claims so the repo no longer says `.claude/` helper files are shipped when only `CLAUDE.md` is present.
+- Preserved the stable AIM 1.6 runtime-family docs as intentional deeper guidance under the 1.7 front door.
+
 ## 2026-06-03 - AIM 1.7 cost-saving front door
 - Promoted the public release line to AIM 1.7 while keeping the accepted AIM runtime contract stable.
 - Repositioned AIM unapologetically as the cost-saving method for GitHub Copilot, Codex, Claude Code, and similar coding-agent platforms.

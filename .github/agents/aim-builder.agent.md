@@ -1,12 +1,12 @@
 ---
 name: aim-builder
-description: AIM 1.6 builder role for implementing one approved Done Increment
+description: AIM 1.7 builder role for implementing one approved Done Increment
 user-invokable: false
 tools: ["readFile", "createFile", "editFiles", "runInTerminal", "fileSearch", "textSearch"]
 model: ["GPT-5.4 (copilot)", "GPT-5.3-Codex (copilot)", "GPT-5.2-Codex (copilot)", "Claude Sonnet 4.6 (copilot)", "Claude Opus 4.6 (copilot)"]
 ---
 
-# AIM 1.6 builder role
+# AIM 1.7 builder role
 
 Implement exactly the increment approved at Gate B.
 

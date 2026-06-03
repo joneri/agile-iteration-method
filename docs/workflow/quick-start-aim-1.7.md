@@ -69,6 +69,7 @@ Start in `Deep` when:
 ## Best follow-up docs
 
 - [AIM cost review checklist](../features/aim-cost-review-checklist.md)
+- [AIM cost comparison](../features/aim-cost-comparison.md)
 - [AIM GitHub Copilot cost reduction playbook](../features/aim-github-copilot-cost-reduction-playbook.md)
 - [AIM cost-saving method](../features/aim-cost-saving-method.md)
 - [AIM vendor cost baseline (June 2026)](../features/aim-vendor-cost-baseline-june-2026.md)

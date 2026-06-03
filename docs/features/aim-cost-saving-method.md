@@ -18,6 +18,8 @@ AIM cuts cost by reducing waste before it turns into billable tokens or AI credi
 
 For GitHub Copilot specifically, this matters because the June 1, 2026 billing model prices usage through AI Credits rather than old premium-request intuition. Long agent sessions, repeated retries, unnecessary large contexts, expensive model choices, and broad ambiguous tasks can now become directly visible spend.
 
+For a concrete behavior-by-behavior comparison, see `docs/features/aim-cost-comparison.md`.
+
 ## Key decisions
 
 - AIM 1.7 markets cost savings directly because users now feel the spend directly.
@@ -63,6 +65,7 @@ If a team says "AI is too expensive now", inspect in this order:
 ## Related files
 
 - `docs/features/aim-cost-control-mode.md`
+- `docs/features/aim-cost-comparison.md`
 - `docs/features/aim-cost-review-checklist.md`
 - `docs/features/aim-vendor-cost-baseline-june-2026.md`
 - `docs/workflow/quick-start-aim-1.7.md`

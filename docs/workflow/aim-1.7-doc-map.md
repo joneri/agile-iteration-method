@@ -10,6 +10,7 @@ Use this when you want the current public release story first.
 - start: [Quick start AIM 1.7](quick-start-aim-1.7.md)
 - install: [Install AIM 1.7](install-aim-1.7.md)
 - explain the cost-saving promise: [AIM cost-saving method](../features/aim-cost-saving-method.md)
+- compare AIM 1.7 with AIM 1.6-style use and vibe coding: [AIM cost comparison](../features/aim-cost-comparison.md)
 - explain concrete Copilot spend reduction: [AIM GitHub Copilot cost reduction playbook](../features/aim-github-copilot-cost-reduction-playbook.md)
 - explain current vendor billing facts: [AIM vendor cost baseline (June 2026)](../features/aim-vendor-cost-baseline-june-2026.md)
 

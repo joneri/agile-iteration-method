@@ -2,7 +2,10 @@
 mode: aim
 ---
 
-Start AIM 1.6 in this repository.
+Start AIM 1.7 in this repository.
+
+Before reading major docs, check `.aim/state.json`.
+If an incomplete Epic exists, resume that checkpoint instead of rebuilding context or starting over.
 
 If no Epic is provided yet:
 - ask for one line: `EPIC: ...`
@@ -13,7 +16,8 @@ If no Epic is provided yet:
 
 If Epic is provided:
 - select the `aim` agent flow
-- preserve the AIM 1.6 runtime contract from `AGENTS.md` and `docs/workflow/agile-iteration-method.md`
+- preserve the AIM runtime contract from `AGENTS.md` and `docs/workflow/agile-iteration-method.md`
+- load only the context needed for the current state, command, cost profile, and risk
 - ensure PO owns Epic definition at Gate A
 - ensure TDO owns Done Increment spec at Gate B
 - ensure canonical role names are used in reporting: `PO`, `TDO`, `Dev`, `Reviewer`

@@ -18,11 +18,14 @@ AIM 1.6 separates approval flow from runtime depth:
 - compact role outputs
 - no subagents by default
 - narrow context loading
+- state-first resume from `.aim/state.json`
 - validator-first runtime checks
 - concise review evidence
+- short trace artifacts for low-risk work
 - escalation to `Standard` or `Deep` when risk appears
 
-`Standard` also becomes cheaper in AIM 1.6 by using progressive context loading. Agents read the shortest authoritative context first and load deeper docs only when the task needs them.
+`Standard` also becomes cheaper in AIM 1.7 by using state-first resume and progressive context loading.
+Agents read `.aim/state.json` before rebuilding runtime context, then load the shortest authoritative context first and load deeper docs only when the task needs them.
 
 ## Key decisions
 
@@ -31,6 +34,7 @@ AIM 1.6 separates approval flow from runtime depth:
 - Cost profiles are orthogonal to execution modes.
 - Risk controls the profile. Low-risk work can stay narrow; trust-sensitive work must expand.
 - Standard AIM should be cheaper by default, not only when Cost Control is selected.
+- Context hogs, repeated major-doc rereads, and long low-risk markdown artifacts are budget bugs.
 
 ## Inputs/outputs
 
@@ -46,6 +50,7 @@ Outputs:
 
 - visible `Cost profile` when resource use matters or when not `Standard`
 - compact or expanded checkpoints according to risk
+- resumed state without rebuilding context when `.aim/state.json` is coherent
 - explicit escalation when deeper runtime depth is required
 - verification evidence scaled to the work
 
@@ -65,6 +70,7 @@ At Gate B, check whether the selected cost profile matches the risk:
 - trust-sensitive or high-blast-radius: `Deep`
 
 If a run feels expensive, inspect whether AIM loaded documents or ran verification that were not required by the selected profile.
+For `/aim continue`, first check whether the agent resumed from `.aim/state.json` before rereading `AGENTS.md`, the full workflow doc, or adapter guides.
 
 ## Related files
 

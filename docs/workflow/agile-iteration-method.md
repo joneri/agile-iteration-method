@@ -176,12 +176,32 @@ Markdown artifacts remain important for human inspection, but `state.json` is th
 AIM 1.4 defines one shared conceptual startup sequence across adapters:
 
 1. detect repo root
-2. load repo-aware AIM context
-3. detect or create `.aim`
-4. load active Epic from `.aim/state.json` or initialize a new Epic
-5. resolve execution mode
-6. resolve platform capability and repo-policy limits
+2. detect or create `.aim`
+3. read `.aim/state.json` first when it exists
+4. resume the active checkpoint or initialize a new Epic
+5. load only the repo-aware AIM context needed for the current state, role, gate, cost profile, and requested command
+6. resolve execution mode, cost profile, and platform capability or repo-policy limits
 7. enter the AIM role sequence
+
+### Cost-first bootstrap
+
+AIM should spend the first tokens or AI Credits on deciding whether it can resume cheaply.
+The runtime must check durable state before broad rereads:
+
+- read `.aim/state.json` before rereading large method docs
+- run the validator, when available, before manual artifact sweeps
+- load the shortest authoritative context that can answer the current command
+- reuse normalized runtime context from `.aim/runtime-context.md` when it is present and still coherent
+- expand context only when the current state, risk, missing artifact, or user request requires it
+
+This does not change AIM core.
+It preserves role order, gate ownership, and escalation, but it makes waste visible as a runtime defect.
+
+Budget bugs include:
+- rebuilding the whole Epic context when state already points to a live checkpoint
+- rereading major docs on every `continue`
+- writing long low-risk markdown artifacts where a compact trace would satisfy audit needs
+- treating large mixed-responsibility files as harmless just because they reduce file count
 
 ### Resume behavior
 
@@ -523,6 +543,7 @@ Defined cost profiles:
 - `Standard`:
   - default AIM behavior
   - progressive context loading instead of broad rereads
+  - durable-state resume before full context rebuilds
   - compact gates unless risk requires detail
   - validator and direct evidence before manual artifact sweeps
 - `Cost Control`:
@@ -530,6 +551,7 @@ Defined cost profiles:
   - same roles, gates, acceptance, and escalation rules
   - no subagents by default
   - narrow file reads and short visible checkpoints
+  - short trace artifacts by default
   - expand to `Standard` or `Deep` if risk appears
 - `Deep`:
   - high-assurance AIM for trust, data correctness, migration, deployment, security, API, or broad public-method changes
@@ -953,11 +975,11 @@ If any of the following are true, Gate B must not be approved:
 AIM 1.4 prefers one shared conceptual flow across platforms:
 
 1. detect repo root
-2. load repo-aware context
-3. detect or create `.aim`
-4. load active Epic or start a new one
-5. resolve execution mode
-6. resolve platform capability limits
+2. detect or create `.aim`
+3. read `.aim/state.json` first when it exists
+4. resume the active checkpoint or start a new Epic
+5. load only the repo-aware context needed for the current state, command, and risk
+6. resolve execution mode, cost profile, and platform capability limits
 7. enter the AIM role sequence
 
 Parity classes used by AIM 1.4:

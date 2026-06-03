@@ -13,16 +13,19 @@ Attribution: based on Agile Iteration Method 1.7 by Jonas Eriksson, licensed as 
 ## First Response
 
 1. Detect the repository root.
-2. Load repo-aware AIM context in precedence order:
+2. Detect or create `.aim` before starting or resuming an AIM run.
+3. Read `.aim/state.json` first when it exists.
+4. If `.aim/state.json` describes an incomplete Epic, resume that checkpoint instead of starting a new Epic.
+5. Load only the repo-aware AIM context needed for the current state, role, gate, cost profile, and command:
    `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, `.github/agents/aim*.agent.md`, then active adapter helpers such as `.github/prompts/*`, `CLAUDE.md`, `.claude/agents/*`, and `.claude/commands/*`.
-3. Read `CONTRIBUTING.md` first when the target repository is the AIM repository itself.
-4. Detect or create `.aim` before starting or resuming an AIM run.
-5. If `.aim/state.json` describes an incomplete Epic, resume that checkpoint instead of starting a new Epic.
-6. Default to `Mode: Strict` unless the user explicitly chooses `Mode: Auto`.
-7. Default to `Cost profile: Standard` unless the user explicitly chooses `Cost Control` or `Deep`.
-8. Start visible AIM phases with exactly `Role: PO`, `Role: TDO`, `Role: Dev`, or `Role: Reviewer`, and show `Mode: Strict` or `Mode: Auto`.
-9. Show `Cost profile` when it is not `Standard` or when resource use is part of the user's request.
-10. Keep the public front door thin: route first to start, continue, or validate before explaining the full method.
+6. Read `CONTRIBUTING.md` first when the target repository is the AIM repository itself and a change is being made.
+7. Default to `Mode: Strict` unless the user explicitly chooses `Mode: Auto`.
+8. Default to `Cost profile: Standard` unless the user explicitly chooses `Cost Control` or `Deep`.
+9. Start visible AIM phases with exactly `Role: PO`, `Role: TDO`, `Role: Dev`, or `Role: Reviewer`, and show `Mode: Strict` or `Mode: Auto`.
+10. Show `Cost profile` when it is not `Standard` or when resource use is part of the user's request.
+11. Keep the public front door thin: route first to start, continue, or validate before explaining the full method.
+
+Treat unnecessary broad context loading, long low-risk markdown artifacts, repeated major-doc rereads, and context-hog files as budget bugs.
 
 Stop and ask only when an escalation condition applies: scope expansion beyond Gate B, unclear or contradictory Epic intent, unmet acceptance checks without new assumptions, trust/data/user-facing risk, missing required files/APIs/data, or contradictory repo policy.
 
@@ -86,13 +89,14 @@ Do not explain adapter layering, every gate, or every runtime artifact unless th
 Use the shared bootstrap sequence:
 
 1. Detect repo root.
-2. Load and normalize repo-aware context.
-3. Detect or create `.aim`.
-4. Load active Epic from `.aim/state.json` or initialize a new Epic.
-5. Resolve execution mode.
-6. Resolve cost profile.
-7. Resolve platform capability and repo-policy limits.
-8. Enter the role sequence.
+2. Detect or create `.aim`.
+3. Read `.aim/state.json` first when it exists.
+4. Resume the active checkpoint or initialize a new Epic.
+5. Load and normalize only the repo-aware context needed for the current state, command, and risk.
+6. Resolve execution mode.
+7. Resolve cost profile.
+8. Resolve platform capability and repo-policy limits.
+9. Enter the role sequence.
 
 Only the main AIM thread may write `.aim/state.json`, advance gates, change role, change increment status, or accept/complete an Epic. Subagents, when explicitly allowed by the host and repo policy, may only produce scoped analysis in allowed locations and never own runtime state.
 
@@ -139,7 +143,7 @@ AIM 1.6 allows focused files, components, hooks, helpers, domain modules, servic
 Cost profile controls runtime depth, not approval semantics.
 
 - `Standard`: default AIM with progressive context loading and compact gates unless risk requires detail.
-- `Cost Control`: use for low-risk, reversible cleanup, docs maintenance, and narrow fixes. Preserve roles, gates, and escalation while using narrow context, no subagents by default, and concise checkpoints.
+- `Cost Control`: use for low-risk, reversible cleanup, docs maintenance, and narrow fixes. Preserve roles, gates, and escalation while using narrow context, no subagents by default, concise checkpoints, and short trace artifacts.
 - `Deep`: use for trust-sensitive, data correctness, public API, migration, deployment, security, or broad method changes. Broader inspection and stronger review evidence are expected.
 
 Escalate from `Cost Control` to `Standard` or `Deep` when trust, data correctness, user-facing meaning, migration, deployment, security, API, unclear acceptance, or scope risk appears.

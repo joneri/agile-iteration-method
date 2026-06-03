@@ -56,9 +56,13 @@ Kickoff contract:
 - TDO defines the next Done Increment from that Epic.
 
 Repository-aware loading order:
-1. AIM base semantics
-2. repository `AGENTS.md`
-3. repository `.github/agents/aim*.agent.md`
+1. resume checkpoint from `.aim/state.json` when present
+2. AIM base semantics
+3. repository `AGENTS.md`
+4. repository `.github/agents/aim*.agent.md`
+
+Load only the context needed for the current state, command, cost profile, and risk.
+Avoid broad rereads on `/aim continue`; after the June 1, 2026 AI Credits shift, unnecessary context loading is a budget bug.
 
 If instructions conflict, escalate.
 
@@ -130,13 +134,14 @@ Suggested state shape:
 
 1. If `.aim/state.json` exists and points to an incomplete Epic, show status and resume that Epic instead of creating a parallel session.
 2. Create missing official runtime artifacts in `.aim/` before continuing.
-3. Create initial state at Gate A with `commitMode: optional`.
+3. Load only the repo-aware context needed to validate the current start or resume path.
+4. Create initial state at Gate A with `commitMode: optional`.
    Also set `mode: Strict` unless user explicitly chooses `Auto`.
    Also set `costProfile: Standard` unless user explicitly chooses `Cost Control` or `Deep`.
    The thin front door may suggest `Cost Control` for ordinary low-risk work, but omitted cost profile still resolves to `Standard`.
-4. Run `aim-planner` in `mode: PO` to create `.aim/epic.md`.
-5. Run `aim-planner` in `mode: TDO` to draft `.aim/plan.md` only as an optional helper for the next increment.
-6. Present Gate A only (Epic approval). Do not auto-approve Gate B unless PO policy explicitly allows it.
+5. Run `aim-planner` in `mode: PO` to create `.aim/epic.md`.
+6. Run `aim-planner` in `mode: TDO` to draft `.aim/plan.md` only as an optional helper for the next increment.
+7. Present Gate A only (Epic approval). Do not auto-approve Gate B unless PO policy explicitly allows it.
 
 Epic candidate rule:
 - if the user provides a valid Epic candidate, accept it with light normalization instead of forcing a full rewrite
@@ -197,8 +202,8 @@ Execution-mode behavior:
   - keep transparent trace of all Done Increments
 
 Cost-profile behavior:
-- `standard`: use normal AIM with progressive context loading and compact gates unless risk requires detail
-- `control`: preserve roles, gates, and escalation while using narrow context, no subagents by default, and concise checkpoints
+- `standard`: use normal AIM with state-first resume, progressive context loading, and compact gates unless risk requires detail
+- `control`: preserve roles, gates, and escalation while using narrow context, no subagents by default, concise checkpoints, and short trace artifacts
 - `deep`: use broader context and stronger review evidence for high-risk work
 
 If Cost Control discovers trust, data correctness, user-facing meaning, migration, deployment, security, API, or unclear acceptance risk, move to Standard or Deep before continuing.

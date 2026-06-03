@@ -197,12 +197,19 @@ Housekeeping rules:
 
 All adapters must follow the same conceptual startup flow:
 1. detect repo root
-2. load repo-aware AIM context
-3. detect or create `.aim`
-4. load active Epic from `.aim/state.json` or initialize a new Epic
-5. resolve execution mode
-6. resolve platform capability and repo-policy limits
+2. detect or create `.aim`
+3. read `.aim/state.json` first when it exists
+4. resume the active checkpoint or initialize a new Epic
+5. load only the repo-aware AIM context needed for the current state, role, gate, cost profile, and requested command
+6. resolve execution mode, cost profile, and platform capability or repo-policy limits
 7. enter the AIM role sequence
+
+Cost-first bootstrap rule:
+- resume from `.aim/state.json` before rereading major workflow docs or rebuilding full runtime context
+- use the validator or direct state evidence before manual artifact sweeps
+- avoid rereading large docs such as `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, or adapter guides unless the current state, command, risk, or missing context requires them
+- treat unnecessary broad context loading, long low-risk markdown artifacts, and context-hog files as budget bugs
+- preserve all gate, ownership, and escalation semantics while reducing runtime depth
 
 Resume rule:
 - if `.aim/state.json` exists and describes an incomplete Epic, the runtime must resume from that checkpoint instead of silently starting a new Epic
@@ -416,6 +423,7 @@ Cost profile controls runtime depth. It does not change AIM gates, role ownershi
 
 - `Standard` (default):
   - normal AIM behavior with progressive context loading
+  - resume from durable state before broad context reloads
   - read the shortest authoritative context first
   - run cheap validation before manual artifact inspection
   - keep gate outputs compact unless risk requires more detail
@@ -423,6 +431,7 @@ Cost profile controls runtime depth. It does not change AIM gates, role ownershi
   - use for low-risk, reversible maintenance, documentation cleanup, small adapter text changes, or obvious narrow fixes
   - no controlled parallel subagents by default
   - read only `AGENTS.md`, the shortest relevant workflow or feature doc, and directly affected files unless risk appears
+  - produce short trace artifacts instead of long markdown narratives unless audit value requires detail
   - prefer one compact Gate B, one implementation summary, one concise review, and one Gate E checkpoint
   - skip nonessential `.aim` artifact inspection when the validator reports healthy and runtime state is not the work target
 - `Deep`:

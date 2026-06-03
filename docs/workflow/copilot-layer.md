@@ -69,12 +69,18 @@ Failure handling:
 
 Copilot must preserve the same conceptual startup flow as Codex:
 1. detect repo root
-2. load repo-aware AIM context
-3. detect or create `.aim`
-4. load active Epic from `.aim/state.json` or initialize a new Epic
-5. resolve execution mode
-6. resolve platform capability and repo-policy limits
+2. detect or create `.aim`
+3. read `.aim/state.json` first when it exists
+4. resume the active checkpoint or initialize a new Epic
+5. load only the repo-aware AIM context needed for the current state, command, cost profile, and risk
+6. resolve execution mode, cost profile, and platform capability or repo-policy limits
 7. enter the AIM role sequence
+
+Cost-first Copilot rule:
+- after the June 1, 2026 AI Credits shift, Copilot must treat broad startup rereads as avoidable spend
+- `/aim continue` should resume from `.aim/state.json` before rereading major docs or rebuilding full context
+- `/aim status` and `/aim validate` should prefer cheap state and validator evidence before manual artifact sweeps
+- long low-risk markdown artifacts and context-hog files are budget bugs, not neutral style choices
 
 Resume rule:
 - if `.aim/state.json` exists and points to an incomplete Epic, Copilot must resume from that checkpoint instead of silently starting a new Epic

@@ -59,16 +59,13 @@ Before starting AIM in Claude Code, ensure these files are present:
 - `docs/workflow/agile-iteration-method.md`
 - `CLAUDE.md`
 
-Recommended Claude Code helper packaging:
+Optional Claude Code helper packaging:
 - `.claude/commands/`
 - `.claude/agents/`
 
-This repository now ships a small Claude starter layer:
-- `.claude/commands/start-aim.md`
-- `.claude/commands/install-aim.md`
-- `.claude/commands/continue-aim.md`
-- `.claude/commands/upgrade-aim-1.5-to-1.6.md`
-- `.claude/agents/aim.md`
+This repository ships `CLAUDE.md` as the Claude Code bridge.
+It does not currently ship `.claude/` helper files.
+Repositories may add `.claude/commands/` or `.claude/agents/` when they want Claude-specific command packaging.
 
 Start with either:
 - a repository AIM command exposed through `.claude/commands/`
@@ -88,4 +85,4 @@ Mode: Auto
 Cost profile: Standard
 ```
 
-If command-file invocation differs in the current Claude Code environment, use the explicit `EPIC: ...` fallback and keep the shipped command files as the discoverability layer.
+If command-file invocation differs in the current Claude Code environment, use the explicit `EPIC: ...` fallback.

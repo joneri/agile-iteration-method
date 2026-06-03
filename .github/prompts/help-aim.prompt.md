@@ -2,7 +2,7 @@
 mode: aim
 ---
 
-Show short AIM 1.6 help for this repository.
+Show short AIM 1.7 help for this repository.
 
 Explain:
 1. the three front-door choices:

@@ -78,6 +78,7 @@ AIM 1.7 reduces spend in ways that are concrete, not mystical:
 - it tells teams when to stop guessing and check official vendor billing behavior first
 
 That matters even more after GitHub Copilot moved to AI-credit billing on June 1, 2026.
+For the concrete comparison against AIM 1.6-style use and undisciplined vibe coding, see [AIM cost comparison](docs/features/aim-cost-comparison.md).
 
 In practice, AIM should spend attention only where risk justifies it.
 Low-risk cleanup can run in Cost Control, while trust-sensitive product work can stay Standard or move to Deep.
@@ -128,9 +129,7 @@ Need the full map? Use [AIM 1.7 document map](docs/workflow/aim-1.7-doc-map.md).
 - Copilot:
   use the packaged `aim` agent in `.github/agents/` and add `.github/prompts/` when you want Copilot-style command helpers.
 - Claude Code:
-  use `CLAUDE.md` plus the shipped starter files in `.claude/commands/` and `.claude/agents/`.
-
-This repo now ships a small Claude starter layer so Claude Code users can start from real files instead of abstract directory guidance.
+  use `CLAUDE.md` as the bridge layer. Add `.claude/commands/` and `.claude/agents/` in repositories that want Claude-specific command packaging.
 
 Important installation rule:
 - `.github/agents/aim*.agent.md` are part of the AIM instruction layer, not just Copilot decoration.
@@ -166,9 +165,9 @@ The skill is copyable adapter packaging. It must point back to the repository co
 | --- | --- | --- | --- | --- |
 | Codex | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `adapters/codex/agile-iteration-method/SKILL.md` | `/aim start "EPIC: ..."` | Shipped skill enabled for `/aim`; repo alone can still work with explicit AIM intent |
 | Copilot | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `.github/prompts/` | select `aim` and run `/aim start "EPIC: ..."` | `.github/agents/aim*.agent.md`; prompts optional |
-| Claude Code | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` + `CLAUDE.md` | `.claude/commands/` and `.claude/agents/` | repo Claude command or explicit `EPIC: ...` | `CLAUDE.md`; `.claude/` helpers recommended |
+| Claude Code | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` + `CLAUDE.md` | optional repo-local `.claude/commands/` and `.claude/agents/` | repo Claude command if provided, or explicit `EPIC: ...` | `CLAUDE.md`; `.claude/` helpers optional |
 
-## Starting A New Repo With AIM v1.6
+## Starting A New Repo With AIM v1.7
 
 Use this path when the repository does not exist yet or when you want to bootstrap a new repo around AIM from day one.
 
@@ -183,6 +182,10 @@ Required for AIM:
 - `.github/agents/aim-reviewer.agent.md`
 
 Recommended:
+- `README.md`
+- `docs/workflow/quick-start-aim-1.7.md`
+- `docs/workflow/install-aim-1.7.md`
+- `docs/workflow/aim-1.7-doc-map.md`
 - `docs/workflow/quick-start-aim-1.6.md`
 - `docs/workflow/install-aim-1.6.md`
 - `docs/workflow/migrate-aim-1.5-to-1.6.md`
@@ -200,10 +203,8 @@ Optional Codex skill packaging:
 
 If you want Claude Code support too, also copy:
 - `CLAUDE.md`
-- `.claude/agents/aim.md`
-- `.claude/commands/start-aim.md`
-- `.claude/commands/install-aim.md`
-- `.claude/commands/continue-aim.md`
+
+Add `.claude/agents/` or `.claude/commands/` only if your repository provides Claude-specific helper files.
 
 What each file is for:
 - `AGENTS.md` defines the canonical repo-aware AIM behavior.
@@ -211,7 +212,7 @@ What each file is for:
 - in Copilot, those same files also act as native custom-agent files.
 - `.github/prompts/` are optional prompt-entry helpers, mainly useful for Copilot-style command flows.
 - `adapters/codex/agile-iteration-method/SKILL.md` is the copyable Codex launcher/runtime guide for `/aim`.
-- Claude Code uses `CLAUDE.md` and `.claude/` as its adapter layer but does not replace `AGENTS.md`.
+- Claude Code uses `CLAUDE.md` as its adapter bridge. Optional `.claude/` helpers may extend that bridge, but they do not replace `AGENTS.md`.
 
 ### 2. Ignore live AIM runtime state
 
@@ -268,13 +269,9 @@ Mode: Strict
 Cost profile: Standard
 ```
 
-This repository also ships a small Claude starter layer:
-- `.claude/commands/start-aim.md`
-- `.claude/commands/install-aim.md`
-- `.claude/commands/continue-aim.md`
-- `.claude/agents/aim.md`
-
-If Claude Code exposes repo command files directly in your environment, use the shipped start command. Otherwise use the explicit start prompt above.
+This repository ships `CLAUDE.md` as the Claude Code bridge.
+Add `.claude/commands/` or `.claude/agents/` in target repositories only when you provide Claude-specific command packaging.
+Otherwise use the explicit start prompt above.
 
 If you want automatic continuation between increments, use `Mode: Auto` instead of `Mode: Strict`.
 
@@ -297,12 +294,10 @@ Add the core AIM files:
 Add optional Copilot prompt files if you want packaged Copilot entrypoints too:
 - `.github/prompts/`
 
-Add Claude Code packaging too if needed:
+Add Claude Code bridge support too if needed:
 - `CLAUDE.md`
-- `.claude/agents/aim.md`
-- `.claude/commands/start-aim.md`
-- `.claude/commands/install-aim.md`
-- `.claude/commands/continue-aim.md`
+
+Add `.claude/agents/` or `.claude/commands/` only when the target repo provides those helper files.
 
 Important:
 `.github/agents/aim*.agent.md` are not Copilot-only.
@@ -358,7 +353,7 @@ If someone wants the shortest path, this is it:
 3. Add `/.aim` to `.gitignore`.
 4. For Codex `/aim`, copy `adapters/codex/agile-iteration-method/` into `~/.codex/skills/agile-iteration-method/`.
 5. Optionally copy `.github/prompts/` if you want packaged Copilot prompt entrypoints too.
-6. Optionally add `CLAUDE.md` and `.claude/` if you want Claude Code support too.
+6. Add `CLAUDE.md` if you want Claude Code bridge support; add `.claude/` helpers only when you provide them.
 7. Open the repo in Codex, Copilot or Claude Code.
 8. Start with `/aim start "EPIC: <desired outcome>"`.
 9. If slash commands are unavailable, start with `EPIC: <desired outcome>`, `Mode: Strict`, and `Cost profile: Cost Control`.
@@ -459,8 +454,8 @@ In Codex, AIM reads and uses them as part of the repository instruction layer.
 
 Claude Code uses a separate adapter bridge:
 - `CLAUDE.md`
-- `.claude/agents/`
-- `.claude/commands/`
+- optional `.claude/agents/`
+- optional `.claude/commands/`
 
 These files extend the Claude adapter surface but they do not replace `AGENTS.md` as the canonical AIM contract.
 
@@ -468,14 +463,14 @@ These files extend the Claude adapter surface but they do not replace `AGENTS.md
 
 If you want to use AIM:
 1. [README.md](README.md)
-2. [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md) for the first run
-3. [Install AIM 1.6](docs/workflow/install-aim-1.6.md) when setup is missing
-4. [AIM 1.6 document map](docs/workflow/aim-1.6-doc-map.md) only when you need the broader path
+2. [Quick start AIM 1.7](docs/workflow/quick-start-aim-1.7.md) for the first run
+3. [Install AIM 1.7](docs/workflow/install-aim-1.7.md) when setup is missing
+4. [AIM 1.7 document map](docs/workflow/aim-1.7-doc-map.md) only when you need the broader path
 
 If you want to upgrade an existing AIM repo:
-1. [Migrate AIM 1.5 to AIM 1.6](docs/workflow/migrate-aim-1.5-to-1.6.md)
-2. [Quick start AIM 1.6](docs/workflow/quick-start-aim-1.6.md)
-3. [Troubleshoot AIM 1.6](docs/workflow/troubleshoot-aim-1.6.md)
+1. [Install AIM 1.7](docs/workflow/install-aim-1.7.md)
+2. [Migrate AIM 1.5 to AIM 1.6](docs/workflow/migrate-aim-1.5-to-1.6.md) only when upgrading an older 1.5 repository through the stable runtime bridge
+3. [Troubleshoot AIM 1.6](docs/workflow/troubleshoot-aim-1.6.md) for deeper runtime-family issues
 
 If you are implementing AIM itself:
 1. [AGENTS.md](AGENTS.md)
@@ -492,18 +487,28 @@ Do not start with `AGENTS.md` when the goal is just to install or run AIM in a r
   Claude Code bridge layer that maps AIM onto Claude Code without changing the shared runtime contract.
 - `docs/workflow/agile-iteration-method.md`
   The method and runtime explanation.
-- `docs/workflow/quick-start-aim-1.6.md`
-  The shortest correct start path.
-- `docs/workflow/install-aim-1.6.md`
-  Minimum viable installation guidance.
-- `docs/workflow/aim-1.6-doc-map.md`
-  Route map for the public docs and the correct next read.
+- `docs/workflow/quick-start-aim-1.7.md`
+  Current first-run front door.
+- `docs/workflow/install-aim-1.7.md`
+  Current installation front door.
+- `docs/workflow/aim-1.7-doc-map.md`
+  Current route map.
+- `docs/features/aim-cost-comparison.md`
+  Cost comparison against AIM 1.6-style use and undisciplined vibe coding.
 - `docs/workflow/copilot-layer.md`
   Optional GitHub Copilot packaging and workflow layer.
 - `adapters/codex/agile-iteration-method/SKILL.md`
   Copyable Codex skill that exposes `/aim` as a launcher/runtime guide.
+- `docs/workflow/release-aim-1.7.md`
+  Current release note.
+- `docs/workflow/quick-start-aim-1.6.md`
+  Stable runtime-family quick start under the 1.7 front door.
+- `docs/workflow/install-aim-1.6.md`
+  Stable runtime-family installation guidance.
+- `docs/workflow/aim-1.6-doc-map.md`
+  Stable runtime-family route map.
 - `docs/workflow/release-aim-1.6.md`
-  Release note and publish checklist for the current version.
+  Stable runtime-family release note.
 - `docs/workflow/migrate-aim-1.5-to-1.6.md`
   Upgrade guidance for existing AIM repos.
 - `docs/workflow/troubleshoot-aim-1.6.md`
