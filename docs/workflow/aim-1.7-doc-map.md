@@ -24,13 +24,18 @@ The 1.7 release line keeps the accepted 1.6 runtime-family docs as the deeper op
 - [AIM 1.6 document map](aim-1.6-doc-map.md)
 - [Troubleshoot AIM 1.6](troubleshoot-aim-1.6.md)
 
-## AIM 2.0 planning and adoption model
+## AIM 2.0 transition path
 
-Use these when exploring the low-footprint, reusable repo-intelligence direction after AIM 1.7:
+Use these when you want the current AIM 2.0 operating and install path on the way from AIM 1.7 to AIM 2.0:
 
+- [Quick start AIM 2.0](quick-start-aim-2.0.md)
+- [Install AIM 1.7](install-aim-1.7.md) for the current transition-aware install surface
 - [AIM 2.0 low-footprint adoption](aim-2-low-footprint-adoption.md)
-- [AIM 2.0 adoption strategy](../features/aim-2-enterprise-and-universal-adoption-strategy.md)
 - [AIM 2.0 repo profile and footprint model](../features/aim-2-repo-profile-and-footprint-model.md)
+- [AIM 2.0 adoption strategy](../features/aim-2-enterprise-and-universal-adoption-strategy.md)
+
+The broader AIM 2.0 release transition is still incomplete.
+Use this section as the current transition path, not as a claim that the full release switch is already finished.
 
 ## Why the split exists
 

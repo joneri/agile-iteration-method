@@ -51,6 +51,26 @@ The repo profile is reusable repo intelligence.
 
 It describes how this repository works, independent of any one Epic or branch.
 
+For Team AIM, the default tiny artifact is:
+
+```text
+aim.profile.yaml
+```
+
+It lives at the repository root and may either contain the small shared profile directly or point to managed/internal profile storage.
+
+For Personal AIM, the default local artifact is outside the repository:
+
+```text
+~/.aim/profiles/<repo-fingerprint>/profile.yaml
+```
+
+The ignored repo-local fallback is:
+
+```text
+.aim/profile.yaml
+```
+
 The smallest useful profile should capture:
 
 - repo identity and profile version
@@ -168,13 +188,18 @@ aimRepoProfile:
 Default storage:
 
 - runtime: installed tool or local adapter
-- repo profile: local user or adapter storage
+- repo profile: `~/.aim/profiles/<repo-fingerprint>/profile.yaml`
 - working state: local and ignored
 - docs: AIM distribution or links
 
 Repository mutation:
 
 - none required by default
+
+Fallback storage:
+
+- `.aim/profile.yaml` only when the adapter cannot use the user-level profile store
+- fallback remains ignored by the repository-level `/.aim` rule
 
 Use this when:
 
@@ -188,19 +213,24 @@ Use this when:
 Default storage:
 
 - runtime: installed tool or local adapter
-- repo profile: tiny committed profile or pointer
+- repo profile: root `aim.profile.yaml` as a tiny committed profile or pointer
 - working state: local by default
 - docs: AIM distribution or links
 
 Repository mutation:
 
-- one small profile surface, or one small pointer to shared profile storage
+- one small `aim.profile.yaml` profile surface, or one small pointer to shared profile storage
 
 Use this when:
 
 - teammates should reuse commands, conventions, risk zones, and validation paths
 - the team wants shared AIM behavior without copying full docs
 - adoption should be reviewable as repo metadata
+
+The Team AIM profile must not contain active Epic state, current Done Increment state, gate approval state, review findings for one branch, secrets, or copied AIM reference docs.
+
+When both Personal and Team profiles exist, use Personal profile facts as local reuse hints and Team profile facts as the shared baseline.
+Personal facts must not silently contradict Team commands, ownership, risk, or policy.
 
 ### Managed AIM
 
@@ -251,14 +281,24 @@ Full embedded use remains supported, but it is not the default definition of ado
 AIM 2.0 startup should expand context in this order:
 
 1. current working state
-2. reusable repo profile
-3. directly affected files
-4. nearest package, module, or service metadata
-5. nearest build/test/lint commands
-6. short authoritative repo docs named by the profile
-7. broader repository docs only when risk or missing evidence requires them
+2. personal local profile when present
+3. reusable team repo profile, normally root `aim.profile.yaml`
+4. directly affected files
+5. nearest package, module, or service metadata
+6. nearest build/test/lint commands
+7. short authoritative repo docs named by the profile
+8. broader repository docs only when risk or missing evidence requires them
 
 This keeps large repositories from paying for repo-wide rediscovery when the active work is local and low-risk.
+
+Operational startup behavior:
+
+- read `.aim/state.json` first when it exists
+- read the Personal AIM local profile next when it exists
+- read `aim.profile.yaml` after the personal profile when it exists
+- use the profile to select locality, commands, short authoritative docs, risk zones, freshness checks, and avoid-by-default context
+- read broader docs only after profile/state evidence shows they are needed
+- report profile reuse and avoided broad context at startup or Gate B
 
 Escalate discovery depth when:
 
@@ -272,11 +312,21 @@ Escalate discovery depth when:
 
 Reusable repo intelligence must be safe enough to trust.
 
+Before AIM treats a profile as reusable, the validator should report repo-profile readiness.
+
+Repo-profile readiness has four states:
+
+- `not_ready`: no AIM 2.0 profile artifact exists yet; `AGENTS.md` can still bridge AIM 1.7 behavior, but Personal/Team profile reuse is not ready.
+- `incomplete_profile`: a profile file exists, but it does not yet contain recognizable repo intelligence such as commands, locality, ownership, risk, freshness, or cost fields.
+- `repair_profile`: a profile file exists, but it appears to contain active AIM working state and must be repaired before reuse.
+- `profile_ready`: a profile file exists, contains repo-intelligence markers, and does not contain active working-state markers.
+
 AIM may reuse a profile when:
 
 - profile ownership is clear
 - the profile applies to the current repo identity
 - branch or base commit differences are understood
+- the validator reports `profile_ready`
 - no refresh trigger has fired
 - the active work is inside a known locality boundary
 - the selected cost profile allows profile reuse
@@ -304,9 +354,12 @@ At startup or Gate B, AIM should be able to report:
 - adoption mode
 - footprint level
 - whether a repo profile was reused
+- what profile facts were reused
 - profile freshness result
 - scan depth used
+- locality selected from the profile or current task
 - reason for any profile refresh
+- docs or scans avoided because the profile was enough
 - review depth expected
 - whether subagents are disabled, allowed, or escalated
 - which docs or areas were intentionally avoided
@@ -358,10 +411,14 @@ At Gate E, AIM should be able to report:
 - Default working state: local and ignored.
 - Default discovery: locality-first.
 - Default cost reporting: short startup or Gate B summary.
-- Fallback if no profile exists: create a minimal local profile from directly affected files and nearest commands.
+- Fallback if no profile exists: report `not_ready`, then create a minimal local profile from directly affected files and nearest commands when profile reuse is needed.
+- Fallback if a profile is incomplete: report `incomplete_profile` and add the smallest missing repo-intelligence sections before relying on reuse.
+- Fallback if a profile contains active state: report `repair_profile` and move active Epic, gate, role, review, or acceptance state back to `.aim` working-state artifacts.
 - Fallback if profile is stale: refresh the smallest affected locality.
 - Fallback if policy conflicts: stop and escalate before continuing.
 - Fallback if a team wants sharing: export or commit only the tiny profile surface, not full AIM docs.
+- Team AIM artifact: use root `aim.profile.yaml` unless a managed policy explicitly chooses another pointer path.
+- Personal AIM artifact: use `~/.aim/profiles/<repo-fingerprint>/profile.yaml`; use `.aim/profile.yaml` only as an ignored adapter fallback.
 
 ## Edge cases
 
@@ -394,6 +451,8 @@ The single best check is whether AIM can answer:
 > What did you reuse, where did it come from, and why was it fresh enough?
 
 - Primary log: startup or Gate B profile-source summary
+- Validator check: `AIM 2.0 repo profile readiness`
+- Summary shape: [AIM 2.0 profile source summary](aim-2-profile-source-summary.md)
 - What "good" looks like:
   - adoption mode is explicit
   - footprint level is explicit
@@ -411,6 +470,11 @@ The single best check is whether AIM can answer:
 ## Related files
 
 - `docs/features/aim-2-enterprise-and-universal-adoption-strategy.md`
+- `docs/features/aim-2-migration-classification-checks.md`
+- `docs/features/aim-2-personal-local-profile-storage.md`
+- `docs/features/aim-2-profile-source-summary.md`
+- `docs/features/aim-2-tiny-team-profile-example.md`
+- `docs/features/aim-2-working-state-boundaries.md`
 - `docs/features/aim-cost-comparison.md`
 - `docs/features/aim-cost-control-mode.md`
 - `docs/features/aim-cost-saving-method.md`
@@ -420,4 +484,12 @@ The single best check is whether AIM can answer:
 
 ## Change log
 
+- 2026-06-05: Added profile-first startup behavior so adapters consume `aim.profile.yaml` before broader docs.
+- 2026-06-05: Linked the compact startup/Gate B profile-source summary.
+- 2026-06-05: Added Personal AIM local profile storage path and Team profile layering rules.
+- 2026-06-05: Defined root `aim.profile.yaml` as the concrete tiny Team AIM profile artifact/pointer.
+- 2026-06-05: Added repo-profile readiness states for validator-backed Personal/Team profile reuse.
+- 2026-06-05: Linked the tiny Team AIM profile example.
+- 2026-06-05: Linked the working-state boundary model.
+- 2026-06-05: Linked AIM 1.7 migration classification checks.
 - 2026-06-04: Initial concrete AIM 2.0 repo profile and footprint model.

@@ -1,4 +1,7 @@
 
 # macOS
 .DS_Store
+
+# AIM local runtime and Personal AIM profile fallback.
+# Team AIM uses committed root aim.profile.yaml by explicit choice.
 /.aim

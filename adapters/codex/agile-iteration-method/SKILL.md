@@ -16,16 +16,33 @@ Attribution: based on Agile Iteration Method 1.7 by Jonas Eriksson, licensed as 
 2. Detect or create `.aim` before starting or resuming an AIM run.
 3. Read `.aim/state.json` first when it exists.
 4. If `.aim/state.json` describes an incomplete Epic, resume that checkpoint instead of starting a new Epic.
-5. Load only the repo-aware AIM context needed for the current state, role, gate, cost profile, and command:
+5. Read the Personal AIM local profile next when it exists: `~/.aim/profiles/<repo-fingerprint>/profile.yaml`, or ignored fallback `.aim/profile.yaml`.
+6. Read `aim.profile.yaml` after the personal profile when it exists, treating it as the shared Team AIM baseline.
+7. Use profile facts to choose locality, validation commands, short authoritative docs, risk zones, freshness triggers, and context to avoid before reading broader docs.
+8. Load only the additional repo-aware AIM context needed for the current state, role, gate, cost profile, and command:
    `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, `.github/agents/aim*.agent.md`, then active adapter helpers such as `.github/prompts/*`, `CLAUDE.md`, `.claude/agents/*`, and `.claude/commands/*`.
-6. Read `CONTRIBUTING.md` first when the target repository is the AIM repository itself and a change is being made.
-7. Default to `Mode: Strict` unless the user explicitly chooses `Mode: Auto`.
-8. Default to `Cost profile: Standard` unless the user explicitly chooses `Cost Control` or `Deep`.
-9. Start visible AIM phases with exactly `Role: PO`, `Role: TDO`, `Role: Dev`, or `Role: Reviewer`, and show `Mode: Strict` or `Mode: Auto`.
-10. Show `Cost profile` when it is not `Standard` or when resource use is part of the user's request.
-11. Keep the public front door thin: route first to start, continue, or validate before explaining the full method.
+9. Read `CONTRIBUTING.md` first when the target repository is the AIM repository itself and a change is being made.
+10. Default to `Mode: Strict` unless the user explicitly chooses `Mode: Auto`.
+11. Default to `Cost profile: Standard` unless the user explicitly chooses `Cost Control` or `Deep`.
+12. Start visible AIM phases with exactly `Role: PO`, `Role: TDO`, `Role: Dev`, or `Role: Reviewer`, and show `Mode: Strict` or `Mode: Auto`.
+13. Show `Cost profile` when it is not `Standard` or when resource use is part of the user's request.
+14. Keep the public front door thin: route first to start, continue, or validate before explaining the full method.
 
 Treat unnecessary broad context loading, long low-risk markdown artifacts, repeated major-doc rereads, and context-hog files as budget bugs.
+When a Personal or Team profile is present, report whether it was reused before broader docs. Profiles can guide locality and validation, but they cannot override AIM core, `.aim/state.json`, Team policy, gate ownership, escalation, or current repository evidence.
+When profile reuse affects startup or Gate B, include this compact profile-source summary:
+
+```text
+Profile source: <personal profile path and/or aim.profile.yaml> (profile_ready)
+Layering: <personal narrows team baseline | team profile baseline | personal profile only | no profile source>
+Reused facts: commands, locality, risk zones, short docs, freshness, avoid-by-default context
+Selected locality: <area>
+Avoided context: <docs/scans avoided>
+Expansion reason: <none or reason>
+Cheap validation first: <command>
+```
+
+When the repository provides `scripts/validate_aim_runtime.py`, use its `AIM 2.0 profile-source summary` output as the generated startup summary.
 
 Stop and ask only when an escalation condition applies: scope expansion beyond Gate B, unclear or contradictory Epic intent, unmet acceptance checks without new assumptions, trust/data/user-facing risk, missing required files/APIs/data, or contradictory repo policy.
 
@@ -92,11 +109,12 @@ Use the shared bootstrap sequence:
 2. Detect or create `.aim`.
 3. Read `.aim/state.json` first when it exists.
 4. Resume the active checkpoint or initialize a new Epic.
-5. Load and normalize only the repo-aware context needed for the current state, command, and risk.
-6. Resolve execution mode.
-7. Resolve cost profile.
-8. Resolve platform capability and repo-policy limits.
-9. Enter the role sequence.
+5. Read `aim.profile.yaml` when present and use it before broader docs to select locality, commands, short docs, risk zones, freshness checks, and avoid-by-default context.
+6. Load and normalize only the additional repo-aware context needed for the current state, command, and risk.
+7. Resolve execution mode.
+8. Resolve cost profile.
+9. Resolve platform capability and repo-policy limits.
+10. Enter the role sequence.
 
 Only the main AIM thread may write `.aim/state.json`, advance gates, change role, change increment status, or accept/complete an Epic. Subagents, when explicitly allowed by the host and repo policy, may only produce scoped analysis in allowed locations and never own runtime state.
 

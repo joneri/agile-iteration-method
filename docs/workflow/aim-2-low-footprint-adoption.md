@@ -30,7 +30,7 @@ Default behavior:
 - no committed AIM files
 - local runtime from the tool or adapter
 - local working state
-- local repo profile
+- local repo profile at `~/.aim/profiles/<repo-fingerprint>/profile.yaml`
 - AIM docs read from the installed package or canonical AIM repository
 
 Best for:
@@ -46,7 +46,7 @@ Use Team AIM when a team wants to share repo adaptation without copying the full
 
 Default behavior:
 
-- tiny committed profile surface or pointer
+- root `aim.profile.yaml` as a tiny committed profile surface or pointer
 - shared repo profile facts
 - local working state by default
 - runtime still supplied by the tool or adapter
@@ -91,7 +91,7 @@ Full embedded AIM remains valid, but it is not the default definition of adoptio
 | Layer | Personal AIM | Team AIM | Managed AIM |
 | --- | --- | --- | --- |
 | Runtime | tool or local adapter | tool or local adapter | approved org adapter |
-| Repo profile | local user/adapter storage | tiny committed profile or pointer | managed registry |
+| Repo profile | `~/.aim/profiles/<repo-fingerprint>/profile.yaml` | root `aim.profile.yaml` profile or pointer | managed registry |
 | Working state | local and ignored | local by default | local or approved shared store |
 | Docs | installed package or links | installed package or links | managed docs or canonical links |
 
@@ -117,10 +117,19 @@ aim start "EPIC: <goal>"
 What the runtime should do:
 
 1. avoid committed AIM files by default
-2. create or reuse a local repo profile
+2. create or reuse `~/.aim/profiles/<repo-fingerprint>/profile.yaml`
 3. create local working state
 4. scan only the affected area first
 5. load broader docs only when risk requires it
+
+Adapter fallback:
+
+```text
+.aim/profile.yaml
+```
+
+Use the fallback only when the adapter cannot use the user-level profile store.
+It remains local because `.aim/` is ignored.
 
 ### Team start
 
@@ -130,9 +139,15 @@ aim profile export --tiny
 aim start "EPIC: <goal>"
 ```
 
+Until a final CLI exists, the concrete Team AIM artifact is:
+
+```text
+aim.profile.yaml
+```
+
 What the runtime should do:
 
-1. create or reuse a small shared repo profile
+1. create or reuse root `aim.profile.yaml` as a small shared repo profile or pointer
 2. keep active working state local unless the team chooses otherwise
 3. avoid copying full AIM docs into the repo
 4. let teammates reuse commands, conventions, risk zones, and validation paths
@@ -157,16 +172,35 @@ What the runtime should eventually do:
 At startup, AIM should load context in this order:
 
 1. active working state
-2. reusable repo profile
-3. directly affected files
-4. nearest package, service, or module metadata
-5. nearest commands for build, test, lint, or validation
-6. short authoritative docs named by the profile
-7. broader repository docs only when risk or missing evidence requires them
+2. Personal AIM local profile when present
+3. Team AIM profile, normally root `aim.profile.yaml`
+4. directly affected files
+5. nearest package, service, or module metadata
+6. nearest commands for build, test, lint, or validation
+7. short authoritative docs named by the profile
+8. broader repository docs only when risk or missing evidence requires them
 
 This is the main cold-start cost reduction.
 
 AIM should not scan a large monorepo broadly when the work is local, low-risk, and covered by a fresh profile.
+
+For Team AIM, profile-first startup means:
+
+- read `.aim/state.json` first when it exists
+- read `aim.profile.yaml` before broader workflow or adapter docs
+- use profile locality and command hints to plan the smallest safe scan
+- use profile `shortAuthoritativeDocs` only when needed
+- use profile `avoidByDefault` and `knownContextHogs` as budget guidance
+- escalate when profile freshness, trust, or current repo evidence is uncertain
+
+For Personal AIM, profile-first startup means:
+
+- read `.aim/state.json` first when it exists
+- read `~/.aim/profiles/<repo-fingerprint>/profile.yaml` next when it exists
+- fall back to ignored `.aim/profile.yaml` only when user-level storage is unavailable
+- reuse profile facts across branches after a freshness check
+- keep personal profile facts out of commits
+- layer personal hints over the Team profile only when they do not contradict shared commands, ownership, risk, or policy
 
 ## Reusing repo intelligence
 
@@ -198,9 +232,13 @@ At startup or Gate B, the runtime should report:
 - adoption mode
 - footprint level
 - whether a repo profile was reused
+- what profile facts were reused
 - profile freshness result
 - scan depth
+- selected locality
 - reason for any profile refresh
+- broader docs or scans avoided
+- expansion reason when broader context is loaded
 - expected review depth
 - whether broader docs were avoided
 
@@ -253,15 +291,19 @@ If repo profile reuse conflicts with trust, trust wins.
 
 Good follow-up increments:
 
-1. define a tiny committed profile example
-2. define local working-state placement for Personal AIM
-3. update install docs with Personal and Team AIM paths
-4. update adapter guidance with profile reuse expectations
-5. add validator checks for profile/state separation
+1. make a runtime helper emit the profile-source summary from personal and team profile sources
+3. prepare README/front-door wording when AIM 2.0 release scope is clearer
+
+For the concrete tiny Team AIM profile artifact, see [AIM 2.0 tiny Team profile artifact](../features/aim-2-tiny-team-profile-example.md).
+For Personal AIM local storage, see [AIM 2.0 Personal local profile storage](../features/aim-2-personal-local-profile-storage.md).
+For the compact startup/Gate B summary, see [AIM 2.0 profile source summary](../features/aim-2-profile-source-summary.md).
+For active state boundaries, see [AIM 2.0 working-state boundaries](../features/aim-2-working-state-boundaries.md).
 
 ## Related files
 
 - `docs/features/aim-2-enterprise-and-universal-adoption-strategy.md`
 - `docs/features/aim-2-repo-profile-and-footprint-model.md`
+- `docs/features/aim-2-tiny-team-profile-example.md`
+- `docs/features/aim-2-working-state-boundaries.md`
 - `docs/features/aim-cost-comparison.md`
 - `docs/workflow/aim-1.7-doc-map.md`

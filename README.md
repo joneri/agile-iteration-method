@@ -1,8 +1,8 @@
-# Agile Iteration Method (AIM) v1.7
+# Agile Iteration Method (AIM) v2.0
 
-AIM 1.7 is the cost-saving method for GitHub Copilot, Codex, Claude Code, and other coding-agent platforms.
+AIM 2.0 is the low-footprint adoption release for GitHub Copilot, Codex, Claude Code, and other coding-agent platforms.
 
-It gives AI work a clear Agile loop instead of a prompt spiral, and it does that in a way that is deliberately designed to reduce wasted tokens, wasted AI credits, and wasted agent passes.
+It gives AI work a clear Agile loop instead of a prompt spiral, and it makes that loop easier to start personally, share with a team, and reuse across sessions without committing a broad AIM package into every repository.
 
 One loop:
 
@@ -27,15 +27,20 @@ Without a method, agentic development usually breaks in predictable ways:
 
 AIM fixes that with clear roles, gates and ownership.
 
-## What's new in v1.7
+## What's new in v2.0
 
-AIM 1.7 keeps the accepted core loop and stable runtime contract, but turns cost savings into the main public promise.
+AIM 2.0 keeps the accepted core loop and stable runtime contract, but changes the adoption model.
 
+- Personal AIM lets one developer use AIM without required committed AIM files
+- Team AIM lets a team share repo adaptation through a tiny `aim.profile.yaml` profile or pointer
+- AIM runtime, repo profile, working state and docs are treated as separate things
+- profile-first startup reuses repo intelligence before broad scans
+- branch and session reuse become part of the normal operating model
 - Cost profiles are now explicit: `Standard`, `Cost Control`, and `Deep`
 - `Cost Control` keeps AIM gates and escalation rules while reducing context, output, and verification depth for low-risk work
 - `Standard` AIM now uses progressive context loading by default instead of rereading every method document
 - `Deep` is available for high-risk work where broader inspection and stronger review are worth the spend
-- the public front door now says the quiet part out loud: AIM is for cutting unnecessary spend in GitHub Copilot and other coding-agent platforms
+- AIM 1.7 remains available as the full embedded and cost-saving fallback path
 - GitHub Copilot AI Credits are treated as a first-class operator concern after the June 1, 2026 billing change
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
@@ -47,28 +52,30 @@ AIM 1.7 keeps the accepted core loop and stable runtime contract, but turns cost
 
 ## Why teams use it
 
-Teams use AIM 1.7 because it saves money without turning agentic work into chaos:
+Teams use AIM 2.0 because it makes disciplined agentic work easier to adopt without turning the repository into a method package:
 - you can resume real work instead of re-explaining context every session
 - you can inspect runtime state instead of guessing what the agent thinks is happening
 - you can use Codex, Copilot and Claude Code with one shared conceptual model
 - you can use more focused files when that avoids context hogs and keeps boundaries cohesive
 - you can delegate bounded work without losing ownership of gates or acceptance
-- you can install AIM into a real repo without turning the repo into an experiment
-- the public docs now explain how to spend less on AI Credits and tokens without weakening trust or review
+- you can start personally with no required committed AIM files
+- you can share team repo knowledge through a tiny profile instead of copying full AIM docs
+- you still get the cost discipline from AIM 1.7 without weakening trust or review
 
-## Why 1.7 and not 2.0
+## Why 2.0
 
-This is a strong new release line, not a broken-compatibility reset.
+AIM 2.0 is a release identity change, not a method break.
 
 - the core loop is still `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
 - the accepted runtime contract and `.aim` ownership model stay intact
-- the big change is the public promise and operator guidance: AIM is now positioned explicitly as the method for cost-saving agentic delivery
+- the big change is adoption: Personal AIM and Team AIM become the normal starting paths
+- AIM 1.7 remains the full embedded and cost-saving fallback path when a repository owner explicitly wants that model
 
-`2.0` would imply a method break. This release is sharper than that, not more chaotic.
+The method stays stable. The install footprint gets smaller and reuse gets stronger.
 
 ## How AIM saves money
 
-AIM 1.7 reduces spend in ways that are concrete, not mystical:
+AIM 2.0 keeps AIM 1.7's cost discipline and extends it to adoption, startup and reuse:
 
 - it prevents uncontrolled retries by forcing one approved Done Increment at a time
 - it keeps low-risk work in `Cost Control` instead of burning `Deep`-style context and review everywhere
@@ -89,26 +96,36 @@ Before AIM 1.3, the method was there but the runtime story was too loose.
 
 With AIM 1.4, the runtime became inspectable and adapter-aware.
 
-With AIM 1.7:
+With AIM 2.0:
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
+- `aim.profile.yaml` is the default tiny Team AIM profile when a team chooses to share repo intelligence
+- Personal AIM can keep reusable repo knowledge outside the repository by default
 - small scope is defined by behavior and user value, not by lowest possible file count
 - runtime depth is explicit through cost profiles
 - normal AIM loads context progressively instead of treating every run as a full reread
 - the public onboarding path makes the latest guidance obvious to new users
 - the front door starts with three simple choices instead of the full method
-- Codex users can see and install the repo-bundled AIM skill from the first AIM 1.7 command
+- Codex users can see and install the repo-bundled AIM skill from the first AIM command
 - adapter guidance, packaging, and upgrade docs now read as one current release surface
 
-That is the main upgrade: AIM 1.7 makes the accepted runtime easier to afford without weakening ownership, gates, or escalation.
+That is the main upgrade: AIM 2.0 makes the accepted runtime easier to adopt, reuse and afford without weakening ownership, gates or escalation.
 
 ## Start Here
 
 Choose one:
 
-1. [Start AIM](docs/workflow/quick-start-aim-1.7.md)
-2. [Continue or troubleshoot AIM](docs/workflow/troubleshoot-aim-1.6.md)
-3. [Install or upgrade AIM](docs/workflow/install-aim-1.7.md)
+1. [Start AIM 2.0 in Personal or Team mode](docs/workflow/quick-start-aim-2.0.md)
+2. [Start AIM 1.7 full embedded or cost-saving path](docs/workflow/quick-start-aim-1.7.md)
+3. [Continue or troubleshoot AIM](docs/workflow/troubleshoot-aim-1.6.md)
+4. [Install or upgrade AIM](docs/workflow/install-aim-1.7.md)
+
+The AIM 2.0 path is the default adoption path for new Personal AIM or Team AIM use:
+
+- Personal AIM: start AIM without required committed AIM files
+- Team AIM: share a tiny repo profile through `aim.profile.yaml`
+
+AIM 1.7 remains available for the full embedded path and the cost-saving release story when that is the better fit.
 
 Fast start:
 
@@ -142,7 +159,7 @@ Important installation rule:
 - `/aim` is the normal Codex start path when the AIM skill is installed and enabled.
 - A fully AIM-aware repo can still be used in Codex without the skill if you start with explicit AIM intent in plain language.
 - The skill is still useful in a prepared repo because it gives you the clean `/aim` entrypoint plus status, help, config, validate and upgrade helpers.
-- On the first AIM 1.7 command in Codex, AIM should make the bundled skill path and local install target visible.
+- On the first AIM command in Codex, AIM should make the bundled skill path and local install target visible.
 
 60-second local Codex skill install:
 
@@ -167,9 +184,9 @@ The skill is copyable adapter packaging. It must point back to the repository co
 | Copilot | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `.github/prompts/` | select `aim` and run `/aim start "EPIC: ..."` | `.github/agents/aim*.agent.md`; prompts optional |
 | Claude Code | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` + `CLAUDE.md` | optional repo-local `.claude/commands/` and `.claude/agents/` | repo Claude command if provided, or explicit `EPIC: ...` | `CLAUDE.md`; `.claude/` helpers optional |
 
-## Starting A New Repo With AIM v1.7
+## Starting A New Repo With Full Embedded AIM 1.7
 
-Use this path when the repository does not exist yet or when you want to bootstrap a new repo around AIM from day one.
+Use this fallback path when the repository owner intentionally wants the full embedded AIM 1.7 package in a new repository from day one.
 
 ### 1. Copy the AIM files into the new repo
 
@@ -463,8 +480,8 @@ These files extend the Claude adapter surface but they do not replace `AGENTS.md
 
 If you want to use AIM:
 1. [README.md](README.md)
-2. [Quick start AIM 1.7](docs/workflow/quick-start-aim-1.7.md) for the first run
-3. [Install AIM 1.7](docs/workflow/install-aim-1.7.md) when setup is missing
+2. [Quick start AIM 2.0](docs/workflow/quick-start-aim-2.0.md) for the first run
+3. [Install AIM 1.7](docs/workflow/install-aim-1.7.md) when setup is missing or when you need the full embedded fallback
 4. [AIM 1.7 document map](docs/workflow/aim-1.7-doc-map.md) only when you need the broader path
 
 If you want to upgrade an existing AIM repo:
@@ -488,11 +505,11 @@ Do not start with `AGENTS.md` when the goal is just to install or run AIM in a r
 - `docs/workflow/agile-iteration-method.md`
   The method and runtime explanation.
 - `docs/workflow/quick-start-aim-1.7.md`
-  Current first-run front door.
+  AIM 1.7 full embedded and cost-saving fallback front door.
 - `docs/workflow/install-aim-1.7.md`
-  Current installation front door.
+  Transition-aware installation front door with AIM 2.0 operating choices and AIM 1.7 full embedded fallback.
 - `docs/workflow/aim-1.7-doc-map.md`
-  Current route map.
+  Current transition route map.
 - `docs/features/aim-cost-comparison.md`
   Cost comparison against AIM 1.6-style use and undisciplined vibe coding.
 - `docs/workflow/copilot-layer.md`

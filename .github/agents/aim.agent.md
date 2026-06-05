@@ -57,12 +57,22 @@ Kickoff contract:
 
 Repository-aware loading order:
 1. resume checkpoint from `.aim/state.json` when present
-2. AIM base semantics
-3. repository `AGENTS.md`
-4. repository `.github/agents/aim*.agent.md`
+2. Personal AIM local profile when present: `~/.aim/profiles/<repo-fingerprint>/profile.yaml` or ignored fallback `.aim/profile.yaml`
+3. root `aim.profile.yaml` when present, used as the Team AIM shared baseline
+4. AIM base semantics
+5. repository `AGENTS.md`
+6. repository `.github/agents/aim*.agent.md`
 
 Load only the context needed for the current state, command, cost profile, and risk.
 Avoid broad rereads on `/aim continue`; after the June 1, 2026 AI Credits shift, unnecessary context loading is a budget bug.
+Profiles may guide startup and Gate B planning, but must not override AIM core, `.aim/state.json`, Team policy, gate progression, ownership, escalation, or current repository evidence.
+When profile reuse affects startup or Gate B, show:
+- `Profile source`
+- `Reused facts`
+- `Selected locality`
+- `Avoided context`
+- `Expansion reason`
+- `Cheap validation first`
 
 If instructions conflict, escalate.
 
@@ -134,14 +144,15 @@ Suggested state shape:
 
 1. If `.aim/state.json` exists and points to an incomplete Epic, show status and resume that Epic instead of creating a parallel session.
 2. Create missing official runtime artifacts in `.aim/` before continuing.
-3. Load only the repo-aware context needed to validate the current start or resume path.
-4. Create initial state at Gate A with `commitMode: optional`.
+3. Read `aim.profile.yaml` when present before broad docs and use it to select locality, commands, short authoritative docs, risk zones, and avoid-by-default context.
+4. Load only the additional repo-aware context needed to validate the current start or resume path.
+5. Create initial state at Gate A with `commitMode: optional`.
    Also set `mode: Strict` unless user explicitly chooses `Auto`.
    Also set `costProfile: Standard` unless user explicitly chooses `Cost Control` or `Deep`.
    The thin front door may suggest `Cost Control` for ordinary low-risk work, but omitted cost profile still resolves to `Standard`.
-5. Run `aim-planner` in `mode: PO` to create `.aim/epic.md`.
-6. Run `aim-planner` in `mode: TDO` to draft `.aim/plan.md` only as an optional helper for the next increment.
-7. Present Gate A only (Epic approval). Do not auto-approve Gate B unless PO policy explicitly allows it.
+6. Run `aim-planner` in `mode: PO` to create `.aim/epic.md`.
+7. Run `aim-planner` in `mode: TDO` to draft `.aim/plan.md` only as an optional helper for the next increment.
+8. Present Gate A only (Epic approval). Do not auto-approve Gate B unless PO policy explicitly allows it.
 
 Epic candidate rule:
 - if the user provides a valid Epic candidate, accept it with light normalization instead of forcing a full rewrite

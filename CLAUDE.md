@@ -8,11 +8,13 @@ This file maps that contract onto Claude Code's instruction and command surface.
 ## Recommended layer order
 
 1. AIM base semantics
-2. repository `AGENTS.md`
-3. repository `.github/agents/aim*.agent.md`
-4. repository `CLAUDE.md`
-5. repository `.claude/agents/*`
-6. repository `.claude/commands/*`
+2. Personal AIM local profile when present
+3. repository `aim.profile.yaml` for shared Team AIM repo intelligence when present
+4. repository `AGENTS.md`
+5. repository `.github/agents/aim*.agent.md`
+6. repository `CLAUDE.md`
+7. repository `.claude/agents/*`
+8. repository `.claude/commands/*`
 
 Later Claude-specific layers may refine execution for Claude Code, but they must not contradict the shared AIM runtime contract.
 
@@ -24,6 +26,8 @@ Keep in mind:
 ## Claude Code adapter rules
 
 - Treat `AGENTS.md` as the source of truth for AIM behavior in this repository.
+- Treat Personal AIM local profile storage, when present, as local reuse hints loaded before broader docs.
+- Treat root `aim.profile.yaml`, when present, as shared Team AIM repo intelligence to load before broader docs for locality, validation commands, short authoritative docs, risk zones, freshness triggers, and context to avoid.
 - Use `docs/workflow/agile-iteration-method.md` for the method and runtime explanation.
 - Treat `.aim/` as the official AIM runtime workspace.
 - Treat `.aim/state.json` as the authoritative runtime checkpoint.
@@ -32,6 +36,8 @@ Keep in mind:
 - Use `Cost profile: Cost Control` for low-risk reversible work and escalate to `Standard` or `Deep` when risk appears.
 - Prefer cohesive files and clear module boundaries when they reduce future context cost and preserve the approved behavior.
 - Do not create context hogs or arbitrary file splits just to satisfy a superficial diff-size goal.
+- Do not let Personal or Team profiles override AIM core, `.aim/state.json`, Team policy, gate progression, ownership, escalation, or current repository evidence.
+- When profile reuse affects startup or Gate B, show a compact profile-source summary with source, reused facts, selected locality, avoided context, expansion reason and cheap validation first.
 - Keep the main AIM thread as the only owner of:
   - `.aim/state.json`
   - gate progression

@@ -179,9 +179,50 @@ AIM 1.4 defines one shared conceptual startup sequence across adapters:
 2. detect or create `.aim`
 3. read `.aim/state.json` first when it exists
 4. resume the active checkpoint or initialize a new Epic
-5. load only the repo-aware AIM context needed for the current state, role, gate, cost profile, and requested command
-6. resolve execution mode, cost profile, and platform capability or repo-policy limits
-7. enter the AIM role sequence
+5. read `aim.profile.yaml` when present and use it as the first reusable repo-intelligence source
+6. load only the additional repo-aware AIM context needed for the current state, role, gate, cost profile, and requested command
+7. resolve execution mode, cost profile, and platform capability or repo-policy limits
+8. enter the AIM role sequence
+
+### Profile-first startup
+
+Team AIM can provide a root `aim.profile.yaml` profile.
+When it exists, adapters should read it before broad workflow docs, adapter guides, or repository-wide discovery.
+
+The profile may guide:
+
+- affected locality
+- nearest validation commands
+- short authoritative docs
+- risk zones
+- freshness triggers
+- known context hogs
+- areas to avoid by default
+
+The profile must not own:
+
+- AIM core semantics
+- `.aim/state.json`
+- current Epic or Done Increment state
+- gate progression
+- approval or acceptance decisions
+- escalation decisions
+
+If the profile conflicts with current repository evidence, AIM treats it as stale or incomplete and escalates or refreshes the smallest affected area.
+
+At startup or Gate B, AIM should show a compact profile-source summary when profile reuse affects context selection:
+
+```text
+Profile source: aim.profile.yaml (profile_ready)
+Reused facts: commands, locality, risk zones, short docs, freshness, avoid-by-default context
+Selected locality: <directly affected area or nearest known area>
+Avoided context: <broad docs, adapter docs, repo-wide scan, or none>
+Expansion reason: <none | missing evidence | stale profile | risk | ownership | user requested Deep>
+Cheap validation first: <command or nearest check>
+```
+
+This summary is not a new gate.
+It explains why AIM stayed local or expanded context.
 
 ### Cost-first bootstrap
 
@@ -189,6 +230,7 @@ AIM should spend the first tokens or AI Credits on deciding whether it can resum
 The runtime must check durable state before broad rereads:
 
 - read `.aim/state.json` before rereading large method docs
+- read `aim.profile.yaml`, when present and profile-ready, before broader docs or repo-wide scanning
 - run the validator, when available, before manual artifact sweeps
 - load the shortest authoritative context that can answer the current command
 - reuse normalized runtime context from `.aim/runtime-context.md` when it is present and still coherent

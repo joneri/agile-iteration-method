@@ -200,13 +200,38 @@ All adapters must follow the same conceptual startup flow:
 2. detect or create `.aim`
 3. read `.aim/state.json` first when it exists
 4. resume the active checkpoint or initialize a new Epic
-5. load only the repo-aware AIM context needed for the current state, role, gate, cost profile, and requested command
-6. resolve execution mode, cost profile, and platform capability or repo-policy limits
-7. enter the AIM role sequence
+5. if a Personal AIM local profile exists, read it before broader repo docs
+6. if `aim.profile.yaml` exists, read it as the Team AIM shared baseline
+7. use available profile facts to choose locality, commands, short authoritative docs, risk zones, freshness triggers, and context to avoid
+8. load only the additional repo-aware AIM context needed for the current state, role, gate, cost profile, and requested command
+9. resolve execution mode, cost profile, and platform capability or repo-policy limits
+10. enter the AIM role sequence
+
+Profile-first startup rule:
+- the Personal AIM default profile path is `~/.aim/profiles/<repo-fingerprint>/profile.yaml`
+- `.aim/profile.yaml` is an ignored adapter fallback when user-level profile storage is unavailable
+- `aim.profile.yaml` is the first reusable repo-intelligence artifact for Team AIM
+- read Personal and Team profiles after durable state and before broad workflow docs, adapter guides, or repo-wide discovery
+- use profile facts to choose the smallest safe locality and cheapest relevant validation first
+- use profile `shortAuthoritativeDocs` only when the current role, gate, risk, or missing evidence requires more context
+- use profile `avoidByDefault` and `knownContextHogs` entries as budget guidance
+- at startup or Gate B, show a compact profile-source summary when profile reuse affects context selection
+- when Personal and Team profiles both exist, treat Team profile facts as the shared baseline and Personal profile facts as local reuse hints
+- do not let any profile override AIM core, `.aim/state.json`, gate progression, ownership, escalation, shared Team policy, or current repository evidence
+
+Profile-source summary shape:
+- `Profile source`: Personal profile path, `aim.profile.yaml`, readiness status, or `none`
+- `Layering`: how Personal and Team profile sources were resolved
+- `Reused facts`: commands, locality, risk zones, short docs, freshness, and avoid-by-default context used for this run
+- `Selected locality`: directly affected area or nearest known profile area
+- `Avoided context`: broad docs, adapter docs, repo-wide scans, or `none`
+- `Expansion reason`: `none`, missing evidence, stale profile, risk, ownership boundary, or user-requested `Deep`
+- `Cheap validation first`: nearest relevant validation command when known
 
 Cost-first bootstrap rule:
 - resume from `.aim/state.json` before rereading major workflow docs or rebuilding full runtime context
-- use the validator or direct state evidence before manual artifact sweeps
+- when `aim.profile.yaml` exists and passes readiness checks, reuse it before broad scans
+- use the validator or direct state evidence before manual artifact sweeps; when available, use validator profile-source summary output as startup evidence
 - avoid rereading large docs such as `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, or adapter guides unless the current state, command, risk, or missing context requires them
 - treat unnecessary broad context loading, long low-risk markdown artifacts, and context-hog files as budget bugs
 - preserve all gate, ownership, and escalation semantics while reducing runtime depth

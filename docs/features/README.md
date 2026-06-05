@@ -19,7 +19,13 @@ Create or update a feature explanation when:
 
 Examples:
 - aim-2-enterprise-and-universal-adoption-strategy.md
+- aim-2-migration-classification-checks.md
+- aim-2-personal-local-profile-storage.md
+- aim-2-profile-source-summary.md
+- aim-2-release-path-readiness-audit.md
 - aim-2-repo-profile-and-footprint-model.md
+- aim-2-tiny-team-profile-example.md
+- aim-2-working-state-boundaries.md
 - aim-cost-control-mode.md
 - aim-cost-comparison.md
 - aim-cost-review-checklist.md

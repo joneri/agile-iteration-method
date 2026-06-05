@@ -1,0 +1,98 @@
+aimRepoProfile:
+  profileVersion: "0.1"
+  repoIdentity:
+    name: agile-iteration-method
+    defaultBranch: main
+
+  adoption:
+    mode: team
+    footprint: tiny
+    sharing: committed
+    profileOwner: repository-maintainers
+
+  storage:
+    runtimeLocation: adapter-or-local-tool
+    profileLocation: aim.profile.yaml
+    workingStateLocation: .aim/
+    docsSource: docs/workflow/ and docs/features/
+
+  locality:
+    defaultDiscoveryOrder:
+      - existing-working-state
+      - this-profile
+      - directly-affected-files
+      - nearest-workflow-or-feature-doc
+      - validator-output
+      - broader-docs-only-on-risk
+    primaryAreas:
+      - docs/features/
+      - docs/workflow/
+      - adapters/
+      - scripts/
+      - .github/
+      - .claude/
+    nearestMetadata:
+      - AGENTS.md
+      - CONTRIBUTING.md
+      - docs/features/README.md
+
+  commands:
+    validate: python3 scripts/validate_aim_runtime.py .
+    pythonSyntax: python3 -m py_compile scripts/validate_aim_runtime.py
+    diffWhitespace: git diff --check
+
+  conventions:
+    docs: short-feature-docs-for-new-behavior
+    review: short-review-by-default-escalate-on-risk
+    adoption: prefer-lowest-footprint-that-preserves-AIM-core
+
+  ownership:
+    owners:
+      - repository-maintainers
+    approvalNotes:
+      - AIM-core-loop-gates-and-escalation-stay-authoritative
+
+  risk:
+    highRiskAreas:
+      - AGENTS.md
+      - adapters/
+      - scripts/validate_aim_runtime.py
+      - .github/agents/
+      - .claude/
+    escalation:
+      - gate-semantics-change
+      - ownership-change
+      - runtime-state-change
+      - migration-behavior-change
+      - public-release-claim
+
+  context:
+    shortAuthoritativeDocs:
+      - AGENTS.md
+      - docs/workflow/agile-iteration-method.md
+      - docs/features/aim-2-repo-profile-and-footprint-model.md
+      - docs/features/aim-2-working-state-boundaries.md
+    avoidByDefault:
+      - full-doc-reread-before-locality-check
+      - copying-AIM-docs-into-every-target-repo
+      - treating-.aim-working-state-as-shared-profile
+    knownContextHogs:
+      - broad-adapter-doc-rereads
+      - long-release-marketing-docs-for-narrow-runtime-changes
+
+  freshness:
+    refreshTriggers:
+      - AGENTS.md changed
+      - scripts/validate_aim_runtime.py changed
+      - docs/workflow/agile-iteration-method.md changed
+      - docs/features/aim-2-repo-profile-and-footprint-model.md changed
+      - adapter instruction files changed
+    revalidate:
+      - run-validator-first
+      - refresh-smallest-affected-area
+
+  cost:
+    startupBudget: reuse-profile-before-broad-scan
+    scanDepth: locality-first
+    reviewDepth: risk-scaled
+    subagentPolicy: disabled-by-default-unless-runtime-and-policy-allow
