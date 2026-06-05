@@ -4,4 +4,9 @@
 
 # AIM local runtime and Personal AIM profile fallback.
 # Team AIM uses committed root aim.profile.yaml by explicit choice.
+# Enterprise AIM keeps AIM-internal artifacts private unless explicitly promoted.
 /.aim
+/.aim-local
+/aim.local.*
+/*.aim.local.md
+/*.aim.process.md

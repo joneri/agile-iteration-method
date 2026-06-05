@@ -133,7 +133,7 @@ When both personal and team profiles are used, name both sources and state wheth
 
 ## Edge cases
 
-- Some organizations may forbid local profile persistence; use session-only profile memory or Managed AIM policy.
+- Some organizations may forbid local profile persistence; use session-only profile memory or Enterprise AIM policy.
 - A repository without a remote should use a root-path fingerprint and refresh if the path changes.
 - A developer may have multiple clones of the same repo; remote-based fingerprinting allows reuse, but local path differences should remain visible.
 - Sensitive repos may require excluding risk or architecture details from the local profile.

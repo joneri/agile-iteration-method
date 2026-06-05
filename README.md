@@ -67,7 +67,7 @@ AIM 2.0 is a release identity change, not a method break.
 
 - the core loop is still `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
 - the accepted runtime contract and `.aim` ownership model stay intact
-- the big change is adoption: Personal AIM, Team AIM, and Full embedded AIM are all described as current AIM 2.0 operating paths
+- the big change is adoption: Personal AIM, Team AIM, and Enterprise AIM are clear operating modes
 
 The method stays stable. The install footprint gets smaller and reuse gets stronger.
 
@@ -109,7 +109,7 @@ That is the main upgrade: AIM 2.0 makes the accepted runtime easier to adopt, re
 
 Choose one:
 
-1. [Start AIM 2.0 in Personal or Team mode](docs/workflow/quick-start-aim-2.0.md)
+1. [Start AIM 2.0 in Personal, Team, or Enterprise mode](docs/workflow/quick-start-aim-2.0.md)
 2. [Continue or troubleshoot AIM](docs/workflow/troubleshoot-aim-2.0.md)
 3. [Install AIM](docs/workflow/install-aim-2.0.md)
 
@@ -117,7 +117,9 @@ The AIM 2.0 path is the current adoption path:
 
 - Personal AIM: start AIM without required committed AIM files
 - Team AIM: share a tiny repo profile through `aim.profile.yaml`
-- Full embedded AIM: commit the AIM contract only when the repository owner intentionally wants it in the repo
+- Enterprise AIM: keep AIM internals isolated by default and share repo-awareness only by explicit approval
+
+Full embedded AIM remains available as a footprint choice when the repository owner intentionally wants AIM product docs and adapter helpers in the repo.
 
 Fast start:
 

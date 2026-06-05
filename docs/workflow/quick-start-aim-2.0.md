@@ -5,7 +5,7 @@
 
 Use this page when you want the shortest practical start into the current AIM 2.0 operating model.
 
-This is the front-door operating path for AIM 2.0 after setup, whether you use Personal AIM, Team AIM, or Full embedded AIM.
+This is the front-door operating path for AIM 2.0 after setup, whether you use Personal AIM, Team AIM, or Enterprise AIM.
 
 ## Choose your start mode
 
@@ -13,8 +13,9 @@ Pick one:
 
 - Personal AIM: use AIM yourself with no required committed AIM files
 - Team AIM: share a small repo profile with the team through root `aim.profile.yaml`
+- Enterprise AIM: use AIM with safe isolation defaults so AIM-internal artifacts are not committed by accident
 
-If the repository owner explicitly wants AIM committed into the repo, use the Full embedded AIM path in [Install AIM 2.0](install-aim-2.0.md).
+If the repository owner explicitly wants AIM product docs and adapter helpers committed into the repo, use the Full embedded AIM footprint in [Install AIM 2.0](install-aim-2.0.md).
 
 ## Personal AIM
 

@@ -69,6 +69,21 @@ Use these rules for future installer work.
 | Adapter helpers | yes when the adapter is selected | yes for known AIM helper files after review | never over unrelated helper files | unrelated `.github/`, `.claude/`, or prompt content |
 | Internal build memory | no by default | no by default | never | maintainer notes unless explicitly exporting them |
 
+## Mode behavior
+
+The canonical operating modes are defined in [AIM 2.0 operating modes](aim-2-operating-modes.md).
+Surface handling must follow that mode model.
+
+| Surface | Personal | Team | Enterprise |
+| --- | --- | --- | --- |
+| `.aim/` | may stay local or be committed if the user wants | private by default; shared only by team choice | ignored by default; do not commit unless explicitly approved |
+| `aim.profile.yaml` | optional | default tiny shared repo-awareness surface | create or modify only by explicit repo-owner approval |
+| Personal profile storage | allowed and preferred for local reuse | allowed as local hint under Team baseline | allowed as private/local hint |
+| `docs/features/` AIM helper docs | may be kept or committed freely | shared when the team wants common AIM behavior | local/private by default unless explicitly approved |
+| `AGENTS.md` and `CLAUDE.md` | permissive if the user owns the repo | reviewed merge or creation by team agreement | never assume overwrite rights |
+| Generated markdown/process artifacts | may be kept or committed | commit only when the team wants audit/process history | ignored by default unless promoted to product docs |
+| Product output | commit normally when part of the work | commit normally when part of the work | commit normally when part of the work |
+
 ## Collision rules
 
 `AGENTS.md` and `CLAUDE.md` are first-class collision surfaces.

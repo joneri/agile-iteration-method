@@ -19,7 +19,7 @@ AIM 2.0 separates four things that older embedded AIM docs blended too much:
 
 Using AIM should not require committing all AIM docs and adapter files into every repository.
 
-## Choose an adoption depth
+## Choose an operating mode
 
 ### Personal AIM
 
@@ -59,19 +59,20 @@ Best for:
 - team coding conventions
 - avoiding repeated cold-start scans across teammates
 
-### Managed AIM
+### Enterprise AIM
 
-Use Managed AIM later when an organization wants central policy and governed shared profiles.
+Use Enterprise AIM when safe isolation is the default and AIM-internal artifacts must not be committed or pushed by accident.
 
 Default behavior:
 
 - approved runtime or adapter
-- shared profile registry
-- central policy
-- optional repository pointer
+- local/private working state and repo-awareness by default
+- Enterprise ignore baseline for AIM-internal artifacts
+- shared profile registry or policy pointer only by explicit approval
+- no overwrite assumptions for root instruction files
 
-Managed AIM should not block Personal AIM or Team AIM.
-It is the later standardization path, not the starting requirement.
+Enterprise AIM should not block Personal AIM or Team AIM.
+It is the stricter safety mode, not a requirement for ordinary adoption.
 
 ### Full embedded AIM
 
@@ -84,16 +85,16 @@ Best for:
 - training repositories
 - public examples
 
-Full embedded AIM remains valid, but it is not the default definition of adoption.
+Full embedded AIM remains valid, but it is a footprint choice rather than an operating mode.
 
 ## Where things live
 
-| Layer | Personal AIM | Team AIM | Managed AIM |
+| Layer | Personal AIM | Team AIM | Enterprise AIM |
 | --- | --- | --- | --- |
-| Runtime | tool or local adapter | tool or local adapter | approved org adapter |
-| Repo profile | `~/.aim/profiles/<repo-fingerprint>/profile.yaml` | root `aim.profile.yaml` profile or pointer | managed registry |
-| Working state | local and ignored | local by default | local or approved shared store |
-| Docs | installed package or links | installed package or links | managed docs or canonical links |
+| Runtime | tool or local adapter | tool or local adapter | approved local or org adapter |
+| Repo profile | `~/.aim/profiles/<repo-fingerprint>/profile.yaml` | root `aim.profile.yaml` profile or pointer | local/private by default; governed shared profile only by approval |
+| Working state | local or user-chosen | local by default | local/private and ignored by default |
+| Docs | installed package or links | installed package, links, or reviewed shared docs | installed package, canonical links, or approved internal package |
 
 The important rule is simple:
 
@@ -268,8 +269,8 @@ Migration should:
 
 1. preserve current behavior
 2. extract reusable repo-profile facts where possible
-3. offer Personal, Team, or Managed adoption depth
-4. keep Full embedded AIM available by explicit choice
+3. offer Personal, Team, or Enterprise operating mode
+4. keep Full embedded AIM available as an explicit footprint choice
 
 Do not require teams to remove committed AIM docs if they already chose that model.
 

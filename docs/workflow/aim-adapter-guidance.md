@@ -59,8 +59,10 @@ Adapters should support or gracefully describe these adoption depths:
   - shared repo adaptation by intentional team choice
   - working state local by default unless the team explicitly chooses otherwise
   - full AIM docs linked or installed, not copied wholesale by default
-- Managed AIM:
-  - future organization-managed profile or policy source
+- Enterprise AIM:
+  - safe isolation by default
+  - local/private AIM internals unless sharing is explicitly approved
+  - future organization-managed profile or policy source may be used
   - optional repository pointer to managed policy
   - must not be required for Personal or Team AIM
 - Full embedded AIM:

@@ -99,9 +99,9 @@ Default behavior:
 Teams may decide to share some state for pair work, handoff, or audit.
 That is a team policy decision, not a requirement for Team AIM.
 
-## Managed AIM direction
+## Enterprise AIM direction
 
-Managed AIM may later define approved state storage or audit export rules.
+Enterprise AIM may later define approved state storage or audit export rules.
 
 Until then:
 
@@ -193,7 +193,7 @@ When an Epic is complete:
 - Accepted increments do not automatically close an Epic.
 - Local state is the default for Personal AIM.
 - Team AIM shares profile facts, not active state, by default.
-- Managed AIM can govern state later without redefining AIM core.
+- Enterprise AIM can govern state later without redefining AIM core.
 - Reusable facts discovered during an increment should be promoted to the repo profile only when they are stable beyond the active work.
 
 ## Defaults and fallbacks

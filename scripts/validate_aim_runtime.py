@@ -232,6 +232,34 @@ REQUIRED_SURFACE_MODEL_MARKERS = [
     "Must never touch",
 ]
 
+OPERATING_MODE_DOC_PATH = "docs/features/aim-2-operating-modes.md"
+
+REQUIRED_OPERATING_MODE_MARKERS = [
+    "Personal AIM",
+    "Team AIM",
+    "Enterprise AIM",
+    "permissive",
+    "shared AIM understanding",
+    "safe and isolated by default",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "Enterprise ignore baseline",
+]
+
+ENTERPRISE_IGNORE_MARKERS = [
+    "/.aim",
+    "/.aim-local",
+    "/aim.local.*",
+    "/*.aim.local.md",
+    "/*.aim.process.md",
+]
+
+OPERATING_MODE_VALUES = {
+    "personal": "Personal",
+    "team": "Team",
+    "enterprise": "Enterprise",
+}
+
 EXPECTED_ROLE_BY_STATE = {
     "epic_initialized": "PO",
     "gate_a_pending": "PO",
@@ -515,6 +543,21 @@ def collect_repo_profile_readiness(repo_root: Path) -> dict[str, object]:
     }
 
 
+def detect_operating_mode(repo_root: Path, profile_paths: list[str]) -> tuple[str | None, str]:
+    for relative_path in profile_paths:
+        content = (repo_root / relative_path).read_text(encoding="utf-8", errors="replace")
+        normalized_content = content.lower()
+        for raw_mode, display_mode in OPERATING_MODE_VALUES.items():
+            mode_patterns = (
+                f"mode: {raw_mode}",
+                f"mode: \"{raw_mode}\"",
+                f"mode: '{raw_mode}'",
+            )
+            if any(pattern in normalized_content for pattern in mode_patterns):
+                return display_mode, relative_path
+    return None, "none"
+
+
 def collect_migration_classification(repo_root: Path) -> dict[str, list[str]]:
     classification: dict[str, list[str]] = {}
     for category, paths in AIM_2_MIGRATION_CLASSIFICATION.items():
@@ -631,9 +674,40 @@ def main() -> int:
             "Restore docs/features/aim-2-repository-surface-classification.md before relying on installer boundary guidance.",
         )
 
+    operating_mode_doc_path = repo_root / OPERATING_MODE_DOC_PATH
+    checked.append(OPERATING_MODE_DOC_PATH)
+    if operating_mode_doc_path.is_file():
+        operating_mode_doc_content = operating_mode_doc_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_operating_mode_markers = [
+            marker
+            for marker in REQUIRED_OPERATING_MODE_MARKERS
+            if marker not in operating_mode_doc_content
+        ]
+        if missing_operating_mode_markers:
+            add_issue(
+                issues,
+                "recoverable",
+                OPERATING_MODE_DOC_PATH,
+                f"operating mode model is missing required markers: {', '.join(missing_operating_mode_markers)}",
+                "Update the canonical operating mode model so Personal, Team, and Enterprise behavior remains enforceable.",
+            )
+    else:
+        add_issue(
+            issues,
+            "recoverable",
+            OPERATING_MODE_DOC_PATH,
+            "canonical operating mode model is missing",
+            "Create docs/features/aim-2-operating-modes.md before relying on mode-aware installation behavior.",
+        )
+
     checked.append("AIM 2.0 repo profile readiness")
     repo_profile_readiness = collect_repo_profile_readiness(repo_root)
     profile_source_summary = build_profile_source_summary(repo_root, repo_profile_readiness)
+    configured_operating_mode, operating_mode_source = detect_operating_mode(
+        repo_root, repo_profile_readiness["profile_paths"]
+    )
     readiness_status = repo_profile_readiness["status"]
     if readiness_status == "repair_profile":
         for relative_path, markers in repo_profile_readiness["state_marker_findings"].items():
@@ -652,6 +726,31 @@ def main() -> int:
                 relative_path,
                 "repo profile artifact exists but does not contain recognizable repo-intelligence sections",
                 "Add reusable repo identity, commands, locality, ownership, risk, freshness, or cost fields before relying on profile reuse.",
+            )
+
+    if configured_operating_mode == "Enterprise":
+        gitignore_path = repo_root / ".gitignore"
+        checked.append(".gitignore Enterprise ignore baseline")
+        if gitignore_path.is_file():
+            gitignore_content = gitignore_path.read_text(encoding="utf-8", errors="replace")
+            missing_ignore_markers = [
+                marker for marker in ENTERPRISE_IGNORE_MARKERS if marker not in gitignore_content
+            ]
+            if missing_ignore_markers:
+                add_issue(
+                    issues,
+                    "recoverable",
+                    ".gitignore",
+                    f"Enterprise mode is missing required AIM-internal ignore markers: {', '.join(missing_ignore_markers)}",
+                    "Add the Enterprise AIM ignore baseline or explicitly document why this repo promotes those AIM internals.",
+                )
+        else:
+            add_issue(
+                issues,
+                "recoverable",
+                ".gitignore",
+                "Enterprise mode requires an ignore surface for AIM-internal artifacts",
+                "Create .gitignore with the Enterprise AIM ignore baseline or document an equivalent repo policy.",
             )
 
     state_path = repo_root / ".aim/state.json"
@@ -884,6 +983,15 @@ def main() -> int:
             print(f"- {category}: {', '.join(paths)}")
         else:
             print(f"- {category}: none")
+
+    print("AIM 2.0 operating mode model:")
+    print(f"- canonical doc: {OPERATING_MODE_DOC_PATH}")
+    print(
+        f"- configured mode: {configured_operating_mode if configured_operating_mode else 'not declared'}"
+    )
+    print(f"- mode source: {operating_mode_source}")
+    if configured_operating_mode == "Enterprise":
+        print(f"- Enterprise ignore baseline: {', '.join(ENTERPRISE_IGNORE_MARKERS)}")
 
     print("AIM 2.0 repo profile readiness:")
     print(f"- status: {readiness_status}")

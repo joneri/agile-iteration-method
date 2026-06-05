@@ -233,7 +233,7 @@ The tiny profile also must not claim ownership of:
 ## Edge cases
 
 - Some teams may prefer a pointer to an internal profile registry instead of committing profile content.
-- Some repositories may forbid even a tiny profile; use Personal AIM or Managed AIM policy instead.
+- Some repositories may forbid even a tiny profile; use Personal AIM or Enterprise AIM policy instead.
 - Cross-cutting changes may require broader discovery even with a fresh profile.
 - Security-sensitive profile facts may need to live outside the repository.
 

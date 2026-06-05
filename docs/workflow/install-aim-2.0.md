@@ -8,20 +8,27 @@ Use this guide when repository setup is still missing and you want a current AIM
 This guide is about repository setup.
 Use [Quick start AIM 2.0](quick-start-aim-2.0.md) for the first run after setup.
 
-## Choose the installation footprint
+## Choose the operating mode
 
 - Personal AIM:
-  - no committed AIM files are required by default
-  - repo profile lives at `~/.aim/profiles/<repo-fingerprint>/profile.yaml`
-  - working state stays local
+  - flexible and permissive
+  - no committed AIM files are required by default, but the user may commit AIM files if they want
+  - repo-awareness may live locally or in the repo
 - Team AIM:
-  - share a small root `aim.profile.yaml`
-  - working state stays local by default
-  - teammates reuse commands, locality hints, risk zones, and validation paths
-- Full embedded AIM:
-  - commit the AIM contract into the repository only when the repo owner intentionally wants AIM inside the repo
+  - shared AIM understanding by agreement
+  - share a small root `aim.profile.yaml` or approved shared profile pointer
+  - share selected features/docs when the team wants common behavior
+  - private runtime state may still stay local
+- Enterprise AIM:
+  - safe and isolated by default
+  - share product output, not AIM internals
+  - keep AIM runtime and generated process artifacts ignored unless explicitly approved
+  - do not assume the repo root is empty or instruction files can be overwritten
 
-All three footprints are current AIM 2.0 choices.
+These are the canonical AIM 2.0 operating modes.
+Full embedded AIM remains a footprint choice when the repo owner intentionally wants AIM product docs and adapter helpers in the repository.
+
+For the canonical mode model, see [AIM 2.0 operating modes](../features/aim-2-operating-modes.md).
 
 ## Installation boundary model
 
@@ -40,6 +47,14 @@ Installer actions must follow these defaults:
 | Personal profile | store outside the repository by default |
 | Target repo policy files | never overwrite |
 | Internal build-memory | do not install by default |
+
+Mode-specific defaults:
+
+| Mode | Installer default |
+| --- | --- |
+| Personal | offer local-only setup first; allow repo mutation when the user chooses it |
+| Team | create or update shared repo-awareness only through small reviewed surfaces such as `aim.profile.yaml` |
+| Enterprise | verify ignore safety before creating repo-local AIM internals; require explicit approval for any shared AIM surface |
 
 Installation safety matters more than convenience.
 If a file is both useful and collision-prone, treat it as a template or merge target, not as a normal copy target.
@@ -66,6 +81,10 @@ For `.gitignore`, suggest this fragment instead of replacing the target file:
 
 ```gitignore
 /.aim
+/.aim-local
+/aim.local.*
+/*.aim.local.md
+/*.aim.process.md
 ```
 
 ## Minimum setup for full embedded AIM

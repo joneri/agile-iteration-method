@@ -2,30 +2,29 @@
 
 ## Purpose
 
-Define the first concrete AIM 2.0 model for low-footprint adoption and reusable repo intelligence.
+Define the concrete AIM 2.0 model for operating modes, low-footprint adoption, and reusable repo intelligence.
 
 This model turns the AIM 2.0 strategy into a practical product surface:
 
 - Personal AIM can run without committed AIM files.
 - Team AIM can share repo adaptation through a tiny committed profile surface.
-- Managed AIM can later attach organization policy and shared profile registries.
+- Enterprise AIM can later attach organization policy, stricter ignore defaults, and approved shared profile registries.
 - Repo-aware context can be reused across branches and sessions without repeating broad cold-start scans.
 
 ## User experience
 
-AIM 2.0 should start by asking how much the repository should share, not which AIM files should be copied.
+AIM 2.0 should start by asking which operating mode applies and how much the repository should share, not which AIM files should be copied.
 
-The user-facing adoption depths are:
+The canonical operating modes are:
 
 | Mode | Default footprint | Primary user | Shared by default | Best for |
 | --- | --- | --- | --- | --- |
-| Personal AIM | zero-footprint | one developer | no | trying AIM, protected repos, personal feature work |
-| Team AIM | tiny-footprint | one team | yes, intentionally | shared repo conventions and validation paths |
-| Managed AIM | managed footprint | organization | yes, governed | standard policy, profile registry, larger rollout |
-| Full embedded AIM | full repository footprint | repo owner | yes | AIM itself, templates, public examples |
+| Personal AIM | zero-footprint or user-chosen | one developer | no | trying AIM, personal repos, flexible local workflows |
+| Team AIM | tiny-footprint by default | one team | yes, intentionally | shared repo conventions, features, and validation paths |
+| Enterprise AIM | isolated footprint by default | strict repo or organization | no, unless explicitly approved | protected repos, larger orgs, regulated environments |
 
-Personal and Team AIM are first-class product modes.
-Managed AIM is a direction that should remain possible without making simple adoption heavy.
+Full embedded AIM remains a footprint choice, not a fourth operating mode.
+It is valid when a repo owner intentionally wants AIM product docs and adapter helpers in the repository.
 
 ## How it works
 
@@ -127,9 +126,9 @@ aimRepoProfile:
     remote:
     defaultBranch:
   adoption:
-    mode: personal | team | managed | full-embedded
-    footprint: zero | tiny | managed | full
-    sharing: local | committed | registry
+    mode: personal | team | enterprise
+    footprint: zero | tiny | isolated | full
+    sharing: local | committed | explicit | registry
     profileOwner:
   storage:
     runtimeLocation:
@@ -232,26 +231,39 @@ The Team AIM profile must not contain active Epic state, current Done Increment 
 When both Personal and Team profiles exist, use Personal profile facts as local reuse hints and Team profile facts as the shared baseline.
 Personal facts must not silently contradict Team commands, ownership, risk, or policy.
 
-### Managed AIM
+### Enterprise AIM
 
 Default storage:
 
-- runtime: approved adapter or organization environment
-- repo profile: managed registry or governed shared profile
-- working state: local or approved team storage
-- docs: managed distribution or canonical links
+- runtime: local adapter, approved adapter, or organization environment
+- repo profile: local/private by default, governed shared profile only by explicit approval
+- working state: local/private and ignored by default
+- docs: installed distribution, canonical links, or approved internal package
 
 Repository mutation:
 
-- optional pointer to managed policy/profile
+- none by default
+- optional reviewed pointer to managed policy/profile
+- optional reviewed Team-like shared profile only when the repo owner explicitly chooses it
 
 Use this when:
 
-- an organization needs central policy
+- accidental AIM artifact commits or pushes are a real risk
+- the repository is protected or policy-constrained
+- an organization needs central policy or profile governance
 - repo profiles need ownership and lifecycle rules
-- shared profiles need governance
+- shared AIM surfaces need explicit approval
 
-Managed AIM is not required for AIM 2.0 to be useful.
+Enterprise AIM is not required for AIM 2.0 to be useful.
+It exists to make safe isolation the default in stricter environments.
+
+Enterprise AIM should protect these AIM-internal surfaces from accidental commit or push:
+
+- `/.aim`
+- `/.aim-local`
+- `/aim.local.*`
+- `/*.aim.local.md`
+- `/*.aim.process.md`
 
 ### Full embedded AIM
 
@@ -274,7 +286,8 @@ Use this for:
 - public examples
 - repos that intentionally want AIM fully visible
 
-Full embedded use remains supported, but it is not the default definition of adoption.
+Full embedded use remains supported, but it is not an operating mode by itself.
+It is a footprint choice that may be used in Personal, Team, or Enterprise only by explicit repo-owner approval.
 
 ## Locality-first discovery
 
@@ -351,7 +364,7 @@ AIM 2.0 should explain the main cost drivers without pretending to provide exact
 
 At startup or Gate B, AIM should be able to report:
 
-- adoption mode
+- operating mode
 - footprint level
 - whether a repo profile was reused
 - what profile facts were reused
@@ -375,7 +388,7 @@ At Gate E, AIM should be able to report:
 ## Inputs and outputs
 
 - Inputs:
-  - adoption mode
+  - operating mode
   - repository identity
   - current branch
   - current task scope
@@ -400,12 +413,12 @@ At Gate E, AIM should be able to report:
 - Docs are reference material, not mandatory install payload.
 - Personal AIM defaults to zero committed files.
 - Team AIM defaults to a tiny shared profile surface.
-- Managed AIM stays possible without making Personal AIM heavy.
+- Enterprise AIM protects AIM-internal artifacts by default.
 - Full embedded AIM remains valid only by explicit repo-owner choice.
 
 ## Defaults and fallbacks
 
-- Default adoption mode: Personal AIM when ownership is unclear.
+- Default operating mode: Personal AIM when ownership is unclear.
 - Default footprint: zero-footprint.
 - Default profile sharing: local-only.
 - Default working state: local and ignored.
@@ -417,14 +430,15 @@ At Gate E, AIM should be able to report:
 - Fallback if profile is stale: refresh the smallest affected locality.
 - Fallback if policy conflicts: stop and escalate before continuing.
 - Fallback if a team wants sharing: export or commit only the tiny profile surface, not full AIM docs.
-- Team AIM artifact: use root `aim.profile.yaml` unless a managed policy explicitly chooses another pointer path.
+- Team AIM artifact: use root `aim.profile.yaml` unless Enterprise policy explicitly chooses another approved pointer path.
 - Personal AIM artifact: use `~/.aim/profiles/<repo-fingerprint>/profile.yaml`; use `.aim/profile.yaml` only as an ignored adapter fallback.
+- Enterprise AIM artifact: prefer local/private storage and Enterprise ignore defaults; shared repo-awareness requires explicit approval.
 
 ## Edge cases
 
 - A repo may intentionally use full embedded AIM.
 - A security-sensitive repo may forbid local profile persistence.
-- A managed organization may require profile storage outside developer machines.
+- An Enterprise organization may require profile storage outside developer machines.
 - A stale profile may be more dangerous than no profile.
 - A profile can accidentally leak proprietary architecture if exported publicly.
 - Cross-cutting work may legitimately require broad discovery.
@@ -454,7 +468,7 @@ The single best check is whether AIM can answer:
 - Validator check: `AIM 2.0 repo profile readiness`
 - Summary shape: [AIM 2.0 profile source summary](aim-2-profile-source-summary.md)
 - What "good" looks like:
-  - adoption mode is explicit
+  - operating mode is explicit
   - footprint level is explicit
   - profile location is explicit
   - working-state location is explicit
@@ -475,6 +489,7 @@ The single best check is whether AIM can answer:
 - `docs/features/aim-2-profile-source-summary.md`
 - `docs/features/aim-2-tiny-team-profile-example.md`
 - `docs/features/aim-2-working-state-boundaries.md`
+- `docs/features/aim-2-operating-modes.md`
 - `docs/features/aim-cost-comparison.md`
 - `docs/features/aim-cost-control-mode.md`
 - `docs/features/aim-cost-saving-method.md`
@@ -489,6 +504,7 @@ The single best check is whether AIM can answer:
 - 2026-06-05: Added Personal AIM local profile storage path and Team profile layering rules.
 - 2026-06-05: Defined root `aim.profile.yaml` as the concrete tiny Team AIM profile artifact/pointer.
 - 2026-06-05: Added repo-profile readiness states for validator-backed Personal/Team profile reuse.
+- 2026-06-05: Replaced the loose Managed mode wording with the canonical Enterprise operating mode and explicit ignore baseline.
 - 2026-06-05: Linked the tiny Team AIM profile example.
 - 2026-06-05: Linked the working-state boundary model.
 - 2026-06-05: Linked current migration classification checks.
