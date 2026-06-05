@@ -24,6 +24,14 @@ The 1.7 release line keeps the accepted 1.6 runtime-family docs as the deeper op
 - [AIM 1.6 document map](aim-1.6-doc-map.md)
 - [Troubleshoot AIM 1.6](troubleshoot-aim-1.6.md)
 
+## AIM 2.0 planning and adoption model
+
+Use these when exploring the low-footprint, reusable repo-intelligence direction after AIM 1.7:
+
+- [AIM 2.0 low-footprint adoption](aim-2-low-footprint-adoption.md)
+- [AIM 2.0 adoption strategy](../features/aim-2-enterprise-and-universal-adoption-strategy.md)
+- [AIM 2.0 repo profile and footprint model](../features/aim-2-repo-profile-and-footprint-model.md)
+
 ## Why the split exists
 
 - `1.7` is the sharper public release story

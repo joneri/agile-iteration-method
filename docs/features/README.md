@@ -18,6 +18,8 @@ Create or update a feature explanation when:
   docs/features/<feature-name>.md
 
 Examples:
+- aim-2-enterprise-and-universal-adoption-strategy.md
+- aim-2-repo-profile-and-footprint-model.md
 - aim-cost-control-mode.md
 - aim-cost-comparison.md
 - aim-cost-review-checklist.md
