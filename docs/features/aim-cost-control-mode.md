@@ -77,5 +77,4 @@ For `/aim continue`, first check whether the agent resumed from `.aim/state.json
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
 - `docs/workflow/quick-start-aim-1.6.md`
-- `docs/workflow/aim-1.6-usage-guides.md`
 - `.github/agents/aim.agent.md`

@@ -36,6 +36,8 @@ Mode: Strict
 Cost profile: Cost Control
 ```
 
+If slash commands are not available in the active adapter, state the same intent in plain language.
+
 What AIM should do next:
 
 1. read local AIM state first when it exists
@@ -71,6 +73,8 @@ Mode: Strict
 Cost profile: Cost Control
 ```
 
+If slash commands are not available in the active adapter, state the same intent in plain language.
+
 What AIM should do next:
 
 1. read local AIM state first when it exists
@@ -89,6 +93,34 @@ The difference is sharing:
 - Personal AIM keeps repo knowledge local by default
 - Team AIM shares repo knowledge intentionally
 - both keep active working state separate from the reusable profile
+
+## Execution defaults
+
+Make the execution mode and cost profile explicit when you start.
+
+Use one mode:
+
+- `Mode: Strict`
+- `Mode: Auto`
+
+If you do not specify a mode, AIM defaults to `Strict`.
+
+Use one cost profile:
+
+- `Cost profile: Standard`
+- `Cost profile: Cost Control`
+- `Cost profile: Deep`
+
+Use `Cost Control` for normal low-risk work, cleanup, documentation maintenance, and narrow reversible fixes.
+Use `Deep` for trust-sensitive, migration, deployment, security, API, or broad public-method work.
+
+## Common follow-up commands
+
+- `/aim continue`
+- `/aim validate`
+- `/aim help`
+
+If slash commands are unavailable, use the same intent in plain language.
 
 ## What a normal startup should show
 

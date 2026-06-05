@@ -55,7 +55,6 @@ Then add the current front-door docs:
 - `README.md`
 - `docs/workflow/quick-start-aim-1.7.md`
 - `docs/workflow/install-aim-1.7.md`
-- `docs/workflow/aim-1.7-doc-map.md`
 
 This is the highest-footprint path.
 Do not treat it as required for every individual developer who wants to use AIM.
@@ -84,7 +83,7 @@ After installation:
 
 - start with [Quick start AIM 1.7](quick-start-aim-1.7.md)
 - start with [Quick start AIM 2.0](quick-start-aim-2.0.md) when you want the low-footprint Personal AIM or Team AIM operating path
-- keep [Install AIM 1.6](install-aim-1.6.md) as the deeper runtime-family setup guide
+- use [Install AIM 2.0](install-aim-2.0.md) when repository setup is the main need
 - use [AIM 2.0 low-footprint adoption](aim-2-low-footprint-adoption.md) when repository mutation is the adoption blocker
 - use [AIM 2.0 repo profile and footprint model](../features/aim-2-repo-profile-and-footprint-model.md) when designing a reusable repo profile
 - use [AIM cost-saving method](../features/aim-cost-saving-method.md) when the team asks how AIM actually saves money

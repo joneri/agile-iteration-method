@@ -1196,8 +1196,7 @@ At that point, the EPIC is complete.
 - `docs/workflow/aim-adapter-guidance.md` collects adapter-specific entrypoints, parity labels, helper-file boundaries, and fallback notes so canonical files stay focused.
 - `docs/features/aim-cost-control-mode.md` defines AIM 1.6 cost profiles and escalation rules for runtime depth.
 - `docs/features/aim-modularity-context-efficiency.md` defines AIM 1.6 file-boundary and context-efficiency behavior.
-- `docs/workflow/install-aim-1.6.md`, `docs/workflow/quick-start-aim-1.6.md`, and `docs/workflow/aim-1.6-doc-map.md` define the current public onboarding path.
-- `docs/workflow/migrate-aim-1.5-to-1.6.md` defines the supported current upgrade bridge.
+- `docs/workflow/quick-start-aim-2.0.md` and `docs/workflow/aim-2-low-footprint-adoption.md` define the current public onboarding path; older 1.6 install and map docs remain historical reference material.
 - `CONTRIBUTING.md` defines coding standards, PR rules and local commands.
 - `docs/workflow/copilot-layer.md` defines the optional Copilot custom-agent interface.
 - `docs/features/` explains non-obvious feature behaviour, contracts and fallbacks.

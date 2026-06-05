@@ -73,5 +73,4 @@ Start in `Deep` when:
 - [AIM GitHub Copilot cost reduction playbook](../features/aim-github-copilot-cost-reduction-playbook.md)
 - [AIM cost-saving method](../features/aim-cost-saving-method.md)
 - [AIM vendor cost baseline (June 2026)](../features/aim-vendor-cost-baseline-june-2026.md)
-- [Quick start AIM 1.6 runtime guide](quick-start-aim-1.6.md)
-- [AIM 1.7 document map](aim-1.7-doc-map.md)
+- [Quick start AIM 2.0](quick-start-aim-2.0.md)

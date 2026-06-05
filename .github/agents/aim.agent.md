@@ -237,19 +237,18 @@ Supported packaged upgrade path:
 - `/aim upgrade 1.5-to-1.6`
 
 For `/aim upgrade 1.5-to-1.6`:
-1. read `docs/workflow/migrate-aim-1.5-to-1.6.md`
-2. inspect the active public doc surface, packaged prompt helpers, and packaged agent metadata
-3. preserve the accepted AIM runtime model and shared ownership rules
-4. update the active release framing from 1.5 to 1.6 where those files are intended to be current
-5. add cost profile guidance and keep AIM 1.5 file-boundary guidance active
-6. return:
+1. inspect the active public doc surface, packaged prompt helpers, and packaged agent metadata
+2. preserve the accepted AIM runtime model and shared ownership rules
+3. update the active release framing from 1.5 to 1.6 where those files are intended to be current
+4. add cost profile guidance and keep AIM 1.5 file-boundary guidance active
+5. return:
   - changed files
   - migration assumptions
   - follow-up risks
 
 If the requested upgrade target is not packaged here:
 - explain the supported upgrade paths that do exist in the repository
-- point to the relevant migration doc or prompt helper
+- point to the relevant prompt helper or current workflow doc
 - do not guess a version jump that is not documented
 
 ## Interaction model expectations

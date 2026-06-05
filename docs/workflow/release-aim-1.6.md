@@ -70,7 +70,7 @@ Best supporting reference:
 
 ### 3) Latest-version onboarding path
 - `README.md`
-- `docs/workflow/install-aim-1.6.md`
+- `docs/workflow/install-aim-2.0.md`
 - `docs/workflow/quick-start-aim-1.6.md`
 - `docs/workflow/aim-1.6-doc-map.md`
 - `docs/workflow/troubleshoot-aim-1.6.md`

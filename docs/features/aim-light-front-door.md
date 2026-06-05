@@ -52,6 +52,5 @@ Do I start, continue, or install?
 
 - `README.md`
 - `docs/workflow/quick-start-aim-1.6.md`
-- `docs/workflow/aim-1.6-doc-map.md`
 - `.github/prompts/help-aim.prompt.md`
 - `.github/agents/aim.agent.md`

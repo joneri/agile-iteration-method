@@ -137,8 +137,6 @@ Cost profile: Cost Control
 
 Use `Cost Control` for ordinary low-risk work. Use `Deep` when the work touches trust, data correctness, deployment, migration, security, or public APIs.
 
-Need the full map? Use [AIM 1.7 document map](docs/workflow/aim-1.7-doc-map.md).
-
 ## Choose Your Adapter
 
 - Codex:
@@ -202,10 +200,8 @@ Recommended:
 - `README.md`
 - `docs/workflow/quick-start-aim-1.7.md`
 - `docs/workflow/install-aim-1.7.md`
-- `docs/workflow/aim-1.7-doc-map.md`
-- `docs/workflow/quick-start-aim-1.6.md`
-- `docs/workflow/install-aim-1.6.md`
-- `docs/workflow/migrate-aim-1.5-to-1.6.md`
+- `docs/workflow/quick-start-aim-2.0.md`
+- `docs/workflow/install-aim-2.0.md`
 - `docs/workflow/troubleshoot-aim-1.6.md`
 - `examples/epics/example-epic.md`
 
@@ -482,12 +478,10 @@ If you want to use AIM:
 1. [README.md](README.md)
 2. [Quick start AIM 2.0](docs/workflow/quick-start-aim-2.0.md) for the first run
 3. [Install AIM 1.7](docs/workflow/install-aim-1.7.md) when setup is missing or when you need the full embedded fallback
-4. [AIM 1.7 document map](docs/workflow/aim-1.7-doc-map.md) only when you need the broader path
 
 If you want to upgrade an existing AIM repo:
 1. [Install AIM 1.7](docs/workflow/install-aim-1.7.md)
-2. [Migrate AIM 1.5 to AIM 1.6](docs/workflow/migrate-aim-1.5-to-1.6.md) only when upgrading an older 1.5 repository through the stable runtime bridge
-3. [Troubleshoot AIM 1.6](docs/workflow/troubleshoot-aim-1.6.md) for deeper runtime-family issues
+2. [Troubleshoot AIM 1.6](docs/workflow/troubleshoot-aim-1.6.md) for deeper runtime-family issues
 
 If you are implementing AIM itself:
 1. [AGENTS.md](AGENTS.md)
@@ -508,8 +502,6 @@ Do not start with `AGENTS.md` when the goal is just to install or run AIM in a r
   AIM 1.7 full embedded and cost-saving fallback front door.
 - `docs/workflow/install-aim-1.7.md`
   Transition-aware installation front door with AIM 2.0 operating choices and AIM 1.7 full embedded fallback.
-- `docs/workflow/aim-1.7-doc-map.md`
-  Current transition route map.
 - `docs/features/aim-cost-comparison.md`
   Cost comparison against AIM 1.6-style use and undisciplined vibe coding.
 - `docs/workflow/copilot-layer.md`
@@ -518,20 +510,14 @@ Do not start with `AGENTS.md` when the goal is just to install or run AIM in a r
   Copyable Codex skill that exposes `/aim` as a launcher/runtime guide.
 - `docs/workflow/release-aim-1.7.md`
   Current release note.
-- `docs/workflow/quick-start-aim-1.6.md`
-  Stable runtime-family quick start under the 1.7 front door.
-- `docs/workflow/install-aim-1.6.md`
-  Stable runtime-family installation guidance.
-- `docs/workflow/aim-1.6-doc-map.md`
-  Stable runtime-family route map.
+- `docs/workflow/quick-start-aim-2.0.md`
+  Current quick start with the absorbed execution guidance from the removed 1.6 front door.
+- `docs/workflow/install-aim-2.0.md`
+  Current installation front door.
 - `docs/workflow/release-aim-1.6.md`
   Stable runtime-family release note.
-- `docs/workflow/migrate-aim-1.5-to-1.6.md`
-  Upgrade guidance for existing AIM repos.
 - `docs/workflow/troubleshoot-aim-1.6.md`
   Startup, resume, validator and fallback troubleshooting.
-- `docs/workflow/example-aim-1.6-reference-run.md`
-  Concrete example of an AIM 1.6 run.
 - `examples/epics/example-epic.md`
   Example Epic input.
 

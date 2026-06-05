@@ -69,6 +69,6 @@ If the visible skill card still looks stale after this, restart or refresh Codex
 - `adapters/codex/agile-iteration-method/SKILL.md`
 - `adapters/codex/agile-iteration-method/agents/openai.yaml`
 - `README.md`
-- `docs/workflow/install-aim-1.6.md`
+- `docs/workflow/install-aim-2.0.md`
 - `docs/workflow/quick-start-aim-1.6.md`
 - `docs/workflow/aim-adapter-guidance.md`

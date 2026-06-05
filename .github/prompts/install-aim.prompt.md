@@ -20,10 +20,8 @@ Actions:
 3. Confirm supporting AIM docs are present:
    - `docs/workflow/install-aim-1.7.md`
    - `docs/workflow/quick-start-aim-1.7.md`
-   - `docs/workflow/aim-1.7-doc-map.md`
-   - `docs/workflow/install-aim-1.6.md`
+   - `docs/workflow/install-aim-2.0.md`
    - `docs/workflow/copilot-layer.md`
-   - `docs/workflow/migrate-aim-1.5-to-1.6.md`
 4. Return a short checklist and tell me the next command to run.
 
 After setup, suggest:

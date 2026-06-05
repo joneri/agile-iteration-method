@@ -28,16 +28,10 @@ This repo is both:
   Current installation front door.
 - `docs/workflow/quick-start-aim-1.7.md`
   Current first-run front door.
-- `docs/workflow/aim-1.7-doc-map.md`
-  Current navigation map.
-- `docs/workflow/install-aim-1.6.md`
-  Stable runtime-family installation guide.
-- `docs/workflow/quick-start-aim-1.6.md`
-  Stable runtime-family first-run guide.
-- `docs/workflow/aim-1.6-doc-map.md`
-  Stable runtime-family navigation map.
-- `docs/workflow/migrate-aim-1.5-to-1.6.md`
-  Current supported upgrade bridge for older AIM 1.5 repositories.
+- `docs/workflow/install-aim-2.0.md`
+  Current installation guide.
+- `docs/workflow/quick-start-aim-2.0.md`
+  Current first-run guide.
 - `docs/workflow/release-aim-1.7.md`
   Current release notes.
 - `docs/features/_template.md`  

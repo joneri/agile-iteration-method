@@ -143,7 +143,6 @@ When Copilot feels too expensive, inspect in this order:
 - `docs/features/aim-vendor-cost-baseline-june-2026.md`
 - `docs/features/aim-cost-review-checklist.md`
 - `docs/workflow/quick-start-aim-1.7.md`
-- `docs/workflow/aim-1.6-usage-guides.md`
 
 ## Official sources used
 

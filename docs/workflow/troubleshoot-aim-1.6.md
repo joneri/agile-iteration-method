@@ -80,13 +80,9 @@ An AIM 1.5 repository does not migrate cleanly to AIM 1.6.
 - the public docs point to the 1.6 front door
 - contradictory legacy state must be escalated instead of guessed through
 
-Best reference:
-- [Migrate AIM 1.5 to AIM 1.6](migrate-aim-1.5-to-1.6.md)
-
 ## Best reference docs
 
 - [README.md](../../README.md)
 - [Agile iteration method](agile-iteration-method.md)
-- [AIM 1.6 document map](aim-1.6-doc-map.md)
 - [AIM modularity and context efficiency](../features/aim-modularity-context-efficiency.md)
 - [AIM adapter guidance](aim-adapter-guidance.md)

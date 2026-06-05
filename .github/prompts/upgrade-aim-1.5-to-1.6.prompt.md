@@ -22,4 +22,4 @@ Required outcomes:
    - migration assumptions
    - follow-up risks
 
-Use `docs/workflow/migrate-aim-1.5-to-1.6.md` as the workflow contract.
+Use the active public docs and packaged helper surfaces as the workflow contract.

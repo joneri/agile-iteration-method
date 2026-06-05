@@ -24,6 +24,7 @@ Examples:
 - aim-2-profile-source-summary.md
 - aim-2-release-path-readiness-audit.md
 - aim-2-repo-profile-and-footprint-model.md
+- aim-2-repository-surface-classification.md
 - aim-2-tiny-team-profile-example.md
 - aim-2-working-state-boundaries.md
 - aim-cost-control-mode.md
