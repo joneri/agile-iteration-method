@@ -176,6 +176,62 @@ AIM_2_MIGRATION_CLASSIFICATION = {
     ],
 }
 
+SURFACE_BOUNDARY_CLASSIFICATION = {
+    "static_product": [
+        "README.md",
+        "docs/workflow",
+        "adapters",
+        "scripts/validate_aim_runtime.py",
+        "examples",
+    ],
+    "repo_aware_collision_prone": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "aim.profile.yaml",
+        ".github/agents",
+        ".github/prompts",
+        ".claude",
+        ".gitignore",
+    ],
+    "repo_owned_collision_prone": [
+        "CONTRIBUTING.md",
+    ],
+    "runtime_working_state": [
+        ".aim",
+        ".aim/epic.md",
+        ".aim/state.json",
+        ".aim/increments",
+        ".aim/decisions",
+        ".aim/reviews",
+    ],
+    "mixed_docs": [
+        "docs/features",
+    ],
+    "local_generated_never_ship": [
+        ".DS_Store",
+    ],
+}
+
+REQUIRED_SURFACE_MODEL_MARKERS = [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "aim.profile.yaml",
+    ".aim/",
+    ".github/",
+    ".claude/",
+    "docs/workflow/",
+    "docs/features/",
+    "adapters/",
+    "scripts/",
+    "examples/",
+    "May create",
+    "May modify",
+    "May overwrite",
+    "Must never touch",
+]
+
 EXPECTED_ROLE_BY_STATE = {
     "epic_initialized": "PO",
     "gate_a_pending": "PO",
@@ -471,6 +527,18 @@ def collect_migration_classification(repo_root: Path) -> dict[str, list[str]]:
     return classification
 
 
+def collect_surface_boundary_classification(repo_root: Path) -> dict[str, list[str]]:
+    classification: dict[str, list[str]] = {}
+    for category, paths in SURFACE_BOUNDARY_CLASSIFICATION.items():
+        existing_paths = []
+        for relative_path in paths:
+            path = repo_root / relative_path
+            if path.exists():
+                existing_paths.append(relative_path)
+        classification[category] = existing_paths
+    return classification
+
+
 def main() -> int:
     repo_root = Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()
     checked: list[str] = []
@@ -535,6 +603,33 @@ def main() -> int:
 
     checked.append("AIM 2.0 migration classification")
     migration_classification = collect_migration_classification(repo_root)
+
+    checked.append("AIM 2.0 surface boundary classification")
+    surface_boundary_classification = collect_surface_boundary_classification(repo_root)
+
+    surface_model_path = repo_root / "docs/features/aim-2-repository-surface-classification.md"
+    checked.append(str(surface_model_path.relative_to(repo_root)))
+    if surface_model_path.is_file():
+        surface_model_content = surface_model_path.read_text(encoding="utf-8", errors="replace")
+        missing_surface_markers = [
+            marker for marker in REQUIRED_SURFACE_MODEL_MARKERS if marker not in surface_model_content
+        ]
+        if missing_surface_markers:
+            add_issue(
+                issues,
+                "recoverable",
+                str(surface_model_path.relative_to(repo_root)),
+                f"surface classification model is missing required markers: {', '.join(missing_surface_markers)}",
+                "Update the surface matrix so installer-facing boundary rules cover all required AIM 2.0 surfaces.",
+            )
+    else:
+        add_issue(
+            issues,
+            "recoverable",
+            str(surface_model_path.relative_to(repo_root)),
+            "surface classification model is missing",
+            "Restore docs/features/aim-2-repository-surface-classification.md before relying on installer boundary guidance.",
+        )
 
     checked.append("AIM 2.0 repo profile readiness")
     repo_profile_readiness = collect_repo_profile_readiness(repo_root)
@@ -770,6 +865,21 @@ def main() -> int:
     print("AIM 2.0 migration classification:")
     for category in ["runtime", "repo_profile", "working_state", "docs", "adapter_helpers"]:
         paths = migration_classification.get(category, [])
+        if paths:
+            print(f"- {category}: {', '.join(paths)}")
+        else:
+            print(f"- {category}: none")
+
+    print("AIM 2.0 surface boundary classification:")
+    for category in [
+        "static_product",
+        "repo_aware_collision_prone",
+        "repo_owned_collision_prone",
+        "runtime_working_state",
+        "mixed_docs",
+        "local_generated_never_ship",
+    ]:
+        paths = surface_boundary_classification.get(category, [])
         if paths:
             print(f"- {category}: {', '.join(paths)}")
         else:

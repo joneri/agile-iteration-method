@@ -23,6 +23,51 @@ Use [Quick start AIM 2.0](quick-start-aim-2.0.md) for the first run after setup.
 
 All three footprints are current AIM 2.0 choices.
 
+## Installation boundary model
+
+Before copying files, classify the target surface.
+
+Use [AIM 2.0 repository surface classification](../features/aim-2-repository-surface-classification.md) as the operational boundary model.
+
+Installer actions must follow these defaults:
+
+| Surface class | Default action |
+| --- | --- |
+| Static AIM product docs and adapter packages | may be copied into an AIM-owned package path selected by the user |
+| Repo-aware instruction files | may be created only when absent and explicitly requested; otherwise produce a merge plan |
+| Runtime state | never install as product; AIM creates `.aim/` at runtime |
+| Team profile | create or update only by explicit Team AIM choice |
+| Personal profile | store outside the repository by default |
+| Target repo policy files | never overwrite |
+| Internal build-memory | do not install by default |
+
+Installation safety matters more than convenience.
+If a file is both useful and collision-prone, treat it as a template or merge target, not as a normal copy target.
+
+### Collision-prone root files
+
+These files require explicit handling:
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `CONTRIBUTING.md`
+- `aim.profile.yaml`
+- `.gitignore`
+
+Rules:
+
+- inspect before writing
+- create only when absent and requested
+- modify only through a reviewed merge or patch
+- never blind overwrite
+- never store active Epic, gate, role, review, or acceptance state in repo profiles or instruction files
+
+For `.gitignore`, suggest this fragment instead of replacing the target file:
+
+```gitignore
+/.aim
+```
+
 ## Minimum setup for full embedded AIM
 
 Required in the repository:
@@ -34,6 +79,12 @@ Required in the repository:
 - `.github/agents/aim-builder.agent.md`
 - `.github/agents/aim-reviewer.agent.md`
 - `.aim/` created automatically when AIM starts if missing
+
+Important:
+
+- the listed instruction files are required for a full embedded AIM repo, but they are not safe blind-overwrite targets in an existing repository
+- `.aim/` is runtime state, not an install payload
+- `CONTRIBUTING.md` is not part of default AIM installation for target repositories
 
 Optional Copilot prompt helpers:
 
