@@ -2,7 +2,7 @@
 mode: aim
 ---
 
-Start AIM 1.7 in this repository.
+Start AIM 2.0 in this repository.
 
 Before reading major docs, check `.aim/state.json`.
 If an incomplete Epic exists, resume that checkpoint instead of rebuilding context or starting over.

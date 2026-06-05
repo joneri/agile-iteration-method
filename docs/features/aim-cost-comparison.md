@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Show why AIM 1.7 is expected to reduce AI spend compared with AIM 1.6-style normal use and undisciplined vibe coding, without claiming exact dollar or token savings.
+Show why AIM 2.0 is expected to reduce AI spend compared with undisciplined agentic work, without claiming exact dollar or token savings.
 
 ## How it works
 
@@ -20,7 +20,7 @@ Those drivers matter because modern coding-agent cost is tied to token volume, m
 
 ## Comparison
 
-| Cost driver | Undisciplined vibe coding | AIM 1.6-style normal use | AIM 1.7 cost-first use |
+| Cost driver | Undisciplined agentic work | Ordinary AIM use | AIM 2.0 cost-aware use |
 | --- | --- | --- | --- |
 | Scope | Broad prompt or drifting task | One Done Increment, but cost story is less prominent | One behavioral Done Increment with cost reviewed before work |
 | Context loading | Often reloads or re-explains everything | Progressive context loading exists | State-first resume from `.aim/state.json` before broad rereads |
@@ -35,7 +35,7 @@ Those drivers matter because modern coding-agent cost is tied to token volume, m
 
 This proves a behavioral cost case, not a measured price benchmark.
 
-AIM 1.7 should be cheaper in normal day-to-day work because it removes or narrows common spend drivers:
+AIM 2.0 should be cheaper in normal day-to-day work because it removes or narrows common spend drivers:
 
 - fewer full-method rereads
 - fewer large ambiguous sessions
@@ -52,15 +52,15 @@ This document does not claim:
 - a fixed percentage saving
 - a fixed token saving
 - a fixed GitHub Copilot AI Credit saving
-- that every AIM 1.7 run is cheaper than every AIM 1.6 or vibe-coding run
+- that every AIM 2.0 run is cheaper than every uncontrolled agentic run
 
 Some work should cost more because the risk justifies deeper review and broader context.
 
 ## Key decisions
 
-- AIM 1.7 can claim lower waste more safely than exact lower cost.
-- The strongest comparison is against uncontrolled agent behavior, not against a perfect AIM 1.6 run.
-- AIM 1.6 already introduced cost profiles, so the 1.7 improvement is mainly enforcement, front-door clarity, and Copilot-specific operator behavior.
+- AIM 2.0 can claim lower waste more safely than exact lower cost.
+- The strongest comparison is against uncontrolled agent behavior, not against a hypothetical perfect process baseline.
+- The improvement is mainly enforcement, front-door clarity, and operator behavior tied to real risk.
 
 ## Inputs/outputs
 
@@ -86,7 +86,7 @@ Outputs:
 
 ## Debugging
 
-When AIM 1.7 does not feel cheaper, check:
+When AIM 2.0 does not feel cheaper, check:
 
 1. Did it resume from `.aim/state.json`?
 2. Did Gate B approve one narrow behavioral increment?
@@ -102,4 +102,4 @@ When AIM 1.7 does not feel cheaper, check:
 - `docs/features/aim-cost-saving-method.md`
 - `docs/features/aim-cost-review-checklist.md`
 - `docs/features/aim-github-copilot-cost-reduction-playbook.md`
-- `docs/workflow/quick-start-aim-1.7.md`
+- `docs/workflow/quick-start-aim-2.0.md`

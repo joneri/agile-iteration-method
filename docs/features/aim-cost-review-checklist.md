@@ -83,4 +83,4 @@ When a team says AIM still feels expensive, ask:
 
 - `docs/features/aim-cost-saving-method.md`
 - `docs/features/aim-vendor-cost-baseline-june-2026.md`
-- `docs/workflow/quick-start-aim-1.7.md`
+- `docs/workflow/quick-start-aim-2.0.md`

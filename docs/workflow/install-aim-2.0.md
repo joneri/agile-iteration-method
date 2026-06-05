@@ -21,6 +21,8 @@ Use [Quick start AIM 2.0](quick-start-aim-2.0.md) for the first run after setup.
 - Full embedded AIM:
   - commit the AIM contract into the repository only when the repo owner intentionally wants AIM inside the repo
 
+All three footprints are current AIM 2.0 choices.
+
 ## Minimum setup for full embedded AIM
 
 Required in the repository:
@@ -38,7 +40,6 @@ Optional Copilot prompt helpers:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.5-to-1.6.prompt.md`
 
 Recommended for Claude Code support:
 
@@ -47,7 +48,6 @@ Recommended for Claude Code support:
 - `.claude/commands/start-aim.md`
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`
-- `.claude/commands/upgrade-aim-1.5-to-1.6.md`
 
 ## Adapter packaging
 
@@ -102,5 +102,6 @@ After setup, a user should be able to:
 ## Next documents
 
 - [Quick start AIM 2.0](quick-start-aim-2.0.md)
+- [Troubleshoot AIM 2.0](troubleshoot-aim-2.0.md)
 - [AIM 2.0 low-footprint adoption](aim-2-low-footprint-adoption.md)
 - [AIM adapter guidance](aim-adapter-guidance.md)

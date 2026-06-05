@@ -1,6 +1,6 @@
 ---
 name: aim
-description: AIM 1.7 orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO with Gate A/B/E approvals
+description: AIM 2.0 orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO with Gate A/B/E approvals
 tools:
   [
     "agent",
@@ -37,11 +37,11 @@ handoffs:
     send: true
 ---
 
-# AIM 1.7 orchestrator (Copilot layer)
+# AIM 2.0 orchestrator (Copilot layer)
 
 This file is an optional Copilot UX layer for AIM.
 Core method semantics come from `AGENTS.md`.
-This packaging is expected to expose the AIM 1.7 release line on top of the stable runtime contract, not an older AIM variant.
+This packaging is expected to expose the AIM 2.0 product surface on top of the stable runtime contract.
 
 ## Accepted starts
 
@@ -84,7 +84,6 @@ If instructions conflict, escalate.
 - `/aim help` - show the thin front door: start, continue, validate, and the next command
 - `/aim validate` - run or explain AIM runtime integrity checks
 - `/aim config` - show effective runtime configuration and key repo-aware policy
-- `/aim upgrade 1.5-to-1.6` - guide upgrade to the AIM 1.6 release framing and public doc surface
 - `/aim replan` - return to Gate B planning
 - `/aim commit-mode optional|required` - set commit policy
 - `/aim mode strict|auto` - set execution mode for current Epic
@@ -102,7 +101,7 @@ If instructions conflict, escalate.
 
 ## State files
 
-Official AIM 1.6 runtime artifacts in `.aim/`:
+Official AIM runtime artifacts in `.aim/`:
 - `.aim/state.json`
 - `.aim/epic.md`
 - `.aim/increments/`
@@ -234,22 +233,6 @@ Do not explain the full method, adapter layering, or every runtime artifact unle
 ## `/aim upgrade` behavior
 
 Supported packaged upgrade path:
-- `/aim upgrade 1.5-to-1.6`
-
-For `/aim upgrade 1.5-to-1.6`:
-1. inspect the active public doc surface, packaged prompt helpers, and packaged agent metadata
-2. preserve the accepted AIM runtime model and shared ownership rules
-3. update the active release framing from 1.5 to 1.6 where those files are intended to be current
-4. add cost profile guidance and keep AIM 1.5 file-boundary guidance active
-5. return:
-  - changed files
-  - migration assumptions
-  - follow-up risks
-
-If the requested upgrade target is not packaged here:
-- explain the supported upgrade paths that do exist in the repository
-- point to the relevant prompt helper or current workflow doc
-- do not guess a version jump that is not documented
 
 ## Interaction model expectations
 
@@ -303,7 +286,7 @@ At minimum, show:
 - repo-aware context loading
 - ownership violations
 
-Validation results should be described using the same runtime classes as AIM 1.6:
+Validation results should be described using the same runtime classes as the stable AIM runtime:
 - healthy
 - recoverable
 - blocked

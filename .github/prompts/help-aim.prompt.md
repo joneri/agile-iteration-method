@@ -2,7 +2,7 @@
 mode: aim
 ---
 
-Show short AIM 1.7 help for this repository.
+Show short AIM 2.0 help for this repository.
 
 Explain:
 1. the three front-door choices:
@@ -23,7 +23,6 @@ Explain:
    - `/aim validate`
    - `/aim config`
    - `/aim cost standard|control|deep`
-   - `/aim upgrade 1.5-to-1.6`
 
 Keep the answer compact. Do not explain adapter layers, gate theory, or the full method unless I ask for deeper help.
 

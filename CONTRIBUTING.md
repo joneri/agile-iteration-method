@@ -6,7 +6,7 @@ This repo is both:
 1) the public method definition, and
 2) a copyable implementation kit for real projects.
 
-## Versioning policy (AIM 1.7)
+## Versioning policy (AIM 2.0)
 - This repository is the source of truth for AIM.
 - Documentation updates here are method updates.
 - AIM changes should be proposed and reviewed using AIM itself.
@@ -24,16 +24,12 @@ This repo is both:
   Optional Copilot custom-agent layer.
 - `docs/workflow/aim-adapter-guidance.md`
   Adapter entrypoints, parity labels and helper-file boundaries.
-- `docs/workflow/install-aim-1.7.md`
-  Current installation front door.
-- `docs/workflow/quick-start-aim-1.7.md`
-  Current first-run front door.
 - `docs/workflow/install-aim-2.0.md`
   Current installation guide.
 - `docs/workflow/quick-start-aim-2.0.md`
   Current first-run guide.
-- `docs/workflow/release-aim-1.7.md`
-  Current release notes.
+- `docs/workflow/troubleshoot-aim-2.0.md`
+  Current troubleshooting guide.
 - `docs/features/_template.md`  
   Feature explanation template (contracts, rules, fallbacks).
 - `CONTRIBUTORS.md`  

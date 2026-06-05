@@ -22,7 +22,7 @@ For a concrete behavior-by-behavior comparison, see `docs/features/aim-cost-comp
 
 ## Key decisions
 
-- AIM 1.7 markets cost savings directly because users now feel the spend directly.
+- AIM 2.0 markets cost savings directly because users now feel the spend directly.
 - The method does not promise "cheapest possible" output. It promises lower waste with preserved trust.
 - `Cost Control` is the default low-cost operating mode, not a weaker method.
 - `Deep` remains mandatory when billing facts, trust, data correctness, or public behavior are at stake.
@@ -68,5 +68,5 @@ If a team says "AI is too expensive now", inspect in this order:
 - `docs/features/aim-cost-comparison.md`
 - `docs/features/aim-cost-review-checklist.md`
 - `docs/features/aim-vendor-cost-baseline-june-2026.md`
-- `docs/workflow/quick-start-aim-1.7.md`
+- `docs/workflow/quick-start-aim-2.0.md`
 - `README.md`

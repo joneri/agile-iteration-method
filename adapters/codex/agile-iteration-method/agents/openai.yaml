@@ -1,4 +1,4 @@
 interface:
-  display_name: "AIM 1.7"
-  short_description: "Run repo-aware AIM 1.7 loops with `.aim`, cost profiles, and explicit cost-saving guidance"
+  display_name: "AIM 2.0"
+  short_description: "Run repo-aware AIM 2.0 loops with `.aim`, cost profiles, and explicit cost-saving guidance"
   default_prompt: "Use $agile-iteration-method to start or continue an AIM loop with: EPIC: <desired outcome>. Mode: Strict or Mode: Auto."

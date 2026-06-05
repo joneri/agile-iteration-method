@@ -421,7 +421,7 @@ def collect_repo_profile_readiness(repo_root: Path) -> dict[str, object]:
             "profile_paths": [],
             "team_profile_paths": [],
             "personal_profile_paths": [],
-            "summary": "No AIM 2.0 repo profile artifact found; AGENTS.md can bridge AIM 1.7 migration, but reusable Personal/Team profile reuse is not ready yet.",
+            "summary": "No AIM 2.0 repo profile artifact found; AGENTS.md can bridge current runtime behavior, but reusable Personal/Team profile reuse is not ready yet.",
             "state_marker_findings": {},
             "intelligence_marker_findings": {},
         }

@@ -3,10 +3,9 @@
 
 # Quick start AIM 2.0
 
-Use this page when you want the shortest practical start into the AIM 2.0 operating model.
+Use this page when you want the shortest practical start into the current AIM 2.0 operating model.
 
-AIM 2.0 is not presented here as a fully finished release switch.
-This is the front-door operating path for the current Personal AIM and Team AIM model.
+This is the front-door operating path for AIM 2.0 after setup, whether you use Personal AIM, Team AIM, or Full embedded AIM.
 
 ## Choose your start mode
 
@@ -15,7 +14,7 @@ Pick one:
 - Personal AIM: use AIM yourself with no required committed AIM files
 - Team AIM: share a small repo profile with the team through root `aim.profile.yaml`
 
-If the repository owner explicitly wants AIM committed into the repo, use the embedded AIM 1.7 install path instead.
+If the repository owner explicitly wants AIM committed into the repo, use the Full embedded AIM path in [Install AIM 2.0](install-aim-2.0.md).
 
 ## Personal AIM
 
@@ -114,6 +113,11 @@ Use one cost profile:
 Use `Cost Control` for normal low-risk work, cleanup, documentation maintenance, and narrow reversible fixes.
 Use `Deep` for trust-sensitive, migration, deployment, security, API, or broad public-method work.
 
+## Cost-aware default
+
+Start with `Cost Control` when the work is reversible and low risk.
+Move to `Standard` or `Deep` only when trust, data correctness, deployment, migration, security, or broader product behavior justifies the extra depth.
+
 ## Common follow-up commands
 
 - `/aim continue`
@@ -153,7 +157,9 @@ Do not treat the docs as the install footprint.
 
 ## Start here, go deeper only if needed
 
+- For repository setup, embedded AIM, or adapter packaging: [Install AIM 2.0](install-aim-2.0.md)
 - For the broader adoption model: [AIM 2.0 low-footprint adoption](aim-2-low-footprint-adoption.md)
+- For troubleshooting start, resume, validation, and adapter behavior: [Troubleshoot AIM 2.0](troubleshoot-aim-2.0.md)
 - For Personal profile storage details: [AIM 2.0 Personal local profile storage](../features/aim-2-personal-local-profile-storage.md)
 - For the tiny shared Team profile: [AIM 2.0 Tiny Team Profile Artifact](../features/aim-2-tiny-team-profile-example.md)
 - For the compact startup summary contract: [AIM 2.0 Profile Source Summary](../features/aim-2-profile-source-summary.md)

@@ -166,7 +166,7 @@ Adapters should make the main profile-related cost drivers visible without exact
 - expected review depth
 - subagent policy or sequential fallback
 
-This preserves the AIM 1.7 cost story while extending it to install, startup, scanning, resume, profile refresh, and branch switching.
+This preserves the AIM 2.0 cost story while extending it to install, startup, scanning, resume, profile refresh, and branch switching.
 
 ## Optional adapter layers
 
@@ -185,7 +185,7 @@ Codex layer:
 - may use the shipped Codex skill at `adapters/codex/agile-iteration-method/SKILL.md` as the canonical copyable launcher/runtime guide
 - may expose bounded subagent capability where runtime support exists
 - treats `/aim`, when available, as a launcher surface rather than the source of method authority
-- on the first AIM 1.6 command in Codex, should make the bundled skill path and local install target visible so new and existing users know which skill to use
+- on the first AIM command in Codex, should make the bundled skill path and local install target visible so new and existing users know which skill to use
 
 ## Quick start phrases
 
@@ -193,7 +193,6 @@ These phrases are valid adapter entrypoint hints when the matching layer support
 - `Install AIM`
 - `Start working according to AIM`
 - `/aim start "EPIC: ..."`
-- `/aim upgrade 1.5-to-1.6`
 - `Starta en AIM-loop med denna EPIC: ...`
 
 Transport shortcuts and command surfaces are adapter UX.
@@ -208,7 +207,6 @@ Copilot prompt helpers:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.5-to-1.6.prompt.md`
 
 Claude Code:
 - `CLAUDE.md`

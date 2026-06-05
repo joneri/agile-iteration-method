@@ -4,11 +4,11 @@
 
 Make AIM budget-aware so users can reduce agent resource use without weakening role ownership, gate semantics, or escalation rules.
 
-In AIM 1.7, this feature becomes part of the explicit public cost-saving promise rather than a quiet internal optimization.
+In AIM 2.0, this feature is part of the explicit public cost-saving promise rather than a quiet internal optimization.
 
 ## How it works
 
-AIM 1.6 separates approval flow from runtime depth:
+AIM separates approval flow from runtime depth:
 
 - execution mode: `Strict` or `Auto`
 - cost profile: `Standard`, `Cost Control`, or `Deep`
@@ -24,7 +24,7 @@ AIM 1.6 separates approval flow from runtime depth:
 - short trace artifacts for low-risk work
 - escalation to `Standard` or `Deep` when risk appears
 
-`Standard` also becomes cheaper in AIM 1.7 by using state-first resume and progressive context loading.
+`Standard` also becomes cheaper in AIM 2.0 by using state-first resume and progressive context loading.
 Agents read `.aim/state.json` before rebuilding runtime context, then load the shortest authoritative context first and load deeper docs only when the task needs them.
 
 ## Key decisions
@@ -76,5 +76,5 @@ For `/aim continue`, first check whether the agent resumed from `.aim/state.json
 
 - `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
-- `docs/workflow/quick-start-aim-1.6.md`
+- `docs/workflow/quick-start-aim-2.0.md`
 - `.github/agents/aim.agent.md`

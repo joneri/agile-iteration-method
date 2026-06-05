@@ -6,8 +6,8 @@
 
 ## Version
 
-This document describes the **AIM 1.7** release line.
-It retains the AIM 1.2 core method and keeps the accepted AIM 1.6 runtime model stable while making AIM's cost-saving operator story explicit.
+This document describes the **AIM 2.0** product surface.
+It retains the stable AIM core method and runtime model while making AIM's cost-aware operator story explicit.
 
 ## Overview
 
@@ -74,7 +74,7 @@ Execution may proceed autonomously within an explicitly approved Done Increment 
 
 ## Stable runtime architecture
 
-AIM 1.6 keeps the same architecture split and adds an explicit runtime-depth layer.
+AIM keeps the same architecture split and uses an explicit runtime-depth layer.
 
 - `AIM core`:
   - the canonical role sequence
@@ -122,14 +122,14 @@ The full `.aim` file contract, schema and lifecycle rules belong to the runtime 
 
 ### Official `.aim` contract
 
-Required AIM 1.4 artifacts:
+Required artifacts:
 - `.aim/epic.md`
 - `.aim/state.json`
 - `.aim/increments/`
 - `.aim/decisions/`
 - `.aim/reviews/`
 
-Optional AIM 1.4 artifacts:
+Optional artifacts:
 - `.aim/handoffs/`
 - `.aim/logs/`
 - `.aim/archive/`
@@ -173,7 +173,7 @@ Markdown artifacts remain important for human inspection, but `state.json` is th
 
 ## Bootstrap and resume flow
 
-AIM 1.4 defines one shared conceptual startup sequence across adapters:
+AIM defines one shared conceptual startup sequence across adapters:
 
 1. detect repo root
 2. detect or create `.aim`
@@ -271,7 +271,7 @@ If startup cannot proceed cleanly:
 
 ## State transition model
 
-AIM 1.4 gives `state.json` a formal runtime meaning instead of treating it as a loose status note.
+AIM gives `state.json` a formal runtime meaning instead of treating it as a loose status note.
 
 ### Canonical runtime states
 
@@ -342,7 +342,7 @@ Resume cases:
 
 ## Normalized repo-aware runtime context
 
-AIM 1.4 does not let each adapter invent its own interpretation of repository rules.
+AIM does not let each adapter invent its own interpretation of repository rules.
 After loading repo files, the runtime must normalize them into one shared repo-aware context.
 
 ### Precedence order
@@ -402,7 +402,7 @@ If normalization does not produce a safe context:
 
 ## Validator support
 
-AIM 1.4 should provide one quick integrity check for the active runtime state before or during startup, resume, or troubleshooting.
+AIM should provide one quick integrity check for the active runtime state before or during startup, resume, or troubleshooting.
 
 ### What the validator checks
 
@@ -447,8 +447,8 @@ This means:
 
 ## Migration support
 
-AIM 1.6 must define a practical upgrade path for repositories that already use the accepted AIM 1.4 runtime model.
-The active repository surface keeps the current 1.5-to-1.6 bridge; older migration hops may live outside the active file set.
+AIM 2.0 must define a practical upgrade path for repositories that already use earlier AIM runtime models.
+Older migration hops may live outside the active shipped file set.
 
 ### Supported migration scenarios
 
@@ -457,17 +457,17 @@ The active repository surface keeps the current 1.5-to-1.6 bridge; older migrati
   - the runtime initializes `.aim/epic.md` and `.aim/state.json` from the active Epic context
 - informal `.aim` already in use:
   - legacy helper artifacts may remain temporarily
-  - the official AIM 1.6 workspace contract becomes the authoritative runtime layout
+  - the official AIM workspace contract becomes the authoritative runtime layout
 - Codex-only repository:
-  - the repo can adopt AIM 1.6 runtime behavior without also adopting the optional Copilot layer
+  - the repo can adopt AIM runtime behavior without also adopting the optional Copilot layer
 - Claude Code repository:
-  - the repo can adopt AIM 1.6 runtime behavior with `AGENTS.md` plus `CLAUDE.md` and optional `.claude/` helpers
+  - the repo can adopt AIM runtime behavior with `AGENTS.md` plus `CLAUDE.md` and optional `.claude/` helpers
 - Copilot-layer repository:
-  - existing `.github/agents/aim*.agent.md` files may remain, but they must align with the shared AIM 1.6 runtime contract
+  - existing `.github/agents/aim*.agent.md` files may remain, but they must align with the shared AIM runtime contract
 
 ### Upgrade checklist
 
-A safe AIM 1.5 to AIM 1.6 migration should:
+A safe AIM migration should:
 - keep the repository profile in `AGENTS.md` and any active adapter helper files readable through the accepted layer order
 - create or normalize the official `.aim` workspace
 - make `state.json` the durable runtime checkpoint for startup and resume
@@ -483,7 +483,7 @@ Legacy artifacts should be classified like this:
 - migrated:
   - active Epic context into `.aim/epic.md`
   - active runtime checkpoint into `.aim/state.json`
-  - older runtime wording in repo docs into AIM 1.6 terminology
+  - older runtime wording in repo docs into current AIM terminology
 - archived:
   - stale logs, analysis notes, and superseded helper artifacts after their decision value is preserved elsewhere
 - removed or replaced:
@@ -644,7 +644,7 @@ but **never replaces PO ownership of value or acceptance**.
 
 ## Interaction model
 
-AIM 1.4 replaces the generic visible approval template with a role-specific, step-specific interaction model.
+AIM replaces the generic visible approval template with a role-specific, step-specific interaction model.
 
 Core method stays the same:
 - role order stays the same
@@ -1014,7 +1014,7 @@ If any of the following are true, Gate B must not be approved:
 
 ## Platform adapters
 
-AIM 1.4 prefers one shared conceptual flow across platforms:
+AIM prefers one shared conceptual flow across platforms:
 
 1. detect repo root
 2. detect or create `.aim`
@@ -1024,7 +1024,7 @@ AIM 1.4 prefers one shared conceptual flow across platforms:
 6. resolve execution mode, cost profile, and platform capability limits
 7. enter the AIM role sequence
 
-Parity classes used by AIM 1.4:
+Parity classes used by AIM:
 - `shared`
   - same conceptual behavior and same runtime contract across supported adapters
 - `shared_with_adapter_differences`
@@ -1142,9 +1142,9 @@ At minimum, the matrix must classify:
 
 ## Controlled parallelism
 
-AIM 1.6 allows controlled parallelism only when the runtime supports it and repo-aware policy permits it.
+AIM allows controlled parallelism only when the runtime supports it and repo-aware policy permits it.
 
-Controlled parallelism remains one of the practical runtime capabilities in AIM 1.6.
+Controlled parallelism remains one of the practical runtime capabilities in AIM.
 It allows AIM to speed up analysis, discovery and verification in the right situations without weakening central ownership of shared state, gates or acceptance decisions.
 
 The safety rule is simple:
@@ -1194,9 +1194,9 @@ At that point, the EPIC is complete.
 
 - `AGENTS.md` defines operational rules, gates and escalation behaviour for Codex runs.
 - `docs/workflow/aim-adapter-guidance.md` collects adapter-specific entrypoints, parity labels, helper-file boundaries, and fallback notes so canonical files stay focused.
-- `docs/features/aim-cost-control-mode.md` defines AIM 1.6 cost profiles and escalation rules for runtime depth.
-- `docs/features/aim-modularity-context-efficiency.md` defines AIM 1.6 file-boundary and context-efficiency behavior.
-- `docs/workflow/quick-start-aim-2.0.md` and `docs/workflow/aim-2-low-footprint-adoption.md` define the current public onboarding path; older 1.6 install and map docs remain historical reference material.
+- `docs/features/aim-cost-control-mode.md` defines AIM cost profiles and escalation rules for runtime depth.
+- `docs/features/aim-modularity-context-efficiency.md` defines AIM file-boundary and context-efficiency behavior.
+- `docs/workflow/quick-start-aim-2.0.md`, `docs/workflow/install-aim-2.0.md`, and `docs/workflow/aim-2-low-footprint-adoption.md` define the current public onboarding path.
 - `CONTRIBUTING.md` defines coding standards, PR rules and local commands.
 - `docs/workflow/copilot-layer.md` defines the optional Copilot custom-agent interface.
 - `docs/features/` explains non-obvious feature behaviour, contracts and fallbacks.

@@ -40,7 +40,6 @@ AIM 2.0 keeps the accepted core loop and stable runtime contract, but changes th
 - `Cost Control` keeps AIM gates and escalation rules while reducing context, output, and verification depth for low-risk work
 - `Standard` AIM now uses progressive context loading by default instead of rereading every method document
 - `Deep` is available for high-risk work where broader inspection and stronger review are worth the spend
-- AIM 1.7 remains available as the full embedded and cost-saving fallback path
 - GitHub Copilot AI Credits are treated as a first-class operator concern after the June 1, 2026 billing change
 - `.aim/` is the official repo-local AIM workspace
 - `.aim/state.json` is the durable checkpoint for start, resume and gate tracking
@@ -60,7 +59,7 @@ Teams use AIM 2.0 because it makes disciplined agentic work easier to adopt with
 - you can delegate bounded work without losing ownership of gates or acceptance
 - you can start personally with no required committed AIM files
 - you can share team repo knowledge through a tiny profile instead of copying full AIM docs
-- you still get the cost discipline from AIM 1.7 without weakening trust or review
+- you still get strong cost discipline without weakening trust or review
 
 ## Why 2.0
 
@@ -68,14 +67,13 @@ AIM 2.0 is a release identity change, not a method break.
 
 - the core loop is still `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
 - the accepted runtime contract and `.aim` ownership model stay intact
-- the big change is adoption: Personal AIM and Team AIM become the normal starting paths
-- AIM 1.7 remains the full embedded and cost-saving fallback path when a repository owner explicitly wants that model
+- the big change is adoption: Personal AIM, Team AIM, and Full embedded AIM are all described as current AIM 2.0 operating paths
 
 The method stays stable. The install footprint gets smaller and reuse gets stronger.
 
 ## How AIM saves money
 
-AIM 2.0 keeps AIM 1.7's cost discipline and extends it to adoption, startup and reuse:
+AIM 2.0 keeps cost discipline and extends it to adoption, startup and reuse:
 
 - it prevents uncontrolled retries by forcing one approved Done Increment at a time
 - it keeps low-risk work in `Cost Control` instead of burning `Deep`-style context and review everywhere
@@ -85,16 +83,12 @@ AIM 2.0 keeps AIM 1.7's cost discipline and extends it to adoption, startup and 
 - it tells teams when to stop guessing and check official vendor billing behavior first
 
 That matters even more after GitHub Copilot moved to AI-credit billing on June 1, 2026.
-For the concrete comparison against AIM 1.6-style use and undisciplined vibe coding, see [AIM cost comparison](docs/features/aim-cost-comparison.md).
+For the concrete comparison against undisciplined vibe coding and oversized agent sessions, see [AIM cost comparison](docs/features/aim-cost-comparison.md).
 
 In practice, AIM should spend attention only where risk justifies it.
 Low-risk cleanup can run in Cost Control, while trust-sensitive product work can stay Standard or move to Deep.
 
 ## From prompt pattern to runtime
-
-Before AIM 1.3, the method was there but the runtime story was too loose.
-
-With AIM 1.4, the runtime became inspectable and adapter-aware.
 
 With AIM 2.0:
 - `.aim/` is the official repo-local AIM workspace
@@ -107,7 +101,7 @@ With AIM 2.0:
 - the public onboarding path makes the latest guidance obvious to new users
 - the front door starts with three simple choices instead of the full method
 - Codex users can see and install the repo-bundled AIM skill from the first AIM command
-- adapter guidance, packaging, and upgrade docs now read as one current release surface
+- adapter guidance and packaging now read as one current release surface
 
 That is the main upgrade: AIM 2.0 makes the accepted runtime easier to adopt, reuse and afford without weakening ownership, gates or escalation.
 
@@ -116,16 +110,14 @@ That is the main upgrade: AIM 2.0 makes the accepted runtime easier to adopt, re
 Choose one:
 
 1. [Start AIM 2.0 in Personal or Team mode](docs/workflow/quick-start-aim-2.0.md)
-2. [Start AIM 1.7 full embedded or cost-saving path](docs/workflow/quick-start-aim-1.7.md)
-3. [Continue or troubleshoot AIM](docs/workflow/troubleshoot-aim-1.6.md)
-4. [Install or upgrade AIM](docs/workflow/install-aim-1.7.md)
+2. [Continue or troubleshoot AIM](docs/workflow/troubleshoot-aim-2.0.md)
+3. [Install AIM](docs/workflow/install-aim-2.0.md)
 
-The AIM 2.0 path is the default adoption path for new Personal AIM or Team AIM use:
+The AIM 2.0 path is the current adoption path:
 
 - Personal AIM: start AIM without required committed AIM files
 - Team AIM: share a tiny repo profile through `aim.profile.yaml`
-
-AIM 1.7 remains available for the full embedded path and the cost-saving release story when that is the better fit.
+- Full embedded AIM: commit the AIM contract only when the repository owner intentionally wants it in the repo
 
 Fast start:
 
@@ -182,9 +174,9 @@ The skill is copyable adapter packaging. It must point back to the repository co
 | Copilot | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `.github/prompts/` | select `aim` and run `/aim start "EPIC: ..."` | `.github/agents/aim*.agent.md`; prompts optional |
 | Claude Code | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` + `CLAUDE.md` | optional repo-local `.claude/commands/` and `.claude/agents/` | repo Claude command if provided, or explicit `EPIC: ...` | `CLAUDE.md`; `.claude/` helpers optional |
 
-## Starting A New Repo With Full Embedded AIM 1.7
+## Starting A New Repo With Full Embedded AIM
 
-Use this fallback path when the repository owner intentionally wants the full embedded AIM 1.7 package in a new repository from day one.
+Use this path when the repository owner intentionally wants the full embedded AIM package in a new repository from day one.
 
 ### 1. Copy the AIM files into the new repo
 
@@ -198,18 +190,15 @@ Required for AIM:
 
 Recommended:
 - `README.md`
-- `docs/workflow/quick-start-aim-1.7.md`
-- `docs/workflow/install-aim-1.7.md`
 - `docs/workflow/quick-start-aim-2.0.md`
 - `docs/workflow/install-aim-2.0.md`
-- `docs/workflow/troubleshoot-aim-1.6.md`
+- `docs/workflow/troubleshoot-aim-2.0.md`
 - `examples/epics/example-epic.md`
 
 Optional GitHub Copilot prompt files:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim-1.5-to-1.6.prompt.md`
 
 Optional Codex skill packaging:
 - `adapters/codex/agile-iteration-method/SKILL.md`
@@ -439,7 +428,7 @@ Cost Control is not weaker AIM. It is AIM with a smaller runtime budget and a cl
 
 ## Platform Adapters
 
-AIM 1.6 explicitly separates:
+AIM explicitly separates:
 - AIM core
 - AIM runtime
 - repo-aware policy
@@ -477,11 +466,8 @@ These files extend the Claude adapter surface but they do not replace `AGENTS.md
 If you want to use AIM:
 1. [README.md](README.md)
 2. [Quick start AIM 2.0](docs/workflow/quick-start-aim-2.0.md) for the first run
-3. [Install AIM 1.7](docs/workflow/install-aim-1.7.md) when setup is missing or when you need the full embedded fallback
-
-If you want to upgrade an existing AIM repo:
-1. [Install AIM 1.7](docs/workflow/install-aim-1.7.md)
-2. [Troubleshoot AIM 1.6](docs/workflow/troubleshoot-aim-1.6.md) for deeper runtime-family issues
+3. [Install AIM 2.0](docs/workflow/install-aim-2.0.md) when setup is missing
+4. [Troubleshoot AIM 2.0](docs/workflow/troubleshoot-aim-2.0.md) when startup, resume, validation, or adapter behavior is wrong
 
 If you are implementing AIM itself:
 1. [AGENTS.md](AGENTS.md)
@@ -498,25 +484,17 @@ Do not start with `AGENTS.md` when the goal is just to install or run AIM in a r
   Claude Code bridge layer that maps AIM onto Claude Code without changing the shared runtime contract.
 - `docs/workflow/agile-iteration-method.md`
   The method and runtime explanation.
-- `docs/workflow/quick-start-aim-1.7.md`
-  AIM 1.7 full embedded and cost-saving fallback front door.
-- `docs/workflow/install-aim-1.7.md`
-  Transition-aware installation front door with AIM 2.0 operating choices and AIM 1.7 full embedded fallback.
 - `docs/features/aim-cost-comparison.md`
-  Cost comparison against AIM 1.6-style use and undisciplined vibe coding.
+  Cost comparison against undisciplined vibe coding and oversized agent sessions.
 - `docs/workflow/copilot-layer.md`
   Optional GitHub Copilot packaging and workflow layer.
 - `adapters/codex/agile-iteration-method/SKILL.md`
   Copyable Codex skill that exposes `/aim` as a launcher/runtime guide.
-- `docs/workflow/release-aim-1.7.md`
-  Current release note.
 - `docs/workflow/quick-start-aim-2.0.md`
-  Current quick start with the absorbed execution guidance from the removed 1.6 front door.
+  Current quick start.
 - `docs/workflow/install-aim-2.0.md`
   Current installation front door.
-- `docs/workflow/release-aim-1.6.md`
-  Stable runtime-family release note.
-- `docs/workflow/troubleshoot-aim-1.6.md`
+- `docs/workflow/troubleshoot-aim-2.0.md`
   Startup, resume, validator and fallback troubleshooting.
 - `examples/epics/example-epic.md`
   Example Epic input.

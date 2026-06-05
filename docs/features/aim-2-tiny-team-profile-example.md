@@ -275,7 +275,7 @@ The single best check is whether the profile helps AIM explain its startup conte
 - `aim.profile.yaml`
 - `docs/workflow/aim-2-low-footprint-adoption.md`
 - `docs/workflow/aim-adapter-guidance.md`
-- `docs/workflow/install-aim-1.7.md`
+- `docs/workflow/install-aim-2.0.md`
 
 ## Change log
 

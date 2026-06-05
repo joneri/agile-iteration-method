@@ -71,7 +71,7 @@ When AI costs feel unexpectedly high, check these first:
 ## Related files
 
 - `docs/features/aim-cost-control-mode.md`
-- `docs/workflow/quick-start-aim-1.6.md`
+- `docs/workflow/quick-start-aim-2.0.md`
 
 ## Official sources used for this June 2026 baseline
 

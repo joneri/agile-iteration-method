@@ -8,7 +8,7 @@ The front door should help a user choose the next action first, not teach the fu
 
 ## How it works
 
-AIM 1.6 presents three first choices:
+AIM 2.0 presents three first choices:
 - start a new AIM run
 - continue or troubleshoot an existing AIM run
 - install or upgrade AIM
@@ -51,6 +51,6 @@ Do I start, continue, or install?
 ## Related files
 
 - `README.md`
-- `docs/workflow/quick-start-aim-1.6.md`
+- `docs/workflow/quick-start-aim-2.0.md`
 - `.github/prompts/help-aim.prompt.md`
 - `.github/agents/aim.agent.md`

@@ -1,6 +1,6 @@
 # AIM Codex Bundled Skill Onboarding
 
-This feature remains part of the stable runtime-family support story underneath the AIM 1.7 public release line.
+This feature is part of the current AIM 2.0 Codex support story.
 
 ## Purpose
 
@@ -8,7 +8,7 @@ Make it obvious for Codex users that AIM ships a repository-bundled Codex skill 
 
 ## How it works
 
-On the first AIM 1.6.1 command in Codex, AIM should show:
+On the first AIM command in Codex, AIM should show:
 - the repo-bundled skill path: `adapters/codex/agile-iteration-method/SKILL.md`
 - the local Codex install target: `~/.codex/skills/agile-iteration-method/SKILL.md`
 - the install command when the local skill is missing or stale
@@ -22,7 +22,7 @@ The install command copies the whole skill directory because Codex may read pick
 - Missing or stale local skill installation is not automatically a blocker when the repo already contains the AIM contract.
 - Codex should report the fallback clearly and continue from repository instructions unless another escalation condition applies.
 - `Install AIM`, `/aim validate`, `/aim status`, `/aim config`, `/aim start`, and `/aim continue` are the most important surfaces for showing skill install status.
-- This is an AIM 1.6.1 feature because it improves first-run Codex adoption without changing AIM core behavior.
+- This behavior improves first-run Codex adoption without changing AIM core behavior.
 
 ## Inputs and outputs
 
@@ -70,5 +70,5 @@ If the visible skill card still looks stale after this, restart or refresh Codex
 - `adapters/codex/agile-iteration-method/agents/openai.yaml`
 - `README.md`
 - `docs/workflow/install-aim-2.0.md`
-- `docs/workflow/quick-start-aim-1.6.md`
+- `docs/workflow/quick-start-aim-2.0.md`
 - `docs/workflow/aim-adapter-guidance.md`

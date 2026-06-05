@@ -274,5 +274,5 @@ The fix is to move active Epic, increment, gate, review, or acceptance state bac
 ## Change log
 
 - 2026-06-05: Documented validator support for profile/state separation checks.
-- 2026-06-05: Linked AIM 1.7 migration classification checks.
+- 2026-06-05: Linked current migration classification checks.
 - 2026-06-05: Initial AIM 2.0 working-state boundary model.

@@ -4,7 +4,7 @@ This folder contains short, concrete explanations of non-obvious features.
 The goal is to make future debugging and changes faster and safer.
 
 Path note:
-- In AIM 1.6, `docs/features/` is the canonical feature-contract folder.
+- In AIM, `docs/features/` is the canonical feature-contract folder.
 
 ## When to add or update a doc
 Create or update a feature explanation when:
@@ -18,11 +18,8 @@ Create or update a feature explanation when:
   docs/features/<feature-name>.md
 
 Examples:
-- aim-2-enterprise-and-universal-adoption-strategy.md
-- aim-2-migration-classification-checks.md
 - aim-2-personal-local-profile-storage.md
 - aim-2-profile-source-summary.md
-- aim-2-release-path-readiness-audit.md
 - aim-2-repo-profile-and-footprint-model.md
 - aim-2-repository-surface-classification.md
 - aim-2-tiny-team-profile-example.md

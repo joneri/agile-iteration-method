@@ -10,7 +10,7 @@ This guide defines the practical product path that future runtime and installer 
 
 ## What changes in AIM 2.0
 
-AIM 2.0 separates four things that AIM 1.7 still blends too much:
+AIM 2.0 separates four things that older embedded AIM docs blended too much:
 
 - AIM runtime: how the loop runs
 - AIM repo profile: reusable knowledge about the repository
@@ -252,9 +252,9 @@ At Gate E, the runtime should report:
 
 Exact dollar or token accounting is not required for the first implementation path.
 
-## Migration from AIM 1.7
+## Migration from older embedded AIM repositories
 
-Existing AIM 1.7 repositories should continue to work.
+Existing embedded AIM repositories should continue to work.
 
 When AIM 2.0 sees existing AIM files, it should classify them:
 
@@ -306,4 +306,4 @@ For active state boundaries, see [AIM 2.0 working-state boundaries](../features/
 - `docs/features/aim-2-tiny-team-profile-example.md`
 - `docs/features/aim-2-working-state-boundaries.md`
 - `docs/features/aim-cost-comparison.md`
-- `docs/workflow/aim-1.7-doc-map.md`
+- `docs/workflow/quick-start-aim-2.0.md`

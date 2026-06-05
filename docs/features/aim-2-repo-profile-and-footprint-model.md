@@ -316,7 +316,7 @@ Before AIM treats a profile as reusable, the validator should report repo-profil
 
 Repo-profile readiness has four states:
 
-- `not_ready`: no AIM 2.0 profile artifact exists yet; `AGENTS.md` can still bridge AIM 1.7 behavior, but Personal/Team profile reuse is not ready.
+- `not_ready`: no AIM 2.0 profile artifact exists yet; `AGENTS.md` can still bridge runtime behavior, but Personal/Team profile reuse is not ready.
 - `incomplete_profile`: a profile file exists, but it does not yet contain recognizable repo intelligence such as commands, locality, ownership, risk, freshness, or cost fields.
 - `repair_profile`: a profile file exists, but it appears to contain active AIM working state and must be repaired before reuse.
 - `profile_ready`: a profile file exists, contains repo-intelligence markers, and does not contain active working-state markers.
@@ -479,8 +479,8 @@ The single best check is whether AIM can answer:
 - `docs/features/aim-cost-control-mode.md`
 - `docs/features/aim-cost-saving-method.md`
 - `docs/features/aim-modularity-context-efficiency.md`
-- `docs/workflow/install-aim-1.7.md`
-- `docs/workflow/quick-start-aim-1.7.md`
+- `docs/workflow/install-aim-2.0.md`
+- `docs/workflow/quick-start-aim-2.0.md`
 
 ## Change log
 
@@ -491,5 +491,5 @@ The single best check is whether AIM can answer:
 - 2026-06-05: Added repo-profile readiness states for validator-backed Personal/Team profile reuse.
 - 2026-06-05: Linked the tiny Team AIM profile example.
 - 2026-06-05: Linked the working-state boundary model.
-- 2026-06-05: Linked AIM 1.7 migration classification checks.
+- 2026-06-05: Linked current migration classification checks.
 - 2026-06-04: Initial concrete AIM 2.0 repo profile and footprint model.
