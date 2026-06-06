@@ -9,29 +9,52 @@ from __future__ import annotations
 from pathlib import Path
 
 
-SHARED_PROFILE_SEED = """\
-aimProfile:
-  schema: "1"
-  status: needs_calibration
-  confidence: low
-  calibrated: false
-  calibrationCommand: /aim calibrate-repo
-  note: >-
-    Seeded by aim_install.py. This is a bootstrap profile and is NOT calibrated.
-    Run /aim calibrate-repo before relying on repo-awareness.
-  knowledge:
+def shared_profile_seed(mode: str = "team") -> str:
+    """Return the bootstrap shared profile content.
+
+    Matches the canonical `aimRepoProfile` repo-awareness model (see
+    `aim.profile.yaml` and `docs/workflow/repo-awareness.md`) but is explicitly
+    uncalibrated: `calibration.status: needs_calibration`, `confidence: low`, and
+    empty `repoKnowledge` categories. It never claims `ready`.
+    """
+
+    sharing = "local" if mode == "personal" else "committed"
+    return f"""\
+aimRepoProfile:
+  profileVersion: "0.2"
+  calibration:
+    status: needs_calibration
+    source: installer-bootstrap
+    confidence: low
+    openUncertainties:
+      - Repository knowledge has not been calibrated yet.
+  repoIdentity:
+    name: to-be-calibrated
+    defaultBranch: to-be-calibrated
+  adoption:
+    mode: {mode}
+    footprint: tiny
+    sharing: {sharing}
+    profileOwner: repository-maintainers
+  storage:
+    profileLocation: aim.profile.yaml
+    personalHintsLocation: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
+    workingStateLocation: .aim/
+    docsSource: docs/workflow/
+  repoKnowledge:
     technologies: []
     commands: []
     validation: []
     uiTesting: []
     docs: []
+    localities: []
+    riskZones: []
+    habits: []
+  note: >-
+    Seeded by aim_install.py. This is a bootstrap profile and is NOT calibrated.
+    Run /aim calibrate-repo before relying on repo-awareness.
 """
 
-
-def shared_profile_seed() -> str:
-    """Return the bootstrap shared profile content (never claims 'ready')."""
-
-    return SHARED_PROFILE_SEED
 
 
 def gitignore_with_fragments(existing: str | None, fragments: list[str]) -> str:

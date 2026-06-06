@@ -1,5 +1,7 @@
-"""AIM 2.0 installer package (dry-run engine).
+"""AIM 2.0 installer package.
 
-DI-044 ships the read-only dry-run planner. Apply, rollback, additional modes,
-and additional adapters land in later increments of EPIC-20260606-005.
+Manifest-driven engine that plans and applies a repo-safe AIM install: dry-run
+preview (text/JSON), reviewed apply with rollback, idempotent re-runs, Personal/
+Team/Enterprise modes, Codex/Copilot/Claude adapters, stale-package detection, and
+post-install guidance.
 """

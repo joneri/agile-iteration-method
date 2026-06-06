@@ -195,7 +195,7 @@ def _codex_actions(source_root: Path, home_root: Path) -> list[dict[str, Any]]:
 
 
 def _bootstrap_actions(
-    target_root: Path, manifest: Manifest, committed: bool
+    target_root: Path, manifest: Manifest, committed: bool, mode: str
 ) -> list[dict[str, Any]]:
     bootstrap = manifest.repo_awareness_bootstrap
     shared_profile = str(bootstrap.get("sharedProfile", "aim.profile.yaml"))
@@ -207,7 +207,7 @@ def _bootstrap_actions(
             action_id=shared_profile,
             category="bootstrap",
             classification=_classify_content(
-                target_root / shared_profile, seed.shared_profile_seed()
+                target_root / shared_profile, seed.shared_profile_seed(mode)
             ),
             source=None,
             destination=shared_profile,
@@ -316,7 +316,7 @@ def compute_plan(
         actions.extend(_claude_actions(source_root, target_root))
     if "codex" in adapters:
         actions.extend(_codex_actions(source_root, home_root))
-    actions.extend(_bootstrap_actions(target_root, manifest, committed))
+    actions.extend(_bootstrap_actions(target_root, manifest, committed, mode))
     fragments = mode_fragments or manifest.gitignore_fragments or manifest.runtime_exclusions
     actions.extend(_ignore_actions(target_root, manifest, fragments))
 

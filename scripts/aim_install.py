@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """AIM 2.0 installer — canonical entrypoint.
 
-DI-044 implements the read-only dry-run engine: it computes a manifest-driven
-install plan and renders it as human-readable text and/or machine-readable JSON.
-It never writes to a target repository. ``--apply`` is intentionally rejected
-until DI-045.
+Computes a manifest-driven install plan and renders it as human-readable text
+and/or machine-readable JSON. ``--dry-run`` (the default) previews without writing.
+``--apply`` writes the plan with reviewed apply, rollback on failure, and idempotent
+re-runs; ``--force`` overwrites drifted/colliding files after backing them up.
 
 Examples:
     python3 scripts/aim_install.py --target /path/to/repo --mode team --adapter copilot
     python3 scripts/aim_install.py --target /path/to/repo --format json
-    python3 scripts/aim_install.py --target /path/to/repo --plan-out plan.json
+    python3 scripts/aim_install.py --target /path/to/repo --apply
+    python3 scripts/aim_install.py --target /path/to/repo --apply --force
 """
 
 from __future__ import annotations
@@ -35,7 +36,7 @@ EXIT_FAILED = 3
 def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="aim_install.py",
-        description="AIM 2.0 installer (dry-run engine).",
+        description="AIM 2.0 installer.",
     )
     parser.add_argument(
         "--target",
@@ -52,7 +53,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--mode",
         default="team",
-        help="Install mode (team is supported in DI-044).",
+        help="Install mode: team, personal, or enterprise.",
     )
     parser.add_argument(
         "--adapter",
@@ -73,7 +74,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         "--dry-run",
         action="store_true",
         default=True,
-        help="Compute a plan without writing (default and only mode in DI-044).",
+        help="Preview the plan without writing (default; use --apply to write).",
     )
     parser.add_argument(
         "--apply",

@@ -94,12 +94,13 @@ def _desired_bytes(
     target_root: Path,
     manifest: Manifest,
     fragments: list[str],
+    mode: str,
 ) -> bytes:
     category = action["category"]
     if category in ("file", "package"):
         return (source_root / action["source"]).read_bytes()
     if category == "bootstrap":
-        return seed.shared_profile_seed().encode("utf-8")
+        return seed.shared_profile_seed(mode).encode("utf-8")
     if category == "ignore":
         existing = seed.read_text_or_none(target_root / ".gitignore")
         return seed.gitignore_with_fragments(existing, fragments).encode("utf-8")
@@ -132,6 +133,7 @@ def apply_plan(
 
     journal = _Journal()
     applied: list[dict[str, str]] = []
+    mode = str(plan.get("mode", "team"))
     fragments = plan.get("gitignoreFragments") or (
         manifest.gitignore_fragments or manifest.runtime_exclusions
     )
@@ -144,7 +146,7 @@ def apply_plan(
                 dest = Path(action["destination"])
             else:
                 dest = target_root / action["destination"]
-            data = _desired_bytes(action, source_root, target_root, manifest, fragments)
+            data = _desired_bytes(action, source_root, target_root, manifest, fragments, mode)
             _write_file(dest, data, journal)
             applied.append(
                 {
