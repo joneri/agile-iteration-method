@@ -4,16 +4,16 @@ description: AIM 2.0 orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO 
 tools:
   [
     "agent",
-    "readFile",
-    "createFile",
-    "editFiles",
-    "runInTerminal",
-    "fileSearch",
-    "textSearch",
-    "createDirectory"
+    "read/readFile",
+    "edit/createFile",
+    "edit/editFiles",
+    "execute/runInTerminal",
+    "search/fileSearch",
+    "search/textSearch",
+    "edit/createDirectory"
   ]
 agents: ["aim-planner", "aim-builder", "aim-reviewer"]
-model: ["GPT-5.4 (copilot)", "GPT-5.3-Codex (copilot)", "GPT-5.2-Codex (copilot)", "Claude Sonnet 4.6 (copilot)", "Claude Opus 4.6 (copilot)"]
+model: ["GPT-5.4 (copilot)", "GPT-5.5 (copilot)", "GPT-5.3-Codex (copilot)", "Claude Sonnet 4.6 (copilot)", "Claude Opus 4.8 (copilot)"]
 handoffs:
   - label: "✅ Send \"approve\""
     agent: aim

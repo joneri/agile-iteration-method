@@ -2,8 +2,8 @@
 name: aim-planner
 description: AIM 2.0 planner role for PO or TDO output
 user-invokable: false
-tools: ["readFile", "fileSearch", "textSearch", "createFile", "editFiles"]
-model: ["GPT-5.4 (copilot)", "GPT-5.3-Codex (copilot)", "GPT-5.2-Codex (copilot)", "Claude Sonnet 4.6 (copilot)", "Claude Opus 4.6 (copilot)"]
+tools: ["read/readFile", "search/fileSearch", "search/textSearch", "edit/createFile", "edit/editFiles"]
+model: ["GPT-5.4 (copilot)", "GPT-5.5 (copilot)", "GPT-5.3-Codex (copilot)", "Claude Sonnet 4.6 (copilot)", "Claude Opus 4.8 (copilot)"]
 ---
 
 # AIM 2.0 planner role (PO or TDO)
