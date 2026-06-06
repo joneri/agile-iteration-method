@@ -30,7 +30,7 @@ docs/workflow/repo-<area>.md
 
 They contain the full repository-specific truth for areas such as:
 
-- UI and Playwright verification
+- UI verification
 - deployment
 - migrations
 - reviewer evidence
@@ -109,12 +109,28 @@ A long or procedural remembered rule must be proposed as an operational-doc upda
 
 ## Example
 
-The profile says that rendered UI work requires Playwright evidence and points to `docs/workflow/repo-playwright-verification.md`.
-The deeper document loads for UI work, Reviewer or Gate E verification, visual-regression risk, Playwright commands, or calibration of UI-testing policy.
+This is a schema example only. It does not require an operational document in every AIM repository:
+
+```yaml
+- id: repo-policy-area
+  kind: operational
+  path: docs/workflow/repo-policy-area.md
+  loading: load_when_relevant
+  when: the named repository policy affects the active work
+  triggers:
+    workTypes: [relevant-work-type]
+    rolesOrGates: [relevant-role-or-gate]
+    risks: [relevant-risk]
+    commands: [relevant-command]
+    calibration: relevant-policy-area
+```
+
+Operational docs are repo-specific and optional.
+A repository should create one only when its own complex policy cannot be represented safely as a short structured profile rule.
+AIM itself does not require any particular technology-specific operational doc.
 
 ## Related files
 
 - `aim.profile.yaml`
 - `docs/workflow/repo-awareness-calibration.md`
-- `docs/workflow/repo-playwright-verification.md`
 - `scripts/validate_aim_runtime.py`

@@ -1658,30 +1658,6 @@ def main() -> int:
                         "Keep operational docs practical with applicability, procedure, evidence, blockers, edge cases, debugging, and related surfaces.",
                     )
 
-            playwright_pointer_markers = [
-                "kind: operational",
-                "path: docs/workflow/repo-playwright-verification.md",
-                "loading: load_when_relevant",
-                "workTypes:",
-                "rolesOrGates:",
-                "risks:",
-                "commands:",
-                "calibration: ui-testing-policy",
-            ]
-            missing_playwright_pointer_markers = [
-                marker
-                for marker in playwright_pointer_markers
-                if marker not in profile_content
-            ]
-            if missing_playwright_pointer_markers:
-                add_issue(
-                    issues,
-                    "recoverable",
-                    relative_path,
-                    f"Playwright two-layer migration is incomplete: {', '.join(missing_playwright_pointer_markers)}",
-                    "Restore the compressed UI-testing rule and structured pointer to the repo Playwright operational doc.",
-                )
-
             loading_states = extract_loading_states(profile_content)
             invalid_loading_states = sorted(
                 loading_states - DOCUMENT_LOADING_STATES

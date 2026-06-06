@@ -75,13 +75,7 @@ aimRepoProfile:
         confidence: high
         source: repository-maintainer-confirmation
         verified: true
-    uiTesting:
-      - id: playwright-rendered-ui
-        rule: Rendered UI work requires Playwright or supported browser evidence; documentation-only work does not.
-        operationalDoc: docs/workflow/repo-playwright-verification.md
-        confidence: medium
-        source: repository-structure
-        verified: true
+    uiTesting: []
     docs:
       - id: aim-core
         path: docs/workflow/agile-iteration-method.md
@@ -99,26 +93,6 @@ aimRepoProfile:
         path: docs/workflow/aim-adapter-guidance.md
         loading: load_when_relevant
         when: active adapter mechanics are involved
-      - id: playwright-verification
-        kind: operational
-        path: docs/workflow/repo-playwright-verification.md
-        loading: load_when_relevant
-        when: rendered UI planning, Reviewer evidence, Gate E verification, visual risk, Playwright commands, or UI-policy calibration
-        triggers:
-          workTypes:
-            - rendered-ui
-            - browser-interaction
-            - responsive-layout
-          rolesOrGates:
-            - Reviewer
-            - Gate E
-          risks:
-            - visual-regression
-            - interaction-correctness
-          commands:
-            - playwright
-            - browser
-          calibration: ui-testing-policy
       - id: vendor-baseline
         path: docs/features/aim-vendor-cost-baseline-june-2026.md
         loading: avoid_by_default

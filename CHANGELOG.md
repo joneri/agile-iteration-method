@@ -3,7 +3,6 @@
 ## 2026-06-06 - AIM 2.0 two-layer repo-awareness
 - Split persistent repo-awareness into a compressed `aim.profile.yaml` layer and load-on-demand AIM-owned operational docs.
 - Added structured operational-doc pointers with work, role/gate, risk, command, and calibration triggers.
-- Migrated the repository Playwright verification policy into the two-layer model.
 - Extended validation for pointer completeness, operational-doc structure, missing targets, and prose-heavy profile values.
 
 ## 2026-06-06 - AIM 2.0 repo-awareness calibration
