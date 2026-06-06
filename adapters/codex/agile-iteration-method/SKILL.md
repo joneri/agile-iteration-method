@@ -10,6 +10,14 @@ AIM is `core + runtime + repo-awareness + platform adapters`; canonical behavior
 
 Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into Codex skill form.
 
+## Native Entry Surface
+
+In Codex, AIM is **skill/package-first**: this installed AIM skill/package is the
+primary user-facing front door, and the AIM command family and intents run through
+it. If the skill is unavailable, fall back to explicit AIM intent while preserving
+the canonical behavior model.
+The canonical cross-adapter entry model is `docs/workflow/adapter-entry-model.md`.
+
 ## First Response
 
 1. Detect the repository root.

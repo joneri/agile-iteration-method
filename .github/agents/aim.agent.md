@@ -43,6 +43,13 @@ This file is an optional Copilot UX layer for AIM.
 Core method semantics come from `docs/workflow/agile-iteration-method.md`.
 This packaging is expected to expose the AIM 2.0 product surface on top of the stable runtime contract.
 
+## Native entry surface
+
+In GitHub Copilot, AIM is **agent-first**: this AIM agent is the primary
+user-facing front door, and AIM commands run inside this agent chat.
+`.github/prompts/` helpers stay secondary.
+The canonical cross-adapter entry model is `docs/workflow/adapter-entry-model.md`.
+
 ## Accepted starts
 
 Treat all of these as start intents:

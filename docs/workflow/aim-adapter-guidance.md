@@ -19,6 +19,18 @@ Use this file when changing:
 - Codex, Copilot, or Claude Code capability notes
 - fallback behavior for adapter-specific tools
 
+## Native entry model
+
+The canonical, user-facing native entry model lives in
+`docs/workflow/adapter-entry-model.md`. It defines the per-adapter front door:
+
+- Codex is **skill/package-first**
+- GitHub Copilot is **agent-first**
+- Claude is **command-first** (with `.claude/agents/` as an internal helper surface)
+
+This adapter-guidance file covers adapter mechanics and helper boundaries; the
+entry-model doc owns which surface is the user-facing front door.
+
 ## Canonical boundary
 
 Adapter layers may improve UX and discoverability, but they must preserve:

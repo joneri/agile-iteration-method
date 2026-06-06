@@ -251,6 +251,40 @@ REPO_CALIBRATION_DOC_PATH = "docs/workflow/repo-awareness-calibration.md"
 INSTALL_GUIDE_DOC_PATH = "docs/workflow/install-aim-2.0.md"
 INSTALL_MANIFEST_PATH = "install/aim-install-manifest.yaml"
 
+ADAPTER_ENTRY_MODEL_DOC_PATH = "docs/workflow/adapter-entry-model.md"
+
+REQUIRED_ADAPTER_ENTRY_MODEL_MARKERS = [
+    "user-facing entry surface",
+    "internal helper surface",
+    "fallback",
+    "skill/package-first",
+    "agent-first",
+    "command-first",
+    "/aim start",
+    "/aim continue",
+    "/aim validate",
+    "/aim help",
+    "/aim calibrate-repo",
+    "/aim remember-repo",
+    "/aim forget-repo",
+    "Codex",
+    "GitHub Copilot",
+    "Claude",
+    ".claude/commands/",
+    ".claude/agents/",
+    ".github/agents/",
+]
+
+ADAPTER_ENTRY_SURFACE_MARKERS = {
+    ".github/agents/aim.agent.md": ["agent-first", ADAPTER_ENTRY_MODEL_DOC_PATH],
+    "adapters/codex/agile-iteration-method/SKILL.md": [
+        "skill/package-first",
+        ADAPTER_ENTRY_MODEL_DOC_PATH,
+    ],
+    ".claude/commands/start-aim.md": ["command-first", ADAPTER_ENTRY_MODEL_DOC_PATH],
+    ".claude/agents/aim.md": ["internal helper surface", "command-first"],
+}
+
 REMOVED_GENERIC_AIM_ROOT_PATHS = [
     "AGENTS.md",
     "CLAUDE.md",
@@ -923,6 +957,7 @@ def main() -> int:
         repo_root / REPO_CALIBRATION_DOC_PATH,
         repo_root / DOCUMENTATION_MODEL_DOC_PATH,
         repo_root / SURFACE_MODEL_DOC_PATH,
+        repo_root / ADAPTER_ENTRY_MODEL_DOC_PATH,
         repo_root / INSTALL_MANIFEST_PATH,
     ]
 
@@ -1265,6 +1300,62 @@ def main() -> int:
             "canonical documentation model is missing",
             "Create docs/workflow/documentation-model.md before relying on documentation source-of-truth guidance.",
         )
+
+    adapter_entry_model_path = repo_root / ADAPTER_ENTRY_MODEL_DOC_PATH
+    checked.append(ADAPTER_ENTRY_MODEL_DOC_PATH)
+    if adapter_entry_model_path.is_file():
+        adapter_entry_model_content = adapter_entry_model_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_entry_model_markers = [
+            marker
+            for marker in REQUIRED_ADAPTER_ENTRY_MODEL_MARKERS
+            if marker not in adapter_entry_model_content
+        ]
+        if missing_entry_model_markers:
+            add_issue(
+                issues,
+                "recoverable",
+                ADAPTER_ENTRY_MODEL_DOC_PATH,
+                f"adapter entry model is missing required markers: {', '.join(missing_entry_model_markers)}",
+                "Restore the user-facing/internal/fallback surface classes, the canonical command family, and the per-adapter native front doors.",
+            )
+    else:
+        add_issue(
+            issues,
+            "blocked",
+            ADAPTER_ENTRY_MODEL_DOC_PATH,
+            "canonical adapter entry model is missing",
+            "Restore docs/workflow/adapter-entry-model.md before relying on native adapter entry guidance.",
+        )
+
+    checked.append("AIM 2.0 adapter native entry surfaces")
+    for relative_path, required_markers in ADAPTER_ENTRY_SURFACE_MARKERS.items():
+        entry_surface_path = repo_root / relative_path
+        checked.append(relative_path)
+        if not entry_surface_path.is_file():
+            add_issue(
+                issues,
+                "recoverable",
+                relative_path,
+                "adapter native entry surface file is missing",
+                "Restore the adapter entry surface or remove the unsupported native-entry claim.",
+            )
+            continue
+        entry_surface_content = entry_surface_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_surface_entry_markers = [
+            marker for marker in required_markers if marker not in entry_surface_content
+        ]
+        if missing_surface_entry_markers:
+            add_issue(
+                issues,
+                "recoverable",
+                relative_path,
+                f"adapter native entry surface is unclear: {', '.join(missing_surface_entry_markers)}",
+                "Declare the adapter native front door (agent-first, skill/package-first, command-first, or internal-helper) and link docs/workflow/adapter-entry-model.md.",
+            )
 
     checked.append("AIM 2.0 repo profile readiness")
     repo_profile_readiness = collect_repo_profile_readiness(repo_root)
@@ -1717,6 +1808,17 @@ def main() -> int:
     print("- retained support/reference docs:")
     for support_path, role_marker in FEATURE_SUPPORT_ROLE_MARKERS.items():
         print(f"  - {support_path}: {role_marker}")
+
+    print("AIM 2.0 adapter entry model:")
+    print(f"- canonical doc: {ADAPTER_ENTRY_MODEL_DOC_PATH}")
+    print("- Codex: skill/package-first")
+    print("- GitHub Copilot: agent-first")
+    print("- Claude: command-first (.claude/agents/ internal helper)")
+    for relative_path in ADAPTER_ENTRY_SURFACE_MARKERS:
+        entry_surface_present = (repo_root / relative_path).is_file()
+        print(
+            f"- entry surface {relative_path}: {'present' if entry_surface_present else 'missing'}"
+        )
 
     print("AIM 2.0 repo profile readiness:")
     print(f"- status: {readiness_status}")
