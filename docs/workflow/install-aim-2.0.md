@@ -11,18 +11,26 @@ Run:
 python3 scripts/aim_install.py
 ```
 
-In a terminal, the installer asks only for required information that was not supplied by flags, including target, mode, and adapters.
-Press Enter to accept a displayed default.
+In a terminal, the installer asks only for required information that was not supplied by flags:
+
+- target repository supports filesystem Tab completion
+- mode uses Up/Down and Enter, with Personal highlighted by default
+- adapters use Up/Down, Space to toggle, and Enter to confirm
+
 Flags such as `--target`, `--mode`, and `--adapter` are used directly and are not asked again.
 
 The default text view is compact: it shows the target, selected mode and adapters, action counts, blockers, and files that need a decision.
 Use `--verbose` (or `--raw`) for the complete file-by-file plan and `--format json` for machine-readable output.
 JSON and `--non-interactive` runs never prompt.
 
-Applying remains explicit:
+The compact preview and reviewed apply are one guided session.
+After preview and any collision decisions, the final confirmation can apply immediately without restarting with `--apply`.
+Declining leaves the target unchanged.
+
+For an explicit preview-only guided run, use:
 
 ```bash
-python3 scripts/aim_install.py --target /path/to/repo --apply
+python3 scripts/aim_install.py --dry-run
 ```
 
 In an interactive terminal, each collision uses:
@@ -33,6 +41,11 @@ In an interactive terminal, each collision uses:
 - `q`: quit before applying
 
 Enter defaults to `n`.
+After all collision decisions, the guided flow asks `Apply this plan now? [y/N]`.
+No files are written unless the user answers `y`.
+
+The prompt flow is a concise sequential terminal interaction.
+It keeps the active question visually clear by avoiding the old raw plan dump, but it is not a sticky prompt fixed to the bottom of the terminal.
 For automation, unresolved collisions fail; `--force` remains the explicit non-interactive overwrite mechanism.
 Color is automatic on supported terminals and can be controlled with `--color always|never`.
 

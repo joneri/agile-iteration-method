@@ -1,10 +1,15 @@
 # Changelog
 
 ## 2026-06-06 - AIM 2.0 guided-first installer
+- Added target path Tab completion, arrow-key mode selection, and adapter multi-select.
+- Made Personal the guided mode default and connected preview to reviewed apply in one session.
+- Added explicit `--dry-run` preview-only behavior while preserving non-interactive defaults.
 - Added an interactive target prompt when required input is missing in a terminal.
 - Replaced the default raw action dump with a compact plan summary and optional terminal color.
 - Added `y` overwrite, `n` keep, `a` overwrite-all-remaining, and `q` quit decisions for apply collisions.
 - Extended guided prompting to missing target, mode, and adapter inputs while preserving flag and non-interactive defaults.
+- Added a final default-no apply confirmation after guided collision decisions.
+- Clarified that prompts are concise and sequential, not sticky terminal UI.
 - Preserved detailed `--verbose`/`--raw`, JSON, plan-file, force, and non-interactive workflows.
 - Added focused installer tests for prompting, rendering, collision safety, and automation behavior.
 

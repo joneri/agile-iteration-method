@@ -22,7 +22,9 @@ def _paint(text: str, code: str, enabled: bool) -> str:
     return f"\033[{code}m{text}\033[0m" if enabled else text
 
 
-def render_compact_text(plan: dict[str, Any], *, color: bool = False) -> str:
+def render_compact_text(
+    plan: dict[str, Any], *, color: bool = False, guided_session: bool = False
+) -> str:
     """Render the normal-user summary without dumping every planned action."""
 
     summary = plan.get("summary", {})
@@ -67,12 +69,17 @@ def render_compact_text(plan: dict[str, Any], *, color: bool = False) -> str:
         else:
             lines.append("Next  apply this plan")
     else:
-        lines.append("No files were written. Add --apply when ready.")
+        if guided_session and not blockers:
+            lines.append("No files were written yet. Continue below to reviewed apply.")
+        else:
+            lines.append("No files were written. Add --apply when ready.")
         lines.append("Use --verbose for every file action or --format json for automation.")
     return "\n".join(lines)
 
 
-def render_verbose_text(plan: dict[str, Any]) -> str:
+def render_verbose_text(
+    plan: dict[str, Any], *, guided_session: bool = False
+) -> str:
     lines: list[str] = []
     operation = "apply" if plan.get("operation") == "apply" else "dry-run"
     lines.append(f"AIM 2.0 install plan ({operation})")
@@ -159,14 +166,24 @@ def render_verbose_text(plan: dict[str, Any]) -> str:
             "Apply mode: unresolved collisions require decisions or --force; "
             "writes are rollback-protected."
         )
+    elif guided_session and not blockers:
+        lines.append(
+            "No files were written yet. Continue below to reviewed apply in this session."
+        )
     else:
         lines.append("This is a dry-run. No files were written. Use --apply to write.")
     return "\n".join(lines)
 
 
 def render_text(
-    plan: dict[str, Any], *, verbose: bool = False, color: bool = False
+    plan: dict[str, Any],
+    *,
+    verbose: bool = False,
+    color: bool = False,
+    guided_session: bool = False,
 ) -> str:
     if verbose:
-        return render_verbose_text(plan)
-    return render_compact_text(plan, color=color)
+        return render_verbose_text(plan, guided_session=guided_session)
+    return render_compact_text(
+        plan, color=color, guided_session=guided_session
+    )

@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +16,7 @@ SCRIPTS = REPO_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 from aim_installer import apply, guided, render  # noqa: E402
+import aim_install  # noqa: E402
 
 
 class _UnusedManifest:
@@ -50,24 +52,44 @@ class GuidedInputTests(unittest.TestCase):
             )
             self.assertEqual(result, Path(target).resolve())
             self.assertIn("Target repository", output.getvalue())
+            self.assertIn("Tab completes paths", output.getvalue())
 
-    def test_missing_mode_and_adapters_accept_guided_defaults(self) -> None:
+    def test_path_completion_returns_directories_with_trailing_separator(self) -> None:
+        with tempfile.TemporaryDirectory() as parent:
+            directory = Path(parent) / "target repo"
+            directory.mkdir()
+            matches = guided.path_completion_matches(str(Path(parent) / "target"))
+            self.assertIn(str(directory) + "/", matches)
+
+    def test_mode_menu_defaults_to_personal_and_supports_arrows(self) -> None:
         mode_output = io.StringIO()
-        adapter_output = io.StringIO()
+        default_keys = iter(["enter"])
         mode = guided.prompt_mode(
             ["team", "personal", "enterprise"],
-            input_stream=io.StringIO("\n"),
+            key_reader=lambda: next(default_keys),
             output_stream=mode_output,
         )
-        adapters = guided.prompt_adapters(
-            ["copilot", "codex", "claude"],
-            input_stream=io.StringIO("\n"),
-            output_stream=adapter_output,
+        self.assertEqual(mode, "personal")
+        self.assertIn(">   Personal", mode_output.getvalue())
+
+        arrow_keys = iter(["down", "enter"])
+        mode = guided.prompt_mode(
+            ["personal", "team", "enterprise"],
+            key_reader=lambda: next(arrow_keys),
+            output_stream=io.StringIO(),
         )
         self.assertEqual(mode, "team")
-        self.assertEqual(adapters, ["copilot"])
-        self.assertIn("[team]", mode_output.getvalue())
-        self.assertIn("[copilot]", adapter_output.getvalue())
+
+    def test_adapter_menu_supports_multi_select(self) -> None:
+        adapter_output = io.StringIO()
+        keys = iter(["down", "space", "down", "space", "enter"])
+        adapters = guided.prompt_adapters(
+            ["copilot", "codex", "claude"],
+            key_reader=lambda: next(keys),
+            output_stream=adapter_output,
+        )
+        self.assertEqual(adapters, ["copilot", "codex", "claude"])
+        self.assertIn("Space toggles", adapter_output.getvalue())
 
     def test_collision_n_and_enter_keep_existing(self) -> None:
         output = io.StringIO()
@@ -123,6 +145,24 @@ class GuidedInputTests(unittest.TestCase):
                 input_stream=io.StringIO("q\n"),
                 output_stream=io.StringIO(),
             )
+
+    def test_final_apply_confirmation_defaults_to_no(self) -> None:
+        output = io.StringIO()
+        self.assertFalse(
+            guided.confirm_apply(
+                input_stream=io.StringIO("\n"),
+                output_stream=output,
+            )
+        )
+        self.assertIn("Apply this plan now? [y/N]", output.getvalue())
+
+    def test_final_apply_confirmation_accepts_y(self) -> None:
+        self.assertTrue(
+            guided.confirm_apply(
+                input_stream=io.StringIO("y\n"),
+                output_stream=io.StringIO(),
+            )
+        )
 
 
 class ApplyDecisionTests(unittest.TestCase):
@@ -236,6 +276,11 @@ class RenderTests(unittest.TestCase):
         self.assertNotIn("reason : test", compact)
         self.assertIn("reason : test", verbose)
 
+    def test_guided_preview_points_to_same_session_apply(self) -> None:
+        rendered = render.render_text(self._plan(), guided_session=True)
+        self.assertIn("Continue below to reviewed apply", rendered)
+        self.assertNotIn("Add --apply when ready", rendered)
+
     def test_json_is_machine_readable_without_color(self) -> None:
         rendered = render.render_json(self._plan())
         self.assertNotIn("\033[", rendered)
@@ -259,6 +304,61 @@ class CliTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 2)
         self.assertIn("--target is required", completed.stderr)
         self.assertNotIn("Target repository:", completed.stdout)
+
+    def test_guided_preview_can_apply_without_apply_flag(self) -> None:
+        with tempfile.TemporaryDirectory() as target, mock.patch.object(
+            guided, "is_interactive", return_value=True
+        ), mock.patch.object(
+            guided, "prompt_mode", return_value="personal"
+        ), mock.patch.object(
+            guided, "prompt_adapters", return_value=["claude"]
+        ), mock.patch.object(
+            guided, "confirm_apply", return_value=True
+        ):
+            result = aim_install.main(
+                ["--target", target, "--color", "never"]
+            )
+            self.assertEqual(result, 0)
+            self.assertTrue(
+                (Path(target) / "docs/workflow/agile-iteration-method.md").exists()
+            )
+
+    def test_guided_preview_decline_is_successful_and_writes_nothing(self) -> None:
+        with tempfile.TemporaryDirectory() as target, mock.patch.object(
+            guided, "is_interactive", return_value=True
+        ), mock.patch.object(
+            guided, "prompt_mode", return_value="personal"
+        ), mock.patch.object(
+            guided, "prompt_adapters", return_value=["claude"]
+        ), mock.patch.object(
+            guided, "confirm_apply", return_value=False
+        ):
+            result = aim_install.main(
+                ["--target", target, "--color", "never"]
+            )
+            self.assertEqual(result, 0)
+            self.assertEqual(list(Path(target).iterdir()), [])
+
+    def test_explicit_dry_run_does_not_offer_same_session_apply(self) -> None:
+        with tempfile.TemporaryDirectory() as target, mock.patch.object(
+            guided, "is_interactive", return_value=True
+        ), mock.patch.object(
+            guided, "prompt_mode", return_value="personal"
+        ), mock.patch.object(
+            guided, "prompt_adapters", return_value=["claude"]
+        ), mock.patch.object(
+            guided, "confirm_apply"
+        ) as confirmation:
+            result = aim_install.main(
+                ["--target", target, "--dry-run", "--color", "never"]
+            )
+            self.assertEqual(result, 0)
+            confirmation.assert_not_called()
+            self.assertEqual(list(Path(target).iterdir()), [])
+
+    def test_apply_and_dry_run_are_mutually_exclusive(self) -> None:
+        result = aim_install.main(["--apply", "--dry-run", "--non-interactive"])
+        self.assertEqual(result, 2)
 
 
 if __name__ == "__main__":

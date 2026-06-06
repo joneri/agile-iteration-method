@@ -358,11 +358,12 @@ Cost profile: Standard
 If someone wants the shortest path, this is it:
 
 1. Run `python3 scripts/aim_install.py` and follow the guided prompt.
-2. Review the compact preview, then rerun with `--apply`.
+2. Review the compact preview and choose whether to apply in the same session.
 3. Open the repo in Codex, Copilot or Claude Code.
 4. Start with `/aim start "EPIC: <desired outcome>"`.
 5. If slash commands are unavailable, start with `EPIC: <desired outcome>`, `Mode: Strict`, and `Cost profile: Cost Control`.
 
+Target paths support Tab completion; mode and adapters use keyboard selection menus.
 Flags prefill the installer and are not asked again.
 Use `--verbose` for the complete plan or `--format json --non-interactive` for automation.
 

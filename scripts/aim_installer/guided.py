@@ -2,10 +2,28 @@
 
 from __future__ import annotations
 
+import builtins
+import glob
 import os
 import sys
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, TextIO
+from typing import Any, Callable, Iterator, TextIO
+
+try:
+    import readline
+except ImportError:  # pragma: no cover - unavailable on some Python builds
+    readline = None  # type: ignore[assignment]
+
+try:
+    import termios
+    import tty
+except ImportError:  # pragma: no cover - non-POSIX fallback
+    termios = None  # type: ignore[assignment]
+    tty = None  # type: ignore[assignment]
+
+
+KeyReader = Callable[[], str]
 
 
 def is_interactive(
@@ -28,6 +46,176 @@ def use_color(mode: str, *, output_stream: TextIO = sys.stdout) -> bool:
     return bool(output_stream.isatty())
 
 
+def path_completion_matches(text: str) -> list[str]:
+    """Return filesystem completion candidates for a partially typed path."""
+
+    expanded = os.path.expanduser(text)
+    matches = sorted(glob.glob(expanded + "*"))
+    results = []
+    for match in matches:
+        candidate = match + os.sep if os.path.isdir(match) else match
+        if text.startswith("~"):
+            home = str(Path.home())
+            candidate = (
+                "~" + candidate[len(home) :]
+                if candidate.startswith(home)
+                else candidate
+            )
+        results.append(candidate)
+    return results
+
+
+@contextmanager
+def _path_completion() -> Iterator[bool]:
+    """Temporarily enable readline/libedit filesystem completion."""
+
+    if readline is None:
+        yield False
+        return
+
+    previous_completer = readline.get_completer()
+    previous_delimiters = readline.get_completer_delims()
+    matches: list[str] = []
+
+    def completer(text: str, state: int) -> str | None:
+        nonlocal matches
+        if state == 0:
+            matches = path_completion_matches(text)
+        return matches[state] if state < len(matches) else None
+
+    try:
+        readline.set_completer(completer)
+        readline.set_completer_delims("\t\n")
+        if "libedit" in (readline.__doc__ or "").lower():
+            readline.parse_and_bind("bind ^I rl_complete")
+        else:
+            readline.parse_and_bind("tab: complete")
+        yield True
+    finally:
+        readline.set_completer(previous_completer)
+        readline.set_completer_delims(previous_delimiters)
+
+
+def _read_key(input_stream: TextIO = sys.stdin) -> str:
+    """Read one normalized terminal key."""
+
+    if termios is None or tty is None:
+        raw = input_stream.readline()
+        if raw == "":
+            raise EOFError("terminal selection ended")
+        return "enter" if raw in ("\n", "\r\n") else raw[0]
+
+    fd = input_stream.fileno()
+    previous = termios.tcgetattr(fd)
+    try:
+        tty.setraw(fd)
+        first = input_stream.read(1)
+        if first == "":
+            raise EOFError("terminal selection ended")
+        if first == "\x03":
+            raise KeyboardInterrupt
+        if first in ("\r", "\n"):
+            return "enter"
+        if first == " ":
+            return "space"
+        if first == "\x1b":
+            second = input_stream.read(1)
+            third = input_stream.read(1) if second == "[" else ""
+            if third == "A":
+                return "up"
+            if third == "B":
+                return "down"
+            return "escape"
+        return first.lower()
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, previous)
+
+
+def _render_menu(
+    title: str,
+    options: list[str],
+    cursor: int,
+    selected: set[int] | None,
+    output_stream: TextIO,
+    *,
+    repaint: bool,
+) -> None:
+    line_count = len(options) + 1
+    if repaint:
+        output_stream.write(f"\033[{line_count}A")
+    output_stream.write(title + "\033[K\n")
+    for index, option in enumerate(options):
+        pointer = ">" if index == cursor else " "
+        marker = f"[{'x' if index in selected else ' '}]" if selected is not None else " "
+        output_stream.write(
+            f"  {pointer} {marker} {option.replace('-', ' ').title()}\033[K\n"
+        )
+    output_stream.flush()
+
+
+def select_one(
+    title: str,
+    options: list[str],
+    *,
+    default: str,
+    key_reader: KeyReader | None = None,
+    output_stream: TextIO = sys.stdout,
+) -> str:
+    """Select one option with Up/Down and Enter."""
+
+    cursor = options.index(default) if default in options else 0
+    read_key = key_reader or (lambda: _read_key())
+    repaint = False
+    while True:
+        _render_menu(title, options, cursor, None, output_stream, repaint=repaint)
+        key = read_key()
+        if key == "up":
+            cursor = (cursor - 1) % len(options)
+        elif key == "down":
+            cursor = (cursor + 1) % len(options)
+        elif key == "enter":
+            return options[cursor]
+        elif key in ("q", "escape"):
+            raise KeyboardInterrupt
+        repaint = True
+
+
+def select_many(
+    title: str,
+    options: list[str],
+    *,
+    defaults: list[str],
+    key_reader: KeyReader | None = None,
+    output_stream: TextIO = sys.stdout,
+) -> list[str]:
+    """Select multiple options with Up/Down, Space, and Enter."""
+
+    selected = {index for index, option in enumerate(options) if option in defaults}
+    cursor = min(selected) if selected else 0
+    read_key = key_reader or (lambda: _read_key())
+    repaint = False
+    while True:
+        _render_menu(title, options, cursor, selected, output_stream, repaint=repaint)
+        key = read_key()
+        if key == "up":
+            cursor = (cursor - 1) % len(options)
+        elif key == "down":
+            cursor = (cursor + 1) % len(options)
+        elif key == "space":
+            if cursor in selected:
+                selected.remove(cursor)
+            else:
+                selected.add(cursor)
+        elif key == "enter":
+            if selected:
+                return [option for index, option in enumerate(options) if index in selected]
+            output_stream.write("\a")
+            output_stream.flush()
+        elif key in ("q", "escape"):
+            raise KeyboardInterrupt
+        repaint = True
+
+
 def prompt_target(
     *,
     source_root: Path,
@@ -38,11 +226,17 @@ def prompt_target(
 
     cwd = Path.cwd().resolve()
     default = cwd if cwd != source_root else None
+    use_readline = input_stream is sys.stdin and output_stream is sys.stdout
     while True:
         suffix = f" [{default}]" if default else ""
-        output_stream.write(f"Target repository{suffix}: ")
-        output_stream.flush()
-        raw = input_stream.readline()
+        prompt = f"Target repository{suffix} (Tab completes paths): "
+        if use_readline:
+            with _path_completion():
+                raw = builtins.input(prompt) + "\n"
+        else:
+            output_stream.write(prompt)
+            output_stream.flush()
+            raw = input_stream.readline()
         if raw == "":
             raise EOFError("target repository was not provided")
         value = raw.strip()
@@ -62,59 +256,37 @@ def prompt_target(
 def prompt_mode(
     modes: list[str],
     *,
-    default: str = "team",
-    input_stream: TextIO = sys.stdin,
+    default: str = "personal",
+    key_reader: KeyReader | None = None,
     output_stream: TextIO = sys.stdout,
 ) -> str:
-    """Ask for an install mode when no mode flag was provided."""
+    """Ask for an install mode using an arrow-key menu."""
 
-    while True:
-        output_stream.write(
-            f"Install mode ({'/'.join(modes)}) [{default}]: "
-        )
-        output_stream.flush()
-        raw = input_stream.readline()
-        if raw == "":
-            raise EOFError("install mode was not provided")
-        value = raw.strip().lower() or default
-        if value in modes:
-            return value
-        output_stream.write(f"  Choose one of: {', '.join(modes)}.\n")
+    return select_one(
+        "Install mode  (Up/Down, Enter)",
+        modes,
+        default=default,
+        key_reader=key_reader,
+        output_stream=output_stream,
+    )
 
 
 def prompt_adapters(
     adapters: list[str],
     *,
-    default: str = "copilot",
-    input_stream: TextIO = sys.stdin,
+    defaults: list[str] | None = None,
+    key_reader: KeyReader | None = None,
     output_stream: TextIO = sys.stdout,
 ) -> list[str]:
-    """Ask for one or more comma-separated adapters when flags are absent."""
+    """Ask for adapters using an arrow-key multi-select menu."""
 
-    while True:
-        output_stream.write(
-            f"Adapters, comma-separated ({'/'.join(adapters)}) [{default}]: "
-        )
-        output_stream.flush()
-        raw = input_stream.readline()
-        if raw == "":
-            raise EOFError("adapters were not provided")
-        values = [
-            value.strip().lower()
-            for value in (raw.strip() or default).split(",")
-            if value.strip()
-        ]
-        selected = list(dict.fromkeys(values))
-        unknown = [value for value in selected if value not in adapters]
-        if selected and not unknown:
-            return selected
-        if unknown:
-            output_stream.write(
-                f"  Unknown adapter(s): {', '.join(unknown)}. "
-                f"Choose from: {', '.join(adapters)}.\n"
-            )
-        else:
-            output_stream.write("  Choose at least one adapter.\n")
+    return select_many(
+        "Adapters  (Up/Down, Space toggles, Enter confirms)",
+        adapters,
+        defaults=defaults or ["copilot"],
+        key_reader=key_reader,
+        output_stream=output_stream,
+    )
 
 
 def resolve_collisions(
@@ -154,3 +326,24 @@ def resolve_collisions(
                 raise KeyboardInterrupt("installation aborted by user")
             output_stream.write("    Choose y, n, a, or q.\n")
     return decisions
+
+
+def confirm_apply(
+    *,
+    input_stream: TextIO = sys.stdin,
+    output_stream: TextIO = sys.stdout,
+) -> bool:
+    """Ask for the final guided apply confirmation, defaulting to no."""
+
+    while True:
+        output_stream.write("\nApply this plan now? [y/N]: ")
+        output_stream.flush()
+        raw = input_stream.readline()
+        if raw == "":
+            raise EOFError("final apply confirmation was not provided")
+        choice = raw.strip().lower()
+        if choice in ("", "n"):
+            return False
+        if choice == "y":
+            return True
+        output_stream.write("  Choose y or n.\n")

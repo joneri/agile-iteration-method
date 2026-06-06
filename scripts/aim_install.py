@@ -52,7 +52,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument(
         "--mode",
-        help="Install mode: team, personal, or enterprise. Guided default: team.",
+        help="Install mode: team, personal, or enterprise. Guided default: personal.",
     )
     parser.add_argument(
         "--adapter",
@@ -90,8 +90,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        default=True,
-        help="Preview the plan without writing (default; use --apply to write).",
+        help="Preview only; do not offer same-session apply.",
     )
     parser.add_argument(
         "--apply",
@@ -120,6 +119,9 @@ def _normalize_adapters(raw: list[str] | None) -> list[str]:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(sys.argv[1:] if argv is None else argv)
+    if args.apply and args.dry_run:
+        print("error: --apply and --dry-run cannot be used together.", file=sys.stderr)
+        return EXIT_USAGE
 
     source_root = (
         Path(args.source).resolve()
@@ -229,10 +231,14 @@ def main(argv: list[str] | None = None) -> int:
                 plan,
                 verbose=args.verbose,
                 color=guided.use_color(args.color),
+                guided_session=interactive,
             )
         )
 
-    if args.apply:
+    apply_in_session = args.apply or (
+        interactive and not args.dry_run and not plan["blockers"]
+    )
+    if apply_in_session:
         collision_decisions: dict[str, str] | None = None
         collisions = [
             action
@@ -245,6 +251,23 @@ def main(argv: list[str] | None = None) -> int:
             except (EOFError, KeyboardInterrupt):
                 print("\ninstallation cancelled; no files were written.", file=sys.stderr)
                 return EXIT_BLOCKED
+        if interactive and not plan["blockers"]:
+            try:
+                confirmed = guided.confirm_apply()
+            except (EOFError, KeyboardInterrupt):
+                confirmed = False
+            if not confirmed:
+                if args.apply:
+                    print(
+                        "\ninstallation cancelled at final confirmation; "
+                        "no files were written.",
+                        file=sys.stderr,
+                    )
+                    return EXIT_BLOCKED
+                print("\npreview complete; no files were written.", file=sys.stderr)
+                return EXIT_OK
+        plan["operation"] = "apply"
+        plan["applyAllowed"] = True
         try:
             result = apply.apply_plan(
                 plan=plan,
