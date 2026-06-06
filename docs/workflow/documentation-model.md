@@ -44,6 +44,7 @@ It separates:
 | Runtime validation behavior | `scripts/validate_aim_runtime.py` |
 | Repo profile and footprint behavior | `docs/workflow/repo-profile-and-footprint-model.md` |
 | Repo-awareness calibration and persistent memory | `docs/workflow/repo-awareness-calibration.md` |
+| Structured profile and repo operational-doc boundary | `docs/workflow/repo-awareness-two-layer-model.md` |
 | Working-state boundaries | `docs/workflow/working-state-boundaries.md` |
 | Personal profile storage | `docs/workflow/personal-local-profile-storage.md` |
 | Profile-source reporting | `docs/workflow/profile-source-summary.md` |

@@ -148,6 +148,8 @@ Shared knowledge lives in `aim.profile.yaml`.
 Personal hints live at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`.
 `.aim/` remains runtime-only.
 
+Keep startup knowledge compressed in `aim.profile.yaml`. For complex repo-specific procedures, the profile points to AIM-owned `docs/workflow/repo-<area>.md` operational docs that load only when their work, role/gate, risk, command, or calibration trigger matches.
+
 ## Choose Your Adapter
 
 - Codex:

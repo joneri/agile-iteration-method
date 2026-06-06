@@ -248,6 +248,7 @@ DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 SURFACE_MODEL_DOC_PATH = "docs/workflow/repository-surface-classification.md"
 REPO_AWARENESS_DOC_PATH = "docs/workflow/repo-awareness.md"
 REPO_CALIBRATION_DOC_PATH = "docs/workflow/repo-awareness-calibration.md"
+TWO_LAYER_DOC_PATH = "docs/workflow/repo-awareness-two-layer-model.md"
 INSTALL_GUIDE_DOC_PATH = "docs/workflow/install-aim-2.0.md"
 INSTALL_MANIFEST_PATH = "install/aim-install-manifest.yaml"
 
@@ -316,6 +317,32 @@ REQUIRED_CALIBRATION_DOC_MARKERS = [
     "`avoid_by_default`",
     "`stale_or_uncertain`",
 ]
+
+REQUIRED_TWO_LAYER_MARKERS = [
+    "Layer 1: structured profile",
+    "Layer 2: operational documents",
+    "docs/workflow/repo-<area>.md",
+    "`kind: operational`",
+    "workTypes",
+    "rolesOrGates",
+    "risks",
+    "commands",
+    "calibration",
+]
+
+OPERATIONAL_DOC_REQUIRED_HEADINGS = [
+    "## Purpose",
+    "## Applicability",
+    "## Procedure",
+    "## Commands",
+    "## Evidence",
+    "## Blockers",
+    "## Edge Cases",
+    "## Debugging",
+    "## Related Surfaces",
+]
+
+PROFILE_PROSE_LIMIT = 240
 
 CONTRIBUTING_EXCLUSION_MARKERS = {
     REPO_AWARENESS_DOC_PATH: [
@@ -421,6 +448,7 @@ REQUIRED_DOCUMENTATION_MODEL_MARKERS = [
     "docs/workflow/cost-saving-method.md",
     "docs/workflow/modularity-context-efficiency.md",
     "docs/workflow/repo-awareness-calibration.md",
+    "docs/workflow/repo-awareness-two-layer-model.md",
     "docs/features/",
     "AGENTS.md",
     "CLAUDE.md",
@@ -604,10 +632,19 @@ def extract_repo_knowledge_values(
 ) -> list[str]:
     scoped_content = extract_section_block(content, "repoKnowledge") or content
     lines = scoped_content.splitlines()
+    section_indent = (
+        len(lines[0]) - len(lines[0].lstrip())
+        if lines and lines[0].strip() == "repoKnowledge:"
+        else -2
+    )
     matched_values = []
 
     for index, line in enumerate(lines):
-        if line.strip() != f"{category_name}:":
+        line_indent = len(line) - len(line.lstrip())
+        if (
+            line.strip() != f"{category_name}:"
+            or line_indent != section_indent + 2
+        ):
             continue
 
         category_indent = len(line) - len(line.lstrip())
@@ -638,10 +675,19 @@ def extract_repo_knowledge_values(
 def extract_category_entries(content: str, category_name: str) -> list[dict[str, str]]:
     scoped_content = extract_section_block(content, "repoKnowledge") or content
     lines = scoped_content.splitlines()
+    section_indent = (
+        len(lines[0]) - len(lines[0].lstrip())
+        if lines and lines[0].strip() == "repoKnowledge:"
+        else -2
+    )
     matched_entries = []
 
     for index, line in enumerate(lines):
-        if line.strip() != f"{category_name}:":
+        line_indent = len(line) - len(line.lstrip())
+        if (
+            line.strip() != f"{category_name}:"
+            or line_indent != section_indent + 2
+        ):
             continue
 
         category_indent = len(line) - len(line.lstrip())
@@ -654,7 +700,10 @@ def extract_category_entries(content: str, category_name: str) -> list[dict[str,
             child_indent = len(child_line) - len(child_line.lstrip())
             if child_indent <= category_indent:
                 break
-            if child_stripped.startswith("- "):
+            if (
+                child_stripped.startswith("- ")
+                and child_indent == category_indent + 2
+            ):
                 current_entry = {}
                 entries.append(current_entry)
                 first_field = child_stripped[2:]
@@ -678,6 +727,33 @@ def extract_all_scalar_values(content: str, key_name: str) -> list[str]:
         if normalized.startswith(f"{key_name}:"):
             values.append(normalized.split(":", 1)[1].strip().strip("\"'"))
     return values
+
+
+def find_overlong_profile_scalars(content: str) -> list[str]:
+    block = extract_section_block(content, "repoKnowledge")
+    if not block:
+        return []
+
+    findings = []
+    for line in block.splitlines():
+        stripped = line.strip()
+        normalized = stripped[2:] if stripped.startswith("- ") else stripped
+        if ":" not in normalized:
+            continue
+        key, value = normalized.split(":", 1)
+        value = value.strip().strip("\"'")
+        if len(value) > PROFILE_PROSE_LIMIT:
+            findings.append(f"{key.strip()} ({len(value)} chars)")
+    return findings
+
+
+def operational_doc_paths(content: str) -> list[str]:
+    paths = []
+    for entry in extract_category_entries(content, "docs"):
+        path = entry.get("path", "")
+        if entry.get("kind") == "operational" and path:
+            paths.append(path)
+    return paths
 
 
 def extract_profile_list(content: str, section_name: str) -> list[str]:
@@ -955,6 +1031,7 @@ def main() -> int:
         repo_root / "docs/workflow/agile-iteration-method.md",
         repo_root / REPO_AWARENESS_DOC_PATH,
         repo_root / REPO_CALIBRATION_DOC_PATH,
+        repo_root / TWO_LAYER_DOC_PATH,
         repo_root / DOCUMENTATION_MODEL_DOC_PATH,
         repo_root / SURFACE_MODEL_DOC_PATH,
         repo_root / ADAPTER_ENTRY_MODEL_DOC_PATH,
@@ -1119,6 +1196,34 @@ def main() -> int:
             REPO_CALIBRATION_DOC_PATH,
             "canonical repo-awareness calibration contract is missing",
             "Restore the calibration contract before using persistent repo memory.",
+        )
+
+    two_layer_doc_path = repo_root / TWO_LAYER_DOC_PATH
+    checked.append(TWO_LAYER_DOC_PATH)
+    if two_layer_doc_path.is_file():
+        two_layer_content = two_layer_doc_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_two_layer_markers = [
+            marker
+            for marker in REQUIRED_TWO_LAYER_MARKERS
+            if marker not in two_layer_content
+        ]
+        if missing_two_layer_markers:
+            add_issue(
+                issues,
+                "recoverable",
+                TWO_LAYER_DOC_PATH,
+                f"two-layer repo-awareness model is incomplete: {', '.join(missing_two_layer_markers)}",
+                "Restore the structured profile, operational doc, pointer, and trigger contract.",
+            )
+    else:
+        add_issue(
+            issues,
+            "blocked",
+            TWO_LAYER_DOC_PATH,
+            "canonical two-layer repo-awareness model is missing",
+            "Restore the two-layer model before relying on operational doc pointers.",
         )
 
     checked.append("AIM 2.0 promoted canonical documentation paths")
@@ -1449,9 +1554,8 @@ def main() -> int:
                         "Give every remembered repo-awareness entry a stable id.",
                     )
 
-            for index, doc_entry in enumerate(
-                extract_category_entries(profile_content, "docs")
-            ):
+            doc_entries = extract_category_entries(profile_content, "docs")
+            for index, doc_entry in enumerate(doc_entries):
                 if doc_entry.get("loading") not in DOCUMENT_LOADING_STATES:
                     add_issue(
                         issues,
@@ -1460,6 +1564,42 @@ def main() -> int:
                         f"docs entry {doc_entry.get('id') or index + 1} has an invalid or missing loading state",
                         "Use authoritative, load_when_relevant, avoid_by_default, or stale_or_uncertain.",
                     )
+                if doc_entry.get("kind") == "operational":
+                    missing_pointer_fields = [
+                        field
+                        for field in ("path", "when", "calibration")
+                        if not doc_entry.get(field)
+                    ]
+                    missing_pointer_fields.extend(
+                        field
+                        for field in (
+                            "workTypes",
+                            "rolesOrGates",
+                            "risks",
+                            "commands",
+                        )
+                        if field not in doc_entry
+                    )
+                    if doc_entry.get("loading") != "load_when_relevant":
+                        missing_pointer_fields.append(
+                            "loading: load_when_relevant"
+                        )
+                    operational_path = doc_entry.get("path", "")
+                    if not (
+                        operational_path.startswith("docs/workflow/repo-")
+                        and operational_path.endswith(".md")
+                    ):
+                        missing_pointer_fields.append(
+                            "AIM-owned docs/workflow/repo-<area>.md path"
+                        )
+                    if missing_pointer_fields:
+                        add_issue(
+                            issues,
+                            "recoverable",
+                            relative_path,
+                            f"operational docs entry {doc_entry.get('id') or index + 1} has an incomplete pointer contract: {', '.join(missing_pointer_fields)}",
+                            "Add the operational doc path, concise relevance rule, load_when_relevant state, and structured work, role/gate, risk, command, and calibration triggers.",
+                        )
 
             invalid_confidence_values = sorted(
                 {
@@ -1477,6 +1617,69 @@ def main() -> int:
                     relative_path,
                     f"invalid confidence values: {', '.join(invalid_confidence_values)}",
                     "Use high, medium, or low confidence.",
+                )
+
+            overlong_scalars = find_overlong_profile_scalars(profile_content)
+            if overlong_scalars:
+                add_issue(
+                    issues,
+                    "recoverable",
+                    relative_path,
+                    f"structured profile contains prose-heavy scalar values: {', '.join(overlong_scalars)}",
+                    f"Keep profile values under {PROFILE_PROSE_LIMIT} characters and move rich policy into an AIM-owned repo operational doc.",
+                )
+
+            for operational_path in operational_doc_paths(profile_content):
+                operational_doc = repo_root / operational_path
+                checked.append(operational_path)
+                if not operational_doc.is_file():
+                    add_issue(
+                        issues,
+                        "blocked",
+                        operational_path,
+                        "profile points to a missing repo operational document",
+                        "Create the AIM-owned operational doc or remove the pointer.",
+                    )
+                    continue
+                operational_content = operational_doc.read_text(
+                    encoding="utf-8", errors="replace"
+                )
+                missing_headings = [
+                    heading
+                    for heading in OPERATIONAL_DOC_REQUIRED_HEADINGS
+                    if heading not in operational_content
+                ]
+                if missing_headings:
+                    add_issue(
+                        issues,
+                        "recoverable",
+                        operational_path,
+                        f"repo operational doc is missing required sections: {', '.join(missing_headings)}",
+                        "Keep operational docs practical with applicability, procedure, evidence, blockers, edge cases, debugging, and related surfaces.",
+                    )
+
+            playwright_pointer_markers = [
+                "kind: operational",
+                "path: docs/workflow/repo-playwright-verification.md",
+                "loading: load_when_relevant",
+                "workTypes:",
+                "rolesOrGates:",
+                "risks:",
+                "commands:",
+                "calibration: ui-testing-policy",
+            ]
+            missing_playwright_pointer_markers = [
+                marker
+                for marker in playwright_pointer_markers
+                if marker not in profile_content
+            ]
+            if missing_playwright_pointer_markers:
+                add_issue(
+                    issues,
+                    "recoverable",
+                    relative_path,
+                    f"Playwright two-layer migration is incomplete: {', '.join(missing_playwright_pointer_markers)}",
+                    "Restore the compressed UI-testing rule and structured pointer to the repo Playwright operational doc.",
                 )
 
             loading_states = extract_loading_states(profile_content)

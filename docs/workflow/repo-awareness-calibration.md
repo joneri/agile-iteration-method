@@ -71,6 +71,10 @@ The shared profile supports these categories:
 Remembered rules must be entries in one of those categories.
 Loose prose memory blobs are invalid.
 
+Repo-awareness uses the two-layer model in `docs/workflow/repo-awareness-two-layer-model.md`.
+Calibration stores atomic, compressed facts in the profile and moves procedural or exception-heavy policy into `docs/workflow/repo-<area>.md`.
+The profile retains a short summary plus a structured load-on-demand pointer.
+
 ## Document loading states
 
 Every remembered document rule uses one state:
@@ -110,6 +114,11 @@ Behavior:
 5. persist it to `aim.profile.yaml` or the user-level hints file
 6. update freshness and calibration status
 7. never write stable memory into `.aim/`
+
+Before persistence, classify the rule:
+
+- short atomic fact: update the profile
+- procedure, policy, evidence contract, blockers, edge cases, or debugging: update an operational doc and its profile pointer
 
 If scope is ambiguous, default to personal for preferences and ask before changing shared team policy.
 

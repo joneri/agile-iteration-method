@@ -357,6 +357,8 @@ The detailed load order, profile behavior, native adapter continuity, and failur
 
 - `docs/workflow/repo-awareness.md`
 
+When the profile points to richer repo-specific policy, use the two-layer contract in `docs/workflow/repo-awareness-two-layer-model.md` and load the pointed operational doc only when one of its triggers matches.
+
 The core rule is simple: load state first, profile second, affected evidence third, and deeper AIM or adapter docs only when the current role, gate, command, or risk needs them.
 
 ## Validator support
@@ -1124,6 +1126,7 @@ Load deeper documents only when their area becomes relevant:
 
 - repo-awareness or adapter loading: `docs/workflow/repo-awareness.md`
 - calibration, persistent memory, remember, or forget: `docs/workflow/repo-awareness-calibration.md`
+- rich repo-specific policy or an operational-doc pointer: `docs/workflow/repo-awareness-two-layer-model.md`, then only the pointed doc
 - operating modes: `docs/workflow/operating-modes.md`
 - installation or file ownership: `docs/workflow/install-aim-2.0.md` and `docs/workflow/repository-surface-classification.md`
 - cost behavior: `docs/workflow/cost-control-mode.md`
