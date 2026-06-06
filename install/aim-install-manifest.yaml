@@ -1,6 +1,42 @@
 aimInstallManifest:
-  manifestVersion: "0.1"
-  status: boundary-contract
+  manifestVersion: "0.2"
+  status: engine-dry-run
+
+  canonicalCommand: "python3 scripts/aim_install.py"
+
+  modes:
+    - team
+    - personal
+    - enterprise
+
+  adapters:
+    - copilot
+    - codex
+    - claude
+
+  gitignoreFragments:
+    - .aim/
+
+  modeProfiles:
+    team:
+      committedSharedProfile: true
+      includeOptionalSurfaces: true
+      gitignore:
+        - .aim/
+    personal:
+      committedSharedProfile: false
+      includeOptionalSurfaces: true
+      gitignore:
+        - .aim/
+        - aim.profile.yaml
+    enterprise:
+      committedSharedProfile: true
+      includeOptionalSurfaces: false
+      enterpriseSafe: true
+      gitignore:
+        - .aim/
+        - "*.aim-backup"
+        - aim.local.yaml
 
   targetExclusions:
     - path: CONTRIBUTING.md
