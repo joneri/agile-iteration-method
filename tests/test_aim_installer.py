@@ -51,15 +51,78 @@ class GuidedInputTests(unittest.TestCase):
             self.assertEqual(result, Path(target).resolve())
             self.assertIn("Target repository", output.getvalue())
 
-    def test_collision_prompt_defaults_to_keep(self) -> None:
+    def test_missing_mode_and_adapters_accept_guided_defaults(self) -> None:
+        mode_output = io.StringIO()
+        adapter_output = io.StringIO()
+        mode = guided.prompt_mode(
+            ["team", "personal", "enterprise"],
+            input_stream=io.StringIO("\n"),
+            output_stream=mode_output,
+        )
+        adapters = guided.prompt_adapters(
+            ["copilot", "codex", "claude"],
+            input_stream=io.StringIO("\n"),
+            output_stream=adapter_output,
+        )
+        self.assertEqual(mode, "team")
+        self.assertEqual(adapters, ["copilot"])
+        self.assertIn("[team]", mode_output.getvalue())
+        self.assertIn("[copilot]", adapter_output.getvalue())
+
+    def test_collision_n_and_enter_keep_existing(self) -> None:
         output = io.StringIO()
         decisions = guided.resolve_collisions(
-            [{"destination": "existing.md"}],
-            input_stream=io.StringIO("\n"),
+            [
+                {"destination": "one.md"},
+                {"destination": "two.md"},
+            ],
+            input_stream=io.StringIO("n\n\n"),
             output_stream=output,
         )
-        self.assertEqual(decisions, {"existing.md": "keep"})
-        self.assertIn("[k]eep existing", output.getvalue())
+        self.assertEqual(decisions, {"one.md": "keep", "two.md": "keep"})
+        self.assertIn("[y] overwrite", output.getvalue())
+        self.assertIn("[n] keep existing", output.getvalue())
+
+    def test_collision_a_overwrites_current_and_all_remaining(self) -> None:
+        decisions = guided.resolve_collisions(
+            [
+                {"destination": "one.md"},
+                {"destination": "two.md"},
+                {"destination": "three.md"},
+            ],
+            input_stream=io.StringIO("n\na\n"),
+            output_stream=io.StringIO(),
+        )
+        self.assertEqual(
+            decisions,
+            {
+                "one.md": "keep",
+                "two.md": "overwrite",
+                "three.md": "overwrite",
+            },
+        )
+
+    def test_collision_y_overwrites_only_current_file(self) -> None:
+        decisions = guided.resolve_collisions(
+            [
+                {"destination": "one.md"},
+                {"destination": "two.md"},
+            ],
+            input_stream=io.StringIO("y\nn\n"),
+            output_stream=io.StringIO(),
+        )
+        self.assertEqual(
+            decisions,
+            {"one.md": "overwrite", "two.md": "keep"},
+        )
+
+    def test_collision_q_quits(self) -> None:
+        with self.assertRaises(KeyboardInterrupt):
+            guided.resolve_collisions(
+                [{"destination": "existing.md"}],
+                input_stream=io.StringIO("q\n"),
+                output_stream=io.StringIO(),
+            )
 
 
 class ApplyDecisionTests(unittest.TestCase):

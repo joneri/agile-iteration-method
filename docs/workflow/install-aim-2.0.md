@@ -11,7 +11,7 @@ Run:
 python3 scripts/aim_install.py
 ```
 
-In a terminal, the installer asks only for required information that was not supplied by flags.
+In a terminal, the installer asks only for required information that was not supplied by flags, including target, mode, and adapters.
 Press Enter to accept a displayed default.
 Flags such as `--target`, `--mode`, and `--adapter` are used directly and are not asked again.
 
@@ -25,7 +25,14 @@ Applying remains explicit:
 python3 scripts/aim_install.py --target /path/to/repo --apply
 ```
 
-In an interactive terminal, each collision asks whether to keep the existing file, overwrite it with backup protection, or abort.
+In an interactive terminal, each collision uses:
+
+- `y`: overwrite this file
+- `n`: keep the existing file
+- `a`: overwrite this file and all remaining AIM-owned collisions
+- `q`: quit before applying
+
+Enter defaults to `n`.
 For automation, unresolved collisions fail; `--force` remains the explicit non-interactive overwrite mechanism.
 Color is automatic on supported terminals and can be controlled with `--color always|never`.
 

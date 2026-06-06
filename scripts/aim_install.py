@@ -52,8 +52,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument(
         "--mode",
-        default="team",
-        help="Install mode: team, personal, or enterprise.",
+        help="Install mode: team, personal, or enterprise. Guided default: team.",
     )
     parser.add_argument(
         "--adapter",
@@ -132,6 +131,13 @@ def main(argv: list[str] | None = None) -> int:
         and args.format == "text"
         and guided.is_interactive()
     )
+
+    try:
+        manifest = load_manifest(source_root)
+    except ManifestError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return EXIT_USAGE
+
     if args.target:
         target_root = Path(args.target).expanduser().resolve()
     elif interactive:
@@ -148,12 +154,23 @@ def main(argv: list[str] | None = None) -> int:
         return EXIT_USAGE
 
     try:
-        manifest = load_manifest(source_root)
-    except ManifestError as exc:
-        print(f"error: {exc}", file=sys.stderr)
+        if args.mode:
+            mode = args.mode.strip().lower()
+        elif interactive:
+            mode = guided.prompt_mode(manifest.modes)
+        else:
+            mode = "team"
+
+        if args.adapter:
+            adapters = _normalize_adapters(args.adapter)
+        elif interactive:
+            adapters = guided.prompt_adapters(manifest.adapters)
+        else:
+            adapters = ["copilot"]
+    except (EOFError, KeyboardInterrupt):
+        print("\ninstallation cancelled.", file=sys.stderr)
         return EXIT_USAGE
 
-    mode = args.mode.strip().lower()
     if mode not in manifest.modes:
         print(
             f"error: unknown mode '{mode}'. Known modes: {', '.join(manifest.modes)}.",
@@ -161,7 +178,6 @@ def main(argv: list[str] | None = None) -> int:
         )
         return EXIT_USAGE
 
-    adapters = _normalize_adapters(args.adapter)
     unknown_adapters = [a for a in adapters if a not in manifest.adapters]
     if unknown_adapters:
         print(

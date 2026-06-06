@@ -59,13 +59,71 @@ def prompt_target(
         return candidate
 
 
+def prompt_mode(
+    modes: list[str],
+    *,
+    default: str = "team",
+    input_stream: TextIO = sys.stdin,
+    output_stream: TextIO = sys.stdout,
+) -> str:
+    """Ask for an install mode when no mode flag was provided."""
+
+    while True:
+        output_stream.write(
+            f"Install mode ({'/'.join(modes)}) [{default}]: "
+        )
+        output_stream.flush()
+        raw = input_stream.readline()
+        if raw == "":
+            raise EOFError("install mode was not provided")
+        value = raw.strip().lower() or default
+        if value in modes:
+            return value
+        output_stream.write(f"  Choose one of: {', '.join(modes)}.\n")
+
+
+def prompt_adapters(
+    adapters: list[str],
+    *,
+    default: str = "copilot",
+    input_stream: TextIO = sys.stdin,
+    output_stream: TextIO = sys.stdout,
+) -> list[str]:
+    """Ask for one or more comma-separated adapters when flags are absent."""
+
+    while True:
+        output_stream.write(
+            f"Adapters, comma-separated ({'/'.join(adapters)}) [{default}]: "
+        )
+        output_stream.flush()
+        raw = input_stream.readline()
+        if raw == "":
+            raise EOFError("adapters were not provided")
+        values = [
+            value.strip().lower()
+            for value in (raw.strip() or default).split(",")
+            if value.strip()
+        ]
+        selected = list(dict.fromkeys(values))
+        unknown = [value for value in selected if value not in adapters]
+        if selected and not unknown:
+            return selected
+        if unknown:
+            output_stream.write(
+                f"  Unknown adapter(s): {', '.join(unknown)}. "
+                f"Choose from: {', '.join(adapters)}.\n"
+            )
+        else:
+            output_stream.write("  Choose at least one adapter.\n")
+
+
 def resolve_collisions(
     collisions: list[dict[str, Any]],
     *,
     input_stream: TextIO = sys.stdin,
     output_stream: TextIO = sys.stdout,
 ) -> dict[str, str]:
-    """Collect keep/overwrite/abort decisions for every collision."""
+    """Collect y/n/a/q decisions before apply begins."""
 
     decisions: dict[str, str] = {}
     output_stream.write("\nResolve collisions\n")
@@ -74,20 +132,25 @@ def resolve_collisions(
         while True:
             output_stream.write(
                 f"  {index}/{len(collisions)} {destination}\n"
-                "    [k]eep existing  [o]verwrite with backup  [a]bort: "
+                "    [y] overwrite  [n] keep existing  "
+                "[a] overwrite all remaining  [q] quit [n]: "
             )
             output_stream.flush()
             raw = input_stream.readline()
             if raw == "":
                 raise EOFError(f"no decision provided for {destination}")
             choice = raw.strip().lower()
-            if choice in ("", "k", "keep"):
+            if choice in ("", "n"):
                 decisions[destination] = "keep"
                 break
-            if choice in ("o", "overwrite"):
+            if choice == "y":
                 decisions[destination] = "overwrite"
                 break
-            if choice in ("a", "abort"):
+            if choice == "a":
+                for remaining in collisions[index - 1 :]:
+                    decisions[str(remaining["destination"])] = "overwrite"
+                return decisions
+            if choice == "q":
                 raise KeyboardInterrupt("installation aborted by user")
-            output_stream.write("    Choose keep, overwrite, or abort.\n")
+            output_stream.write("    Choose y, n, a, or q.\n")
     return decisions
