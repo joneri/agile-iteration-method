@@ -4,7 +4,8 @@
 
 Make AIM budget-aware so users can reduce agent resource use without weakening role ownership, gate semantics, or escalation rules.
 
-In AIM 2.0, this feature is part of the explicit public cost-saving promise rather than a quiet internal optimization.
+This is canonical AIM cost-profile behavior.
+In AIM 2.0, cost control is part of the explicit public cost-saving promise rather than a quiet internal optimization.
 
 ## How it works
 
@@ -70,11 +71,12 @@ At Gate B, check whether the selected cost profile matches the risk:
 - trust-sensitive or high-blast-radius: `Deep`
 
 If a run feels expensive, inspect whether AIM loaded documents or ran verification that were not required by the selected profile.
-For `/aim continue`, first check whether the agent resumed from `.aim/state.json` before rereading `AGENTS.md`, the full workflow doc, or adapter guides.
+For `/aim continue`, first check whether the agent resumed from `.aim/state.json` before rereading the full workflow doc, adapter guides, or broad repository material.
 
 ## Related files
 
-- `AGENTS.md`
+- `aim.profile.yaml`
 - `docs/workflow/agile-iteration-method.md`
+- `docs/workflow/documentation-model.md`
 - `docs/workflow/quick-start-aim-2.0.md`
 - `.github/agents/aim.agent.md`

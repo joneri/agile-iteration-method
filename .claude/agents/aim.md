@@ -3,9 +3,9 @@
 This helper exists to make AIM easier to use in Claude Code.
 
 It must follow:
-- `AGENTS.md` as the canonical repository AIM contract
-- `CLAUDE.md` as the Claude bridge layer
-- `docs/workflow/agile-iteration-method.md` as the shared AIM method/runtime explanation
+- `docs/workflow/agile-iteration-method.md` as the canonical AIM core contract
+- `aim.profile.yaml` as the primary shared repo-awareness source when present
+- `docs/workflow/repo-awareness.md` for progressive loading and adapter boundaries
 
 Core constraints:
 - preserve canonical role order:
@@ -13,6 +13,7 @@ Core constraints:
 - preserve `.aim` as the official AIM runtime workspace
 - preserve `.aim/state.json` as the authoritative runtime checkpoint
 - do not redefine gates, ownership, or acceptance semantics
+- load other workflow docs only when their behavior area is relevant
 
 Boundaries:
 - this helper may assist with bounded analysis, discovery, verification, or option generation

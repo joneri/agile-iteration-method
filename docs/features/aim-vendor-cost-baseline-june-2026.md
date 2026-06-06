@@ -4,6 +4,9 @@
 
 Give AIM users one current baseline for how Codex, Claude Code, and GitHub Copilot charge for usage so pricing-sensitive work starts from official billing units instead of guesswork.
 
+This is a date-stamped external-vendor reference, not canonical AIM behavior.
+Current vendor facts must be reverified before price-sensitive decisions.
+
 ## How it works
 
 As of June 2026, the three main coding-agent surfaces differ in how they present cost:
@@ -70,7 +73,7 @@ When AI costs feel unexpectedly high, check these first:
 
 ## Related files
 
-- `docs/features/aim-cost-control-mode.md`
+- `docs/workflow/cost-control-mode.md`
 - `docs/workflow/quick-start-aim-2.0.md`
 
 ## Official sources used for this June 2026 baseline

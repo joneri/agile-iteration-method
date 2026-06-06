@@ -6,7 +6,8 @@ Install AIM 2.0 in this workspace and add the optional Copilot prompt layer when
 
 Actions:
 1. Verify these files exist and create missing ones from templates:
-   - `AGENTS.md`
+   - `docs/workflow/agile-iteration-method.md`
+   - `aim.profile.yaml` when Team repo-awareness is selected
    - `docs/workflow/agile-iteration-method.md`
    - `.github/agents/aim.agent.md`
    - `.github/agents/aim-planner.agent.md`

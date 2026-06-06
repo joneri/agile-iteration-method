@@ -40,7 +40,7 @@ handoffs:
 # AIM 2.0 orchestrator (Copilot layer)
 
 This file is an optional Copilot UX layer for AIM.
-Core method semantics come from `AGENTS.md`.
+Core method semantics come from `docs/workflow/agile-iteration-method.md`.
 This packaging is expected to expose the AIM 2.0 product surface on top of the stable runtime contract.
 
 ## Accepted starts
@@ -57,11 +57,11 @@ Kickoff contract:
 
 Repository-aware loading order:
 1. resume checkpoint from `.aim/state.json` when present
-2. Personal AIM local profile when present: `~/.aim/profiles/<repo-fingerprint>/profile.yaml` or ignored fallback `.aim/profile.yaml`
-3. root `aim.profile.yaml` when present, used as the Team AIM shared baseline
-4. AIM base semantics
-5. repository `AGENTS.md`
-6. repository `.github/agents/aim*.agent.md`
+2. root `aim.profile.yaml` when present, used as the primary shared repo-awareness baseline
+3. compatible Personal AIM hints from `~/.aim/profiles/<repo-fingerprint>/profile.yaml` or ignored fallback `.aim/profile.yaml`
+4. directly affected repository evidence
+5. canonical workflow docs needed for the current role, gate, command, or risk
+6. active Copilot agent or prompt policy only when Copilot mechanics matter
 
 Load only the context needed for the current state, command, cost profile, and risk.
 Avoid broad rereads on `/aim continue`; after the June 1, 2026 AI Credits shift, unnecessary context loading is a budget bug.
@@ -267,7 +267,7 @@ Use a visible `handoff` label only when it improves clarity; otherwise prefer a 
 - the next expected action or automatic continuation point
 
 `/aim config` should explain effective runtime configuration from:
-- `AGENTS.md`
+- `aim.profile.yaml`
 - repository `.github/agents/aim*.agent.md`
 - `.aim/state.json`
 - documented adapter limitations or fallbacks

@@ -4,6 +4,8 @@
 
 Define the smallest useful Team AIM profile artifact for sharing repo adaptation without committing full AIM docs or active working state.
 
+This is canonical Team AIM profile-artifact behavior.
+
 The concrete artifact name is:
 
 ```text
@@ -255,7 +257,7 @@ If the profile and current repository evidence disagree, AIM must treat the prof
 The single best check is whether the profile helps AIM explain its startup context choice.
 
 - Primary log: Gate B profile-source summary
-- Summary contract: [AIM 2.0 profile source summary](aim-2-profile-source-summary.md)
+- Summary contract: [AIM 2.0 profile source summary](profile-source-summary.md)
 - What "good" looks like:
   - AIM says the team profile was reused
   - AIM states which locality it inspected
@@ -270,8 +272,8 @@ The single best check is whether the profile helps AIM explain its startup conte
 
 ## Related files
 
-- `docs/features/aim-2-repo-profile-and-footprint-model.md`
-- `docs/features/aim-2-profile-source-summary.md`
+- `docs/workflow/repo-profile-and-footprint-model.md`
+- `docs/workflow/profile-source-summary.md`
 - `aim.profile.yaml`
 - `docs/workflow/aim-2-low-footprint-adoption.md`
 - `docs/workflow/aim-adapter-guidance.md`

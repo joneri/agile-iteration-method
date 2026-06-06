@@ -131,7 +131,6 @@ AIM_2_MIGRATION_CLASSIFICATION = {
         "scripts/validate_aim_runtime.py",
     ],
     "repo_profile": [
-        "AGENTS.md",
         "aim.profile.md",
         "aim.profile.json",
         "aim.profile.yaml",
@@ -159,7 +158,6 @@ AIM_2_MIGRATION_CLASSIFICATION = {
     ],
     "docs": [
         "README.md",
-        "CONTRIBUTING.md",
         "CHANGELOG.md",
         "CONTRIBUTORS.md",
         "LICENSE",
@@ -168,11 +166,13 @@ AIM_2_MIGRATION_CLASSIFICATION = {
         "docs/workflow",
     ],
     "adapter_helpers": [
-        "CLAUDE.md",
         ".claude",
         ".github/agents",
         ".github/prompts",
         "adapters/codex/agile-iteration-method/SKILL.md",
+    ],
+    "source_repo_maintainer_only": [
+        "CONTRIBUTING.md",
     ],
 }
 
@@ -185,16 +185,18 @@ SURFACE_BOUNDARY_CLASSIFICATION = {
         "examples",
     ],
     "repo_aware_collision_prone": [
-        "AGENTS.md",
-        "CLAUDE.md",
         "aim.profile.yaml",
         ".github/agents",
         ".github/prompts",
         ".claude",
         ".gitignore",
     ],
-    "repo_owned_collision_prone": [
+    "source_repo_maintainer_only": [
         "CONTRIBUTING.md",
+    ],
+    "generic_root_files_outside_aim": [
+        "AGENTS.md",
+        "CLAUDE.md",
     ],
     "runtime_working_state": [
         ".aim",
@@ -204,7 +206,7 @@ SURFACE_BOUNDARY_CLASSIFICATION = {
         ".aim/decisions",
         ".aim/reviews",
     ],
-    "mixed_docs": [
+    "support_reference_docs": [
         "docs/features",
     ],
     "local_generated_never_ship": [
@@ -232,7 +234,62 @@ REQUIRED_SURFACE_MODEL_MARKERS = [
     "Must never touch",
 ]
 
-OPERATING_MODE_DOC_PATH = "docs/features/aim-2-operating-modes.md"
+OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
+DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
+SURFACE_MODEL_DOC_PATH = "docs/workflow/repository-surface-classification.md"
+REPO_AWARENESS_DOC_PATH = "docs/workflow/repo-awareness.md"
+INSTALL_GUIDE_DOC_PATH = "docs/workflow/install-aim-2.0.md"
+INSTALL_MANIFEST_PATH = "install/aim-install-manifest.yaml"
+
+REMOVED_GENERIC_AIM_ROOT_PATHS = [
+    "AGENTS.md",
+    "CLAUDE.md",
+]
+
+REQUIRED_REPO_AWARENESS_MARKERS = [
+    "aim.profile.yaml",
+    "primary shared repo-awareness source",
+    "Generic root files",
+    "outside the AIM architecture",
+    "optional and secondary",
+    "Codex",
+    "Copilot",
+    "Claude",
+]
+
+CONTRIBUTING_EXCLUSION_MARKERS = {
+    REPO_AWARENESS_DOC_PATH: [
+        "AIM source repository",
+        "must never copy, create, modify, require, or read `CONTRIBUTING.md`",
+    ],
+    INSTALL_GUIDE_DOC_PATH: [
+        "source-repository-only maintainer file",
+        "must never copy, create, modify, require, or read it",
+        "installer manifest",
+        "explicitly exclude `CONTRIBUTING.md`",
+    ],
+    DOCUMENTATION_MODEL_DOC_PATH: [
+        "source-repository-only",
+        "must never copy, create, modify, require, or read it in a target repository",
+        "exclude from every installer manifest",
+    ],
+    SURFACE_MODEL_DOC_PATH: [
+        "source-repository-only",
+        "never copy, create, modify, require, or read a target repo's `CONTRIBUTING.md`",
+        "exclude `CONTRIBUTING.md` from every installer manifest",
+    ],
+}
+
+REQUIRED_INSTALL_MANIFEST_MARKERS = [
+    "targetExclusions:",
+    "path: CONTRIBUTING.md",
+    "AIM-source-repository-maintainer-only",
+    "copy: forbidden",
+    "create: forbidden",
+    "modify: forbidden",
+    "require: forbidden",
+    "read: forbidden",
+]
 
 REQUIRED_OPERATING_MODE_MARKERS = [
     "Personal AIM",
@@ -258,6 +315,49 @@ OPERATING_MODE_VALUES = {
     "personal": "Personal",
     "team": "Team",
     "enterprise": "Enterprise",
+}
+
+REQUIRED_DOCUMENTATION_MODEL_MARKERS = [
+    "AIM core truth",
+    "docs/workflow/agile-iteration-method.md",
+    "docs/workflow/operating-modes.md",
+    "docs/workflow/repository-surface-classification.md",
+    "docs/workflow/cost-control-mode.md",
+    "docs/workflow/cost-review-checklist.md",
+    "docs/workflow/cost-saving-method.md",
+    "docs/workflow/modularity-context-efficiency.md",
+    "docs/features/",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CONTRIBUTING.md",
+    ".aim/",
+    "outside AIM architecture",
+    "Runtime state",
+    "Shipped AIM product docs",
+    "Behavior-defining AIM documents belong here",
+]
+
+PROMOTED_CANONICAL_DOC_PATHS = {
+    "docs/workflow/documentation-model.md": "docs/features/aim-2-documentation-model.md",
+    "docs/workflow/operating-modes.md": "docs/features/aim-2-operating-modes.md",
+    "docs/workflow/repository-surface-classification.md": "docs/features/aim-2-repository-surface-classification.md",
+    "docs/workflow/repo-profile-and-footprint-model.md": "docs/features/aim-2-repo-profile-and-footprint-model.md",
+    "docs/workflow/working-state-boundaries.md": "docs/features/aim-2-working-state-boundaries.md",
+    "docs/workflow/cost-control-mode.md": "docs/features/aim-cost-control-mode.md",
+    "docs/workflow/modularity-context-efficiency.md": "docs/features/aim-modularity-context-efficiency.md",
+    "docs/workflow/personal-local-profile-storage.md": "docs/features/aim-2-personal-local-profile-storage.md",
+    "docs/workflow/profile-source-summary.md": "docs/features/aim-2-profile-source-summary.md",
+    "docs/workflow/team-profile-artifact.md": "docs/features/aim-2-tiny-team-profile-example.md",
+    "docs/workflow/codex-skill-onboarding.md": "docs/features/aim-codex-bundled-skill-onboarding.md",
+    "docs/workflow/light-front-door.md": "docs/features/aim-light-front-door.md",
+    "docs/workflow/cost-review-checklist.md": "docs/features/aim-cost-review-checklist.md",
+    "docs/workflow/cost-saving-method.md": "docs/features/aim-cost-saving-method.md",
+}
+
+FEATURE_SUPPORT_ROLE_MARKERS = {
+    "docs/features/aim-cost-comparison.md": "non-canonical reference comparison",
+    "docs/features/aim-github-copilot-cost-reduction-playbook.md": "vendor-specific onboarding playbook",
+    "docs/features/aim-vendor-cost-baseline-june-2026.md": "date-stamped external-vendor reference",
 }
 
 EXPECTED_ROLE_BY_STATE = {
@@ -505,7 +605,7 @@ def collect_repo_profile_readiness(repo_root: Path) -> dict[str, object]:
             "profile_paths": [],
             "team_profile_paths": [],
             "personal_profile_paths": [],
-            "summary": "No AIM 2.0 repo profile artifact found; AGENTS.md can bridge current runtime behavior, but reusable Personal/Team profile reuse is not ready yet.",
+            "summary": "No AIM 2.0 repo profile artifact found; use current repository evidence until a Personal or Team profile is available.",
             "state_marker_findings": {},
             "intelligence_marker_findings": {},
         }
@@ -588,12 +688,11 @@ def main() -> int:
     issues: list[dict[str, str]] = []
 
     required_repo_files = [
-        repo_root / "AGENTS.md",
         repo_root / "docs/workflow/agile-iteration-method.md",
-        repo_root / ".github/agents/aim.agent.md",
-        repo_root / ".github/agents/aim-planner.agent.md",
-        repo_root / ".github/agents/aim-builder.agent.md",
-        repo_root / ".github/agents/aim-reviewer.agent.md",
+        repo_root / REPO_AWARENESS_DOC_PATH,
+        repo_root / DOCUMENTATION_MODEL_DOC_PATH,
+        repo_root / SURFACE_MODEL_DOC_PATH,
+        repo_root / INSTALL_MANIFEST_PATH,
     ]
 
     required_runtime_paths = [
@@ -612,8 +711,21 @@ def main() -> int:
                 issues,
                 "blocked",
                 str(path.relative_to(repo_root)),
-                "required repo-aware AIM file is missing",
-                "Restore the canonical AIM repository file before continuing.",
+                "required canonical AIM product file is missing",
+                "Restore the canonical AIM-owned workflow file before continuing.",
+            )
+
+    checked.append("AIM 2.0 generic root-file independence")
+    for relative_path in REMOVED_GENERIC_AIM_ROOT_PATHS:
+        generic_root_path = repo_root / relative_path
+        checked.append(relative_path)
+        if generic_root_path.exists():
+            add_issue(
+                issues,
+                "recoverable",
+                relative_path,
+                "generic root file remains in the AIM product surface",
+                "Remove the AIM-owned root file; keep AIM behavior in canonical workflow docs and adapter mechanics in AIM-owned adapter paths.",
             )
 
     for path in required_runtime_paths:
@@ -650,7 +762,7 @@ def main() -> int:
     checked.append("AIM 2.0 surface boundary classification")
     surface_boundary_classification = collect_surface_boundary_classification(repo_root)
 
-    surface_model_path = repo_root / "docs/features/aim-2-repository-surface-classification.md"
+    surface_model_path = repo_root / SURFACE_MODEL_DOC_PATH
     checked.append(str(surface_model_path.relative_to(repo_root)))
     if surface_model_path.is_file():
         surface_model_content = surface_model_path.read_text(encoding="utf-8", errors="replace")
@@ -671,8 +783,134 @@ def main() -> int:
             "recoverable",
             str(surface_model_path.relative_to(repo_root)),
             "surface classification model is missing",
-            "Restore docs/features/aim-2-repository-surface-classification.md before relying on installer boundary guidance.",
+            "Restore docs/workflow/repository-surface-classification.md before relying on installer boundary guidance.",
         )
+
+    repo_awareness_doc_path = repo_root / REPO_AWARENESS_DOC_PATH
+    checked.append(REPO_AWARENESS_DOC_PATH)
+    if repo_awareness_doc_path.is_file():
+        repo_awareness_content = repo_awareness_doc_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_repo_awareness_markers = [
+            marker
+            for marker in REQUIRED_REPO_AWARENESS_MARKERS
+            if marker not in repo_awareness_content
+        ]
+        if missing_repo_awareness_markers:
+            add_issue(
+                issues,
+                "recoverable",
+                REPO_AWARENESS_DOC_PATH,
+                f"repo-awareness model is missing required markers: {', '.join(missing_repo_awareness_markers)}",
+                "Restore the primary shared profile, root-file independence, optional adapter policy, and native adapter continuity rules.",
+            )
+    else:
+        add_issue(
+            issues,
+            "blocked",
+            REPO_AWARENESS_DOC_PATH,
+            "canonical repo-awareness model is missing",
+            "Restore docs/workflow/repo-awareness.md before relying on AIM repo-aware behavior.",
+        )
+
+    checked.append("AIM 2.0 promoted canonical documentation paths")
+    for canonical_path, old_feature_path in PROMOTED_CANONICAL_DOC_PATHS.items():
+        checked.append(canonical_path)
+        if not (repo_root / canonical_path).is_file():
+            add_issue(
+                issues,
+                "recoverable",
+                canonical_path,
+                "promoted canonical AIM behavior doc is missing from docs/workflow",
+                "Restore the behavior-defining AIM doc under docs/workflow rather than docs/features.",
+            )
+        if (repo_root / old_feature_path).exists():
+            checked.append(old_feature_path)
+            add_issue(
+                issues,
+                "recoverable",
+                old_feature_path,
+                "promoted behavior-defining AIM doc still exists under docs/features",
+                "Move behavior-defining AIM docs into docs/workflow so docs/features remains support/reference by default.",
+            )
+
+    checked.append("AIM 2.0 CONTRIBUTING.md target-install exclusion")
+    for relative_path, required_markers in CONTRIBUTING_EXCLUSION_MARKERS.items():
+        exclusion_doc_path = repo_root / relative_path
+        checked.append(relative_path)
+        if not exclusion_doc_path.is_file():
+            add_issue(
+                issues,
+                "recoverable",
+                relative_path,
+                "CONTRIBUTING.md exclusion contract cannot be verified because the canonical document is missing",
+                "Restore the canonical document and its source-repository-only CONTRIBUTING.md rule.",
+            )
+            continue
+        exclusion_content = exclusion_doc_path.read_text(encoding="utf-8", errors="replace")
+        missing_exclusion_markers = [
+            marker for marker in required_markers if marker not in exclusion_content
+        ]
+        if missing_exclusion_markers:
+            add_issue(
+                issues,
+                "recoverable",
+                relative_path,
+                f"CONTRIBUTING.md target-install exclusion is incomplete: {', '.join(missing_exclusion_markers)}",
+                "State that CONTRIBUTING.md is source-repository-only and must never be copied, created, modified, required, or read in target repositories or installer manifests.",
+            )
+
+    install_manifest_path = repo_root / INSTALL_MANIFEST_PATH
+    checked.append(INSTALL_MANIFEST_PATH)
+    if install_manifest_path.is_file():
+        install_manifest_content = install_manifest_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_manifest_markers = [
+            marker
+            for marker in REQUIRED_INSTALL_MANIFEST_MARKERS
+            if marker not in install_manifest_content
+        ]
+        if missing_manifest_markers:
+            add_issue(
+                issues,
+                "blocked",
+                INSTALL_MANIFEST_PATH,
+                f"installer manifest does not fully exclude CONTRIBUTING.md: {', '.join(missing_manifest_markers)}",
+                "Restore the forbidden copy/create/modify/require/read operations for the source-repository-only file.",
+            )
+    else:
+        add_issue(
+            issues,
+            "blocked",
+            INSTALL_MANIFEST_PATH,
+            "canonical installer boundary manifest is missing",
+            "Restore the manifest before installer work relies on package boundaries.",
+        )
+
+    checked.append("AIM 2.0 feature support/reference roles")
+    for support_path, role_marker in FEATURE_SUPPORT_ROLE_MARKERS.items():
+        checked.append(support_path)
+        support_doc_path = repo_root / support_path
+        if not support_doc_path.is_file():
+            add_issue(
+                issues,
+                "recoverable",
+                support_path,
+                "declared AIM support/reference doc is missing",
+                "Restore the support/reference doc or remove it from the documented feature inventory.",
+            )
+            continue
+        support_content = support_doc_path.read_text(encoding="utf-8", errors="replace")
+        if role_marker not in support_content:
+            add_issue(
+                issues,
+                "recoverable",
+                support_path,
+                f"support/reference role marker is missing: {role_marker}",
+                "State the file's exact non-canonical role or promote it into docs/workflow if it defines AIM behavior.",
+            )
 
     operating_mode_doc_path = repo_root / OPERATING_MODE_DOC_PATH
     checked.append(OPERATING_MODE_DOC_PATH)
@@ -699,7 +937,35 @@ def main() -> int:
             "recoverable",
             OPERATING_MODE_DOC_PATH,
             "canonical operating mode model is missing",
-            "Create docs/features/aim-2-operating-modes.md before relying on mode-aware installation behavior.",
+            "Create docs/workflow/operating-modes.md before relying on mode-aware installation behavior.",
+        )
+
+    documentation_model_doc_path = repo_root / DOCUMENTATION_MODEL_DOC_PATH
+    checked.append(DOCUMENTATION_MODEL_DOC_PATH)
+    if documentation_model_doc_path.is_file():
+        documentation_model_content = documentation_model_doc_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_documentation_model_markers = [
+            marker
+            for marker in REQUIRED_DOCUMENTATION_MODEL_MARKERS
+            if marker not in documentation_model_content
+        ]
+        if missing_documentation_model_markers:
+            add_issue(
+                issues,
+                "recoverable",
+                DOCUMENTATION_MODEL_DOC_PATH,
+                f"documentation model is missing required markers: {', '.join(missing_documentation_model_markers)}",
+                "Update the documentation source-of-truth model so canonical, repo-local, runtime, and maintainer surfaces stay distinct.",
+            )
+    else:
+        add_issue(
+            issues,
+            "recoverable",
+            DOCUMENTATION_MODEL_DOC_PATH,
+            "canonical documentation model is missing",
+            "Create docs/workflow/documentation-model.md before relying on documentation source-of-truth guidance.",
         )
 
     checked.append("AIM 2.0 repo profile readiness")
@@ -962,7 +1228,14 @@ def main() -> int:
         print(f"- {item}")
 
     print("AIM 2.0 migration classification:")
-    for category in ["runtime", "repo_profile", "working_state", "docs", "adapter_helpers"]:
+    for category in [
+        "runtime",
+        "repo_profile",
+        "working_state",
+        "docs",
+        "adapter_helpers",
+        "source_repo_maintainer_only",
+    ]:
         paths = migration_classification.get(category, [])
         if paths:
             print(f"- {category}: {', '.join(paths)}")
@@ -973,9 +1246,10 @@ def main() -> int:
     for category in [
         "static_product",
         "repo_aware_collision_prone",
-        "repo_owned_collision_prone",
+        "source_repo_maintainer_only",
+        "generic_root_files_outside_aim",
         "runtime_working_state",
-        "mixed_docs",
+        "support_reference_docs",
         "local_generated_never_ship",
     ]:
         paths = surface_boundary_classification.get(category, [])
@@ -992,6 +1266,24 @@ def main() -> int:
     print(f"- mode source: {operating_mode_source}")
     if configured_operating_mode == "Enterprise":
         print(f"- Enterprise ignore baseline: {', '.join(ENTERPRISE_IGNORE_MARKERS)}")
+
+    print("AIM 2.0 documentation model:")
+    print(f"- canonical doc: {DOCUMENTATION_MODEL_DOC_PATH}")
+    print("- core truth: docs/workflow/agile-iteration-method.md")
+    print("- canonical behavior surface: docs/workflow/")
+    print("- support/reference surface: docs/features/")
+    print("- primary shared repo-awareness: aim.profile.yaml")
+    print("- generic root files: outside AIM architecture")
+    print("- adapter policy: optional, secondary, and active-adapter-only")
+    print("- CONTRIBUTING.md: AIM source-repository-only; excluded from all target installs and manifests")
+    print(f"- installer boundary manifest: {INSTALL_MANIFEST_PATH}")
+    print("- runtime state: .aim/ is not documentation truth")
+    print("- promoted behavior docs:")
+    for canonical_path in PROMOTED_CANONICAL_DOC_PATHS:
+        print(f"  - {canonical_path}")
+    print("- retained support/reference docs:")
+    for support_path, role_marker in FEATURE_SUPPORT_ROLE_MARKERS.items():
+        print(f"  - {support_path}: {role_marker}")
 
     print("AIM 2.0 repo profile readiness:")
     print(f"- status: {readiness_status}")

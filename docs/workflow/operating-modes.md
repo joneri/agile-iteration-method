@@ -78,7 +78,7 @@ It is a stricter safety mode that protects the repository from accidental AIM fo
 | `aim.profile.yaml` | optional | default shared repo-awareness surface | only by explicit repo-owner approval |
 | Personal profile under `~/.aim/profiles/` | allowed | allowed as local hint | allowed as local/private hint |
 | Feature docs that help AIM | may keep or commit | may share by agreement | local/private by default unless explicitly approved |
-| Root instruction files such as `AGENTS.md` and `CLAUDE.md` | may create or modify if user owns repo | merge or create by team review | never assume overwrite rights; explicit approval required |
+| Generic root instruction files such as `AGENTS.md` and `CLAUDE.md` | outside AIM architecture | outside AIM architecture | outside AIM architecture |
 | AIM-generated markdown/process artifacts | may keep or commit | commit only if team wants audit/shared process | ignored by default unless explicitly promoted |
 | Adapter helpers under `.github/` or `.claude/` | optional | share by adapter choice | explicit opt-in only |
 
@@ -107,19 +107,25 @@ Enterprise repositories may deliberately share a reviewed AIM surface, but accid
 
 ## Collision behavior
 
-Collision-prone root instruction files include:
+Generic root instruction files are outside AIM architecture:
 
 - `AGENTS.md`
 - `CLAUDE.md`
+- `CONTRIBUTING.md`
+
+AIM installation must not copy, create, modify, require, read, merge into, or overwrite them in any operating mode.
+`CONTRIBUTING.md` may exist only as maintainer guidance in the AIM source repository and must be excluded from every target installer manifest.
+
+Repo-owned AIM configuration surfaces still require collision handling:
+
 - `.gitignore`
 - `aim.profile.yaml`
-- `CONTRIBUTING.md`
 
 Rules by mode:
 
-- Personal: permissive, but existing files should still be inspected before overwrite.
-- Team: create or modify through reviewed team agreement.
-- Enterprise: never assume overwrite rights; generate a patch or side-by-side template unless explicit approval exists.
+- Personal: profile and ignore changes are permissive, but existing files must be inspected.
+- Team: create or modify shared AIM configuration through reviewed team agreement.
+- Enterprise: never assume overwrite rights; generate a patch unless explicit approval exists.
 
 ## Install behavior
 
@@ -156,8 +162,8 @@ The validator should:
 
 - `aim.profile.yaml`
 - `.gitignore`
-- `docs/features/aim-2-repo-profile-and-footprint-model.md`
-- `docs/features/aim-2-repository-surface-classification.md`
+- `docs/workflow/repo-profile-and-footprint-model.md`
+- `docs/workflow/repository-surface-classification.md`
 - `docs/workflow/install-aim-2.0.md`
 - `scripts/validate_aim_runtime.py`
 

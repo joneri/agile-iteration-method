@@ -41,10 +41,11 @@ If slash commands are not available in the active adapter, state the same intent
 What AIM should do next:
 
 1. read local AIM state first when it exists
-2. read the Personal AIM profile next when it exists
-3. inspect the directly affected area before broad docs
-4. load short authoritative docs only when risk or missing evidence requires them
-5. keep the profile local unless you intentionally promote shared facts into Team AIM
+2. read root `aim.profile.yaml` when it exists as the primary shared baseline
+3. apply compatible Personal AIM profile hints when they exist
+4. inspect the directly affected area before broad docs
+5. load short authoritative docs only when risk or missing evidence requires them
+6. keep Personal hints local unless you intentionally promote shared facts into Team AIM
 
 Use the repo-local fallback only when the adapter cannot use the user-level profile store:
 
@@ -78,8 +79,8 @@ If slash commands are not available in the active adapter, state the same intent
 What AIM should do next:
 
 1. read local AIM state first when it exists
-2. read the Personal AIM profile when present for local reuse hints
-3. read root `aim.profile.yaml` as the shared team baseline
+2. read root `aim.profile.yaml` as the primary shared team baseline
+3. apply compatible Personal AIM profile hints for local reuse
 4. inspect the directly affected area before broad docs
 5. expand only when risk, stale profile facts, ownership boundaries, or missing evidence require it
 
@@ -161,6 +162,6 @@ Do not treat the docs as the install footprint.
 - For repository setup, embedded AIM, or adapter packaging: [Install AIM 2.0](install-aim-2.0.md)
 - For the broader adoption model: [AIM 2.0 low-footprint adoption](aim-2-low-footprint-adoption.md)
 - For troubleshooting start, resume, validation, and adapter behavior: [Troubleshoot AIM 2.0](troubleshoot-aim-2.0.md)
-- For Personal profile storage details: [AIM 2.0 Personal local profile storage](../features/aim-2-personal-local-profile-storage.md)
-- For the tiny shared Team profile: [AIM 2.0 Tiny Team Profile Artifact](../features/aim-2-tiny-team-profile-example.md)
-- For the compact startup summary contract: [AIM 2.0 Profile Source Summary](../features/aim-2-profile-source-summary.md)
+- For Personal profile storage details: [AIM 2.0 Personal local profile storage](personal-local-profile-storage.md)
+- For the tiny shared Team profile: [AIM 2.0 Tiny Team Profile Artifact](team-profile-artifact.md)
+- For the compact startup summary contract: [AIM 2.0 Profile Source Summary](profile-source-summary.md)

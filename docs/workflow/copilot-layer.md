@@ -12,9 +12,9 @@ It makes AIM easier to start and use in VS Code with:
 - slash commands via prompt files
 
 It does **not** change AIM semantics.
-Core AIM rules still come from:
-- `AGENTS.md`
-- `docs/workflow/agile-iteration-method.md`
+Core AIM rules come from `docs/workflow/agile-iteration-method.md`.
+Shared repo-awareness comes from `aim.profile.yaml`.
+Copilot files are optional adapter packaging, not additional core or repo-awareness authorities.
 
 Parity rule:
 - Copilot and Codex must execute the same repository-driven AIM behavior.
@@ -33,12 +33,15 @@ Parity rule:
 
 ## Repository-aware loading
 
-Load behavior is layered in this order:
-1. AIM base semantics
-2. repository `AGENTS.md`
-3. repository `.github/agents/aim*.agent.md`
+Load behavior is progressive:
+1. `.aim/state.json`
+2. root `aim.profile.yaml` when present
+3. compatible Personal profile hints
+4. directly affected repository evidence
+5. the active `.github/agents/aim*.agent.md` file or prompt helper only when Copilot mechanics are relevant
 
-If layers conflict, escalate to PO.
+Generic root instruction files are outside the AIM architecture.
+If adapter policy conflicts with canonical workflow docs or the shared profile, escalate to PO.
 
 ## Normalized runtime context
 
@@ -103,9 +106,10 @@ Fallback rule:
 - `.github/prompts/start-aim.prompt.md`
 
 Canonical rule:
-- `.github/agents/aim*.agent.md` are part of the shared AIM instruction layer and also act as native Copilot agent files.
+- `.github/agents/aim*.agent.md` are native Copilot AIM entrypoints.
 - `.github/prompts/` are source of truth for Copilot-specific entrypoints and UX wiring.
-- The shared AIM runtime contract still comes from `AGENTS.md` and `docs/workflow/agile-iteration-method.md`.
+- The shared AIM runtime contract comes from `docs/workflow/agile-iteration-method.md`.
+- Repo-aware guidance comes from `aim.profile.yaml`; Copilot helpers may consume it but must not replace it.
 
 ## Handoff buttons
 
@@ -250,10 +254,10 @@ Expected fix:
 
 ## Related files
 
-- `AGENTS.md`
+- `aim.profile.yaml`
 - `docs/workflow/agile-iteration-method.md`
-- `docs/features/aim-cost-control-mode.md`
-- `docs/features/aim-modularity-context-efficiency.md`
+- `docs/workflow/cost-control-mode.md`
+- `docs/workflow/modularity-context-efficiency.md`
 - `docs/workflow/aim-adapter-guidance.md`
 - `.github/agents/aim.agent.md`
 - `.github/prompts/start-aim.prompt.md`

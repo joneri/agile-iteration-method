@@ -4,6 +4,9 @@
 
 Give AIM users a practical playbook for reducing GitHub Copilot AI Credit waste after the June 1, 2026 move to usage-based billing.
 
+This is a vendor-specific onboarding playbook, not canonical AIM behavior.
+Canonical AIM cost and Gate behavior lives under `docs/workflow/`.
+
 ## How it works
 
 Use this playbook when GitHub Copilot is the primary agent surface or when Copilot spend is the main cost concern.
@@ -141,7 +144,7 @@ When Copilot feels too expensive, inspect in this order:
 ## Related files
 
 - `docs/features/aim-vendor-cost-baseline-june-2026.md`
-- `docs/features/aim-cost-review-checklist.md`
+- `docs/workflow/cost-review-checklist.md`
 - `docs/workflow/quick-start-aim-2.0.md`
 
 ## Official sources used

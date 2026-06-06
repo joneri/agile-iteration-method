@@ -173,8 +173,8 @@ What the runtime should eventually do:
 At startup, AIM should load context in this order:
 
 1. active working state
-2. Personal AIM local profile when present
-3. Team AIM profile, normally root `aim.profile.yaml`
+2. Team AIM profile, normally root `aim.profile.yaml`
+3. compatible Personal AIM local profile hints when present
 4. directly affected files
 5. nearest package, service, or module metadata
 6. nearest commands for build, test, lint, or validation
@@ -295,16 +295,15 @@ Good follow-up increments:
 1. make a runtime helper emit the profile-source summary from personal and team profile sources
 3. prepare README/front-door wording when AIM 2.0 release scope is clearer
 
-For the concrete tiny Team AIM profile artifact, see [AIM 2.0 tiny Team profile artifact](../features/aim-2-tiny-team-profile-example.md).
-For Personal AIM local storage, see [AIM 2.0 Personal local profile storage](../features/aim-2-personal-local-profile-storage.md).
-For the compact startup/Gate B summary, see [AIM 2.0 profile source summary](../features/aim-2-profile-source-summary.md).
-For active state boundaries, see [AIM 2.0 working-state boundaries](../features/aim-2-working-state-boundaries.md).
+For the concrete tiny Team AIM profile artifact, see [AIM 2.0 tiny Team profile artifact](team-profile-artifact.md).
+For Personal AIM local storage, see [AIM 2.0 Personal local profile storage](personal-local-profile-storage.md).
+For the compact startup/Gate B summary, see [AIM 2.0 profile source summary](profile-source-summary.md).
+For active state boundaries, see [AIM 2.0 working-state boundaries](working-state-boundaries.md).
 
 ## Related files
 
-- `docs/features/aim-2-enterprise-and-universal-adoption-strategy.md`
-- `docs/features/aim-2-repo-profile-and-footprint-model.md`
-- `docs/features/aim-2-tiny-team-profile-example.md`
-- `docs/features/aim-2-working-state-boundaries.md`
+- `docs/workflow/repo-profile-and-footprint-model.md`
+- `docs/workflow/team-profile-artifact.md`
+- `docs/workflow/working-state-boundaries.md`
 - `docs/features/aim-cost-comparison.md`
 - `docs/workflow/quick-start-aim-2.0.md`

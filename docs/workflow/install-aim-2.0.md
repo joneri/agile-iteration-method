@@ -28,24 +28,24 @@ Use [Quick start AIM 2.0](quick-start-aim-2.0.md) for the first run after setup.
 These are the canonical AIM 2.0 operating modes.
 Full embedded AIM remains a footprint choice when the repo owner intentionally wants AIM product docs and adapter helpers in the repository.
 
-For the canonical mode model, see [AIM 2.0 operating modes](../features/aim-2-operating-modes.md).
+For the canonical mode model, see [AIM 2.0 operating modes](operating-modes.md).
 
 ## Installation boundary model
 
 Before copying files, classify the target surface.
 
-Use [AIM 2.0 repository surface classification](../features/aim-2-repository-surface-classification.md) as the operational boundary model.
+Use [AIM 2.0 repository surface classification](repository-surface-classification.md) as the operational boundary model.
 
 Installer actions must follow these defaults:
 
 | Surface class | Default action |
 | --- | --- |
 | Static AIM product docs and adapter packages | may be copied into an AIM-owned package path selected by the user |
-| Repo-aware instruction files | may be created only when absent and explicitly requested; otherwise produce a merge plan |
+| Shared repo-awareness | create or update root `aim.profile.yaml` only by explicit Team or Enterprise choice |
 | Runtime state | never install as product; AIM creates `.aim/` at runtime |
 | Team profile | create or update only by explicit Team AIM choice |
 | Personal profile | store outside the repository by default |
-| Target repo policy files | never overwrite |
+| Generic root files | never create, modify, or overwrite for AIM |
 | Internal build-memory | do not install by default |
 
 Mode-specific defaults:
@@ -57,22 +57,33 @@ Mode-specific defaults:
 | Enterprise | verify ignore safety before creating repo-local AIM internals; require explicit approval for any shared AIM surface |
 
 Installation safety matters more than convenience.
-If a file is both useful and collision-prone, treat it as a template or merge target, not as a normal copy target.
+Generic root files may still exist for repository purposes, but AIM installation ignores them.
 
-### Collision-prone root files
+### Root-file independence
 
-These files require explicit handling:
+These generic root files are outside the AIM architecture:
 
 - `AGENTS.md`
 - `CLAUDE.md`
 - `CONTRIBUTING.md`
+
+An AIM installer must not create, modify, merge into, or overwrite them.
+Repository-owned content in those files remains untouched and is not needed for AIM core, repo-awareness, or adapter startup.
+
+`CONTRIBUTING.md` is a source-repository-only maintainer file.
+In a target repository, AIM must never copy, create, modify, require, or read it.
+Every installer manifest, package definition, and export boundary must explicitly exclude `CONTRIBUTING.md`.
+The canonical machine-readable boundary is `install/aim-install-manifest.yaml`.
+
+These repo-owned configuration surfaces still require collision handling:
+
 - `aim.profile.yaml`
 - `.gitignore`
 
 Rules:
 
 - inspect before writing
-- create only when absent and requested
+- create only when absent and explicitly requested
 - modify only through a reviewed merge or patch
 - never blind overwrite
 - never store active Epic, gate, role, review, or acceptance state in repo profiles or instruction files
@@ -91,19 +102,17 @@ For `.gitignore`, suggest this fragment instead of replacing the target file:
 
 Required in the repository:
 
-- `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
-- `.github/agents/aim.agent.md`
-- `.github/agents/aim-planner.agent.md`
-- `.github/agents/aim-builder.agent.md`
-- `.github/agents/aim-reviewer.agent.md`
+- `docs/workflow/repo-awareness.md`
+- `aim.profile.yaml` when shared repo-awareness is wanted
 - `.aim/` created automatically when AIM starts if missing
 
 Important:
 
-- the listed instruction files are required for a full embedded AIM repo, but they are not safe blind-overwrite targets in an existing repository
+- full embedded is a footprint choice, not a separate operating mode
+- adapter packages are selected independently and remain secondary to canonical workflow docs
 - `.aim/` is runtime state, not an install payload
-- `CONTRIBUTING.md` is not part of default AIM installation for target repositories
+- `CONTRIBUTING.md` is excluded from every target-repository installation footprint
 
 Optional Copilot prompt helpers:
 
@@ -111,9 +120,8 @@ Optional Copilot prompt helpers:
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
 
-Recommended for Claude Code support:
+Optional Claude Code package:
 
-- `CLAUDE.md`
 - `.claude/agents/aim.md`
 - `.claude/commands/start-aim.md`
 - `.claude/commands/install-aim.md`
@@ -140,15 +148,17 @@ Copy the whole directory, not just `SKILL.md`.
 
 ### Copilot
 
-1. Verify the required `.github/agents/aim*.agent.md` files exist.
+1. Install the selected `.github/agents/aim*.agent.md` files as the native Copilot entrypoint package.
 2. Add `.github/prompts/` when you want packaged Copilot prompt entrypoints.
 3. Start with `/aim start "EPIC: ..."` or `Start working according to AIM`.
 
 ### Claude Code
 
-1. Ensure `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, and `CLAUDE.md` are present.
-2. Confirm the shipped Claude starter files exist.
+1. Ensure canonical AIM workflow docs are available from the selected product footprint.
+2. Install the selected `.claude/agents/` and `.claude/commands/` files.
 3. Start with the shipped Claude starter command or the explicit `EPIC: <desired outcome>` fallback.
+
+No adapter requires a generic root instruction file.
 
 ## First-run checks
 

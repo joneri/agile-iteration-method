@@ -1,41 +1,36 @@
 # Feature explanations
 
-This folder contains short, concrete explanations of non-obvious features.
-The goal is to make future debugging and changes faster and safer.
+This folder contains support and reference explanations.
+The goal is to make future debugging, examples, comparisons, and repo-local support easier.
 
 Path note:
-- In AIM, `docs/features/` is the canonical feature-contract folder.
+- In this AIM repository, `docs/features/` is support/reference by default.
+- Behavior-defining AIM docs belong in `docs/workflow/`.
+- The folder is not AIM core truth.
+
+Canonical documentation model:
+- `docs/workflow/documentation-model.md`
 
 ## When to add or update a doc
-Create or update a feature explanation when:
-- a feature is introduced or significantly changed
-- a new behaviour, rule, fallback or threshold is added
-- an API contract changes (shape, semantics, flags)
-- a fix relies on a specific assumption (for example trading days source, coverage thresholds)
+Create or update a support/reference explanation when:
+- background, examples, comparisons, or debugging support are needed
+- a repo-local feature note is useful but should not define AIM behavior
+- a support doc relies on a specific assumption that future readers should see
+
+If the document defines AIM behavior, install behavior, mode behavior, cost behavior, context behavior, classification behavior, or documentation truth, put it in `docs/workflow/` instead.
 
 ## Where to put it
 - One feature, one file:
   docs/features/<feature-name>.md
 
-Examples:
-- aim-2-personal-local-profile-storage.md
-- aim-2-profile-source-summary.md
-- aim-2-operating-modes.md
-- aim-2-repo-profile-and-footprint-model.md
-- aim-2-repository-surface-classification.md
-- aim-2-tiny-team-profile-example.md
-- aim-2-working-state-boundaries.md
-- aim-cost-control-mode.md
-- aim-cost-comparison.md
-- aim-cost-review-checklist.md
-- aim-cost-saving-method.md
-- aim-github-copilot-cost-reduction-playbook.md
-- aim-vendor-cost-baseline-june-2026.md
-- aim-light-front-door.md
-- aim-modularity-context-efficiency.md
-- value-series-trading-days.md
-- autopost-kpis.md
-- dividends-reconciliation.md
+Current roles:
+
+| File | Role |
+| --- | --- |
+| `aim-cost-comparison.md` | reference comparison; explains the behavioral cost case without defining AIM rules |
+| `aim-github-copilot-cost-reduction-playbook.md` | vendor-specific onboarding playbook |
+| `aim-vendor-cost-baseline-june-2026.md` | date-stamped vendor reference based on external facts |
+| `_template.md` | support template for future non-canonical reference or repo-local docs |
 
 ## Required sections
 Use docs/features/_template.md.
@@ -43,8 +38,11 @@ Use docs/features/_template.md.
 Keep it short, concrete and actionable.
 
 ## Rule
-If a Done Increment changes behaviour, it must also update the relevant feature explanation.
-If no doc exists yet, create it.
+If a Done Increment changes AIM behavior, update the relevant canonical document in `docs/workflow/`.
+If a Done Increment needs support, examples, background, or repo-local explanation, add or update a document here.
+
+Do not treat a repo-local or user-created feature explanation as AIM core truth.
+Promote behavior-defining material into `docs/workflow/` by an explicit AIM product documentation change.
 
 ## License
 

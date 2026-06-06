@@ -3,15 +3,13 @@
 Use this command to orient a Claude Code user to the minimum viable AIM setup in this repository.
 
 Explain:
-- `AGENTS.md` is the canonical AIM repo contract
-- `CLAUDE.md` is the Claude Code bridge layer
-- `docs/workflow/agile-iteration-method.md` explains the shared AIM method and runtime
-- `.claude/commands/` and `.claude/agents/` are helper surfaces, not replacements for the shared runtime contract
+- `docs/workflow/agile-iteration-method.md` is the canonical AIM core contract
+- `aim.profile.yaml` is the primary shared repo-awareness source when Team repo-awareness is selected
+- `.claude/commands/` and `.claude/agents/` are native Claude entrypoints and optional secondary policy surfaces
 
 Installation checklist:
-- confirm `AGENTS.md` is present
-- confirm `CLAUDE.md` is present
 - confirm the main workflow doc is present
+- confirm `.claude/agents/aim.md` or the desired `.claude/commands/` entrypoint is present
 - explain how to start AIM with the shipped Claude starter command or the explicit `EPIC: ...` fallback
 - explain that `Cost profile: Cost Control` is available for low-risk work and `Cost profile: Deep` for high-risk work
 - explain that `.aim/` will be created automatically on first valid start if missing

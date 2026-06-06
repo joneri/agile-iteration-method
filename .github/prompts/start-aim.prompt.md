@@ -19,7 +19,7 @@ If no Epic is provided yet:
 
 If Epic is provided:
 - select the `aim` agent flow
-- preserve the AIM runtime contract from `AGENTS.md` and `docs/workflow/agile-iteration-method.md`
+- preserve the AIM runtime contract from `docs/workflow/agile-iteration-method.md`
 - load Personal and Team profiles before broader docs when present
 - load only the additional context needed for the current state, command, cost profile, and risk
 - report whether the profile was reused, which facts were reused, which locality was selected, which broader docs or scans were avoided, and why any expansion was needed

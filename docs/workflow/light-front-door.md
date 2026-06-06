@@ -4,6 +4,8 @@
 
 Make AIM easier to start without removing the method depth that makes it reliable.
 
+This is canonical AIM front-door and first-routing behavior.
+
 The front door should help a user choose the next action first, not teach the full method first.
 
 ## How it works
@@ -19,7 +21,7 @@ Detailed method concepts, adapter differences, runtime contracts, and reference 
 
 - The first screen should not require users to understand every AIM concept.
 - `Cost Control` is the default lightweight suggestion for ordinary low-risk work.
-- The full method remains authoritative in `AGENTS.md` and `docs/workflow/agile-iteration-method.md`.
+- The full method remains authoritative in `docs/workflow/agile-iteration-method.md`; `aim.profile.yaml` supplies shared repo-awareness and host-provided instructions remain external environment constraints.
 - The lighter front door changes onboarding shape, not AIM role order, gate semantics, or acceptance rules.
 
 ## Inputs and outputs

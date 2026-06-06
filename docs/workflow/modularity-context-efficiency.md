@@ -4,6 +4,8 @@
 
 Help AIM agents keep increments readable, reviewable, and cheaper to change later by separating behavioral scope from file count.
 
+This is canonical AIM file-boundary and context-efficiency behavior.
+
 ## How it works
 
 A Done Increment stays small by limiting behavior, assumptions, and user-facing change.
@@ -45,10 +47,11 @@ At Gate B, check whether the planned file boundaries reduce future context load 
 
 ## Related files
 
-- `AGENTS.md`
+- `aim.profile.yaml`
 - `docs/workflow/agile-iteration-method.md`
 - `docs/workflow/copilot-layer.md`
+- `docs/workflow/documentation-model.md`
 - `.github/agents/aim-planner.agent.md`
 - `.github/agents/aim-builder.agent.md`
 - `.github/agents/aim-reviewer.agent.md`
-- `CLAUDE.md`
+- active `.claude/` helper files when Claude mechanics are relevant

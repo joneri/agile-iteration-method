@@ -32,7 +32,8 @@ If manual verification is needed, list steps and mark ready for Gate E.
 
 ## Feature doc rule
 
-Request creation/update of `docs/features/<name>.md` when behavior or contract changed.
+Request creation or update of the relevant canonical `docs/workflow/` document when AIM behavior changes.
+Use `docs/features/` only for support/reference material that does not define AIM behavior.
 
 ## Required output
 

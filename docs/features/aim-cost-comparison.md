@@ -4,6 +4,9 @@
 
 Show why AIM 2.0 is expected to reduce AI spend compared with undisciplined agentic work, without claiming exact dollar or token savings.
 
+This is a non-canonical reference comparison.
+Canonical AIM cost behavior lives in `docs/workflow/cost-control-mode.md`, `docs/workflow/cost-review-checklist.md`, and `docs/workflow/cost-saving-method.md`.
+
 ## How it works
 
 The comparison uses observable cost drivers instead of invented prices:
@@ -98,8 +101,8 @@ When AIM 2.0 does not feel cheaper, check:
 ## Related files
 
 - `AGENTS.md`
-- `docs/features/aim-cost-control-mode.md`
-- `docs/features/aim-cost-saving-method.md`
-- `docs/features/aim-cost-review-checklist.md`
+- `docs/workflow/cost-control-mode.md`
+- `docs/workflow/cost-saving-method.md`
+- `docs/workflow/cost-review-checklist.md`
 - `docs/features/aim-github-copilot-cost-reduction-playbook.md`
 - `docs/workflow/quick-start-aim-2.0.md`

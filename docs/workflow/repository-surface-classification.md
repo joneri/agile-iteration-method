@@ -4,6 +4,8 @@
 
 Define the operational file-surface boundary model for AIM 2.0.
 
+This is canonical AIM file-surface and installation-boundary behavior.
+
 The model lets maintainers and future installers answer, for each important file or folder:
 
 - what is this?
@@ -34,19 +36,20 @@ AIM 2.0 separates repository surfaces by responsibility instead of treating ever
 | Surface | Category | Ownership | Awareness | Lifecycle | Distribution | Install safety | Create | Modify | Overwrite | Recommendation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `README.md` | public release surface | AIM-owned | static | reference | shipped | installer-safe in AIM package only | yes for AIM package | yes in AIM repo | yes only inside AIM distribution | keep as product front door |
-| `AGENTS.md` | repo instruction surface | mixed/layered | repo-aware | reusable policy | optional template/reference | collision-prone | only if absent and explicitly requested | merge or append only with review | never blind overwrite | keep; install as merge target or template |
-| `CLAUDE.md` | Claude bridge instruction surface | mixed/layered | repo-aware | adapter policy | optional adapter helper | collision-prone | only if absent and Claude support requested | merge only with review | never blind overwrite | keep; install as opt-in Claude bridge |
-| `CONTRIBUTING.md` | maintainer contribution policy | repo-owned for target repos, AIM-owned in AIM repo | repo-specific | maintainer reference | shipped for AIM repo, not default install | collision-prone outside AIM repo | no by default | no by default | never in target repos | keep as AIM maintainer file; split later only if product install guidance grows |
+| `AGENTS.md` | generic repo instruction surface | repo-owned | repo-specific | external repository policy | not AIM product | never-touch | no | no | never | remove from AIM product; installer and AIM core ignore it |
+| `CLAUDE.md` | generic Claude repo instruction surface | repo-owned | repo-specific | external repository policy | not AIM product | never-touch | no | no | never | remove from AIM product; use `.claude/` for optional AIM packaging |
+| `CONTRIBUTING.md` | AIM source maintainer policy | AIM source-repo maintainers | source-repository-only | maintainer reference | never in target packages | excluded/never-touch | no | no | never | keep only in AIM source repo; exclude from all installer manifests and exports |
 | `aim.profile.yaml` | Team AIM repo profile | repo-owned | repo-aware | reusable repo intelligence | shareable tiny Team profile | collision-prone | only by explicit Team AIM choice | merge/update with owner review | never blind overwrite | keep as this repo's Team profile and example |
 | Personal profile `~/.aim/profiles/<repo-fingerprint>/profile.yaml` | Personal AIM profile | local user-owned | repo-aware local | reusable local intelligence | local-only | never-touch by repo installer | no | no | never | document as preferred Personal AIM storage |
 | `.aim/` | AIM runtime workspace | runtime-owned | local | runtime/working state | local-only | never-touch as product | runtime may create on start | runtime may mutate active state | installer must never overwrite | keep ignored; never ship as product |
-| `.github/agents/` | AIM instruction layer and Copilot agents | AIM-owned with repo impact | repo-aware adapter layer | reusable adapter policy | shipped/optional adapter package | opt-in with collision checks | yes if selected and absent | replace only AIM-owned files after diff review | never overwrite unrelated files | keep; installer must target known AIM files only |
+| `.github/agents/` | Copilot-native AIM agents | AIM-owned with repo impact | adapter-specific | reusable adapter policy | optional adapter package | opt-in with collision checks | yes if selected and absent | replace only AIM-owned files after diff review | never overwrite unrelated files | keep optional; installer must target known AIM files only |
 | `.github/prompts/` | Copilot prompt helpers | AIM-owned optional helpers | repo-aware adapter layer | reusable prompts | optional ship | opt-in with collision checks | yes if Copilot prompts selected | update known AIM prompt files after review | never overwrite unrelated prompts | keep optional |
 | `.claude/` | Claude helper commands/agents | AIM-owned optional helpers | repo-aware adapter layer | reusable prompts/commands | optional ship | opt-in with collision checks | yes if Claude helpers selected | update known AIM helper files after review | never overwrite unrelated Claude files | keep optional |
-| `docs/workflow/` | method, runtime, adapter, install docs | AIM-owned | static with adapter notes | reference | shipped | installer-safe as docs package | yes for full embedded AIM | yes in AIM repo | yes only inside AIM-owned docs package | keep as canonical docs surface |
-| `docs/features/` | feature contracts and some build-memory docs | mixed | mixed static/build-memory | reusable contracts and maintainer memory | selected ship | opt-in/selective | yes for AIM repo/docs package | yes in AIM repo | yes only for AIM-owned docs | split shipped contracts from build memory later |
+| `docs/workflow/` | canonical AIM behavior, workflow, runtime, adapter, install docs | AIM-owned | static with adapter notes | canonical/reference | shipped | installer-safe as docs package | yes for full embedded AIM | yes in AIM repo | yes only inside AIM-owned docs package | keep as central canonical AIM behavior surface |
+| `docs/features/` | support/reference and repo-local feature docs | mixed/repo-owned by default | support/reference | support and maintainer memory | selective/reference only | opt-in/selective | yes only for support docs | yes in AIM repo | yes only for AIM-owned support docs | keep non-canonical by default; promote behavior docs to `docs/workflow/` |
 | `adapters/` | adapter packages | AIM-owned | static adapter packaging | reusable tooling/docs | shipped by adapter selection | installer-safe inside adapter target | yes when selected | yes for AIM-owned adapter package | yes only inside adapter install target | keep as copyable adapter packages |
 | `scripts/` | validation and support tooling | AIM-owned | static tooling | reusable tooling | shipped when validation selected | installer-safe with review | yes when selected | yes for AIM-owned scripts | yes only inside AIM-owned script path | keep validator; expose classification summary |
+| `install/aim-install-manifest.yaml` | installer boundary manifest | AIM-owned | static | reusable installation contract | shipped | installer-safe | yes with installer package | yes in AIM source repo | yes only as AIM-owned manifest | keep canonical; explicitly exclude source-only and runtime surfaces |
 | `examples/` | examples | AIM-owned | static examples | reference | optional ship | installer-safe optional | yes when examples selected | yes in AIM repo | yes only inside examples package | keep out of minimal install |
 | `.gitignore` | target repo configuration | repo-owned | repo-specific | repository config | not AIM product | collision-prone | no by default | suggest fragment only | never blind overwrite | provide `/.aim` fragment, not whole-file install |
 | `CHANGELOG.md` | release history | AIM-owned | static | maintainer/release reference | shipped for AIM repo | installer-safe in AIM package only | yes for AIM package | yes in AIM repo | yes only inside AIM distribution | keep current and avoid stale legacy claims |
@@ -61,7 +64,7 @@ Use these rules for future installer work.
 | Surface class | May create | May modify | May overwrite | Must never touch |
 | --- | --- | --- | --- | --- |
 | AIM-owned static product files | yes inside the selected AIM package | yes in AIM repo or selected package target | yes only when target path is known AIM-owned and user selected replacement | unrelated repo files |
-| Repo-aware instruction files | only if absent and explicitly selected | only through merge, append, or generated patch with review | never blindly | existing repo-owned instructions |
+| Generic root instruction files | no | no | never | always |
 | Repo-specific configuration | only by explicit repo owner choice | only with owner review | never blindly | target repo policy files |
 | Runtime/working state | runtime may create `.aim/` during AIM start | runtime may mutate active state | installer never overwrites | existing `.aim/state.json`, active Epic, reviews, decisions |
 | Personal local profile | no repo installer action | no repo installer action | never | user-level profile storage |
@@ -71,7 +74,7 @@ Use these rules for future installer work.
 
 ## Mode behavior
 
-The canonical operating modes are defined in [AIM 2.0 operating modes](aim-2-operating-modes.md).
+The canonical operating modes are defined in [AIM 2.0 operating modes](operating-modes.md).
 Surface handling must follow that mode model.
 
 | Surface | Personal | Team | Enterprise |
@@ -79,29 +82,26 @@ Surface handling must follow that mode model.
 | `.aim/` | may stay local or be committed if the user wants | private by default; shared only by team choice | ignored by default; do not commit unless explicitly approved |
 | `aim.profile.yaml` | optional | default tiny shared repo-awareness surface | create or modify only by explicit repo-owner approval |
 | Personal profile storage | allowed and preferred for local reuse | allowed as local hint under Team baseline | allowed as private/local hint |
-| `docs/features/` AIM helper docs | may be kept or committed freely | shared when the team wants common AIM behavior | local/private by default unless explicitly approved |
-| `AGENTS.md` and `CLAUDE.md` | permissive if the user owns the repo | reviewed merge or creation by team agreement | never assume overwrite rights |
+| `docs/features/` support/reference docs | may be kept or committed freely | shared when the team wants common support material | local/private by default unless explicitly approved |
+| `AGENTS.md` and `CLAUDE.md` | outside AIM architecture | outside AIM architecture | outside AIM architecture |
 | Generated markdown/process artifacts | may be kept or committed | commit only when the team wants audit/process history | ignored by default unless promoted to product docs |
 | Product output | commit normally when part of the work | commit normally when part of the work | commit normally when part of the work |
 
 ## Collision rules
 
-`AGENTS.md` and `CLAUDE.md` are first-class collision surfaces.
+`AGENTS.md` and `CLAUDE.md` are first-class never-touch surfaces.
 
 Rules:
 
-- an installer must inspect whether the target file exists before proposing changes
-- if the target file exists, installation must produce a merge plan, patch, or side-by-side template
-- blind overwrite is forbidden
-- repo-specific rules in an existing file remain authoritative unless the repo owner approves a change
-- AIM core may be referenced from these files, but these files must not become hidden runtime state
-- adapter helpers may explain AIM behavior but must not redefine role order, gate meaning, ownership, or escalation
+- AIM installation must not create, modify, merge into, or overwrite either file
+- AIM core, repo-awareness, and adapter startup must not require either file
+- repository-owned content remains untouched
+- optional adapter helpers live in AIM-owned `.github/`, `.claude/`, or adapter package paths
 
 Other collision-prone root surfaces:
 
 - `.gitignore`
 - `aim.profile.yaml`
-- `CONTRIBUTING.md`
 - `.github/agents/`
 - `.github/prompts/`
 - `.claude/`
@@ -127,30 +127,31 @@ Shipped AIM product:
 
 - `README.md`
 - `docs/workflow/`
-- selected current `docs/features/` contracts
+- canonical behavior docs under `docs/workflow/`
+- selected `docs/features/` support/reference docs
 - `adapters/`
 - selected `.github/agents/aim*.agent.md`
 - optional `.github/prompts/`
 - optional `.claude/`
 - `scripts/validate_aim_runtime.py`
+- `install/aim-install-manifest.yaml`
 - examples when the install footprint includes examples
 
 Internal build-memory:
 
 - active `.aim/` artifacts
 - historical analysis, reviews, and decisions
-- feature docs that record how AIM was built rather than stable user-facing behavior
+- support docs that record how AIM was built rather than stable user-facing behavior
 
 ## `CONTRIBUTING.md` role
 
-`CONTRIBUTING.md` is a maintainer-facing policy for the AIM repository.
-
-It is not a default shipped install surface for target repositories because most target repos already own their contribution process.
+`CONTRIBUTING.md` is a maintainer-facing policy only for the AIM source repository.
 
 Installer rule:
 
-- do not create, modify, or overwrite a target repo's `CONTRIBUTING.md` by default
-- link to AIM contribution guidance only when installing AIM into an AIM-related template or maintained fork
+- never copy, create, modify, require, or read a target repo's `CONTRIBUTING.md`
+- explicitly exclude `CONTRIBUTING.md` from every installer manifest, package definition, and export boundary
+- do not make exceptions for templates, forks, or full embedded footprints
 - if product installation guidance grows inside `CONTRIBUTING.md`, split that guidance into `docs/workflow/` instead of making `CONTRIBUTING.md` an install payload
 
 ## Repo-aware profile rules
@@ -180,16 +181,16 @@ Runtime state:
 | Surface | Recommendation |
 | --- | --- |
 | `README.md` | keep as product front door |
-| `AGENTS.md` | keep as repo-aware contract; install only by merge/template |
-| `CLAUDE.md` | keep as opt-in Claude bridge; install only by merge/template |
-| `CONTRIBUTING.md` | keep as AIM maintainer file; never default-install into target repos |
+| `AGENTS.md` | remove from AIM product surfaces; installer must never touch |
+| `CLAUDE.md` | remove from AIM product surfaces; use optional `.claude/` package |
+| `CONTRIBUTING.md` | keep only as AIM source-repo maintainer guidance; exclude from every target install |
 | `aim.profile.yaml` | keep as Team profile example and shared repo intelligence |
 | `.aim/` | keep ignored; never ship |
-| `.github/agents/` | keep as AIM instruction layer and Copilot package with collision checks |
+| `.github/agents/` | keep as optional Copilot-native package with collision checks |
 | `.github/prompts/` | keep optional |
 | `.claude/` | keep optional |
-| `docs/workflow/` | keep as shipped reference docs |
-| `docs/features/` | split shipped contracts from internal build-memory later |
+| `docs/workflow/` | keep as central canonical AIM behavior docs |
+| `docs/features/` | keep as support/reference by default; promote behavior-defining docs to `docs/workflow/` |
 | `adapters/` | keep as adapter package surface |
 | `scripts/` | keep validator and make structural checks explicit |
 | `examples/` | keep optional, not minimal install |
@@ -200,8 +201,8 @@ Runtime state:
 
 - Repo-aware is not the same as static.
 - Runtime is not product.
-- `AGENTS.md` and `CLAUDE.md` are collision-prone instruction surfaces, not safe overwrite targets.
-- `CONTRIBUTING.md` belongs to the AIM repo maintainer surface, not target repo installation.
+- `AGENTS.md` and `CLAUDE.md` are repo-owned generic files outside AIM architecture.
+- `CONTRIBUTING.md` belongs only to the AIM source-repo maintainer surface and is forbidden from target installation.
 - `aim.profile.yaml` is a Team profile surface, not working state.
 - Installation safety takes priority over convenience.
 
@@ -217,21 +218,19 @@ What good looks like:
 
 - `.aim/` reports as working state
 - `aim.profile.yaml` reports as repo profile
-- `AGENTS.md` and `CLAUDE.md` are treated as collision-prone
+- `AGENTS.md` and `CLAUDE.md` are absent from AIM product surfaces and treated as never-touch
 - shipped docs and adapter helpers are separated from runtime artifacts
 
 What bad looks like:
 
-- an installer proposes to overwrite `AGENTS.md` or `CLAUDE.md`
+- an installer proposes to create, modify, merge into, or overwrite `AGENTS.md` or `CLAUDE.md`
 - `.aim/` is included in shipped product files
 - `aim.profile.yaml` contains active Epic or gate state
-- `CONTRIBUTING.md` is treated as a default target-repo payload
+- `CONTRIBUTING.md` is present in any target-repo manifest, package, read set, or write set
 
 ## Related files
 
 - `README.md`
-- `AGENTS.md`
-- `CLAUDE.md`
 - `CONTRIBUTING.md`
 - `aim.profile.yaml`
 - `.aim/`
@@ -242,6 +241,7 @@ What bad looks like:
 - `docs/features/`
 - `scripts/validate_aim_runtime.py`
 - `examples/`
+- `docs/workflow/documentation-model.md`
 
 ## Change log
 

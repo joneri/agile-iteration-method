@@ -6,7 +6,7 @@ description: Run Agile Iteration Method (AIM) 2.0 workflows in Codex or another 
 # Agile Iteration Method
 
 Use this skill to operate AIM 2.0 as a continuous role-and-gate delivery loop.
-AIM is `core + runtime + repo-aware policy + platform adapters`; the repository remains the source of truth and this skill is the launcher/runtime guide.
+AIM is `core + runtime + repo-awareness + platform adapters`; canonical behavior lives under `docs/workflow/` and this skill is the Codex launcher/runtime guide.
 
 Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into Codex skill form.
 
@@ -16,17 +16,17 @@ Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as 
 2. Detect or create `.aim` before starting or resuming an AIM run.
 3. Read `.aim/state.json` first when it exists.
 4. If `.aim/state.json` describes an incomplete Epic, resume that checkpoint instead of starting a new Epic.
-5. Read the Personal AIM local profile next when it exists: `~/.aim/profiles/<repo-fingerprint>/profile.yaml`, or ignored fallback `.aim/profile.yaml`.
-6. Read `aim.profile.yaml` after the personal profile when it exists, treating it as the shared Team AIM baseline.
+5. Read `aim.profile.yaml` when present as the primary shared repo-awareness source.
+6. Apply compatible Personal AIM hints from `~/.aim/profiles/<repo-fingerprint>/profile.yaml`, or ignored fallback `.aim/profile.yaml`.
 7. Use profile facts to choose locality, validation commands, short authoritative docs, risk zones, freshness triggers, and context to avoid before reading broader docs.
-8. Load only the additional repo-aware AIM context needed for the current state, role, gate, cost profile, and command:
-   `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, `.github/agents/aim*.agent.md`, then active adapter helpers such as `.github/prompts/*`, `CLAUDE.md`, `.claude/agents/*`, and `.claude/commands/*`.
-9. Read `CONTRIBUTING.md` first when the target repository is the AIM repository itself and a change is being made.
-10. Default to `Mode: Strict` unless the user explicitly chooses `Mode: Auto`.
-11. Default to `Cost profile: Standard` unless the user explicitly chooses `Cost Control` or `Deep`.
-12. Start visible AIM phases with exactly `Role: PO`, `Role: TDO`, `Role: Dev`, or `Role: Reviewer`, and show `Mode: Strict` or `Mode: Auto`.
-13. Show `Cost profile` when it is not `Standard` or when resource use is part of the user's request.
-14. Keep the public front door thin: route first to start, continue, or validate before explaining the full method.
+8. Load `docs/workflow/agile-iteration-method.md`, then only the workflow docs required by the current role, gate, command, or risk.
+9. Load Codex-specific packaging only when Codex mechanics matter.
+10. Read ordinary repository maintainer docs only when the requested change actually needs them.
+11. Default to `Mode: Strict` unless the user explicitly chooses `Mode: Auto`.
+12. Default to `Cost profile: Standard` unless the user explicitly chooses `Cost Control` or `Deep`.
+13. Start visible AIM phases with exactly `Role: PO`, `Role: TDO`, `Role: Dev`, or `Role: Reviewer`, and show `Mode: Strict` or `Mode: Auto`.
+14. Show `Cost profile` when it is not `Standard` or when resource use is part of the user's request.
+15. Keep the public front door thin: route first to start, continue, or validate before explaining the full method.
 
 Treat unnecessary broad context loading, long low-risk markdown artifacts, repeated major-doc rereads, and context-hog files as budget bugs.
 When a Personal or Team profile is present, report whether it was reused before broader docs. Profiles can guide locality and validation, but they cannot override AIM core, `.aim/state.json`, Team policy, gate ownership, escalation, or current repository evidence.
@@ -53,7 +53,7 @@ When the user runs AIM in Codex for the first time in a repository, make the bun
 - repo-bundled skill: `adapters/codex/agile-iteration-method/SKILL.md`
 - local Codex install path: `~/.codex/skills/agile-iteration-method/SKILL.md`
 
-If the local Codex skill is missing or appears older than the repo-bundled skill, state that AIM can continue from the repository contract for this run, but `/aim` works best after installing the bundled skill:
+If the local Codex skill is missing or appears older than the repo-bundled skill, state that AIM can continue from explicit AIM intent and canonical workflow docs for this run, but `/aim` works best after installing the bundled skill:
 
 ```sh
 mkdir -p ~/.codex/skills/agile-iteration-method

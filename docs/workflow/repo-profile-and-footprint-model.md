@@ -294,8 +294,8 @@ It is a footprint choice that may be used in Personal, Team, or Enterprise only 
 AIM 2.0 startup should expand context in this order:
 
 1. current working state
-2. personal local profile when present
-3. reusable team repo profile, normally root `aim.profile.yaml`
+2. reusable team repo profile, normally root `aim.profile.yaml`
+3. compatible personal local profile hints when present
 4. directly affected files
 5. nearest package, module, or service metadata
 6. nearest build/test/lint commands
@@ -307,8 +307,8 @@ This keeps large repositories from paying for repo-wide rediscovery when the act
 Operational startup behavior:
 
 - read `.aim/state.json` first when it exists
-- read the Personal AIM local profile next when it exists
-- read `aim.profile.yaml` after the personal profile when it exists
+- read `aim.profile.yaml` next when it exists as the shared baseline
+- apply compatible Personal AIM local profile hints when they exist
 - use the profile to select locality, commands, short authoritative docs, risk zones, freshness checks, and avoid-by-default context
 - read broader docs only after profile/state evidence shows they are needed
 - report profile reuse and avoided broad context at startup or Gate B
@@ -329,7 +329,7 @@ Before AIM treats a profile as reusable, the validator should report repo-profil
 
 Repo-profile readiness has four states:
 
-- `not_ready`: no AIM 2.0 profile artifact exists yet; `AGENTS.md` can still bridge runtime behavior, but Personal/Team profile reuse is not ready.
+- `not_ready`: no AIM 2.0 profile artifact exists yet; repo-awareness must be discovered from current repository evidence until a Personal or Team profile is available.
 - `incomplete_profile`: a profile file exists, but it does not yet contain recognizable repo intelligence such as commands, locality, ownership, risk, freshness, or cost fields.
 - `repair_profile`: a profile file exists, but it appears to contain active AIM working state and must be repaired before reuse.
 - `profile_ready`: a profile file exists, contains repo-intelligence markers, and does not contain active working-state markers.
@@ -466,7 +466,7 @@ The single best check is whether AIM can answer:
 
 - Primary log: startup or Gate B profile-source summary
 - Validator check: `AIM 2.0 repo profile readiness`
-- Summary shape: [AIM 2.0 profile source summary](aim-2-profile-source-summary.md)
+- Summary shape: [AIM 2.0 profile source summary](profile-source-summary.md)
 - What "good" looks like:
   - operating mode is explicit
   - footprint level is explicit
@@ -483,17 +483,15 @@ The single best check is whether AIM can answer:
 
 ## Related files
 
-- `docs/features/aim-2-enterprise-and-universal-adoption-strategy.md`
-- `docs/features/aim-2-migration-classification-checks.md`
-- `docs/features/aim-2-personal-local-profile-storage.md`
-- `docs/features/aim-2-profile-source-summary.md`
-- `docs/features/aim-2-tiny-team-profile-example.md`
-- `docs/features/aim-2-working-state-boundaries.md`
-- `docs/features/aim-2-operating-modes.md`
+- `docs/workflow/personal-local-profile-storage.md`
+- `docs/workflow/profile-source-summary.md`
+- `docs/workflow/team-profile-artifact.md`
+- `docs/workflow/working-state-boundaries.md`
+- `docs/workflow/operating-modes.md`
 - `docs/features/aim-cost-comparison.md`
-- `docs/features/aim-cost-control-mode.md`
-- `docs/features/aim-cost-saving-method.md`
-- `docs/features/aim-modularity-context-efficiency.md`
+- `docs/workflow/cost-control-mode.md`
+- `docs/workflow/cost-saving-method.md`
+- `docs/workflow/modularity-context-efficiency.md`
 - `docs/workflow/install-aim-2.0.md`
 - `docs/workflow/quick-start-aim-2.0.md`
 

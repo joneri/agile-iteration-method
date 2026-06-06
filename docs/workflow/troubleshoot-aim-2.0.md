@@ -11,9 +11,9 @@ Check these first:
 1. `.aim/state.json`
 2. `.aim/epic.md`
 3. the newest files in `.aim/increments/`, `.aim/reviews/`, and `.aim/decisions/`
-4. `AGENTS.md`
+4. root `aim.profile.yaml` when shared repo-awareness exists
 5. `docs/workflow/agile-iteration-method.md`
-6. `docs/features/aim-modularity-context-efficiency.md` when the issue is about file boundaries or increment size
+6. `docs/workflow/modularity-context-efficiency.md` when the issue is about file boundaries or increment size
 7. `scripts/validate_aim_runtime.py .`
 
 ## Startup issues
@@ -24,7 +24,7 @@ AIM does not start cleanly.
 
 ### Expected AIM behavior
 
-- AIM loads repo-aware context first
+- AIM resumes state first, then loads root `aim.profile.yaml` when present
 - AIM creates `.aim` if it is missing
 - AIM stops and escalates if repo-aware context is contradictory in a trust-affecting way
 
@@ -53,7 +53,7 @@ AIM tries to force one file when the behavior is still small but the structure w
 - broad rewrites still require explicit approval
 
 Best reference:
-- [AIM modularity and context efficiency](../features/aim-modularity-context-efficiency.md)
+- [AIM modularity and context efficiency](modularity-context-efficiency.md)
 
 ## Adapter and parity issues
 
@@ -89,7 +89,8 @@ The repository has some AIM files, but start commands, prompt helpers, or adapte
 
 - `Install AIM 2.0` should point to the current required files and optional adapter helpers
 - helper prompts are optional convenience surfaces, not the AIM contract
-- Codex, Copilot, and Claude packaging may differ, but the repository contract stays consistent
+- Codex, Copilot, and Claude packaging may differ, but the canonical workflow contract stays consistent
+- generic root instruction files are not required, created, or modified by AIM
 
 ## Best reference docs
 

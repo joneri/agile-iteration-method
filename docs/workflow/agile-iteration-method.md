@@ -35,7 +35,8 @@ The method is inspired by the “Ralph Wiggum loop”, adapted to real product d
 - `.aim` is treated as official repo-local runtime state.
 - Small Done Increments are defined by behavioral scope, not by minimal file count.
 - Focused file boundaries are valid when they preserve the approved behavior and reduce future context cost.
-- Feature documentation path is `docs/features/`.
+- Canonical AIM behavior docs live in `docs/workflow/`.
+- `docs/features/` is support/reference by default, not AIM core truth.
 - Active Epic runtime state lives in `.aim/epic.md`.
 - Repository profile is a first-class concept with a defined layer order.
 - Execution modes are `Strict` and `Auto`.
@@ -179,10 +180,12 @@ AIM defines one shared conceptual startup sequence across adapters:
 2. detect or create `.aim`
 3. read `.aim/state.json` first when it exists
 4. resume the active checkpoint or initialize a new Epic
-5. read `aim.profile.yaml` when present and use it as the first reusable repo-intelligence source
-6. load only the additional repo-aware AIM context needed for the current state, role, gate, cost profile, and requested command
-7. resolve execution mode, cost profile, and platform capability or repo-policy limits
-8. enter the AIM role sequence
+5. read `aim.profile.yaml` when present as the primary shared repo-awareness source
+6. apply compatible Personal profile hints when present
+7. load only directly relevant repository evidence and canonical AIM docs
+8. load active-adapter policy only when adapter mechanics matter
+9. resolve execution mode, cost profile, and platform capability limits
+10. enter the AIM role sequence
 
 ### Profile-first startup
 
@@ -340,65 +343,21 @@ Resume cases:
 - if `state.json` says `epic_paused`, AIM resumes as paused until the main thread reactivates the Epic
 - if `state.json` says `po_approval_pending`, AIM resumes at Gate E rather than replaying earlier steps
 
-## Normalized repo-aware runtime context
+## Repo-awareness loading model
 
-AIM does not let each adapter invent its own interpretation of repository rules.
-After loading repo files, the runtime must normalize them into one shared repo-aware context.
+`aim.profile.yaml` is the primary shared repo-awareness source.
 
-### Precedence order
+The runtime uses it to select locality, validation, ownership, risk, freshness, and the smallest relevant repository evidence.
+Personal profile data may add compatible local hints.
+Adapter-specific policy is optional, secondary, and loaded only for the active adapter.
 
-The context is built in this order:
-1. AIM base semantics
-2. repository `AGENTS.md`
-3. repository `.github/agents/aim*.agent.md`
-4. active adapter helper files
-   - Copilot:
-     - repository `.github/prompts/*`
-   - Claude Code:
-     - repository `CLAUDE.md`
-     - repository `.claude/agents/*`
-     - repository `.claude/commands/*`
+Generic root files are not AIM control surfaces.
 
-Later layers may refine earlier ones, but they must not silently change AIM core semantics.
+The detailed load order, profile behavior, native adapter continuity, and failure rules live in:
 
-### Canonical context output
+- `docs/workflow/repo-awareness.md`
 
-The normalized runtime context should expose, at minimum:
-- `verification`
-  - preferred verification tools and expectations
-- `deployment`
-  - whether deployment is allowed, restricted, or escalation-gated
-- `migration`
-  - whether migrations are allowed, restricted, or escalation-gated
-- `reviewer`
-  - reviewer preferences, required evidence, and focus areas
-- `environment`
-  - platform limits, adapter constraints, and capability availability
-- `approval`
-  - execution mode, gate approval constraints, and optional commit policy
-- `parallel`
-  - whether parallel work is allowed and what restrictions apply
-- `modularity`
-  - file-boundary, responsibility, and future context-efficiency guidance for planning, implementation, and review
-
-### Runtime behavior
-
-The runtime and adapters should read from the normalized context, not directly from scattered repo files during each decision.
-
-Across adapters:
-- startup uses the same context shape in Codex, Copilot and Claude Code
-- resume uses the same context shape when deciding whether execution can continue
-- verification, deployment, migration, reviewer and parallel rules are interpreted once, then reused consistently
-
-### Missing or contradictory policy
-
-If normalization does not produce a safe context:
-- missing context area:
-  - fall back to AIM defaults and report the assumption when it materially affects behavior
-- contradictory trust-affecting policy:
-  - stop and escalate instead of guessing
-- unsupported platform capability:
-  - keep the intended policy in the normalized context and fall back safely during execution
+The core rule is simple: load state first, profile second, affected evidence third, and deeper AIM or adapter docs only when the current role, gate, command, or risk needs them.
 
 ## Validator support
 
@@ -461,14 +420,16 @@ Older migration hops may live outside the active shipped file set.
 - Codex-only repository:
   - the repo can adopt AIM runtime behavior without also adopting the optional Copilot layer
 - Claude Code repository:
-  - the repo can adopt AIM runtime behavior with `AGENTS.md` plus `CLAUDE.md` and optional `.claude/` helpers
+  - the repo can adopt AIM through `.claude/` entrypoints without a root `CLAUDE.md` AIM bridge
 - Copilot-layer repository:
   - existing `.github/agents/aim*.agent.md` files may remain, but they must align with the shared AIM runtime contract
 
 ### Upgrade checklist
 
 A safe AIM migration should:
-- keep the repository profile in `AGENTS.md` and any active adapter helper files readable through the accepted layer order
+- migrate reusable repository facts into `aim.profile.yaml`
+- migrate adapter mechanics into the active adapter's AIM-owned helper surface
+- remove AIM dependency on generic root instruction files
 - create or normalize the official `.aim` workspace
 - make `state.json` the durable runtime checkpoint for startup and resume
 - update documentation so AIM core, AIM runtime, repo-aware policy, and platform adapters are separated explicitly
@@ -500,51 +461,19 @@ During migration:
 - validator quick checks should distinguish recoverable legacy gaps from contradictory legacy state
 - only the main AIM thread may repair shared state during migration
 
-## Repository profile and layering
+## Documentation and repo-aware policy
 
-Each repository defines its own profile in `AGENTS.md`:
-- stack and runtime assumptions
-- verification/testing strategy
-- role behavior constraints for `PO`, `TDO`, `Dev` and `Reviewer`
+AIM core behavior lives in this document.
+Canonical supporting behavior lives under `docs/workflow/`.
+Repository facts live in `aim.profile.yaml`.
+Runtime state lives in `.aim/`.
+Active-adapter helpers are optional and secondary.
 
-Layer order:
-1. AIM base semantics
-2. repository `AGENTS.md`
-3. repository `.github/agents/aim*.agent.md`
-4. active adapter helper files
-   - Copilot:
-     - repository `.github/prompts/*`
-   - Claude Code:
-     - repository `CLAUDE.md`
-     - repository `.claude/agents/*`
-     - repository `.claude/commands/*`
+Do not preload the workflow family.
+Load a supporting document only when its behavior area becomes relevant.
 
-If layers conflict, escalate instead of guessing.
-
-Required repository files:
-- `AGENTS.md`
-- `docs/workflow/agile-iteration-method.md`
-- `.github/agents/aim.agent.md`
-- `.github/agents/aim-planner.agent.md`
-- `.github/agents/aim-builder.agent.md`
-- `.github/agents/aim-reviewer.agent.md`
-
-Optional adapter files:
-- Codex skill:
-  - `adapters/codex/agile-iteration-method/SKILL.md`
-- Copilot prompt helpers:
-  - `.github/prompts/`
-- Claude Code:
-  - `CLAUDE.md`
-  - `.claude/agents/`
-  - `.claude/commands/`
-
-Installation note:
-- `.github/agents/aim*.agent.md` are part of the repository instruction layer for AIM itself.
-- In Copilot, the same files also act as native custom-agent files.
-- `.github/prompts/` are optional Copilot-style command helpers rather than the canonical AIM contract.
-- In Codex, the repository remains the canonical AIM contract.
-- In Codex, `/aim` depends on the shipped AIM skill at `adapters/codex/agile-iteration-method/SKILL.md` or another compatible runtime entrypoint and acts as the launcher surface rather than hidden authority.
+The detailed documentation hierarchy lives in `docs/workflow/documentation-model.md`.
+The repo-awareness load order lives in `docs/workflow/repo-awareness.md`.
 
 Startup triggers (no manual bootstrap expected):
 - `Install AIM`
@@ -1040,13 +969,13 @@ Parity classes used by AIM:
 
 ### Codex adapter
 
-In Codex, AIM runs through repository instructions plus the available Codex tool/runtime surface.
+In Codex, AIM runs through the installed AIM skill or explicit AIM intent plus the available Codex tool/runtime surface.
 
 - shared goal:
   - preserve the same AIM core and repo-aware policy interpretation as other adapters
 - recommended launcher:
   - install or enable the shipped `agile-iteration-method` skill from `adapters/codex/agile-iteration-method/SKILL.md` when `/aim` command routing is wanted
-  - keep the skill as a launcher/runtime guide that points back to the repository contract, not a second source of method truth
+  - keep the skill as a launcher/runtime guide that points to canonical workflow docs
 - supported capability areas:
   - start and resume AIM through the shared runtime flow
   - create and read `.aim`
@@ -1065,11 +994,9 @@ In Codex, AIM runs through repository instructions plus the available Codex tool
   - if bounded subagents are unavailable, AIM runs sequentially in one main thread
   - if an adapter-specific tool is unavailable, the runtime falls back to the shared contract instead of inventing different gate semantics
 
-`AGENTS.md` contains the operational rules for Codex runs.
-
 ### Claude Code adapter
 
-In Claude Code, AIM runs through `AGENTS.md`, `CLAUDE.md`, and any repo-defined `.claude/` helper files.
+In Claude, AIM runs through AIM-owned `.claude/` entrypoints or explicit AIM intent.
 
 - shared goal:
   - preserve the same AIM core and repo-aware policy interpretation as other adapters
@@ -1079,7 +1006,7 @@ In Claude Code, AIM runs through `AGENTS.md`, `CLAUDE.md`, and any repo-defined 
   - update shared runtime state through the main AIM thread
   - use repository-defined Claude commands or helpers without taking ownership of gates or acceptance
 - adapter differences:
-  - the interaction surface is Claude Code plus `CLAUDE.md` and optional `.claude/commands/`
+  - the interaction surface is Claude plus optional `.claude/commands/` and `.claude/agents/`
   - `.claude/agents/` may provide bounded helper agents for analysis, discovery, verification, or option generation
   - helper agents must remain subordinate to the shared runtime contract and repo-aware policy
 - `.aim` behavior:
@@ -1091,13 +1018,12 @@ In Claude Code, AIM runs through `AGENTS.md`, `CLAUDE.md`, and any repo-defined 
   - if bounded helper capability is unavailable, AIM runs sequentially in one main thread
 
 Setup and usage are documented in:
-- `CLAUDE.md`
 - `.claude/agents/`
 - `.claude/commands/`
 
 ### Copilot adapter
 
-In Copilot, AIM can run through the optional custom-agent layer.
+In GitHub Copilot, AIM runs through the shipped AIM custom-agent layer.
 
 - shared goal:
   - preserve the same AIM core and repo-aware policy interpretation as Codex
@@ -1190,19 +1116,23 @@ At that point, the EPIC is complete.
 
 ---
 
-## Relationship to other documents
+## Load supporting documents when needed
 
-- `AGENTS.md` defines operational rules, gates and escalation behaviour for Codex runs.
-- `docs/workflow/aim-adapter-guidance.md` collects adapter-specific entrypoints, parity labels, helper-file boundaries, and fallback notes so canonical files stay focused.
-- `docs/features/aim-cost-control-mode.md` defines AIM cost profiles and escalation rules for runtime depth.
-- `docs/features/aim-modularity-context-efficiency.md` defines AIM file-boundary and context-efficiency behavior.
-- `docs/workflow/quick-start-aim-2.0.md`, `docs/workflow/install-aim-2.0.md`, and `docs/workflow/aim-2-low-footprint-adoption.md` define the current public onboarding path.
-- `CONTRIBUTING.md` defines coding standards, PR rules and local commands.
-- `docs/workflow/copilot-layer.md` defines the optional Copilot custom-agent interface.
-- `docs/features/` explains non-obvious feature behaviour, contracts and fallbacks.
-- Active Epic state lives in `.aim/epic.md`; stable feature truth belongs in `docs/features/`.
+Start with this core document, active `.aim` state, and `aim.profile.yaml`.
 
-Together, these documents form a complete system for structured AI-assisted development.
+Load deeper documents only when their area becomes relevant:
+
+- repo-awareness or adapter loading: `docs/workflow/repo-awareness.md`
+- operating modes: `docs/workflow/operating-modes.md`
+- installation or file ownership: `docs/workflow/install-aim-2.0.md` and `docs/workflow/repository-surface-classification.md`
+- cost behavior: `docs/workflow/cost-control-mode.md`
+- documentation authority: `docs/workflow/documentation-model.md`
+- active adapter mechanics: the matching adapter guide or helper only
+
+Other workflow docs remain canonical for their named area, but they are not startup prerequisites.
+`docs/features/` is support/reference.
+`.aim/` is runtime state.
+Generic root files are outside the AIM architecture.
 
 ## License
 

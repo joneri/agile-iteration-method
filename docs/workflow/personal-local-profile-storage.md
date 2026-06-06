@@ -4,6 +4,8 @@
 
 Define how one developer can reuse AIM repo intelligence without committing `aim.profile.yaml` or copying AIM docs into the repository.
 
+This is canonical Personal AIM profile-storage behavior.
+
 Personal AIM should preserve the value of repo-aware startup while leaving no required repository footprint.
 
 ## User experience
@@ -161,9 +163,9 @@ What "bad" looks like:
 
 ## Related files
 
-- `docs/features/aim-2-repo-profile-and-footprint-model.md`
-- `docs/features/aim-2-profile-source-summary.md`
-- `docs/features/aim-2-working-state-boundaries.md`
+- `docs/workflow/repo-profile-and-footprint-model.md`
+- `docs/workflow/profile-source-summary.md`
+- `docs/workflow/working-state-boundaries.md`
 - `docs/workflow/aim-2-low-footprint-adoption.md`
 - `scripts/validate_aim_runtime.py`
 

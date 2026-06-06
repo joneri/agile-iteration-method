@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-06-06 - AIM 2.0 root-file independence
+- Removed AIM-owned `AGENTS.md` and `CLAUDE.md` from the product surface.
+- Made `aim.profile.yaml` the primary shared repo-awareness source and added the canonical progressive-loading model.
+- Kept Codex, Copilot, and Claude entrypoints native through optional adapter-owned packages.
+- Updated validation so canonical AIM docs are required while generic root instruction files are rejected from the AIM product surface.
+- Added `install/aim-install-manifest.yaml`, which forbids copying, creating, modifying, requiring, or reading `CONTRIBUTING.md` in target repositories.
+
 ## 2026-06-03 - AIM 1.7 GitHub Pages website update
 - Updated the GitHub Pages website on `gh-pages` from AIM v1.6.1 to AIM v1.7 messaging.
 - Added the AIM 1.7 cost-discipline story, GitHub Copilot AI Credits angle, and Cost Comparison link to the site.
@@ -26,14 +33,14 @@
 - Updated the bundled Codex skill to explain how to install or refresh the full local package at `~/.codex/skills/agile-iteration-method/` from `adapters/codex/agile-iteration-method/`.
 - Added Codex picker metadata at `adapters/codex/agile-iteration-method/agents/openai.yaml` so the app card presents AIM 1.6.1 instead of stale older labels.
 - Documented the stale picker case where `SKILL.md` is current but `agents/openai.yaml` still shows an older AIM version.
-- Added `docs/features/aim-codex-bundled-skill-onboarding.md` as the feature contract for the Codex skill onboarding behavior.
+- Added `docs/workflow/codex-skill-onboarding.md` as the canonical workflow contract for Codex skill onboarding behavior.
 - Removed stale packaged-skill references to missing helper scripts and reference docs so the repo-bundled skill is usable as a single copied skill file.
 
 ## 2026-04-15 - AIM 1.6 cost control and budget-aware runtime depth
 - Added explicit cost profiles: `Standard`, `Cost Control`, and `Deep`.
 - Clarified that cost profile controls runtime depth while `Strict` and `Auto` still control approval flow.
 - Documented Cost Control as full AIM with narrower context, compact checkpoints, no subagents by default, and escalation to Standard or Deep when risk appears.
-- Added `docs/features/aim-light-front-door.md` and updated onboarding so first-run users choose start, continue, or validate before reading deeper docs.
+- Added `docs/workflow/light-front-door.md` and updated onboarding so first-run users choose start, continue, or validate before reading deeper docs.
 - Updated README, AGENTS, workflow docs, feature docs, prompt helpers, Copilot metadata, and Claude bridge files to present AIM 1.6.
 
 ## 2026-04-14 - AIM 1.5 repository surface cleanup

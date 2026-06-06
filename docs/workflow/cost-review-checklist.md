@@ -4,6 +4,8 @@
 
 Give AIM users a concrete checklist for reducing AI spend before work starts, during Gate B planning, and before Gate E acceptance.
 
+This is canonical AIM cost-review behavior at startup, Gate B, implementation, and Gate E.
+
 ## How it works
 
 Use this checklist whenever AI cost is a meaningful concern.
@@ -81,6 +83,6 @@ When a team says AIM still feels expensive, ask:
 
 ## Related files
 
-- `docs/features/aim-cost-saving-method.md`
+- `docs/workflow/cost-saving-method.md`
 - `docs/features/aim-vendor-cost-baseline-june-2026.md`
 - `docs/workflow/quick-start-aim-2.0.md`

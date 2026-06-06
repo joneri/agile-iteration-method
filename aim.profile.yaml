@@ -32,8 +32,8 @@ aimRepoProfile:
       - .github/
       - .claude/
     nearestMetadata:
-      - AGENTS.md
-      - CONTRIBUTING.md
+      - docs/workflow/agile-iteration-method.md
+      - docs/workflow/repo-awareness.md
       - docs/features/README.md
 
   commands:
@@ -54,7 +54,8 @@ aimRepoProfile:
 
   risk:
     highRiskAreas:
-      - AGENTS.md
+      - docs/workflow/agile-iteration-method.md
+      - docs/workflow/repo-awareness.md
       - adapters/
       - scripts/validate_aim_runtime.py
       - .github/agents/
@@ -68,10 +69,10 @@ aimRepoProfile:
 
   context:
     shortAuthoritativeDocs:
-      - AGENTS.md
       - docs/workflow/agile-iteration-method.md
-      - docs/features/aim-2-repo-profile-and-footprint-model.md
-      - docs/features/aim-2-working-state-boundaries.md
+      - docs/workflow/repo-awareness.md
+      - docs/workflow/repo-profile-and-footprint-model.md
+      - docs/workflow/working-state-boundaries.md
     avoidByDefault:
       - full-doc-reread-before-locality-check
       - copying-AIM-docs-into-every-target-repo
@@ -82,10 +83,10 @@ aimRepoProfile:
 
   freshness:
     refreshTriggers:
-      - AGENTS.md changed
       - scripts/validate_aim_runtime.py changed
       - docs/workflow/agile-iteration-method.md changed
-      - docs/features/aim-2-repo-profile-and-footprint-model.md changed
+      - docs/workflow/repo-awareness.md changed
+      - docs/workflow/repo-profile-and-footprint-model.md changed
       - adapter instruction files changed
     revalidate:
       - run-validator-first

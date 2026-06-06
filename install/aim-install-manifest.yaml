@@ -1,0 +1,37 @@
+aimInstallManifest:
+  manifestVersion: "0.1"
+  status: boundary-contract
+
+  targetExclusions:
+    - path: CONTRIBUTING.md
+      reason: AIM-source-repository-maintainer-only
+      operations:
+        copy: forbidden
+        create: forbidden
+        modify: forbidden
+        require: forbidden
+        read: forbidden
+
+  packageBoundaries:
+    canonicalDocs:
+      source: docs/workflow/
+      targetOwned: true
+    codex:
+      source: adapters/codex/agile-iteration-method/
+      destination: ~/.codex/skills/agile-iteration-method/
+      optional: true
+    copilotAgents:
+      source: .github/agents/aim*.agent.md
+      destination: .github/agents/
+      optional: true
+    copilotPrompts:
+      source: .github/prompts/
+      destination: .github/prompts/
+      optional: true
+    claude:
+      source: .claude/
+      destination: .claude/
+      optional: true
+
+  runtimeExclusions:
+    - .aim/

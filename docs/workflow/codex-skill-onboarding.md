@@ -1,6 +1,6 @@
 # AIM Codex Bundled Skill Onboarding
 
-This feature is part of the current AIM 2.0 Codex support story.
+This document defines canonical Codex onboarding behavior for the shipped AIM skill.
 
 ## Purpose
 
@@ -20,7 +20,7 @@ The install command copies the whole skill directory because Codex may read pick
 ## Key decisions
 
 - Missing or stale local skill installation is not automatically a blocker when the repo already contains the AIM contract.
-- Codex should report the fallback clearly and continue from repository instructions unless another escalation condition applies.
+- Codex should report the fallback clearly and continue from explicit AIM intent, canonical workflow docs, and `aim.profile.yaml` when present unless another escalation condition applies.
 - `Install AIM`, `/aim validate`, `/aim status`, `/aim config`, `/aim start`, and `/aim continue` are the most important surfaces for showing skill install status.
 - This behavior improves first-run Codex adoption without changing AIM core behavior.
 

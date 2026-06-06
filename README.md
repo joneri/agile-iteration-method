@@ -134,19 +134,21 @@ Use `Cost Control` for ordinary low-risk work. Use `Deep` when the work touches 
 ## Choose Your Adapter
 
 - Codex:
-  the repo is the AIM contract. The shipped Codex skill at `adapters/codex/agile-iteration-method/SKILL.md` adds the `/aim` launcher plus bootstrap help.
+  install the shipped skill at `adapters/codex/agile-iteration-method/SKILL.md` for the `/aim` launcher, or start with explicit AIM intent.
 - Copilot:
-  use the packaged `aim` agent in `.github/agents/` and add `.github/prompts/` when you want Copilot-style command helpers.
+  use the packaged `aim` agent in `.github/agents/`; `.github/prompts/` adds optional command helpers.
 - Claude Code:
-  use `CLAUDE.md` as the bridge layer. Add `.claude/commands/` and `.claude/agents/` in repositories that want Claude-specific command packaging.
+  use `.claude/commands/` and `.claude/agents/`, or start with explicit AIM intent.
 
 Important installation rule:
-- `.github/agents/aim*.agent.md` are part of the AIM instruction layer, not just Copilot decoration.
-- `.github/prompts/` are optional Copilot prompt helpers.
+- canonical AIM behavior lives under `docs/workflow/`
+- shared repo-awareness comes from root `aim.profile.yaml`
+- generic root files are not AIM control surfaces
+- adapter packages are optional and secondary
 
 ## Codex model
 
-- The repository is the canonical AIM contract.
+- Canonical workflow docs are the AIM contract.
 - The shipped Codex skill in `adapters/codex/agile-iteration-method/SKILL.md` is a bootstrap and convenience layer.
 - `/aim` is the normal Codex start path when the AIM skill is installed and enabled.
 - A fully AIM-aware repo can still be used in Codex without the skill if you start with explicit AIM intent in plain language.
@@ -168,13 +170,13 @@ Local Codex skill target:
 
 Codex may show the skill picker name and short description from `~/.codex/skills/agile-iteration-method/agents/openai.yaml`, so copy the full directory. If the picker still shows an older AIM version after reinstalling, restart or refresh Codex.
 
-The skill is copyable adapter packaging. It must point back to the repository contract instead of becoming a second method definition.
+The skill is copyable adapter packaging. It must point back to canonical workflow docs instead of becoming a second method definition.
 
 | Adapter | Canonical contract | Convenience layer | Normal start path | Required for best experience |
 | --- | --- | --- | --- | --- |
-| Codex | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `adapters/codex/agile-iteration-method/SKILL.md` | `/aim start "EPIC: ..."` | Shipped skill enabled for `/aim`; repo alone can still work with explicit AIM intent |
-| Copilot | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` | `.github/prompts/` | select `aim` and run `/aim start "EPIC: ..."` | `.github/agents/aim*.agent.md`; prompts optional |
-| Claude Code | `AGENTS.md` + `docs/workflow/agile-iteration-method.md` + `.github/agents/aim*.agent.md` + `CLAUDE.md` | optional repo-local `.claude/commands/` and `.claude/agents/` | repo Claude command if provided, or explicit `EPIC: ...` | `CLAUDE.md`; `.claude/` helpers optional |
+| Codex | canonical workflow docs + `aim.profile.yaml` | `adapters/codex/agile-iteration-method/` | `/aim start "EPIC: ..."` | installed skill for `/aim`; explicit AIM intent remains valid |
+| Copilot | canonical workflow docs + `aim.profile.yaml` | `.github/agents/` and optional `.github/prompts/` | select `aim` and run `/aim start "EPIC: ..."` | selected AIM agent package |
+| Claude Code | canonical workflow docs + `aim.profile.yaml` | optional `.claude/commands/` and `.claude/agents/` | shipped command or explicit `EPIC: ...` | selected Claude package or explicit AIM intent |
 
 ## Starting A New Repo With Full Embedded AIM
 
@@ -183,12 +185,9 @@ Use this path when the repository owner intentionally wants the full embedded AI
 ### 1. Copy the AIM files into the new repo
 
 Required for AIM:
-- `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
-- `.github/agents/aim.agent.md`
-- `.github/agents/aim-planner.agent.md`
-- `.github/agents/aim-builder.agent.md`
-- `.github/agents/aim-reviewer.agent.md`
+- `docs/workflow/repo-awareness.md`
+- `aim.profile.yaml` when shared repo-awareness is wanted
 
 Recommended:
 - `README.md`
@@ -205,18 +204,16 @@ Optional GitHub Copilot prompt files:
 Optional Codex skill packaging:
 - `adapters/codex/agile-iteration-method/SKILL.md`
 
-If you want Claude Code support too, also copy:
-- `CLAUDE.md`
-
-Add `.claude/agents/` or `.claude/commands/` only if your repository provides Claude-specific helper files.
+For Claude Code, select the `.claude/agents/` and `.claude/commands/` package you need.
 
 What each file is for:
-- `AGENTS.md` defines the canonical repo-aware AIM behavior.
-- `.github/agents/aim*.agent.md` are part of the AIM instruction layer and affect behavior in both Codex and Copilot.
-- in Copilot, those same files also act as native custom-agent files.
+- `docs/workflow/agile-iteration-method.md` defines AIM core behavior.
+- `docs/workflow/repo-awareness.md` defines how repo guidance is found and layered.
+- `aim.profile.yaml` is the primary shared repo-awareness source.
+- `.github/agents/aim*.agent.md` are native Copilot AIM entrypoints.
 - `.github/prompts/` are optional prompt-entry helpers, mainly useful for Copilot-style command flows.
 - `adapters/codex/agile-iteration-method/SKILL.md` is the copyable Codex launcher/runtime guide for `/aim`.
-- Claude Code uses `CLAUDE.md` as its adapter bridge. Optional `.claude/` helpers may extend that bridge, but they do not replace `AGENTS.md`.
+- `.claude/` contains optional Claude-native AIM entrypoints.
 
 ### 2. Ignore live AIM runtime state
 
@@ -228,7 +225,7 @@ Add this to `.gitignore` if it is not already there:
 
 `.aim/` is runtime state, not release material. AIM creates it automatically on first valid start.
 
-### 3. Add your repository-specific rules to `AGENTS.md`
+### 3. Add reusable repository knowledge to `aim.profile.yaml`
 
 Before the first run, make sure your repo profile is real, not generic. At minimum, define:
 - stack and runtime assumptions
@@ -273,8 +270,7 @@ Mode: Strict
 Cost profile: Standard
 ```
 
-This repository ships `CLAUDE.md` as the Claude Code bridge.
-Add `.claude/commands/` or `.claude/agents/` in target repositories only when you provide Claude-specific command packaging.
+Add `.claude/commands/` or `.claude/agents/` in target repositories only when Claude-specific command packaging is wanted.
 Otherwise use the explicit start prompt above.
 
 If you want automatic continuation between increments, use `Mode: Auto` instead of `Mode: Strict`.
@@ -288,30 +284,20 @@ Use this path when the product, codebase, tests and CI already exist and you wan
 You do not need to restructure the application first.
 
 Add the core AIM files:
-- `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
-- `.github/agents/aim.agent.md`
-- `.github/agents/aim-planner.agent.md`
-- `.github/agents/aim-builder.agent.md`
-- `.github/agents/aim-reviewer.agent.md`
+- `docs/workflow/repo-awareness.md`
+- `aim.profile.yaml` when shared repo-awareness is wanted
 
-Add optional Copilot prompt files if you want packaged Copilot entrypoints too:
-- `.github/prompts/`
+Add only the adapter package you need:
+- Codex: install `adapters/codex/agile-iteration-method/` locally
+- Copilot: select `.github/agents/` and optional `.github/prompts/`
+- Claude Code: select `.claude/agents/` and `.claude/commands/`
 
-Add Claude Code bridge support too if needed:
-- `CLAUDE.md`
-
-Add `.claude/agents/` or `.claude/commands/` only when the target repo provides those helper files.
-
-Important:
-`.github/agents/aim*.agent.md` are not Copilot-only.
-In AIM, they are part of the repository instruction layer and should be installed for proper AIM behavior in both Codex and Copilot.
-
-### 2. Make `AGENTS.md` repo-aware
+### 2. Make `aim.profile.yaml` repo-aware
 
 For an existing repo, this is the most important step.
 
-Update `AGENTS.md` so it reflects reality:
+Keep the profile small and factual:
 - what stack the repo uses
 - how verification should be done
 - what commands are safe
@@ -352,12 +338,12 @@ Cost profile: Standard
 
 If someone wants the shortest path, this is it:
 
-1. Copy `AGENTS.md` and `docs/workflow/agile-iteration-method.md` into the target repo.
-2. Copy `.github/agents/aim*.agent.md` into the target repo.
+1. Make canonical AIM workflow docs available through the selected product footprint.
+2. Add root `aim.profile.yaml` only when shared repo-awareness is wanted.
 3. Add `/.aim` to `.gitignore`.
 4. For Codex `/aim`, copy `adapters/codex/agile-iteration-method/` into `~/.codex/skills/agile-iteration-method/`.
-5. Optionally copy `.github/prompts/` if you want packaged Copilot prompt entrypoints too.
-6. Add `CLAUDE.md` if you want Claude Code bridge support; add `.claude/` helpers only when you provide them.
+5. For Copilot, install the selected `.github/agents/` files and optional `.github/prompts/`.
+6. For Claude Code, install selected `.claude/` helpers.
 7. Open the repo in Codex, Copilot or Claude Code.
 8. Start with `/aim start "EPIC: <desired outcome>"`.
 9. If slash commands are unavailable, start with `EPIC: <desired outcome>`, `Mode: Strict`, and `Cost profile: Cost Control`.
@@ -443,25 +429,15 @@ The rule is simple:
 - explicit fallback where parity is not possible
 - no silent redefinition of gates, ownership or acceptance
 
-### Instruction layering in practice
+### Loading in practice
 
-AIM uses layered repository instructions:
+1. Resume `.aim/state.json`.
+2. Read root `aim.profile.yaml` when present.
+3. Apply compatible Personal profile hints.
+4. Inspect directly affected repository evidence.
+5. Load deeper workflow docs or active adapter policy only when needed.
 
-1. AIM base semantics
-2. repository `AGENTS.md`
-3. repository `.github/agents/aim*.agent.md`
-
-This means `.github/agents/` files are part of AIM behavior in practice, not just optional Copilot decoration.
-
-In Copilot, they also act as native custom-agent files.
-In Codex, AIM reads and uses them as part of the repository instruction layer.
-
-Claude Code uses a separate adapter bridge:
-- `CLAUDE.md`
-- optional `.claude/agents/`
-- optional `.claude/commands/`
-
-These files extend the Claude adapter surface but they do not replace `AGENTS.md` as the canonical AIM contract.
+Generic root instruction files are outside the AIM architecture.
 
 ## Recommended Reading Order
 
@@ -472,20 +448,16 @@ If you want to use AIM:
 4. [Troubleshoot AIM 2.0](docs/workflow/troubleshoot-aim-2.0.md) when startup, resume, validation, or adapter behavior is wrong
 
 If you are implementing AIM itself:
-1. [AGENTS.md](AGENTS.md)
-2. [Agile iteration method](docs/workflow/agile-iteration-method.md)
+1. [Agile iteration method](docs/workflow/agile-iteration-method.md)
+2. [Repo-awareness](docs/workflow/repo-awareness.md)
 3. [AIM adapter guidance](docs/workflow/aim-adapter-guidance.md)
-
-Do not start with `AGENTS.md` when the goal is just to install or run AIM in a repository.
 
 ## Repository Map
 
-- `AGENTS.md`
-  Canonical repository AIM contract across adapters.
-- `CLAUDE.md`
-  Claude Code bridge layer that maps AIM onto Claude Code without changing the shared runtime contract.
 - `docs/workflow/agile-iteration-method.md`
-  The method and runtime explanation.
+  The thin AIM core contract.
+- `docs/workflow/repo-awareness.md`
+  The primary repo-awareness and progressive-loading model.
 - `docs/features/aim-cost-comparison.md`
   Cost comparison against undisciplined vibe coding and oversized agent sessions.
 - `docs/workflow/copilot-layer.md`
@@ -505,7 +477,8 @@ Do not start with `AGENTS.md` when the goal is just to install or run AIM in a r
 
 Use AIM to improve AIM.
 
-See `CONTRIBUTING.md` for consistency rules, scope rules and documentation expectations.
+When contributing to the AIM source repository, see `CONTRIBUTING.md` for consistency rules, scope rules and documentation expectations.
+It is not an AIM installation surface.
 
 ## License
 

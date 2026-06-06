@@ -4,6 +4,8 @@
 
 Define the compact startup and Gate B summary that makes AIM 2.0 profile reuse visible.
 
+This is canonical AIM startup and Gate B profile-source reporting behavior.
+
 The summary explains what AIM reused from Personal and Team profile sources, what locality it selected, what broader context it avoided, and why it expanded beyond the profile when it did.
 
 ## User experience
@@ -138,12 +140,12 @@ What "bad" looks like:
 ## Related files
 
 - `aim.profile.yaml`
-- `AGENTS.md`
+- `aim.profile.yaml`
 - `adapters/codex/agile-iteration-method/SKILL.md`
 - `scripts/validate_aim_runtime.py`
-- `docs/features/aim-2-repo-profile-and-footprint-model.md`
-- `docs/features/aim-2-personal-local-profile-storage.md`
-- `docs/features/aim-2-tiny-team-profile-example.md`
+- `docs/workflow/repo-profile-and-footprint-model.md`
+- `docs/workflow/personal-local-profile-storage.md`
+- `docs/workflow/team-profile-artifact.md`
 - `docs/workflow/aim-2-low-footprint-adoption.md`
 - `docs/workflow/aim-adapter-guidance.md`
 

@@ -18,8 +18,8 @@ This repo is both:
 
 - `docs/workflow/agile-iteration-method.md`  
   The method and principles.
-- `AGENTS.md`  
-  Operational rules for Codex execution.
+- `docs/workflow/repo-awareness.md`
+  The repo-awareness loading and authority model.
 - `docs/workflow/copilot-layer.md`  
   Optional Copilot custom-agent layer.
 - `docs/workflow/aim-adapter-guidance.md`
@@ -57,8 +57,8 @@ Avoid large frameworks or opinionated extras unless explicitly requested.
 
 ### Keep documents consistent
 If you change a rule in one place, update the others if needed:
-- `AGENTS.md` (operational)
 - `docs/workflow/agile-iteration-method.md` (explanation)
+- the relevant canonical behavior document under `docs/workflow/`
 - `docs/workflow/copilot-layer.md` (Copilot interface, if relevant)
 - `.github/agents/aim*.agent.md` and `.github/prompts/` (adapter packaging, if relevant)
 
@@ -74,14 +74,12 @@ Mention logging only when it helps verify a hypothesis.
 ## Documentation updates
 
 ### Feature explanations
-Add/update a file in `docs/features/` when a change introduces:
-- new user-visible behavior or rule
-- non-obvious fallback or constraint
-- contract changes (inputs/outputs/semantics)
+Behavior-defining AIM documents belong under `docs/workflow/`.
+Use `docs/features/` only for support, reference, examples, comparisons, onboarding playbooks, or repo-local patterns that do not define AIM behavior.
 
 ### Active Epic state
 AIM stores the active Epic in `.aim/epic.md`.
-Do not add committed Epic folders under `docs/`; stable feature contracts belong in `docs/features/`.
+Do not add committed Epic folders under `docs/`; stable AIM behavior belongs in `docs/workflow/`, while non-canonical support/reference material may live in `docs/features/`.
 
 ### Copilot layer
 Update `docs/workflow/copilot-layer.md` and `.github/agents/` when:
@@ -90,7 +88,9 @@ Update `docs/workflow/copilot-layer.md` and `.github/agents/` when:
 - setup/install UX changes
 
 Canonical source:
-- `AGENTS.md` and `docs/workflow/agile-iteration-method.md` define AIM behavior.
+- `docs/workflow/agile-iteration-method.md` defines AIM core behavior.
+- canonical model documents under `docs/workflow/` define their behavior areas.
+- `aim.profile.yaml` is the primary shared repo-awareness source.
 - `.github/agents/` and `.github/prompts/` package Copilot entrypoints.
 
 ---
@@ -121,7 +121,7 @@ No build is required.
 Before submitting:
 - spell-check changed sections
 - keep terms consistent (Epic, Done Increment, Gate A-E)
-- confirm no contradictions between `AGENTS.md` and `docs/workflow/agile-iteration-method.md`
+- confirm canonical workflow docs and adapter packages do not contradict each other
 
 ---
 

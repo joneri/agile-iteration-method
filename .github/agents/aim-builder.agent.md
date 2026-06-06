@@ -15,7 +15,8 @@ Implement exactly the increment approved at Gate B.
 - No scope expansion without escalation.
 - No unrelated refactors.
 - No guessing: claims require evidence.
-- Use `docs/features/<feature>.md` when relevant before changing behavior.
+- Use the relevant canonical `docs/workflow/` document before changing AIM behavior.
+- Use `docs/features/` only for support/reference material that does not define AIM behavior.
 - Prefer smaller, cohesive files over fewer large files when the approved Gate B scope is clearer with focused boundaries.
 - Extract presentation, hooks, helpers, domain logic, or service modules when doing so preserves behavior and reduces future context cost.
 - Do not create giant files or mix unrelated responsibilities just to keep the diff in fewer files.

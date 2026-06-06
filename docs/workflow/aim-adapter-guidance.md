@@ -3,14 +3,14 @@
 
 # AIM adapter guidance
 
-This document collects adapter-specific AIM guidance that should not live in the canonical `AGENTS.md` master instruction file.
+This document defines optional adapter-specific AIM entrypoints and helper boundaries.
 
-`AGENTS.md` remains the repository contract for AIM behavior.
-This file explains how supported adapters expose that contract without redefining AIM core, runtime ownership, gates, role order, or acceptance.
+Canonical AIM behavior lives under `docs/workflow/`.
+Adapters expose that behavior without redefining AIM core, runtime ownership, gates, role order, or acceptance.
 
 ## Purpose
 
-Keep adapter guidance easy to inspect without making `AGENTS.md` carry every platform detail.
+Keep adapter guidance secondary, optional, and active-adapter-only.
 
 Use this file when changing:
 - adapter entrypoints
@@ -26,10 +26,10 @@ Adapter layers may improve UX and discoverability, but they must preserve:
 - hard-gate meaning at Gate A, Gate B, and Gate E
 - Gate C and Gate D as soft gates
 - `.aim/state.json` ownership by the main AIM thread
-- repo-aware policy interpretation from `AGENTS.md`
+- repo-awareness from `aim.profile.yaml`
 - sequential fallback when controlled parallelism is unavailable
 
-If adapter guidance conflicts with `AGENTS.md`, escalate instead of guessing.
+If adapter guidance conflicts with canonical workflow docs or `aim.profile.yaml`, escalate instead of guessing.
 
 ## AIM 2.0 low-footprint adapter expectations
 
@@ -108,8 +108,8 @@ aim.profile.yaml
 On `/aim start`, `/aim continue`, `/aim status`, `/aim validate`, or equivalent adapter entrypoints:
 
 1. read `.aim/state.json` first when it exists
-2. read the Personal AIM profile next when it exists
-3. read root `aim.profile.yaml` after the personal profile when it exists
+2. read root `aim.profile.yaml` as the shared repo-awareness baseline when it exists
+3. apply compatible Personal AIM profile hints when they exist
 4. use profile facts to select directly affected areas, nearest commands, short authoritative docs, and avoid-by-default context
 5. run or report validator readiness when available
 6. read broader AIM docs, adapter docs, or repo-wide context only when the current state, risk, missing evidence, or user request requires it
@@ -174,16 +174,16 @@ This preserves the AIM 2.0 cost story while extending it to install, startup, sc
 
 Copilot layer:
 - documented in `docs/workflow/copilot-layer.md`
-- uses `.github/agents/aim*.agent.md` as both shared AIM instruction-layer files and native Copilot custom-agent files
+- uses `.github/agents/aim*.agent.md` as native Copilot custom-agent files
 - uses `.github/prompts/` for optional Copilot-style prompt helpers
 
 Claude Code layer:
-- uses `CLAUDE.md` as the Claude Code bridge
-- may add `.claude/commands/` for AIM command entrypoints
-- may add `.claude/agents/` for AIM-aligned Claude helpers
+- uses `.claude/commands/` for AIM command entrypoints
+- uses `.claude/agents/` for AIM-aligned Claude helpers
+- does not require a root `CLAUDE.md` AIM bridge
 
 Codex layer:
-- uses repository instructions plus the available Codex tool surface
+- uses the installed AIM skill or explicit AIM intent plus the available Codex tool surface
 - may use the shipped Codex skill at `adapters/codex/agile-iteration-method/SKILL.md` as the canonical copyable launcher/runtime guide
 - may expose bounded subagent capability where runtime support exists
 - treats `/aim`, when available, as a launcher surface rather than the source of method authority
@@ -211,16 +211,15 @@ Copilot prompt helpers:
 - `.github/prompts/help-aim.prompt.md`
 
 Claude Code:
-- `CLAUDE.md`
 - `.claude/commands/`
 - `.claude/agents/`
 
 Installation boundary:
 - `adapters/codex/agile-iteration-method/SKILL.md` is the shipped Codex convenience layer; copy it into the local Codex skills directory when `/aim` support is wanted.
-- The local Codex target is `~/.codex/skills/agile-iteration-method/SKILL.md`; if that file is missing or stale, Codex may continue from the repo contract but should surface the install command before relying on `/aim` routing.
-- `.github/agents/aim*.agent.md` are part of the AIM repository instruction layer, not Copilot-only decoration.
+- The local Codex target is `~/.codex/skills/agile-iteration-method/SKILL.md`; if that file is missing or stale, Codex may continue from explicit AIM intent and canonical workflow docs but should surface the install command before relying on `/aim` routing.
+- `.github/agents/aim*.agent.md` are Copilot-native AIM entrypoints.
 - `.github/prompts/` are optional Copilot-style prompt helpers, not the canonical AIM contract.
-- `CLAUDE.md` bridges canonical AIM behavior into Claude Code; it does not replace `AGENTS.md`.
+- `.claude/` provides Claude-native AIM entrypoints without a generic root bridge.
 
 ## Parity classification
 
@@ -241,20 +240,19 @@ Use these labels when comparing adapter behavior:
 ## Adapter rules
 
 Codex:
-- uses repository instructions plus the available Codex tool surface
+- uses the installed AIM skill or explicit AIM intent plus the available Codex tool surface
 - uses the shipped `agile-iteration-method` skill as the recommended `/aim` launcher when the skill is installed and enabled
 - reports bundled-skill install status during first-run AIM commands, validation, status, config, and install flows
 - may expose bounded subagent capability where runtime support exists
 - may expose adapter-specific tools such as MCP-backed browser automation
 
 Copilot:
-- uses `.github/agents/aim*.agent.md` as both shared instruction-layer input and native Copilot agent packaging
+- uses `.github/agents/aim*.agent.md` as native Copilot AIM packaging
 - uses `.github/prompts/` as optional Copilot command-entry helpers
 - may differ in command routing, handoff UI, and prompt-file availability
 - must still preserve the shared runtime contract and repo-aware policy interpretation
 
 Claude Code:
-- uses `AGENTS.md` as the canonical repository contract and `CLAUDE.md` as the Claude bridge layer
 - may expose repository-defined entrypoints through `.claude/commands/` and helper agents through `.claude/agents/`
 - may use bounded Claude helpers for analysis, discovery, verification, or option generation only
 - must still preserve the shared runtime contract and repo-aware policy interpretation
@@ -265,10 +263,10 @@ Fallback rule:
 
 ## Related files
 
-- `AGENTS.md`
 - `docs/workflow/agile-iteration-method.md`
+- `docs/workflow/repo-awareness.md`
 - `docs/workflow/copilot-layer.md`
-- `CLAUDE.md`
+- `aim.profile.yaml`
 - `.github/agents/`
 - `.github/prompts/`
 - `.claude/`

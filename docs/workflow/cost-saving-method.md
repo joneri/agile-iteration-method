@@ -4,6 +4,8 @@
 
 Explain, in plain operator terms, how AIM saves money on GitHub Copilot, Codex, Claude Code, and similar coding-agent platforms without weakening quality gates.
 
+This is canonical AIM cost-saving and cost-escalation behavior.
+
 ## How it works
 
 AIM cuts cost by reducing waste before it turns into billable tokens or AI credits:
@@ -64,9 +66,9 @@ If a team says "AI is too expensive now", inspect in this order:
 
 ## Related files
 
-- `docs/features/aim-cost-control-mode.md`
+- `docs/workflow/cost-control-mode.md`
 - `docs/features/aim-cost-comparison.md`
-- `docs/features/aim-cost-review-checklist.md`
+- `docs/workflow/cost-review-checklist.md`
 - `docs/features/aim-vendor-cost-baseline-june-2026.md`
 - `docs/workflow/quick-start-aim-2.0.md`
 - `README.md`
