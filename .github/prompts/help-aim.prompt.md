@@ -19,6 +19,7 @@ Explain:
 4. the main commands:
    - `/aim start "EPIC: ..."`
    - `/aim continue`
+   - `/aim upgrade`
    - `/aim status`
    - `/aim validate`
    - `/aim config`
@@ -30,5 +31,7 @@ Include repo-awareness commands when relevant:
 - `/aim calibrate-repo`
 - `/aim remember-repo <category> "<rule>"`
 - `/aim forget-repo <category> "<rule-id>"`
+
+If AIM helper files or instructions were updated recently, mention `/aim upgrade` before suggesting resume or start.
 
 If no active Epic exists, end by telling me the exact next start command to run.

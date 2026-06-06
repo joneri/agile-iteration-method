@@ -24,6 +24,8 @@ The guided installer:
 
 Installation is manifest-driven, rollback-protected, and safe to rerun.
 
+If AIM was already installed and the AIM package changed later, run `/aim upgrade` before continuing.
+
 For automation, use flags with `--non-interactive` or `--format json`.
 For preview only, use `--dry-run`.
 

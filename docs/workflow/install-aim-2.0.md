@@ -165,6 +165,7 @@ Optional Copilot prompt helpers:
 - `.github/prompts/start-aim.prompt.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`
+- `.github/prompts/upgrade-aim.prompt.md`
 
 Optional Claude Code package:
 
@@ -172,6 +173,44 @@ Optional Claude Code package:
 - `.claude/commands/start-aim.md`
 - `.claude/commands/install-aim.md`
 - `.claude/commands/continue-aim.md`
+- `.claude/commands/upgrade-aim.md`
+
+## Updating an existing AIM install
+
+Use this path when AIM is already present in the repository, but AIM 2.0 instruction files, helper prompts, or adapter packages changed and the repository should start following the newer behavior.
+
+Recommended flow:
+
+1. Run the installer again:
+
+```bash
+python3 scripts/aim_install.py
+```
+
+2. Refresh repo-awareness:
+
+```text
+/aim calibrate-repo
+```
+
+3. Start a fresh adapter session when the active platform uses installed helper files, such as:
+  - Copilot agents or prompt helpers
+  - Claude command files
+  - Codex local skill packaging
+
+4. If an Epic was already active, resume it with:
+
+```text
+/aim continue
+```
+
+Use `/aim upgrade` as the normal user-facing command for this flow when the active adapter supports packaged AIM command entrypoints.
+
+Important:
+
+- upgrade refreshes installed AIM surfaces
+- calibration refreshes repo-awareness
+- active `.aim/` runtime state is not silently replaced by upgrade
 
 ## Adapter packaging
 

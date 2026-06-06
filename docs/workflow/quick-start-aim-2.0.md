@@ -96,6 +96,7 @@ Approve, request adjustment, continue, or close.
 ## Common Commands
 
 - `/aim continue`
+- `/aim upgrade`
 - `/aim status`
 - `/aim validate`
 - `/aim calibrate-repo`
@@ -103,6 +104,19 @@ Approve, request adjustment, continue, or close.
 - `/aim forget-repo <category> "<rule-id>"`
 - `/aim cost standard|control|deep`
 - `/aim help`
+
+## When AIM Itself Was Updated
+
+Use this flow when the repository already had AIM 2.0, but AIM instruction files, helper prompts, or adapter packaging changed afterward.
+
+1. Run `/aim upgrade`
+2. Run `/aim calibrate-repo`
+3. Start a fresh adapter session when helper files or agent/skill packaging changed
+4. Resume with `/aim continue` if the Epic was already in progress
+
+Upgrade refreshes installed AIM surfaces.
+Calibration refreshes repo-awareness.
+They are related, but not the same action.
 
 ## Choose an Adoption Mode
 

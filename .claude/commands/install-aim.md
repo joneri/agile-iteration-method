@@ -10,6 +10,7 @@ Explain:
 Installation checklist:
 - confirm the main workflow doc is present
 - confirm `.claude/agents/aim.md` or the desired `.claude/commands/` entrypoint is present
+- mention `upgrade-aim` when AIM was already installed and only helper or instruction files changed
 - explain how to start AIM with the shipped Claude starter command or the explicit `EPIC: ...` fallback
 - explain that `Cost profile: Cost Control` is available for low-risk work and `Cost profile: Deep` for high-risk work
 - explain that `.aim/` will be created automatically on first valid start if missing

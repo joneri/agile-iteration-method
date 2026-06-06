@@ -88,6 +88,7 @@ The repository has some AIM files, but start commands, prompt helpers, or adapte
 ### Expected AIM behavior
 
 - `Install AIM 2.0` should point to the current required files and optional adapter helpers
+- `Upgrade AIM` should be the normal recovery path when AIM files are present but helper surfaces or instruction files became stale
 - helper prompts are optional convenience surfaces, not the AIM contract
 - Codex, Copilot, and Claude packaging may differ, but the canonical workflow contract stays consistent
 - generic root instruction files are not required, created, or modified by AIM

@@ -145,6 +145,8 @@ The guided installer provides:
    python3 scripts/aim_install.py
    ```
 
+   If AIM is already installed and you updated AIM files afterward, run `/aim upgrade` before continuing.
+
 2. **Calibrate repository awareness**
 
    ```text

@@ -17,6 +17,7 @@ Actions:
    - `.github/prompts/install-aim.prompt.md`
    - `.github/prompts/start-aim.prompt.md`
    - `.github/prompts/help-aim.prompt.md`
+   - `.github/prompts/upgrade-aim.prompt.md`
 3. Confirm supporting AIM docs are present:
    - `docs/workflow/install-aim-2.0.md`
    - `docs/workflow/quick-start-aim-2.0.md`
@@ -27,6 +28,7 @@ Actions:
 After setup, suggest:
 - `/aim start "EPIC: ..."`
 - `/aim help`
+- `/aim upgrade`
 - `/aim status`
 - `/aim validate`
 - `/aim config`
