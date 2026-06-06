@@ -80,21 +80,33 @@ Treat these as AIM intents when the current adapter supports them or when the us
 - `/aim start "EPIC: ..."`
 - `/aim continue`
 - `/aim status`
-- `/aim help`
 - `/aim validate`
+- `/aim help`
 - `/aim config`
 - `/aim calibrate-repo`
 - `/aim remember-repo <category> "<rule>"`
 - `/aim forget-repo <category> "<rule-id>"`
+- `/aim upgrade`
 - `/aim mode strict|auto`
 - `/aim cost standard|control|deep`
+- `/aim replan`
 - `Install AIM`
 - `Start working according to AIM`
 
-If a slash command surface is unavailable, perform the equivalent workflow directly and mention the fallback briefly.
+Canonical intent, state effects, upgrade safety, and adapter fallbacks are
+defined in `docs/workflow/adapter-command-contract.md`.
+
+If literal slash routing is unavailable, report that limitation, map the user's
+plain-language request to the same command intent, and perform the equivalent
+workflow directly. Syntax may fall back; command semantics may not.
 
 `/aim calibrate-repo` uses the canonical cheap-first flow in `docs/workflow/repo-awareness-calibration.md`.
 Remember and forget intents must persist structured rules to `aim.profile.yaml` or the user-level hints file and must never use `.aim/`.
+`/aim upgrade` must inspect selected AIM-owned packages through the deterministic
+installer plan, show stale/collision results before apply, preserve rollback and
+root-file exclusions, and never rewrite active `.aim/` state.
+`/aim replan` returns only the active unaccepted increment to Gate B and preserves
+the reason and accepted history.
 
 ## Thin Front Door
 

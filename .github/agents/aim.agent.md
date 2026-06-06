@@ -49,6 +49,12 @@ In GitHub Copilot, AIM is **agent-first**: this AIM agent is the primary
 user-facing front door, and AIM commands run inside this agent chat.
 `.github/prompts/` helpers stay secondary.
 The canonical cross-adapter entry model is `docs/workflow/adapter-entry-model.md`.
+Canonical command intent, state effects, upgrade behavior, and fallbacks are
+defined in `docs/workflow/adapter-command-contract.md`.
+
+If AIM agent or slash routing is unavailable, report the limitation and handle
+the same explicit AIM intent in ordinary chat. Fallback syntax must preserve the
+command's canonical semantics and state effect.
 
 ## Accepted starts
 
@@ -94,6 +100,7 @@ If instructions conflict, escalate.
 - `/aim calibrate-repo` - cheaply inspect, verify, and persist repository knowledge
 - `/aim remember-repo <category> "<rule>"` - persist a structured shared or personal repository rule
 - `/aim forget-repo <category> "<rule-id>"` - remove a structured repository rule
+- `/aim upgrade` - inspect and refresh selected AIM-owned packages through a reviewed installer plan
 - `/aim replan` - return to Gate B planning
 - `/aim commit-mode optional|required` - set commit policy
 - `/aim mode strict|auto` - set execution mode for current Epic
@@ -133,7 +140,7 @@ Suggested state shape:
 
 ```json
 {
-  "aimVersion": "1.6",
+  "aimVersion": "2.0",
   "mode": "Strict",
   "costProfile": "Standard",
   "epicId": "EPIC-YYYYMMDD-001",
@@ -271,6 +278,31 @@ primary button.
 ## `/aim upgrade` behavior
 
 Supported packaged upgrade path:
+
+1. Determine the selected mode, footprint, and adapters. Distinguish refreshing
+   that package selection from deliberately reconfiguring it.
+2. Run or explain the deterministic installer dry-run so AIM-owned docs and
+   Codex, Claude, and Copilot packages are classified as current, missing, or
+   stale/collision.
+3. Show the reviewed text or JSON plan before apply. A different source and
+   destination copy is stale only when that package belongs to the selection.
+4. Apply only after review. Preserve collision decisions, `--force` as an
+   explicit overwrite choice, rollback, Enterprise safety, and generic root-file
+   exclusions.
+5. Never rewrite `.aim/state.json`, active increments, decisions, reviews, or
+   personal hints as part of package upgrade.
+6. Recommend `/aim calibrate-repo` when reusable repo facts may be stale, then
+   `/aim continue` for an active Epic or `/aim start` when none is active.
+
+Actionable CLI fallback:
+
+```bash
+python3 scripts/aim_install.py --target <repo> --mode <mode> \
+  --footprint <footprint> --adapter <adapter> --dry-run
+```
+
+Review the plan, then rerun with `--apply`. Use `--force` only for collisions
+the user explicitly approves.
 
 ## Interaction model expectations
 

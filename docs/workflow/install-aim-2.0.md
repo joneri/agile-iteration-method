@@ -201,10 +201,9 @@ Optional Copilot prompt helpers:
 Optional Claude Code package:
 
 - `.claude/agents/aim.md`
-- `.claude/commands/start-aim.md`
-- `.claude/commands/install-aim.md`
-- `.claude/commands/continue-aim.md`
-- `.claude/commands/upgrade-aim.md`
+- the complete native AIM command family under `.claude/commands/`, as defined
+  by [AIM 2.0 adapter command contract](adapter-command-contract.md)
+- `.claude/commands/install-aim.md` as the additional install/onboarding helper
 
 ## Updating an existing AIM install
 

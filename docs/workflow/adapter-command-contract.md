@@ -1,0 +1,119 @@
+> License: CC BY 4.0 (documentation).
+> Author: Jonas Eriksson.
+
+# AIM 2.0 Adapter Command Contract
+
+## Purpose
+
+Define one command-intent contract for Codex, Claude, and GitHub Copilot.
+
+Adapters keep their native front doors, but a command must mean the same thing
+everywhere. This contract is secondary to AIM core in
+`docs/workflow/agile-iteration-method.md` and does not redefine roles, gates,
+ownership, or acceptance.
+
+## Required command family
+
+| Command | Intent | State effect |
+| --- | --- | --- |
+| `/aim start "EPIC: ..."` | start a new Epic or resume an incomplete checkpoint instead of creating a parallel run | may create `.aim/` and initialize `state.json` at Gate A |
+| `/aim continue` | resume from the persisted role, gate, increment, mode, and cost profile | advances state only when the current AIM transition allows it |
+| `/aim status` | report Epic, increment, role, mode, cost profile, gate, adapter, and next action | read-only |
+| `/aim validate` | run or explain canonical runtime, profile, adapter, and structural checks | read-only |
+| `/aim help` | show the thin front door and the next useful command | read-only |
+| `/aim config` | show effective mode, cost, profile, ownership, validation, and adapter fallback configuration | read-only |
+| `/aim calibrate-repo` | verify and persist reusable repository knowledge using the canonical calibration flow | writes only approved profile or user-hint facts; never active state |
+| `/aim remember-repo <category> "<rule>"` | add one structured shared or personal repository rule | writes the owning profile or user-hint file; never `.aim/` |
+| `/aim forget-repo <category> "<rule-id>"` | remove one structured repository rule after showing the proposed change | writes the owning profile or user-hint file; never `.aim/` |
+| `/aim upgrade` | inspect installed AIM-owned packages, plan a reviewed refresh, and report follow-up calibration or resume actions | must not rewrite active `.aim/` state |
+| `/aim mode strict\|auto` | set execution mode for the active Epic | updates mode in `state.json`; does not approve a gate |
+| `/aim cost standard\|control\|deep` | set runtime depth for the active Epic or increment | updates cost profile in `state.json`; does not approve a gate |
+| `/aim replan` | return the active, unaccepted increment to Gate B planning with the reason preserved | updates the active checkpoint; never rewrites accepted history |
+
+`/aim calibrate-repo`, `/aim remember-repo`, and `/aim forget-repo` follow
+`docs/workflow/repo-awareness-calibration.md`.
+
+## Upgrade contract
+
+`/aim upgrade` is a package inspection and reviewed refresh intent.
+
+It must:
+
+1. identify the AIM source/package version and selected target mode, footprint,
+   and adapters
+2. inspect canonical docs and installed Codex, Claude, and Copilot AIM-owned
+   surfaces that belong to the selected footprint
+3. use the deterministic installer planner to classify files as create,
+   current, stale/collision, or excluded
+4. distinguish package refresh from reconfiguration:
+   - refresh keeps the selected mode, footprint, and adapters
+   - reconfiguration deliberately changes one or more of them
+5. show the dry-run or JSON plan before apply
+6. require normal collision decisions or explicit `--force`; never blind
+   overwrite repository-owned content
+7. preserve rollback, generic root-file exclusions, and non-interactive safety
+8. leave `.aim/state.json`, active increments, decisions, reviews, and personal
+   hints untouched
+9. recommend `/aim calibrate-repo` only when repo-awareness facts may be stale,
+   then `/aim continue` for an active Epic or `/aim start` when no Epic is active
+
+Stale packages are AIM-owned source/destination pairs whose installed content
+differs from the selected package source. A missing optional adapter is not
+stale when that adapter or footprint is not selected.
+
+The actionable CLI fallback is:
+
+```bash
+python3 scripts/aim_install.py --target <repo> --mode <mode> \
+  --footprint <footprint> --adapter <adapter> --dry-run
+```
+
+After review, rerun with `--apply`. Add `--force` only for collisions the user
+has explicitly decided to overwrite.
+
+## Native adapter mapping
+
+### Codex
+
+- Primary surface: installed AIM skill/package.
+- Commands are intents handled through the skill even when literal slash
+  routing is unavailable.
+- Fallback: state the routing limitation, then execute the same intent from the
+  user's plain-language request.
+
+### Claude
+
+- Primary surface: command files under `.claude/commands/`.
+- Each required command has a packaged command file.
+- Fallback: when command-file routing is unavailable, use `/aim <command>` as
+  explicit text or state the intent in plain language; preserve this contract.
+
+### GitHub Copilot
+
+- Primary surface: the AIM agent in chat.
+- The agent recognizes the complete command family as typed intents.
+- Fallback: when agent or slash routing is unavailable, use explicit AIM intent
+  in chat and report that the native route was unavailable.
+
+## Universal fallback rule
+
+A fallback may change syntax, never semantics.
+
+Every adapter must:
+
+- report that native routing was unavailable
+- preserve AIM core role order, hard-gate ownership, state ownership, and
+  escalation
+- preserve the command's state effect or read-only status
+- never silently replace an unsupported command with a different action
+
+## Drift prevention
+
+The validator must reject:
+
+- a missing canonical command
+- a missing Claude command file
+- a Codex or Copilot surface without the complete command family
+- an empty advertised command behavior section
+- an AIM 1.x `aimVersion` example in an AIM 2.0 adapter surface
+- an adapter with no explicit fallback rule

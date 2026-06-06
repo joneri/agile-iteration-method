@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -298,6 +299,44 @@ INSTALL_GUIDE_DOC_PATH = "docs/workflow/install-aim-2.0.md"
 INSTALL_MANIFEST_PATH = "install/aim-install-manifest.yaml"
 
 ADAPTER_ENTRY_MODEL_DOC_PATH = "docs/workflow/adapter-entry-model.md"
+ADAPTER_COMMAND_CONTRACT_DOC_PATH = "docs/workflow/adapter-command-contract.md"
+
+CANONICAL_AIM_COMMANDS = [
+    "/aim start",
+    "/aim continue",
+    "/aim status",
+    "/aim validate",
+    "/aim help",
+    "/aim config",
+    "/aim calibrate-repo",
+    "/aim remember-repo",
+    "/aim forget-repo",
+    "/aim upgrade",
+    "/aim mode",
+    "/aim cost",
+    "/aim replan",
+]
+
+CLAUDE_COMMAND_SURFACES = {
+    "/aim start": ".claude/commands/start-aim.md",
+    "/aim continue": ".claude/commands/continue-aim.md",
+    "/aim status": ".claude/commands/status-aim.md",
+    "/aim validate": ".claude/commands/validate-aim.md",
+    "/aim help": ".claude/commands/help-aim.md",
+    "/aim config": ".claude/commands/config-aim.md",
+    "/aim calibrate-repo": ".claude/commands/calibrate-repo.md",
+    "/aim remember-repo": ".claude/commands/remember-repo.md",
+    "/aim forget-repo": ".claude/commands/forget-repo.md",
+    "/aim upgrade": ".claude/commands/upgrade-aim.md",
+    "/aim mode": ".claude/commands/mode-aim.md",
+    "/aim cost": ".claude/commands/cost-aim.md",
+    "/aim replan": ".claude/commands/replan-aim.md",
+}
+
+COMMAND_FAMILY_SURFACES = {
+    "Codex": "adapters/codex/agile-iteration-method/SKILL.md",
+    "GitHub Copilot": ".github/agents/aim.agent.md",
+}
 
 REQUIRED_ADAPTER_ENTRY_MODEL_MARKERS = [
     "user-facing entry surface",
@@ -313,6 +352,13 @@ REQUIRED_ADAPTER_ENTRY_MODEL_MARKERS = [
     "/aim calibrate-repo",
     "/aim remember-repo",
     "/aim forget-repo",
+    "/aim status",
+    "/aim config",
+    "/aim upgrade",
+    "/aim mode",
+    "/aim cost",
+    "/aim replan",
+    ADAPTER_COMMAND_CONTRACT_DOC_PATH,
     "Codex",
     "GitHub Copilot",
     "Claude",
@@ -506,6 +552,7 @@ REQUIRED_DOCUMENTATION_MODEL_MARKERS = [
     "docs/workflow/modularity-context-efficiency.md",
     "docs/workflow/repo-awareness-calibration.md",
     "docs/workflow/repo-awareness-two-layer-model.md",
+    "docs/workflow/adapter-command-contract.md",
     "docs/features/",
     "AGENTS.md",
     "CLAUDE.md",
@@ -518,6 +565,7 @@ REQUIRED_DOCUMENTATION_MODEL_MARKERS = [
 ]
 
 PROMOTED_CANONICAL_DOC_PATHS = {
+    "docs/workflow/adapter-command-contract.md": "docs/features/aim-adapter-command-contract.md",
     "docs/workflow/documentation-model.md": "docs/features/aim-2-documentation-model.md",
     "docs/workflow/operating-modes.md": "docs/features/aim-2-operating-modes.md",
     "docs/workflow/repository-surface-classification.md": "docs/features/aim-2-repository-surface-classification.md",
@@ -1645,6 +1693,208 @@ def main() -> int:
             "Restore docs/workflow/adapter-entry-model.md before relying on native adapter entry guidance.",
         )
 
+    command_contract_path = repo_root / ADAPTER_COMMAND_CONTRACT_DOC_PATH
+    checked.append(ADAPTER_COMMAND_CONTRACT_DOC_PATH)
+    if command_contract_path.is_file():
+        command_contract_content = command_contract_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_contract_commands = [
+            command
+            for command in CANONICAL_AIM_COMMANDS
+            if command not in command_contract_content
+        ]
+        required_upgrade_markers = [
+            "deterministic installer planner",
+            "stale/collision",
+            "--dry-run",
+            "--apply",
+            "--force",
+            "rollback",
+            ".aim/state.json",
+            "never blind",
+        ]
+        missing_upgrade_markers = [
+            marker
+            for marker in required_upgrade_markers
+            if marker not in command_contract_content
+        ]
+        if missing_contract_commands or missing_upgrade_markers:
+            missing = missing_contract_commands + missing_upgrade_markers
+            add_issue(
+                issues,
+                "blocked",
+                ADAPTER_COMMAND_CONTRACT_DOC_PATH,
+                f"canonical adapter command contract is incomplete: {', '.join(missing)}",
+                "Restore the full command family and reviewed, collision-safe upgrade contract.",
+            )
+    else:
+        add_issue(
+            issues,
+            "blocked",
+            ADAPTER_COMMAND_CONTRACT_DOC_PATH,
+            "canonical adapter command contract is missing",
+            "Restore the command intent, state-effect, upgrade, and fallback contract.",
+        )
+
+    checked.append("AIM 2.0 adapter command parity")
+    for adapter_name, relative_path in COMMAND_FAMILY_SURFACES.items():
+        surface_path = repo_root / relative_path
+        checked.append(relative_path)
+        if not surface_path.is_file():
+            continue
+        content = surface_path.read_text(encoding="utf-8", errors="replace")
+        missing_commands = [
+            command for command in CANONICAL_AIM_COMMANDS if command not in content
+        ]
+        missing_surface_markers = [
+            marker
+            for marker in (
+                ADAPTER_COMMAND_CONTRACT_DOC_PATH,
+                "routing is unavailable",
+            )
+            if marker not in content
+        ]
+        if missing_commands or missing_surface_markers:
+            missing = missing_commands + missing_surface_markers
+            add_issue(
+                issues,
+                "blocked",
+                relative_path,
+                f"{adapter_name} command coverage drifted: {', '.join(missing)}",
+                "Restore every canonical command intent and the adapter's explicit fallback rule.",
+            )
+
+    for command, relative_path in CLAUDE_COMMAND_SURFACES.items():
+        command_path = repo_root / relative_path
+        checked.append(relative_path)
+        if not command_path.is_file():
+            add_issue(
+                issues,
+                "blocked",
+                relative_path,
+                f"Claude native command surface is missing for {command}",
+                "Restore the command-first file or remove the unsupported parity claim.",
+            )
+            continue
+        content = command_path.read_text(encoding="utf-8", errors="replace")
+        required_markers = [
+            command,
+            ADAPTER_COMMAND_CONTRACT_DOC_PATH,
+            "routing is unavailable",
+        ]
+        missing_markers = [
+            marker for marker in required_markers if marker not in content
+        ]
+        if missing_markers:
+            add_issue(
+                issues,
+                "blocked",
+                relative_path,
+                f"Claude command contract is incomplete: {', '.join(missing_markers)}",
+                "Map the native command file to the canonical intent and explicit fallback.",
+            )
+
+    copilot_path = repo_root / ".github/agents/aim.agent.md"
+    if copilot_path.is_file():
+        copilot_content = copilot_path.read_text(encoding="utf-8", errors="replace")
+        behavior_sections = re.findall(
+            r"^## `(/aim [^`]+)` behavior\s*$\n(.*?)(?=^## |\Z)",
+            copilot_content,
+            flags=re.MULTILINE | re.DOTALL,
+        )
+        empty_sections = [
+            command
+            for command, body in behavior_sections
+            if len(body.strip().split()) < 15
+        ]
+        if empty_sections:
+            add_issue(
+                issues,
+                "blocked",
+                ".github/agents/aim.agent.md",
+                "Copilot advertised command behavior is empty or non-actionable: "
+                + ", ".join(empty_sections),
+                "Define actionable behavior or remove the unsupported advertised section.",
+            )
+        upgrade_body = next(
+            (
+                body.strip()
+                for command, body in behavior_sections
+                if command == "/aim upgrade"
+            ),
+            "",
+        )
+        required_copilot_upgrade_markers = [
+            "dry-run",
+            "--apply",
+            "--force",
+            "rollback",
+            ".aim/state.json",
+        ]
+        missing_copilot_upgrade_markers = [
+            marker
+            for marker in required_copilot_upgrade_markers
+            if marker not in upgrade_body
+        ]
+        if len(upgrade_body.split()) < 40:
+            add_issue(
+                issues,
+                "blocked",
+                ".github/agents/aim.agent.md",
+                "Copilot /aim upgrade behavior section is empty or non-actionable",
+                "Define inspection, stale detection, reviewed apply, collision safety, rollback, and runtime-state exclusions.",
+            )
+        elif missing_copilot_upgrade_markers:
+            add_issue(
+                issues,
+                "blocked",
+                ".github/agents/aim.agent.md",
+                "Copilot /aim upgrade behavior is missing safety markers: "
+                + ", ".join(missing_copilot_upgrade_markers),
+                "Restore the reviewed installer plan, explicit apply/force, rollback, and runtime-state exclusions.",
+            )
+
+    stale_version_pattern = re.compile(
+        r"""aimVersion["']?\s*[:=]\s*["']?1\.""",
+        flags=re.IGNORECASE,
+    )
+    adapter_files = sorted(
+        {
+            *(
+                path
+                for path in (
+                    repo_root / "adapters/codex/agile-iteration-method"
+                ).rglob("*")
+                if path.is_file()
+            ),
+            *(
+                path
+                for path in (repo_root / ".github/agents").glob("aim*.agent.md")
+                if path.is_file()
+            ),
+            *(
+                path
+                for path in (repo_root / ".claude").rglob("*.md")
+                if path.is_file()
+            ),
+        },
+        key=lambda path: path.as_posix(),
+    )
+    for adapter_file in adapter_files:
+        if not adapter_file.is_file():
+            continue
+        content = adapter_file.read_text(encoding="utf-8", errors="replace")
+        if stale_version_pattern.search(content):
+            relative_path = adapter_file.relative_to(repo_root).as_posix()
+            add_issue(
+                issues,
+                "blocked",
+                relative_path,
+                "AIM 2.0 adapter surface contains a stale AIM 1.x state example",
+                'Use the current AIM 2.0 state example, including "aimVersion": "2.0".',
+            )
+
     checked.append("AIM 2.0 adapter native entry surfaces")
     for relative_path, required_markers in ADAPTER_ENTRY_SURFACE_MARKERS.items():
         entry_surface_path = repo_root / relative_path
@@ -2202,6 +2452,8 @@ def main() -> int:
 
     print("AIM 2.0 adapter entry model:")
     print(f"- canonical doc: {ADAPTER_ENTRY_MODEL_DOC_PATH}")
+    print(f"- command contract: {ADAPTER_COMMAND_CONTRACT_DOC_PATH}")
+    print(f"- canonical command intents: {len(CANONICAL_AIM_COMMANDS)}")
     print("- Codex: skill/package-first")
     print("- GitHub Copilot: agent-first")
     print("- Claude: command-first (.claude/agents/ internal helper)")

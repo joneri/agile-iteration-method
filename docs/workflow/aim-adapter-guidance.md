@@ -28,6 +28,10 @@ The canonical, user-facing native entry model lives in
 - GitHub Copilot is **agent-first**
 - Claude is **command-first** (with `.claude/agents/` as an internal helper surface)
 
+The canonical command intent, state-effect, upgrade, and fallback contract is
+`docs/workflow/adapter-command-contract.md`. Adapter files may choose native
+syntax and packaging, but they must preserve that command meaning.
+
 This adapter-guidance file covers adapter mechanics and helper boundaries; the
 entry-model doc owns which surface is the user-facing front door.
 
@@ -273,6 +277,8 @@ Fallback rule:
 ## Related files
 
 - `docs/workflow/agile-iteration-method.md`
+- `docs/workflow/adapter-command-contract.md`
+- `docs/workflow/adapter-entry-model.md`
 - `docs/workflow/repo-awareness.md`
 - `docs/workflow/copilot-layer.md`
 - `aim.profile.yaml`

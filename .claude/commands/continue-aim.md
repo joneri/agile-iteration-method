@@ -1,6 +1,8 @@
 # Continue AIM
 
 Use this command to continue the active AIM loop in Claude Code.
+Map it to `/aim continue` from
+`docs/workflow/adapter-command-contract.md`.
 
 Command behavior:
 - inspect `.aim/state.json`
@@ -10,3 +12,6 @@ Command behavior:
 
 Ownership rule:
 - only the main AIM thread may update `.aim/state.json`, advance gates, or accept increments
+
+If command-file routing is unavailable, state that limitation and handle the
+same `/aim continue` intent in ordinary Claude chat.

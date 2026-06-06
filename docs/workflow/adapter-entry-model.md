@@ -33,15 +33,22 @@ Every adapter file is exactly one of these classes for entry purposes:
 
 ## Canonical command family
 
-The canonical AIM command family is:
+The canonical AIM command family is defined in
+`docs/workflow/adapter-command-contract.md`:
 
-- `/aim start "EPIC: ..."`
+- `/aim start`
 - `/aim continue`
+- `/aim status`
 - `/aim validate`
 - `/aim help`
+- `/aim config`
 - `/aim calibrate-repo`
-- `/aim remember-repo <category> "<rule>"`
-- `/aim forget-repo <category> "<rule-id>"`
+- `/aim remember-repo`
+- `/aim forget-repo`
+- `/aim upgrade`
+- `/aim mode`
+- `/aim cost`
+- `/aim replan`
 
 If an adapter cannot express these literally, it must still support the same
 **intent model** in plain language and preserve the canonical behavior contract.
@@ -118,6 +125,8 @@ Fallback rules:
 - the adapter must report the limitation and continue with explicit AIM intent
 - the canonical role order, gates, ownership, and acceptance never change
 - a reduced visible command set is allowed, but the underlying intent model stays whole
+- exact command state effects and per-adapter fallbacks come from
+  `docs/workflow/adapter-command-contract.md`
 
 ## Boundary
 
@@ -135,5 +144,7 @@ If adapter entry guidance conflicts with canonical workflow docs or
 ## Related files
 
 - `docs/workflow/agile-iteration-method.md` — canonical AIM core
+- `docs/workflow/adapter-command-contract.md` — canonical command intents,
+  state effects, upgrade behavior, and fallbacks
 - `docs/workflow/aim-adapter-guidance.md` — adapter mechanics and helper boundaries
 - `docs/workflow/repo-awareness.md` — progressive loading and adapter boundaries
