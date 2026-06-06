@@ -131,6 +131,23 @@ Cost profile: Cost Control
 
 Use `Cost Control` for ordinary low-risk work. Use `Deep` when the work touches trust, data correctness, deployment, migration, security, or public APIs.
 
+Calibrate persistent repository knowledge after installation:
+
+```text
+/aim calibrate-repo
+```
+
+Teach or remove structured repository habits later:
+
+```text
+/aim remember-repo habits "Run rsync before every Gate E"
+/aim forget-repo validation "old-validation-command"
+```
+
+Shared knowledge lives in `aim.profile.yaml`.
+Personal hints live at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`.
+`.aim/` remains runtime-only.
+
 ## Choose Your Adapter
 
 - Codex:

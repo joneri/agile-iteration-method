@@ -23,7 +23,7 @@ Choose Personal AIM when one developer wants to start AIM without repository mut
 
 What this means:
 
-- repo profile lives at `~/.aim/profiles/<repo-fingerprint>/profile.yaml`
+- personal hints live at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 - working state stays local
 - AIM docs come from the installed package, adapter, or canonical AIM repo
 - no committed AIM files are required by default
@@ -47,11 +47,7 @@ What AIM should do next:
 5. load short authoritative docs only when risk or missing evidence requires them
 6. keep Personal hints local unless you intentionally promote shared facts into Team AIM
 
-Use the repo-local fallback only when the adapter cannot use the user-level profile store:
-
-```text
-.aim/profile.yaml
-```
+If the user-level store is unavailable, continue with session-only hints; never persist repo-awareness under `.aim/`.
 
 ## Team AIM
 
@@ -124,6 +120,9 @@ Move to `Standard` or `Deep` only when trust, data correctness, deployment, migr
 
 - `/aim continue`
 - `/aim validate`
+- `/aim calibrate-repo`
+- `/aim remember-repo <category> "<rule>"`
+- `/aim forget-repo <category> "<rule-id>"`
 - `/aim help`
 
 If slash commands are unavailable, use the same intent in plain language.
@@ -136,7 +135,7 @@ When AIM reuses Personal or Team profile data, the operator should see a compact
 Expected summary shape:
 
 ```text
-Profile source: team: aim.profile.yaml (profile_ready)
+Profile source: team: aim.profile.yaml (ready)
 Layering: personal hints over team baseline
 Reused facts: commands, locality, risk zones, short docs, freshness, avoid-by-default context
 Selected locality: <directly affected area>
@@ -146,6 +145,9 @@ Cheap validation first: <nearest command or check>
 ```
 
 If no Personal or Team profile exists yet, AIM should say `Profile source: none` and continue with locality-first discovery instead of pretending reuse happened.
+
+After installation, run `/aim calibrate-repo` when readiness is `needs_calibration` or `partially_ready`.
+Calibration starts with cheap repository evidence and expands only for uncertainty, risk, conflict, or explicit user direction.
 
 ## Keep these boundaries clear
 

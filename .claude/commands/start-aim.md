@@ -6,6 +6,7 @@ Before starting:
 - load `docs/workflow/agile-iteration-method.md`
 - load `.aim/state.json` when present
 - load `aim.profile.yaml` when present
+- apply compatible Personal hints from `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 - load `docs/workflow/repo-awareness.md` when repo-awareness or adapter loading needs clarification
 - preserve `.aim` as the official AIM runtime workspace
 
@@ -22,6 +23,7 @@ Command behavior:
 - keep canonical workflow docs authoritative
 - keep Claude helper files secondary to canonical workflow docs and `aim.profile.yaml`
 - keep the main AIM thread as the only owner of `.aim/state.json`, gate progression, and acceptance
+- map repo-awareness verification Epics to `docs/workflow/repo-awareness-calibration.md`
 
 Safe fallback:
 - if command-file routing is unavailable in the current Claude Code environment, use the explicit start prompt:

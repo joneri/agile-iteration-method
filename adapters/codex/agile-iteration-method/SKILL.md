@@ -17,7 +17,7 @@ Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as 
 3. Read `.aim/state.json` first when it exists.
 4. If `.aim/state.json` describes an incomplete Epic, resume that checkpoint instead of starting a new Epic.
 5. Read `aim.profile.yaml` when present as the primary shared repo-awareness source.
-6. Apply compatible Personal AIM hints from `~/.aim/profiles/<repo-fingerprint>/profile.yaml`, or ignored fallback `.aim/profile.yaml`.
+6. Apply compatible Personal AIM hints from `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`.
 7. Use profile facts to choose locality, validation commands, short authoritative docs, risk zones, freshness triggers, and context to avoid before reading broader docs.
 8. Load `docs/workflow/agile-iteration-method.md`, then only the workflow docs required by the current role, gate, command, or risk.
 9. Load Codex-specific packaging only when Codex mechanics matter.
@@ -33,7 +33,7 @@ When a Personal or Team profile is present, report whether it was reused before 
 When profile reuse affects startup or Gate B, include this compact profile-source summary:
 
 ```text
-Profile source: <personal profile path and/or aim.profile.yaml> (profile_ready)
+Profile source: <personal hints path and/or aim.profile.yaml> (<readiness>)
 Layering: <personal narrows team baseline | team profile baseline | personal profile only | no profile source>
 Reused facts: commands, locality, risk zones, short docs, freshness, avoid-by-default context
 Selected locality: <area>
@@ -75,12 +75,18 @@ Treat these as AIM intents when the current adapter supports them or when the us
 - `/aim help`
 - `/aim validate`
 - `/aim config`
+- `/aim calibrate-repo`
+- `/aim remember-repo <category> "<rule>"`
+- `/aim forget-repo <category> "<rule-id>"`
 - `/aim mode strict|auto`
 - `/aim cost standard|control|deep`
 - `Install AIM`
 - `Start working according to AIM`
 
 If a slash command surface is unavailable, perform the equivalent workflow directly and mention the fallback briefly.
+
+`/aim calibrate-repo` uses the canonical cheap-first flow in `docs/workflow/repo-awareness-calibration.md`.
+Remember and forget intents must persist structured rules to `aim.profile.yaml` or the user-level hints file and must never use `.aim/`.
 
 ## Thin Front Door
 

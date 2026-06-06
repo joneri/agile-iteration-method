@@ -30,7 +30,7 @@ Default behavior:
 - no committed AIM files
 - local runtime from the tool or adapter
 - local working state
-- local repo profile at `~/.aim/profiles/<repo-fingerprint>/profile.yaml`
+- local hints at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 - AIM docs read from the installed package or canonical AIM repository
 
 Best for:
@@ -92,7 +92,7 @@ Full embedded AIM remains valid, but it is a footprint choice rather than an ope
 | Layer | Personal AIM | Team AIM | Enterprise AIM |
 | --- | --- | --- | --- |
 | Runtime | tool or local adapter | tool or local adapter | approved local or org adapter |
-| Repo profile | `~/.aim/profiles/<repo-fingerprint>/profile.yaml` | root `aim.profile.yaml` profile or pointer | local/private by default; governed shared profile only by approval |
+| Repo awareness | `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml` | root `aim.profile.yaml` profile or pointer | local/private by default; governed shared profile only by approval |
 | Working state | local or user-chosen | local by default | local/private and ignored by default |
 | Docs | installed package or links | installed package, links, or reviewed shared docs | installed package, canonical links, or approved internal package |
 
@@ -118,19 +118,13 @@ aim start "EPIC: <goal>"
 What the runtime should do:
 
 1. avoid committed AIM files by default
-2. create or reuse `~/.aim/profiles/<repo-fingerprint>/profile.yaml`
+2. create or reuse `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 3. create local working state
 4. scan only the affected area first
 5. load broader docs only when risk requires it
 
-Adapter fallback:
-
-```text
-.aim/profile.yaml
-```
-
-Use the fallback only when the adapter cannot use the user-level profile store.
-It remains local because `.aim/` is ignored.
+There is no `.aim/` fallback because `.aim/` is runtime-only.
+Use session-only hints when the adapter cannot use the user-level profile store.
 
 ### Team start
 
@@ -197,8 +191,8 @@ For Team AIM, profile-first startup means:
 For Personal AIM, profile-first startup means:
 
 - read `.aim/state.json` first when it exists
-- read `~/.aim/profiles/<repo-fingerprint>/profile.yaml` next when it exists
-- fall back to ignored `.aim/profile.yaml` only when user-level storage is unavailable
+- read `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml` next when it exists
+- use session-only hints when user-level persistence is unavailable
 - reuse profile facts across branches after a freshness check
 - keep personal profile facts out of commits
 - layer personal hints over the Team profile only when they do not contradict shared commands, ownership, risk, or policy

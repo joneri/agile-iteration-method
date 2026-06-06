@@ -40,7 +40,7 @@ AIM 2.0 separates repository surfaces by responsibility instead of treating ever
 | `CLAUDE.md` | generic Claude repo instruction surface | repo-owned | repo-specific | external repository policy | not AIM product | never-touch | no | no | never | remove from AIM product; use `.claude/` for optional AIM packaging |
 | `CONTRIBUTING.md` | AIM source maintainer policy | AIM source-repo maintainers | source-repository-only | maintainer reference | never in target packages | excluded/never-touch | no | no | never | keep only in AIM source repo; exclude from all installer manifests and exports |
 | `aim.profile.yaml` | Team AIM repo profile | repo-owned | repo-aware | reusable repo intelligence | shareable tiny Team profile | collision-prone | only by explicit Team AIM choice | merge/update with owner review | never blind overwrite | keep as this repo's Team profile and example |
-| Personal profile `~/.aim/profiles/<repo-fingerprint>/profile.yaml` | Personal AIM profile | local user-owned | repo-aware local | reusable local intelligence | local-only | never-touch by repo installer | no | no | never | document as preferred Personal AIM storage |
+| Personal hints `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml` | Personal AIM hints | local user-owned | repo-aware local | reusable local preferences | local-only | never-touch by repo installer | no | no | never | keep outside the repository |
 | `.aim/` | AIM runtime workspace | runtime-owned | local | runtime/working state | local-only | never-touch as product | runtime may create on start | runtime may mutate active state | installer must never overwrite | keep ignored; never ship as product |
 | `.github/agents/` | Copilot-native AIM agents | AIM-owned with repo impact | adapter-specific | reusable adapter policy | optional adapter package | opt-in with collision checks | yes if selected and absent | replace only AIM-owned files after diff review | never overwrite unrelated files | keep optional; installer must target known AIM files only |
 | `.github/prompts/` | Copilot prompt helpers | AIM-owned optional helpers | repo-aware adapter layer | reusable prompts | optional ship | opt-in with collision checks | yes if Copilot prompts selected | update known AIM prompt files after review | never overwrite unrelated prompts | keep optional |
@@ -113,7 +113,7 @@ For `.gitignore`, installers should suggest the `/.aim` fragment instead of repl
 Local-only:
 
 - `.aim/`
-- Personal AIM profile storage under `~/.aim/profiles/`
+- Personal AIM hint storage under `~/.aim/repo-awareness/`
 - adapter-local caches
 - generated OS files such as `.DS_Store`
 
@@ -166,8 +166,8 @@ Team AIM:
 
 Personal AIM:
 
-- should store reusable local profile facts at `~/.aim/profiles/<repo-fingerprint>/profile.yaml`
-- may use ignored `.aim/profile.yaml` only as an adapter fallback
+- should store reusable local hints at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
+- must never store stable repo-awareness under `.aim/`
 - must not require repository mutation
 
 Runtime state:

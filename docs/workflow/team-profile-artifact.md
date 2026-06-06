@@ -211,7 +211,7 @@ The tiny profile also must not claim ownership of:
   - cheaper startup for future AIM runs
   - clearer locality-first scans
   - safer profile reuse across branches and sessions
-  - validator readiness status of `profile_ready` when the profile is structurally useful and separate from working state
+  - validator readiness status of `ready` only when required knowledge is verified and separate from working state
 
 ## Key decisions
 

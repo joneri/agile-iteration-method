@@ -61,14 +61,10 @@ It lives at the repository root and may either contain the small shared profile 
 For Personal AIM, the default local artifact is outside the repository:
 
 ```text
-~/.aim/profiles/<repo-fingerprint>/profile.yaml
+~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
 ```
 
-The ignored repo-local fallback is:
-
-```text
-.aim/profile.yaml
-```
+There is no `.aim/` profile fallback.
 
 The smallest useful profile should capture:
 
@@ -187,7 +183,7 @@ aimRepoProfile:
 Default storage:
 
 - runtime: installed tool or local adapter
-- repo profile: `~/.aim/profiles/<repo-fingerprint>/profile.yaml`
+- personal hints: `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 - working state: local and ignored
 - docs: AIM distribution or links
 
@@ -197,7 +193,7 @@ Repository mutation:
 
 Fallback storage:
 
-- `.aim/profile.yaml` only when the adapter cannot use the user-level profile store
+- session-only hints when the adapter cannot use the user-level store
 - fallback remains ignored by the repository-level `/.aim` rule
 
 Use this when:
@@ -327,19 +323,18 @@ Reusable repo intelligence must be safe enough to trust.
 
 Before AIM treats a profile as reusable, the validator should report repo-profile readiness.
 
-Repo-profile readiness has four states:
+Repo-awareness readiness has three states:
 
-- `not_ready`: no AIM 2.0 profile artifact exists yet; repo-awareness must be discovered from current repository evidence until a Personal or Team profile is available.
-- `incomplete_profile`: a profile file exists, but it does not yet contain recognizable repo intelligence such as commands, locality, ownership, risk, freshness, or cost fields.
-- `repair_profile`: a profile file exists, but it appears to contain active AIM working state and must be repaired before reuse.
-- `profile_ready`: a profile file exists, contains repo-intelligence markers, and does not contain active working-state markers.
+- `needs_calibration`: no trustworthy reusable shared profile exists or required knowledge is missing.
+- `partially_ready`: useful knowledge exists, but non-blocking uncertainty remains.
+- `ready`: required knowledge is verified and no blocking uncertainty remains.
 
 AIM may reuse a profile when:
 
 - profile ownership is clear
 - the profile applies to the current repo identity
 - branch or base commit differences are understood
-- the validator reports `profile_ready`
+- the validator reports `ready`
 - no refresh trigger has fired
 - the active work is inside a known locality boundary
 - the selected cost profile allows profile reuse
@@ -424,14 +419,14 @@ At Gate E, AIM should be able to report:
 - Default working state: local and ignored.
 - Default discovery: locality-first.
 - Default cost reporting: short startup or Gate B summary.
-- Fallback if no profile exists: report `not_ready`, then create a minimal local profile from directly affected files and nearest commands when profile reuse is needed.
-- Fallback if a profile is incomplete: report `incomplete_profile` and add the smallest missing repo-intelligence sections before relying on reuse.
-- Fallback if a profile contains active state: report `repair_profile` and move active Epic, gate, role, review, or acceptance state back to `.aim` working-state artifacts.
+- If no profile exists, report `needs_calibration` and run the cheap-first calibration flow.
+- If useful facts exist with uncertainty, report `partially_ready`.
+- If a profile contains active state, block reuse and move active Epic, gate, role, review, or acceptance state back to `.aim`.
 - Fallback if profile is stale: refresh the smallest affected locality.
 - Fallback if policy conflicts: stop and escalate before continuing.
 - Fallback if a team wants sharing: export or commit only the tiny profile surface, not full AIM docs.
 - Team AIM artifact: use root `aim.profile.yaml` unless Enterprise policy explicitly chooses another approved pointer path.
-- Personal AIM artifact: use `~/.aim/profiles/<repo-fingerprint>/profile.yaml`; use `.aim/profile.yaml` only as an ignored adapter fallback.
+- Personal AIM artifact: use `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`; never use `.aim/`.
 - Enterprise AIM artifact: prefer local/private storage and Enterprise ignore defaults; shared repo-awareness requires explicit approval.
 
 ## Edge cases

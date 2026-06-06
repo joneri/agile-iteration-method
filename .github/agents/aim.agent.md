@@ -58,7 +58,7 @@ Kickoff contract:
 Repository-aware loading order:
 1. resume checkpoint from `.aim/state.json` when present
 2. root `aim.profile.yaml` when present, used as the primary shared repo-awareness baseline
-3. compatible Personal AIM hints from `~/.aim/profiles/<repo-fingerprint>/profile.yaml` or ignored fallback `.aim/profile.yaml`
+3. compatible Personal AIM hints from `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 4. directly affected repository evidence
 5. canonical workflow docs needed for the current role, gate, command, or risk
 6. active Copilot agent or prompt policy only when Copilot mechanics matter
@@ -84,10 +84,16 @@ If instructions conflict, escalate.
 - `/aim help` - show the thin front door: start, continue, validate, and the next command
 - `/aim validate` - run or explain AIM runtime integrity checks
 - `/aim config` - show effective runtime configuration and key repo-aware policy
+- `/aim calibrate-repo` - cheaply inspect, verify, and persist repository knowledge
+- `/aim remember-repo <category> "<rule>"` - persist a structured shared or personal repository rule
+- `/aim forget-repo <category> "<rule-id>"` - remove a structured repository rule
 - `/aim replan` - return to Gate B planning
 - `/aim commit-mode optional|required` - set commit policy
 - `/aim mode strict|auto` - set execution mode for current Epic
 - `/aim cost standard|control|deep` - set runtime depth for the current Epic or increment
+
+Calibration, remember, and forget behavior must follow `docs/workflow/repo-awareness-calibration.md`.
+Stable repository knowledge must never be stored under `.aim/`.
 
 ## Core constraints
 

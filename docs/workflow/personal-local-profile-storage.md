@@ -20,20 +20,14 @@ The repository does not need a committed AIM profile, docs package, adapter file
 Default local profile location:
 
 ```text
-~/.aim/profiles/<repo-fingerprint>/profile.yaml
+~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
 ```
 
 `<repo-fingerprint>` should be derived from the repository remote URL when available.
 If no remote is available, use a stable hash of the absolute repository root path.
 
-Adapter fallback location:
-
-```text
-.aim/profile.yaml
-```
-
-The fallback is repo-local but ignored by default.
-Use it only when the adapter cannot use a user-level AIM profile store.
+There is no repo-local fallback.
+If user-level storage is unavailable, use session-only hints and report that they will not persist.
 
 ## What stays local
 
@@ -88,8 +82,8 @@ It should trigger a freshness check, then reuse or partially refresh the profile
 When both a personal local profile and root `aim.profile.yaml` exist, AIM should layer them this way:
 
 1. `.aim/state.json` for active runtime state
-2. personal local profile for the developer's local reuse hints
-3. root `aim.profile.yaml` for shared team repo intelligence
+2. root `aim.profile.yaml` for shared team repo intelligence
+3. personal local hints for compatible developer preferences
 4. directly affected files and nearest metadata
 5. broader docs only when risk or missing evidence requires them
 
@@ -104,8 +98,8 @@ If personal and team profiles conflict on commands, ownership, risk, or policy, 
 Personal AIM avoids leaking into commits by default:
 
 - the primary profile path is outside the repository
-- the fallback `.aim/profile.yaml` path is covered by the existing `/.aim` ignore rule
-- personal summaries and refresh notes stay in ignored/local working state
+- personal hints remain outside the repository
+- calibration summaries are regenerated from the profiles rather than persisted as stable `.aim` knowledge
 - a team must explicitly export or copy a tiny profile to root `aim.profile.yaml` to share it
 
 Exporting from Personal AIM to Team AIM should be an intentional action, not an automatic side effect.
@@ -115,7 +109,7 @@ Exporting from Personal AIM to Team AIM should be an intentional action, not an 
 When a personal profile is reused, the startup or Gate B summary should say so:
 
 ```text
-Profile source: ~/.aim/profiles/<repo-fingerprint>/profile.yaml (personal, profile_ready)
+Profile source: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml (personal hints)
 Reused facts: commands, locality, freshness, avoid-by-default context
 Selected locality: <area>
 Avoided context: <docs/scans avoided>
@@ -129,7 +123,7 @@ When both personal and team profiles are used, name both sources and state wheth
 
 - Personal AIM defaults to zero committed files.
 - The user-level profile store is preferred over repo-local storage.
-- `.aim/profile.yaml` is a fallback only, not the primary Personal AIM model.
+- `.aim/` is runtime-only and may never store persistent Personal hints.
 - Team AIM remains the intentional sharing path.
 - Profile reuse is allowed across branches, but freshness checks decide whether partial refresh is needed.
 
@@ -148,7 +142,7 @@ The best check is whether AIM can answer:
 
 What "good" looks like:
 
-- profile source is outside the repo or under ignored `.aim/`
+- profile source is outside the repository
 - branch freshness is checked
 - Team profile conflicts are reported
 - no active state appears in profile storage

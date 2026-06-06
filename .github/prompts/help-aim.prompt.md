@@ -26,4 +26,9 @@ Explain:
 
 Keep the answer compact. Do not explain adapter layers, gate theory, or the full method unless I ask for deeper help.
 
+Include repo-awareness commands when relevant:
+- `/aim calibrate-repo`
+- `/aim remember-repo <category> "<rule>"`
+- `/aim forget-repo <category> "<rule-id>"`
+
 If no active Epic exists, end by telling me the exact next start command to run.

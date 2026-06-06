@@ -33,11 +33,12 @@ It must not contain AIM core behavior, active Epic state, gate state, review sta
 Personal AIM may use:
 
 ```text
-~/.aim/profiles/<repo-fingerprint>/profile.yaml
+~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
 ```
 
 This is an optional local reuse layer.
 It may narrow startup or remember local preferences, but it does not replace or override a shared `aim.profile.yaml`.
+Stable repo-awareness must never use a path under `.aim/`.
 
 When both exist:
 
@@ -121,11 +122,25 @@ Do not preload the full workflow family.
 - Missing adapter helper: use explicit AIM intent when the host permits it.
 - Adapter helper contradicts canonical workflow docs: stop and escalate.
 
+## Calibration and memory
+
+Use `/aim calibrate-repo` to bootstrap or refine repository knowledge through the canonical cheap-first flow.
+An ordinary AIM Epic whose goal is to verify and refine repo-awareness follows the same contract and produces the same profile shape.
+
+Use:
+
+- `/aim remember-repo <category> "<rule>"`
+- `/aim forget-repo <category> "<rule-id>"`
+
+for persistent structured updates.
+See `docs/workflow/repo-awareness-calibration.md` for readiness, confidence, categories, document loading, installer bootstrap, and summary behavior.
+
 ## Related files
 
 - `docs/workflow/agile-iteration-method.md`
 - `docs/workflow/repo-profile-and-footprint-model.md`
 - `docs/workflow/personal-local-profile-storage.md`
+- `docs/workflow/repo-awareness-calibration.md`
 - `docs/workflow/aim-adapter-guidance.md`
 - `aim.profile.yaml`
 - `scripts/validate_aim_runtime.py`

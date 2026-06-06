@@ -160,6 +160,27 @@ Copy the whole directory, not just `SKILL.md`.
 
 No adapter requires a generic root instruction file.
 
+## Repo-awareness bootstrap
+
+Installation and calibration are two stages of one model.
+
+The installer may:
+
+- create a schema-valid `aim.profile.yaml` from cheap, obvious repository evidence
+- declare `needs_calibration` when required knowledge is absent
+- declare `partially_ready` when useful facts exist with unresolved uncertainty
+- point Personal hints to `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
+
+The installer must not claim `ready`.
+Run `/aim calibrate-repo`, or start an AIM Epic to verify and refine repo-awareness, to confirm facts and promote readiness.
+
+After installation, report:
+
+- repo-awareness readiness
+- bootstrap evidence used
+- unresolved uncertainties
+- the `/aim calibrate-repo` next action when readiness is not `ready`
+
 ## First-run checks
 
 After setup, a user should be able to:
@@ -171,6 +192,8 @@ After setup, a user should be able to:
 - validate runtime state with `/aim validate`
 - read help with `/aim help`
 - select runtime depth with `/aim cost standard|control|deep`
+- calibrate repository knowledge with `/aim calibrate-repo`
+- remember and forget structured repository rules
 
 ## If setup is incomplete
 

@@ -6,8 +6,8 @@ Start AIM 2.0 in this repository.
 
 Before reading major docs, check `.aim/state.json`.
 If an incomplete Epic exists, resume that checkpoint instead of rebuilding context or starting over.
-If a Personal AIM local profile exists, read it next.
-If `aim.profile.yaml` exists, read it after the personal profile as the Team AIM shared baseline.
+If `aim.profile.yaml` exists, read it next as the shared baseline.
+If Personal AIM hints exist at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`, apply compatible hints after the shared profile.
 Use profile facts to choose locality, commands, short authoritative docs, risk zones, freshness triggers, and context to avoid before broader docs.
 
 If no Epic is provided yet:

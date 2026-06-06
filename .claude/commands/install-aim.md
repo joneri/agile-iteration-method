@@ -13,3 +13,6 @@ Installation checklist:
 - explain how to start AIM with the shipped Claude starter command or the explicit `EPIC: ...` fallback
 - explain that `Cost profile: Cost Control` is available for low-risk work and `Cost profile: Deep` for high-risk work
 - explain that `.aim/` will be created automatically on first valid start if missing
+- report repo-awareness as `ready`, `partially_ready`, or `needs_calibration`
+- direct incomplete setups to the shipped `calibrate-repo` command
+- keep Personal hints at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`

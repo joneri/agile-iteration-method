@@ -33,5 +33,15 @@ aimInstallManifest:
       destination: .claude/
       optional: true
 
+  repoAwarenessBootstrap:
+    sharedProfile: aim.profile.yaml
+    personalHints: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
+    initialStatus:
+      - needs_calibration
+      - partially_ready
+    readyRequiresCalibration: true
+    calibrationCommand: /aim calibrate-repo
+    runtimeProfileStorage: forbidden
+
   runtimeExclusions:
     - .aim/

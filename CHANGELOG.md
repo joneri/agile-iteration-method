@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-06-06 - AIM 2.0 repo-awareness calibration
+- Added the canonical cheap-first `/aim calibrate-repo` flow and equivalent AIM Epic path.
+- Added structured shared repository knowledge, readiness, confidence, evidence, document-loading, remember, and forget behavior.
+- Moved persistent Personal hints to `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml` and prohibited stable repo-awareness under `.aim/`.
+- Added native Codex, Copilot, and Claude calibration entrypoints plus installer bootstrap readiness.
+- Extended validation with schema categories, stable IDs, loading states, runtime separation, adapter parity, and a human-visible calibration summary.
+
 ## 2026-06-06 - AIM 2.0 root-file independence
 - Removed AIM-owned `AGENTS.md` and `CLAUDE.md` from the product surface.
 - Made `aim.profile.yaml` the primary shared repo-awareness source and added the canonical progressive-loading model.

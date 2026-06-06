@@ -14,6 +14,9 @@ Core constraints:
 - preserve `.aim/state.json` as the authoritative runtime checkpoint
 - do not redefine gates, ownership, or acceptance semantics
 - load other workflow docs only when their behavior area is relevant
+- use `docs/workflow/repo-awareness-calibration.md` for calibrate, remember, and forget intents
+- store Personal hints only at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
+- never store stable repo-awareness under `.aim/`
 
 Boundaries:
 - this helper may assist with bounded analysis, discovery, verification, or option generation

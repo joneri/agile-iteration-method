@@ -31,7 +31,7 @@ The summary should help the user understand:
 Use this compact shape by default:
 
 ```text
-Profile source: team: aim.profile.yaml (profile_ready)
+Profile source: team: aim.profile.yaml (ready)
 Layering: team profile baseline
 Reused facts: commands, locality, risk zones, short docs, freshness, avoid-by-default context
 Selected locality: <directly affected area or nearest known area>
@@ -51,7 +51,7 @@ Profile source: aim.profile.yaml reused; locality=<area>; avoided=<broad scan/do
 AIM builds the summary from:
 
 - `.aim/state.json`
-- Personal AIM profile source, when available
+- Personal AIM hints at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`, when available
 - `aim.profile.yaml`
 - directly affected files or user-provided scope
 - validator readiness when available
@@ -95,7 +95,7 @@ It recognizes profile sections and markers without requiring a full YAML parser.
 
 ## Edge cases
 
-- If no profile exists, report `Profile source: none` and continue with locality-first discovery.
+- If no profile exists, report `Profile source: none`, readiness `needs_calibration`, and continue with locality-first discovery.
 - If both Personal and Team profiles exist, report both and explain the layering.
 - If the profile is stale, report the freshness reason and refresh the smallest affected area.
 - If the work crosses risk or ownership boundaries, report that as the expansion reason.
@@ -132,7 +132,7 @@ What "good" looks like:
 
 What "bad" looks like:
 
-- AIM silently rereads broad docs after a profile-ready startup
+- AIM silently rereads broad docs after a `ready` startup
 - AIM expands without saying why
 - the summary becomes a long planning document
 - profile facts are treated as gate or acceptance authority
@@ -140,7 +140,7 @@ What "bad" looks like:
 ## Related files
 
 - `aim.profile.yaml`
-- `aim.profile.yaml`
+- `docs/workflow/repo-awareness-calibration.md`
 - `adapters/codex/agile-iteration-method/SKILL.md`
 - `scripts/validate_aim_runtime.py`
 - `docs/workflow/repo-profile-and-footprint-model.md`

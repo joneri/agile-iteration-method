@@ -90,13 +90,7 @@ Adapters that can read files should support both Personal and Team profile sourc
 Personal AIM default:
 
 ```text
-~/.aim/profiles/<repo-fingerprint>/profile.yaml
-```
-
-Personal AIM adapter fallback:
-
-```text
-.aim/profile.yaml
+~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
 ```
 
 Team AIM default:
@@ -105,7 +99,7 @@ Team AIM default:
 aim.profile.yaml
 ```
 
-On `/aim start`, `/aim continue`, `/aim status`, `/aim validate`, or equivalent adapter entrypoints:
+On `/aim start`, `/aim continue`, `/aim status`, `/aim validate`, `/aim calibrate-repo`, or equivalent adapter entrypoints:
 
 1. read `.aim/state.json` first when it exists
 2. read root `aim.profile.yaml` as the shared repo-awareness baseline when it exists
@@ -114,6 +108,8 @@ On `/aim start`, `/aim continue`, `/aim status`, `/aim validate`, or equivalent 
 5. run or report validator readiness when available
 6. read broader AIM docs, adapter docs, or repo-wide context only when the current state, risk, missing evidence, or user request requires it
 
+Calibration, remember, and forget commands use `docs/workflow/repo-awareness-calibration.md`.
+
 When Personal and Team profiles both exist, the Team profile is the shared baseline.
 Personal profile facts may narrow local startup, but must not silently contradict shared commands, ownership, risk, or policy.
 
@@ -121,7 +117,7 @@ The visible startup or Gate B summary should state whether the profile was reuse
 Use this compact shape when profile reuse affects context selection:
 
 ```text
-Profile source: <personal profile path and/or aim.profile.yaml> (profile_ready)
+Profile source: <personal hints path and/or aim.profile.yaml> (<readiness>)
 Layering: <personal narrows team baseline | team profile baseline | personal profile only | no profile source>
 Reused facts: commands, locality, risk zones, short docs, freshness, avoid-by-default context
 Selected locality: <area>

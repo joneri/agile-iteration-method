@@ -216,7 +216,7 @@ If the profile conflicts with current repository evidence, AIM treats it as stal
 At startup or Gate B, AIM should show a compact profile-source summary when profile reuse affects context selection:
 
 ```text
-Profile source: aim.profile.yaml (profile_ready)
+Profile source: aim.profile.yaml (ready)
 Reused facts: commands, locality, risk zones, short docs, freshness, avoid-by-default context
 Selected locality: <directly affected area or nearest known area>
 Avoided context: <broad docs, adapter docs, repo-wide scan, or none>
@@ -1123,6 +1123,7 @@ Start with this core document, active `.aim` state, and `aim.profile.yaml`.
 Load deeper documents only when their area becomes relevant:
 
 - repo-awareness or adapter loading: `docs/workflow/repo-awareness.md`
+- calibration, persistent memory, remember, or forget: `docs/workflow/repo-awareness-calibration.md`
 - operating modes: `docs/workflow/operating-modes.md`
 - installation or file ownership: `docs/workflow/install-aim-2.0.md` and `docs/workflow/repository-surface-classification.md`
 - cost behavior: `docs/workflow/cost-control-mode.md`

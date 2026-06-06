@@ -1,5 +1,11 @@
 aimRepoProfile:
-  profileVersion: "0.1"
+  profileVersion: "0.2"
+  calibration:
+    status: ready
+    source: verified-chat-calibration
+    verifiedAt: "2026-06-06"
+    confidence: high
+    openUncertainties: []
   repoIdentity:
     name: agile-iteration-method
     defaultBranch: main
@@ -13,6 +19,7 @@ aimRepoProfile:
   storage:
     runtimeLocation: adapter-or-local-tool
     profileLocation: aim.profile.yaml
+    personalHintsLocation: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
     workingStateLocation: .aim/
     docsSource: docs/workflow/ and docs/features/
 
@@ -40,6 +47,85 @@ aimRepoProfile:
     validate: python3 scripts/validate_aim_runtime.py .
     pythonSyntax: python3 -m py_compile scripts/validate_aim_runtime.py
     diffWhitespace: git diff --check
+
+  repoKnowledge:
+    technologies:
+      - id: docs-and-python-tooling
+        value: Markdown documentation with Python validation tooling
+        confidence: high
+        source: repository-structure
+        verified: true
+    commands:
+      - id: validate-repository
+        command: python3 scripts/validate_aim_runtime.py .
+        purpose: Run the cheapest canonical integrity check first.
+        confidence: high
+        source: repository-maintainer-confirmation
+        verified: true
+    validation:
+      - id: runtime-validator
+        command: python3 scripts/validate_aim_runtime.py .
+        locality: repository-root
+        confidence: high
+        source: scripts/validate_aim_runtime.py
+        verified: true
+      - id: python-syntax
+        command: python3 -m py_compile scripts/validate_aim_runtime.py
+        locality: scripts/
+        confidence: high
+        source: repository-maintainer-confirmation
+        verified: true
+    uiTesting:
+      - id: no-default-ui-runtime
+        rule: Use browser or Playwright checks only when work introduces or changes a rendered UI surface.
+        confidence: medium
+        source: repository-structure
+        verified: true
+    docs:
+      - id: aim-core
+        path: docs/workflow/agile-iteration-method.md
+        loading: authoritative
+        when: AIM core semantics are required
+      - id: repo-awareness
+        path: docs/workflow/repo-awareness.md
+        loading: authoritative
+        when: repo-awareness or loading policy is involved
+      - id: calibration
+        path: docs/workflow/repo-awareness-calibration.md
+        loading: load_when_relevant
+        when: calibrating, remembering, forgetting, or validating repository knowledge
+      - id: adapter-guidance
+        path: docs/workflow/aim-adapter-guidance.md
+        loading: load_when_relevant
+        when: active adapter mechanics are involved
+      - id: vendor-baseline
+        path: docs/features/aim-vendor-cost-baseline-june-2026.md
+        loading: avoid_by_default
+        when: current vendor pricing evidence is explicitly needed
+    localities:
+      - id: canonical-behavior
+        path: docs/workflow/
+      - id: adapter-packages
+        path: adapters/
+      - id: runtime-validator
+        path: scripts/
+    riskZones:
+      - id: core-contract
+        path: docs/workflow/agile-iteration-method.md
+        reason: Changes may alter AIM core semantics.
+      - id: validator
+        path: scripts/validate_aim_runtime.py
+        reason: Changes affect executable safety enforcement.
+    habits:
+      - id: validate-before-gate-e
+        rule: Run the AIM validator and git diff --check before Gate E.
+        scope: shared
+    avoidByDefault:
+      - id: broad-doc-scan
+        rule: Do not scan all workflow or adapter docs without a risk, evidence, or command reason.
+    freshness:
+      - id: core-or-validator-change
+        trigger: Recalibrate affected facts when core workflow, repo-awareness, adapter entrypoints, or validator behavior changes.
 
   conventions:
     docs: short-feature-docs-for-new-behavior

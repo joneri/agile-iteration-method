@@ -76,7 +76,7 @@ It is a stricter safety mode that protects the repository from accidental AIM fo
 | Product output: code, config, tests, product docs | may commit | should commit when part of work | should commit when part of work |
 | `.aim/` runtime state | may keep local or commit | local by default; shared only by team choice | ignored by default; do not commit unless explicitly approved |
 | `aim.profile.yaml` | optional | default shared repo-awareness surface | only by explicit repo-owner approval |
-| Personal profile under `~/.aim/profiles/` | allowed | allowed as local hint | allowed as local/private hint |
+| Personal hints under `~/.aim/repo-awareness/` | allowed | allowed as local hint | allowed as local/private hint |
 | Feature docs that help AIM | may keep or commit | may share by agreement | local/private by default unless explicitly approved |
 | Generic root instruction files such as `AGENTS.md` and `CLAUDE.md` | outside AIM architecture | outside AIM architecture | outside AIM architecture |
 | AIM-generated markdown/process artifacts | may keep or commit | commit only if team wants audit/shared process | ignored by default unless explicitly promoted |

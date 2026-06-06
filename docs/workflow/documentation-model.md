@@ -43,6 +43,7 @@ It separates:
 | Install behavior | `docs/workflow/install-aim-2.0.md`, constrained by the canonical mode and surface models |
 | Runtime validation behavior | `scripts/validate_aim_runtime.py` |
 | Repo profile and footprint behavior | `docs/workflow/repo-profile-and-footprint-model.md` |
+| Repo-awareness calibration and persistent memory | `docs/workflow/repo-awareness-calibration.md` |
 | Working-state boundaries | `docs/workflow/working-state-boundaries.md` |
 | Personal profile storage | `docs/workflow/personal-local-profile-storage.md` |
 | Profile-source reporting | `docs/workflow/profile-source-summary.md` |
