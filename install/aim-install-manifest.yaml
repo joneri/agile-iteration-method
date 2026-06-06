@@ -1,6 +1,6 @@
 aimInstallManifest:
   manifestVersion: "0.2"
-  status: engine-dry-run
+  status: guided-first
 
   canonicalCommand: "python3 scripts/aim_install.py"
 

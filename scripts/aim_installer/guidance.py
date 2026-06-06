@@ -58,8 +58,8 @@ def build_guidance(plan: dict[str, Any]) -> dict[str, Any]:
     elif state == "drifted":
         steps.append(
             "Some installed files differ from the AIM source (see stalePackages / "
-            "collisions). Refresh with --apply --force (backups are kept), or keep "
-            "your local edits by leaving them as-is."
+            "collisions). Refresh with --apply --force (rollback-protected), or "
+            "keep your local edits by leaving them as-is."
         )
     else:  # up-to-date
         steps.append("Install is current; no apply needed.")

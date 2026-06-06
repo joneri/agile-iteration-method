@@ -357,15 +357,14 @@ Cost profile: Standard
 
 If someone wants the shortest path, this is it:
 
-1. Make canonical AIM workflow docs available through the selected product footprint.
-2. Add root `aim.profile.yaml` only when shared repo-awareness is wanted.
-3. Add `/.aim` to `.gitignore`.
-4. For Codex `/aim`, copy `adapters/codex/agile-iteration-method/` into `~/.codex/skills/agile-iteration-method/`.
-5. For Copilot, install the selected `.github/agents/` files and optional `.github/prompts/`.
-6. For Claude Code, install selected `.claude/` helpers.
-7. Open the repo in Codex, Copilot or Claude Code.
-8. Start with `/aim start "EPIC: <desired outcome>"`.
-9. If slash commands are unavailable, start with `EPIC: <desired outcome>`, `Mode: Strict`, and `Cost profile: Cost Control`.
+1. Run `python3 scripts/aim_install.py` and follow the guided prompt.
+2. Review the compact preview, then rerun with `--apply`.
+3. Open the repo in Codex, Copilot or Claude Code.
+4. Start with `/aim start "EPIC: <desired outcome>"`.
+5. If slash commands are unavailable, start with `EPIC: <desired outcome>`, `Mode: Strict`, and `Cost profile: Cost Control`.
+
+Flags prefill the installer and are not asked again.
+Use `--verbose` for the complete plan or `--format json --non-interactive` for automation.
 
 ## Why AIM Feels Different
 

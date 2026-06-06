@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""AIM 2.0 installer — canonical entrypoint.
+"""AIM 2.0 guided-first installer entrypoint.
 
-Computes a manifest-driven install plan and renders it as human-readable text
-and/or machine-readable JSON. ``--dry-run`` (the default) previews without writing.
-``--apply`` writes the plan with reviewed apply, rollback on failure, and idempotent
-re-runs; ``--force`` overwrites drifted/colliding files after backing them up.
+Collects missing required input in an interactive terminal, computes a
+manifest-driven plan, and renders a compact summary by default. ``--verbose`` and
+JSON preserve advanced plan inspection. ``--dry-run`` previews without writing;
+``--apply`` uses explicit collision decisions, rollback, and idempotent re-runs.
 
 Examples:
     python3 scripts/aim_install.py --target /path/to/repo --mode team --adapter copilot
@@ -22,7 +22,7 @@ from pathlib import Path
 # Allow importing the installer package when run as a standalone script.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from aim_installer import apply, planner, render  # noqa: E402
+from aim_installer import apply, guided, planner, render  # noqa: E402
 from aim_installer.manifest import ManifestError, load_manifest  # noqa: E402
 from aim_installer.validator import run_validator  # noqa: E402
 
@@ -67,6 +67,24 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         help="Output format for the plan on stdout.",
     )
     parser.add_argument(
+        "--verbose",
+        "--raw",
+        action="store_true",
+        dest="verbose",
+        help="Show every planned file action and detailed guidance.",
+    )
+    parser.add_argument(
+        "--color",
+        choices=("auto", "always", "never"),
+        default="auto",
+        help="Colorize guided text output (default: auto).",
+    )
+    parser.add_argument(
+        "--non-interactive",
+        action="store_true",
+        help="Never prompt; missing input or unresolved collisions fail clearly.",
+    )
+    parser.add_argument(
         "--plan-out",
         help="Write the machine-readable JSON plan to this path.",
     )
@@ -104,16 +122,30 @@ def _normalize_adapters(raw: list[str] | None) -> list[str]:
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(sys.argv[1:] if argv is None else argv)
 
-    if not args.target:
-        print("error: --target is required.", file=sys.stderr)
-        return EXIT_USAGE
-
     source_root = (
         Path(args.source).resolve()
         if args.source
         else Path(__file__).resolve().parent.parent
     )
-    target_root = Path(args.target).resolve()
+    interactive = (
+        not args.non_interactive
+        and args.format == "text"
+        and guided.is_interactive()
+    )
+    if args.target:
+        target_root = Path(args.target).expanduser().resolve()
+    elif interactive:
+        try:
+            target_root = guided.prompt_target(source_root=source_root)
+        except (EOFError, KeyboardInterrupt):
+            print("\ninstallation cancelled.", file=sys.stderr)
+            return EXIT_USAGE
+    else:
+        print(
+            "error: --target is required in non-interactive or JSON mode.",
+            file=sys.stderr,
+        )
+        return EXIT_USAGE
 
     try:
         manifest = load_manifest(source_root)
@@ -176,9 +208,27 @@ def main(argv: list[str] | None = None) -> int:
     if args.format == "json":
         print(render.render_json(plan))
     else:
-        print(render.render_text(plan))
+        print(
+            render.render_text(
+                plan,
+                verbose=args.verbose,
+                color=guided.use_color(args.color),
+            )
+        )
 
     if args.apply:
+        collision_decisions: dict[str, str] | None = None
+        collisions = [
+            action
+            for action in plan["actions"]
+            if action["classification"] == "collision"
+        ]
+        if collisions and not args.force and interactive:
+            try:
+                collision_decisions = guided.resolve_collisions(collisions)
+            except (EOFError, KeyboardInterrupt):
+                print("\ninstallation cancelled; no files were written.", file=sys.stderr)
+                return EXIT_BLOCKED
         try:
             result = apply.apply_plan(
                 plan=plan,
@@ -186,6 +236,7 @@ def main(argv: list[str] | None = None) -> int:
                 target_root=target_root,
                 manifest=manifest,
                 force=args.force,
+                collision_decisions=collision_decisions,
             )
         except apply.ApplyRefused as exc:
             print(f"apply refused: {exc}", file=sys.stderr)
@@ -195,7 +246,7 @@ def main(argv: list[str] | None = None) -> int:
             return EXIT_FAILED
         print(
             f"apply complete: wrote {result['writtenCount']} file(s), "
-            f"{result['untouchedCount']} already up to date.",
+            f"{result['untouchedCount']} kept or already up to date.",
             file=sys.stderr,
         )
         return EXIT_OK

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-06-06 - AIM 2.0 guided-first installer
+- Added an interactive target prompt when required input is missing in a terminal.
+- Replaced the default raw action dump with a compact plan summary and optional terminal color.
+- Added file-by-file keep, overwrite, or abort decisions for apply collisions.
+- Preserved detailed `--verbose`/`--raw`, JSON, plan-file, force, and non-interactive workflows.
+- Added focused installer tests for prompting, rendering, collision safety, and automation behavior.
+
 ## 2026-06-06 - AIM 2.0 two-layer repo-awareness
 - Split persistent repo-awareness into a compressed `aim.profile.yaml` layer and load-on-demand AIM-owned operational docs.
 - Added structured operational-doc pointers with work, role/gate, risk, command, and calibration triggers.

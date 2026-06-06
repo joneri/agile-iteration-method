@@ -3,6 +3,32 @@
 
 # Install AIM 2.0
 
+## Guided installer
+
+Run:
+
+```bash
+python3 scripts/aim_install.py
+```
+
+In a terminal, the installer asks only for required information that was not supplied by flags.
+Press Enter to accept a displayed default.
+Flags such as `--target`, `--mode`, and `--adapter` are used directly and are not asked again.
+
+The default text view is compact: it shows the target, selected mode and adapters, action counts, blockers, and files that need a decision.
+Use `--verbose` (or `--raw`) for the complete file-by-file plan and `--format json` for machine-readable output.
+JSON and `--non-interactive` runs never prompt.
+
+Applying remains explicit:
+
+```bash
+python3 scripts/aim_install.py --target /path/to/repo --apply
+```
+
+In an interactive terminal, each collision asks whether to keep the existing file, overwrite it with backup protection, or abort.
+For automation, unresolved collisions fail; `--force` remains the explicit non-interactive overwrite mechanism.
+Color is automatic on supported terminals and can be controlled with `--color always|never`.
+
 Use this guide when repository setup is still missing and you want a current AIM 2.0 installation path.
 
 This guide is about repository setup.

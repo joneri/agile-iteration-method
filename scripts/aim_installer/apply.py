@@ -114,6 +114,7 @@ def apply_plan(
     target_root: Path,
     manifest: Manifest,
     force: bool,
+    collision_decisions: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Apply the plan to the target repo with rollback on failure."""
 
@@ -124,12 +125,18 @@ def apply_plan(
         )
 
     collisions = [a for a in plan["actions"] if a["classification"] == "collision"]
+    collision_decisions = collision_decisions or {}
     if collisions and not force:
-        names = ", ".join(a["destination"] for a in collisions)
-        raise ApplyRefused(
-            "refusing to overwrite existing files (reviewed apply). "
-            f"Collisions: {names}. Re-run with --force to overwrite (backups kept)."
-        )
+        missing = [
+            a["destination"]
+            for a in collisions
+            if collision_decisions.get(a["destination"]) not in ("keep", "overwrite")
+        ]
+        if missing:
+            raise ApplyRefused(
+                "collisions require explicit keep/overwrite decisions: "
+                + ", ".join(missing)
+            )
 
     journal = _Journal()
     applied: list[dict[str, str]] = []
@@ -141,6 +148,13 @@ def apply_plan(
         for action in plan["actions"]:
             if action["classification"] == "untouched":
                 applied.append({"destination": action["destination"], "result": "untouched"})
+                continue
+            if (
+                action["classification"] == "collision"
+                and not force
+                and collision_decisions[action["destination"]] == "keep"
+            ):
+                applied.append({"destination": action["destination"], "result": "kept"})
                 continue
             if action.get("scope") == "home":
                 dest = Path(action["destination"])
@@ -162,6 +176,11 @@ def apply_plan(
     return {
         "operation": "apply",
         "applied": applied,
-        "writtenCount": sum(1 for a in applied if a["result"] != "untouched"),
-        "untouchedCount": sum(1 for a in applied if a["result"] == "untouched"),
+        "writtenCount": sum(
+            1 for a in applied if a["result"] not in ("untouched", "kept")
+        ),
+        "untouchedCount": sum(
+            1 for a in applied if a["result"] in ("untouched", "kept")
+        ),
+        "keptCount": sum(1 for a in applied if a["result"] == "kept"),
     }
