@@ -23,10 +23,10 @@ handoffs:
     agent: aim
     prompt: "change: "
     send: false
-  - label: "🔄 Replan"
+  - label: "🧠 Draft \"remember-repo\""
     agent: aim
-    prompt: "/aim replan"
-    send: true
+    prompt: "/aim remember-repo <category> \"<rule>\""
+    send: false
   - label: "📊 Status"
     agent: aim
     prompt: "/aim status"
@@ -239,9 +239,34 @@ Show:
 - start new work: `/aim start "EPIC: ..."`
 - continue current work: `/aim continue`
 - check setup: `/aim validate`
+- capture repo knowledge: the `Remember` quick action drafts `/aim remember-repo <category> "<rule>"`
 - recommended lightweight start: `Mode: Strict` and `Cost profile: Cost Control`
 
 Do not explain the full method, adapter layering, or every runtime artifact unless the user asks for deeper help.
+
+## Quick actions
+
+The Copilot chat controls expose draft-and-send shortcuts that mirror the `handoffs`
+frontmatter. Keep these in sync:
+
+- `approve` - send approval at the current hard gate
+- `Draft "change:"` - draft a change request; you edit before sending
+- `Remember` - draft `/aim remember-repo <category> "<rule>"` into the input; you edit and send it yourself
+- `Status` - show current AIM state
+- `Continue` - continue the loop
+
+The `Remember` quick action is **draft-only**: it never sends silently and never
+writes `aim.profile.yaml`, local hints, or `.aim/`. Use it to capture repository
+knowledge such as:
+
+- commands
+- habits
+- validation rules
+- UI/testing preferences
+- load-on-demand doc rules
+
+`/aim replan` remains available as a typed command even though it is no longer a
+primary button.
 
 ## `/aim upgrade` behavior
 
