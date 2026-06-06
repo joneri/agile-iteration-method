@@ -191,10 +191,11 @@ Repository mutation:
 
 - none required by default
 
-Fallback storage:
+When user-level persistence is unavailable:
 
-- session-only hints when the adapter cannot use the user-level store
-- fallback remains ignored by the repository-level `/.aim` rule
+- use session-only hints only
+- do not create a repo-local profile or hints file
+- do not store stable repo-awareness anywhere under `.aim/`
 
 Use this when:
 
