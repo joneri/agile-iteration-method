@@ -8,6 +8,7 @@ This model makes `docs/workflow/` the central AIM-owned behavior documentation s
 
 It separates:
 
+- public product narrative
 - AIM core truth
 - mode and safety models
 - workflow and onboarding docs
@@ -21,6 +22,7 @@ It separates:
 
 | Layer | Role | Source-of-truth status | Examples |
 | --- | --- | --- | --- |
+| Public product docs | explain what AIM is, why it exists, and how to begin | product narrative constrained by canonical behavior | `README.md`, `docs/product/` |
 | AIM core truth | canonical method behavior | canonical | `docs/workflow/agile-iteration-method.md` |
 | AIM behavior models | canonical AIM-owned behavior, install, mode, cost, context, classification, and documentation models | canonical for their model area | `docs/workflow/operating-modes.md`, `docs/workflow/repository-surface-classification.md`, `docs/workflow/cost-control-mode.md`, this document |
 | Install and onboarding docs | user-facing application of canonical models | canonical for install/onboarding behavior | `docs/workflow/install-aim-2.0.md`, `docs/workflow/quick-start-aim-2.0.md`, `docs/workflow/troubleshoot-aim-2.0.md` |
@@ -57,6 +59,24 @@ It separates:
 | Modularity and context efficiency | `docs/workflow/modularity-context-efficiency.md` |
 
 If two canonical AIM-owned docs conflict, treat the conflict as a documentation bug and escalate instead of guessing.
+If public product docs conflict with canonical workflow docs, correct the public explanation; public narrative does not redefine AIM behavior.
+
+## `docs/product/` role
+
+`docs/product/` is the public-facing explanation and onboarding layer.
+
+It is for:
+
+- newcomers evaluating AIM
+- users choosing an adoption mode or platform
+- first-time installation and first-Epic journeys
+- future GitHub Pages, tutorials, launch content, and demos
+
+It should explain benefits, boundaries, and the user journey in plain language.
+It must not become a second source of truth for gates, runtime state, installer safety, mode semantics, or adapter behavior.
+Those rules remain canonical under `docs/workflow/`.
+
+Public product docs should link deeper only when the reader needs operational or reference detail.
 
 ## Root-file rule
 
@@ -130,6 +150,7 @@ Runtime artifacts may be useful evidence, but they are not product documentation
 
 Shipped AIM product docs:
 
+- public product narrative under `README.md` and `docs/product/`
 - canonical core and behavior model docs under `docs/workflow/`
 - install and onboarding docs
 - selected support/reference docs
@@ -153,6 +174,8 @@ Internal maintainer/build-memory docs:
 
 | Surface | Recommendation |
 | --- | --- |
+| `README.md` | concise public product front door |
+| `docs/product/` | public narrative and newcomer onboarding, constrained by canonical workflow docs |
 | `docs/workflow/agile-iteration-method.md` | canonical AIM core truth |
 | `docs/workflow/operating-modes.md` | canonical mode model |
 | `docs/workflow/repository-surface-classification.md` | canonical file-surface/install-boundary model |
@@ -172,6 +195,7 @@ Internal maintainer/build-memory docs:
 
 The validator should:
 
+- confirm the public product front door and required `docs/product/` journey exist
 - confirm this documentation model exists
 - check for required source-of-truth markers
 - check that promoted behavior docs exist under `docs/workflow/`
@@ -182,6 +206,7 @@ The validator should:
 ## Related files
 
 - `docs/workflow/agile-iteration-method.md`
+- `docs/product/README.md`
 - `docs/features/README.md`
 - `docs/workflow/operating-modes.md`
 - `docs/workflow/repository-surface-classification.md`
@@ -194,3 +219,4 @@ The validator should:
 
 - 2026-06-05: Added canonical AIM 2.0 documentation model and source-of-truth hierarchy.
 - 2026-06-05: Promoted behavior-defining AIM docs into `docs/workflow/` and made `docs/features/` support/reference by default.
+- 2026-06-06: Added `docs/product/` as the public narrative and newcomer layer without changing canonical workflow authority.

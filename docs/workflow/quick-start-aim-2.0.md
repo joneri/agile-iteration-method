@@ -1,169 +1,120 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# Quick start AIM 2.0
+# Quick Start AIM 2.0
 
-Use this page when you want the shortest practical start into the current AIM 2.0 operating model.
+Use this page when AIM is installed and you want to begin real work.
 
-This is the front-door operating path for AIM 2.0 after setup, whether you use Personal AIM, Team AIM, or Enterprise AIM.
+New to the product? Read the [public first-time journey](../product/getting-started.md) first.
 
-## Choose your start mode
+## 1. Check Repository Readiness
 
-Pick one:
-
-- Personal AIM: use AIM yourself with no required committed AIM files
-- Team AIM: share a small repo profile with the team through root `aim.profile.yaml`
-- Enterprise AIM: use AIM with safe isolation defaults so AIM-internal artifacts are not committed by accident
-
-If the repository owner explicitly wants AIM product docs and adapter helpers committed into the repo, use the Full embedded AIM footprint in [Install AIM 2.0](install-aim-2.0.md).
-
-## Personal AIM
-
-Choose Personal AIM when one developer wants to start AIM without repository mutation.
-
-What this means:
-
-- personal hints live at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
-- working state stays local
-- AIM docs come from the installed package, adapter, or canonical AIM repo
-- no committed AIM files are required by default
-
-Normal startup path:
+Run:
 
 ```text
-/aim start "EPIC: <desired outcome>"
-Mode: Strict
-Cost profile: Cost Control
+/aim calibrate-repo
 ```
 
-If slash commands are not available in the active adapter, state the same intent in plain language.
+Calibration verifies the smallest useful set of repository facts:
 
-What AIM should do next:
+- technologies and package tooling
+- likely validation commands
+- important localities
+- risk areas
+- documents that should load only when relevant
 
-1. read local AIM state first when it exists
-2. read root `aim.profile.yaml` when it exists as the primary shared baseline
-3. apply compatible Personal AIM profile hints when they exist
-4. inspect the directly affected area before broad docs
-5. load short authoritative docs only when risk or missing evidence requires them
-6. keep Personal hints local unless you intentionally promote shared facts into Team AIM
+Shared knowledge belongs in `aim.profile.yaml`.
+Personal hints belong in user-level storage.
+Active work state belongs in `.aim/`.
 
-If the user-level store is unavailable, continue with session-only hints; never persist repo-awareness under `.aim/`.
+If slash commands are unavailable, ask AIM to verify and refine repository awareness.
 
-## Team AIM
+## 2. Start the Epic
 
-Choose Team AIM when the team wants shared repo adaptation without copying the full AIM method into the repository.
-
-Before the first shared run, create or reuse root `aim.profile.yaml` as the tiny Team AIM profile.
-
-What this means:
-
-- shared repo profile lives at root `aim.profile.yaml`
-- working state stays local by default
-- AIM docs remain linked or installed, not copied wholesale
-- the team shares commands, locality hints, risk zones, and short authoritative docs
-
-Normal startup path:
+Use a desired outcome:
 
 ```text
-/aim start "EPIC: <desired outcome>"
-Mode: Strict
-Cost profile: Cost Control
+/aim start "EPIC: <desired user outcome>"
 ```
 
-If slash commands are not available in the active adapter, state the same intent in plain language.
+Or use explicit intent:
 
-What AIM should do next:
+```text
+EPIC: <desired user outcome>
+Mode: Strict
+Cost profile: Standard
+```
 
-1. read local AIM state first when it exists
-2. read root `aim.profile.yaml` as the primary shared team baseline
-3. apply compatible Personal AIM profile hints for local reuse
-4. inspect the directly affected area before broad docs
-5. expand only when risk, stale profile facts, ownership boundaries, or missing evidence require it
+Avoid beginning with a list of implementation tasks.
+AIM uses the Epic to decide what the next useful increment should be.
 
-## Personal vs Team in one rule
+## 3. Choose Execution Style
 
-Choose Personal AIM when the repo should not change.
-Choose Team AIM when the team intentionally wants a tiny shared repo profile.
+- `Mode: Strict`: pause at Gate A, Gate B, and Gate E
+- `Mode: Auto`: continue between increments unless escalation is required; Epic closure still requires explicit approval
 
-The difference is sharing:
+Strict is a good default for first use and trust-sensitive work.
+Auto is useful when the outcome and boundaries are already clear.
 
-- Personal AIM keeps repo knowledge local by default
-- Team AIM shares repo knowledge intentionally
-- both keep active working state separate from the reusable profile
+## 4. Choose Runtime Depth
 
-## Execution defaults
+- `Cost profile: Cost Control`: narrow, reversible, low-risk work
+- `Cost profile: Standard`: normal product work
+- `Cost profile: Deep`: security, migration, deployment, public APIs, or broad trust-sensitive changes
 
-Make the execution mode and cost profile explicit when you start.
+Cost profile changes context and verification depth.
+It does not remove AIM roles, gates, ownership, or escalation.
 
-Use one mode:
+## 5. Review Gate A
 
-- `Mode: Strict`
-- `Mode: Auto`
+Confirm:
 
-If you do not specify a mode, AIM defaults to `Strict`.
+- outcome
+- scope boundaries
+- acceptance intent
+- important risks
 
-Use one cost profile:
+Reply `approve` when the Epic is right.
+Use `change: ...` when it needs correction.
 
-- `Cost profile: Standard`
-- `Cost profile: Cost Control`
-- `Cost profile: Deep`
+## 6. Review the Increment
 
-Use `Cost Control` for normal low-risk work, cleanup, documentation maintenance, and narrow reversible fixes.
-Use `Deep` for trust-sensitive, migration, deployment, security, API, or broad public-method work.
+AIM proposes one Done Increment.
 
-## Cost-aware default
+In Strict mode, Gate B waits for approval.
+The increment should deliver useful end-to-end value and state how it will be verified.
 
-Start with `Cost Control` when the work is reversible and low risk.
-Move to `Standard` or `Deep` only when trust, data correctness, deployment, migration, security, or broader product behavior justifies the extra depth.
+After implementation and review, Gate E reports:
 
-## Common follow-up commands
+- delivered behavior
+- verification evidence
+- remaining risk
+- whether another increment is needed
+
+Approve, request adjustment, continue, or close.
+
+## Common Commands
 
 - `/aim continue`
+- `/aim status`
 - `/aim validate`
 - `/aim calibrate-repo`
 - `/aim remember-repo <category> "<rule>"`
 - `/aim forget-repo <category> "<rule-id>"`
+- `/aim cost standard|control|deep`
 - `/aim help`
 
-If slash commands are unavailable, use the same intent in plain language.
+## Choose an Adoption Mode
 
-## What a normal startup should show
+- **Personal**: local-first and flexible
+- **Team**: small shared repo-awareness by agreement
+- **Enterprise**: isolate AIM internals by default
 
-Profile-first startup is part of the visible user path.
-When AIM reuses Personal or Team profile data, the operator should see a compact profile-source summary during startup or Gate B.
+See [Platforms and adoption modes](../product/platforms-and-adoption.md) for the newcomer explanation and [Operating modes](operating-modes.md) for the canonical rules.
 
-Expected summary shape:
+## Need Help?
 
-```text
-Profile source: team: aim.profile.yaml (ready)
-Layering: personal hints over team baseline
-Reused facts: commands, locality, risk zones, short docs, freshness, avoid-by-default context
-Selected locality: <directly affected area>
-Avoided context: <broad docs, adapter docs, repo-wide scan, or none>
-Expansion reason: <none | missing evidence | stale profile | risk | ownership | user requested Deep>
-Cheap validation first: <nearest command or check>
-```
-
-If no Personal or Team profile exists yet, AIM should say `Profile source: none` and continue with locality-first discovery instead of pretending reuse happened.
-
-After installation, run `/aim calibrate-repo` when readiness is `needs_calibration` or `partially_ready`.
-Calibration starts with cheap repository evidence and expands only for uncertainty, risk, conflict, or explicit user direction.
-
-## Keep these boundaries clear
-
-- runtime: how AIM runs
-- repo profile: reusable repo knowledge
-- working state: current Epic, increment, and gate state
-- docs: reference material
-
-Do not treat the repo profile as working state.
-Do not treat the docs as the install footprint.
-
-## Start here, go deeper only if needed
-
-- For repository setup, embedded AIM, or adapter packaging: [Install AIM 2.0](install-aim-2.0.md)
-- For the broader adoption model: [AIM 2.0 low-footprint adoption](aim-2-low-footprint-adoption.md)
-- For troubleshooting start, resume, validation, and adapter behavior: [Troubleshoot AIM 2.0](troubleshoot-aim-2.0.md)
-- For Personal profile storage details: [AIM 2.0 Personal local profile storage](personal-local-profile-storage.md)
-- For the tiny shared Team profile: [AIM 2.0 Tiny Team Profile Artifact](team-profile-artifact.md)
-- For the compact startup summary contract: [AIM 2.0 Profile Source Summary](profile-source-summary.md)
+- [Installation](install-aim-2.0.md)
+- [Troubleshooting](troubleshoot-aim-2.0.md)
+- [Platform entrypoints](adapter-entry-model.md)
+- [Canonical AIM workflow](agile-iteration-method.md)

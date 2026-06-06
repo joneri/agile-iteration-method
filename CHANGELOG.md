@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-06-06 - AIM 2.0 public product and onboarding story
+- Rebuilt `README.md` as a concise public front door with the AIM 2.0 product story and website artwork.
+- Added `docs/product/` for newcomer-focused explanation, first-time onboarding, platform support, and adoption modes.
+- Created a six-step path from guided installation through repository calibration to the first AIM Epic.
+- Separated public product narrative from canonical workflow, support/reference, and maintainer documentation.
+- Added validator checks for the required public documentation journey.
+
 ## 2026-06-06 - AIM 2.0 guided-first installer
 - Added target path Tab completion, arrow-key mode selection, and adapter multi-select.
 - Made Personal the guided mode default and connected preview to reviewed apply in one session.

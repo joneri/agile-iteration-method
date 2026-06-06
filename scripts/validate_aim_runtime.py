@@ -171,6 +171,7 @@ AIM_2_MIGRATION_CLASSIFICATION = {
         "CONTRIBUTORS.md",
         "LICENSE",
         "docs/LICENSE-DOCS",
+        "docs/product",
         "docs/features",
         "docs/workflow",
     ],
@@ -188,6 +189,7 @@ AIM_2_MIGRATION_CLASSIFICATION = {
 SURFACE_BOUNDARY_CLASSIFICATION = {
     "static_product": [
         "README.md",
+        "docs/product",
         "docs/workflow",
         "adapters",
         "scripts/validate_aim_runtime.py",
@@ -245,6 +247,45 @@ REQUIRED_SURFACE_MODEL_MARKERS = [
 
 OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
+PUBLIC_PRODUCT_DOC_PATHS = {
+    "README.md": [
+        "A structured AI delivery system",
+        "## What AIM Is Not",
+        "## Start in Six Steps",
+        "docs/product/",
+    ],
+    "docs/product/README.md": [
+        "public product guide",
+        "## Documentation Layers",
+        "Product docs",
+        "Workflow docs",
+        "Maintainer docs",
+    ],
+    "docs/product/what-is-aim.md": [
+        "A Delivery System, Not a Coding Assistant",
+        "## Quality First",
+        "## Repository-Aware",
+        "## Memory Without Context Bloat",
+        "## Human Controlled",
+    ],
+    "docs/product/getting-started.md": [
+        "## 1. Install AIM",
+        "## 2. Calibrate the Repository",
+        "## 3. Start an Epic",
+        "## 4. Review Gate A",
+        "## 5. Approve the Next Increment",
+        "## 6. Build With Confidence",
+    ],
+    "docs/product/platforms-and-adoption.md": [
+        "### Personal",
+        "### Team",
+        "### Enterprise",
+        "### Codex",
+        "### GitHub Copilot",
+        "### Claude",
+        "## What Native Support Means",
+    ],
+}
 SURFACE_MODEL_DOC_PATH = "docs/workflow/repository-surface-classification.md"
 REPO_AWARENESS_DOC_PATH = "docs/workflow/repo-awareness.md"
 REPO_CALIBRATION_DOC_PATH = "docs/workflow/repo-awareness-calibration.md"
@@ -439,6 +480,9 @@ OPERATING_MODE_VALUES = {
 }
 
 REQUIRED_DOCUMENTATION_MODEL_MARKERS = [
+    "Public product docs",
+    "docs/product/",
+    "public-facing explanation and onboarding layer",
     "AIM core truth",
     "docs/workflow/agile-iteration-method.md",
     "docs/workflow/operating-modes.md",
@@ -1028,6 +1072,8 @@ def main() -> int:
     issues: list[dict[str, str]] = []
 
     required_repo_files = [
+        repo_root / "README.md",
+        *[repo_root / path for path in PUBLIC_PRODUCT_DOC_PATHS if path != "README.md"],
         repo_root / "docs/workflow/agile-iteration-method.md",
         repo_root / REPO_AWARENESS_DOC_PATH,
         repo_root / REPO_CALIBRATION_DOC_PATH,
@@ -1245,6 +1291,34 @@ def main() -> int:
                 old_feature_path,
                 "promoted behavior-defining AIM doc still exists under docs/features",
                 "Move behavior-defining AIM docs into docs/workflow so docs/features remains support/reference by default.",
+            )
+
+    checked.append("AIM 2.0 public product documentation")
+    for relative_path, required_markers in PUBLIC_PRODUCT_DOC_PATHS.items():
+        product_doc_path = repo_root / relative_path
+        checked.append(relative_path)
+        if not product_doc_path.is_file():
+            add_issue(
+                issues,
+                "recoverable",
+                relative_path,
+                "required public product document is missing",
+                "Restore the public product front door or newcomer journey under docs/product/.",
+            )
+            continue
+        product_content = product_doc_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_product_markers = [
+            marker for marker in required_markers if marker not in product_content
+        ]
+        if missing_product_markers:
+            add_issue(
+                issues,
+                "recoverable",
+                relative_path,
+                f"public product document is incomplete: {', '.join(missing_product_markers)}",
+                "Restore the plain-language product, onboarding, platform, and control story without redefining canonical workflow behavior.",
             )
 
     checked.append("AIM 2.0 CONTRIBUTING.md target-install exclusion")
@@ -1973,6 +2047,7 @@ def main() -> int:
     print("AIM 2.0 documentation model:")
     print(f"- canonical doc: {DOCUMENTATION_MODEL_DOC_PATH}")
     print("- core truth: docs/workflow/agile-iteration-method.md")
+    print("- public product surface: README.md and docs/product/")
     print("- canonical behavior surface: docs/workflow/")
     print("- support/reference surface: docs/features/")
     print("- primary shared repo-awareness: aim.profile.yaml")
