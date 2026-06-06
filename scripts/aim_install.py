@@ -55,6 +55,10 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
         help="Install mode: team, personal, or enterprise. Guided default: personal.",
     )
     parser.add_argument(
+        "--footprint",
+        help="Installation footprint: local, profile, adapters, or full.",
+    )
+    parser.add_argument(
         "--adapter",
         action="append",
         help="Adapter to include (repeatable). Defaults to copilot.",
@@ -163,6 +167,20 @@ def main(argv: list[str] | None = None) -> int:
         else:
             mode = "team"
 
+        mode_profile = manifest.mode_profile(mode)
+        default_footprint = str(mode_profile.get("defaultFootprint", "local"))
+        if args.footprint:
+            footprint = args.footprint.strip().lower()
+            footprint_explicit = True
+        elif interactive:
+            footprint = guided.prompt_footprint(
+                manifest.footprints, default=default_footprint
+            )
+            footprint_explicit = True
+        else:
+            footprint = default_footprint
+            footprint_explicit = False
+
         if args.adapter:
             adapters = _normalize_adapters(args.adapter)
         elif interactive:
@@ -176,6 +194,14 @@ def main(argv: list[str] | None = None) -> int:
     if mode not in manifest.modes:
         print(
             f"error: unknown mode '{mode}'. Known modes: {', '.join(manifest.modes)}.",
+            file=sys.stderr,
+        )
+        return EXIT_USAGE
+
+    if footprint not in manifest.footprints:
+        print(
+            f"error: unknown footprint '{footprint}'. "
+            f"Known footprints: {', '.join(manifest.footprints)}.",
             file=sys.stderr,
         )
         return EXIT_USAGE
@@ -206,6 +232,8 @@ def main(argv: list[str] | None = None) -> int:
             source_root=source_root,
             target_root=target_root,
             mode=mode,
+            footprint=footprint,
+            footprint_explicit=footprint_explicit,
             adapters=adapters,
             manifest=manifest,
             validator_result=validator_result,

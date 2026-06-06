@@ -37,6 +37,8 @@ def render_compact_text(
         _paint(f"AIM 2.0 installer · {operation}", "1;36", color),
         f"Target    {plan['target']}",
         f"Mode      {plan['mode']}",
+        f"Footprint {plan['footprint']}",
+        f"           {plan.get('footprintDescription', '')}",
         f"Adapters  {', '.join(plan['adapters']) or '(none)'}",
         "",
         (
@@ -47,6 +49,24 @@ def render_compact_text(
             f"{counts.get('collision', 0)} need attention"
         ),
     ]
+    scope = plan.get("scopeSummary", {})
+    lines.extend(
+        [
+            (
+                f"Repo writes {scope.get('repoActionCount', 0)} · "
+                f"Local writes {scope.get('localActionCount', 0)}"
+            ),
+        ]
+    )
+    skipped = scope.get("skippedAdapters", [])
+    if skipped:
+        lines.append(
+            "This footprint leaves repo adapters uninstalled: " + ", ".join(skipped)
+        )
+    if scope.get("staysLocal"):
+        lines.append("Local policy " + "; ".join(scope["staysLocal"]))
+    for note in scope.get("explicitApproval", []):
+        lines.append("Approval  " + note)
 
     if collisions:
         lines.extend(["", _paint("Needs your decision", "1;33", color)])
@@ -69,7 +89,11 @@ def render_compact_text(
         else:
             lines.append("Next  apply this plan")
     else:
-        if guided_session and not blockers:
+        if summary.get("total", 0) == 0 and not blockers:
+            lines.append(
+                "No files are selected. Choose Codex or a broader footprint to install files."
+            )
+        elif guided_session and not blockers:
             lines.append("No files were written yet. Continue below to reviewed apply.")
         else:
             lines.append("No files were written. Add --apply when ready.")
@@ -86,9 +110,22 @@ def render_verbose_text(
     lines.append("=" * 32)
     lines.append(f"Manifest version : {plan['manifestVersion']}")
     lines.append(f"Mode             : {plan['mode']}")
+    lines.append(f"Footprint        : {plan['footprint']}")
+    lines.append(f"Footprint meaning: {plan.get('footprintDescription', '')}")
+    lines.append(f"Default footprint: {plan.get('defaultFootprint')}")
     lines.append(f"Adapters         : {', '.join(plan['adapters']) or '(none)'}")
     lines.append(f"Source           : {plan['source']}")
     lines.append(f"Target           : {plan['target']}")
+    scope = plan.get("scopeSummary", {})
+    lines.append(f"Repo actions     : {scope.get('repoActionCount', 0)}")
+    lines.append(f"Local actions    : {scope.get('localActionCount', 0)}")
+    if scope.get("staysLocal"):
+        lines.append("Stays local      : " + "; ".join(scope["staysLocal"]))
+    if scope.get("skippedAdapters"):
+        lines.append("Not installed    : " + ", ".join(scope["skippedAdapters"]))
+    if scope.get("explicitApproval"):
+        lines.append("Explicit approval:")
+        lines.extend(f"  - {note}" for note in scope["explicitApproval"])
 
     validator = plan.get("validator", {})
     lines.append(

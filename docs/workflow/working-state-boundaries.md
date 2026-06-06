@@ -63,11 +63,12 @@ The same fact may appear in both places with different meaning.
 For example, a test command in working state means "this was run for this increment."
 A test command in the repo profile means "this is a reusable validation path for this repo area."
 
-## Personal AIM defaults
+## Personal AIM choices
 
-Personal AIM should keep working state local by default.
+Personal AIM may keep working state local or commit it when the solo user wants
+audit, handoff, or visible process history.
 
-Default behavior:
+Local option:
 
 - working state is not committed
 - repo profile may be local or adapter-managed
@@ -83,7 +84,8 @@ Good local storage options include:
 
 The key rule:
 
-> Personal AIM can be repo-aware without committing active AIM state.
+> Personal AIM can be repo-aware without committing active AIM state, but it
+> does not forbid committing AIM state or other AIM-owned files.
 
 ## Team AIM defaults
 
@@ -191,7 +193,7 @@ When an Epic is complete:
 
 - Working state is not the repo profile.
 - Accepted increments do not automatically close an Epic.
-- Local state is the default for Personal AIM.
+- Personal AIM working-state sharing is the solo user's choice.
 - Team AIM shares profile facts, not active state, by default.
 - Enterprise AIM can govern state later without redefining AIM core.
 - Reusable facts discovered during an increment should be promoted to the repo profile only when they are stable beyond the active work.

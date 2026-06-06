@@ -27,7 +27,8 @@ Default assumptions:
 
 - AIM imposes no sharing rules by default.
 - `.aim/` may stay local or be committed if the user wants.
-- AIM-related files may live in the repo root if the user wants.
+- AIM docs, repo-awareness docs, adapter files, profiles, and other AIM-owned
+  files may be written to and committed in the repository if the user wants.
 - repo-awareness may stay local or be committed.
 - feature docs that help AIM may remain available in the repo.
 - no extra safety restrictions are required just because AIM is present.
@@ -132,8 +133,11 @@ Rules by mode:
 Personal:
 
 - install may be local-only
-- repo mutation is optional
+- repo mutation, adapter installation, shared profiles, and full embedded docs
+  are all allowed choices
 - permissive choices are allowed
+- the installer must not apply Team review rules or Enterprise isolation rules
+  merely because files will be written to the repository
 
 Team:
 

@@ -23,21 +23,22 @@ Using AIM should not require committing all AIM docs and adapter files into ever
 
 ### Personal AIM
 
-Use Personal AIM when one developer wants AIM discipline without repository mutation.
+Use Personal AIM when one developer wants maximum freedom over AIM's footprint.
 
 Default behavior:
 
-- no committed AIM files
-- local runtime from the tool or adapter
-- local working state
-- local hints at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
-- AIM docs read from the installed package or canonical AIM repository
+- no Team sharing rules or Enterprise isolation constraints
+- runtime, working state, profiles, adapters, and docs may stay local
+- the same surfaces may be written to or committed in the repository when the
+  solo user chooses
+- local hints at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml` remain an
+  available low-footprint option
 
 Best for:
 
-- trying AIM in a large existing repo
-- protected enterprise repos
-- feature branches where the developer does not own repository policy
+- solo work and personal repositories
+- trying AIM with a local footprint
+- fully embedding AIM for one developer
 - comparing AIM against normal agentic coding
 
 ### Team AIM
@@ -92,9 +93,9 @@ Full embedded AIM remains valid, but it is a footprint choice rather than an ope
 | Layer | Personal AIM | Team AIM | Enterprise AIM |
 | --- | --- | --- | --- |
 | Runtime | tool or local adapter | tool or local adapter | approved local or org adapter |
-| Repo awareness | `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml` | root `aim.profile.yaml` profile or pointer | local/private by default; governed shared profile only by approval |
-| Working state | local or user-chosen | local by default | local/private and ignored by default |
-| Docs | installed package or links | installed package, links, or reviewed shared docs | installed package, canonical links, or approved internal package |
+| Repo awareness | local hints or user-chosen repo profile | root `aim.profile.yaml` profile or pointer | local/private by default; governed shared profile only by approval |
+| Working state | local, ignored, or committed by user choice | local by default | local/private and ignored by default |
+| Docs | installed package, links, or repo-embedded by user choice | installed package, links, or reviewed shared docs | installed package, canonical links, or approved internal package |
 
 The important rule is simple:
 
@@ -117,7 +118,7 @@ aim start "EPIC: <goal>"
 
 What the runtime should do:
 
-1. avoid committed AIM files by default
+1. choose the desired footprint without Team or Enterprise restrictions
 2. create or reuse `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 3. create local working state
 4. scan only the affected area first
@@ -194,7 +195,8 @@ For Personal AIM, profile-first startup means:
 - read `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml` next when it exists
 - use session-only hints when user-level persistence is unavailable
 - reuse profile facts across branches after a freshness check
-- keep personal profile facts out of commits
+- keep user-level hint files out of commits while allowing a separately chosen
+  repo profile to be committed
 - layer personal hints over the Team profile only when they do not contradict shared commands, ownership, risk, or policy
 
 ## Reusing repo intelligence

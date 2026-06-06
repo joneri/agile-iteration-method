@@ -166,9 +166,11 @@ Team AIM:
 
 Personal AIM:
 
-- should store reusable local hints at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
+- may store reusable local hints at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
+- may create and commit `aim.profile.yaml`, adapter surfaces, docs, and runtime
+  artifacts when the solo user chooses
 - must never store stable repo-awareness under `.aim/`
-- must not require repository mutation
+- has no required repository footprint, but repository mutation is allowed
 
 Runtime state:
 

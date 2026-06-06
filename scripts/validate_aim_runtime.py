@@ -5,7 +5,11 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
 from pathlib import Path
+
+from aim_installer import planner as installer_planner
+from aim_installer.manifest import ManifestError, load_manifest
 
 
 RESULT_ORDER = {
@@ -409,6 +413,15 @@ CONTRIBUTING_EXCLUSION_MARKERS = {
 }
 
 REQUIRED_INSTALL_MANIFEST_MARKERS = [
+    "footprints:",
+    "defaultFootprint: local",
+    "defaultFootprint: adapters",
+    "footprintProfiles:",
+    "embeddedDocs:",
+    "repoAdapters:",
+    "sharedProfile:",
+    "repoIgnore:",
+    "homeAdapters:",
     "targetExclusions:",
     "path: CONTRIBUTING.md",
     "AIM-source-repository-maintainer-only",
@@ -1365,6 +1378,130 @@ def main() -> int:
                 INSTALL_MANIFEST_PATH,
                 f"installer manifest does not fully exclude CONTRIBUTING.md: {', '.join(missing_manifest_markers)}",
                 "Restore the forbidden copy/create/modify/require/read operations for the source-repository-only file.",
+            )
+        checked.append("AIM 2.0 installer mode/footprint contract")
+        try:
+            install_manifest = load_manifest(repo_root)
+            expected_defaults = {
+                "personal": "adapters",
+                "team": "adapters",
+                "enterprise": "local",
+            }
+            actual_defaults = {
+                mode: str(
+                    install_manifest.mode_profile(mode).get("defaultFootprint", "")
+                )
+                for mode in expected_defaults
+            }
+            if actual_defaults != expected_defaults:
+                add_issue(
+                    issues,
+                    "blocked",
+                    INSTALL_MANIFEST_PATH,
+                    f"mode footprint defaults drifted: {actual_defaults}",
+                    f"Restore the canonical defaults: {expected_defaults}.",
+                )
+
+            canonical_enterprise_ignores = [
+                "/.aim",
+                "/.aim-local",
+                "/aim.local.*",
+                "/*.aim.local.md",
+                "/*.aim.process.md",
+            ]
+            enterprise_ignores = [
+                str(value)
+                for value in install_manifest.mode_profile("enterprise").get(
+                    "gitignore", []
+                )
+            ]
+            if enterprise_ignores != canonical_enterprise_ignores:
+                add_issue(
+                    issues,
+                    "blocked",
+                    INSTALL_MANIFEST_PATH,
+                    "Enterprise installer ignore baseline differs from canonical policy",
+                    "Use the exact ordered Enterprise ignore baseline from docs/workflow/operating-modes.md.",
+                )
+
+            with tempfile.TemporaryDirectory() as target_dir, tempfile.TemporaryDirectory() as home_dir:
+                generated_plans = {}
+                for mode, footprint in expected_defaults.items():
+                    generated_plans[mode] = installer_planner.compute_plan(
+                        source_root=repo_root,
+                        target_root=Path(target_dir),
+                        mode=mode,
+                        footprint=footprint,
+                        footprint_explicit=False,
+                        adapters=["copilot", "claude", "codex"],
+                        manifest=install_manifest,
+                        validator_result={
+                            "resultClass": "healthy",
+                            "exitCode": 0,
+                        },
+                        home_root=Path(home_dir),
+                    )
+
+            enterprise_repo_count = generated_plans["enterprise"]["scopeSummary"][
+                "repoActionCount"
+            ]
+            if enterprise_repo_count != 0:
+                add_issue(
+                    issues,
+                    "blocked",
+                    "scripts/aim_installer/planner.py",
+                    "enterprise default footprint plans repository actions",
+                    "Keep Enterprise non-invasive; repo mutation requires an explicit footprint.",
+                )
+
+            team_plan = generated_plans["team"]
+            team_destinations = set(
+                team_plan["scopeSummary"]["repoDestinations"]
+            )
+            if (
+                "aim.profile.yaml" not in team_destinations
+                or ".gitignore" not in team_destinations
+                or any(
+                    path.startswith("docs/workflow/")
+                    for path in team_destinations
+                )
+            ):
+                add_issue(
+                    issues,
+                    "blocked",
+                    "scripts/aim_installer/planner.py",
+                    "Team default footprint does not produce the canonical small shared setup",
+                    "Plan the shared profile, runtime ignore, and selected adapters without embedded workflow docs.",
+                )
+            personal_plan = generated_plans["personal"]
+            personal_destinations = set(
+                personal_plan["scopeSummary"]["repoDestinations"]
+            )
+            if (
+                "aim.profile.yaml" in personal_destinations
+                or not any(
+                    path.startswith((".github/agents/", ".claude/"))
+                    for path in personal_destinations
+                )
+                or any(
+                    path.startswith("docs/workflow/")
+                    for path in personal_destinations
+                )
+            ):
+                add_issue(
+                    issues,
+                    "blocked",
+                    "scripts/aim_installer/planner.py",
+                    "Personal default does not provide the canonical permissive solo adapter setup",
+                    "Install selected repo adapters without forcing a shared profile or embedded docs; allow explicit local/profile/full choices.",
+                )
+        except (ManifestError, installer_planner.PlanError, OSError, KeyError) as exc:
+            add_issue(
+                issues,
+                "blocked",
+                INSTALL_MANIFEST_PATH,
+                f"installer mode/footprint contract could not be validated: {exc}",
+                "Repair the manifest and planner so canonical mode plans can be generated deterministically.",
             )
     else:
         add_issue(

@@ -15,7 +15,7 @@ from .manifest import Manifest
 from . import guidance, seed
 
 
-PLAN_SCHEMA_VERSION = "1"
+PLAN_SCHEMA_VERSION = "2"
 
 # Generic root files AIM must never create, modify, or read in a target repo.
 GENERIC_ROOT_FILES = ("AGENTS.md", "CLAUDE.md", "CONTRIBUTING.md")
@@ -211,7 +211,7 @@ def _bootstrap_actions(
             ),
             source=None,
             destination=shared_profile,
-            reason="Seed shared repo-awareness profile (needs calibration, not 'ready')",
+            reason="Seed repo-awareness profile (needs calibration, not 'ready')",
             adapter="core",
             optional=False,
         )
@@ -292,6 +292,8 @@ def compute_plan(
     source_root: Path,
     target_root: Path,
     mode: str,
+    footprint: str,
+    footprint_explicit: bool,
     adapters: list[str],
     manifest: Manifest,
     validator_result: dict[str, object],
@@ -303,25 +305,73 @@ def compute_plan(
     blockers = list(blockers or [])
     home_root = home_root or Path.home()
     mode_profile = manifest.mode_profile(mode)
-    committed = bool(mode_profile.get("committedSharedProfile", True))
+    footprint_profile = manifest.footprint_profile(footprint)
+    if not footprint_profile:
+        raise PlanError(f"unknown or unconfigured footprint: {footprint}")
+
     include_optional = bool(mode_profile.get("includeOptionalSurfaces", True))
     enterprise_safe = bool(mode_profile.get("enterpriseSafe", False))
     mode_fragments = [str(f) for f in mode_profile.get("gitignore", [])]
+    embedded_docs = bool(footprint_profile.get("embeddedDocs", False))
+    footprint_description = str(footprint_profile.get("description", footprint))
+    repo_adapters = bool(footprint_profile.get("repoAdapters", False))
+    repo_ignore = bool(footprint_profile.get("repoIgnore", False))
+    home_adapters = bool(footprint_profile.get("homeAdapters", True))
+    shared_profile_rule = footprint_profile.get("sharedProfile", False)
+    shared_profile = bool(
+        shared_profile_rule is True
+        or (shared_profile_rule == "team-default" and mode == "team")
+    )
 
     actions: list[dict[str, Any]] = []
-    actions.extend(_canonical_doc_actions(source_root, target_root))
-    if "copilot" in adapters:
+    if embedded_docs:
+        actions.extend(_canonical_doc_actions(source_root, target_root))
+    if repo_adapters and "copilot" in adapters:
         actions.extend(_copilot_actions(source_root, target_root, include_optional))
-    if "claude" in adapters:
+    if repo_adapters and "claude" in adapters:
         actions.extend(_claude_actions(source_root, target_root))
-    if "codex" in adapters:
+    if home_adapters and "codex" in adapters:
         actions.extend(_codex_actions(source_root, home_root))
-    actions.extend(_bootstrap_actions(target_root, manifest, committed, mode))
+    actions.extend(_bootstrap_actions(target_root, manifest, shared_profile, mode))
     fragments = mode_fragments or manifest.gitignore_fragments or manifest.runtime_exclusions
-    actions.extend(_ignore_actions(target_root, manifest, fragments))
+    if repo_ignore:
+        actions.extend(_ignore_actions(target_root, manifest, fragments))
 
     excluded = _root_file_exclusions(manifest)
     _assert_root_files_untouched(actions, excluded)
+    repo_actions = [a for a in actions if a.get("scope") != "home"]
+    local_actions = [a for a in actions if a.get("scope") == "home"]
+    skipped_adapters = [
+        adapter
+        for adapter in adapters
+        if adapter in {"copilot", "claude"} and not repo_adapters
+    ]
+    approval_notes: list[str] = []
+    default_footprint = str(mode_profile.get("defaultFootprint", "local"))
+    if footprint_explicit and footprint != default_footprint:
+        approval_notes.append(
+            f"Explicit footprint '{footprint}' overrides the {mode} default "
+            f"'{default_footprint}'."
+        )
+    if mode == "enterprise" and repo_actions:
+        approval_notes.append(
+            "Enterprise repository mutation is present only because a non-local "
+            "footprint was explicitly selected."
+        )
+    local_policy = {
+        "personal": [
+            "User-level personal hints remain outside the repository",
+            "Runtime state is created later; keeping or committing it is the solo user's choice",
+        ],
+        "team": [
+            "Personal hints remain user-level",
+            "Runtime state stays local by default unless the team chooses otherwise",
+        ],
+        "enterprise": [
+            "Personal hints remain private",
+            "Runtime state stays local/private and protected by default",
+        ],
+    }.get(mode, [])
 
     bootstrap = manifest.repo_awareness_bootstrap
     plan = {
@@ -330,10 +380,20 @@ def compute_plan(
         "generatedAt": _now_iso(),
         "operation": "dry-run",
         "mode": mode,
+        "footprint": footprint,
+        "footprintDescription": footprint_description,
+        "footprintExplicit": footprint_explicit,
+        "defaultFootprint": default_footprint,
         "modeProfile": {
-            "committedSharedProfile": committed,
             "includeOptionalSurfaces": include_optional,
             "enterpriseSafe": enterprise_safe,
+        },
+        "footprintProfile": {
+            "embeddedDocs": embedded_docs,
+            "repoAdapters": repo_adapters,
+            "sharedProfile": shared_profile,
+            "repoIgnore": repo_ignore,
+            "homeAdapters": home_adapters,
         },
         "gitignoreFragments": fragments,
         "adapters": adapters,
@@ -342,7 +402,11 @@ def compute_plan(
         "validator": validator_result,
         "bootstrap": {
             "status": "needs_calibration",
-            "storage": "committed-shared-profile" if committed else "personal-local-only",
+            "storage": (
+                "committed-shared-profile"
+                if shared_profile
+                else "local-or-no-profile"
+            ),
             "readyRequiresCalibration": bool(
                 bootstrap.get("readyRequiresCalibration", True)
             ),
@@ -360,6 +424,15 @@ def compute_plan(
         },
         "rootFileExclusions": excluded,
         "actions": actions,
+        "scopeSummary": {
+            "repoActionCount": len(repo_actions),
+            "localActionCount": len(local_actions),
+            "repoDestinations": [a["destination"] for a in repo_actions],
+            "localDestinations": [a["destination"] for a in local_actions],
+            "staysLocal": local_policy,
+            "skippedAdapters": skipped_adapters,
+            "explicitApproval": approval_notes,
+        },
         "summary": _summarize(actions),
         "stalePackages": [
             a["id"]

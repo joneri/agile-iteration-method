@@ -120,7 +120,7 @@ They are related, but not the same action.
 
 ## Choose an Adoption Mode
 
-- **Personal**: local-first and flexible
+- **Personal**: freedom mode for one developer; local or repo-writing footprints are user choice
 - **Team**: small shared repo-awareness by agreement
 - **Enterprise**: isolate AIM internals by default
 

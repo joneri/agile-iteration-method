@@ -15,11 +15,13 @@ In a terminal, the installer asks only for required information that was not sup
 
 - target repository supports filesystem Tab completion
 - mode uses Up/Down and Enter, with Personal highlighted by default
+- footprint uses Up/Down and Enter, with the selected mode's suggested
+  footprint highlighted
 - adapters use Up/Down, Space to toggle, and Enter to confirm
 
-Flags such as `--target`, `--mode`, and `--adapter` are used directly and are not asked again.
+Flags such as `--target`, `--mode`, `--footprint`, and `--adapter` are used directly and are not asked again.
 
-The default text view is compact: it shows the target, selected mode and adapters, action counts, blockers, and files that need a decision.
+The default text view is compact: it shows the target, selected mode, footprint and adapters, action counts, blockers, and files that need a decision.
 Use `--verbose` (or `--raw`) for the complete file-by-file plan and `--format json` for machine-readable output.
 JSON and `--non-interactive` runs never prompt.
 
@@ -57,9 +59,10 @@ Use [Quick start AIM 2.0](quick-start-aim-2.0.md) for the first run after setup.
 ## Choose the operating mode
 
 - Personal AIM:
-  - flexible and permissive
-  - no committed AIM files are required by default, but the user may commit AIM files if they want
-  - repo-awareness may live locally or in the repo
+  - freedom mode for one developer
+  - repo mutation and committed AIM files are allowed
+  - docs, repo-awareness, profiles, adapters, and runtime state may live locally
+    or in the repo as the user chooses
 - Team AIM:
   - shared AIM understanding by agreement
   - share a small root `aim.profile.yaml` or approved shared profile pointer
@@ -76,6 +79,32 @@ Full embedded AIM remains a footprint choice when the repo owner intentionally w
 
 For the canonical mode model, see [AIM 2.0 operating modes](operating-modes.md).
 
+## Choose the installation footprint
+
+Mode and footprint are separate:
+
+- mode defines who is using AIM and the default sharing/safety posture
+- footprint defines which files are installed
+
+Available footprints:
+
+| Footprint | Repository effect |
+| --- | --- |
+| `local` | no target-repository mutation; home-scope packages such as Codex may be installed |
+| `profile` | repo profile and runtime ignore policy, without repo adapters or embedded docs |
+| `adapters` | selected adapter surfaces; Team also receives the shared profile |
+| `full` | selected adapters, repo profile, runtime ignore, and embedded workflow docs |
+
+Suggested defaults:
+
+- Personal: `adapters`, as a useful solo setup; all four footprints remain
+  unrestricted user choices
+- Team: `adapters`, with intentional shared repo-awareness
+- Enterprise: `local`; every repo-writing footprint is an explicit override
+
+Selecting Personal never applies Team review ownership or Enterprise isolation
+rules. Selecting Enterprise never broadens repository mutation silently.
+
 ## Installation boundary model
 
 Before copying files, classify the target surface.
@@ -87,10 +116,10 @@ Installer actions must follow these defaults:
 | Surface class | Default action |
 | --- | --- |
 | Static AIM product docs and adapter packages | may be copied into an AIM-owned package path selected by the user |
-| Shared repo-awareness | create or update root `aim.profile.yaml` only by explicit Team or Enterprise choice |
+| Shared repo-awareness | Team and Enterprise require deliberate shared choice; Personal may create or update it by solo choice |
 | Runtime state | never install as product; AIM creates `.aim/` at runtime |
 | Team profile | create or update only by explicit Team AIM choice |
-| Personal profile | store outside the repository by default |
+| Personal profile | local hints are available, but a repo profile is also allowed by user choice |
 | Generic root files | never create, modify, or overwrite for AIM |
 | Internal build-memory | do not install by default |
 
@@ -98,11 +127,13 @@ Mode-specific defaults:
 
 | Mode | Installer default |
 | --- | --- |
-| Personal | offer local-only setup first; allow repo mutation when the user chooses it |
+| Personal | suggest a practical adapter setup while allowing local, profile, adapters, or full without Team/Enterprise restrictions |
 | Team | create or update shared repo-awareness only through small reviewed surfaces such as `aim.profile.yaml` |
 | Enterprise | verify ignore safety before creating repo-local AIM internals; require explicit approval for any shared AIM surface |
 
-Installation safety matters more than convenience.
+Enterprise safety and collision protection matter more than convenience.
+Personal remains permissive; choosing a repo-writing footprint is itself the
+solo user's reviewed choice.
 Generic root files may still exist for repository purposes, but AIM installation ignores them.
 
 ### Root-file independence

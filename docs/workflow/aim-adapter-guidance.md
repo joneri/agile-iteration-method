@@ -62,10 +62,11 @@ Repo profile reuse must not move that authority into helper files, subagents, or
 Adapters should support or gracefully describe these adoption depths:
 
 - Personal AIM:
-  - no committed AIM files required by default
-  - runtime supplied by the tool or local adapter
-  - repo profile stored locally or in adapter storage
-  - working state local and ignored by default
+  - freedom mode with no Team or Enterprise sharing restrictions
+  - runtime may come from the tool, local adapter, or repo package
+  - repo profile may be local or committed by user choice
+  - working state may be local, ignored, or committed by user choice
+  - full embedded docs and adapter surfaces are allowed
 - Team AIM:
   - tiny committed repo profile or pointer
   - shared repo adaptation by intentional team choice
@@ -99,7 +100,7 @@ Adapters should report when they cannot preserve this order and should fall back
 
 Adapters that can read files should support both Personal and Team profile sources.
 
-Personal AIM default:
+Personal AIM local-hints option:
 
 ```text
 ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml

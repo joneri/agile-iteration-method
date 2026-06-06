@@ -93,7 +93,7 @@ People still own product intent, scope changes, trust decisions, and final accep
 
 | Mode | Best for | Default posture |
 | --- | --- | --- |
-| **Personal** | solo work, trials, personal repositories | flexible and local-first |
+| **Personal** | solo work, trials, personal repositories | maximum freedom; sharing is the user's choice |
 | **Team** | shared repository understanding | small, deliberate, reviewable sharing |
 | **Enterprise** | protected or stricter environments | isolate AIM internals unless sharing is explicitly approved |
 

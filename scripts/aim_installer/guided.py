@@ -271,6 +271,24 @@ def prompt_mode(
     )
 
 
+def prompt_footprint(
+    footprints: list[str],
+    *,
+    default: str,
+    key_reader: KeyReader | None = None,
+    output_stream: TextIO = sys.stdout,
+) -> str:
+    """Ask for an installation footprint using an arrow-key menu."""
+
+    return select_one(
+        "Installation footprint  (Up/Down, Enter)",
+        footprints,
+        default=default,
+        key_reader=key_reader,
+        output_stream=output_stream,
+    )
+
+
 def prompt_adapters(
     adapters: list[str],
     *,

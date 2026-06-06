@@ -6,14 +6,16 @@ Define how one developer can reuse AIM repo intelligence without committing `aim
 
 This is canonical Personal AIM profile-storage behavior.
 
-Personal AIM should preserve the value of repo-aware startup while leaving no required repository footprint.
+This document describes the local-storage option within permissive Personal AIM.
+It does not require Personal AIM to remain local or prohibit committed AIM files.
 
 ## User experience
 
 A developer can use AIM personally in a large or protected repository and still get reusable repo awareness across sessions and branches.
 
-Personal AIM stores the profile locally by default.
-The repository does not need a committed AIM profile, docs package, adapter files, or working-state artifacts.
+Personal AIM may store the profile locally.
+The repository does not need a committed AIM profile, docs package, adapter
+files, or working-state artifacts, but the solo user may choose any of them.
 
 ## Storage locations
 
@@ -40,7 +42,8 @@ Personal AIM keeps these local by default:
 - refresh notes
 - local validation preferences
 
-Personal AIM must not commit these by default.
+This local-storage option keeps them out of commits unless the user deliberately
+promotes or replaces it with a repo footprint.
 
 ## What does not belong in the local profile
 
@@ -121,7 +124,8 @@ When both personal and team profiles are used, name both sources and state wheth
 
 ## Key decisions
 
-- Personal AIM defaults to zero committed files.
+- Personal local-profile storage supports zero committed files; Personal AIM as
+  a mode remains permissive.
 - The user-level profile store is preferred over repo-local storage.
 - `.aim/` is runtime-only and may never store persistent Personal hints.
 - Team AIM remains the intentional sharing path.

@@ -44,6 +44,10 @@ class Manifest:
         return [str(a) for a in self._root.get("adapters", [])]
 
     @property
+    def footprints(self) -> list[str]:
+        return [str(f) for f in self._root.get("footprints", [])]
+
+    @property
     def gitignore_fragments(self) -> list[str]:
         return [str(f) for f in self._root.get("gitignoreFragments", [])]
 
@@ -54,6 +58,15 @@ class Manifest:
 
     def mode_profile(self, mode: str) -> dict[str, Any]:
         profile = self.mode_profiles.get(mode, {})
+        return profile if isinstance(profile, dict) else {}
+
+    @property
+    def footprint_profiles(self) -> dict[str, Any]:
+        profiles = self._root.get("footprintProfiles", {})
+        return profiles if isinstance(profiles, dict) else {}
+
+    def footprint_profile(self, footprint: str) -> dict[str, Any]:
+        profile = self.footprint_profiles.get(footprint, {})
         return profile if isinstance(profile, dict) else {}
 
     @property

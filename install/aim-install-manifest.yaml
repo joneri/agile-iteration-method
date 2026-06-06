@@ -1,5 +1,5 @@
 aimInstallManifest:
-  manifestVersion: "0.2"
+  manifestVersion: "0.3"
   status: guided-first
 
   canonicalCommand: "python3 scripts/aim_install.py"
@@ -14,29 +14,66 @@ aimInstallManifest:
     - codex
     - claude
 
+  footprints:
+    - local
+    - profile
+    - adapters
+    - full
+
   gitignoreFragments:
     - .aim/
 
   modeProfiles:
     team:
-      committedSharedProfile: true
+      defaultFootprint: adapters
       includeOptionalSurfaces: true
       gitignore:
         - .aim/
     personal:
-      committedSharedProfile: false
+      defaultFootprint: adapters
       includeOptionalSurfaces: true
       gitignore:
         - .aim/
-        - aim.profile.yaml
     enterprise:
-      committedSharedProfile: true
+      defaultFootprint: local
       includeOptionalSurfaces: false
       enterpriseSafe: true
       gitignore:
-        - .aim/
-        - "*.aim-backup"
-        - aim.local.yaml
+        - /.aim
+        - /.aim-local
+        - /aim.local.*
+        - /*.aim.local.md
+        - /*.aim.process.md
+
+  footprintProfiles:
+    local:
+      description: Local packages only; no target-repository mutation.
+      embeddedDocs: false
+      repoAdapters: false
+      sharedProfile: false
+      repoIgnore: false
+      homeAdapters: true
+    profile:
+      description: Tiny shared profile and runtime ignore policy; no repo adapters or docs.
+      embeddedDocs: false
+      repoAdapters: false
+      sharedProfile: true
+      repoIgnore: true
+      homeAdapters: true
+    adapters:
+      description: Selected adapter packages; Team also gets the shared profile.
+      embeddedDocs: false
+      repoAdapters: true
+      sharedProfile: team-default
+      repoIgnore: true
+      homeAdapters: true
+    full:
+      description: Shared profile, selected adapters, and embedded workflow docs.
+      embeddedDocs: true
+      repoAdapters: true
+      sharedProfile: true
+      repoIgnore: true
+      homeAdapters: true
 
   targetExclusions:
     - path: CONTRIBUTING.md

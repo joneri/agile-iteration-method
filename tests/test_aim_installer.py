@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import io
+import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -15,7 +17,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = REPO_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-from aim_installer import apply, guided, render  # noqa: E402
+from aim_installer import apply, guided, planner, render  # noqa: E402
+from aim_installer.manifest import load_manifest  # noqa: E402
 import aim_install  # noqa: E402
 
 
@@ -90,6 +93,17 @@ class GuidedInputTests(unittest.TestCase):
         )
         self.assertEqual(adapters, ["copilot", "codex", "claude"])
         self.assertIn("Space toggles", adapter_output.getvalue())
+
+    def test_footprint_menu_uses_mode_default(self) -> None:
+        output = io.StringIO()
+        footprint = guided.prompt_footprint(
+            ["local", "profile", "adapters", "full"],
+            default="adapters",
+            key_reader=lambda: "enter",
+            output_stream=output,
+        )
+        self.assertEqual(footprint, "adapters")
+        self.assertIn(">   Adapters", output.getvalue())
 
     def test_collision_n_and_enter_keep_existing(self) -> None:
         output = io.StringIO()
@@ -240,6 +254,9 @@ class RenderTests(unittest.TestCase):
             "source": "/tmp/aim",
             "manifestVersion": "0.2",
             "mode": "team",
+            "footprint": "adapters",
+            "footprintDescription": "Selected adapter packages.",
+            "defaultFootprint": "adapters",
             "adapters": ["copilot"],
             "actions": [
                 {
@@ -265,6 +282,13 @@ class RenderTests(unittest.TestCase):
                 "calibrationCommand": "/aim calibrate-repo",
             },
             "rootFileExclusions": [],
+            "scopeSummary": {
+                "repoActionCount": 1,
+                "localActionCount": 0,
+                "staysLocal": [],
+                "skippedAdapters": [],
+                "explicitApproval": [],
+            },
             "blockers": [],
         }
 
@@ -285,6 +309,176 @@ class RenderTests(unittest.TestCase):
         rendered = render.render_json(self._plan())
         self.assertNotIn("\033[", rendered)
         self.assertIn('"operation": "dry-run"', rendered)
+
+
+class ModeFootprintContractTests(unittest.TestCase):
+    def _plan(
+        self,
+        *,
+        mode: str,
+        footprint: str | None = None,
+        adapters: list[str] | None = None,
+    ) -> dict:
+        manifest = load_manifest(REPO_ROOT)
+        mode_profile = manifest.mode_profile(mode)
+        selected = footprint or str(mode_profile["defaultFootprint"])
+        with tempfile.TemporaryDirectory() as target, tempfile.TemporaryDirectory() as home:
+            return planner.compute_plan(
+                source_root=REPO_ROOT,
+                target_root=Path(target),
+                mode=mode,
+                footprint=selected,
+                footprint_explicit=footprint is not None,
+                adapters=adapters or ["copilot", "claude", "codex"],
+                manifest=manifest,
+                validator_result={"resultClass": "healthy", "exitCode": 0},
+                home_root=Path(home),
+            )
+
+    def test_personal_default_is_permissive_adapter_setup(self) -> None:
+        plan = self._plan(mode="personal")
+        destinations = set(plan["scopeSummary"]["repoDestinations"])
+        self.assertEqual(plan["footprint"], "adapters")
+        self.assertFalse(plan["footprintProfile"]["sharedProfile"])
+        self.assertIn(".github/agents/aim.agent.md", destinations)
+        self.assertIn(".claude/commands/start-aim.md", destinations)
+        self.assertNotIn("aim.profile.yaml", destinations)
+        self.assertFalse(
+            any(path.startswith("docs/workflow/") for path in destinations)
+        )
+
+    def test_team_default_installs_profile_and_selected_adapters_without_docs(self) -> None:
+        plan = self._plan(mode="team")
+        destinations = set(plan["scopeSummary"]["repoDestinations"])
+        self.assertEqual(plan["footprint"], "adapters")
+        self.assertIn("aim.profile.yaml", destinations)
+        self.assertIn(".gitignore", destinations)
+        self.assertIn(".github/agents/aim.agent.md", destinations)
+        self.assertIn(".claude/commands/start-aim.md", destinations)
+        self.assertFalse(
+            any(path.startswith("docs/workflow/") for path in destinations)
+        )
+        self.assertGreater(plan["scopeSummary"]["localActionCount"], 0)
+
+    def test_enterprise_default_is_non_invasive(self) -> None:
+        plan = self._plan(mode="enterprise")
+        self.assertEqual(plan["footprint"], "local")
+        self.assertEqual(plan["scopeSummary"]["repoActionCount"], 0)
+        self.assertFalse(plan["footprintProfile"]["sharedProfile"])
+        self.assertTrue(plan["modeProfile"]["enterpriseSafe"])
+
+    def test_enterprise_profile_uses_exact_canonical_ignore_baseline(self) -> None:
+        plan = self._plan(
+            mode="enterprise", footprint="profile", adapters=["copilot"]
+        )
+        self.assertEqual(
+            plan["gitignoreFragments"],
+            [
+                "/.aim",
+                "/.aim-local",
+                "/aim.local.*",
+                "/*.aim.local.md",
+                "/*.aim.process.md",
+            ],
+        )
+        self.assertEqual(
+            set(plan["scopeSummary"]["repoDestinations"]),
+            {"aim.profile.yaml", ".gitignore"},
+        )
+        self.assertTrue(plan["scopeSummary"]["explicitApproval"])
+
+    def test_full_footprint_is_the_only_one_that_embeds_workflow_docs(self) -> None:
+        for footprint in ("local", "profile", "adapters"):
+            plan = self._plan(mode="team", footprint=footprint)
+            self.assertFalse(
+                any(
+                    path.startswith("docs/workflow/")
+                    for path in plan["scopeSummary"]["repoDestinations"]
+                )
+            )
+        full = self._plan(mode="team", footprint="full")
+        self.assertTrue(
+            any(
+                path.startswith("docs/workflow/")
+                for path in full["scopeSummary"]["repoDestinations"]
+            )
+        )
+
+    def test_generic_root_files_remain_excluded_for_every_mode(self) -> None:
+        for mode in ("personal", "team", "enterprise"):
+            plan = self._plan(mode=mode)
+            excluded = {entry["path"] for entry in plan["rootFileExclusions"]}
+            self.assertEqual(
+                {"AGENTS.md", "CLAUDE.md", "CONTRIBUTING.md"},
+                excluded,
+            )
+            destinations = {Path(a["destination"]).name for a in plan["actions"]}
+            self.assertTrue(excluded.isdisjoint(destinations))
+
+    def test_local_guidance_does_not_claim_skipped_adapter_is_installed(self) -> None:
+        plan = self._plan(
+            mode="personal", footprint="local", adapters=["copilot"]
+        )
+        steps = plan["guidance"]["steps"]
+        self.assertTrue(any("was not installed" in step for step in steps))
+        self.assertFalse(any("open chat and run" in step for step in steps))
+        rendered = render.render_text(plan)
+        self.assertIn("keeping or committing it is the solo user's choice", rendered)
+        self.assertIn("No files are selected", rendered)
+
+    def test_personal_allows_every_footprint(self) -> None:
+        expected_repo_writes = {
+            "local": False,
+            "profile": True,
+            "adapters": True,
+            "full": True,
+        }
+        for footprint, has_repo_writes in expected_repo_writes.items():
+            plan = self._plan(mode="personal", footprint=footprint)
+            self.assertEqual(
+                plan["scopeSummary"]["repoActionCount"] > 0,
+                has_repo_writes,
+            )
+        profile = self._plan(mode="personal", footprint="profile")
+        self.assertIn(
+            "aim.profile.yaml", profile["scopeSummary"]["repoDestinations"]
+        )
+        full = self._plan(mode="personal", footprint="full")
+        self.assertTrue(
+            any(
+                path.startswith("docs/workflow/")
+                for path in full["scopeSummary"]["repoDestinations"]
+            )
+        )
+
+    def test_validator_blocks_mode_default_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = Path(temporary) / "repo"
+            shutil.copytree(
+                REPO_ROOT,
+                copied,
+                ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc"),
+            )
+            manifest_path = copied / "install/aim-install-manifest.yaml"
+            content = manifest_path.read_text(encoding="utf-8")
+            content = content.replace(
+                "team:\n      defaultFootprint: adapters",
+                "team:\n      defaultFootprint: local",
+                1,
+            )
+            manifest_path.write_text(content, encoding="utf-8")
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(copied / "scripts/validate_aim_runtime.py"),
+                    str(copied),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=20,
+            )
+            self.assertEqual(completed.returncode, 2)
+            self.assertIn("mode footprint defaults drifted", completed.stdout)
 
 
 class CliTests(unittest.TestCase):
@@ -311,6 +505,8 @@ class CliTests(unittest.TestCase):
         ), mock.patch.object(
             guided, "prompt_mode", return_value="personal"
         ), mock.patch.object(
+            guided, "prompt_footprint", return_value="full"
+        ), mock.patch.object(
             guided, "prompt_adapters", return_value=["claude"]
         ), mock.patch.object(
             guided, "confirm_apply", return_value=True
@@ -323,11 +519,40 @@ class CliTests(unittest.TestCase):
                 (Path(target) / "docs/workflow/agile-iteration-method.md").exists()
             )
 
+    def test_guided_non_default_footprint_is_recorded_as_explicit(self) -> None:
+        output = io.StringIO()
+        with tempfile.TemporaryDirectory() as temporary, mock.patch.object(
+            guided, "is_interactive", return_value=True
+        ), mock.patch.object(
+            guided, "prompt_mode", return_value="enterprise"
+        ), mock.patch.object(
+            guided, "prompt_footprint", return_value="profile"
+        ), mock.patch.object(
+            guided, "prompt_adapters", return_value=["copilot"]
+        ), mock.patch.object(
+            guided, "confirm_apply", return_value=False
+        ), mock.patch(
+            "sys.stdout", output
+        ):
+            target = Path(temporary) / "target"
+            target.mkdir()
+            plan_path = Path(temporary) / "plan.json"
+            result = aim_install.main(
+                ["--target", str(target), "--plan-out", str(plan_path)]
+            )
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(result, 0)
+        self.assertTrue(plan["footprintExplicit"])
+        self.assertTrue(plan["scopeSummary"]["explicitApproval"])
+
     def test_guided_preview_decline_is_successful_and_writes_nothing(self) -> None:
         with tempfile.TemporaryDirectory() as target, mock.patch.object(
             guided, "is_interactive", return_value=True
         ), mock.patch.object(
             guided, "prompt_mode", return_value="personal"
+        ), mock.patch.object(
+            guided, "prompt_footprint", return_value="local"
         ), mock.patch.object(
             guided, "prompt_adapters", return_value=["claude"]
         ), mock.patch.object(
@@ -344,6 +569,8 @@ class CliTests(unittest.TestCase):
             guided, "is_interactive", return_value=True
         ), mock.patch.object(
             guided, "prompt_mode", return_value="personal"
+        ), mock.patch.object(
+            guided, "prompt_footprint", return_value="local"
         ), mock.patch.object(
             guided, "prompt_adapters", return_value=["claude"]
         ), mock.patch.object(

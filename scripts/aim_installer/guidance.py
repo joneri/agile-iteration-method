@@ -50,10 +50,15 @@ def build_guidance(plan: dict[str, Any]) -> dict[str, Any]:
     target = plan["target"]
     steps: list[str] = []
 
-    if state in ("fresh", "partial", "empty"):
+    if state in ("fresh", "partial"):
         steps.append(
             f"Apply the plan: {command} --target {target} "
-            f"--mode {plan['mode']} --apply"
+            f"--mode {plan['mode']} --footprint {plan['footprint']} --apply"
+        )
+    elif state == "empty":
+        steps.append(
+            "No files are selected for installation. Use explicit AIM intent, "
+            "select Codex for a local package, or choose a broader footprint."
         )
     elif state == "drifted":
         steps.append(
@@ -65,11 +70,20 @@ def build_guidance(plan: dict[str, Any]) -> dict[str, Any]:
         steps.append("Install is current; no apply needed.")
 
     steps.append(
-        "Reconfigure later by re-running with different --mode / --adapter; "
+        "Reconfigure later by re-running with different --mode / --footprint / "
+        "--adapter; "
         "update or repair by re-running with --apply (use --force to overwrite drift)."
     )
 
+    skipped_adapters = set(plan.get("scopeSummary", {}).get("skippedAdapters", []))
     for adapter in plan["adapters"]:
+        if adapter in skipped_adapters:
+            steps.append(
+                f"{adapter.title()} repo package was not installed by the "
+                f"{plan['footprint']} footprint; use explicit AIM intent or "
+                "choose the adapters/full footprint."
+            )
+            continue
         start = _START_COMMANDS.get(adapter)
         if start:
             steps.append("Start AIM — " + start)

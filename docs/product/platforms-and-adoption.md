@@ -12,12 +12,15 @@ Neither changes the core delivery loop.
 
 Use Personal AIM when one developer wants maximum flexibility.
 
-- no committed AIM files are required by default
-- personal repository hints stay outside the repo
-- AIM can be tried without asking a team to adopt it
-- the user may choose to share more later
+- there are no Team or Enterprise sharing constraints
+- AIM docs, repo-awareness, profiles, adapters, and runtime artifacts may stay
+  local or be written and committed when the user chooses
+- local personal hints remain available when the user prefers no repo footprint
+- AIM can be tried or fully embedded without asking a team to adopt it
 
 Personal is the guided installer default.
+Its suggested adapter footprint is a convenience, not a restriction; the user
+may choose local, profile, adapters, or full.
 
 ### Team
 

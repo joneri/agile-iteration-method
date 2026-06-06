@@ -6,7 +6,8 @@ Define the concrete AIM 2.0 model for operating modes, low-footprint adoption, a
 
 This model turns the AIM 2.0 strategy into a practical product surface:
 
-- Personal AIM can run without committed AIM files.
+- Personal AIM may run with no committed AIM files or with a user-chosen
+  committed AIM footprint.
 - Team AIM can share repo adaptation through a tiny committed profile surface.
 - Enterprise AIM can later attach organization policy, stricter ignore defaults, and approved shared profile registries.
 - Repo-aware context can be reused across branches and sessions without repeating broad cold-start scans.
@@ -19,7 +20,7 @@ The canonical operating modes are:
 
 | Mode | Default footprint | Primary user | Shared by default | Best for |
 | --- | --- | --- | --- | --- |
-| Personal AIM | zero-footprint or user-chosen | one developer | no | trying AIM, personal repos, flexible local workflows |
+| Personal AIM | user-chosen, from zero-footprint to full embedded | one developer | no | solo work, trials, personal repos, maximum flexibility |
 | Team AIM | tiny-footprint by default | one team | yes, intentionally | shared repo conventions, features, and validation paths |
 | Enterprise AIM | isolated footprint by default | strict repo or organization | no, unless explicitly approved | protected repos, larger orgs, regulated environments |
 
@@ -184,25 +185,23 @@ Default storage:
 
 - runtime: installed tool or local adapter
 - personal hints: `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
-- working state: local and ignored
-- docs: AIM distribution or links
+- working state: local, ignored, or committed by user choice
+- docs: AIM distribution, links, or repo-embedded by user choice
 
 Repository mutation:
 
-- none required by default
+- allowed
+- profile, adapter, docs, ignore, and runtime choices belong to the solo user
+- no Team sharing review or Enterprise isolation rule is imposed
 
 When user-level persistence is unavailable:
 
 - use session-only hints only
-- do not create a repo-local profile or hints file
+- or create a repo-local profile when the user chooses that footprint
 - do not store stable repo-awareness anywhere under `.aim/`
 
-Use this when:
-
-- the developer does not own the repo
-- the repo is protected
-- the team has not adopted AIM
-- the user wants a cheap first trial
+Use this when one developer owns the AIM setup choice, whether they prefer a
+cheap local trial or a fully embedded personal workflow.
 
 ### Team AIM
 
@@ -407,7 +406,7 @@ At Gate E, AIM should be able to report:
 - Working state is not the repo profile.
 - Runtime is not repository documentation.
 - Docs are reference material, not mandatory install payload.
-- Personal AIM defaults to zero committed files.
+- Personal AIM has no required sharing rule; footprint is the user's choice.
 - Team AIM defaults to a tiny shared profile surface.
 - Enterprise AIM protects AIM-internal artifacts by default.
 - Full embedded AIM remains valid only by explicit repo-owner choice.
