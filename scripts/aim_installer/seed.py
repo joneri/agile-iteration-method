@@ -50,6 +50,8 @@ aimRepoProfile:
     localities: []
     riskZones: []
     habits: []
+    avoidByDefault: []
+    freshness: []
   note: >-
     Seeded by aim_install.py. This is a bootstrap profile and is NOT calibrated.
     Run /aim calibrate-repo before relying on repo-awareness.
