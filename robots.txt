@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://joneri.github.io/agile-iteration-method/sitemap.xml

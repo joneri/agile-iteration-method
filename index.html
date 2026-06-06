@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agile Iteration Method (AIM) 2.0 - Structured AI Software Delivery</title>
+  <meta name="description" content="AIM 2.0 is a structured AI delivery system for planning, building, reviewing, validating, and approving real software with Codex, Claude, and GitHub Copilot.">
+  <link rel="canonical" href="https://joneri.github.io/agile-iteration-method/">
+  <link rel="icon" type="image/png" href="github-pages/assets/images/aim-2-logo-light.png">
+  <link rel="apple-touch-icon" href="github-pages/assets/images/aim-2-logo-light.png">
+  <meta name="theme-color" content="#06142d">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="Agile Iteration Method (AIM) 2.0">
+  <meta property="og:description" content="Build what you want. Stay aligned. Protect quality, context, and human control.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://joneri.github.io/agile-iteration-method/">
+  <meta property="og:image" content="https://joneri.github.io/agile-iteration-method/AIM_OG.png">
+  <meta property="og:image:width" content="1730">
+  <meta property="og:image:height" content="909">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Agile Iteration Method (AIM) 2.0">
+  <meta name="twitter:description" content="A structured AI delivery system for real software.">
+  <meta name="twitter:image" content="https://joneri.github.io/agile-iteration-method/AIM_OG.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Agile Iteration Method (AIM)",
+    "alternateName": "AIM 2.0",
+    "description": "A structured AI delivery system for planning, implementation, review, validation, correction, and human approval.",
+    "url": "https://joneri.github.io/agile-iteration-method/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "softwareVersion": "2.0",
+    "author": { "@type": "Person", "name": "Jonas Eriksson" },
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "codeRepository": "https://github.com/joneri/agile-iteration-method"
+  }
+  </script>
+  <style>
+    :root {
+      --ink: #071426;
+      --navy: #06142d;
+      --navy-2: #0a2148;
+      --blue: #0867e8;
+      --cyan: #20b9ec;
+      --green: #83ca31;
+      --yellow: #f6ad22;
+      --paper: #ffffff;
+      --mist: #eef6fb;
+      --line: #cfdce7;
+      --muted: #506277;
+      --max: 1160px;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    }
+    a { color: inherit; }
+    img { display: block; max-width: 100%; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .container { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--blue);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .section-title {
+      margin: 0;
+      max-width: 780px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    .section-lead {
+      max-width: 720px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+    .band { padding: 88px 0; }
+    .band-dark { color: #f5f9ff; background: var(--navy); }
+    .band-dark .eyebrow { color: var(--cyan); }
+    .band-dark .section-lead { color: #b8cae2; }
+    .band-mist { background: var(--mist); }
+
+    .skip-link {
+      position: absolute;
+      top: -80px;
+      left: 16px;
+      z-index: 100;
+      padding: 10px 14px;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    .skip-link:focus { top: 12px; }
+
+    .site-nav {
+      position: absolute;
+      inset: 0 0 auto;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      background: rgba(4, 15, 34, 0.82);
+      backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      min-height: 64px;
+      gap: 30px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 7px;
+      color: #fff;
+      font-weight: 850;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .brand-version { color: var(--green); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-left: auto;
+    }
+    .nav-links a {
+      color: #d7e5f6;
+      font-size: 0.9rem;
+      font-weight: 650;
+      text-decoration: none;
+    }
+    .nav-links a:hover, .nav-links a:focus-visible { color: #fff; }
+    .github-link {
+      padding: 8px 13px;
+      border: 1px solid rgba(255,255,255,0.36);
+      border-radius: 6px;
+    }
+
+    .hero {
+      position: relative;
+      min-height: clamp(650px, 88svh, 860px);
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      color: #fff;
+      background: var(--navy);
+    }
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+    .hero-shade {
+      position: absolute;
+      inset: auto 0 0;
+      height: 46%;
+      background: rgba(2, 12, 29, 0.88);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 720px) auto;
+      align-items: end;
+      gap: 40px;
+      padding-bottom: 48px;
+    }
+    .hero-copy .eyebrow { color: var(--cyan); }
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2.45rem, 5.2vw, 5.2rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+    .hero-lead {
+      max-width: 670px;
+      margin: 18px 0 0;
+      color: #dce8f7;
+      font-size: clamp(1rem, 1.7vw, 1.22rem);
+    }
+    .hero-actions {
+      display: flex;
+      flex-direction: column;
+      min-width: 175px;
+      gap: 10px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 10px 18px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      text-decoration: none;
+      text-align: center;
+    }
+    .button-primary { color: #06142d; background: var(--green); }
+    .button-primary:hover, .button-primary:focus-visible { background: #a0e052; }
+    .button-secondary { color: #fff; border-color: rgba(255,255,255,0.48); background: rgba(3,13,31,0.45); }
+    .button-secondary:hover, .button-secondary:focus-visible { border-color: #fff; background: rgba(3,13,31,0.8); }
+
+    .promise-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 48px;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+    .promise {
+      min-height: 180px;
+      padding: 26px 24px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .promise-number {
+      color: var(--blue);
+      font-size: 0.78rem;
+      font-weight: 850;
+    }
+    .promise h3 { margin: 26px 0 8px; font-size: 1.06rem; }
+    .promise p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+
+    .loop {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      margin-top: 46px;
+      border-top: 1px solid #29476d;
+      border-bottom: 1px solid #29476d;
+    }
+    .loop-step {
+      position: relative;
+      min-height: 145px;
+      padding: 24px 20px;
+      border-right: 1px solid #29476d;
+    }
+    .loop-step:last-child { border-right: 0; }
+    .loop-step:not(:last-child)::after {
+      content: "\2192";
+      position: absolute;
+      top: 22px;
+      right: -9px;
+      z-index: 2;
+      width: 18px;
+      color: var(--yellow);
+      background: var(--navy);
+      text-align: center;
+    }
+    .loop-role { color: var(--cyan); font-size: 0.78rem; font-weight: 850; text-transform: uppercase; }
+    .loop-step h3 { margin: 22px 0 6px; font-size: 1rem; }
+    .loop-step p { margin: 0; color: #b8cae2; font-size: 0.86rem; }
+    .quality-note {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(240px, 0.5fr);
+      gap: 52px;
+      align-items: center;
+      margin-top: 42px;
+    }
+    .quality-note p { margin: 0; color: #b8cae2; }
+    .quality-callout {
+      padding: 20px 0 20px 22px;
+      border-left: 4px solid var(--green);
+      color: #fff;
+      font-size: 1.06rem;
+      font-weight: 750;
+    }
+
+    .feature-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 70px;
+      align-items: start;
+    }
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+    .feature {
+      min-height: 205px;
+      padding: 24px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .feature-label { color: var(--blue); font-size: 0.76rem; font-weight: 850; text-transform: uppercase; }
+    .feature h3 { margin: 18px 0 8px; font-size: 1.08rem; }
+    .feature p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+    .rebuild {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      gap: 58px;
+      align-items: center;
+    }
+    .brand-visual {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    .brand-visual img {
+      width: 100%;
+      aspect-ratio: 1.9 / 1;
+      object-fit: cover;
+      object-position: center;
+    }
+    .rebuild-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+      margin-top: 30px;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+    .rebuild-item {
+      padding: 18px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .mode-grid, .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 44px;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+    .mode, .platform {
+      padding: 30px 26px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .mode-tag, .platform-tag {
+      display: inline-block;
+      margin-bottom: 36px;
+      color: var(--blue);
+      font-size: 0.78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+    .mode h3, .platform h3 { margin: 0 0 10px; font-size: 1.35rem; }
+    .mode p, .platform p { margin: 0; color: var(--muted); }
+    .mode strong { display: block; margin-top: 18px; font-size: 0.9rem; }
+    .platform-start {
+      display: block;
+      margin-top: 20px;
+      color: #d5e7fa;
+      font: 0.82rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .band-dark .platform-grid { border-color: #29476d; }
+    .band-dark .platform { border-color: #29476d; }
+    .band-dark .platform-tag { color: var(--cyan); }
+    .band-dark .platform p { color: #b8cae2; }
+
+    .journey {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      margin-top: 46px;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+    .journey-step {
+      min-height: 210px;
+      padding: 22px 18px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .journey-number {
+      display: flex;
+      width: 32px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--blue);
+      font-size: 0.82rem;
+      font-weight: 850;
+    }
+    .journey-step h3 { margin: 30px 0 8px; font-size: 1rem; }
+    .journey-step p { margin: 0; color: var(--muted); font-size: 0.86rem; }
+    .installer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 40px;
+      align-items: center;
+      margin-top: 36px;
+      padding: 28px;
+      color: #fff;
+      background: var(--navy-2);
+      border-radius: var(--radius);
+    }
+    .installer h3 { margin: 0 0 8px; font-size: 1.15rem; }
+    .installer p { margin: 0; color: #c7d8eb; }
+    .command {
+      display: inline-block;
+      padding: 12px 16px;
+      color: #dff7ff;
+      border: 1px solid #315782;
+      border-radius: 6px;
+      background: #06142d;
+      font: 0.86rem/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: nowrap;
+    }
+    .start-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .docs-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 40px;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+    }
+    .doc-link {
+      min-height: 125px;
+      padding: 22px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      text-decoration: none;
+    }
+    .doc-link span { display: block; color: var(--blue); font-size: 0.75rem; font-weight: 850; text-transform: uppercase; }
+    .doc-link strong { display: block; margin-top: 28px; font-size: 1rem; }
+    .doc-link:hover, .doc-link:focus-visible { background: #f5fbff; }
+
+    footer {
+      padding: 32px 0;
+      color: #a9bdd5;
+      background: #030b18;
+      font-size: 0.85rem;
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    footer a { color: #dceafb; }
+
+    @media (max-width: 980px) {
+      .nav-links a:not(.github-link) { display: none; }
+      .hero-content { grid-template-columns: 1fr; gap: 24px; }
+      .hero-actions { flex-direction: row; min-width: 0; }
+      .promise-grid, .mode-grid, .platform-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .feature-layout, .rebuild { grid-template-columns: 1fr; gap: 44px; }
+      .loop, .journey { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .loop-step:nth-child(3) { border-right: 0; }
+      .loop-step:nth-child(3)::after { display: none; }
+      .docs-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .container { width: min(100% - 28px, var(--max)); }
+      .band { padding: 64px 0; }
+      .nav-inner { min-height: 58px; }
+      .github-link { padding: 7px 10px; }
+      .hero {
+        min-height: 760px;
+        align-items: flex-end;
+      }
+      .hero-media {
+        object-position: 62% center;
+      }
+      .hero-shade { height: 58%; }
+      .hero-content { padding-bottom: 34px; }
+      .hero h1 { font-size: clamp(2.2rem, 12vw, 3.3rem); }
+      .hero-lead { font-size: 1rem; }
+      .hero-actions { flex-direction: column; }
+      .promise-grid, .feature-list, .mode-grid, .platform-grid, .rebuild-list, .docs-row {
+        grid-template-columns: 1fr;
+      }
+      .promise, .feature { min-height: 0; }
+      .loop, .journey { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .loop-step:nth-child(3) { border-right: 1px solid #29476d; }
+      .loop-step:nth-child(3)::after { display: block; }
+      .loop-step:nth-child(even) { border-right: 0; }
+      .loop-step:nth-child(even)::after { display: none; }
+      .quality-note { grid-template-columns: 1fr; gap: 28px; }
+      .brand-visual img { aspect-ratio: 1.35 / 1; }
+      .journey-step { min-height: 190px; }
+      .installer { grid-template-columns: 1fr; gap: 22px; padding: 24px 20px; }
+      .command { width: 100%; overflow-x: auto; white-space: normal; word-break: break-word; }
+      .start-actions { flex-direction: column; }
+      .start-actions .button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="AIM 2.0 home">
+        <span>AIM</span><span class="brand-version">2.0</span>
+      </a>
+      <div class="nav-links">
+        <a href="#why">Why AIM</a>
+        <a href="#features">Features</a>
+        <a href="#modes">Modes</a>
+        <a href="#platforms">Platforms</a>
+        <a href="#start">Get started</a>
+        <a class="github-link" href="https://github.com/joneri/agile-iteration-method">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <img class="hero-media" src="github-pages/assets/images/aim-2-hero-dark.png" alt="">
+    <div class="hero-shade"></div>
+    <div class="container hero-content">
+      <div class="hero-copy">
+        <p class="eyebrow">AI operating system for agentic software delivery</p>
+        <h1>Agile Iteration Method 2.0</h1>
+        <p class="hero-lead">Build what you want without losing the goal. AIM turns AI-assisted development into a clear loop of planning, implementation, review, validation, correction, and human approval.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#start">Start with AIM</a>
+        <a class="button button-secondary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">Discover the product</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="band" id="why">
+      <div class="container">
+        <p class="eyebrow">A delivery system, not a coding assistant</p>
+        <h2 class="section-title">AI can move fast. AIM makes sure it moves in the right direction.</h2>
+        <p class="section-lead">AIM gives AI work a destination, a controlled next step, evidence before acceptance, and a human decision when it matters.</p>
+
+        <div class="promise-grid">
+          <article class="promise">
+            <span class="promise-number">01</span>
+            <h3>Build what you want</h3>
+            <p>Start from an outcome, not a pile of disconnected coding tasks.</p>
+          </article>
+          <article class="promise">
+            <span class="promise-number">02</span>
+            <h3>Never lose track</h3>
+            <p>Keep the Epic, approved increment, evidence, and next decision visible.</p>
+          </article>
+          <article class="promise">
+            <span class="promise-number">03</span>
+            <h3>Quality first</h3>
+            <p>Make review, validation, and correction part of delivery rather than cleanup.</p>
+          </article>
+          <article class="promise">
+            <span class="promise-number">04</span>
+            <h3>Human controlled</h3>
+            <p>People retain ownership of scope, trust decisions, releases, and completion.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-dark" id="loop">
+      <div class="container">
+        <p class="eyebrow">One repeatable delivery loop</p>
+        <h2 class="section-title">From product intent to accepted software.</h2>
+        <p class="section-lead">AIM separates responsibilities so planning does not silently become implementation and generated work does not silently become accepted work.</p>
+
+        <div class="loop" aria-label="AIM role sequence">
+          <article class="loop-step">
+            <span class="loop-role">PO</span>
+            <h3>Set direction</h3>
+            <p>Define the Epic, value, boundaries, and acceptance intent.</p>
+          </article>
+          <article class="loop-step">
+            <span class="loop-role">TDO</span>
+            <h3>Shape the increment</h3>
+            <p>Choose one useful, reviewable slice of the outcome.</p>
+          </article>
+          <article class="loop-step">
+            <span class="loop-role">Dev</span>
+            <h3>Build it</h3>
+            <p>Implement the approved increment end to end.</p>
+          </article>
+          <article class="loop-step">
+            <span class="loop-role">Reviewer</span>
+            <h3>Challenge it</h3>
+            <p>Find correctness issues, edge cases, and risk.</p>
+          </article>
+          <article class="loop-step">
+            <span class="loop-role">TDO</span>
+            <h3>Validate it</h3>
+            <p>Check evidence against the increment and Epic.</p>
+          </article>
+          <article class="loop-step">
+            <span class="loop-role">PO</span>
+            <h3>Decide</h3>
+            <p>Accept, adjust, continue, or close the Epic.</p>
+          </article>
+        </div>
+
+        <div class="quality-note">
+          <p>AIM does not promise that AI is always correct. It creates repeated opportunities to discover mistakes before they are accepted, and sends failed work back for correction.</p>
+          <div class="quality-callout">Generation is the beginning. Evidence decides what is done.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="features">
+      <div class="container feature-layout">
+        <div>
+          <p class="eyebrow">Built for real repositories</p>
+          <h2 class="section-title">Rich when needed. Lightweight by default.</h2>
+          <p class="section-lead">AIM learns enough to work safely, remembers useful repository knowledge, and expands context only when the task, evidence, or risk requires it.</p>
+        </div>
+
+        <div class="feature-list">
+          <article class="feature">
+            <span class="feature-label">Repo-aware</span>
+            <h3>Understands local reality</h3>
+            <p>Technologies, commands, important folders, conventions, risks, and relevant documentation.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-label">Persistent memory</span>
+            <h3>Remembers what matters</h3>
+            <p>Shared repository facts and personal hints persist without becoming one giant active prompt.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-label">Context discipline</span>
+            <h3>Your tokens are valuable</h3>
+            <p>Start from compact state and load deeper operational truth only when it becomes relevant.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-label">Self-correction</span>
+            <h3>Problems return for repair</h3>
+            <p>Blocking review findings and failed validation prevent silent completion.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-mist" id="rebuilt">
+      <div class="container rebuild">
+        <figure class="brand-visual">
+          <img src="github-pages/assets/images/aim-2-logo-light.png" alt="AIM 2.0 Agile Iteration Method logo">
+        </figure>
+        <div>
+          <p class="eyebrow">Rebuilt for AIM 2.0</p>
+          <h2 class="section-title">Cleaner architecture. Easier adoption.</h2>
+          <p class="section-lead">AIM 2.0 was rebuilt while preserving the proven delivery loop. Workflow, repo awareness, runtime state, installation, and platform adapters now have clearer boundaries.</p>
+          <div class="rebuild-list">
+            <div class="rebuild-item">Guided installation</div>
+            <div class="rebuild-item">Collision protection</div>
+            <div class="rebuild-item">Rollback-safe apply</div>
+            <div class="rebuild-item">Safe reconfiguration</div>
+            <div class="rebuild-item">Persistent repo knowledge</div>
+            <div class="rebuild-item">Load-on-demand context</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="modes">
+      <div class="container">
+        <p class="eyebrow">One product, three operating modes</p>
+        <h2 class="section-title">Adopt AIM at the level that fits your environment.</h2>
+        <p class="section-lead">The workflow remains familiar. What changes is how AIM knowledge is shared and how strongly the repository is protected by default.</p>
+
+        <div class="mode-grid">
+          <article class="mode">
+            <span class="mode-tag">Flexible</span>
+            <h3>Personal</h3>
+            <p>Maximum freedom for one developer. Keep AIM local, share selected files, or evolve the setup over time.</p>
+            <strong>Default: local-first</strong>
+          </article>
+          <article class="mode">
+            <span class="mode-tag">Shared</span>
+            <h3>Team</h3>
+            <p>Commit a small, deliberate repository understanding while private runtime state remains separate.</p>
+            <strong>Default: intentional sharing</strong>
+          </article>
+          <article class="mode">
+            <span class="mode-tag">Protected</span>
+            <h3>Enterprise</h3>
+            <p>Isolate AIM-internal artifacts unless sharing is explicitly reviewed and approved.</p>
+            <strong>Default: safe separation</strong>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-dark" id="platforms">
+      <div class="container">
+        <p class="eyebrow">Native where you already work</p>
+        <h2 class="section-title">Codex, Claude, and GitHub Copilot.</h2>
+        <p class="section-lead">Each platform gets a natural entrypoint. The delivery loop, quality rules, ownership, and acceptance stay shared.</p>
+
+        <div class="platform-grid">
+          <article class="platform">
+            <span class="platform-tag">Skill-first</span>
+            <h3>Codex</h3>
+            <p>Install the AIM skill for the native command family and guided AIM runtime.</p>
+            <code class="platform-start">/aim start "EPIC: ..."</code>
+          </article>
+          <article class="platform">
+            <span class="platform-tag">Command-first</span>
+            <h3>Claude</h3>
+            <p>Use installed AIM commands, with explicit Epic intent as the reliable fallback.</p>
+            <code class="platform-start">/aim start "EPIC: ..."</code>
+          </article>
+          <article class="platform">
+            <span class="platform-tag">Agent-first</span>
+            <h3>GitHub Copilot</h3>
+            <p>Select the AIM agent and continue with the same AIM command and approval model.</p>
+            <code class="platform-start">/aim start "EPIC: ..."</code>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-mist" id="start">
+      <div class="container">
+        <p class="eyebrow">Your first AIM journey</p>
+        <h2 class="section-title">Install once. Start building with confidence.</h2>
+        <p class="section-lead">The guided installer asks only for missing choices, previews the plan, protects collisions, and lets you apply in the same session.</p>
+
+        <div class="journey">
+          <article class="journey-step">
+            <span class="journey-number">1</span>
+            <h3>Install AIM</h3>
+            <p>Choose the repository, operating mode, and adapters.</p>
+          </article>
+          <article class="journey-step">
+            <span class="journey-number">2</span>
+            <h3>Calibrate</h3>
+            <p>Verify the smallest useful repository understanding.</p>
+          </article>
+          <article class="journey-step">
+            <span class="journey-number">3</span>
+            <h3>Start an Epic</h3>
+            <p>Describe the outcome you want, not a task pile.</p>
+          </article>
+          <article class="journey-step">
+            <span class="journey-number">4</span>
+            <h3>Review Gate A</h3>
+            <p>Confirm direction, boundaries, risks, and acceptance.</p>
+          </article>
+          <article class="journey-step">
+            <span class="journey-number">5</span>
+            <h3>Approve the slice</h3>
+            <p>Work through one useful Done Increment at a time.</p>
+          </article>
+          <article class="journey-step">
+            <span class="journey-number">6</span>
+            <h3>Accept evidence</h3>
+            <p>Review what changed, what passed, and what remains.</p>
+          </article>
+        </div>
+
+        <div class="installer">
+          <div>
+            <h3>Run the guided installer</h3>
+            <p>Clone or download AIM, then start the human-friendly setup flow from the source repository.</p>
+          </div>
+          <code class="command">python3 scripts/aim_install.py</code>
+        </div>
+
+        <div class="start-actions">
+          <a class="button button-primary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/getting-started.md">Follow the first-time journey</a>
+          <a class="button" style="color: var(--blue); border-color: var(--blue);" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/install-aim-2.0.md">Read the installer guide</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" id="docs">
+      <div class="container">
+        <p class="eyebrow">Go deeper when you need to</p>
+        <h2 class="section-title">Start with the product. Load the details by need.</h2>
+
+        <div class="docs-row">
+          <a class="doc-link" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">
+            <span>Product</span>
+            <strong>What AIM is</strong>
+          </a>
+          <a class="doc-link" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/platforms-and-adoption.md">
+            <span>Adoption</span>
+            <strong>Modes and platforms</strong>
+          </a>
+          <a class="doc-link" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/quick-start-aim-2.0.md">
+            <span>Workflow</span>
+            <strong>AIM 2.0 quick start</strong>
+          </a>
+          <a class="doc-link" href="https://github.com/joneri/agile-iteration-method">
+            <span>Source</span>
+            <strong>View AIM on GitHub</strong>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>Agile Iteration Method 2.0</span>
+      <span>Created by Jonas Eriksson. Documentation licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</span>
+    </div>
+  </footer>
+</body>
+</html>
