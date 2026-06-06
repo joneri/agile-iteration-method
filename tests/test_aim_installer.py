@@ -477,7 +477,9 @@ class ModeFootprintContractTests(unittest.TestCase):
                 text=True,
                 timeout=20,
             )
-            self.assertEqual(completed.returncode, 2)
+            self.assertEqual(completed.returncode, 3)
+            self.assertIn("Result: contradictory", completed.stdout)
+            self.assertIn("Release readiness: FAIL", completed.stdout)
             self.assertIn("mode footprint defaults drifted", completed.stdout)
 
 

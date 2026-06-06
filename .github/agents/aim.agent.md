@@ -355,6 +355,10 @@ At minimum, show:
 - active increment alignment
 - repo-aware context loading
 - ownership violations
+- generated installer mode behavior
+- adapter command, fallback, upgrade, and state-version parity
+- product coherence across canonical docs, public claims, and packaged behavior
+- release readiness as `PASS`, `CONDITIONAL`, or `FAIL`
 
 Validation results should be described using the same runtime classes as the stable AIM runtime:
 - healthy

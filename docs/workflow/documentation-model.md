@@ -54,6 +54,7 @@ It separates:
 | Codex skill onboarding | `docs/workflow/codex-skill-onboarding.md` |
 | Front-door routing | `docs/workflow/light-front-door.md` |
 | Adapter command intents and upgrade behavior | `docs/workflow/adapter-command-contract.md` |
+| Validator tiers, coherence findings, and release readiness | `docs/workflow/product-coherence-validation.md` |
 | Cost profile behavior | `docs/workflow/cost-control-mode.md` |
 | Cost review behavior | `docs/workflow/cost-review-checklist.md` |
 | Cost-saving and escalation behavior | `docs/workflow/cost-saving-method.md` |
@@ -208,6 +209,7 @@ The validator should:
 
 - `docs/workflow/agile-iteration-method.md`
 - `docs/workflow/adapter-command-contract.md`
+- `docs/workflow/product-coherence-validation.md`
 - `docs/product/README.md`
 - `docs/features/README.md`
 - `docs/workflow/operating-modes.md`

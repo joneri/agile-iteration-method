@@ -105,6 +105,15 @@ Remember and forget intents must persist structured rules to `aim.profile.yaml` 
 `/aim upgrade` must inspect selected AIM-owned packages through the deterministic
 installer plan, show stale/collision results before apply, preserve rollback and
 root-file exclusions, and never rewrite active `.aim/` state.
+When no richer host action is available, use the actionable package fallback:
+
+```sh
+python3 scripts/aim_install.py --target <repo> --mode <mode> \
+  --footprint <footprint> --adapter <adapter> --dry-run
+```
+
+Review the plan, then rerun with `--apply`. Use `--force` only for collisions
+the user explicitly approves.
 `/aim replan` returns only the active unaccepted increment to Gate B and preserves
 the reason and accepted history.
 
@@ -223,4 +232,7 @@ Optional runtime artifacts:
 - `.aim/analysis/`
 
 For `/aim validate`, resume checks, and troubleshooting, inspect the required `.aim` artifacts and repository AIM files directly unless the repository provides a validator script.
-Validation reports should classify the result as `healthy`, `recoverable`, `blocked`, or `contradictory`, name the failed artifact or rule, and avoid mutating runtime state.
+Validation reports should classify the result as `healthy`, `recoverable`,
+`blocked`, or `contradictory`; report Structural, Behavioral, Product coherence,
+and Release readiness tiers; name the failed artifact or rule; and avoid
+mutating runtime state.

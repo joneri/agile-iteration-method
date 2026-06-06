@@ -374,6 +374,12 @@ The validator should check:
 - active increment alignment with increment, review and decision artifacts
 - normalized repo-aware context availability
 - ownership-rule violations, especially around shared state and subagent outputs
+- representative installer and adapter behavior
+- product coherence across canonical docs, public claims, manifests, generated
+  plans, and packaged adapter surfaces
+
+The tiered coherence and release-readiness contract lives in
+`docs/workflow/product-coherence-validation.md`.
 
 ### Result classes
 
@@ -392,6 +398,9 @@ Validator results should be reported using one of these classes:
 The quick check should report:
 - what was checked
 - the result class
+- validation status for Structural, Behavioral, Product coherence, and Release
+  readiness tiers
+- release readiness as `PASS`, `CONDITIONAL`, or `FAIL`
 - the specific failing artifact or rule, if any
 - the best next action
 

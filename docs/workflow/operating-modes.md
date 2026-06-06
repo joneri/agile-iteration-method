@@ -157,10 +157,14 @@ Enterprise:
 The validator should:
 
 - confirm this canonical mode document exists
-- confirm mode-specific boundary language exists
+- generate representative Personal, Team, and Enterprise default plans
+- compare mode-specific claims with actual plan footprint, profile, adapter,
+  docs, ignore, and repo/local action behavior
 - report the configured operating mode when it can detect one
 - require Enterprise ignore markers when the repo profile declares Enterprise mode
 - continue to reject active runtime state inside repo profiles
+- report a contradiction when documented mode behavior and generated plans
+  disagree
 
 ## Related files
 

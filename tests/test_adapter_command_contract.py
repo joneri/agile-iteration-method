@@ -47,7 +47,9 @@ class AdapterCommandContractTests(unittest.TestCase):
             (copied / ".claude/commands/status-aim.md").unlink()
             completed = self._validate(copied)
 
-        self.assertEqual(completed.returncode, 2)
+        self.assertEqual(completed.returncode, 3)
+        self.assertIn("Result: contradictory", completed.stdout)
+        self.assertIn("Release readiness: FAIL", completed.stdout)
         self.assertIn(
             "Claude native command surface is missing for /aim status",
             completed.stdout,
@@ -68,7 +70,9 @@ class AdapterCommandContractTests(unittest.TestCase):
             )
             completed = self._validate(copied)
 
-        self.assertEqual(completed.returncode, 2)
+        self.assertEqual(completed.returncode, 3)
+        self.assertIn("Result: contradictory", completed.stdout)
+        self.assertIn("Release readiness: FAIL", completed.stdout)
         self.assertIn("stale AIM 1.x state example", completed.stdout)
 
     def test_empty_copilot_upgrade_section_is_blocked(self) -> None:
@@ -86,7 +90,9 @@ class AdapterCommandContractTests(unittest.TestCase):
             )
             completed = self._validate(copied)
 
-        self.assertEqual(completed.returncode, 2)
+        self.assertEqual(completed.returncode, 3)
+        self.assertIn("Result: contradictory", completed.stdout)
+        self.assertIn("Release readiness: FAIL", completed.stdout)
         self.assertIn(
             "Copilot advertised command behavior is empty or non-actionable",
             completed.stdout,

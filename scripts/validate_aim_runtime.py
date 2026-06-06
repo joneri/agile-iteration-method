@@ -11,14 +11,15 @@ from pathlib import Path
 
 from aim_installer import planner as installer_planner
 from aim_installer.manifest import ManifestError, load_manifest
+from aim_validator.coherence import evaluate_product_coherence
+from aim_validator.reporting import (
+    findings_by_category,
+    make_finding,
+    release_readiness,
+    summarize_result as summarize_typed_result,
+    tier_statuses,
+)
 
-
-RESULT_ORDER = {
-    "healthy": 0,
-    "recoverable": 1,
-    "blocked": 2,
-    "contradictory": 3,
-}
 
 EXIT_CODES = {
     "healthy": 0,
@@ -300,6 +301,7 @@ INSTALL_MANIFEST_PATH = "install/aim-install-manifest.yaml"
 
 ADAPTER_ENTRY_MODEL_DOC_PATH = "docs/workflow/adapter-entry-model.md"
 ADAPTER_COMMAND_CONTRACT_DOC_PATH = "docs/workflow/adapter-command-contract.md"
+PRODUCT_COHERENCE_DOC_PATH = "docs/workflow/product-coherence-validation.md"
 
 CANONICAL_AIM_COMMANDS = [
     "/aim start",
@@ -553,6 +555,7 @@ REQUIRED_DOCUMENTATION_MODEL_MARKERS = [
     "docs/workflow/repo-awareness-calibration.md",
     "docs/workflow/repo-awareness-two-layer-model.md",
     "docs/workflow/adapter-command-contract.md",
+    PRODUCT_COHERENCE_DOC_PATH,
     "docs/features/",
     "AGENTS.md",
     "CLAUDE.md",
@@ -566,6 +569,7 @@ REQUIRED_DOCUMENTATION_MODEL_MARKERS = [
 
 PROMOTED_CANONICAL_DOC_PATHS = {
     "docs/workflow/adapter-command-contract.md": "docs/features/aim-adapter-command-contract.md",
+    PRODUCT_COHERENCE_DOC_PATH: "docs/features/aim-product-coherence-validation.md",
     "docs/workflow/documentation-model.md": "docs/features/aim-2-documentation-model.md",
     "docs/workflow/operating-modes.md": "docs/features/aim-2-operating-modes.md",
     "docs/workflow/repository-surface-classification.md": "docs/features/aim-2-repository-surface-classification.md",
@@ -599,14 +603,29 @@ EXPECTED_ROLE_BY_STATE = {
 }
 
 
-def add_issue(issues: list[dict[str, str]], result: str, artifact: str, rule: str, action: str) -> None:
+def add_issue(
+    issues: list[dict[str, object]],
+    result: str,
+    artifact: str,
+    rule: str,
+    action: str,
+    *,
+    tier: str | None = None,
+    category: str | None = None,
+    release_impact: str | None = None,
+    evidence: str | None = None,
+) -> None:
     issues.append(
-        {
-            "result": result,
-            "artifact": artifact,
-            "rule": rule,
-            "action": action,
-        }
+        make_finding(
+            result,
+            artifact,
+            rule,
+            action,
+            tier=tier,
+            category=category,
+            release_impact=release_impact,
+            evidence=evidence,
+        )
     )
 
 
@@ -623,10 +642,8 @@ def parse_increment_id(active_increment_id: object) -> tuple[str | None, str | N
     return suffix, None
 
 
-def summarize_result(issues: list[dict[str, str]]) -> str:
-    if not issues:
-        return "healthy"
-    return max(issues, key=lambda issue: RESULT_ORDER[issue["result"]])["result"]
+def summarize_result(issues: list[dict[str, object]]) -> str:
+    return summarize_typed_result(issues)
 
 
 def find_profile_state_markers(content: str) -> list[str]:
@@ -1130,7 +1147,7 @@ def collect_surface_boundary_classification(repo_root: Path) -> dict[str, list[s
 def main() -> int:
     repo_root = Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()
     checked: list[str] = []
-    issues: list[dict[str, str]] = []
+    issues: list[dict[str, object]] = []
 
     required_repo_files = [
         repo_root / "README.md",
@@ -1142,6 +1159,7 @@ def main() -> int:
         repo_root / DOCUMENTATION_MODEL_DOC_PATH,
         repo_root / SURFACE_MODEL_DOC_PATH,
         repo_root / ADAPTER_ENTRY_MODEL_DOC_PATH,
+        repo_root / PRODUCT_COHERENCE_DOC_PATH,
         repo_root / INSTALL_MANIFEST_PATH,
     ]
 
@@ -2378,15 +2396,28 @@ def main() -> int:
                 "Record the last runtime update timestamp in ISO-8601 form.",
             )
 
+    checked.append("AIM 2.0 product coherence")
+    coherence_findings, coherence_evidence = evaluate_product_coherence(repo_root)
+    issues.extend(coherence_findings)
+
     result = summarize_result(issues)
+    readiness = release_readiness(issues)
+    validation_tiers = tier_statuses(issues)
     next_action = {
         "healthy": "Continue or resume the AIM loop normally.",
         "recoverable": "Repair the listed runtime gaps, then re-run the validator before resuming.",
         "blocked": "Restore the required repo/runtime files before continuing the AIM loop.",
-        "contradictory": "Stop and reconcile the contradictory runtime state before continuing.",
+        "contradictory": "Stop and reconcile the reported product or runtime contradictions before continuing.",
     }[result]
 
     print(f"Result: {result}")
+    print(f"Release readiness: {readiness}")
+    print("Validation tiers:")
+    for tier, status in validation_tiers.items():
+        print(f"- {tier}: {status}")
+    print("Behavioral evidence:")
+    for evidence in coherence_evidence:
+        print(f"- {evidence}")
     print("Checked:")
     for item in checked:
         print(f"- {item}")
@@ -2521,13 +2552,34 @@ def main() -> int:
     print(f"- Expansion reason: {profile_source_summary['expansion_reason']}")
     print(f"- Cheap validation first: {profile_source_summary['cheap_validation_first']}")
 
+    categorized = findings_by_category(issues)
+    for category, heading in (
+        ("Error", "Errors"),
+        ("Warning", "Warnings"),
+        ("Contradiction", "Contradictions"),
+    ):
+        print(f"{heading}:")
+        category_findings = categorized[category]
+        if not category_findings:
+            print("- none")
+            continue
+        for issue in category_findings:
+            print(
+                f"- [{issue['tier']}] {issue['artifact']}: {issue['rule']}"
+            )
+            if issue["evidence"]:
+                print(f"  Evidence: {issue['evidence']}")
+
+    print("Recommendations:")
     if issues:
-        print("Issues:")
+        seen_recommendations: set[str] = set()
         for issue in issues:
-            print(f"- [{issue['result']}] {issue['artifact']}: {issue['rule']}")
-            print(f"  Next action: {issue['action']}")
+            recommendation = str(issue["action"])
+            if recommendation in seen_recommendations:
+                continue
+            seen_recommendations.add(recommendation)
+            print(f"- {recommendation}")
     else:
-        print("Issues:")
         print("- none")
 
     print(f"Best next action: {next_action}")

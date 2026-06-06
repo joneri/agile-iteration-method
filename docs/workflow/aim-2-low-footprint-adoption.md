@@ -5,8 +5,8 @@
 
 Use this guide when you want the AIM 2.0 adoption model without copying the full AIM method package into a repository.
 
-AIM 2.0 is not released as a final runtime yet.
-This guide defines the practical product path that future runtime and installer work should follow.
+This guide defines the practical low-footprint path supported by the AIM 2.0
+runtime and installer.
 
 ## What changes in AIM 2.0
 
