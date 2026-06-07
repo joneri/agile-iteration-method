@@ -24,7 +24,9 @@ The guided installer:
 
 Installation is manifest-driven, rollback-protected, and safe to rerun.
 
-If AIM was already installed and the AIM package changed later, run `/aim upgrade` before continuing.
+Already have AIM 1.x or older AIM helper files in the target repository?
+Run `/aim upgrade` before continuing.
+Upgrade refreshes installed AIM-owned surfaces through the reviewed installer plan and keeps active `.aim/` runtime state intact.
 
 For automation, use flags with `--non-interactive` or `--format json`.
 For preview only, use `--dry-run`.

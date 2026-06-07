@@ -3,6 +3,22 @@
 
 # Install AIM 2.0
 
+## Already installed or upgrading from AIM 1.x
+
+If the target repository already contains AIM 1.x-era files, older AIM helper prompts, command files, adapter packages, or an existing `.aim/` runtime, use the packaged upgrade path before starting or resuming work:
+
+```text
+/aim upgrade
+```
+
+The upgrade intent inspects installed AIM-owned packages through the deterministic installer plan, shows stale files and collisions before apply, preserves rollback behavior, and does not silently replace active `.aim/` runtime state.
+
+After upgrade:
+
+1. Run `/aim calibrate-repo` when repository knowledge or shared profiles may have changed.
+2. Start a fresh adapter session when skill, agent, prompt, or command files changed.
+3. Resume an active Epic with `/aim continue`.
+
 ## Guided installer
 
 Run:
@@ -227,17 +243,23 @@ Optional Claude Code package:
 
 ## Updating an existing AIM install
 
-Use this path when AIM is already present in the repository, but AIM 2.0 instruction files, helper prompts, or adapter packages changed and the repository should start following the newer behavior.
+Use this path when AIM is already present in the repository, including older AIM 1.x installations, but AIM 2.0 instruction files, helper prompts, or adapter packages changed and the repository should start following the newer behavior.
 
 Recommended flow:
 
-1. Run the installer again:
+1. Run the normal user-facing upgrade command when available:
+
+```text
+/aim upgrade
+```
+
+If slash routing is unavailable, run the installer directly:
 
 ```bash
 python3 scripts/aim_install.py
 ```
 
-2. Refresh repo-awareness:
+2. Refresh repo-awareness when repository knowledge may have changed:
 
 ```text
 /aim calibrate-repo

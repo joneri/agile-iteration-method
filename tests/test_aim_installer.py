@@ -495,6 +495,31 @@ class ModeFootprintContractTests(unittest.TestCase):
         self.assertIn("keeping or committing it is the solo user's choice", rendered)
         self.assertIn("No files are selected", rendered)
 
+    def test_existing_install_guidance_points_to_upgrade(self) -> None:
+        with tempfile.TemporaryDirectory() as target, tempfile.TemporaryDirectory() as home:
+            copied = Path(target) / ".github" / "agents"
+            copied.mkdir(parents=True)
+            shutil.copy2(
+                REPO_ROOT / ".github" / "agents" / "aim.agent.md",
+                copied / "aim.agent.md",
+            )
+            plan = planner.compute_plan(
+                source_root=REPO_ROOT,
+                target_root=Path(target),
+                mode="team",
+                footprint="adapters",
+                footprint_explicit=True,
+                adapters=["copilot"],
+                manifest=load_manifest(REPO_ROOT),
+                validator_result={"resultClass": "healthy", "exitCode": 0},
+                home_root=Path(home),
+            )
+
+        self.assertEqual(plan["installState"], "partial")
+        guidance = "\n".join(plan["guidance"]["steps"])
+        self.assertIn("/aim upgrade", guidance)
+        self.assertIn(".aim runtime state", guidance)
+
     def test_personal_allows_every_footprint(self) -> None:
         expected_repo_writes = {
             "local": False,

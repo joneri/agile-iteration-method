@@ -4,6 +4,13 @@ mode: agent
 
 Install AIM 2.0 in this workspace and add the optional Copilot prompt layer when needed.
 
+Before starting, check whether the repository already has AIM 1.x-era files,
+older AIM helper prompts, command files, adapter packages, or `.aim/` runtime
+state. If so, make `/aim upgrade` the first recommendation before start,
+continue, or calibrate. Explain that upgrade refreshes installed AIM-owned
+surfaces through the reviewed installer plan and preserves active `.aim/`
+runtime state.
+
 Actions:
 1. Verify these files exist and create missing ones from templates:
    - `docs/workflow/agile-iteration-method.md`

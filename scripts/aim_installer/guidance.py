@@ -55,6 +55,12 @@ def build_guidance(plan: dict[str, Any]) -> dict[str, Any]:
             f"Apply the plan: {command} --target {target} "
             f"--mode {plan['mode']} --footprint {plan['footprint']} --apply"
         )
+        if state == "partial":
+            steps.append(
+                "Existing AIM files were detected. Prefer /aim upgrade when "
+                "using packaged AIM commands; it runs this reviewed installer "
+                "refresh and preserves active .aim runtime state."
+            )
     elif state == "empty":
         steps.append(
             "No files are selected for installation. Use explicit AIM intent, "
@@ -65,6 +71,11 @@ def build_guidance(plan: dict[str, Any]) -> dict[str, Any]:
             "Some installed files differ from the AIM source (see stalePackages / "
             "collisions). Refresh with --apply --force (rollback-protected), or "
             "keep your local edits by leaving them as-is."
+        )
+        steps.append(
+            "For an existing AIM 1.x or drifted AIM install, /aim upgrade is the "
+            "normal packaged command before start, continue, or calibration; it "
+            "must not silently replace active .aim runtime state."
         )
     else:  # up-to-date
         steps.append("Install is current; no apply needed.")

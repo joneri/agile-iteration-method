@@ -7,6 +7,16 @@
 AIM helps you turn a desired outcome into reviewed, validated increments instead of an expanding prompt conversation.
 It works with Codex, Claude, and GitHub Copilot, adapts to the repository in front of it, and keeps important decisions visible.
 
+## Already Have AIM 1.x Or Older AIM Files?
+
+Install or upgrade AIM from the AIM source repository as usual, but when a target repository already contains AIM runtime files, helper prompts, commands, or adapter packages, use the packaged upgrade path before continuing:
+
+```text
+/aim upgrade
+```
+
+Upgrade refreshes installed AIM-owned surfaces through the reviewed installer plan and preserves active `.aim/` runtime state. After upgrade, run `/aim calibrate-repo` when repository knowledge may have changed, then resume with `/aim continue` if an Epic was already in progress.
+
 ## What AIM Does
 
 AIM brings planning, implementation, review, correction, validation, and approval into one repeatable delivery loop:
@@ -147,7 +157,7 @@ The guided installer provides:
    python3 scripts/aim_install.py
    ```
 
-   If AIM is already installed and you updated AIM files afterward, run `/aim upgrade` before continuing.
+   If AIM is already installed, or the repository still has AIM 1.x-era files, run `/aim upgrade` before continuing.
 
 2. **Calibrate repository awareness**
 
