@@ -105,6 +105,28 @@ class GuidedInputTests(unittest.TestCase):
         self.assertEqual(footprint, "adapters")
         self.assertIn(">   Adapters", output.getvalue())
 
+    def test_footprint_menu_explains_choices_and_recommends_full(self) -> None:
+        output = io.StringIO()
+        footprint = guided.prompt_footprint(
+            ["local", "profile", "adapters", "full"],
+            default="full",
+            mode="personal",
+            key_reader=lambda: "enter",
+            output_stream=output,
+        )
+        rendered = output.getvalue()
+        self.assertEqual(footprint, "full")
+        # Footprint is presented as a separate dimension from mode.
+        self.assertIn("separate from mode", rendered)
+        self.assertIn("Personal mode allows any footprint.", rendered)
+        # Full is highlighted, recommended, and listed before the smaller footprints.
+        self.assertIn(">   Full (recommended for first install)", rendered)
+        self.assertLess(rendered.index("Full (recommended"), rendered.index("Local"))
+        # Each footprint explains when it is the reasonable choice.
+        self.assertIn("Add or update Codex/Copilot/Claude support only", rendered)
+        self.assertIn("Add repo-awareness only", rendered)
+        self.assertIn("No repository changes", rendered)
+
     def test_collision_n_and_enter_keep_existing(self) -> None:
         output = io.StringIO()
         decisions = guided.resolve_collisions(

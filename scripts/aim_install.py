@@ -173,8 +173,11 @@ def main(argv: list[str] | None = None) -> int:
             footprint = args.footprint.strip().lower()
             footprint_explicit = True
         elif interactive:
+            guided_default = default_footprint
+            if mode != "enterprise" and "full" in manifest.footprints:
+                guided_default = "full"
             footprint = guided.prompt_footprint(
-                manifest.footprints, default=default_footprint
+                manifest.footprints, default=guided_default, mode=mode
             )
             footprint_explicit = True
         else:

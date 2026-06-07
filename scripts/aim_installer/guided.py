@@ -139,17 +139,27 @@ def _render_menu(
     output_stream: TextIO,
     *,
     repaint: bool,
+    intro: list[str] | None = None,
+    labels: list[str] | None = None,
+    descriptions: list[list[str]] | None = None,
 ) -> None:
-    line_count = len(options) + 1
+    intro_lines = intro or []
+    option_descriptions = descriptions or [[] for _ in options]
+    line_count = len(intro_lines) + 1 + sum(
+        1 + len(option_descriptions[index]) for index in range(len(options))
+    )
     if repaint:
         output_stream.write(f"\033[{line_count}A")
+    for line in intro_lines:
+        output_stream.write(line + "\033[K\n")
     output_stream.write(title + "\033[K\n")
     for index, option in enumerate(options):
         pointer = ">" if index == cursor else " "
         marker = f"[{'x' if index in selected else ' '}]" if selected is not None else " "
-        output_stream.write(
-            f"  {pointer} {marker} {option.replace('-', ' ').title()}\033[K\n"
-        )
+        label = labels[index] if labels is not None else option.replace("-", " ").title()
+        output_stream.write(f"  {pointer} {marker} {label}\033[K\n")
+        for detail in option_descriptions[index]:
+            output_stream.write(f"        {detail}\033[K\n")
     output_stream.flush()
 
 
@@ -160,6 +170,9 @@ def select_one(
     default: str,
     key_reader: KeyReader | None = None,
     output_stream: TextIO = sys.stdout,
+    intro: list[str] | None = None,
+    labels: list[str] | None = None,
+    descriptions: list[list[str]] | None = None,
 ) -> str:
     """Select one option with Up/Down and Enter."""
 
@@ -167,7 +180,17 @@ def select_one(
     read_key = key_reader or (lambda: _read_key())
     repaint = False
     while True:
-        _render_menu(title, options, cursor, None, output_stream, repaint=repaint)
+        _render_menu(
+            title,
+            options,
+            cursor,
+            None,
+            output_stream,
+            repaint=repaint,
+            intro=intro,
+            labels=labels,
+            descriptions=descriptions,
+        )
         key = read_key()
         if key == "up":
             cursor = (cursor - 1) % len(options)
@@ -271,21 +294,67 @@ def prompt_mode(
     )
 
 
+_FOOTPRINT_ORDER = ("full", "adapters", "profile", "local")
+
+_FOOTPRINT_LABELS = {
+    "full": "Full (recommended for first install)",
+}
+
+_FOOTPRINT_DETAILS = {
+    "full": "First real install: AIM docs, repo-awareness profile, and selected adapters.",
+    "adapters": "AIM already set up? Add or update Codex/Copilot/Claude support only.",
+    "profile": "Add repo-awareness only (the shared aim.profile.yaml); no docs or adapters.",
+    "local": "No repository changes - try AIM, or stay private/Enterprise-safe.",
+}
+
+_FOOTPRINT_MODE_NOTES = {
+    "personal": "Personal mode allows any footprint.",
+    "team": "Team mode allows any footprint; shared files are committed.",
+    "enterprise": "Enterprise mode keeps repository impact minimal by default.",
+}
+
+
+def _footprint_mode_note(mode: str) -> str:
+    return _FOOTPRINT_MODE_NOTES.get(mode, f"{mode.title()} mode allows any footprint.")
+
+
 def prompt_footprint(
     footprints: list[str],
     *,
     default: str,
+    mode: str | None = None,
     key_reader: KeyReader | None = None,
     output_stream: TextIO = sys.stdout,
 ) -> str:
-    """Ask for an installation footprint using an arrow-key menu."""
+    """Ask for an installation footprint using an arrow-key menu.
 
+    Footprint is a separate dimension from mode: it controls how much AIM writes
+    into the target repository. The menu lists the most complete option first,
+    marks it as the first-install recommendation, and explains when each smaller
+    footprint is the reasonable choice.
+    """
+
+    ordered = [name for name in _FOOTPRINT_ORDER if name in footprints]
+    ordered += [name for name in footprints if name not in ordered]
+    labels = [
+        _FOOTPRINT_LABELS.get(name, name.replace("-", " ").title()) for name in ordered
+    ]
+    descriptions = [
+        [_FOOTPRINT_DETAILS[name]] if name in _FOOTPRINT_DETAILS else [] for name in ordered
+    ]
+    intro = ["Footprint controls how much AIM writes into this repo (separate from mode)."]
+    if mode:
+        intro.append(_footprint_mode_note(mode))
+    intro.append("")
     return select_one(
         "Installation footprint  (Up/Down, Enter)",
-        footprints,
+        ordered,
         default=default,
         key_reader=key_reader,
         output_stream=output_stream,
+        intro=intro,
+        labels=labels,
+        descriptions=descriptions,
     )
 
 
