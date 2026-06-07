@@ -131,6 +131,7 @@ class RepoProfileSchemaTests(unittest.TestCase):
                 sys.executable,
                 str(REPO_ROOT / "scripts/validate_aim_runtime.py"),
                 str(REPO_ROOT),
+                "--release",
             ],
             capture_output=True,
             text=True,

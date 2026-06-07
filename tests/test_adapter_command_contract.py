@@ -37,6 +37,7 @@ class AdapterCommandContractTests(unittest.TestCase):
                 sys.executable,
                 str(repo / "scripts/validate_aim_runtime.py"),
                 str(repo),
+                "--release",
             ],
             capture_output=True,
             text=True,
