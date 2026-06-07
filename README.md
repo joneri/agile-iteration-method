@@ -115,6 +115,8 @@ Platform packaging may differ; the delivery loop, gates, ownership, and acceptan
 
 ## AIM 2.0
 
+AIM 2.0 is the current release. See the [changelog](CHANGELOG.md) for what shipped and the [release and publication model](docs/workflow/release-publication-model.md) for how releases are validated.
+
 AIM 2.0 was rebuilt as a cleaner product while preserving the proven AIM core.
 
 The rewrite separates:

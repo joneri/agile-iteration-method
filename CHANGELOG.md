@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-06-07 - AIM 2.0 release
+- Cut the official **AIM 2.0** release, promoting the rebuilt method, runtime, repo-awareness, and adapter model to the current public line (previous release: AIM 1.7).
+- Shipped a validated public launch: GitHub Pages and release artifacts now pass a reusable release gate (`.github/workflows/release-readiness.yml`) covering compilation, tests, AIM validator health, schema/public-ID correctness, package integrity, and deterministic artifact assembly.
+- Published the canonical JSON Schemas at stable URLs and documented the AIM 2.0 release and publication model in `docs/workflow/release-publication-model.md`.
+- Consolidated the AIM 2.0 story across `README.md`, `docs/product/`, and the GitHub Pages site, with license metadata included in public and full-footprint distributions.
+- Established `v2.0` as the source tag family for the released, gate-passing commit.
+
 ## 2026-06-06 - AIM 2.0 public product and onboarding story
 - Rebuilt `README.md` as a concise public front door with the AIM 2.0 product story and website artwork.
 - Added `docs/product/` for newcomer-focused explanation, first-time onboarding, platform support, and adoption modes.
