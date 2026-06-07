@@ -83,6 +83,11 @@ class Manifest:
         return boundaries if isinstance(boundaries, dict) else {}
 
     @property
+    def adapter_closure(self) -> dict[str, Any]:
+        closure = self._root.get("adapterClosure", {})
+        return closure if isinstance(closure, dict) else {}
+
+    @property
     def repo_awareness_bootstrap(self) -> dict[str, Any]:
         bootstrap = self._root.get("repoAwarenessBootstrap", {})
         return bootstrap if isinstance(bootstrap, dict) else {}

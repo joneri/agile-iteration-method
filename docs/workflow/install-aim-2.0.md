@@ -92,7 +92,7 @@ Available footprints:
 | --- | --- |
 | `local` | no target-repository mutation; home-scope packages such as Codex may be installed |
 | `profile` | repo profile and runtime ignore policy, without repo adapters or embedded docs |
-| `adapters` | selected adapter surfaces; Team also receives the shared profile |
+| `adapters` | selected adapter surfaces plus their required canonical contract subset; Team also receives the shared profile |
 | `full` | selected adapters, repo profile, runtime ignore, and embedded workflow docs |
 
 Suggested defaults:
@@ -104,6 +104,26 @@ Suggested defaults:
 
 Selecting Personal never applies Team review ownership or Enterprise isolation
 rules. Selecting Enterprise never broadens repository mutation silently.
+
+### Adapter package closure
+
+The `adapters` footprint is smaller than `full`, but it is not an incomplete
+adapter-only copy:
+
+- Codex receives required contracts inside its home-scoped skill package under
+  `references/`; this does not mutate the target repository.
+- Claude and Copilot receive only the canonical workflow documents directly
+  required by their installed instructions.
+- `full` remains the only footprint that embeds the complete canonical workflow
+  library, schemas, and distribution license metadata.
+
+Required adapter references are release-blocking. Optional links inside copied
+canonical documents remain further reading and do not expand the closure payload
+recursively.
+
+The full footprint includes `docs/aim/LICENSE` and
+`docs/aim/LICENSE-DOCS` so copied AIM documentation retains its attribution and
+CC BY 4.0 context without colliding with the target repository's root license.
 
 ## Installation boundary model
 
@@ -255,11 +275,13 @@ Required for `/aim` in Codex:
 If the local skill is missing or stale, install the repo-bundled skill before relying on `/aim` command routing:
 
 ```sh
-mkdir -p ~/.codex/skills/agile-iteration-method
-cp -R adapters/codex/agile-iteration-method/. ~/.codex/skills/agile-iteration-method/
+python3 scripts/aim_install.py --target . --mode personal \
+  --footprint local --adapter codex --dry-run
 ```
 
-Copy the whole directory, not just `SKILL.md`.
+Review the plan, then rerun with `--apply`. The installer includes package
+metadata and required canonical contracts under `references/`; copying the
+source adapter directory alone does not produce a closed package.
 
 ### Copilot
 

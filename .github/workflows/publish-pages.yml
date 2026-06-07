@@ -19,21 +19,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  release-gate:
+    uses: ./.github/workflows/release-readiness.yml
+    permissions:
+      contents: read
+
   build:
+    needs: release-gate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Prepare site artifact
-        run: |
-          mkdir -p site/github-pages
-          cp index.html robots.txt sitemap.xml AIM_OG.png site/
-          cp -R github-pages/assets site/github-pages/
-          touch site/.nojekyll
+      - name: Build validated site artifact
+        run: python3 scripts/validate_publication.py --output site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

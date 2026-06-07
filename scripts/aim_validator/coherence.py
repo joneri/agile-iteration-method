@@ -7,8 +7,9 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from aim_installer import planner
+from aim_installer import closure, planner
 from aim_installer.manifest import ManifestError, load_manifest
+from aim_publication import PublicationError, validate_source
 
 from .reporting import make_finding
 
@@ -148,6 +149,7 @@ def _generate_default_plans(
 
 
 def _mode_plan_findings(
+    repo_root: Path,
     plans: dict[str, dict[str, Any]],
 ) -> list[dict[str, Any]]:
     findings: list[dict[str, Any]] = []
@@ -156,6 +158,18 @@ def _mode_plan_findings(
 
     personal = plans["personal"]
     personal_destinations = set(personal["scopeSummary"]["repoDestinations"])
+    expected_closure_docs: set[str] = set()
+    for adapter in ("claude", "copilot"):
+        expected_closure_docs.update(
+            closure.required_workflow_docs(
+                repo_root, adapter, include_optional=True
+            )
+        )
+    personal_closure_docs = {
+        path
+        for path in personal_destinations
+        if path.startswith("docs/workflow/")
+    }
     if (
         personal["footprint"] != "adapters"
         or "aim.profile.yaml" in personal_destinations
@@ -163,14 +177,14 @@ def _mode_plan_findings(
             path.startswith((".github/agents/", ".claude/"))
             for path in personal_destinations
         )
-        or any(path.startswith("docs/workflow/") for path in personal_destinations)
+        or personal_closure_docs != expected_closure_docs
     ):
         findings.append(
             make_finding(
                 "contradictory",
                 "Personal docs ↔ generated installer plan",
                 "Personal freedom-mode default is not the documented practical adapter setup",
-                "Restore the adapters default without forcing a shared profile or embedded docs.",
+                "Restore the adapters default with only the selected adapter closure contracts.",
                 tier="Product coherence",
                 category="Contradiction",
                 release_impact="fail",
@@ -183,18 +197,21 @@ def _mode_plan_findings(
 
     team = plans["team"]
     team_destinations = set(team["scopeSummary"]["repoDestinations"])
+    team_closure_docs = {
+        path for path in team_destinations if path.startswith("docs/workflow/")
+    }
     if (
         team["footprint"] != "adapters"
         or "aim.profile.yaml" not in team_destinations
         or ".gitignore" not in team_destinations
-        or any(path.startswith("docs/workflow/") for path in team_destinations)
+        or team_closure_docs != expected_closure_docs
     ):
         findings.append(
             make_finding(
                 "contradictory",
                 "Team docs ↔ generated installer plan",
                 "Team default does not match the documented reviewed shared setup",
-                "Generate the shared profile, ignore policy, and selected adapters without embedded docs.",
+                "Generate the shared profile, ignore policy, selected adapters, and only their closure contracts.",
                 tier="Product coherence",
                 category="Contradiction",
                 release_impact="fail",
@@ -223,6 +240,96 @@ def _mode_plan_findings(
                     f"footprint={enterprise['footprint']}, "
                     f"repoActions={enterprise['scopeSummary']['repoActionCount']}"
                 ),
+            )
+        )
+    return findings
+
+
+def _adapter_closure_findings(repo_root: Path) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
+    try:
+        manifest = load_manifest(repo_root)
+        closure_contract = manifest.adapter_closure
+        if not closure_contract:
+            return [
+                make_finding(
+                    "blocked",
+                    "install/aim-install-manifest.yaml",
+                    "adapter package closure contract is missing",
+                    "Define adapterClosure strategies before claiming native package support.",
+                    tier="Behavioral",
+                    category="Error",
+                    release_impact="fail",
+                )
+            ]
+
+        with tempfile.TemporaryDirectory() as target, tempfile.TemporaryDirectory() as home:
+            target_root = Path(target)
+            home_root = Path(home)
+            for adapter in ("codex", "claude", "copilot"):
+                plan = planner.compute_plan(
+                    source_root=repo_root,
+                    target_root=target_root,
+                    mode="personal",
+                    footprint="adapters",
+                    footprint_explicit=False,
+                    adapters=[adapter],
+                    manifest=manifest,
+                    validator_result={"resultClass": "healthy", "exitCode": 0},
+                    home_root=home_root,
+                )
+                repo_destinations = set(plan["scopeSummary"]["repoDestinations"])
+                local_destinations = set(plan["scopeSummary"]["localDestinations"])
+                for surface in closure.adapter_surface_files(
+                    repo_root, adapter, include_optional=True
+                ):
+                    content = surface.read_text(encoding="utf-8", errors="replace")
+                    for match in closure.WORKFLOW_REFERENCE_RE.finditer(content):
+                        reference = match.group(1)
+                        if reference in repo_destinations:
+                            continue
+                        findings.append(
+                            make_finding(
+                                "contradictory",
+                                surface.relative_to(repo_root).as_posix(),
+                                f"{adapter} package requires missing installed contract: {reference}",
+                                "Install the referenced canonical contract or mark the reference optional.",
+                                tier="Behavioral",
+                                category="Contradiction",
+                                release_impact="fail",
+                            )
+                        )
+                    for match in closure.PACKAGE_REFERENCE_RE.finditer(content):
+                        reference = match.group(1)
+                        expected_suffix = (
+                            "/.codex/skills/agile-iteration-method/" + reference
+                        )
+                        if any(
+                            destination.endswith(expected_suffix)
+                            for destination in local_destinations
+                        ):
+                            continue
+                        findings.append(
+                            make_finding(
+                                "contradictory",
+                                surface.relative_to(repo_root).as_posix(),
+                                f"{adapter} package requires missing package-local contract: {reference}",
+                                "Embed the referenced contract inside the installed adapter package.",
+                                tier="Behavioral",
+                                category="Contradiction",
+                                release_impact="fail",
+                            )
+                        )
+    except (ManifestError, planner.PlanError, OSError, KeyError) as exc:
+        findings.append(
+            make_finding(
+                "blocked",
+                "adapter package closure",
+                f"adapter closure plans could not be validated: {exc}",
+                "Repair the adapter reference or closure payload before release.",
+                tier="Behavioral",
+                category="Error",
+                release_impact="fail",
             )
         )
     return findings
@@ -400,15 +507,127 @@ def _release_claim_findings(repo_root: Path) -> list[dict[str, Any]]:
     return findings
 
 
+def _publication_findings(repo_root: Path) -> list[dict[str, Any]]:
+    findings: list[dict[str, Any]] = []
+    try:
+        validate_source(repo_root)
+    except (PublicationError, OSError) as exc:
+        findings.append(
+            make_finding(
+                "blocked",
+                "public publication contract",
+                str(exc),
+                "Repair the public source, schema IDs, or license metadata before release.",
+                tier="Release readiness",
+                category="Error",
+                release_impact="fail",
+            )
+        )
+
+    release_workflow = _read(
+        repo_root, ".github/workflows/release-readiness.yml"
+    )
+    pages_workflow = _read(repo_root, ".github/workflows/publish-pages.yml")
+    release_markers = (
+        "workflow_call:",
+        "workflow_dispatch:",
+        "python3 -m compileall -q scripts tests",
+        "python3 -m unittest discover -s tests -v",
+        "python3 scripts/validate_aim_runtime.py . --release",
+        "python3 scripts/validate_publication.py --output site",
+    )
+    missing_release_markers = [
+        marker for marker in release_markers if marker not in release_workflow
+    ]
+    if missing_release_markers:
+        findings.append(
+            make_finding(
+                "blocked",
+                ".github/workflows/release-readiness.yml",
+                "release gate is incomplete: " + ", ".join(missing_release_markers),
+                "Restore independently runnable compilation, tests, AIM validation, and publication checks.",
+                tier="Release readiness",
+                category="Error",
+                release_impact="fail",
+            )
+        )
+    pages_markers = (
+        "uses: ./.github/workflows/release-readiness.yml",
+        "needs: release-gate",
+        "python3 scripts/validate_publication.py --output site",
+    )
+    missing_pages_markers = [
+        marker for marker in pages_markers if marker not in pages_workflow
+    ]
+    if missing_pages_markers:
+        findings.append(
+            make_finding(
+                "contradictory",
+                ".github/workflows/publish-pages.yml",
+                "Pages publication can bypass release validation: "
+                + ", ".join(missing_pages_markers),
+                "Make Pages depend on the reusable release gate and deterministic artifact builder.",
+                tier="Release readiness",
+                category="Contradiction",
+                release_impact="fail",
+            )
+        )
+    try:
+        manifest = load_manifest(repo_root)
+        with tempfile.TemporaryDirectory() as target, tempfile.TemporaryDirectory() as home:
+            full_plan = planner.compute_plan(
+                source_root=repo_root,
+                target_root=Path(target),
+                mode="personal",
+                footprint="full",
+                footprint_explicit=True,
+                adapters=["claude"],
+                manifest=manifest,
+                validator_result={"resultClass": "healthy", "exitCode": 0},
+                home_root=Path(home),
+            )
+        destinations = set(full_plan["scopeSummary"]["repoDestinations"])
+        required_licenses = {"docs/aim/LICENSE", "docs/aim/LICENSE-DOCS"}
+        missing_licenses = sorted(required_licenses - destinations)
+        if missing_licenses:
+            findings.append(
+                make_finding(
+                    "blocked",
+                    "full installer footprint",
+                    "documentation distribution omits license metadata: "
+                    + ", ".join(missing_licenses),
+                    "Package source and documentation licenses under the AIM-owned docs/aim/ path.",
+                    tier="Release readiness",
+                    category="Error",
+                    release_impact="fail",
+                )
+            )
+    except (ManifestError, planner.PlanError, OSError, KeyError) as exc:
+        findings.append(
+            make_finding(
+                "blocked",
+                "full installer footprint",
+                f"license-aware distribution plan could not be generated: {exc}",
+                "Repair full-footprint planning before release.",
+                tier="Release readiness",
+                category="Error",
+                release_impact="fail",
+            )
+        )
+    return findings
+
+
 def evaluate_product_coherence(
     repo_root: Path,
 ) -> tuple[list[dict[str, Any]], list[str]]:
     findings = _contradictory_mode_claims(repo_root)
     plans, plan_findings = _generate_default_plans(repo_root)
     findings.extend(plan_findings)
-    findings.extend(_mode_plan_findings(plans))
+    findings.extend(_mode_plan_findings(repo_root, plans))
     findings.extend(_adapter_claim_findings(repo_root))
+    findings.extend(_adapter_closure_findings(repo_root))
     findings.extend(_release_claim_findings(repo_root))
+    findings.extend(_publication_findings(repo_root))
 
     evidence: list[str] = []
     for mode in ("personal", "team", "enterprise"):
@@ -421,7 +640,9 @@ def evaluate_product_coherence(
             f"localActions={plan['scopeSummary']['localActionCount']}"
         )
     evidence.append("adapter command family: Codex, Claude, and Copilot checked")
+    evidence.append("adapter package closure: clean-room plans checked")
     evidence.append("upgrade contract: canonical and adapter surfaces checked")
     evidence.append("public claims: native support and upgrade evidence checked")
     evidence.append("release claims: public and canonical status checked")
+    evidence.append("publication gate: workflows, schemas, licenses, and public files checked")
     return findings, evidence

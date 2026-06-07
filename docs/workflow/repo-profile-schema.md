@@ -12,6 +12,16 @@ schemas/aim-repo-profile.schema.json
 schemas/aim-personal-hints.schema.json
 ```
 
+They are published at their declared stable IDs:
+
+```text
+https://joneri.github.io/agile-iteration-method/schemas/aim-repo-profile.schema.json
+https://joneri.github.io/agile-iteration-method/schemas/aim-personal-hints.schema.json
+```
+
+Publication validation fails when source `$id` values, artifact paths, or the
+canonical Pages origin drift.
+
 They use JSON Schema Draft 2020-12 and validate YAML after it is decoded into
 ordinary data values.
 
@@ -150,6 +160,7 @@ reviewed increment.
 - `scripts/aim_validator/profile_contract.py`
 - `scripts/aim_validator/schema_subset.py`
 - `scripts/validate_aim_runtime.py`
+- `docs/workflow/release-publication-model.md`
 
 ## Change Log
 

@@ -16,7 +16,7 @@ In Codex, AIM is **skill/package-first**: this installed AIM skill/package is th
 primary user-facing front door, and the AIM command family and intents run through
 it. If the skill is unavailable, fall back to explicit AIM intent while preserving
 the canonical behavior model.
-The canonical cross-adapter entry model is `docs/workflow/adapter-entry-model.md`.
+The package-local cross-adapter entry model is `references/adapter-entry-model.md`.
 
 ## First Response
 
@@ -27,7 +27,7 @@ The canonical cross-adapter entry model is `docs/workflow/adapter-entry-model.md
 5. Read `aim.profile.yaml` when present as the primary shared repo-awareness source.
 6. Apply compatible Personal AIM hints from `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`.
 7. Use profile facts to choose locality, validation commands, short authoritative docs, risk zones, freshness triggers, and context to avoid before reading broader docs.
-8. Load `docs/workflow/agile-iteration-method.md`, then only the workflow docs required by the current role, gate, command, or risk.
+8. Load `references/agile-iteration-method.md`, then only the package-local references required by the current role, gate, command, or risk.
 9. Load Codex-specific packaging only when Codex mechanics matter.
 10. Read ordinary repository maintainer docs only when the requested change actually needs them.
 11. Default to `Mode: Strict` unless the user explicitly chooses `Mode: Auto`.
@@ -64,11 +64,13 @@ When the user runs AIM in Codex for the first time in a repository, make the bun
 If the local Codex skill is missing or appears older than the repo-bundled skill, state that AIM can continue from explicit AIM intent and canonical workflow docs for this run, but `/aim` works best after installing the bundled skill:
 
 ```sh
-mkdir -p ~/.codex/skills/agile-iteration-method
-cp -R adapters/codex/agile-iteration-method/. ~/.codex/skills/agile-iteration-method/
+python3 scripts/aim_install.py --target . --mode personal \
+  --footprint local --adapter codex --dry-run
 ```
 
-The Codex skill package may include app metadata such as `agents/openai.yaml`. Copy the whole directory, not only `SKILL.md`, so the Codex skill picker shows the current AIM version and description.
+Review the plan, then rerun with `--apply`. The installer adds picker metadata
+and the package-local canonical references required by `SKILL.md`; a raw copy of
+only the source adapter directory is incomplete.
 
 For `Install AIM`, `/aim validate`, `/aim status`, `/aim config`, and first-run `/aim start` or `/aim continue`, include this install status in the visible output when Codex is the active platform.
 Do not treat a missing local skill as a blocker when the repository already contains the AIM contract; report the fallback and continue unless another escalation condition applies.
@@ -94,13 +96,13 @@ Treat these as AIM intents when the current adapter supports them or when the us
 - `Start working according to AIM`
 
 Canonical intent, state effects, upgrade safety, and adapter fallbacks are
-defined in `docs/workflow/adapter-command-contract.md`.
+defined in `references/adapter-command-contract.md`.
 
 If literal slash routing is unavailable, report that limitation, map the user's
 plain-language request to the same command intent, and perform the equivalent
 workflow directly. Syntax may fall back; command semantics may not.
 
-`/aim calibrate-repo` uses the canonical cheap-first flow in `docs/workflow/repo-awareness-calibration.md`.
+`/aim calibrate-repo` uses the package-local canonical flow in `references/repo-awareness-calibration.md`.
 Remember and forget intents must persist structured rules to `aim.profile.yaml` or the user-level hints file and must never use `.aim/`.
 `/aim upgrade` must inspect selected AIM-owned packages through the deterministic
 installer plan, show stale/collision results before apply, preserve rollback and

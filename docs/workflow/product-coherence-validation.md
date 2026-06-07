@@ -113,6 +113,17 @@ Native-support coherence requires:
 - actionable `/aim upgrade` behavior
 - no AIM 1.x state examples in AIM 2.0 adapter surfaces
 
+## Publication evidence
+
+Release readiness also verifies:
+
+- reusable release workflow is independently runnable
+- Pages depends on that release gate
+- public canonical, Open Graph, robots, and sitemap origins agree
+- schema `$id` values match assembled public paths
+- the Pages artifact contains schemas and license metadata
+- adapter closure and installer package tests participate in the release gate
+
 ## Reporting contract
 
 Text output must show, near the top:
@@ -131,3 +142,6 @@ It must then separate:
 
 The validator remains read-only.
 
+For clean CI checkouts, `--release` keeps all product and release-readiness
+checks but makes the intentionally untracked local `.aim/` runtime workspace
+optional. Normal mode continues to validate runtime resume integrity.

@@ -1,5 +1,5 @@
 aimInstallManifest:
-  manifestVersion: "0.3"
+  manifestVersion: "0.5"
   status: guided-first
 
   canonicalCommand: "python3 scripts/aim_install.py"
@@ -61,7 +61,7 @@ aimInstallManifest:
       repoIgnore: true
       homeAdapters: true
     adapters:
-      description: Selected adapter packages; Team also gets the shared profile.
+      description: Selected adapter packages and required contract subset; Team also gets the shared profile.
       embeddedDocs: false
       repoAdapters: true
       sharedProfile: team-default
@@ -86,6 +86,12 @@ aimInstallManifest:
         read: forbidden
 
   packageBoundaries:
+    licenses:
+      sourceLicense: LICENSE
+      sourceDocumentationLicense: docs/LICENSE-DOCS
+      destination: docs/aim/
+      includedWith: embeddedDocs
+      targetOwned: true
     canonicalDocs:
       source: docs/workflow/
       targetOwned: true
@@ -110,6 +116,21 @@ aimInstallManifest:
       source: .claude/
       destination: .claude/
       optional: true
+
+  adapterClosure:
+    rule: every-required-adapter-document-reference-must-resolve-after-install
+    requiredReferenceScope: direct-adapter-instruction-references
+    optionalReferenceScope: links-inside-canonical-documents-are-further-reading
+    canonicalSourcePrefix: docs/workflow/
+    codex:
+      strategy: embedded-package
+      destination: ~/.codex/skills/agile-iteration-method/references/
+    claude:
+      strategy: installed-canonical-subset
+      destination: docs/workflow/
+    copilot:
+      strategy: installed-canonical-subset
+      destination: docs/workflow/
 
   repoAwarenessBootstrap:
     sharedProfile: aim.profile.yaml

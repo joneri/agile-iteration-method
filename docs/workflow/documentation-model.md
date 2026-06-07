@@ -28,6 +28,7 @@ It separates:
 | Install and onboarding docs | user-facing application of canonical models | canonical for install/onboarding behavior | `docs/workflow/install-aim-2.0.md`, `docs/workflow/quick-start-aim-2.0.md`, `docs/workflow/troubleshoot-aim-2.0.md` |
 | Validator and safety behavior | executable safety checks | canonical for what the validator enforces | `scripts/validate_aim_runtime.py` |
 | Machine-readable repo-awareness structure | versioned profile and Personal-hints shape | canonical for structure | `schemas/aim-repo-profile.schema.json`, `schemas/aim-personal-hints.schema.json` |
+| Release and publication | public artifact, schema URL, license, and release-gate contract | canonical for publication | `docs/workflow/release-publication-model.md` |
 | Adapter docs and helpers | platform-specific entry and packaging behavior | adapter-specific, secondary to core | `docs/workflow/aim-adapter-guidance.md`, `adapters/`, `.github/agents/`, `.github/prompts/`, `.claude/` |
 | Repo-aware policy | reusable target repository guidance | repo-owned, non-core | `aim.profile.yaml`, optional Personal profile |
 | User-created support docs | repo-local feature or workflow notes | non-core by default | repo-created files under `docs/features/` or other local docs |
@@ -159,6 +160,7 @@ Shipped AIM product docs:
 - install and onboarding docs
 - selected support/reference docs
 - adapter docs and packages selected for the footprint
+- release-facing schemas, manifests, and license metadata
 
 Repo-local support docs:
 
@@ -189,6 +191,7 @@ Internal maintainer/build-memory docs:
 | `docs/workflow/cost-saving-method.md` | canonical cost-saving and escalation behavior |
 | `docs/workflow/modularity-context-efficiency.md` | canonical file-boundary and context-efficiency behavior |
 | `docs/workflow/install-aim-2.0.md` | canonical install guidance constrained by model docs |
+| `docs/workflow/release-publication-model.md` | canonical public artifact and release-gate model |
 | `docs/features/` as a folder | support/reference by default; promote behavior-defining docs to `docs/workflow/` |
 | `AGENTS.md` | outside AIM architecture; remove from AIM product surfaces |
 | `CLAUDE.md` | outside AIM architecture; use optional `.claude/` packaging |
@@ -213,6 +216,7 @@ The validator should:
 - `docs/workflow/adapter-command-contract.md`
 - `docs/workflow/product-coherence-validation.md`
 - `docs/workflow/repo-profile-schema.md`
+- `docs/workflow/release-publication-model.md`
 - `docs/product/README.md`
 - `docs/features/README.md`
 - `docs/workflow/operating-modes.md`

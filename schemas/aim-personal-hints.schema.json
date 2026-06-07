@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agile-iteration-method.github.io/schemas/aim-personal-hints.schema.json",
+  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-personal-hints.schema.json",
   "title": "AIM Personal repo-awareness hints",
   "description": "Structural contract for user-level Personal hints version 0.1.",
   "type": "object",

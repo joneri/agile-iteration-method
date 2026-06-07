@@ -343,11 +343,12 @@ class ModeFootprintContractTests(unittest.TestCase):
         self.assertIn(".github/agents/aim.agent.md", destinations)
         self.assertIn(".claude/commands/start-aim.md", destinations)
         self.assertNotIn("aim.profile.yaml", destinations)
-        self.assertFalse(
-            any(path.startswith("docs/workflow/") for path in destinations)
+        self.assertIn(
+            "docs/workflow/agile-iteration-method.md", destinations
         )
+        self.assertNotIn("docs/workflow/operating-modes.md", destinations)
 
-    def test_team_default_installs_profile_and_selected_adapters_without_docs(self) -> None:
+    def test_team_default_installs_profile_adapters_and_closure_subset(self) -> None:
         plan = self._plan(mode="team")
         destinations = set(plan["scopeSummary"]["repoDestinations"])
         self.assertEqual(plan["footprint"], "adapters")
@@ -355,10 +356,19 @@ class ModeFootprintContractTests(unittest.TestCase):
         self.assertIn(".gitignore", destinations)
         self.assertIn(".github/agents/aim.agent.md", destinations)
         self.assertIn(".claude/commands/start-aim.md", destinations)
-        self.assertFalse(
-            any(path.startswith("docs/workflow/") for path in destinations)
+        self.assertIn(
+            "docs/workflow/adapter-command-contract.md", destinations
         )
+        self.assertNotIn("docs/workflow/operating-modes.md", destinations)
         self.assertGreater(plan["scopeSummary"]["localActionCount"], 0)
+        self.assertIn(
+            "docs/workflow/adapter-command-contract.md",
+            plan["adapterClosure"]["requiredRepoDocs"],
+        )
+        self.assertIn(
+            "references/agile-iteration-method.md",
+            plan["adapterClosure"]["packageLocalDocs"]["codex"],
+        )
 
     def test_enterprise_default_is_non_invasive(self) -> None:
         plan = self._plan(mode="enterprise")
@@ -387,8 +397,8 @@ class ModeFootprintContractTests(unittest.TestCase):
         )
         self.assertTrue(plan["scopeSummary"]["explicitApproval"])
 
-    def test_full_footprint_is_the_only_one_that_embeds_workflow_docs(self) -> None:
-        for footprint in ("local", "profile", "adapters"):
+    def test_adapter_footprint_installs_only_required_contract_subset(self) -> None:
+        for footprint in ("local", "profile"):
             plan = self._plan(mode="team", footprint=footprint)
             self.assertFalse(
                 any(
@@ -402,6 +412,19 @@ class ModeFootprintContractTests(unittest.TestCase):
                     for path in plan["scopeSummary"]["repoDestinations"]
                 )
             )
+        adapters = self._plan(mode="team", footprint="adapters")
+        adapter_docs = {
+            path
+            for path in adapters["scopeSummary"]["repoDestinations"]
+            if path.startswith("docs/workflow/")
+        }
+        self.assertIn("docs/workflow/agile-iteration-method.md", adapter_docs)
+        self.assertIn("docs/workflow/adapter-command-contract.md", adapter_docs)
+        self.assertNotIn("docs/workflow/operating-modes.md", adapter_docs)
+        self.assertLess(
+            len(adapter_docs),
+            len(list((REPO_ROOT / "docs/workflow").glob("*.md"))),
+        )
         full = self._plan(mode="team", footprint="full")
         self.assertIn(
             "schemas/aim-repo-profile.schema.json",
@@ -416,6 +439,16 @@ class ModeFootprintContractTests(unittest.TestCase):
                 path.startswith("docs/workflow/")
                 for path in full["scopeSummary"]["repoDestinations"]
             )
+        )
+        self.assertIn(
+            "docs/workflow/operating-modes.md",
+            full["scopeSummary"]["repoDestinations"],
+        )
+        self.assertIn(
+            "docs/aim/LICENSE", full["scopeSummary"]["repoDestinations"]
+        )
+        self.assertIn(
+            "docs/aim/LICENSE-DOCS", full["scopeSummary"]["repoDestinations"]
         )
 
     def test_generic_root_files_remain_excluded_for_every_mode(self) -> None:

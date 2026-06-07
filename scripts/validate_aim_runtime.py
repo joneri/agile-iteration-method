@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the AIM runtime workspace without mutating it."""
+"""Validate AIM runtime or release-facing product state without mutating it."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+from aim_installer import closure as installer_closure
 from aim_installer import planner as installer_planner
 from aim_installer import seed as installer_seed
 from aim_installer.manifest import ManifestError, load_manifest
@@ -314,6 +315,7 @@ ADAPTER_ENTRY_MODEL_DOC_PATH = "docs/workflow/adapter-entry-model.md"
 ADAPTER_COMMAND_CONTRACT_DOC_PATH = "docs/workflow/adapter-command-contract.md"
 PRODUCT_COHERENCE_DOC_PATH = "docs/workflow/product-coherence-validation.md"
 REPO_PROFILE_SCHEMA_DOC_PATH = "docs/workflow/repo-profile-schema.md"
+RELEASE_PUBLICATION_DOC_PATH = "docs/workflow/release-publication-model.md"
 
 CANONICAL_AIM_COMMANDS = [
     "/aim start",
@@ -385,7 +387,7 @@ ADAPTER_ENTRY_SURFACE_MARKERS = {
     ".github/agents/aim.agent.md": ["agent-first", ADAPTER_ENTRY_MODEL_DOC_PATH],
     "adapters/codex/agile-iteration-method/SKILL.md": [
         "skill/package-first",
-        ADAPTER_ENTRY_MODEL_DOC_PATH,
+        "references/adapter-entry-model.md",
     ],
     ".claude/commands/start-aim.md": ["command-first", ADAPTER_ENTRY_MODEL_DOC_PATH],
     ".claude/agents/aim.md": ["internal helper surface", "command-first"],
@@ -482,6 +484,10 @@ REQUIRED_INSTALL_MANIFEST_MARKERS = [
     "sharedProfile:",
     "repoIgnore:",
     "homeAdapters:",
+    "adapterClosure:",
+    "every-required-adapter-document-reference-must-resolve-after-install",
+    "strategy: embedded-package",
+    "strategy: installed-canonical-subset",
     "targetExclusions:",
     "path: CONTRIBUTING.md",
     "AIM-source-repository-maintainer-only",
@@ -569,6 +575,7 @@ REQUIRED_DOCUMENTATION_MODEL_MARKERS = [
     "docs/workflow/adapter-command-contract.md",
     PRODUCT_COHERENCE_DOC_PATH,
     REPO_PROFILE_SCHEMA_DOC_PATH,
+    RELEASE_PUBLICATION_DOC_PATH,
     "docs/features/",
     "AGENTS.md",
     "CLAUDE.md",
@@ -597,6 +604,7 @@ PROMOTED_CANONICAL_DOC_PATHS = {
     "docs/workflow/light-front-door.md": "docs/features/aim-light-front-door.md",
     "docs/workflow/cost-review-checklist.md": "docs/features/aim-cost-review-checklist.md",
     "docs/workflow/cost-saving-method.md": "docs/features/aim-cost-saving-method.md",
+    RELEASE_PUBLICATION_DOC_PATH: "docs/features/aim-release-publication-model.md",
 }
 
 FEATURE_SUPPORT_ROLE_MARKERS = {
@@ -1158,7 +1166,13 @@ def collect_surface_boundary_classification(repo_root: Path) -> dict[str, list[s
 
 
 def main() -> int:
-    repo_root = Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()
+    arguments = sys.argv[1:]
+    release_mode = "--release" in arguments
+    positional = [argument for argument in arguments if argument != "--release"]
+    if len(positional) > 1:
+        print("usage: validate_aim_runtime.py [repo] [--release]", file=sys.stderr)
+        return 2
+    repo_root = Path(positional[0] if positional else ".").resolve()
     checked: list[str] = []
     issues: list[dict[str, object]] = []
 
@@ -1174,6 +1188,7 @@ def main() -> int:
         repo_root / ADAPTER_ENTRY_MODEL_DOC_PATH,
         repo_root / PRODUCT_COHERENCE_DOC_PATH,
         repo_root / REPO_PROFILE_SCHEMA_DOC_PATH,
+        repo_root / RELEASE_PUBLICATION_DOC_PATH,
         repo_root / INSTALL_MANIFEST_PATH,
         repo_root / REPO_PROFILE_SCHEMA_PATH,
         repo_root / PERSONAL_HINTS_SCHEMA_PATH,
@@ -1249,25 +1264,28 @@ def main() -> int:
                 "Remove the AIM-owned root file; keep AIM behavior in canonical workflow docs and adapter mechanics in AIM-owned adapter paths.",
             )
 
-    for path in required_runtime_paths:
-        checked.append(str(path.relative_to(repo_root)))
-        if path.name == ".aim" or path.is_dir():
-            if not path.exists():
+    if release_mode:
+        checked.append("release mode: local .aim runtime workspace is optional")
+    else:
+        for path in required_runtime_paths:
+            checked.append(str(path.relative_to(repo_root)))
+            if path.name == ".aim" or path.is_dir():
+                if not path.exists():
+                    add_issue(
+                        issues,
+                        "recoverable",
+                        str(path.relative_to(repo_root)),
+                        "required AIM runtime path is missing",
+                        "Recreate the missing runtime path from the official .aim contract.",
+                    )
+            elif not path.is_file():
                 add_issue(
                     issues,
                     "recoverable",
                     str(path.relative_to(repo_root)),
-                    "required AIM runtime path is missing",
-                    "Recreate the missing runtime path from the official .aim contract.",
+                    "required AIM runtime artifact is missing",
+                    "Recreate the missing runtime artifact before relying on resume behavior.",
                 )
-        elif not path.is_file():
-            add_issue(
-                issues,
-                "recoverable",
-                str(path.relative_to(repo_root)),
-                "required AIM runtime artifact is missing",
-                "Recreate the missing runtime artifact before relying on resume behavior.",
-            )
 
     checked.append("optional AIM 2.0 repo profile paths")
     for relative_path in OPTIONAL_REPO_PROFILE_PATHS:
@@ -1630,42 +1648,53 @@ def main() -> int:
             team_destinations = set(
                 team_plan["scopeSummary"]["repoDestinations"]
             )
+            required_adapter_docs: set[str] = set()
+            for adapter in ("claude", "copilot"):
+                required_adapter_docs.update(
+                    installer_closure.required_workflow_docs(
+                        repo_root, adapter, include_optional=True
+                    )
+                )
+            team_adapter_docs = {
+                path
+                for path in team_destinations
+                if path.startswith("docs/workflow/")
+            }
             if (
                 "aim.profile.yaml" not in team_destinations
                 or ".gitignore" not in team_destinations
-                or any(
-                    path.startswith("docs/workflow/")
-                    for path in team_destinations
-                )
+                or team_adapter_docs != required_adapter_docs
             ):
                 add_issue(
                     issues,
                     "blocked",
                     "scripts/aim_installer/planner.py",
                     "Team default footprint does not produce the canonical small shared setup",
-                    "Plan the shared profile, runtime ignore, and selected adapters without embedded workflow docs.",
+                    "Plan the shared profile, runtime ignore, selected adapters, and only their closure contracts.",
                 )
             personal_plan = generated_plans["personal"]
             personal_destinations = set(
                 personal_plan["scopeSummary"]["repoDestinations"]
             )
+            personal_adapter_docs = {
+                path
+                for path in personal_destinations
+                if path.startswith("docs/workflow/")
+            }
             if (
                 "aim.profile.yaml" in personal_destinations
                 or not any(
                     path.startswith((".github/agents/", ".claude/"))
                     for path in personal_destinations
                 )
-                or any(
-                    path.startswith("docs/workflow/")
-                    for path in personal_destinations
-                )
+                or personal_adapter_docs != required_adapter_docs
             ):
                 add_issue(
                     issues,
                     "blocked",
                     "scripts/aim_installer/planner.py",
                     "Personal default does not provide the canonical permissive solo adapter setup",
-                    "Install selected repo adapters without forcing a shared profile or embedded docs; allow explicit local/profile/full choices.",
+                    "Install selected repo adapters and only their closure contracts without forcing a shared profile; allow explicit local/profile/full choices.",
                 )
         except (ManifestError, installer_planner.PlanError, OSError, KeyError) as exc:
             add_issue(
@@ -1874,7 +1903,11 @@ def main() -> int:
         missing_surface_markers = [
             marker
             for marker in (
-                ADAPTER_COMMAND_CONTRACT_DOC_PATH,
+                (
+                    "references/adapter-command-contract.md"
+                    if adapter_name == "Codex"
+                    else ADAPTER_COMMAND_CONTRACT_DOC_PATH
+                ),
                 "routing is unavailable",
             )
             if marker not in content

@@ -27,6 +27,9 @@ from aim_validator.profile_contract import (
 from aim_validator.schema_subset import unsupported_keywords
 
 
+PUBLIC_SCHEMA_ORIGIN = "https://joneri.github.io/agile-iteration-method/"
+
+
 class RepoProfileSchemaTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -52,6 +55,7 @@ class RepoProfileSchemaTests(unittest.TestCase):
             self.assertEqual(
                 schema["$schema"], "https://json-schema.org/draft/2020-12/schema"
             )
+            self.assertEqual(schema["$id"], PUBLIC_SCHEMA_ORIGIN + relative_path)
             self.assertEqual(unsupported_keywords(schema), [])
 
     def test_internal_subset_rejects_unimplemented_schema_keywords(self) -> None:

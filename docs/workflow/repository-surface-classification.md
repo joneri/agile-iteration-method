@@ -135,6 +135,7 @@ Shipped AIM product:
 - optional `.claude/`
 - `scripts/validate_aim_runtime.py`
 - `install/aim-install-manifest.yaml`
+- release-facing schemas, `release-manifest.json`, and license metadata
 - examples when the install footprint includes examples
 
 Internal build-memory:

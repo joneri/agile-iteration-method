@@ -102,7 +102,7 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
             skill = copied / "adapters/codex/agile-iteration-method/SKILL.md"
             content = skill.read_text(encoding="utf-8")
             content = content.replace("- `/aim upgrade`\n", "", 1)
-            content = content.replace("--dry-run", "--preview", 1)
+            content = content.replace("--dry-run", "--preview")
             skill.write_text(content, encoding="utf-8")
             completed = self._validate(copied)
 

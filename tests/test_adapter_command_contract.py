@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -12,6 +13,12 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+WORKFLOW_REFERENCE_RE = re.compile(
+    r"(?<![A-Za-z0-9_./-])(docs/workflow/[A-Za-z0-9._/-]+\.md)"
+)
+PACKAGE_REFERENCE_RE = re.compile(
+    r"(?<![A-Za-z0-9_./-])(references/[A-Za-z0-9._/-]+\.md)"
+)
 
 
 class AdapterCommandContractTests(unittest.TestCase):
@@ -140,6 +147,85 @@ class AdapterCommandContractTests(unittest.TestCase):
             ".claude/commands/replan-aim.md",
         }
         self.assertTrue(expected.issubset(destinations))
+
+    def test_clean_room_adapter_installs_resolve_required_references(self) -> None:
+        for adapter in ("codex", "claude", "copilot"):
+            with self.subTest(adapter=adapter), tempfile.TemporaryDirectory() as temporary:
+                base = Path(temporary)
+                target = base / "repo"
+                home = base / "home"
+                target.mkdir()
+                home.mkdir()
+                completed = subprocess.run(
+                    [
+                        sys.executable,
+                        str(REPO_ROOT / "scripts/aim_install.py"),
+                        "--target",
+                        str(target),
+                        "--home",
+                        str(home),
+                        "--mode",
+                        "personal",
+                        "--footprint",
+                        "adapters",
+                        "--adapter",
+                        adapter,
+                        "--apply",
+                        "--format",
+                        "json",
+                        "--non-interactive",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
+                )
+                self.assertEqual(completed.returncode, 0, completed.stderr)
+
+                if adapter == "codex":
+                    package_root = (
+                        home / ".codex/skills/agile-iteration-method"
+                    )
+                    surfaces = [package_root / "SKILL.md"]
+                elif adapter == "claude":
+                    package_root = target
+                    surfaces = sorted((target / ".claude").rglob("*.md"))
+                else:
+                    package_root = target
+                    surfaces = [
+                        *sorted((target / ".github/agents").glob("aim*.agent.md")),
+                        *sorted((target / ".github/prompts").glob("*.prompt.md")),
+                    ]
+
+                for surface in surfaces:
+                    content = surface.read_text(encoding="utf-8")
+                    for reference in WORKFLOW_REFERENCE_RE.findall(content):
+                        self.assertTrue(
+                            (target / reference).is_file(),
+                            f"{adapter}: {surface} -> {reference}",
+                        )
+                    for reference in PACKAGE_REFERENCE_RE.findall(content):
+                        self.assertTrue(
+                            (package_root / reference).is_file(),
+                            f"{adapter}: {surface} -> {reference}",
+                        )
+
+    def test_validator_blocks_missing_adapter_closure_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            command = copied / ".claude/commands/status-aim.md"
+            command.write_text(
+                command.read_text(encoding="utf-8")
+                + "\nFollow `docs/workflow/missing-required-contract.md`.\n",
+                encoding="utf-8",
+            )
+            completed = self._validate(copied)
+
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn("Release readiness: FAIL", completed.stdout)
+        self.assertIn(
+            "required adapter contract is missing",
+            completed.stdout,
+        )
 
 
 if __name__ == "__main__":

@@ -178,6 +178,7 @@ The guided installer provides:
 - [First-time journey](docs/product/getting-started.md)
 - [Platforms and adoption modes](docs/product/platforms-and-adoption.md)
 - [Installation guide](docs/workflow/install-aim-2.0.md)
+- [Release and publication model](docs/workflow/release-publication-model.md)
 - [Canonical workflow](docs/workflow/agile-iteration-method.md)
 
 ## Documentation Map
@@ -185,6 +186,7 @@ The guided installer provides:
 - `docs/product/`: public product story and newcomer guidance
 - `docs/workflow/`: canonical AIM behavior, installation, and operating guidance
 - `docs/features/`: advanced support and reference material
+- `.github/workflows/release-readiness.yml`: independently runnable public release gate
 - `CONTRIBUTING.md`: AIM source-repository maintainer guidance only
 
 ## License

@@ -17,9 +17,27 @@ user-facing entry surfaces that lead into that one behavior model.
 - The user invokes **commands or a native AIM entrypoint**.
 - Internal helper agents remain internal.
 - Adapter packaging supports native use without changing AIM core behavior.
+- Every required local document reference resolves after installation.
 
 A user should never have to guess whether to use a command, an agent, a prompt, or
 a helper file. Each adapter has exactly one primary front door.
+
+## Referential closure
+
+An installable adapter package is referentially closed when every canonical
+document directly required by its installed instructions is available at the
+path those instructions name.
+
+- Codex embeds its required canonical contracts under the installed skill's
+  `references/` directory.
+- Claude installs the required canonical subset under `docs/workflow/`.
+- GitHub Copilot installs the required canonical subset under `docs/workflow/`.
+- The full footprint still installs the complete workflow library.
+
+Links inside those canonical documents are further-reading references, not
+additional adapter startup dependencies. The installer derives the required
+subset from the adapter surfaces it actually installs and fails planning when a
+required source document is missing.
 
 ## Surface classes
 

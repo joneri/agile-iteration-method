@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agile-iteration-method.github.io/schemas/aim-repo-profile.schema.json",
+  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-repo-profile.schema.json",
   "title": "AIM repo-awareness profile",
   "description": "Structural contract for aim.profile.yaml profileVersion 0.2.",
   "type": "object",

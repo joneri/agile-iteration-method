@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from .manifest import Manifest
-from . import guidance, seed
+from . import closure, guidance, seed
 
 
 PLAN_SCHEMA_VERSION = "2"
@@ -111,6 +111,31 @@ def _canonical_doc_actions(source_root: Path, target_root: Path) -> list[dict[st
     return actions
 
 
+def _selected_canonical_doc_actions(
+    source_root: Path,
+    target_root: Path,
+    required_docs: set[str],
+) -> list[dict[str, Any]]:
+    actions: list[dict[str, Any]] = []
+    for rel in sorted(required_docs):
+        source_path = source_root / rel
+        if not source_path.is_file():
+            raise PlanError(f"required adapter contract is missing: {rel}")
+        actions.append(
+            _action(
+                action_id=rel,
+                category="file",
+                classification=_classify_copy(source_path, target_root / rel),
+                source=rel,
+                destination=rel,
+                reason="Required canonical contract for selected AIM adapter",
+                adapter="core",
+                optional=False,
+            )
+        )
+    return actions
+
+
 def _schema_actions(source_root: Path, target_root: Path) -> list[dict[str, Any]]:
     actions: list[dict[str, Any]] = []
     schemas_dir = source_root / "schemas"
@@ -124,6 +149,35 @@ def _schema_actions(source_root: Path, target_root: Path) -> list[dict[str, Any]
                 source=rel,
                 destination=rel,
                 reason="AIM machine-readable structural contract",
+                adapter="core",
+                optional=False,
+            )
+        )
+    return actions
+
+
+def _license_actions(source_root: Path, target_root: Path) -> list[dict[str, Any]]:
+    actions: list[dict[str, Any]] = []
+    license_paths = (
+        ("LICENSE", "docs/aim/LICENSE"),
+        ("docs/LICENSE-DOCS", "docs/aim/LICENSE-DOCS"),
+    )
+    for source_rel, destination_rel in license_paths:
+        source_path = source_root / source_rel
+        if not source_path.is_file():
+            raise PlanError(
+                f"required distribution license is missing: {source_rel}"
+            )
+        actions.append(
+            _action(
+                action_id=destination_rel,
+                category="file",
+                classification=_classify_copy(
+                    source_path, target_root / destination_rel
+                ),
+                source=source_rel,
+                destination=destination_rel,
+                reason="AIM distribution license and attribution metadata",
                 adapter="core",
                 optional=False,
             )
@@ -206,6 +260,27 @@ def _codex_actions(source_root: Path, home_root: Path) -> list[dict[str, Any]]:
                 source=item.relative_to(source_root).as_posix(),
                 destination=str(dest),
                 reason="Codex skill package (user-home install)",
+                adapter="codex",
+                optional=False,
+                scope="home",
+            )
+        )
+    for source_doc in sorted(
+        closure.required_workflow_docs(source_root, "codex", include_optional=True)
+    ):
+        source_path = source_root / source_doc
+        if not source_path.is_file():
+            raise PlanError(f"required Codex contract is missing: {source_doc}")
+        package_reference = closure.package_reference_for(source_doc)
+        dest = dest_base / package_reference
+        actions.append(
+            _action(
+                action_id=f"codex:{package_reference}",
+                category="package",
+                classification=_classify_copy(source_path, dest),
+                source=source_doc,
+                destination=str(dest),
+                reason="Codex package-local canonical contract",
                 adapter="codex",
                 optional=False,
                 scope="home",
@@ -344,9 +419,25 @@ def compute_plan(
     )
 
     actions: list[dict[str, Any]] = []
+    required_repo_docs: set[str] = set()
     if embedded_docs:
         actions.extend(_canonical_doc_actions(source_root, target_root))
         actions.extend(_schema_actions(source_root, target_root))
+        actions.extend(_license_actions(source_root, target_root))
+    elif repo_adapters:
+        for adapter in adapters:
+            if adapter not in {"claude", "copilot"}:
+                continue
+            required_repo_docs.update(
+                closure.required_workflow_docs(
+                    source_root, adapter, include_optional=include_optional
+                )
+            )
+        actions.extend(
+            _selected_canonical_doc_actions(
+                source_root, target_root, required_repo_docs
+            )
+        )
     if repo_adapters and "copilot" in adapters:
         actions.extend(_copilot_actions(source_root, target_root, include_optional))
     if repo_adapters and "claude" in adapters:
@@ -395,6 +486,16 @@ def compute_plan(
     }.get(mode, [])
 
     bootstrap = manifest.repo_awareness_bootstrap
+    codex_package_docs = (
+        sorted(
+            closure.package_reference_for(source_doc)
+            for source_doc in closure.required_workflow_docs(
+                source_root, "codex", include_optional=True
+            )
+        )
+        if home_adapters and "codex" in adapters
+        else []
+    )
     plan = {
         "planSchemaVersion": PLAN_SCHEMA_VERSION,
         "manifestVersion": manifest.version,
@@ -421,6 +522,12 @@ def compute_plan(
         "source": str(source_root),
         "target": str(target_root),
         "validator": validator_result,
+        "adapterClosure": {
+            "rule": str(manifest.adapter_closure.get("rule", "")),
+            "requiredRepoDocs": sorted(required_repo_docs),
+            "packageLocalDocs": {"codex": codex_package_docs},
+            "fullWorkflowLibrary": embedded_docs,
+        },
         "bootstrap": {
             "status": "needs_calibration",
             "storage": (
