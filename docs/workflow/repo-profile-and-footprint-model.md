@@ -109,10 +109,12 @@ They should not be copied into every repository by default.
 
 ## Repo profile shape
 
-This is the first practical model, not a final file format.
+The structural source of truth is
+`schemas/aim-repo-profile.schema.json`. The canonical repository
+representation is YAML at `aim.profile.yaml`.
 
-Future implementations may express it as Markdown, JSON, YAML, or adapter-managed storage.
-The semantic sections should remain stable.
+This document owns field meaning and rationale. The schema owns
+machine-readable shape, and the validator owns cross-field product rules.
 
 ```text
 aimRepoProfile:
@@ -478,6 +480,9 @@ The single best check is whether AIM can answer:
 
 ## Related files
 
+- `schemas/aim-repo-profile.schema.json`
+- `schemas/aim-personal-hints.schema.json`
+- `docs/workflow/repo-profile-schema.md`
 - `docs/workflow/personal-local-profile-storage.md`
 - `docs/workflow/profile-source-summary.md`
 - `docs/workflow/team-profile-artifact.md`

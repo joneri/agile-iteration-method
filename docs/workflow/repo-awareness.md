@@ -28,6 +28,10 @@ The profile contains reusable repository facts such as:
 
 It must not contain AIM core behavior, active Epic state, gate state, review state, or acceptance decisions.
 
+The structural source of truth is `schemas/aim-repo-profile.schema.json`.
+See `docs/workflow/repo-profile-schema.md` for schema versions, validation
+ownership, and migration rules.
+
 ## Personal local profile
 
 Personal AIM may use:
@@ -137,6 +141,9 @@ See `docs/workflow/repo-awareness-calibration.md` for readiness, confidence, cat
 
 ## Related files
 
+- `schemas/aim-repo-profile.schema.json`
+- `schemas/aim-personal-hints.schema.json`
+- `docs/workflow/repo-profile-schema.md`
 - `docs/workflow/agile-iteration-method.md`
 - `docs/workflow/repo-profile-and-footprint-model.md`
 - `docs/workflow/personal-local-profile-storage.md`

@@ -58,6 +58,24 @@ aimRepoProfile:
 """
 
 
+def personal_hints_seed(repo_fingerprint: str = "to-be-calibrated") -> str:
+    """Return an empty Personal hints document matching the public schema."""
+
+    return f"""\
+aimPersonalHints:
+  hintsVersion: "0.1"
+  repoFingerprint: {repo_fingerprint}
+  profileOwner: local-user
+  hints:
+    commands: []
+    localities: []
+    docs: []
+    habits: []
+    avoidByDefault: []
+    freshness: []
+"""
+
+
 
 def gitignore_with_fragments(existing: str | None, fragments: list[str]) -> str:
     """Return .gitignore content with all fragments present (idempotent)."""

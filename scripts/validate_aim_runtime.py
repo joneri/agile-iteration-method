@@ -10,8 +10,18 @@ import tempfile
 from pathlib import Path
 
 from aim_installer import planner as installer_planner
+from aim_installer import seed as installer_seed
 from aim_installer.manifest import ManifestError, load_manifest
 from aim_validator.coherence import evaluate_product_coherence
+from aim_validator.profile_contract import (
+    PERSONAL_HINTS_SCHEMA_PATH,
+    REPO_PROFILE_SCHEMA_PATH,
+    SUPPORTED_HINTS_VERSION,
+    SUPPORTED_PROFILE_VERSION,
+    load_schema,
+    parse_and_validate_personal_hints,
+    parse_and_validate_repo_profile,
+)
 from aim_validator.reporting import (
     findings_by_category,
     make_finding,
@@ -19,6 +29,7 @@ from aim_validator.reporting import (
     summarize_result as summarize_typed_result,
     tier_statuses,
 )
+from aim_validator.schema_subset import unsupported_keywords
 
 
 EXIT_CODES = {
@@ -302,6 +313,7 @@ INSTALL_MANIFEST_PATH = "install/aim-install-manifest.yaml"
 ADAPTER_ENTRY_MODEL_DOC_PATH = "docs/workflow/adapter-entry-model.md"
 ADAPTER_COMMAND_CONTRACT_DOC_PATH = "docs/workflow/adapter-command-contract.md"
 PRODUCT_COHERENCE_DOC_PATH = "docs/workflow/product-coherence-validation.md"
+REPO_PROFILE_SCHEMA_DOC_PATH = "docs/workflow/repo-profile-schema.md"
 
 CANONICAL_AIM_COMMANDS = [
     "/aim start",
@@ -556,6 +568,7 @@ REQUIRED_DOCUMENTATION_MODEL_MARKERS = [
     "docs/workflow/repo-awareness-two-layer-model.md",
     "docs/workflow/adapter-command-contract.md",
     PRODUCT_COHERENCE_DOC_PATH,
+    REPO_PROFILE_SCHEMA_DOC_PATH,
     "docs/features/",
     "AGENTS.md",
     "CLAUDE.md",
@@ -1160,7 +1173,10 @@ def main() -> int:
         repo_root / SURFACE_MODEL_DOC_PATH,
         repo_root / ADAPTER_ENTRY_MODEL_DOC_PATH,
         repo_root / PRODUCT_COHERENCE_DOC_PATH,
+        repo_root / REPO_PROFILE_SCHEMA_DOC_PATH,
         repo_root / INSTALL_MANIFEST_PATH,
+        repo_root / REPO_PROFILE_SCHEMA_PATH,
+        repo_root / PERSONAL_HINTS_SCHEMA_PATH,
     ]
 
     required_runtime_paths = [
@@ -1181,6 +1197,43 @@ def main() -> int:
                 str(path.relative_to(repo_root)),
                 "required canonical AIM product file is missing",
                 "Restore the canonical AIM-owned workflow file before continuing.",
+            )
+
+    repo_profile_schema = None
+    personal_hints_schema = None
+    for relative_path, schema_name in (
+        (REPO_PROFILE_SCHEMA_PATH, "repo profile"),
+        (PERSONAL_HINTS_SCHEMA_PATH, "Personal hints"),
+    ):
+        checked.append(f"{schema_name} JSON Schema")
+        try:
+            loaded_schema = load_schema(repo_root, relative_path)
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
+            add_issue(
+                issues,
+                "blocked",
+                relative_path,
+                f"{schema_name} schema is unavailable or invalid JSON: {exc}",
+                "Restore a valid Draft 2020-12 JSON Schema document.",
+                tier="Structural",
+                category="Error",
+                release_impact="fail",
+            )
+            continue
+        if relative_path == REPO_PROFILE_SCHEMA_PATH:
+            repo_profile_schema = loaded_schema
+        else:
+            personal_hints_schema = loaded_schema
+        for schema_issue in unsupported_keywords(loaded_schema):
+            add_issue(
+                issues,
+                "blocked",
+                relative_path,
+                f"{schema_name} schema uses an unsupported internal-validator keyword at {schema_issue.path}",
+                "Implement and test the schema keyword before publishing it in an AIM schema.",
+                tier="Structural",
+                category="Error",
+                release_impact="fail",
             )
 
     checked.append("AIM 2.0 generic root-file independence")
@@ -1223,6 +1276,59 @@ def main() -> int:
             continue
 
         checked.append(relative_path)
+
+        if relative_path.endswith((".yaml", ".yml")) and repo_profile_schema:
+            profile_source = profile_path.read_text(encoding="utf-8", errors="replace")
+            _, contract_issues = parse_and_validate_repo_profile(
+                profile_source, repo_profile_schema
+            )
+            for contract_issue in contract_issues:
+                is_product_rule = contract_issue.kind == "product"
+                add_issue(
+                    issues,
+                    "blocked",
+                    relative_path,
+                    f"repo-profile {'product rule' if is_product_rule else 'schema'} violation at {contract_issue.path}: {contract_issue.message}",
+                    "Align the profile with the versioned structural schema and AIM repo-awareness product rules.",
+                    tier="Product coherence" if is_product_rule else "Structural",
+                    category="Contradiction" if is_product_rule else "Error",
+                    release_impact="fail",
+                )
+
+    if repo_profile_schema:
+        checked.append("installer shared-profile schema seeds")
+        for mode in ("personal", "team", "enterprise"):
+            _, seed_issues = parse_and_validate_repo_profile(
+                installer_seed.shared_profile_seed(mode), repo_profile_schema
+            )
+            for contract_issue in seed_issues:
+                add_issue(
+                    issues,
+                    "blocked",
+                    "scripts/aim_installer/seed.py",
+                    f"{mode} bootstrap profile violates the repo-profile contract at {contract_issue.path}: {contract_issue.message}",
+                    "Align the installer bootstrap seed with the public repo-profile schema and validator product rules.",
+                    tier="Behavioral",
+                    category="Contradiction",
+                    release_impact="fail",
+                )
+
+    if personal_hints_schema:
+        checked.append("installer Personal-hints schema seed")
+        _, seed_issues = parse_and_validate_personal_hints(
+            installer_seed.personal_hints_seed(), personal_hints_schema
+        )
+        for contract_issue in seed_issues:
+            add_issue(
+                issues,
+                "blocked",
+                "scripts/aim_installer/seed.py",
+                f"Personal hints bootstrap violates its contract at {contract_issue.path}: {contract_issue.message}",
+                "Align the Personal hints seed with its public schema and validator product rules.",
+                tier="Behavioral",
+                category="Contradiction",
+                release_impact="fail",
+            )
 
     checked.append("AIM 2.0 runtime/profile storage separation")
     for relative_path in FORBIDDEN_RUNTIME_PROFILE_PATHS:
@@ -2520,6 +2626,13 @@ def main() -> int:
     if intelligence_marker_findings:
         for relative_path, markers in intelligence_marker_findings.items():
             print(f"- repo intelligence in {relative_path}: {', '.join(markers)}")
+
+    print("AIM 2.0 repo-profile schema contract:")
+    print(f"- repo profile schema: {REPO_PROFILE_SCHEMA_PATH}")
+    print(f"- supported profileVersion: {SUPPORTED_PROFILE_VERSION}")
+    print(f"- Personal hints schema: {PERSONAL_HINTS_SCHEMA_PATH}")
+    print(f"- supported hintsVersion: {SUPPORTED_HINTS_VERSION}")
+    print("- authority: schema=structure, validator=product rules, docs=meaning")
 
     print("AIM 2.0 calibration summary:")
     print(f"- Repo-awareness: {readiness_status}")

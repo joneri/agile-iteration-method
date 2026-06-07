@@ -396,7 +396,21 @@ class ModeFootprintContractTests(unittest.TestCase):
                     for path in plan["scopeSummary"]["repoDestinations"]
                 )
             )
+            self.assertFalse(
+                any(
+                    path.startswith("schemas/")
+                    for path in plan["scopeSummary"]["repoDestinations"]
+                )
+            )
         full = self._plan(mode="team", footprint="full")
+        self.assertIn(
+            "schemas/aim-repo-profile.schema.json",
+            full["scopeSummary"]["repoDestinations"],
+        )
+        self.assertIn(
+            "schemas/aim-personal-hints.schema.json",
+            full["scopeSummary"]["repoDestinations"],
+        )
         self.assertTrue(
             any(
                 path.startswith("docs/workflow/")

@@ -111,6 +111,26 @@ def _canonical_doc_actions(source_root: Path, target_root: Path) -> list[dict[st
     return actions
 
 
+def _schema_actions(source_root: Path, target_root: Path) -> list[dict[str, Any]]:
+    actions: list[dict[str, Any]] = []
+    schemas_dir = source_root / "schemas"
+    for schema in _sorted_glob(schemas_dir, "*.schema.json"):
+        rel = f"schemas/{schema.name}"
+        actions.append(
+            _action(
+                action_id=rel,
+                category="file",
+                classification=_classify_copy(schema, target_root / rel),
+                source=rel,
+                destination=rel,
+                reason="AIM machine-readable structural contract",
+                adapter="core",
+                optional=False,
+            )
+        )
+    return actions
+
+
 def _copilot_actions(
     source_root: Path, target_root: Path, include_optional: bool
 ) -> list[dict[str, Any]]:
@@ -326,6 +346,7 @@ def compute_plan(
     actions: list[dict[str, Any]] = []
     if embedded_docs:
         actions.extend(_canonical_doc_actions(source_root, target_root))
+        actions.extend(_schema_actions(source_root, target_root))
     if repo_adapters and "copilot" in adapters:
         actions.extend(_copilot_actions(source_root, target_root, include_optional))
     if repo_adapters and "claude" in adapters:

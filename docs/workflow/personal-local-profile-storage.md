@@ -9,6 +9,12 @@ This is canonical Personal AIM profile-storage behavior.
 This document describes the local-storage option within permissive Personal AIM.
 It does not require Personal AIM to remain local or prohibit committed AIM files.
 
+The machine-readable structural source of truth for `hints.yaml` is
+`schemas/aim-personal-hints.schema.json`. The schema defines shape, this
+document defines meaning and precedence, and the validator enforces the product
+rule that Personal hints cannot silently claim shared ownership, risk,
+security, migration, deployment, or validation policy.
+
 ## User experience
 
 A developer can use AIM personally in a large or protected repository and still get reusable repo awareness across sessions and branches.
@@ -161,6 +167,8 @@ What "bad" looks like:
 
 ## Related files
 
+- `schemas/aim-personal-hints.schema.json`
+- `docs/workflow/repo-profile-schema.md`
 - `docs/workflow/repo-profile-and-footprint-model.md`
 - `docs/workflow/profile-source-summary.md`
 - `docs/workflow/working-state-boundaries.md`

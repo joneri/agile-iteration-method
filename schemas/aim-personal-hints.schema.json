@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agile-iteration-method.github.io/schemas/aim-personal-hints.schema.json",
+  "title": "AIM Personal repo-awareness hints",
+  "description": "Structural contract for user-level Personal hints version 0.1.",
+  "type": "object",
+  "required": [
+    "aimPersonalHints"
+  ],
+  "properties": {
+    "aimPersonalHints": {
+      "$ref": "#/$defs/personalHints"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "hintEntry": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        }
+      },
+      "additionalProperties": true
+    },
+    "documentHint": {
+      "type": "object",
+      "required": [
+        "id",
+        "path",
+        "loading"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "loading": {
+          "type": "string",
+          "enum": [
+            "authoritative",
+            "load_when_relevant",
+            "avoid_by_default",
+            "stale_or_uncertain"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "hints": {
+      "type": "object",
+      "required": [
+        "commands",
+        "localities",
+        "docs",
+        "habits",
+        "avoidByDefault",
+        "freshness"
+      ],
+      "properties": {
+        "commands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hintEntry"
+          }
+        },
+        "localities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hintEntry"
+          }
+        },
+        "docs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/documentHint"
+          }
+        },
+        "habits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hintEntry"
+          }
+        },
+        "avoidByDefault": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hintEntry"
+          }
+        },
+        "freshness": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hintEntry"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "personalHints": {
+      "type": "object",
+      "required": [
+        "hintsVersion",
+        "repoFingerprint",
+        "profileOwner",
+        "hints"
+      ],
+      "properties": {
+        "hintsVersion": {
+          "const": "0.1"
+        },
+        "repoFingerprint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profileOwner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "updatedAt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hints": {
+          "$ref": "#/$defs/hints"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

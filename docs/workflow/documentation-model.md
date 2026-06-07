@@ -27,6 +27,7 @@ It separates:
 | AIM behavior models | canonical AIM-owned behavior, install, mode, cost, context, classification, and documentation models | canonical for their model area | `docs/workflow/operating-modes.md`, `docs/workflow/repository-surface-classification.md`, `docs/workflow/cost-control-mode.md`, this document |
 | Install and onboarding docs | user-facing application of canonical models | canonical for install/onboarding behavior | `docs/workflow/install-aim-2.0.md`, `docs/workflow/quick-start-aim-2.0.md`, `docs/workflow/troubleshoot-aim-2.0.md` |
 | Validator and safety behavior | executable safety checks | canonical for what the validator enforces | `scripts/validate_aim_runtime.py` |
+| Machine-readable repo-awareness structure | versioned profile and Personal-hints shape | canonical for structure | `schemas/aim-repo-profile.schema.json`, `schemas/aim-personal-hints.schema.json` |
 | Adapter docs and helpers | platform-specific entry and packaging behavior | adapter-specific, secondary to core | `docs/workflow/aim-adapter-guidance.md`, `adapters/`, `.github/agents/`, `.github/prompts/`, `.claude/` |
 | Repo-aware policy | reusable target repository guidance | repo-owned, non-core | `aim.profile.yaml`, optional Personal profile |
 | User-created support docs | repo-local feature or workflow notes | non-core by default | repo-created files under `docs/features/` or other local docs |
@@ -45,6 +46,7 @@ It separates:
 | Install behavior | `docs/workflow/install-aim-2.0.md`, constrained by the canonical mode and surface models |
 | Runtime validation behavior | `scripts/validate_aim_runtime.py` |
 | Repo profile and footprint behavior | `docs/workflow/repo-profile-and-footprint-model.md` |
+| Repo-profile structure, schema versions, and migration process | `schemas/aim-repo-profile.schema.json`, `schemas/aim-personal-hints.schema.json`, and `docs/workflow/repo-profile-schema.md` |
 | Repo-awareness calibration and persistent memory | `docs/workflow/repo-awareness-calibration.md` |
 | Structured profile and repo operational-doc boundary | `docs/workflow/repo-awareness-two-layer-model.md` |
 | Working-state boundaries | `docs/workflow/working-state-boundaries.md` |
@@ -210,6 +212,7 @@ The validator should:
 - `docs/workflow/agile-iteration-method.md`
 - `docs/workflow/adapter-command-contract.md`
 - `docs/workflow/product-coherence-validation.md`
+- `docs/workflow/repo-profile-schema.md`
 - `docs/product/README.md`
 - `docs/features/README.md`
 - `docs/workflow/operating-modes.md`

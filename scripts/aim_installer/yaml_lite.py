@@ -1,12 +1,14 @@
-"""Dependency-free loader for the small YAML subset used by AIM manifests.
+"""Dependency-free loader for the small YAML subset used by AIM data files.
 
 PyYAML is not guaranteed to be installed in AIM runtimes, so this module parses
-the constrained YAML shape used by ``install/aim-install-manifest.yaml``:
+the constrained YAML shapes used by AIM manifests and repo-awareness profiles:
 
 - nested mappings (``key: value`` and ``key:`` block openers)
 - lists of scalars (``- value``)
 - lists of mappings (``- key: value`` followed by deeper-indented keys)
 - scalars: quoted/bare strings, integers, booleans, and null
+- empty inline lists and mappings (``[]`` and ``{}``)
+- folded and literal block strings (``>-``, ``>``, ``|-``, and ``|``)
 
 It intentionally does not implement the full YAML spec. It exists so the
 installer can be manifest-driven without a third-party dependency.
@@ -47,6 +49,10 @@ def _scalar(raw: str) -> Any:
         return True
     if lowered == "false":
         return False
+    if text == "[]":
+        return []
+    if text == "{}":
+        return {}
     if text.lstrip("-").isdigit():
         return int(text)
     return text
@@ -106,6 +112,10 @@ def _parse_mapping(lines: list[_Line], index: int, indent: int) -> tuple[dict, i
         key, _, rest = line.content.partition(":")
         key = key.strip()
         rest = rest.strip()
+        if rest in {">", ">-", "|", "|-"}:
+            value, index = _parse_block_scalar(lines, index + 1, indent, rest)
+            result[key] = value
+            continue
         if rest != "":
             result[key] = _scalar(rest)
             index += 1
@@ -119,6 +129,20 @@ def _parse_mapping(lines: list[_Line], index: int, indent: int) -> tuple[dict, i
             result[key] = None
             index += 1
     return result, index
+
+
+def _parse_block_scalar(
+    lines: list[_Line], index: int, parent_indent: int, style: str
+) -> tuple[str, int]:
+    values: list[str] = []
+    while index < len(lines) and lines[index].indent > parent_indent:
+        values.append(lines[index].content)
+        index += 1
+    separator = "\n" if style.startswith("|") else " "
+    value = separator.join(values)
+    if not style.endswith("-"):
+        value += "\n"
+    return value, index
 
 
 def _parse_list(lines: list[_Line], index: int, indent: int) -> tuple[list, int]:

@@ -89,6 +89,11 @@ aimInstallManifest:
     canonicalDocs:
       source: docs/workflow/
       targetOwned: true
+    schemas:
+      source: schemas/
+      destination: schemas/
+      includedWith: embeddedDocs
+      targetOwned: true
     codex:
       source: adapters/codex/agile-iteration-method/
       destination: ~/.codex/skills/agile-iteration-method/
