@@ -3,7 +3,6 @@ set -eu
 
 AIM_REPO="${AIM_REPO:-joneri/agile-iteration-method}"
 AIM_REF="${AIM_REF:-${AIM_VERSION:-main}}"
-AIM_TARGET="${AIM_TARGET:-$(pwd)}"
 
 die() {
   printf '%s\n' "AIM install: $*" >&2
@@ -50,9 +49,6 @@ mkdir "$tmp_dir/src"
 tar -xzf "$tmp_dir/aim.tar.gz" -C "$tmp_dir/src" --strip-components 1
 
 set -- "$@"
-if ! has_arg "--target" "$@"; then
-  set -- --target "$AIM_TARGET" "$@"
-fi
 if ! has_arg "--source" "$@"; then
   set -- --source "$tmp_dir/src" "$@"
 fi

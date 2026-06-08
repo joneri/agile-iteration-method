@@ -88,6 +88,13 @@ def validate_source(repo_root: Path) -> None:
     sitemap = _read_text(repo_root / "sitemap.xml")
     if not install_script_path.stat().st_mode & 0o111:
         raise PublicationError("install.sh must be executable")
+    forbidden_install_markers = {
+        "install.sh must not force current directory target": 'set -- --target "$AIM_TARGET" "$@"',
+        "install.sh must not default AIM_TARGET to pwd": 'AIM_TARGET="${AIM_TARGET:-$(pwd)}"',
+    }
+    for label, marker in forbidden_install_markers.items():
+        if marker in install_script:
+            raise PublicationError(label)
     required_public_markers = {
         "index.html canonical": (
             index,

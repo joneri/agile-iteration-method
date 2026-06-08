@@ -29,8 +29,8 @@ curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
 ```
 
 The bootstrap downloads the current maintained `main` archive, runs the packaged
-installer from a temporary directory, and uses your current directory as the
-target repository.
+installer from a temporary directory, and asks which repository should receive
+AIM. It does not assume your current shell directory is the target repository.
 
 To test another branch or tag, set `AIM_REF`:
 
@@ -61,6 +61,12 @@ When using the public bootstrap, pass installer flags after `bash -s --`:
 
 ```bash
 curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash -s -- --dry-run
+```
+
+For unattended installs, provide the target explicitly:
+
+```bash
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash -s -- --target /path/to/repo --non-interactive
 ```
 
 The compact preview and reviewed apply are one guided session.

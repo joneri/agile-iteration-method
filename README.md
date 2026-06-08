@@ -15,14 +15,20 @@ From the repository where you want to use AIM, run the public release bootstrap:
 curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
 ```
 
-The bootstrap fetches the current maintained `main` archive, starts the guided
-installer, and uses your current directory as the target repository. It does not
-require cloning this source repository.
+The bootstrap fetches the current maintained `main` archive and starts the
+guided installer. The installer asks which repository to install AIM into; it
+does not assume your current shell directory is the target repository.
 
 To test a specific branch or tag:
 
 ```bash
 curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | AIM_REF=main bash
+```
+
+For automation, pass the target explicitly:
+
+```bash
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash -s -- --target /path/to/repo --non-interactive
 ```
 
 ## Already Have AIM 1.x Or Older AIM Files?

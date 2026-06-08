@@ -3,6 +3,7 @@
 ## 2026-06-08 - AIM 2.0 public launch bootstrap
 - Added the public one-command install bootstrap at `install.sh`, published through GitHub Pages as `curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash`.
 - Made the bootstrap maintainable by default: it follows the current `main` archive while still allowing `AIM_REF` overrides for a specific branch or tag.
+- Changed the bootstrap so it no longer injects the current shell directory as the install target; the guided installer asks for the target repository unless `--target` is passed explicitly.
 - Updated the Pages launch experience, README, first-time journey, and install guide so new users can install AIM without cloning the source repository.
 - Added a tag-driven GitHub Release workflow that depends on the reusable release-readiness gate and publishes versioned Pages, install, and manifest assets.
 - Extended publication validation and tests so release readiness checks the public install command, executable bootstrap, main-archive behavior, and versioned release assets.

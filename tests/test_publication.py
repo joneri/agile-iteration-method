@@ -49,6 +49,10 @@ class PublicationContractTests(unittest.TestCase):
                 "archive/${AIM_REF}.tar.gz",
                 install_script.read_text(encoding="utf-8"),
             )
+            self.assertNotIn(
+                'set -- --target "$AIM_TARGET"',
+                install_script.read_text(encoding="utf-8"),
+            )
             self.assertTrue((output / "LICENSE").is_file())
             self.assertTrue((output / "licenses/LICENSE-DOCS").is_file())
             for relative_path in SCHEMA_RELATIVE_PATHS:
@@ -107,6 +111,21 @@ class PublicationContractTests(unittest.TestCase):
                 encoding="utf-8",
             )
             with self.assertRaisesRegex(PublicationError, "default branch"):
+                validate_source(copied)
+
+    def test_bootstrap_forcing_current_directory_target_blocks_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            install_script = copied / "install.sh"
+            content = install_script.read_text(encoding="utf-8")
+            install_script.write_text(
+                content.replace(
+                    'if ! has_arg "--source" "$@"; then',
+                    'set -- --target "$AIM_TARGET" "$@"\nif ! has_arg "--source" "$@"; then',
+                ),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(PublicationError, "current directory target"):
                 validate_source(copied)
 
     def test_incomplete_assembled_artifact_is_rejected(self) -> None:

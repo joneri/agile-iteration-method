@@ -13,8 +13,9 @@ curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
 ```
 
 The public bootstrap fetches the current maintained `main` archive and starts
-the guided installer from a temporary directory. You do not need to clone the
-AIM source repository.
+the guided installer from a temporary directory. The installer asks which
+repository to install AIM into; it does not assume the current shell directory is
+the target. You do not need to clone the AIM source repository.
 
 To test a specific branch or tag:
 
@@ -39,7 +40,7 @@ Run `/aim upgrade` before continuing.
 Upgrade refreshes installed AIM-owned surfaces through the reviewed installer plan and keeps active `.aim/` runtime state intact.
 
 For automation, pass installer flags after `bash -s --`, such as
-`--non-interactive` or `--format json`.
+`--target /path/to/repo`, `--non-interactive`, or `--format json`.
 For preview only, use `--dry-run`.
 
 ## 2. Calibrate the Repository

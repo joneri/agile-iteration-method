@@ -91,6 +91,9 @@ separate shell copy list.
 maintained `main` archive so the one-command installer stays maintainable
 between formal release tags. Operators may override the source with `AIM_REF`
 when they need a specific branch or tag.
+The bootstrap must not inject the current shell directory as `--target`; the
+guided installer asks for the target repository unless automation passes
+`--target` explicitly.
 The public website and README must expose this command:
 
 ```bash
