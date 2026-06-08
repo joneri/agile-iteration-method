@@ -52,7 +52,7 @@ Cheap validation first: <command>
 
 When the repository provides `scripts/validate_aim_runtime.py`, use its `AIM 2.0 profile-source summary` output as the generated startup summary.
 
-Stop and ask only when an escalation condition applies: scope expansion beyond Gate B, unclear or contradictory Epic intent, unmet acceptance checks without new assumptions, trust/data/user-facing risk, missing required files/APIs/data, or contradictory repo policy.
+Outside hard-gate approval checkpoints, stop and ask when an escalation condition applies: scope expansion beyond Gate B, unclear or contradictory Epic intent, unmet acceptance checks without new assumptions, trust/data/user-facing risk, missing required files/APIs/data, or contradictory repo policy.
 
 ## Codex Skill Install Check
 
@@ -213,7 +213,7 @@ Every hard-gate checkpoint must make clear:
 - exact files planned or touched
 - how the user should evaluate the step
 
-Use `approve` and `change: ...` as transport shortcuts at hard gates, but in Strict mode continue through the full loop unless an escalation condition says to stop. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion.
+Use `approve` and `change: ...` as transport shortcuts at hard gates. In Strict mode, stop at Gate A, Gate B, and Gate E and wait for explicit user approval or change direction before advancing state or doing further work. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion.
 
 ## State And Validation
 
