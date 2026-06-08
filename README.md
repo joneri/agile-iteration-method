@@ -178,7 +178,7 @@ The guided installer provides:
 - rollback-protected, idempotent apply
 - JSON and non-interactive modes for automation
 
-## Start in Six Steps
+## Start in Seven Steps
 
 1. **Install AIM**
 
@@ -194,21 +194,29 @@ The guided installer provides:
    /aim calibrate-repo
    ```
 
-3. **Start an Epic**
+3. **Remember important project context**
+
+   Capture product facts, tone, constraints, or team habits AIM should reuse:
+
+   ```text
+   /aim remember-repo habits "Product context: This app helps people find new homes for cats. User-facing language should be nuanced, calm, and empathetic toward both the cats and future owners."
+   ```
+
+4. **Start an Epic**
 
    ```text
    /aim start "EPIC: <the outcome you want>"
    ```
 
-4. **Review Gate A**
+5. **Review Gate A**
 
    Confirm the outcome, boundaries, and acceptance intent.
 
-5. **Approve the next increment**
+6. **Approve the next increment**
 
    AIM proposes one useful, reviewable slice at a time.
 
-6. **Build with confidence**
+7. **Build with confidence**
 
    AIM implements, reviews, validates, corrects when needed, and returns the result for acceptance.
 

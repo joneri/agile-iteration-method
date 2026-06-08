@@ -31,6 +31,17 @@ If slash commands are unavailable, ask AIM to verify and refine repository aware
 
 ## 2. Start the Epic
 
+Before starting the Epic, remember important product context when it should
+guide future work:
+
+```text
+/aim remember-repo habits "Product context: This app helps people find new homes for cats. User-facing language should be nuanced, calm, and empathetic toward both the cats and future owners."
+```
+
+Use this for durable facts, tone, constraints, team habits, and validation
+expectations. AIM should show the proposed structured change before storing
+shared repository knowledge.
+
 Use a desired outcome:
 
 ```text

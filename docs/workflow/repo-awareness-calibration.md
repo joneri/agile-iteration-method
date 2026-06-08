@@ -105,6 +105,16 @@ Canonical intents:
 
 Natural language such as “Remember that we run rsync before every Gate E” or “Forget that old validation command” maps to the same operations.
 
+Product-context example:
+
+```text
+/aim remember-repo habits "Product context: This app helps people find new homes for cats. User-facing language should be nuanced, calm, and empathetic toward both the cats and future owners."
+```
+
+Use remembered context for stable facts that should guide future AIM work, not
+for temporary Epic state. Tone and product-positioning rules belong in
+repo-awareness only when they are expected to stay true across multiple Epics.
+
 Behavior:
 
 1. resolve shared versus personal scope

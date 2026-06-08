@@ -79,6 +79,10 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn(PUBLIC_INSTALL_COMMAND, readme)
         self.assertIn(PUBLIC_INSTALL_COMMAND, index)
         self.assertIn(PUBLIC_INSTALL_COMMAND, getting_started)
+        for command in ("/aim upgrade", "/aim calibrate-repo", "/aim remember-repo"):
+            self.assertIn(command, readme)
+            self.assertIn(command, index)
+            self.assertIn(command, getting_started)
 
     def test_schema_id_drift_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

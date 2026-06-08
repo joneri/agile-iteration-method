@@ -58,7 +58,23 @@ Review uncertain or trust-sensitive facts before they become reusable repository
 
 If your platform does not expose slash commands, ask AIM to verify and refine repo awareness for the repository.
 
-## 3. Start an Epic
+## 3. Remember Important Project Context
+
+After calibration, teach AIM durable facts that should guide future work.
+Good memory candidates are short product facts, tone rules, project constraints,
+team habits, validation expectations, or areas that deserve special care.
+
+Example:
+
+```text
+/aim remember-repo habits "Product context: This app helps people find new homes for cats. User-facing language should be nuanced, calm, and empathetic toward both the cats and future owners."
+```
+
+AIM maps the request into structured repo-awareness, shows the proposed change,
+and stores stable shared facts in `aim.profile.yaml` or personal preferences in
+user-level hints. It should not store reusable project knowledge in `.aim/`.
+
+## 4. Start an Epic
 
 Describe the outcome, not a list of files to edit.
 
@@ -74,7 +90,7 @@ Choose:
 Start with Cost Control for narrow, reversible work.
 Use Standard or Deep when risk and uncertainty justify more context and verification.
 
-## 4. Review Gate A
+## 5. Review Gate A
 
 Gate A confirms the Epic.
 
@@ -88,7 +104,7 @@ Check:
 Approve when AIM is solving the right problem.
 Request a change when the framing is wrong.
 
-## 5. Approve the Next Increment
+## 6. Approve the Next Increment
 
 AIM proposes one Done Increment at a time.
 
@@ -102,7 +118,7 @@ A good increment:
 In Strict mode, Gate B waits for approval.
 In Auto mode, AIM may continue when the approved Epic makes the next step unambiguous and no escalation condition is present.
 
-## 6. Build With Confidence
+## 7. Build With Confidence
 
 AIM implements the increment, reviews it, validates it, and corrects blocking findings.
 

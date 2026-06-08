@@ -269,7 +269,7 @@ PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
         "A structured AI delivery system",
         "## What AIM Is Not",
-        "## Start in Six Steps",
+        "## Start in Seven Steps",
         "docs/product/",
     ],
     "docs/product/README.md": [
@@ -289,10 +289,11 @@ PUBLIC_PRODUCT_DOC_PATHS = {
     "docs/product/getting-started.md": [
         "## 1. Install AIM",
         "## 2. Calibrate the Repository",
-        "## 3. Start an Epic",
-        "## 4. Review Gate A",
-        "## 5. Approve the Next Increment",
-        "## 6. Build With Confidence",
+        "## 3. Remember Important Project Context",
+        "## 4. Start an Epic",
+        "## 5. Review Gate A",
+        "## 6. Approve the Next Increment",
+        "## 7. Build With Confidence",
     ],
     "docs/product/platforms-and-adoption.md": [
         "### Personal",

@@ -104,6 +104,14 @@ def validate_source(repo_root: Path) -> None:
             index,
             PUBLIC_INSTALL_COMMAND,
         ),
+        "index.html calibrate command": (
+            index,
+            "/aim calibrate-repo",
+        ),
+        "index.html remember command": (
+            index,
+            "/aim remember-repo",
+        ),
         "install.sh default branch": (
             install_script,
             'AIM_REF="${AIM_REF:-${AIM_VERSION:-main}}"',
