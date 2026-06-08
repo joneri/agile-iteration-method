@@ -1,0 +1,87 @@
+name: Publish AIM Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Existing release tag to publish, for example v2.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  release-gate:
+    uses: ./.github/workflows/release-readiness.yml
+    permissions:
+      contents: read
+
+  publish:
+    needs: release-gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve release version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            version="${GITHUB_REF_NAME}"
+          else
+            version="${{ inputs.version }}"
+          fi
+          if [[ ! "${version}" =~ ^v[0-9]+(\.[0-9]+)*(-[A-Za-z0-9.-]+)?$ ]]; then
+            echo "Invalid AIM release tag: ${version}" >&2
+            exit 1
+          fi
+          git rev-parse "${version}^{commit}" >/dev/null
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build validated Pages artifact
+        run: python3 scripts/validate_publication.py --output site
+
+      - name: Assemble release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${{ steps.version.outputs.version }}"
+          mkdir -p release-assets
+          tar -czf "release-assets/aim-pages-${version}.tar.gz" -C site .
+          cp install.sh "release-assets/aim-install-${version}.sh"
+          chmod 755 "release-assets/aim-install-${version}.sh"
+          cp site/release-manifest.json "release-assets/aim-release-manifest-${version}.json"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${{ steps.version.outputs.version }}"
+          title="AIM ${version}"
+          notes="Validated AIM ${version} release assets."
+          if gh release view "${version}" >/dev/null 2>&1; then
+            gh release upload "${version}" release-assets/* --clobber
+          else
+            gh release create "${version}" release-assets/* \
+              --verify-tag \
+              --title "${title}" \
+              --notes "${notes}"
+          fi

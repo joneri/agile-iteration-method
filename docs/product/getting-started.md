@@ -6,10 +6,20 @@ You do not need to read the full AIM method first.
 
 ## 1. Install AIM
 
-From the AIM source repository, run:
+From the repository where you want to use AIM, run:
 
 ```bash
-python3 scripts/aim_install.py
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+```
+
+The public bootstrap fetches the current maintained `main` archive and starts
+the guided installer from a temporary directory. You do not need to clone the
+AIM source repository.
+
+To test a specific branch or tag:
+
+```bash
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | AIM_REF=main bash
 ```
 
 The guided installer:
@@ -28,7 +38,8 @@ Already have AIM 1.x or older AIM helper files in the target repository?
 Run `/aim upgrade` before continuing.
 Upgrade refreshes installed AIM-owned surfaces through the reviewed installer plan and keeps active `.aim/` runtime state intact.
 
-For automation, use flags with `--non-interactive` or `--format json`.
+For automation, pass installer flags after `bash -s --`, such as
+`--non-interactive` or `--format json`.
 For preview only, use `--dry-run`.
 
 ## 2. Calibrate the Repository

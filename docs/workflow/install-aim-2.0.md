@@ -21,7 +21,24 @@ After upgrade:
 
 ## Guided installer
 
-Run:
+For public release installs, run this from the repository where you want to use
+AIM:
+
+```bash
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+```
+
+The bootstrap downloads the current maintained `main` archive, runs the packaged
+installer from a temporary directory, and uses your current directory as the
+target repository.
+
+To test another branch or tag, set `AIM_REF`:
+
+```bash
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | AIM_REF=main bash
+```
+
+From an already downloaded AIM source release, run:
 
 ```bash
 python3 scripts/aim_install.py
@@ -40,6 +57,11 @@ Flags such as `--target`, `--mode`, `--footprint`, and `--adapter` are used dire
 The default text view is compact: it shows the target, selected mode, footprint and adapters, action counts, blockers, and files that need a decision.
 Use `--verbose` (or `--raw`) for the complete file-by-file plan and `--format json` for machine-readable output.
 JSON and `--non-interactive` runs never prompt.
+When using the public bootstrap, pass installer flags after `bash -s --`:
+
+```bash
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash -s -- --dry-run
+```
 
 The compact preview and reviewed apply are one guided session.
 After preview and any collision decisions, the final confirmation can apply immediately without restarting with `--apply`.

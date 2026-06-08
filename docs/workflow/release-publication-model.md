@@ -48,6 +48,22 @@ publication checks. Normal validator mode still checks local resume state.
 Release-gate failure does not prevent local edits, local tests, or local AIM
 loops. It prevents public publication.
 
+## GitHub Release Workflow
+
+`.github/workflows/release.yml` publishes versioned release assets from an
+existing `v*` tag. It must depend on the reusable release-readiness workflow
+before packaging or uploading assets.
+
+The release workflow publishes:
+
+- `aim-pages-<version>.tar.gz`, the validated Pages artifact
+- `aim-install-<version>.sh`, the public install bootstrap
+- `aim-release-manifest-<version>.json`, the deterministic Pages release
+  manifest
+
+GitHub's source archives for the tag provide the installer, schemas, adapters,
+docs, and license metadata used by the public bootstrap.
+
 ## Pages Artifact
 
 `scripts/validate_publication.py --output <directory>` assembles the exact
@@ -56,6 +72,7 @@ release-facing Pages tree.
 It includes:
 
 - `index.html`
+- `install.sh`
 - `robots.txt`
 - `sitemap.xml`
 - `AIM_OG.png`
@@ -70,6 +87,16 @@ The builder validates source URLs before copying and validates the assembled
 artifact afterward. Pages must use this builder rather than maintaining a
 separate shell copy list.
 
+`install.sh` is the public install bootstrap. It defaults to the current
+maintained `main` archive so the one-command installer stays maintainable
+between formal release tags. Operators may override the source with `AIM_REF`
+when they need a specific branch or tag.
+The public website and README must expose this command:
+
+```bash
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+```
+
 ## AIM 2.0 Release Artifact
 
 An official AIM 2.0 release requires:
@@ -77,6 +104,8 @@ An official AIM 2.0 release requires:
 - a reviewed source commit
 - a `v2.0`-family source tag pointing to that commit
 - a successful release-readiness workflow for the tagged source
+- a successful release workflow that creates or updates the GitHub Release for
+  the tag
 - source archives containing installer, validator, schemas, adapters, docs, and
   license metadata
 - the validated release-facing artifact

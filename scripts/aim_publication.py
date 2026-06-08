@@ -15,6 +15,7 @@ SCHEMA_RELATIVE_PATHS = (
 )
 ROOT_PUBLIC_FILES = (
     "index.html",
+    "install.sh",
     "robots.txt",
     "sitemap.xml",
     "AIM_OG.png",
@@ -23,6 +24,7 @@ ROOT_PUBLIC_FILES = (
 PUBLIC_DIRECTORIES = ("github-pages/assets",)
 PUBLIC_LICENSE_PATH = "licenses/LICENSE-DOCS"
 RELEASE_MANIFEST_PATH = "release-manifest.json"
+PUBLIC_INSTALL_COMMAND = f"curl -fsSL {PUBLIC_ORIGIN}install.sh | bash"
 
 
 class PublicationError(ValueError):
@@ -80,12 +82,28 @@ def validate_source(repo_root: Path) -> None:
         _schema_contract(repo_root, relative_path)
 
     index = _read_text(repo_root / "index.html")
+    install_script_path = repo_root / "install.sh"
+    install_script = _read_text(install_script_path)
     robots = _read_text(repo_root / "robots.txt")
     sitemap = _read_text(repo_root / "sitemap.xml")
+    if not install_script_path.stat().st_mode & 0o111:
+        raise PublicationError("install.sh must be executable")
     required_public_markers = {
         "index.html canonical": (
             index,
             f'<link rel="canonical" href="{PUBLIC_ORIGIN}">',
+        ),
+        "index.html public install command": (
+            index,
+            PUBLIC_INSTALL_COMMAND,
+        ),
+        "install.sh default branch": (
+            install_script,
+            'AIM_REF="${AIM_REF:-${AIM_VERSION:-main}}"',
+        ),
+        "install.sh branch archive": (
+            install_script,
+            "archive/${AIM_REF}.tar.gz",
         ),
         "index.html Open Graph URL": (
             index,
@@ -110,6 +128,12 @@ def release_manifest() -> dict[str, Any]:
         "aimVersion": "2.0",
         "artifactType": "github-pages",
         "publicOrigin": PUBLIC_ORIGIN,
+        "install": {
+            "path": "install.sh",
+            "command": PUBLIC_INSTALL_COMMAND,
+            "defaultRef": "main",
+            "sourceArchive": "https://github.com/joneri/agile-iteration-method/archive/main.tar.gz",
+        },
         "schemas": [
             {"path": path, "id": expected_schema_id(path)}
             for path in SCHEMA_RELATIVE_PATHS
@@ -146,6 +170,7 @@ def build_artifact(repo_root: Path, output_root: Path) -> None:
         destination = output_root / relative_path
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(repo_root / relative_path, destination)
+    (output_root / "install.sh").chmod(0o755)
     for relative_path in PUBLIC_DIRECTORIES:
         shutil.copytree(repo_root / relative_path, output_root / relative_path)
     for relative_path in SCHEMA_RELATIVE_PATHS:

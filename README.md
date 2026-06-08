@@ -7,15 +7,38 @@
 AIM helps you turn a desired outcome into reviewed, validated increments instead of an expanding prompt conversation.
 It works with Codex, Claude, and GitHub Copilot, adapts to the repository in front of it, and keeps important decisions visible.
 
+## Install AIM
+
+From the repository where you want to use AIM, run the public release bootstrap:
+
+```bash
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+```
+
+The bootstrap fetches the current maintained `main` archive, starts the guided
+installer, and uses your current directory as the target repository. It does not
+require cloning this source repository.
+
+To test a specific branch or tag:
+
+```bash
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | AIM_REF=main bash
+```
+
 ## Already Have AIM 1.x Or Older AIM Files?
 
-Install or upgrade AIM from the AIM source repository as usual, but when a target repository already contains AIM runtime files, helper prompts, commands, or adapter packages, use the packaged upgrade path before continuing:
+If a target repository already contains AIM runtime files, helper prompts,
+commands, or adapter packages, use the packaged upgrade path before continuing:
 
 ```text
 /aim upgrade
 ```
 
-Upgrade refreshes installed AIM-owned surfaces through the reviewed installer plan and preserves active `.aim/` runtime state. After upgrade, run `/aim calibrate-repo` when repository knowledge may have changed, then resume with `/aim continue` if an Epic was already in progress.
+Upgrade refreshes installed AIM-owned surfaces through the reviewed installer
+plan and preserves active `.aim/` runtime state. If the installed command surface
+is stale or unavailable, rerun the public bootstrap first. After upgrade, run
+`/aim calibrate-repo` when repository knowledge may have changed, then resume
+with `/aim continue` if an Epic was already in progress.
 
 ## What AIM Does
 
@@ -154,7 +177,7 @@ The guided installer provides:
 1. **Install AIM**
 
    ```bash
-   python3 scripts/aim_install.py
+   curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
    ```
 
    If AIM is already installed, or the repository still has AIM 1.x-era files, run `/aim upgrade` before continuing.

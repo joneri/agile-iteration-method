@@ -422,6 +422,19 @@
       font: 0.86rem/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       white-space: nowrap;
     }
+    .hero-command {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      padding-top: 10px;
+    }
+    .hero-command span {
+      color: #aac0d9;
+      font-size: 0.88rem;
+      font-weight: 750;
+    }
     .start-actions {
       display: flex;
       flex-wrap: wrap;
@@ -490,6 +503,7 @@
       .hero h1 { font-size: clamp(2.2rem, 12vw, 3.3rem); }
       .hero-lead { font-size: 1rem; }
       .hero-actions { flex-direction: column; }
+      .hero-command { align-items: stretch; }
       .promise-grid, .feature-list, .mode-grid, .platform-grid, .rebuild-list, .docs-row {
         grid-template-columns: 1fr;
       }
@@ -540,6 +554,10 @@
       <div class="hero-actions">
         <a class="button button-primary" href="#start">Start with AIM</a>
         <a class="button button-secondary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">Discover the product</a>
+      </div>
+      <div class="hero-command" aria-label="Public release install command">
+        <span>Install from the maintained branch</span>
+        <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
       </div>
     </div>
   </header>
@@ -784,9 +802,9 @@
         <div class="installer">
           <div>
             <h3>Run the guided installer</h3>
-            <p>Clone or download AIM, then start the human-friendly setup flow from the source repository.</p>
+            <p>Run the public bootstrap from your target repository. It downloads the current maintained archive and starts the guided setup flow without cloning AIM manually.</p>
           </div>
-          <code class="command">python3 scripts/aim_install.py</code>
+          <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
         </div>
 
         <div class="start-actions">
