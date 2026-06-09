@@ -451,6 +451,61 @@
       font: 0.86rem/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       white-space: nowrap;
     }
+    .copyable-command {
+      display: inline-flex;
+      align-items: stretch;
+      max-width: 100%;
+      border: 1px solid #315782;
+      border-radius: 6px;
+      background: #06142d;
+      overflow: hidden;
+    }
+    .copyable-command .command {
+      min-width: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+    .copy-command {
+      display: inline-flex;
+      position: relative;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      min-width: 46px;
+      border: 0;
+      border-left: 1px solid #315782;
+      color: #dff7ff;
+      background: #0a2148;
+      cursor: pointer;
+    }
+    .copy-command:hover, .copy-command:focus-visible { background: #123466; }
+    .copy-command svg {
+      width: 18px;
+      height: 18px;
+      pointer-events: none;
+    }
+    .copy-command::after {
+      content: attr(data-feedback);
+      position: absolute;
+      right: 0;
+      bottom: calc(100% + 8px);
+      min-width: max-content;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #06142d;
+      background: var(--green);
+      font-size: 0.72rem;
+      font-weight: 800;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 140ms ease, transform 140ms ease;
+      pointer-events: none;
+    }
+    .copy-command.is-copied::after {
+      opacity: 1;
+      transform: translateY(0);
+    }
     .hero-command {
       grid-column: 1 / -1;
       display: flex;
@@ -548,6 +603,8 @@
       .installer { grid-template-columns: 1fr; gap: 22px; padding: 24px 20px; }
       .next-command-grid { grid-template-columns: 1fr; }
       .command { width: 100%; overflow-x: auto; white-space: normal; word-break: break-word; }
+      .copyable-command { width: 100%; }
+      .copyable-command .command { width: auto; flex: 1; }
       .start-actions { flex-direction: column; }
       .start-actions .button { width: 100%; }
     }
@@ -587,7 +644,15 @@
       </div>
       <div class="hero-command" aria-label="Public release install command">
         <span>Install from the maintained branch</span>
-        <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
+        <div class="copyable-command">
+          <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
+          <button class="copy-command" type="button" data-copy-command="curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash" data-feedback="Copied" aria-label="Copy install command">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <rect x="9" y="9" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect>
+              <path d="M5 15V7a2 2 0 0 1 2-2h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -858,7 +923,15 @@
             <h3>Run the guided installer</h3>
             <p>Run the public bootstrap. It downloads the current maintained archive, asks which repository to install into, and starts the guided setup flow without cloning AIM manually.</p>
           </div>
-          <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
+          <div class="copyable-command">
+            <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
+            <button class="copy-command" type="button" data-copy-command="curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash" data-feedback="Copied" aria-label="Copy install command">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="9" y="9" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect>
+                <path d="M5 15V7a2 2 0 0 1 2-2h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div class="start-actions">
@@ -901,5 +974,41 @@
       <span>Created by Jonas Eriksson. Documentation licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</span>
     </div>
   </footer>
+  <script>
+    const copyButtons = document.querySelectorAll("[data-copy-command]");
+
+    async function copyCommand(command) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(command);
+        return;
+      }
+
+      const textArea = document.createElement("textarea");
+      textArea.value = command;
+      textArea.setAttribute("readonly", "");
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      textArea.remove();
+    }
+
+    copyButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        try {
+          await copyCommand(button.dataset.copyCommand || "");
+          button.classList.add("is-copied");
+          button.setAttribute("aria-label", "Install command copied");
+          window.setTimeout(() => {
+            button.classList.remove("is-copied");
+            button.setAttribute("aria-label", "Copy install command");
+          }, 1600);
+        } catch {
+          button.setAttribute("aria-label", "Copy failed");
+        }
+      });
+    });
+  </script>
 </body>
 </html>
