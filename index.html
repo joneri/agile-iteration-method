@@ -150,38 +150,26 @@
 
     .hero {
       position: relative;
-      min-height: clamp(650px, 88svh, 860px);
-      display: flex;
-      align-items: flex-end;
       overflow: hidden;
-      color: #fff;
       background: var(--navy);
     }
     .hero-media {
-      position: absolute;
-      inset: 0;
+      display: block;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
+      height: auto;
     }
-    .hero-shade {
-      position: absolute;
-      inset: auto 0 0;
-      height: 46%;
-      background: rgba(2, 12, 29, 0.88);
+    .hero-intro {
+      padding: 54px 0 62px;
+      color: #fff;
+      background: var(--navy);
     }
     .hero-content {
-      position: relative;
-      z-index: 2;
       display: grid;
       grid-template-columns: minmax(0, 720px);
-      align-items: end;
-      gap: 40px;
-      padding-bottom: 48px;
+      gap: 34px;
     }
-    .hero-copy .eyebrow { color: var(--cyan); }
-    .hero h1 {
+    .hero-intro .eyebrow { color: var(--cyan); }
+    .hero-intro h1 {
       margin: 0;
       font-size: clamp(2.45rem, 5.2vw, 5.2rem);
       line-height: 0.98;
@@ -575,16 +563,8 @@
       .band { padding: 64px 0; }
       .nav-inner { min-height: 58px; }
       .github-link { padding: 7px 10px; }
-      .hero {
-        min-height: 760px;
-        align-items: flex-end;
-      }
-      .hero-media {
-        object-position: 62% center;
-      }
-      .hero-shade { height: 58%; }
-      .hero-content { padding-bottom: 34px; }
-      .hero h1 { font-size: clamp(2.2rem, 12vw, 3.3rem); }
+      .hero-intro { padding: 38px 0 48px; }
+      .hero-intro h1 { font-size: clamp(2.2rem, 12vw, 3.3rem); }
       .hero-lead { font-size: 1rem; }
       .hero-actions { flex-direction: column; max-width: none; }
       .hero-actions .button { width: 100%; }
@@ -632,11 +612,13 @@
 
   <header class="hero" id="top">
     <img class="hero-media" src="github-pages/assets/images/aim-2-hero-dark.png" alt="">
-    <div class="hero-shade"></div>
+  </header>
+
+  <section class="hero-intro" aria-labelledby="hero-title">
     <div class="container hero-content">
       <div class="hero-copy">
         <p class="eyebrow">AI operating system for agentic software delivery</p>
-        <h1>Agile Iteration Method 2.0</h1>
+        <h1 id="hero-title">Agile Iteration Method 2.0</h1>
         <p class="hero-lead">Build what you want without losing the goal. AIM turns AI-assisted development into a clear loop of planning, implementation, review, validation, correction, and human approval.</p>
         <div class="hero-actions">
           <a class="button button-primary" href="#start">Start with AIM</a>
@@ -656,7 +638,7 @@
         </div>
       </div>
     </div>
-  </header>
+  </section>
 
   <main id="main">
     <section class="band" id="why">
