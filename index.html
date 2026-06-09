@@ -467,12 +467,36 @@
       color: #dff7ff;
       background: #0a2148;
       cursor: pointer;
+      transition: background 160ms ease, color 160ms ease, transform 160ms ease;
     }
     .copy-command:hover, .copy-command:focus-visible { background: #123466; }
     .copy-command svg {
+      position: absolute;
       width: 18px;
       height: 18px;
       pointer-events: none;
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+    .copy-command .copy-icon {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+    .copy-command .check-icon {
+      opacity: 0;
+      transform: scale(0.55) rotate(-18deg);
+    }
+    .copy-command.is-copied {
+      color: #06142d;
+      background: var(--green);
+      transform: scale(1.04);
+    }
+    .copy-command.is-copied .copy-icon {
+      opacity: 0;
+      transform: scale(0.55) rotate(18deg);
+    }
+    .copy-command.is-copied .check-icon {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
     }
     .copy-command::after {
       content: attr(data-feedback);
@@ -630,9 +654,12 @@
         <div class="copyable-command">
           <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
           <button class="copy-command" type="button" data-copy-command="curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash" data-feedback="Copied" aria-label="Copy install command">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <rect x="9" y="9" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect>
               <path d="M5 15V7a2 2 0 0 1 2-2h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+            <svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
             </svg>
           </button>
         </div>
@@ -909,9 +936,12 @@
           <div class="copyable-command">
             <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
             <button class="copy-command" type="button" data-copy-command="curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash" data-feedback="Copied" aria-label="Copy install command">
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <rect x="9" y="9" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect>
                 <path d="M5 15V7a2 2 0 0 1 2-2h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+              <svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
             </button>
           </div>
