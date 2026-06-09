@@ -106,6 +106,70 @@ class AdapterCommandContractTests(unittest.TestCase):
             completed.stdout,
         )
 
+    def test_onboarding_guidance_drift_is_blocked(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            codex = copied / "adapters/codex/agile-iteration-method/SKILL.md"
+            content = codex.read_text(encoding="utf-8")
+            codex.write_text(
+                content.replace(
+                    "recommend exactly one next action",
+                    "show the available AIM commands",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            completed = self._validate(copied)
+
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn("Result: blocked", completed.stdout)
+        self.assertIn("Release readiness: FAIL", completed.stdout)
+        self.assertIn("adapter onboarding guidance drifted", completed.stdout)
+
+    def test_codex_adapter_install_contains_state_first_onboarding(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            target = base / "repo"
+            home = base / "home"
+            target.mkdir()
+            home.mkdir()
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(REPO_ROOT / "scripts/aim_install.py"),
+                    "--target",
+                    str(target),
+                    "--home",
+                    str(home),
+                    "--mode",
+                    "personal",
+                    "--footprint",
+                    "adapters",
+                    "--adapter",
+                    "codex",
+                    "--apply",
+                    "--format",
+                    "json",
+                    "--non-interactive",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            self.assertEqual(completed.returncode, 0, completed.stderr)
+            plan = json.loads(completed.stdout)
+            skill_destination = next(
+                destination
+                for destination in plan["scopeSummary"]["localDestinations"]
+                if destination.endswith("/.codex/skills/agile-iteration-method/SKILL.md")
+            )
+            content = Path(skill_destination).read_text(encoding="utf-8")
+        self.assertIn("Detect onboarding state first", content)
+        self.assertIn("recommend exactly one next action", content)
+        self.assertIn("You are here", content)
+        self.assertIn("do not lead with internal file paths", content)
+        self.assertIn("new homes for cats", content)
+
     def test_claude_adapter_plan_packages_complete_command_family(self) -> None:
         with tempfile.TemporaryDirectory() as target:
             completed = subprocess.run(

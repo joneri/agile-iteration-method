@@ -68,6 +68,34 @@ Kickoff contract:
 - PO defines the Epic first (desired outcome).
 - TDO defines the next Done Increment from that Epic.
 
+First-run onboarding contract:
+- detect onboarding state first
+- recommend exactly one next action whenever possible
+- use: `You are here`, `Recommended next action`, `Why it matters`, and `After that`
+- do not lead with internal file paths, runtime locations, adapter packaging,
+  architecture details, or a command inventory unless the user asks for advanced
+  help or a blocker requires that detail
+
+Onboarding states:
+- installed but not calibrated: recommend `/aim calibrate-repo`
+- calibrated but no Epic exists: recommend `/aim start "EPIC: <desired outcome>"`
+- Epic exists but is not approved: recommend reviewing Gate A and replying `approve` or `change: ...`
+- Epic approved: recommend `/aim continue`
+- blocked: recommend resolving the named blocking issue
+
+When recommending `/aim start`, include a realistic Epic example:
+
+```text
+/aim start "EPIC: Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
+```
+
+When durable repository context is the next useful action, prefer a professional
+example such as:
+
+```text
+/aim remember-repo habits "Product context: This app helps people find new homes for cats. Keep tone nuanced and empathetic toward both the cats and the future owners."
+```
+
 Repository-aware loading order:
 1. resume checkpoint from `.aim/state.json` when present
 2. root `aim.profile.yaml` when present, used as the primary shared repo-awareness baseline
@@ -240,16 +268,35 @@ If Cost Control discovers trust, data correctness, user-facing meaning, migratio
 
 ## `/aim help` behavior
 
-Keep help short by default.
+Keep help state-first and short by default.
 
-Show:
-- start new work: `/aim start "EPIC: ..."`
-- continue current work: `/aim continue`
-- check setup: `/aim validate`
-- capture repo knowledge: the `Remember` quick action drafts `/aim remember-repo <category> "<rule>"`
-- recommended lightweight start: `Mode: Strict` and `Cost profile: Cost Control`
+Before showing help, detect onboarding state first and recommend exactly one next
+action whenever possible.
 
-Do not explain the full method, adapter layering, or every runtime artifact unless the user asks for deeper help.
+Use:
+
+```text
+You are here: <state>.
+Recommended next action: <one command or decision>.
+Why it matters: <one short sentence>.
+After that: <one short sentence>.
+```
+
+Default state routing:
+- installed but not calibrated: `/aim calibrate-repo`
+- calibrated but no Epic exists: `/aim start "EPIC: <desired outcome>"`
+- Epic exists but is not approved: review Gate A and reply `approve` or `change: ...`
+- Epic approved: `/aim continue`
+- blocked: resolve the named blocking issue
+
+If the next action is start, show a realistic example:
+
+```text
+/aim start "EPIC: Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
+```
+
+Do not explain the full method, adapter layering, every runtime artifact,
+internal file paths, or a command inventory unless the user asks for deeper help.
 
 ## Quick actions
 

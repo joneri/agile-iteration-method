@@ -314,6 +314,7 @@ INSTALL_MANIFEST_PATH = "install/aim-install-manifest.yaml"
 
 ADAPTER_ENTRY_MODEL_DOC_PATH = "docs/workflow/adapter-entry-model.md"
 ADAPTER_COMMAND_CONTRACT_DOC_PATH = "docs/workflow/adapter-command-contract.md"
+LIGHT_FRONT_DOOR_DOC_PATH = "docs/workflow/light-front-door.md"
 PRODUCT_COHERENCE_DOC_PATH = "docs/workflow/product-coherence-validation.md"
 REPO_PROFILE_SCHEMA_DOC_PATH = "docs/workflow/repo-profile-schema.md"
 RELEASE_PUBLICATION_DOC_PATH = "docs/workflow/release-publication-model.md"
@@ -392,6 +393,110 @@ ADAPTER_ENTRY_SURFACE_MARKERS = {
     ],
     ".claude/commands/start-aim.md": ["command-first", ADAPTER_ENTRY_MODEL_DOC_PATH],
     ".claude/agents/aim.md": ["internal helper surface", "command-first"],
+}
+
+REQUIRED_ONBOARDING_DOC_MARKERS = [
+    "detects onboarding state first",
+    "recommends exactly one next action",
+    "You are here",
+    "Recommended next action",
+    "installed but not calibrated",
+    "calibrated but no Epic exists",
+    "Epic exists but is not approved",
+    "Epic approved",
+    "blocked",
+    "/aim calibrate-repo",
+    '/aim start "EPIC:',
+    "do not lead with internal file paths",
+    "command inventories",
+]
+
+REQUIRED_ONBOARDING_CONTRACT_MARKERS = [
+    "onboarding state first",
+    "recommend exactly one next action",
+    "You are here",
+    "Recommended next action",
+    "installed but not calibrated",
+    "calibrated but no Epic exists",
+    "Epic exists but is not approved",
+    "Epic approved",
+    "blocked",
+    "/aim calibrate-repo",
+    '/aim start "EPIC:',
+    "must not lead with internal file paths",
+    "command inventory",
+]
+
+ONBOARDING_SURFACES = {
+    "adapters/codex/agile-iteration-method/SKILL.md": [
+        "detect onboarding state first",
+        "recommend exactly one next action",
+        "You are here",
+        "Recommended next action",
+        "installed but not calibrated",
+        "calibrated but no Epic exists",
+        "Epic exists but is not approved",
+        "Epic approved",
+        "blocked",
+        "/aim calibrate-repo",
+        '/aim start "EPIC:',
+        "do not lead with internal file paths",
+        "command\ninventory",
+        "new homes for cats",
+    ],
+    ".github/agents/aim.agent.md": [
+        "detect onboarding state first",
+        "recommend exactly one next action",
+        "You are here",
+        "Recommended next action",
+        "installed but not calibrated",
+        "calibrated but no Epic exists",
+        "Epic exists but is not approved",
+        "Epic approved",
+        "blocked",
+        "/aim calibrate-repo",
+        '/aim start "EPIC:',
+        "do not lead with internal file paths",
+        "command inventory",
+        "new homes for cats",
+    ],
+    ".github/prompts/help-aim.prompt.md": [
+        "Detect onboarding state first",
+        "recommend exactly one next action",
+        "You are here",
+        "Recommended next action",
+        "installed but not calibrated",
+        "calibrated but no Epic exists",
+        "Epic exists but is not approved",
+        "Epic approved",
+        "blocked",
+        "/aim calibrate-repo",
+        '/aim start "EPIC:',
+        "Do not lead with internal file paths",
+        "command inventory",
+        "new homes for cats",
+    ],
+    ".claude/commands/help-aim.md": [
+        "Detect onboarding state first",
+        "recommend exactly one next action",
+        "You are here",
+        "Recommended next action",
+        "installed but not calibrated",
+        "calibrated but no Epic exists",
+        "Epic exists but is not approved",
+        "Epic approved",
+        "blocked",
+        "/aim calibrate-repo",
+        '/aim start "EPIC:',
+        "Do not lead with internal file paths",
+        "command inventory",
+    ],
+    ".claude/agents/aim.md": [
+        "detect onboarding state first",
+        "recommend exactly one next action",
+        "do not lead with",
+        "command inventory",
+    ],
 }
 
 REMOVED_GENERIC_AIM_ROOT_PATHS = [
@@ -889,6 +994,11 @@ def find_overlong_profile_scalars(content: str) -> list[str]:
         if len(value) > PROFILE_PROSE_LIMIT:
             findings.append(f"{key.strip()} ({len(value)} chars)")
     return findings
+
+
+def missing_case_insensitive_markers(content: str, markers: list[str]) -> list[str]:
+    normalized_content = content.lower()
+    return [marker for marker in markers if marker.lower() not in normalized_content]
 
 
 def operational_doc_paths(content: str) -> list[str]:
@@ -1890,6 +2000,76 @@ def main() -> int:
             "canonical adapter command contract is missing",
             "Restore the command intent, state-effect, upgrade, and fallback contract.",
         )
+
+    light_front_door_path = repo_root / LIGHT_FRONT_DOOR_DOC_PATH
+    checked.append(LIGHT_FRONT_DOOR_DOC_PATH)
+    if light_front_door_path.is_file():
+        light_front_door_content = light_front_door_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_onboarding_doc_markers = missing_case_insensitive_markers(
+            light_front_door_content, REQUIRED_ONBOARDING_DOC_MARKERS
+        )
+        if missing_onboarding_doc_markers:
+            add_issue(
+                issues,
+                "blocked",
+                LIGHT_FRONT_DOOR_DOC_PATH,
+                "canonical onboarding front door is incomplete: "
+                + ", ".join(missing_onboarding_doc_markers),
+                "Restore state-first guidance, one-next-action behavior, progressive disclosure, and realistic start examples.",
+            )
+    else:
+        add_issue(
+            issues,
+            "blocked",
+            LIGHT_FRONT_DOOR_DOC_PATH,
+            "canonical onboarding front door is missing",
+            "Restore docs/workflow/light-front-door.md before relying on first-run guidance.",
+        )
+
+    if command_contract_path.is_file():
+        missing_onboarding_contract_markers = missing_case_insensitive_markers(
+            command_contract_content, REQUIRED_ONBOARDING_CONTRACT_MARKERS
+        )
+        if missing_onboarding_contract_markers:
+            add_issue(
+                issues,
+                "blocked",
+                ADAPTER_COMMAND_CONTRACT_DOC_PATH,
+                "adapter command contract is missing onboarding semantics: "
+                + ", ".join(missing_onboarding_contract_markers),
+                "Restore state-first guidance, one-next-action behavior, progressive disclosure, and realistic start examples.",
+            )
+
+    checked.append("AIM 2.0 first-run onboarding parity")
+    for relative_path, required_markers in ONBOARDING_SURFACES.items():
+        onboarding_surface_path = repo_root / relative_path
+        checked.append(relative_path)
+        if not onboarding_surface_path.is_file():
+            add_issue(
+                issues,
+                "blocked",
+                relative_path,
+                "onboarding adapter surface is missing",
+                "Restore the adapter surface or remove it from the onboarding parity contract.",
+            )
+            continue
+        onboarding_surface_content = onboarding_surface_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_onboarding_surface_markers = missing_case_insensitive_markers(
+            onboarding_surface_content, required_markers
+        )
+        if missing_onboarding_surface_markers:
+            add_issue(
+                issues,
+                "blocked",
+                relative_path,
+                "adapter onboarding guidance drifted: "
+                + ", ".join(missing_onboarding_surface_markers),
+                "Restore state detection, a single recommended next action, progressive disclosure, and realistic examples.",
+            )
 
     checked.append("AIM 2.0 adapter command parity")
     for adapter_name, relative_path in COMMAND_FAMILY_SURFACES.items():

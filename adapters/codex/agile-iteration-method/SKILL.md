@@ -20,8 +20,29 @@ The package-local cross-adapter entry model is `references/adapter-entry-model.m
 
 ## First Response
 
+Detect onboarding state first, then recommend exactly one next action whenever
+possible. For first-run, help, or "what should I do now" requests, answer in
+this shape before explaining files, paths, packaging, or architecture:
+
+```text
+You are here: <state>.
+Recommended next action: <one command or decision>.
+Why it matters: <one short sentence>.
+After that: <one short sentence>.
+```
+
+State routing:
+
+1. Installed but not calibrated: recommend `/aim calibrate-repo`.
+2. Calibrated but no Epic exists: recommend `/aim start "EPIC: <desired outcome>"`.
+3. Epic exists but is not approved: recommend reviewing Gate A and replying `approve` or `change: ...`.
+4. Epic approved: recommend `/aim continue`.
+5. Blocked: recommend resolving the named blocking issue.
+
+Then perform only the context loading needed for that state:
+
 1. Detect the repository root.
-2. Detect or create `.aim` before starting or resuming an AIM run.
+2. Detect or create `.aim` only when starting or resuming an AIM run.
 3. Read `.aim/state.json` first when it exists.
 4. If `.aim/state.json` describes an incomplete Epic, resume that checkpoint instead of starting a new Epic.
 5. Read `aim.profile.yaml` when present as the primary shared repo-awareness source.
@@ -34,7 +55,7 @@ The package-local cross-adapter entry model is `references/adapter-entry-model.m
 12. Default to `Cost profile: Standard` unless the user explicitly chooses `Cost Control` or `Deep`.
 13. Start visible AIM phases with exactly `Role: PO`, `Role: TDO`, `Role: Dev`, or `Role: Reviewer`, and show `Mode: Strict` or `Mode: Auto`.
 14. Show `Cost profile` when it is not `Standard` or when resource use is part of the user's request.
-15. Keep the public front door thin: route first to start, continue, or validate before explaining the full method.
+15. Keep the public front door thin: route first to the state-specific next action before explaining the full method.
 
 Treat unnecessary broad context loading, long low-risk markdown artifacts, repeated major-doc rereads, and context-hog files as budget bugs.
 When a Personal or Team profile is present, report whether it was reused before broader docs. Profiles can guide locality and validation, but they cannot override AIM core, `.aim/state.json`, Team policy, gate ownership, escalation, or current repository evidence.
@@ -56,7 +77,9 @@ Outside hard-gate approval checkpoints, stop and ask when an escalation conditio
 
 ## Codex Skill Install Check
 
-When the user runs AIM in Codex for the first time in a repository, make the bundled skill path obvious before continuing:
+When the user runs AIM in Codex for install, upgrade, validate, status, config,
+or stale-skill troubleshooting, make the bundled skill path obvious before
+continuing:
 
 - repo-bundled skill: `adapters/codex/agile-iteration-method/SKILL.md`
 - local Codex install path: `~/.codex/skills/agile-iteration-method/SKILL.md`
@@ -72,7 +95,11 @@ Review the plan, then rerun with `--apply`. The installer adds picker metadata
 and the package-local canonical references required by `SKILL.md`; a raw copy of
 only the source adapter directory is incomplete.
 
-For `Install AIM`, `/aim validate`, `/aim status`, `/aim config`, and first-run `/aim start` or `/aim continue`, include this install status in the visible output when Codex is the active platform.
+For ordinary first-run `/aim start`, `/aim continue`, `/aim help`, or "what
+should I do now" requests, do not lead with internal file paths, local skill
+paths, runtime locations, adapter packaging, architecture details, or a command
+inventory. Show install status only after the one-next-action guidance when it
+changes the user's next decision or explains a blocker.
 Do not treat a missing local skill as a blocker when the repository already contains the AIM contract; report the fallback and continue unless another escalation condition applies.
 
 ## Commands
@@ -121,21 +148,31 @@ the reason and accepted history.
 
 ## Thin Front Door
 
-When the user asks how to begin, help, or what AIM should do next, show only the first useful choice by default:
+When the user asks how to begin, help, or what AIM should do next, detect
+onboarding state first and show only the first useful choice by default:
 
-- start new work: `/aim start "EPIC: ..."`
-- continue current work: `/aim continue`
-- check setup: `/aim validate`
+- installed but not calibrated: `/aim calibrate-repo`
+- calibrated but no Epic exists: `/aim start "EPIC: <desired outcome>"`
+- Epic exists but is not approved: review Gate A and reply `approve` or `change: ...`
+- Epic approved: `/aim continue`
+- blocked: resolve the named blocking issue
 
 For ordinary low-risk work, suggest this start shape:
 
 ```text
-/aim start "EPIC: <desired user outcome>"
+/aim start "EPIC: Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
 Mode: Strict
 Cost profile: Cost Control
 ```
 
-Do not explain adapter layering, every gate, or every runtime artifact unless the user asks for deeper help or the task needs that context.
+When the repo needs durable context first, suggest:
+
+```text
+/aim remember-repo habits "Product context: This app helps people find new homes for cats. Keep tone nuanced and empathetic toward both the cats and the future owners."
+```
+
+Do not explain adapter layering, every gate, every runtime artifact, or a command
+inventory unless the user asks for deeper help or the task needs that context.
 
 ## Runtime Workflow
 

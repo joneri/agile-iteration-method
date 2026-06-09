@@ -33,6 +33,37 @@ ownership, or acceptance.
 `/aim calibrate-repo`, `/aim remember-repo`, and `/aim forget-repo` follow
 `docs/workflow/repo-awareness-calibration.md`.
 
+## First-run onboarding contract
+
+Before showing help, status, or a first-run response, adapters must detect
+onboarding state first:
+
+- installed but not calibrated
+- calibrated but no Epic exists
+- Epic exists but is not approved
+- Epic approved
+- blocked
+
+Adapters must recommend exactly one next action whenever possible and use the
+shape from `docs/workflow/light-front-door.md`:
+
+```text
+You are here: <state>.
+Recommended next action: <one command or decision>.
+Why it matters: <one short sentence>.
+After that: <one short sentence>.
+```
+
+Adapters must not lead with internal file paths, runtime locations, adapter
+packaging, architecture details, or a command inventory unless the user asks for
+advanced help or the current blocker requires that detail.
+
+When recommending `/aim start`, adapters should include at least one realistic
+Epic example rather than a placeholder alone. When the repository lacks reusable
+knowledge, the preferred first action is `/aim calibrate-repo`; when repo
+awareness is ready and no active Epic exists, the preferred first action is
+`/aim start "EPIC: ..."`.
+
 ## Upgrade contract
 
 `/aim upgrade` is a package inspection and reviewed refresh intent.
@@ -117,3 +148,5 @@ The validator must reject:
 - an empty advertised command behavior section
 - an AIM 1.x `aimVersion` example in an AIM 2.0 adapter surface
 - an adapter with no explicit fallback rule
+- onboarding wording that lacks state-first guidance, one-next-action behavior,
+  progressive disclosure, or realistic start examples
