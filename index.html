@@ -175,7 +175,7 @@
       position: relative;
       z-index: 2;
       display: grid;
-      grid-template-columns: minmax(0, 720px) auto;
+      grid-template-columns: minmax(0, 720px);
       align-items: end;
       gap: 40px;
       padding-bottom: 48px;
@@ -195,8 +195,9 @@
     }
     .hero-actions {
       display: flex;
-      flex-direction: column;
-      min-width: 175px;
+      flex-wrap: wrap;
+      max-width: 470px;
+      margin-top: 26px;
       gap: 10px;
     }
     .button {
@@ -560,8 +561,7 @@
 
     @media (max-width: 980px) {
       .nav-links a:not(.github-link) { display: none; }
-      .hero-content { grid-template-columns: 1fr; gap: 24px; }
-      .hero-actions { flex-direction: row; min-width: 0; }
+      .hero-content { gap: 24px; }
       .promise-grid, .mode-grid, .platform-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .feature-layout, .rebuild { grid-template-columns: 1fr; gap: 44px; }
       .loop, .journey { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -586,7 +586,8 @@
       .hero-content { padding-bottom: 34px; }
       .hero h1 { font-size: clamp(2.2rem, 12vw, 3.3rem); }
       .hero-lead { font-size: 1rem; }
-      .hero-actions { flex-direction: column; }
+      .hero-actions { flex-direction: column; max-width: none; }
+      .hero-actions .button { width: 100%; }
       .hero-command { align-items: stretch; }
       .promise-grid, .feature-list, .mode-grid, .platform-grid, .rebuild-list, .docs-row {
         grid-template-columns: 1fr;
@@ -637,10 +638,10 @@
         <p class="eyebrow">AI operating system for agentic software delivery</p>
         <h1>Agile Iteration Method 2.0</h1>
         <p class="hero-lead">Build what you want without losing the goal. AIM turns AI-assisted development into a clear loop of planning, implementation, review, validation, correction, and human approval.</p>
-      </div>
-      <div class="hero-actions">
-        <a class="button button-primary" href="#start">Start with AIM</a>
-        <a class="button button-secondary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">Discover the product</a>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#start">Start with AIM</a>
+          <a class="button button-secondary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">Discover the product</a>
+        </div>
       </div>
       <div class="hero-command" aria-label="Public release install command">
         <span>Install from the maintained branch</span>
