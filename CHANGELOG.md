@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-06-11 - AIM 2 release v2.1.0
+- Added the Enterprise `external` footprint so protected repositories can install the full AIM distribution and selected home-scope adapter packages outside the target repository with zero repo writes by default.
+- Added Enterprise external repo-awareness memory at `~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml`, with larger external memory documents under `~/.aim/repo-awareness/<repo-fingerprint>/docs/`.
+- Updated Codex, Claude, and GitHub Copilot adapter guidance so `/aim calibrate-repo` and `/aim remember-repo` write to the correct durable store for the active operating mode instead of defaulting to repo files.
+- Added public one-command installation from GitHub Pages, guided target-repository prompting, maintained-branch bootstrap behavior, and release asset validation.
+- Added first-run onboarding guidance, `/aim upgrade` guidance, `/aim remember-repo` examples, and validation that keeps advanced command inventories behind help.
+- Improved the GitHub Pages launch page with an image-only hero, install command copy button, and copy-success feedback.
+- Hardened AIM 2 validation for Strict-mode gate approval wording, durable `.aim/` runtime boundaries, Enterprise zero-repo-write defaults, external footprint schema support, and release readiness.
+
 ## 2026-06-08 - AIM 2.0 public launch bootstrap
 - Added the public one-command install bootstrap at `install.sh`, published through GitHub Pages as `curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash`.
 - Made the bootstrap maintainable by default: it follows the current `main` archive while still allowing `AIM_REF` overrides for a specific branch or tag.

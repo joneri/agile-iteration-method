@@ -1,4 +1,4 @@
-# Agile Iteration Method (AIM) 2.0
+# Agile Iteration Method (AIM) 2
 
 ![AIM 2.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
@@ -152,9 +152,9 @@ AIM keeps one method while using a native entrypoint for each platform:
 If a native command is unavailable, explicit AIM intent remains the supported fallback.
 Platform packaging may differ; the delivery loop, gates, ownership, and acceptance rules do not.
 
-## AIM 2.0
+## AIM 2
 
-AIM 2.0 is the current release. See the [changelog](CHANGELOG.md) for what shipped and the [release and publication model](docs/workflow/release-publication-model.md) for how releases are validated.
+AIM 2 is the current release line. The current source release is **v2.1.0**. See the [changelog](CHANGELOG.md) for what shipped and the [release and publication model](docs/workflow/release-publication-model.md) for how releases are validated.
 
 AIM 2.0 was rebuilt as a cleaner product while preserving the proven AIM core.
 

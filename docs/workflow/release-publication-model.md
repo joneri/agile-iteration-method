@@ -105,7 +105,7 @@ curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
 An official AIM 2.0 release requires:
 
 - a reviewed source commit
-- a `v2.0`-family source tag pointing to that commit
+- a `v2`-family source tag pointing to that commit
 - a successful release-readiness workflow for the tagged source
 - a successful release workflow that creates or updates the GitHub Release for
   the tag
