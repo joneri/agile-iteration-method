@@ -350,6 +350,15 @@
     .mode h3, .platform h3 { margin: 0 0 10px; font-size: 1.35rem; }
     .mode p, .platform p { margin: 0; color: var(--muted); }
     .mode strong { display: block; margin-top: 18px; font-size: 0.9rem; }
+    .mode ul {
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+    .mode li + li { margin-top: 8px; }
     .platform-start {
       display: block;
       margin-top: 20px;
@@ -401,6 +410,36 @@
     }
     .installer h3 { margin: 0 0 8px; font-size: 1.15rem; }
     .installer p { margin: 0; color: #c7d8eb; }
+    .install-choice-grid {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .install-choice {
+      min-width: 0;
+      padding: 18px;
+      border: 1px solid #315782;
+      border-radius: var(--radius);
+      background: #06142d;
+    }
+    .install-choice h4 {
+      margin: 0 0 8px;
+      color: #fff;
+      font-size: 0.98rem;
+    }
+    .install-choice p {
+      margin: 0;
+      color: #b8cae2;
+      font-size: 0.9rem;
+    }
+    .install-choice strong {
+      display: block;
+      margin-top: 14px;
+      color: #fff;
+      font-size: 0.86rem;
+    }
     .next-command-grid {
       display: grid;
       grid-column: 1 / -1;
@@ -606,7 +645,7 @@
       .brand-visual img { aspect-ratio: 1.35 / 1; }
       .journey-step { min-height: 190px; }
       .installer { grid-template-columns: 1fr; gap: 22px; padding: 24px 20px; }
-      .next-command-grid { grid-template-columns: 1fr; }
+      .install-choice-grid, .next-command-grid { grid-template-columns: 1fr; }
       .command { width: 100%; overflow-x: auto; white-space: normal; word-break: break-word; }
       .copyable-command { width: 100%; }
       .copyable-command .command { width: auto; flex: 1; }
@@ -811,18 +850,30 @@
             <h3>Personal</h3>
             <p>Maximum freedom for one developer. Keep AIM local, share selected files, or evolve the setup over time.</p>
             <strong>Default: local-first</strong>
+            <ul>
+              <li>Best when you own the repo or are trying AIM alone.</li>
+              <li>Repo-writing footprints are available when you want native helpers committed.</li>
+            </ul>
           </article>
           <article class="mode">
             <span class="mode-tag">Shared</span>
             <h3>Team</h3>
             <p>Commit a small, deliberate repository understanding while private runtime state remains separate.</p>
             <strong>Default: intentional sharing</strong>
+            <ul>
+              <li>Best when teammates should reuse the same repo knowledge.</li>
+              <li>Creates reviewable shared surfaces such as <code>aim.profile.yaml</code>.</li>
+            </ul>
           </article>
           <article class="mode">
             <span class="mode-tag">Protected</span>
             <h3>Enterprise</h3>
             <p>Run AIM from an external package and memory store while keeping the target repository free of AIM files by default.</p>
             <strong>Default: external install</strong>
+            <ul>
+              <li>Best when repo writes, helper files, or process artifacts need approval.</li>
+              <li>Durable AIM memory stays outside the repo unless policy opts in.</li>
+            </ul>
           </article>
         </div>
       </div>
@@ -869,6 +920,25 @@
             <p>Run the packaged upgrade path before starting or resuming work. It refreshes installed AIM surfaces while preserving active runtime state.</p>
           </div>
           <code class="command">/aim upgrade</code>
+        </div>
+
+        <div class="installer">
+          <div>
+            <h3>The installer asks how AIM should touch your repo</h3>
+            <p>Choose Personal for a flexible solo setup, Team for shared repo awareness, or Enterprise when AIM should work from outside the target repository by default.</p>
+          </div>
+          <div class="install-choice-grid" aria-label="Personal and Enterprise install behavior">
+            <article class="install-choice">
+              <h4>Personal</h4>
+              <p>A practical solo setup. You can install adapter helpers, repo awareness, or full AIM docs when you want them in the repository.</p>
+              <strong>Good for trials, personal projects, and repos you control.</strong>
+            </article>
+            <article class="install-choice">
+              <h4>Enterprise</h4>
+              <p>A protected setup. AIM installs externally and keeps repo memory outside the repository unless an approved repo-writing footprint is selected.</p>
+              <strong>Good for protected repos, strict policies, and teams avoiding accidental AIM files.</strong>
+            </article>
+          </div>
         </div>
 
         <div class="installer">

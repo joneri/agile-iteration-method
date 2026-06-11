@@ -35,6 +35,18 @@ The guided installer:
 
 Installation is manifest-driven, rollback-protected, and safe to rerun.
 
+The mode choice controls how AIM touches the repository:
+
+| Mode | Default behavior | Use when |
+| --- | --- | --- |
+| Personal | flexible solo setup; repo-writing footprints are available when you want AIM helpers or docs in the repo | you own the repo, are trying AIM, or want maximum freedom |
+| Team | shared repo-awareness and selected adapter surfaces by agreement | teammates should reuse the same commands, risks, and project knowledge |
+| Enterprise | external AIM package and external durable memory by default; zero repo writes unless a broader footprint is explicitly selected | the repo is protected, policy-constrained, or should not show AIM files in Git status |
+
+In Enterprise mode, `/aim remember-repo` stores durable memory outside the
+target repository by default. Repo files such as `aim.profile.yaml`, adapter
+helpers, or embedded AIM docs are explicit opt-ins.
+
 Already have AIM 1.x or older AIM helper files in the target repository?
 Run `/aim upgrade` before continuing.
 Upgrade refreshes installed AIM-owned surfaces through the reviewed installer plan and keeps active `.aim/` runtime state intact.
