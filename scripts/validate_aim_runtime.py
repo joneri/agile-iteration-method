@@ -87,6 +87,7 @@ FORBIDDEN_RUNTIME_PROFILE_PATHS = [
 ]
 
 PERSONAL_HINTS_PATH = "~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml"
+ENTERPRISE_MEMORY_PATH = "~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml"
 
 CALIBRATION_STATUSES = {"ready", "partially_ready", "needs_calibration"}
 CALIBRATION_CONFIDENCE_VALUES = {"high", "medium", "low"}
@@ -596,8 +597,10 @@ CONTRIBUTING_EXCLUSION_MARKERS = {
 
 REQUIRED_INSTALL_MANIFEST_MARKERS = [
     "footprints:",
-    "defaultFootprint: local",
+    "defaultFootprint: external",
     "defaultFootprint: adapters",
+    "externalDocs:",
+    "externalRepoAwareness:",
     "footprintProfiles:",
     "embeddedDocs:",
     "repoAdapters:",
@@ -618,6 +621,7 @@ REQUIRED_INSTALL_MANIFEST_MARKERS = [
     "read: forbidden",
     "repoAwarenessBootstrap:",
     "personalHints: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml",
+    "enterpriseMemory: ~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml",
     "readyRequiresCalibration: true",
     "calibrationCommand: /aim calibrate-repo",
     "runtimeProfileStorage: forbidden",
@@ -628,21 +632,25 @@ CALIBRATION_ADAPTER_MARKERS = {
         "/aim calibrate-repo",
         "/aim remember-repo",
         "/aim forget-repo",
+        ENTERPRISE_MEMORY_PATH,
         PERSONAL_HINTS_PATH,
     ],
     ".github/agents/aim.agent.md": [
         "/aim calibrate-repo",
         "/aim remember-repo",
         "/aim forget-repo",
+        ENTERPRISE_MEMORY_PATH,
         PERSONAL_HINTS_PATH,
     ],
     ".claude/commands/calibrate-repo.md": [
         "/aim calibrate-repo",
+        ENTERPRISE_MEMORY_PATH,
         PERSONAL_HINTS_PATH,
         "never store stable repo-awareness under `.aim/`",
     ],
     ".claude/commands/remember-repo.md": [
         "/aim remember-repo",
+        ENTERPRISE_MEMORY_PATH,
         PERSONAL_HINTS_PATH,
         "Never store stable repository knowledge under `.aim/`",
     ],
@@ -658,7 +666,7 @@ REQUIRED_OPERATING_MODE_MARKERS = [
     "Enterprise AIM",
     "permissive",
     "shared AIM understanding",
-    "safe and isolated by default",
+    "external and protected by default",
     "AGENTS.md",
     "CLAUDE.md",
     "Enterprise ignore baseline",
@@ -1721,7 +1729,7 @@ def main() -> int:
             expected_defaults = {
                 "personal": "adapters",
                 "team": "adapters",
-                "enterprise": "local",
+                "enterprise": "external",
             }
             actual_defaults = {
                 mode: str(
@@ -1778,16 +1786,20 @@ def main() -> int:
                         home_root=Path(home_dir),
                     )
 
-            enterprise_repo_count = generated_plans["enterprise"]["scopeSummary"][
-                "repoActionCount"
+            enterprise_plan = generated_plans["enterprise"]
+            enterprise_destinations = set(
+                generated_plans["enterprise"]["scopeSummary"]["repoDestinations"]
+            )
+            enterprise_local_count = enterprise_plan["scopeSummary"][
+                "localActionCount"
             ]
-            if enterprise_repo_count != 0:
+            if enterprise_destinations or enterprise_local_count == 0:
                 add_issue(
                     issues,
                     "blocked",
                     "scripts/aim_installer/planner.py",
-                    "enterprise default footprint plans repository actions",
-                    "Keep Enterprise non-invasive; repo mutation requires an explicit footprint.",
+                    "enterprise default footprint is not a zero-repo-write external install",
+                    "Keep Enterprise default to the external footprint: install AIM outside the repository and require explicit broader footprint approval for repo files.",
                 )
 
             team_plan = generated_plans["team"]

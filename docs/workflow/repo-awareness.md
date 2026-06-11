@@ -8,13 +8,21 @@ This document makes AIM independent of generic root instruction files.
 
 ## Primary source
 
-The primary shared repo-awareness source is:
+The primary shared repo-awareness source for Team or explicit repo opt-in is:
 
 ```text
 aim.profile.yaml
 ```
 
-It is the first repository-owned source AIM reads after active runtime state.
+Enterprise external mode uses:
+
+```text
+~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml
+~/.aim/repo-awareness/<repo-fingerprint>/docs/
+```
+
+It is the first external durable source AIM reads after active runtime state.
+`aim.profile.yaml` remains the first repository-owned source when it exists.
 
 The profile contains reusable repository facts such as:
 
@@ -34,8 +42,9 @@ source of durable repo-awareness. Stable repo-awareness must not cite
 `.aim/reviews`, `.aim/increments`, `.aim/decisions`, `.aim/archive`, or other
 runtime artifacts as maintained repository knowledge. If a runtime artifact
 contains knowledge worth preserving, normalize that knowledge into
-`aim.profile.yaml`, Personal hints, or a static documentation file under a
-repo-approved docs path, then reference that static source.
+`aim.profile.yaml`, Enterprise external memory, Personal hints, or a static
+documentation file under the selected durable memory/docs path, then reference
+that static source.
 
 The structural source of truth is `schemas/aim-repo-profile.schema.json`.
 See `docs/workflow/repo-profile-schema.md` for schema versions, validation
@@ -56,10 +65,11 @@ Stable repo-awareness must never use a path under `.aim/`.
 When both exist:
 
 1. read active `.aim/state.json`
-2. read `aim.profile.yaml` as the shared repository baseline
-3. apply compatible Personal profile hints
-4. inspect directly affected files
-5. expand only when evidence, risk, or the active command requires it
+2. read Enterprise external memory when Enterprise external mode is active
+3. read `aim.profile.yaml` as the shared repository baseline when present
+4. apply compatible Personal profile hints
+5. inspect directly affected files
+6. expand only when evidence, risk, or the active command requires it
 
 ## Generic root files
 
@@ -90,7 +100,7 @@ Adapter surfaces:
 
 - load only for the active adapter
 - may define command routing and platform mechanics
-- may consume `aim.profile.yaml`
+- may consume `aim.profile.yaml` or Enterprise external memory
 - must not redefine AIM core, gate meaning, ownership, or acceptance
 
 ## Load order
@@ -98,13 +108,14 @@ Adapter surfaces:
 Load the smallest useful context in this order:
 
 1. `.aim/state.json` when an AIM run exists
-2. `aim.profile.yaml` when present
-3. compatible Personal profile hints when present
-4. directly affected files and nearest metadata
-5. the nearest validation command
-6. canonical AIM workflow docs required by the current role, gate, command, or risk
-7. active-adapter policy only when adapter mechanics matter
-8. broader repository docs only when evidence is missing or risk requires expansion
+2. Enterprise external memory when Enterprise external mode is active
+3. `aim.profile.yaml` when present
+4. compatible Personal profile hints when present
+5. directly affected files and nearest metadata
+6. the nearest validation command
+7. canonical AIM workflow docs required by the current role, gate, command, or risk
+8. active-adapter policy only when adapter mechanics matter
+9. broader repository docs only when evidence is missing or risk requires expansion
 
 Do not preload the full workflow family.
 
@@ -140,15 +151,18 @@ Do not preload the full workflow family.
 Use `/aim calibrate-repo` to bootstrap or refine repository knowledge through the canonical cheap-first flow.
 An ordinary AIM Epic whose goal is to verify and refine repo-awareness follows the same contract and produces the same profile shape.
 
-Short, atomic durable facts belong directly in `aim.profile.yaml`.
+Short, atomic durable facts belong directly in the active memory index:
+`aim.profile.yaml` for Team/repo opt-in, or
+`~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml` for Enterprise external.
 Larger repo memory belongs in stable documentation and should be referenced from
-the profile with a short summary and loading rule. Valid static memory locations
+that index with a short summary and loading rule. Valid static memory locations
 include:
 
 - `docs/features/`
 - `docs/workflow/`
 - `docs/architecture/`
 - another stable docs path explicitly configured by the repository
+- `~/.aim/repo-awareness/<repo-fingerprint>/docs/` for Enterprise external
 
 Do not use `.aim/` runtime artifacts as long-lived memory documents.
 

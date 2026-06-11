@@ -294,23 +294,25 @@ def prompt_mode(
     )
 
 
-_FOOTPRINT_ORDER = ("full", "adapters", "profile", "local")
+_FOOTPRINT_ORDER = ("external", "full", "adapters", "profile", "local")
 
 _FOOTPRINT_LABELS = {
     "full": "Full (recommended for first install)",
+    "external": "External (Enterprise default)",
 }
 
 _FOOTPRINT_DETAILS = {
+    "external": "Install AIM outside the repo with external repo-awareness memory; no repo writes.",
     "full": "First real install: AIM docs, repo-awareness profile, and selected adapters.",
     "adapters": "AIM already set up? Add or update Codex/Copilot/Claude support only.",
-    "profile": "Add repo-awareness only (the shared aim.profile.yaml); no docs or adapters.",
-    "local": "No repository changes - try AIM, or stay private/Enterprise-safe.",
+    "profile": "Add the reviewed repo-awareness profile and runtime ignore policy; no docs or adapters.",
+    "local": "No repository changes - trial/private package only.",
 }
 
 _FOOTPRINT_MODE_NOTES = {
     "personal": "Personal mode allows any footprint.",
     "team": "Team mode allows any footprint; shared files are committed.",
-    "enterprise": "Enterprise mode keeps repository impact minimal by default.",
+    "enterprise": "Enterprise mode defaults to external AIM outside the repo; repo writes require an explicit broader footprint.",
 }
 
 

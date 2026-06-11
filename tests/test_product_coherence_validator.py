@@ -82,7 +82,7 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
             content = manifest.read_text(encoding="utf-8")
             manifest.write_text(
                 content.replace(
-                    "enterprise:\n      defaultFootprint: local",
+                    "enterprise:\n      defaultFootprint: external",
                     "enterprise:\n      defaultFootprint: adapters",
                     1,
                 ),
@@ -93,7 +93,7 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         self.assertIn("Release readiness: FAIL", completed.stdout)
         self.assertIn(
-            "Enterprise is documented as non-invasive but its default plan writes repository files",
+            "Enterprise default plan is not the external zero-repo-write install",
             completed.stdout,
         )
 

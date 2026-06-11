@@ -80,9 +80,9 @@ Surface handling must follow that mode model.
 | Surface | Personal | Team | Enterprise |
 | --- | --- | --- | --- |
 | `.aim/` | may stay local or be committed if the user wants | private by default; shared only by team choice | ignored by default; do not commit unless explicitly approved |
-| `aim.profile.yaml` | optional | default tiny shared repo-awareness surface | create or modify only by explicit repo-owner approval |
+| `aim.profile.yaml` | optional | default tiny shared repo-awareness surface | explicit opt-in only; external memory is default |
 | Personal profile storage | allowed and preferred for local reuse | allowed as local hint under Team baseline | allowed as private/local hint |
-| `docs/features/` support/reference docs | may be kept or committed freely | shared when the team wants common support material | local/private by default unless explicitly approved |
+| `docs/features/` support/reference docs | may be kept or committed freely | shared when the team wants common support material | explicit broader footprint or repo-owner approval only |
 | `AGENTS.md` and `CLAUDE.md` | outside AIM architecture | outside AIM architecture | outside AIM architecture |
 | Generated markdown/process artifacts | may be kept or committed | commit only when the team wants audit/process history | ignored by default unless promoted to product docs |
 | Product output | commit normally when part of the work | commit normally when part of the work | commit normally when part of the work |

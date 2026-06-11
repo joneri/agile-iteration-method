@@ -97,7 +97,7 @@ class GuidedInputTests(unittest.TestCase):
     def test_footprint_menu_uses_mode_default(self) -> None:
         output = io.StringIO()
         footprint = guided.prompt_footprint(
-            ["local", "profile", "adapters", "full"],
+            ["external", "local", "profile", "adapters", "full"],
             default="adapters",
             key_reader=lambda: "enter",
             output_stream=output,
@@ -108,7 +108,7 @@ class GuidedInputTests(unittest.TestCase):
     def test_footprint_menu_explains_choices_and_recommends_full(self) -> None:
         output = io.StringIO()
         footprint = guided.prompt_footprint(
-            ["local", "profile", "adapters", "full"],
+            ["external", "local", "profile", "adapters", "full"],
             default="full",
             mode="personal",
             key_reader=lambda: "enter",
@@ -124,8 +124,23 @@ class GuidedInputTests(unittest.TestCase):
         self.assertLess(rendered.index("Full (recommended"), rendered.index("Local"))
         # Each footprint explains when it is the reasonable choice.
         self.assertIn("Add or update Codex/Copilot/Claude support only", rendered)
-        self.assertIn("Add repo-awareness only", rendered)
+        self.assertIn("reviewed repo-awareness profile", rendered)
         self.assertIn("No repository changes", rendered)
+
+    def test_enterprise_footprint_menu_defaults_to_external(self) -> None:
+        output = io.StringIO()
+        footprint = guided.prompt_footprint(
+            ["external", "local", "profile", "adapters", "full"],
+            default="external",
+            mode="enterprise",
+            key_reader=lambda: "enter",
+            output_stream=output,
+        )
+        rendered = output.getvalue()
+        self.assertEqual(footprint, "external")
+        self.assertIn(">   External (Enterprise default)", rendered)
+        self.assertIn("outside the repo", rendered)
+        self.assertNotIn(">   Local", rendered)
 
     def test_collision_n_and_enter_keep_existing(self) -> None:
         output = io.StringIO()
@@ -392,11 +407,23 @@ class ModeFootprintContractTests(unittest.TestCase):
             plan["adapterClosure"]["packageLocalDocs"]["codex"],
         )
 
-    def test_enterprise_default_is_non_invasive(self) -> None:
+    def test_enterprise_default_is_external_zero_repo_write_install(self) -> None:
         plan = self._plan(mode="enterprise")
-        self.assertEqual(plan["footprint"], "local")
-        self.assertEqual(plan["scopeSummary"]["repoActionCount"], 0)
+        destinations = set(plan["scopeSummary"]["repoDestinations"])
+        local_destinations = set(plan["scopeSummary"]["localDestinations"])
+        self.assertEqual(plan["footprint"], "external")
+        self.assertEqual(destinations, set())
         self.assertFalse(plan["footprintProfile"]["sharedProfile"])
+        self.assertTrue(plan["footprintProfile"]["externalDocs"])
+        self.assertGreater(plan["scopeSummary"]["localActionCount"], 0)
+        self.assertTrue(
+            any(
+                ".aim/installs/agile-iteration-method/docs/workflow/"
+                in path
+                for path in local_destinations
+            )
+        )
+        self.assertFalse(plan["scopeSummary"]["explicitApproval"])
         self.assertTrue(plan["modeProfile"]["enterpriseSafe"])
 
     def test_enterprise_profile_uses_exact_canonical_ignore_baseline(self) -> None:
@@ -419,8 +446,18 @@ class ModeFootprintContractTests(unittest.TestCase):
         )
         self.assertTrue(plan["scopeSummary"]["explicitApproval"])
 
+    def test_enterprise_adapters_requires_explicit_repo_write_override(self) -> None:
+        plan = self._plan(
+            mode="enterprise", footprint="adapters", adapters=["copilot"]
+        )
+        self.assertEqual(plan["defaultFootprint"], "external")
+        self.assertTrue(plan["scopeSummary"]["repoActionCount"] > 0)
+        approval = "\n".join(plan["scopeSummary"]["explicitApproval"])
+        self.assertIn("overrides the enterprise default 'external'", approval)
+        self.assertIn("broader repo-writing footprint", approval)
+
     def test_adapter_footprint_installs_only_required_contract_subset(self) -> None:
-        for footprint in ("local", "profile"):
+        for footprint in ("external", "local", "profile"):
             plan = self._plan(mode="team", footprint=footprint)
             self.assertFalse(
                 any(
@@ -522,6 +559,7 @@ class ModeFootprintContractTests(unittest.TestCase):
 
     def test_personal_allows_every_footprint(self) -> None:
         expected_repo_writes = {
+            "external": False,
             "local": False,
             "profile": True,
             "adapters": True,
@@ -622,7 +660,7 @@ class CliTests(unittest.TestCase):
         ), mock.patch.object(
             guided, "prompt_mode", return_value="enterprise"
         ), mock.patch.object(
-            guided, "prompt_footprint", return_value="profile"
+            guided, "prompt_footprint", return_value="adapters"
         ), mock.patch.object(
             guided, "prompt_adapters", return_value=["copilot"]
         ), mock.patch.object(

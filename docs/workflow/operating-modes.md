@@ -17,7 +17,7 @@ They do not change AIM core roles, gates, Done Increment discipline, escalation 
 | --- | --- | --- | --- | --- |
 | Personal | one developer with maximum freedom | none required | permissive | solo work, trials, personal repos, flexible local workflows |
 | Team | shared AIM understanding by agreement | shared repo-awareness and selected features | reviewable sharing | teams that want reusable repo knowledge |
-| Enterprise | safe AIM use in stricter repos | work output only unless explicitly approved | isolated by default | protected repos, larger orgs, regulated environments |
+| Enterprise | safe AIM use in stricter repos | external AIM package and memory | zero repo writes by default | protected repos, larger orgs, regulated environments |
 
 ## Personal AIM
 
@@ -54,16 +54,16 @@ It does not require committing every AIM runtime artifact.
 
 ## Enterprise AIM
 
-Enterprise AIM is safe and isolated by default.
+Enterprise AIM is external and protected by default.
 
 Default assumptions:
 
 - AIM may be used fully by an individual.
-- repo-awareness and feature knowledge may exist locally for that individual.
+- AIM package files and durable repo-awareness memory live outside the target repository by default.
 - AIM-generated non-product artifacts are ignored by default.
 - AIM internal files should not be committed or pushed by accident.
 - the default sharing model is: share the work produced with AIM, not AIM's internal artifacts.
-- shared AIM repo-awareness or features happen only deliberately and explicitly.
+- feature docs, adapter helpers, embedded AIM docs, or broader shared AIM surfaces happen only deliberately and explicitly.
 - installation must not assume the repo root is empty.
 - installation must not assume AIM may overwrite existing instruction files.
 
@@ -76,9 +76,9 @@ It is a stricter safety mode that protects the repository from accidental AIM fo
 | --- | --- | --- | --- |
 | Product output: code, config, tests, product docs | may commit | should commit when part of work | should commit when part of work |
 | `.aim/` runtime state | may keep local or commit | local by default; shared only by team choice | ignored by default; do not commit unless explicitly approved |
-| `aim.profile.yaml` | optional | default shared repo-awareness surface | only by explicit repo-owner approval |
+| `aim.profile.yaml` | optional | default shared repo-awareness surface | explicit opt-in only; external memory is default |
 | Personal hints under `~/.aim/repo-awareness/` | allowed | allowed as local hint | allowed as local/private hint |
-| Feature docs that help AIM | may keep or commit | may share by agreement | local/private by default unless explicitly approved |
+| Feature docs that help AIM | may keep or commit | may share by agreement | explicit broader footprint or repo-owner approval only |
 | Generic root instruction files such as `AGENTS.md` and `CLAUDE.md` | outside AIM architecture | outside AIM architecture | outside AIM architecture |
 | AIM-generated markdown/process artifacts | may keep or commit | commit only if team wants audit/shared process | ignored by default unless explicitly promoted |
 | Adapter helpers under `.github/` or `.claude/` | optional | share by adapter choice | explicit opt-in only |
@@ -106,6 +106,11 @@ Meaning:
 The ignore baseline is a safety default, not a ban.
 Enterprise repositories may deliberately share a reviewed AIM surface, but accidental sharing should be hard.
 
+Enterprise AIM must not rely on repo-local symlinks as the default bridge to
+external AIM package files or memory. Symlinks are allowed only as explicit
+organization policy because they are fragile across OSes, CI, containers, and
+repository moves, and they can make external files appear in repo tooling.
+
 ## Collision behavior
 
 Generic root instruction files are outside AIM architecture:
@@ -126,7 +131,7 @@ Rules by mode:
 
 - Personal: profile and ignore changes are permissive, but existing files must be inspected.
 - Team: create or modify shared AIM configuration through reviewed team agreement.
-- Enterprise: never assume overwrite rights; generate a patch unless explicit approval exists.
+- Enterprise: default to no repo writes; generate a patch unless explicit approval exists.
 
 ## Install behavior
 

@@ -15,6 +15,7 @@ aimInstallManifest:
     - claude
 
   footprints:
+    - external
     - local
     - profile
     - adapters
@@ -35,7 +36,7 @@ aimInstallManifest:
       gitignore:
         - .aim/
     enterprise:
-      defaultFootprint: local
+      defaultFootprint: external
       includeOptionalSurfaces: false
       enterpriseSafe: true
       gitignore:
@@ -46,16 +47,27 @@ aimInstallManifest:
         - /*.aim.process.md
 
   footprintProfiles:
+    external:
+      description: Full AIM distribution and selected home-scope adapter packages outside the target repository; no repo writes.
+      embeddedDocs: false
+      externalDocs: true
+      repoAdapters: false
+      sharedProfile: false
+      repoIgnore: false
+      homeAdapters: true
+      externalRepoAwareness: true
     local:
       description: Local packages only; no target-repository mutation.
       embeddedDocs: false
+      externalDocs: false
       repoAdapters: false
       sharedProfile: false
       repoIgnore: false
       homeAdapters: true
     profile:
-      description: Tiny shared profile and runtime ignore policy; no repo adapters or docs.
+      description: Minimal reviewed repo-awareness profile and runtime ignore policy; no repo adapters or docs.
       embeddedDocs: false
+      externalDocs: false
       repoAdapters: false
       sharedProfile: true
       repoIgnore: true
@@ -63,6 +75,7 @@ aimInstallManifest:
     adapters:
       description: Selected adapter packages and required contract subset; Team also gets the shared profile.
       embeddedDocs: false
+      externalDocs: false
       repoAdapters: true
       sharedProfile: team-default
       repoIgnore: true
@@ -70,6 +83,7 @@ aimInstallManifest:
     full:
       description: Shared profile, selected adapters, and embedded workflow docs.
       embeddedDocs: true
+      externalDocs: false
       repoAdapters: true
       sharedProfile: true
       repoIgnore: true
@@ -104,6 +118,10 @@ aimInstallManifest:
       source: adapters/codex/agile-iteration-method/
       destination: ~/.codex/skills/agile-iteration-method/
       optional: true
+    externalDistribution:
+      source: docs/workflow/, schemas/, adapters/
+      destination: ~/.aim/installs/agile-iteration-method/
+      optional: true
     copilotAgents:
       source: .github/agents/aim*.agent.md
       destination: .github/agents/
@@ -135,6 +153,8 @@ aimInstallManifest:
   repoAwarenessBootstrap:
     sharedProfile: aim.profile.yaml
     personalHints: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
+    enterpriseMemory: ~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml
+    enterpriseMemoryDocs: ~/.aim/repo-awareness/<repo-fingerprint>/docs/
     initialStatus:
       - needs_calibration
       - partially_ready

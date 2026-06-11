@@ -98,7 +98,7 @@ adapters:
 | --- | --- |
 | Personal | `adapters`; selected repo adapters; no forced shared profile or embedded docs |
 | Team | `adapters`; shared profile, ignore policy, and selected adapters; no embedded docs |
-| Enterprise | `local`; zero repository actions |
+| Enterprise | `external`; zero repository actions and a home-scope AIM distribution |
 
 The simulation validates actual planner output. Marker presence alone cannot
 satisfy this tier.

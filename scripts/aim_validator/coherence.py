@@ -64,7 +64,7 @@ def _contradictory_mode_claims(repo_root: Path) -> list[dict[str, Any]]:
                 re.IGNORECASE,
             ),
             "Enterprise is documented as broad or repo-writing by default",
-            "Enterprise defaults to a protected local footprint; repo mutation requires an explicit footprint.",
+            "Enterprise defaults to an external zero-repo-write footprint; repo files require an explicit broader footprint.",
         ),
         (
             "Personal",
@@ -75,7 +75,7 @@ def _contradictory_mode_claims(repo_root: Path) -> list[dict[str, Any]]:
                 re.IGNORECASE,
             ),
             "Personal is documented as a constrained local-only mode",
-            "Personal is freedom mode; local, profile, adapters, and full are user choices.",
+            "Personal is freedom mode; external, local, profile, adapters, and full are user choices.",
         ),
         (
             "Team",
@@ -223,16 +223,18 @@ def _mode_plan_findings(
         )
 
     enterprise = plans["enterprise"]
+    enterprise_destinations = set(enterprise["scopeSummary"]["repoDestinations"])
     if (
-        enterprise["footprint"] != "local"
-        or enterprise["scopeSummary"]["repoActionCount"] != 0
+        enterprise["footprint"] != "external"
+        or enterprise_destinations
+        or enterprise["scopeSummary"]["localActionCount"] == 0
     ):
         findings.append(
             make_finding(
                 "contradictory",
                 "Enterprise docs ↔ generated installer plan",
-                "Enterprise is documented as non-invasive but its default plan writes repository files",
-                "Restore the local default and require explicit footprint approval for every repo write.",
+                "Enterprise default plan is not the external zero-repo-write install",
+                "Restore the external default: install AIM outside the repository and require explicit broader footprint approval for repo files.",
                 tier="Product coherence",
                 category="Contradiction",
                 release_impact="fail",

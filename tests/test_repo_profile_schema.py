@@ -79,6 +79,16 @@ class RepoProfileSchemaTests(unittest.TestCase):
         hints = loads(personal_hints_seed("repo-123"))
         self.assertEqual(validate_personal_hints(hints, self.hints_schema), [])
 
+    def test_repo_profile_schema_accepts_external_footprint(self) -> None:
+        profile = copy.deepcopy(self.profile)
+        profile["aimRepoProfile"]["adoption"]["mode"] = "enterprise"
+        profile["aimRepoProfile"]["adoption"]["footprint"] = "external"
+        profile["aimRepoProfile"]["adoption"]["sharing"] = "local"
+        profile["aimRepoProfile"]["storage"][
+            "profileLocation"
+        ] = "~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml"
+        self.assertEqual(validate_repo_profile(profile, self.profile_schema), [])
+
     def test_invalid_readiness_and_confidence_are_rejected(self) -> None:
         invalid = copy.deepcopy(self.profile)
         calibration = invalid["aimRepoProfile"]["calibration"]

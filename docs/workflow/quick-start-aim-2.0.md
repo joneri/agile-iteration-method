@@ -133,7 +133,7 @@ They are related, but not the same action.
 
 - **Personal**: freedom mode for one developer; local or repo-writing footprints are user choice
 - **Team**: small shared repo-awareness by agreement
-- **Enterprise**: isolate AIM internals by default
+- **Enterprise**: install AIM outside the target repo and protect AIM internals by default
 
 See [Platforms and adoption modes](../product/platforms-and-adoption.md) for the newcomer explanation and [Operating modes](operating-modes.md) for the canonical rules.
 

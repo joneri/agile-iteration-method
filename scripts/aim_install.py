@@ -56,7 +56,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument(
         "--footprint",
-        help="Installation footprint: local, profile, adapters, or full.",
+        help="Installation footprint: external, local, profile, adapters, or full.",
     )
     parser.add_argument(
         "--adapter",

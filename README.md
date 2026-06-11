@@ -134,7 +134,7 @@ People still own product intent, scope changes, trust decisions, and final accep
 | --- | --- | --- |
 | **Personal** | solo work, trials, personal repositories | maximum freedom; sharing is the user's choice |
 | **Team** | shared repository understanding | small, deliberate, reviewable sharing |
-| **Enterprise** | protected or stricter environments | isolate AIM internals unless sharing is explicitly approved |
+| **Enterprise** | protected or stricter environments | full external AIM install; zero repo writes by default |
 
 The AIM workflow stays familiar across all three modes.
 The difference is what is shared and how cautiously AIM touches the repository.

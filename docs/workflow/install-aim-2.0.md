@@ -113,9 +113,9 @@ Use [Quick start AIM 2.0](quick-start-aim-2.0.md) for the first run after setup.
   - share selected features/docs when the team wants common behavior
   - private runtime state may still stay local
 - Enterprise AIM:
-  - safe and isolated by default
+  - full AIM available outside the target repository by default
+  - keep AIM package files, runtime state, and repo-awareness memory external unless explicitly approved
   - share product output, not AIM internals
-  - keep AIM runtime and generated process artifacts ignored unless explicitly approved
   - do not assume the repo root is empty or instruction files can be overwritten
 
 These are the canonical AIM 2.0 operating modes.
@@ -134,6 +134,7 @@ Available footprints:
 
 | Footprint | Repository effect |
 | --- | --- |
+| `external` | full AIM distribution and selected home-scope adapter packages outside the target repository; no repo writes |
 | `local` | no target-repository mutation; home-scope packages such as Codex may be installed |
 | `profile` | repo profile and runtime ignore policy, without repo adapters or embedded docs |
 | `adapters` | selected adapter surfaces plus their required canonical contract subset; Team also receives the shared profile |
@@ -141,13 +142,20 @@ Available footprints:
 
 Suggested defaults:
 
-- Personal: `adapters`, as a useful solo setup; all four footprints remain
+- Personal: `adapters`, as a useful solo setup; all footprints remain
   unrestricted user choices
 - Team: `adapters`, with intentional shared repo-awareness
-- Enterprise: `local`; every repo-writing footprint is an explicit override
+- Enterprise: `external`, as a full AIM install outside the target repository.
+  `profile`, `adapters`, and `full` are explicit repo-writing opt-ins.
 
 Selecting Personal never applies Team review ownership or Enterprise isolation
-rules. Selecting Enterprise never broadens repository mutation silently.
+rules. Selecting Enterprise never installs adapters or embedded docs silently.
+
+Enterprise must not use symlinks as the default way to make external AIM files
+look repo-local. Symlinks can break across operating systems, CI, containers,
+and checked-out paths, and they can accidentally expose external state through
+Git status or tooling. If an organization approves symlinks, treat them as an
+advanced explicit policy with validation, never as the portable default.
 
 ### Adapter package closure
 
@@ -180,7 +188,7 @@ Installer actions must follow these defaults:
 | Surface class | Default action |
 | --- | --- |
 | Static AIM product docs and adapter packages | may be copied into an AIM-owned package path selected by the user |
-| Shared repo-awareness | Team and Enterprise require deliberate shared choice; Personal may create or update it by solo choice |
+| Shared repo-awareness | Team installs it by default; Enterprise stores durable memory externally by default; Personal may create or update it by solo choice |
 | Runtime state | never install as product; AIM creates `.aim/` at runtime |
 | Team profile | create or update only by explicit Team AIM choice |
 | Personal profile | local hints are available, but a repo profile is also allowed by user choice |
@@ -191,9 +199,9 @@ Mode-specific defaults:
 
 | Mode | Installer default |
 | --- | --- |
-| Personal | suggest a practical adapter setup while allowing local, profile, adapters, or full without Team/Enterprise restrictions |
+| Personal | suggest a practical adapter setup while allowing external, local, profile, adapters, or full without Team/Enterprise restrictions |
 | Team | create or update shared repo-awareness only through small reviewed surfaces such as `aim.profile.yaml` |
-| Enterprise | verify ignore safety before creating repo-local AIM internals; require explicit approval for any shared AIM surface |
+| Enterprise | install AIM and repo-awareness memory outside the target repository; require explicit approval for repo profiles, adapters, embedded docs, or broader shared AIM surfaces |
 
 Enterprise safety and collision protection matter more than convenience.
 Personal remains permissive; choosing a repo-writing footprint is itself the

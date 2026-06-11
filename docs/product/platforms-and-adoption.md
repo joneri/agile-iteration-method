@@ -35,16 +35,17 @@ Team mode creates shared understanding, not a requirement to commit every AIM ar
 
 ### Enterprise
 
-Use Enterprise AIM when isolation and repository protection should be the default.
+Use Enterprise AIM when AIM should work from outside the target repository and repository protection should be the default.
 
 - AIM-internal artifacts stay ignored unless explicitly approved
+- installation keeps AIM package files and repo-awareness memory outside the repo by default
 - installation does not assume the repo root is empty
 - generic instruction files are never overwritten
-- shared profiles and adapter packages require deliberate adoption
+- adapter packages, embedded docs, and broader shared AIM surfaces require deliberate adoption
 - product output can be shared without sharing AIM's internal process state
 
 Enterprise is not simply Team mode for a larger company.
-It is a stricter safety posture.
+It is a stricter safety posture with a full external default.
 
 ## Choose a Platform
 

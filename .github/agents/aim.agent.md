@@ -139,10 +139,14 @@ Stable repository knowledge must never be stored under `.aim/`, and durable
 repo-awareness must never cite `.aim/reviews`, `.aim/increments`,
 `.aim/decisions`, `.aim/archive`, or other runtime artifacts as maintained
 knowledge sources. Reading `.aim/state.json` to resume active work remains
-allowed. If remembered knowledge is too large for a short `aim.profile.yaml`
-entry, create or update a static memory document under `docs/features/`,
-`docs/workflow/`, `docs/architecture/`, or another repo-configured stable docs
-path, then reference that static source from the profile.
+allowed. Enterprise external mode must persist durable memory to
+`~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml` and larger memory docs
+under `~/.aim/repo-awareness/<repo-fingerprint>/docs/`; it must not create repo
+profiles, repo docs, symlinks, or adapter files unless a broader repo-writing
+footprint or policy is explicitly selected. If remembered knowledge is too large
+for a short entry, create or update a static memory document in the selected
+durable store, then reference that static source from the profile or external
+memory index.
 
 ## Core constraints
 

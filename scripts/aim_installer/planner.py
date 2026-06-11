@@ -22,6 +22,7 @@ GENERIC_ROOT_FILES = ("AGENTS.md", "CLAUDE.md", "CONTRIBUTING.md")
 
 CLASSIFICATIONS = ("create", "modify", "untouched", "collision")
 CATEGORIES = ("file", "bootstrap", "ignore", "package")
+EXTERNAL_DISTRIBUTION_DEST = ".aim/installs/agile-iteration-method"
 
 
 class PlanError(ValueError):
@@ -180,6 +181,57 @@ def _license_actions(source_root: Path, target_root: Path) -> list[dict[str, Any
                 reason="AIM distribution license and attribution metadata",
                 adapter="core",
                 optional=False,
+            )
+        )
+    return actions
+
+
+def _external_distribution_actions(source_root: Path, home_root: Path) -> list[dict[str, Any]]:
+    actions: list[dict[str, Any]] = []
+    dest_base = home_root / EXTERNAL_DISTRIBUTION_DEST
+    include_roots = (
+        source_root / "docs" / "workflow",
+        source_root / "schemas",
+        source_root / "adapters",
+    )
+    include_files = [
+        source_root / "LICENSE",
+        source_root / "docs" / "LICENSE-DOCS",
+        source_root / "install" / "aim-install-manifest.yaml",
+    ]
+    for base in include_roots:
+        for item in sorted(base.rglob("*"), key=lambda p: p.as_posix()):
+            if not item.is_file():
+                continue
+            rel = item.relative_to(source_root).as_posix()
+            actions.append(
+                _action(
+                    action_id=f"external:{rel}",
+                    category="package",
+                    classification=_classify_copy(item, dest_base / rel),
+                    source=rel,
+                    destination=str(dest_base / rel),
+                    reason="External AIM distribution package (home-scope install)",
+                    adapter="core",
+                    optional=False,
+                    scope="home",
+                )
+            )
+    for item in include_files:
+        if not item.is_file():
+            raise PlanError(f"required external distribution file is missing: {item}")
+        rel = item.relative_to(source_root).as_posix()
+        actions.append(
+            _action(
+                action_id=f"external:{rel}",
+                category="package",
+                classification=_classify_copy(item, dest_base / rel),
+                source=rel,
+                destination=str(dest_base / rel),
+                reason="External AIM distribution package (home-scope install)",
+                adapter="core",
+                optional=False,
+                scope="home",
             )
         )
     return actions
@@ -408,6 +460,7 @@ def compute_plan(
     enterprise_safe = bool(mode_profile.get("enterpriseSafe", False))
     mode_fragments = [str(f) for f in mode_profile.get("gitignore", [])]
     embedded_docs = bool(footprint_profile.get("embeddedDocs", False))
+    external_docs = bool(footprint_profile.get("externalDocs", False))
     footprint_description = str(footprint_profile.get("description", footprint))
     repo_adapters = bool(footprint_profile.get("repoAdapters", False))
     repo_ignore = bool(footprint_profile.get("repoIgnore", False))
@@ -420,6 +473,8 @@ def compute_plan(
 
     actions: list[dict[str, Any]] = []
     required_repo_docs: set[str] = set()
+    if external_docs:
+        actions.extend(_external_distribution_actions(source_root, home_root))
     if embedded_docs:
         actions.extend(_canonical_doc_actions(source_root, target_root))
         actions.extend(_schema_actions(source_root, target_root))
@@ -467,8 +522,8 @@ def compute_plan(
         )
     if mode == "enterprise" and repo_actions:
         approval_notes.append(
-            "Enterprise repository mutation is present only because a non-local "
-            "footprint was explicitly selected."
+            "Enterprise repository mutation is present only because a broader "
+            "repo-writing footprint was explicitly selected."
         )
     local_policy = {
         "personal": [
@@ -480,8 +535,8 @@ def compute_plan(
             "Runtime state stays local by default unless the team chooses otherwise",
         ],
         "enterprise": [
-            "Personal hints remain private",
-            "Runtime state stays local/private and protected by default",
+            "AIM package, runtime state, and repo-awareness memory stay outside the repository by default",
+            "Use repo-writing footprints only when the repo owner explicitly wants shared AIM surfaces",
         ],
     }.get(mode, [])
 
@@ -512,6 +567,7 @@ def compute_plan(
         },
         "footprintProfile": {
             "embeddedDocs": embedded_docs,
+            "externalDocs": external_docs,
             "repoAdapters": repo_adapters,
             "sharedProfile": shared_profile,
             "repoIgnore": repo_ignore,
@@ -533,6 +589,8 @@ def compute_plan(
             "storage": (
                 "committed-shared-profile"
                 if shared_profile
+                else "external-repo-awareness"
+                if footprint_profile.get("externalRepoAwareness")
                 else "local-or-no-profile"
             ),
             "readyRequiresCalibration": bool(
@@ -545,10 +603,25 @@ def compute_plan(
                     "~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml",
                 )
             ),
+            "enterpriseMemory": str(
+                bootstrap.get(
+                    "enterpriseMemory",
+                    "~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml",
+                )
+            ),
+            "enterpriseMemoryDocs": str(
+                bootstrap.get(
+                    "enterpriseMemoryDocs",
+                    "~/.aim/repo-awareness/<repo-fingerprint>/docs/",
+                )
+            ),
             "calibrationCommand": str(
                 bootstrap.get("calibrationCommand", "/aim calibrate-repo")
             ),
             "note": "Bootstrap never reports 'ready'; run calibration after install.",
+            "enterpriseExternal": bool(
+                footprint_profile.get("externalRepoAwareness", False)
+            ),
         },
         "rootFileExclusions": excluded,
         "actions": actions,

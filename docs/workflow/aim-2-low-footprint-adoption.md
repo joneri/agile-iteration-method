@@ -62,14 +62,14 @@ Best for:
 
 ### Enterprise AIM
 
-Use Enterprise AIM when safe isolation is the default and AIM-internal artifacts must not be committed or pushed by accident.
+Use Enterprise AIM when the full AIM package should work outside the target repository and AIM-internal artifacts must not be committed or pushed by accident.
 
 Default behavior:
 
 - approved runtime or adapter
-- local/private working state and repo-awareness by default
-- Enterprise ignore baseline for AIM-internal artifacts
-- shared profile registry or policy pointer only by explicit approval
+- external repo-awareness memory for durable project knowledge
+- local/private working state by default
+- repo profiles, shared profile registry, policy pointer, adapters, or docs only by explicit approval
 - no overwrite assumptions for root instruction files
 
 Enterprise AIM should not block Personal AIM or Team AIM.
@@ -93,7 +93,7 @@ Full embedded AIM remains valid, but it is a footprint choice rather than an ope
 | Layer | Personal AIM | Team AIM | Enterprise AIM |
 | --- | --- | --- | --- |
 | Runtime | tool or local adapter | tool or local adapter | approved local or org adapter |
-| Repo awareness | local hints or user-chosen repo profile | root `aim.profile.yaml` profile or pointer | local/private by default; governed shared profile only by approval |
+| Repo awareness | local hints or user-chosen repo profile | root `aim.profile.yaml` profile or pointer | external memory; governed equivalent by policy |
 | Working state | local, ignored, or committed by user choice | local by default | local/private and ignored by default |
 | Docs | installed package, links, or repo-embedded by user choice | installed package, links, or reviewed shared docs | installed package, canonical links, or approved internal package |
 

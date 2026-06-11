@@ -9,7 +9,7 @@ This model turns the AIM 2.0 strategy into a practical product surface:
 - Personal AIM may run with no committed AIM files or with a user-chosen
   committed AIM footprint.
 - Team AIM can share repo adaptation through a tiny committed profile surface.
-- Enterprise AIM can later attach organization policy, stricter ignore defaults, and approved shared profile registries.
+- Enterprise AIM can attach organization policy, external memory storage, stricter ignore defaults, and approved shared profile registries.
 - Repo-aware context can be reused across branches and sessions without repeating broad cold-start scans.
 
 ## User experience
@@ -22,7 +22,7 @@ The canonical operating modes are:
 | --- | --- | --- | --- | --- |
 | Personal AIM | user-chosen, from zero-footprint to full embedded | one developer | no | solo work, trials, personal repos, maximum flexibility |
 | Team AIM | tiny-footprint by default | one team | yes, intentionally | shared repo conventions, features, and validation paths |
-| Enterprise AIM | isolated footprint by default | strict repo or organization | no, unless explicitly approved | protected repos, larger orgs, regulated environments |
+| Enterprise AIM | external by default | strict repo or organization | no repo files by default | protected repos, larger orgs, regulated environments |
 
 Full embedded AIM remains a footprint choice, not a fourth operating mode.
 It is valid when a repo owner intentionally wants AIM product docs and adapter helpers in the repository.
@@ -234,15 +234,16 @@ Personal facts must not silently contradict Team commands, ownership, risk, or p
 Default storage:
 
 - runtime: local adapter, approved adapter, or organization environment
-- repo profile: local/private by default, governed shared profile only by explicit approval
+- repo profile: external repo-awareness memory by default, or a governed equivalent when policy requires it
 - working state: local/private and ignored by default
-- docs: installed distribution, canonical links, or approved internal package
+- docs: installed external distribution, canonical links, or approved internal package
 
 Repository mutation:
 
 - none by default
-- optional reviewed pointer to managed policy/profile
-- optional reviewed Team-like shared profile only when the repo owner explicitly chooses it
+- external AIM distribution and selected home-scope packages by default
+- optional reviewed pointer to managed policy/profile when policy requires it
+- adapters, feature docs, or embedded AIM docs only when the repo owner explicitly chooses a broader footprint
 
 Use this when:
 
@@ -254,6 +255,12 @@ Use this when:
 
 Enterprise AIM is not required for AIM 2.0 to be useful.
 It exists to make safe isolation the default in stricter environments.
+
+Symlinks are not the Enterprise default. They make external storage look
+repo-local, but they are brittle across platforms, CI, containers, and moved
+checkouts. They also increase the chance that repo tooling surfaces external
+state. Use an external store directly; allow symlinks only under explicit
+organization policy.
 
 Enterprise AIM should protect these AIM-internal surfaces from accidental commit or push:
 
@@ -416,8 +423,8 @@ At Gate E, AIM should be able to report:
 ## Defaults and fallbacks
 
 - Default operating mode: Personal AIM when ownership is unclear.
-- Default footprint: zero-footprint.
-- Default profile sharing: local-only.
+- Default footprint: `external` for Enterprise, `adapters` for Personal and Team.
+- Default profile sharing: root profile for Team; external repo-awareness memory for Enterprise; local hints for Personal unless the user chooses repo sharing.
 - Default working state: local and ignored.
 - Default discovery: locality-first.
 - Default cost reporting: short startup or Gate B summary.
@@ -429,7 +436,7 @@ At Gate E, AIM should be able to report:
 - Fallback if a team wants sharing: export or commit only the tiny profile surface, not full AIM docs.
 - Team AIM artifact: use root `aim.profile.yaml` unless Enterprise policy explicitly chooses another approved pointer path.
 - Personal AIM artifact: use `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`; never use `.aim/`.
-- Enterprise AIM artifact: prefer local/private storage and Enterprise ignore defaults; shared repo-awareness requires explicit approval.
+- Enterprise AIM artifact: use external repo-awareness memory by default; `aim.profile.yaml`, broader repo-awareness docs, or repo adapter files require explicit approval or a repo-approved static docs path.
 
 ## Edge cases
 

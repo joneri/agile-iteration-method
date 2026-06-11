@@ -21,12 +21,14 @@ Core constraints:
 - load other workflow docs only when their behavior area is relevant
 - use `docs/workflow/repo-awareness-calibration.md` for calibrate, remember, and forget intents
 - store Personal hints only at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
+- store Enterprise external memory at `~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml` and larger external memory docs under `~/.aim/repo-awareness/<repo-fingerprint>/docs/`
+- in Enterprise external mode, do not create repo docs, repo profiles, symlinks, or adapter files unless a broader repo-writing footprint or policy is explicitly selected
 - never store stable repo-awareness under `.aim/`
 - never cite `.aim/reviews`, `.aim/increments`, `.aim/decisions`,
   `.aim/archive`, or other runtime artifacts as durable repo-awareness
-- allow larger memory documents under `docs/features/`, `docs/workflow/`,
-  `docs/architecture/`, or another repo-configured stable docs path, then
-  reference those static sources from `aim.profile.yaml`
+- allow larger memory documents under repo docs for repo opt-in or under
+  Enterprise external memory docs for Enterprise external mode, then reference
+  those static sources from the profile or external memory index
 - when assisting help or first-run guidance, detect onboarding state first,
   recommend exactly one next action whenever possible, and do not lead with
   internal file paths, runtime locations, adapter packaging, architecture

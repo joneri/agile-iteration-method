@@ -8,10 +8,17 @@ Define how AIM cheaply bootstraps, verifies, refines, persists, remembers, forge
 
 ## Storage
 
-Shared repository knowledge:
+Shared repository knowledge for Team or explicit repo opt-in:
 
 ```text
 aim.profile.yaml
+```
+
+Enterprise external memory:
+
+```text
+~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml
+~/.aim/repo-awareness/<repo-fingerprint>/docs/
 ```
 
 Personal hints:
@@ -20,7 +27,9 @@ Personal hints:
 ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
 ```
 
-The shared profile is authoritative for team facts.
+The shared profile is authoritative for team facts when repo sharing is
+selected. Enterprise external memory is authoritative for Enterprise facts when
+the default external footprint is selected.
 Personal hints may narrow local behavior but may not override shared ownership, risk, security, deployment, migration, or validation policy.
 
 `.aim/` is runtime state only.
@@ -44,16 +53,17 @@ Only calibration may promote a profile to `ready`.
 ## Cheap-first flow
 
 1. Read active runtime state only to avoid conflicting with an active AIM run.
-2. Read `aim.profile.yaml` when present.
-3. Apply compatible user-level hints when present.
-4. Inspect the repository root and directly named primary areas.
-5. Identify package/build metadata, likely technologies, test tooling, validation commands, and UI-test signals.
-6. Read only short authoritative docs named by the profile.
-7. Compare inferred facts with current files and commands.
-8. Ask for confirmation when confidence is low or the fact affects trust, deployment, migration, security, or user-visible meaning.
-9. Persist verified shared facts to `aim.profile.yaml`.
-10. Persist personal preferences only to the user-level hints file.
-11. Expand the scan only for conflicting evidence, unresolved risk, low confidence, or explicit user direction.
+2. Read Enterprise external memory when Enterprise external mode is active.
+3. Read `aim.profile.yaml` when present.
+4. Apply compatible user-level hints when present.
+5. Inspect the repository root and directly named primary areas.
+6. Identify package/build metadata, likely technologies, test tooling, validation commands, and UI-test signals.
+7. Read only short authoritative docs named by the active memory/profile.
+8. Compare inferred facts with current files and commands.
+9. Ask for confirmation when confidence is low or the fact affects trust, deployment, migration, security, or user-visible meaning.
+10. Persist verified shared facts to `aim.profile.yaml` for Team/repo opt-in or external memory for Enterprise external mode.
+11. Persist personal preferences only to the user-level hints file.
+12. Expand the scan only for conflicting evidence, unresolved risk, low confidence, or explicit user direction.
 
 Calibration must propose a compact change summary before persisting trust-sensitive shared facts.
 
@@ -128,14 +138,21 @@ Behavior:
 2. map the request to a valid category
 3. generate or locate a stable rule ID
 4. show the proposed structured change
-5. persist it to `aim.profile.yaml` or the user-level hints file
+5. persist it to `aim.profile.yaml`, Enterprise external memory, or the user-level hints file
 6. update freshness and calibration status
 7. never write stable memory into `.aim/`
 
 Before persistence, classify the rule:
 
-- short atomic fact: update the profile
-- procedure, policy, evidence contract, blockers, edge cases, debugging, product context, architecture notes, or larger memory: update a static memory document and its profile pointer
+- short atomic fact: update the active profile or external memory index
+- procedure, policy, evidence contract, blockers, edge cases, debugging, product context, architecture notes, or larger memory: update a static memory document and its profile or external memory pointer
+
+In Enterprise external mode, the active durable store is
+`~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml`, with larger memory under
+`~/.aim/repo-awareness/<repo-fingerprint>/docs/`. Do not create
+`aim.profile.yaml`, repo docs, symlinks, adapter files, or `.gitignore` entries
+unless a broader repo-writing footprint or explicit organization policy is
+selected.
 
 If scope is ambiguous, default to personal for preferences and ask before changing shared team policy.
 
@@ -165,7 +182,7 @@ The installer and chat calibration share:
 - the same readiness states
 - the same confidence model
 - the same structured categories
-- the same target paths
+- mode-specific target paths
 
 ## Failure rules
 
