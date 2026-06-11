@@ -109,6 +109,12 @@ DOCUMENT_LOADING_STATES = {
     "stale_or_uncertain",
 }
 
+DEFAULT_STATIC_MEMORY_DOC_PREFIXES = {
+    "docs/architecture/",
+    "docs/features/",
+    "docs/workflow/",
+}
+
 PROFILE_FORBIDDEN_WORKING_STATE_MARKERS = {
     "activeEpic",
     "activeIncrementId",
@@ -507,6 +513,8 @@ REMOVED_GENERIC_AIM_ROOT_PATHS = [
 REQUIRED_REPO_AWARENESS_MARKERS = [
     "aim.profile.yaml",
     "primary shared repo-awareness source",
+    "source of durable repo-awareness",
+    "docs/architecture/",
     "Generic root files",
     "outside the AIM architecture",
     "optional and secondary",
@@ -522,6 +530,8 @@ REQUIRED_CALIBRATION_DOC_MARKERS = [
     "aim.profile.yaml",
     PERSONAL_HINTS_PATH,
     "`.aim/` is runtime state only",
+    "static memory document",
+    "durable repo-awareness reference to `.aim/reviews`",
     "`ready`",
     "`partially_ready`",
     "`needs_calibration`",
@@ -533,9 +543,13 @@ REQUIRED_CALIBRATION_DOC_MARKERS = [
 
 REQUIRED_TWO_LAYER_MARKERS = [
     "Layer 1: structured profile",
-    "Layer 2: operational documents",
-    "docs/workflow/repo-<area>.md",
+    "Layer 2: static memory and operational documents",
+    "docs/features/",
+    "docs/workflow/",
+    "docs/architecture/",
     "`kind: operational`",
+    "`memory`",
+    "No durable pointer may target `.aim/`",
     "workTypes",
     "rolesOrGates",
     "risks",
@@ -1008,6 +1022,27 @@ def operational_doc_paths(content: str) -> list[str]:
         if entry.get("kind") == "operational" and path:
             paths.append(path)
     return paths
+
+
+def static_memory_doc_prefixes(content: str) -> set[str]:
+    prefixes = set(DEFAULT_STATIC_MEMORY_DOC_PREFIXES)
+    docs_source_values = extract_profile_section_values(content, "storage")
+    for value in docs_source_values:
+        if not value.startswith("docsSource:"):
+            continue
+        for match in re.findall(r"docs/[A-Za-z0-9._/-]+/?", value):
+            normalized = match if match.endswith("/") else f"{match}/"
+            prefixes.add(normalized)
+    return prefixes
+
+
+def is_static_memory_doc_path(path: str, prefixes: set[str]) -> bool:
+    normalized = path.strip().replace("\\", "/")
+    while normalized.startswith("./"):
+        normalized = normalized[2:]
+    if not normalized or normalized.startswith(".aim/") or normalized == ".aim":
+        return False
+    return any(normalized.startswith(prefix) for prefix in prefixes)
 
 
 def extract_profile_list(content: str, section_name: str) -> list[str]:
@@ -2354,6 +2389,7 @@ def main() -> int:
                     )
 
             doc_entries = extract_category_entries(profile_content, "docs")
+            memory_doc_prefixes = static_memory_doc_prefixes(profile_content)
             for index, doc_entry in enumerate(doc_entries):
                 if doc_entry.get("loading") not in DOCUMENT_LOADING_STATES:
                     add_issue(
@@ -2385,11 +2421,13 @@ def main() -> int:
                         )
                     operational_path = doc_entry.get("path", "")
                     if not (
-                        operational_path.startswith("docs/workflow/repo-")
+                        is_static_memory_doc_path(
+                            operational_path, memory_doc_prefixes
+                        )
                         and operational_path.endswith(".md")
                     ):
                         missing_pointer_fields.append(
-                            "AIM-owned docs/workflow/repo-<area>.md path"
+                            "static memory doc path under docs/workflow/, docs/features/, docs/architecture/, or configured docsSource"
                         )
                     if missing_pointer_fields:
                         add_issue(
@@ -2397,7 +2435,7 @@ def main() -> int:
                             "recoverable",
                             relative_path,
                             f"operational docs entry {doc_entry.get('id') or index + 1} has an incomplete pointer contract: {', '.join(missing_pointer_fields)}",
-                            "Add the operational doc path, concise relevance rule, load_when_relevant state, and structured work, role/gate, risk, command, and calibration triggers.",
+                            "Add the static memory doc path, concise relevance rule, load_when_relevant state, and structured work, role/gate, risk, command, and calibration triggers.",
                         )
 
             invalid_confidence_values = sorted(
@@ -2437,7 +2475,7 @@ def main() -> int:
                         "blocked",
                         operational_path,
                         "profile points to a missing repo operational document",
-                        "Create the AIM-owned operational doc or remove the pointer.",
+                        "Create the static memory or operational doc, or remove the pointer.",
                     )
                     continue
                 operational_content = operational_doc.read_text(

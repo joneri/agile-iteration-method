@@ -113,6 +113,43 @@ class RepoProfileSchemaTests(unittest.TestCase):
             kind="product",
         )
 
+    def test_working_state_location_allows_aim_runtime_boundary(self) -> None:
+        valid = copy.deepcopy(self.profile)
+        valid["aimRepoProfile"]["storage"]["workingStateLocation"] = ".aim/"
+        self.assertEqual(validate_repo_profile(valid, self.profile_schema), [])
+
+    def test_durable_profile_reference_to_aim_runtime_is_rejected(self) -> None:
+        invalid = copy.deepcopy(self.profile)
+        invalid["aimRepoProfile"]["repoKnowledge"]["docs"].append(
+            {
+                "id": "old-review-memory",
+                "path": ".aim/reviews/review-069.md",
+                "loading": "load_when_relevant",
+                "source": ".aim/decisions/069-gate-e.md",
+            }
+        )
+        issues = validate_repo_profile(invalid, self.profile_schema)
+        self.assert_has_issue(
+            issues,
+            "durable repo-awareness must not reference .aim/ runtime artifacts",
+            kind="product",
+        )
+
+    def test_personal_hints_reference_to_aim_runtime_is_rejected(self) -> None:
+        invalid = loads(personal_hints_seed("repo-123"))
+        invalid["aimPersonalHints"]["hints"]["docs"] = [
+            {
+                "id": "old-runtime-note",
+                "path": ".aim/archive/epic-20260609-024.md",
+            }
+        ]
+        issues = validate_personal_hints(invalid, self.hints_schema)
+        self.assert_has_issue(
+            issues,
+            "durable repo-awareness must not reference .aim/ runtime artifacts",
+            kind="product",
+        )
+
     def test_personal_policy_authority_is_a_validator_product_rule(self) -> None:
         invalid = loads(personal_hints_seed("repo-123"))
         invalid["aimPersonalHints"]["hints"]["validation"] = [
@@ -175,6 +212,144 @@ class RepoProfileSchemaTests(unittest.TestCase):
         self.assertIn("repo-profile schema violation", completed.stdout)
         self.assertIn("$.aimRepoProfile.calibration.status", completed.stdout)
         self.assertIn("Release readiness: FAIL", completed.stdout)
+
+    def test_validator_rejects_durable_profile_reference_to_aim_runtime(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = Path(temporary) / "repo"
+            shutil.copytree(
+                REPO_ROOT,
+                copied,
+                ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc"),
+            )
+            profile_path = copied / "aim.profile.yaml"
+            profile_path.write_text(
+                profile_path.read_text(encoding="utf-8").replace(
+                    "      - id: calibration\n"
+                    "        path: docs/workflow/repo-awareness-calibration.md\n"
+                    "        loading: load_when_relevant\n"
+                    "        when: calibrating, remembering, forgetting, or validating repository knowledge\n",
+                    "      - id: calibration\n"
+                    "        path: docs/workflow/repo-awareness-calibration.md\n"
+                    "        loading: load_when_relevant\n"
+                    "        when: calibrating, remembering, forgetting, or validating repository knowledge\n"
+                    "      - id: stale-runtime-review\n"
+                    "        path: .aim/reviews/review-069.md\n"
+                    "        loading: load_when_relevant\n",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(copied / "scripts/validate_aim_runtime.py"),
+                    str(copied),
+                    "--release",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn("Result: blocked", completed.stdout)
+        self.assertIn("repo-profile product rule violation", completed.stdout)
+        self.assertIn(
+            "durable repo-awareness must not reference .aim/ runtime artifacts",
+            completed.stdout,
+        )
+        self.assertIn("Release readiness: FAIL", completed.stdout)
+
+    def test_validator_allows_static_architecture_memory_document(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = Path(temporary) / "repo"
+            shutil.copytree(
+                REPO_ROOT,
+                copied,
+                ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc"),
+            )
+            architecture_dir = copied / "docs/architecture"
+            architecture_dir.mkdir(parents=True)
+            (architecture_dir / "repo-memory.md").write_text(
+                """# Repo Memory
+
+## Purpose
+
+Capture durable repository context that is too large for a profile entry.
+
+## Applicability
+
+Use when architecture memory affects the active AIM work.
+
+## Procedure
+
+Load this document only when the profile pointer matches the work.
+
+## Commands
+
+- `python3 scripts/validate_aim_runtime.py .`
+
+## Evidence
+
+The profile pointer names this static source.
+
+## Blockers
+
+Do not use `.aim/` runtime artifacts as durable memory.
+
+## Edge Cases
+
+If the memory becomes stale, mark the profile pointer stale.
+
+## Debugging
+
+Compare the memory with current repository evidence.
+
+## Related Surfaces
+
+- `aim.profile.yaml`
+""",
+                encoding="utf-8",
+            )
+            profile_path = copied / "aim.profile.yaml"
+            profile_path.write_text(
+                profile_path.read_text(encoding="utf-8").replace(
+                    "      - id: calibration\n"
+                    "        path: docs/workflow/repo-awareness-calibration.md\n"
+                    "        loading: load_when_relevant\n"
+                    "        when: calibrating, remembering, forgetting, or validating repository knowledge\n",
+                    "      - id: calibration\n"
+                    "        path: docs/workflow/repo-awareness-calibration.md\n"
+                    "        loading: load_when_relevant\n"
+                    "        when: calibrating, remembering, forgetting, or validating repository knowledge\n"
+                    "      - id: architecture-memory\n"
+                    "        kind: operational\n"
+                    "        path: docs/architecture/repo-memory.md\n"
+                    "        loading: load_when_relevant\n"
+                    "        when: architecture memory affects active AIM work\n"
+                    "        workTypes: architecture\n"
+                    "        rolesOrGates: Gate B\n"
+                    "        risks: architecture\n"
+                    "        commands: /aim calibrate-repo\n"
+                    "        calibration: architecture-memory\n",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(copied / "scripts/validate_aim_runtime.py"),
+                    str(copied),
+                    "--release",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+
+        self.assertEqual(completed.returncode, 0, completed.stdout)
+        self.assertIn("Result: healthy", completed.stdout)
 
 
 if __name__ == "__main__":

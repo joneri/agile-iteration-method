@@ -20,16 +20,22 @@ It contains:
 Profile values must remain concise.
 If a rule needs rationale, multiple steps, edge cases, blockers, debugging, evidence expectations, or several commands, it belongs in an operational document.
 
-## Layer 2: operational documents
+## Layer 2: static memory and operational documents
 
-AIM-owned repo-specific operational docs live under:
+Repo-specific memory and operational docs live under stable documentation paths,
+for example:
 
 ```text
-docs/workflow/repo-<area>.md
+docs/features/
+docs/workflow/
+docs/architecture/
 ```
 
-They contain the full repository-specific truth for areas such as:
+or another repository-configured static docs path. They contain the full
+repository-specific truth for areas such as:
 
+- product context
+- architecture notes
 - UI verification
 - deployment
 - migrations
@@ -52,7 +58,9 @@ An operational doc must state:
 
 Profile pointers use:
 
-- `kind: operational`
+- `kind: operational` for procedural policy with the full contract below
+- another explicit `kind` such as `memory` for richer supporting context that
+  does not need the operational procedure contract
 - `path`
 - `loading`
 - `when`
@@ -66,7 +74,11 @@ Profile pointers use:
 `loading` uses the canonical document-loading states.
 Repo operational docs normally use `load_when_relevant`.
 Only pointers marked `kind: operational` are subject to the operational-doc contract.
-Their paths must stay inside the AIM-owned `docs/workflow/repo-<area>.md` namespace.
+Their paths must stay inside a repo-approved static docs path such as
+`docs/workflow/`, `docs/features/`, `docs/architecture/`, or another configured
+docs source.
+No durable pointer may target `.aim/`; `.aim/` is runtime state and trace
+history, not stable repo-awareness documentation.
 
 Load a pointed document when any declared trigger matches the active work.
 Do not load it merely because it exists.
@@ -91,6 +103,14 @@ Move knowledge into a repo operational doc when it contains:
 - multiple related commands
 - policy rationale needed for safe execution
 
+Move knowledge into a static memory doc when it contains:
+
+- larger product or domain context
+- architecture notes
+- nuanced language or tone guidance
+- cross-feature rationale
+- maintained examples or evidence that are too large for a profile entry
+
 Keep a compressed summary and pointer in the profile after moving it.
 
 ## Calibration and updates
@@ -99,7 +119,8 @@ Calibration must:
 
 1. classify new knowledge as structured fact or operational policy
 2. update short facts directly in the profile
-3. create or refine `docs/workflow/repo-<area>.md` for rich policy
+3. create or refine a static memory or operational doc for rich policy or
+   larger supporting context
 4. add or update a structured profile pointer
 5. assign explicit load triggers
 6. validate that the profile did not become a prose dump
@@ -125,8 +146,8 @@ This is a schema example only. It does not require an operational document in ev
     calibration: relevant-policy-area
 ```
 
-Operational docs are repo-specific and optional.
-A repository should create one only when its own complex policy cannot be represented safely as a short structured profile rule.
+Static memory and operational docs are repo-specific and optional.
+A repository should create one only when its own context or complex policy cannot be represented safely as a short structured profile rule.
 AIM itself does not require any particular technology-specific operational doc.
 
 ## Related files

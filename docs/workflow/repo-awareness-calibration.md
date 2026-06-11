@@ -25,6 +25,10 @@ Personal hints may narrow local behavior but may not override shared ownership, 
 
 `.aim/` is runtime state only.
 No stable profile, hint, remembered rule, or calibration result may be stored under `.aim/`.
+`.aim/` may be read to resume or audit an active AIM loop, but it must not be
+cited as durable repo-awareness. Runtime artifacts such as `.aim/reviews`,
+`.aim/increments`, `.aim/decisions`, `.aim/archive`, and `.aim/logs` are trace
+history, not maintained knowledge sources.
 
 ## Readiness
 
@@ -72,7 +76,10 @@ Remembered rules must be entries in one of those categories.
 Loose prose memory blobs are invalid.
 
 Repo-awareness uses the two-layer model in `docs/workflow/repo-awareness-two-layer-model.md`.
-Calibration stores atomic, compressed facts in the profile and moves procedural or exception-heavy policy into `docs/workflow/repo-<area>.md`.
+Calibration stores atomic, compressed facts in the profile and moves procedural,
+exception-heavy, or larger memory content into static docs such as
+`docs/features/`, `docs/workflow/`, `docs/architecture/`, or another
+repo-configured stable docs path.
 The profile retains a short summary plus a structured load-on-demand pointer.
 
 ## Document loading states
@@ -128,7 +135,7 @@ Behavior:
 Before persistence, classify the rule:
 
 - short atomic fact: update the profile
-- procedure, policy, evidence contract, blockers, edge cases, or debugging: update an operational doc and its profile pointer
+- procedure, policy, evidence contract, blockers, edge cases, debugging, product context, architecture notes, or larger memory: update a static memory document and its profile pointer
 
 If scope is ambiguous, default to personal for preferences and ask before changing shared team policy.
 
@@ -166,6 +173,9 @@ The installer and chat calibration share:
 - conflicting personal and shared facts: shared fact wins; report the personal hint conflict
 - unknown memory category: reject and show valid categories
 - `.aim/` profile or hint path: reject as a runtime-boundary violation
+- durable repo-awareness reference to `.aim/reviews`, `.aim/increments`,
+  `.aim/decisions`, `.aim/archive`, or other runtime artifacts: reject as a
+  runtime-boundary violation
 - trust-sensitive low-confidence inference: ask before persisting
 
 ## Related files

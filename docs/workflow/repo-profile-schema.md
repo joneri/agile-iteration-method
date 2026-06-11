@@ -42,6 +42,10 @@ mode behavior, or whether a structurally valid value is coherent with AIM.
 
 - supported schema-version decisions
 - stable repo-awareness never living under `.aim/`
+- durable repo-awareness never citing `.aim/reviews`, `.aim/increments`,
+  `.aim/decisions`, `.aim/archive`, or other runtime artifacts as maintained
+  knowledge sources
+- `.aim/state.json` remaining valid for active resume/checkpoint behavior
 - runtime state never leaking into profiles
 - Personal hints never claiming shared policy authority
 - installer seeds agreeing with documented product contracts

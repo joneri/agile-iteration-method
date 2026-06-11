@@ -135,7 +135,14 @@ If instructions conflict, escalate.
 - `/aim cost standard|control|deep` - set runtime depth for the current Epic or increment
 
 Calibration, remember, and forget behavior must follow `docs/workflow/repo-awareness-calibration.md`.
-Stable repository knowledge must never be stored under `.aim/`.
+Stable repository knowledge must never be stored under `.aim/`, and durable
+repo-awareness must never cite `.aim/reviews`, `.aim/increments`,
+`.aim/decisions`, `.aim/archive`, or other runtime artifacts as maintained
+knowledge sources. Reading `.aim/state.json` to resume active work remains
+allowed. If remembered knowledge is too large for a short `aim.profile.yaml`
+entry, create or update a static memory document under `docs/features/`,
+`docs/workflow/`, `docs/architecture/`, or another repo-configured stable docs
+path, then reference that static source from the profile.
 
 ## Core constraints
 

@@ -130,7 +130,15 @@ plain-language request to the same command intent, and perform the equivalent
 workflow directly. Syntax may fall back; command semantics may not.
 
 `/aim calibrate-repo` uses the package-local canonical flow in `references/repo-awareness-calibration.md`.
-Remember and forget intents must persist structured rules to `aim.profile.yaml` or the user-level hints file and must never use `.aim/`.
+Remember and forget intents must persist structured rules to `aim.profile.yaml`
+or the user-level hints file and must never use `.aim/` as durable
+repo-awareness. If a fact is too large for a short profile entry, create or
+update a static memory document under `docs/features/`, `docs/workflow/`,
+`docs/architecture/`, or another repo-configured stable docs path, then point to
+that static source from the profile. Reading `.aim/state.json` to resume work is
+allowed; citing `.aim/reviews`, `.aim/increments`, `.aim/decisions`,
+`.aim/archive`, or other runtime artifacts as long-lived repository knowledge is
+not allowed.
 `/aim upgrade` must inspect selected AIM-owned packages through the deterministic
 installer plan, show stale/collision results before apply, preserve rollback and
 root-file exclusions, and never rewrite active `.aim/` state.

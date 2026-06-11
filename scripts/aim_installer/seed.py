@@ -40,7 +40,7 @@ aimRepoProfile:
     profileLocation: aim.profile.yaml
     personalHintsLocation: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
     workingStateLocation: .aim/
-    docsSource: docs/workflow/
+    docsSource: docs/workflow/, docs/features/, docs/architecture/, or repo-configured equivalent
   repoKnowledge:
     technologies: []
     commands: []

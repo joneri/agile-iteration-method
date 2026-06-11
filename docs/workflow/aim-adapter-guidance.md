@@ -126,6 +126,14 @@ On `/aim start`, `/aim continue`, `/aim status`, `/aim validate`, `/aim calibrat
 6. read broader AIM docs, adapter docs, or repo-wide context only when the current state, risk, missing evidence, or user request requires it
 
 Calibration, remember, and forget commands use `docs/workflow/repo-awareness-calibration.md`.
+They must never store or cite durable repo-awareness under `.aim/`. Reading
+`.aim/state.json` to resume active work is allowed, but `.aim/reviews`,
+`.aim/increments`, `.aim/decisions`, `.aim/archive`, and other runtime artifacts
+must not become long-lived repository knowledge sources. When a remembered fact
+is too large for a short profile entry, adapters should create or update a
+static memory document under `docs/features/`, `docs/workflow/`,
+`docs/architecture/`, or another repo-configured stable docs path, then reference
+that static source from `aim.profile.yaml`.
 
 When Personal and Team profiles both exist, the Team profile is the shared baseline.
 Personal profile facts may narrow local startup, but must not silently contradict shared commands, ownership, risk, or policy.

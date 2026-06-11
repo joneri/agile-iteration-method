@@ -22,6 +22,11 @@ Core constraints:
 - use `docs/workflow/repo-awareness-calibration.md` for calibrate, remember, and forget intents
 - store Personal hints only at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 - never store stable repo-awareness under `.aim/`
+- never cite `.aim/reviews`, `.aim/increments`, `.aim/decisions`,
+  `.aim/archive`, or other runtime artifacts as durable repo-awareness
+- allow larger memory documents under `docs/features/`, `docs/workflow/`,
+  `docs/architecture/`, or another repo-configured stable docs path, then
+  reference those static sources from `aim.profile.yaml`
 - when assisting help or first-run guidance, detect onboarding state first,
   recommend exactly one next action whenever possible, and do not lead with
   internal file paths, runtime locations, adapter packaging, architecture

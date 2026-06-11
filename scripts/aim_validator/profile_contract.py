@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -31,6 +32,14 @@ PERSONAL_HINTS_FORBIDDEN_AUTHORITY_KEYS = {
     "securityRules",
     "validation",
     "validationPolicy",
+}
+
+AIM_RUNTIME_PATH_RE = re.compile(
+    r"(?<![A-Za-z0-9_./-])\.aim(?:/[A-Za-z0-9._/-]*)?(?![A-Za-z0-9_./-])"
+)
+
+REPO_PROFILE_ALLOWED_RUNTIME_PATHS = {
+    "$.aimRepoProfile.storage.workingStateLocation",
 }
 
 
@@ -89,6 +98,7 @@ def validate_repo_profile(
                         "stable repo-awareness must not be stored under .aim/",
                     )
                 )
+    issues.extend(_durable_runtime_reference_issues(profile, "$.aimRepoProfile"))
     return issues
 
 
@@ -122,6 +132,7 @@ def validate_personal_hints(
                     "Personal hints must not claim shared policy authority",
                 )
             )
+    issues.extend(_durable_runtime_reference_issues(hints, "$.aimPersonalHints"))
     return issues
 
 
@@ -150,6 +161,37 @@ def _is_aim_runtime_path(value: str) -> bool:
     while normalized.startswith("./"):
         normalized = normalized[2:]
     return normalized == ".aim" or normalized.startswith(".aim/")
+
+
+def _durable_runtime_reference_issues(value: Any, path: str) -> list[ContractIssue]:
+    issues = []
+    for scalar_path, scalar_value in _walk_scalar_strings(value, path):
+        if scalar_path in REPO_PROFILE_ALLOWED_RUNTIME_PATHS:
+            continue
+        matches = sorted(set(AIM_RUNTIME_PATH_RE.findall(scalar_value)))
+        if not matches:
+            continue
+        issues.append(
+            ContractIssue(
+                "product",
+                scalar_path,
+                "durable repo-awareness must not reference .aim/ runtime artifacts; "
+                "normalize reusable knowledge into aim.profile.yaml, Personal hints, "
+                "or a static docs path",
+            )
+        )
+    return issues
+
+
+def _walk_scalar_strings(value: Any, path: str):
+    if isinstance(value, dict):
+        for key, child in value.items():
+            yield from _walk_scalar_strings(child, f"{path}.{key}")
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            yield from _walk_scalar_strings(child, f"{path}[{index}]")
+    elif isinstance(value, str):
+        yield path, value
 
 
 def _walk_keys(value: Any, path: str):

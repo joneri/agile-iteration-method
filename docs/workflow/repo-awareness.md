@@ -28,6 +28,15 @@ The profile contains reusable repository facts such as:
 
 It must not contain AIM core behavior, active Epic state, gate state, review state, or acceptance decisions.
 
+`.aim/` is AIM runtime state and trace history. It may be read to resume or
+audit the active AIM loop, especially `.aim/state.json`, but it must not be the
+source of durable repo-awareness. Stable repo-awareness must not cite
+`.aim/reviews`, `.aim/increments`, `.aim/decisions`, `.aim/archive`, or other
+runtime artifacts as maintained repository knowledge. If a runtime artifact
+contains knowledge worth preserving, normalize that knowledge into
+`aim.profile.yaml`, Personal hints, or a static documentation file under a
+repo-approved docs path, then reference that static source.
+
 The structural source of truth is `schemas/aim-repo-profile.schema.json`.
 See `docs/workflow/repo-profile-schema.md` for schema versions, validation
 ownership, and migration rules.
@@ -130,6 +139,18 @@ Do not preload the full workflow family.
 
 Use `/aim calibrate-repo` to bootstrap or refine repository knowledge through the canonical cheap-first flow.
 An ordinary AIM Epic whose goal is to verify and refine repo-awareness follows the same contract and produces the same profile shape.
+
+Short, atomic durable facts belong directly in `aim.profile.yaml`.
+Larger repo memory belongs in stable documentation and should be referenced from
+the profile with a short summary and loading rule. Valid static memory locations
+include:
+
+- `docs/features/`
+- `docs/workflow/`
+- `docs/architecture/`
+- another stable docs path explicitly configured by the repository
+
+Do not use `.aim/` runtime artifacts as long-lived memory documents.
 
 Use:
 
