@@ -55,7 +55,10 @@
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 86px;
+    }
     body {
       margin: 0;
       color: var(--ink);
@@ -105,13 +108,15 @@
     .skip-link:focus { top: 12px; }
 
     .site-nav {
-      position: absolute;
-      inset: 0 0 auto;
+      position: sticky;
+      top: 0;
       z-index: 20;
       border-bottom: 1px solid rgba(255,255,255,0.18);
       color: #fff;
-      background: rgba(4, 15, 34, 0.82);
+      background: rgba(4, 15, 34, 0.72);
       backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 16px 42px rgba(3, 11, 24, 0.18);
     }
     .nav-inner {
       display: flex;
