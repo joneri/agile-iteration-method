@@ -58,14 +58,18 @@ semantics. See the [adapter entry model](../workflow/adapter-entry-model.md).
 
 ## Installation and upgrades
 
-- One guided installer handles every user.
+- The complete, self-contained public Agent Skill installs through
+  `npx skills add joneri/agile-iteration-method --skill agile-iteration-method`.
+- The public package is generated from canonical AIM sources and is not AIM Lite.
+- One adaptive guided installer handles repository-aware setup.
 - Footprints control where files may be written.
 - Plans classify create, current, and collision states before apply.
 - Apply is rollback-protected and safe to rerun.
 - Adapter readiness receipts name skill paths, reload steps, and fallbacks.
 - `/aim upgrade` refreshes AIM-owned packages without rewriting active state.
 
-See [installation](../workflow/install-aim-2.0.md).
+See [public Agent Skill distribution](../workflow/version-and-installation.md)
+and [adaptive installation](../workflow/install-aim-2.0.md).
 
 ## Validation and release safety
 

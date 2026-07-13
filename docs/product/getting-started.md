@@ -6,7 +6,42 @@ You do not need to read the full AIM method first.
 
 ## 1. Install AIM
 
-From the repository where you want to use AIM, run:
+AIM has two maintained installation paths. Both deliver the complete AIM
+method; the public Agent Skill is not AIM Lite and is generated from the same
+canonical sources as the adaptive installation.
+
+### Public Agent Skill
+
+Use the standard skills CLI when you want a portable, self-contained AIM skill
+for Codex, GitHub Copilot, Claude Code, or another compatible agent:
+
+```bash
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method
+```
+
+The installed skill contains the full role loop, gates, operating modes,
+repository calibration, project-agent configuration, scope escalation, and
+sequential fallback. It does not require the AIM source repository to remain
+available locally.
+
+Update it through the standard CLI:
+
+```bash
+npx skills update agile-iteration-method --yes
+```
+
+After installation, `/aim configure-agents` can still generate or refresh
+project-specific native specialists from `aim.roles.yaml`.
+
+See [Public Agent Skill distribution](../workflow/version-and-installation.md)
+for agent-specific commands, versioning, generation, and publication details.
+
+### Adaptive Installer
+
+Use the adaptive installer when you want AIM to inspect a target repository,
+offer one or more native adapters, seed project-specific role configuration,
+and apply the selected repository footprint:
 
 ```bash
 curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
@@ -169,7 +204,16 @@ The increment gives AIM a controlled next step.
 
 ### Codex
 
-Install the AIM skill and run:
+Install the public skill directly for Codex:
+
+```bash
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method \
+  --agent codex \
+  --yes
+```
+
+Then run:
 
 ```text
 /aim start "EPIC: ..."
@@ -177,7 +221,16 @@ Install the AIM skill and run:
 
 ### GitHub Copilot
 
-Load the repository AIM skill, then request:
+Install the public skill directly for GitHub Copilot:
+
+```bash
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method \
+  --agent github-copilot \
+  --yes
+```
+
+Then request:
 
 ```text
 /aim start "EPIC: ..."
@@ -185,8 +238,17 @@ Load the repository AIM skill, then request:
 
 ### Claude
 
-Load the project AIM skill and run `/aim start "EPIC: ..."`. Legacy installed
-commands remain compatible. If skill routing is unavailable, state:
+Install the public skill directly for Claude Code:
+
+```bash
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method \
+  --agent claude-code \
+  --yes
+```
+
+Run `/aim start "EPIC: ..."`. Legacy installed commands remain compatible. If
+skill routing is unavailable, state:
 
 ```text
 EPIC: ...

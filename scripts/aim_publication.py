@@ -27,6 +27,9 @@ PUBLIC_DIRECTORIES = ("github-pages/assets",)
 PUBLIC_LICENSE_PATH = "licenses/LICENSE-DOCS"
 RELEASE_MANIFEST_PATH = "release-manifest.json"
 PUBLIC_INSTALL_COMMAND = f"curl -fsSL {PUBLIC_ORIGIN}install.sh | bash"
+PUBLIC_SKILL_INSTALL_COMMAND = (
+    "npx skills add joneri/agile-iteration-method --skill agile-iteration-method"
+)
 
 
 class PublicationError(ValueError):
@@ -105,6 +108,14 @@ def validate_source(repo_root: Path) -> None:
         "index.html public install command": (
             index,
             PUBLIC_INSTALL_COMMAND,
+        ),
+        "index.html public Agent Skill install command": (
+            index,
+            PUBLIC_SKILL_INSTALL_COMMAND,
+        ),
+        "index.html public Agent Skill page": (
+            index,
+            "https://skills.sh/joneri/agile-iteration-method/agile-iteration-method",
         ),
         "index.html calibrate command": (
             index,

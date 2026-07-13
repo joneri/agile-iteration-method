@@ -41,7 +41,7 @@ Follow the [First-time journey](getting-started.md).
 
 It takes you through:
 
-1. installation
+1. choosing the portable public Agent Skill or adaptive installer
 2. repository calibration
 3. the first Epic
 4. Gate A
@@ -54,7 +54,8 @@ Read [Platforms and project agents](platforms-and-adoption.md).
 
 It explains:
 
-- one adaptive installation with explicit storage and sharing policy
+- the complete public Agent Skill available through the standard skills CLI
+- the adaptive installer with explicit storage and sharing policy
 - Codex, Claude, and GitHub Copilot
 - project-specific PO, TDO, Dev, and Reviewer specialists
 - what stays shared and what uses supplier-native configuration

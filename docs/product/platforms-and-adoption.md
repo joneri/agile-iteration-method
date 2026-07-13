@@ -1,8 +1,36 @@
 # Platforms and Project Agents
 
-AIM is one delivery system with one adaptive installation. Select the suppliers
-already used by the project; AIM installs each supplier's native front door and
-project-agent format without changing the shared role-and-gate loop.
+AIM is one delivery system with two maintained distribution paths. The public
+Agent Skill provides a portable, self-contained installation through the
+standard skills CLI. The adaptive installer can also inspect a target repository
+and install supplier-native front doors and project-agent formats. Neither path
+changes the shared role-and-gate loop or creates a separate AIM edition.
+
+## Choose an Installation Path
+
+Install complete AIM as a public Agent Skill:
+
+```bash
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method
+```
+
+Choose this path for common skill discovery, installation, and updates across
+Codex, GitHub Copilot, Claude Code, and other compatible agents. The package is
+generated from canonical AIM sources and is full AIM, not AIM Lite.
+
+Use the adaptive installer when the repository also needs a reviewed footprint,
+adapter selection, initial `aim.roles.yaml`, and supplier-native project
+specialists:
+
+```bash
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+```
+
+Both paths support later `/aim configure-agents` work. See the
+[public Agent Skill distribution](../workflow/version-and-installation.md) and
+[adaptive installer](../workflow/install-aim-2.0.md) for their complete
+contracts.
 
 ## One Product, Project-Specific Specialists
 
@@ -45,11 +73,12 @@ supplier mechanics.
 
 ## Storage and Sharing Policy
 
-The normal installation writes the small project configuration and selected
-native adapter files after a reviewed preview. Advanced local-only, external,
-or fuller embedded footprints remain available for protected repositories and
-automation. Older Personal, Team, and Enterprise flags are accepted only as
-migration compatibility inputs, not product editions.
+The public Agent Skill uses the standard skills CLI's selected target and scope.
+The adaptive installer writes the small project configuration and selected
+native adapter files after a reviewed preview, with local-only, external, or
+fuller embedded footprints available for protected repositories and automation.
+These are storage and sharing choices, not different AIM editions. Older
+Personal, Team, and Enterprise flags remain migration compatibility inputs.
 
 See [Project-agent configuration](../workflow/project-agent-configuration.md)
 and [Install AIM](../workflow/install-aim-2.0.md).

@@ -17,6 +17,7 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 from aim_publication import (  # noqa: E402
     PUBLIC_INSTALL_COMMAND,
     PUBLIC_ORIGIN,
+    PUBLIC_SKILL_INSTALL_COMMAND,
     PublicationError,
     SCHEMA_RELATIVE_PATHS,
     build_artifact,
@@ -71,17 +72,30 @@ class PublicationContractTests(unittest.TestCase):
             self.assertEqual(manifest["install"]["defaultRef"], "main")
             self.assertIn("publication-artifact", manifest["requiredChecks"])
 
-    def test_public_install_command_is_visible_from_public_sources(self) -> None:
+    def test_public_install_choices_are_visible_from_public_sources(self) -> None:
         validate_source(REPO_ROOT)
         readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
         index = (REPO_ROOT / "index.html").read_text(encoding="utf-8")
         getting_started = (
             REPO_ROOT / "docs/product/getting-started.md"
         ).read_text(encoding="utf-8")
+        platforms = (
+            REPO_ROOT / "docs/product/platforms-and-adoption.md"
+        ).read_text(encoding="utf-8")
+
+        def collapsed(content: str) -> str:
+            return " ".join(content.replace("\\\n", " ").split())
 
         self.assertIn(PUBLIC_INSTALL_COMMAND, readme)
         self.assertIn(PUBLIC_INSTALL_COMMAND, index)
         self.assertIn(PUBLIC_INSTALL_COMMAND, getting_started)
+        self.assertIn(PUBLIC_INSTALL_COMMAND, platforms)
+        for content in (readme, index, getting_started, platforms):
+            self.assertIn(PUBLIC_SKILL_INSTALL_COMMAND, collapsed(content))
+        self.assertIn(
+            "https://skills.sh/joneri/agile-iteration-method/agile-iteration-method",
+            index,
+        )
         for command in ("/aim upgrade", "/aim calibrate-repo", "/aim remember-repo"):
             self.assertIn(command, readme)
             self.assertIn(command, index)

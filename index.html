@@ -624,6 +624,9 @@
       .loop-step:nth-child(3) { border-right: 0; }
       .loop-step:nth-child(3)::after { display: none; }
       .docs-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .installer { grid-template-columns: 1fr; gap: 22px; }
+      .copyable-command { width: 100%; }
+      .copyable-command .command { width: auto; flex: 1; overflow-x: auto; }
     }
 
     @media (max-width: 640px) {
@@ -693,11 +696,11 @@
           <a class="button button-secondary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">Discover the product</a>
         </div>
       </div>
-      <div class="hero-command" aria-label="Public release install command">
-        <span>Install from the maintained branch</span>
+      <div class="hero-command" aria-label="Public Agent Skill install command">
+        <span>Install the complete AIM Agent Skill</span>
         <div class="copyable-command">
-          <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
-          <button class="copy-command" type="button" data-copy-command="curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash" data-feedback="Copied" aria-label="Copy install command">
+          <code class="command">npx skills add joneri/agile-iteration-method --skill agile-iteration-method</code>
+          <button class="copy-command" type="button" data-copy-command="npx skills add joneri/agile-iteration-method --skill agile-iteration-method" data-feedback="Copied" aria-label="Copy Agent Skill install command">
             <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <rect x="9" y="9" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect>
               <path d="M5 15V7a2 2 0 0 1 2-2h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
@@ -916,8 +919,27 @@
     <section class="band band-mist" id="start">
       <div class="container">
         <p class="eyebrow">Your first AIM journey</p>
-        <h2 class="section-title">Install once. Start building with confidence.</h2>
-        <p class="section-lead">The guided installer asks for the repository and adapters, previews one adaptive plan, protects collisions, and lets you apply in the same session.</p>
+        <h2 class="section-title">Choose your installation path. Start building with confidence.</h2>
+        <p class="section-lead">Install the complete portable Agent Skill through the standard skills CLI, or use the adaptive installer for repository-aware setup and native project specialists. Both paths deliver full AIM.</p>
+
+        <div class="installer">
+          <div>
+            <h3>Install the complete public Agent Skill</h3>
+            <p>Use the common skills CLI for a self-contained AIM package that works without the source repository. It is generated from canonical AIM sources, preserves every role and gate, and is full AIM rather than AIM Lite.</p>
+          </div>
+          <div class="copyable-command">
+            <code class="command">npx skills add joneri/agile-iteration-method --skill agile-iteration-method</code>
+            <button class="copy-command" type="button" data-copy-command="npx skills add joneri/agile-iteration-method --skill agile-iteration-method" data-feedback="Copied" aria-label="Copy Agent Skill install command">
+              <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <rect x="9" y="9" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect>
+                <path d="M5 15V7a2 2 0 0 1 2-2h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+              <svg class="check-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
 
         <div class="installer">
           <div>
@@ -1011,7 +1033,7 @@
         <div class="installer">
           <div>
             <h3>Run the guided installer</h3>
-            <p>Run the public bootstrap. It downloads the current maintained archive, asks which repository to install into, and starts the guided setup flow without cloning AIM manually.</p>
+            <p>Choose this adaptive path when you also want repository inspection, adapter selection, an initial role profile, and native project specialists. The bootstrap downloads the maintained archive and starts guided setup without cloning AIM manually.</p>
           </div>
           <div class="copyable-command">
             <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
@@ -1029,6 +1051,7 @@
 
         <div class="start-actions">
           <a class="button button-primary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/getting-started.md">Follow the first-time journey</a>
+          <a class="button" style="color: var(--blue); border-color: var(--blue);" href="https://skills.sh/joneri/agile-iteration-method/agile-iteration-method">View on skills.sh</a>
           <a class="button" style="color: var(--blue); border-color: var(--blue);" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/install-aim-2.0.md">Read the installer guide</a>
         </div>
       </div>

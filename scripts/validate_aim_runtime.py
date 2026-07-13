@@ -286,6 +286,8 @@ PUBLIC_PRODUCT_DOC_PATHS = {
     ],
     "docs/product/README.md": [
         "public product guide",
+        "complete public Agent Skill",
+        "adaptive installer",
         "## Documentation Layers",
         "Product docs",
         "Workflow docs",
@@ -300,6 +302,8 @@ PUBLIC_PRODUCT_DOC_PATHS = {
     ],
     "docs/product/getting-started.md": [
         "## 1. Install AIM",
+        "npx skills add joneri/agile-iteration-method",
+        "full AIM",
         "## 2. Calibrate the Repository",
         "## 3. Remember Important Project Context",
         "## 4. Start an Epic",
@@ -309,6 +313,8 @@ PUBLIC_PRODUCT_DOC_PATHS = {
     ],
     "docs/product/platforms-and-adoption.md": [
         "# Platforms and Project Agents",
+        "## Choose an Installation Path",
+        "npx skills add joneri/agile-iteration-method",
         "## One Product, Project-Specific Specialists",
         "## Configure or Refresh",
         "## What Stays Shared",
