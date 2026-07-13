@@ -181,7 +181,7 @@ See `docs/workflow/repo-awareness-calibration.md` for readiness, confidence, cat
 - `docs/workflow/repo-profile-schema.md`
 - `docs/workflow/agile-iteration-method.md`
 - `docs/workflow/repo-profile-and-footprint-model.md`
-- `docs/workflow/personal-local-profile-storage.md`
+- `docs/workflow/repo-profile-and-footprint-model.md`
 - `docs/workflow/repo-awareness-calibration.md`
 - `docs/workflow/aim-adapter-guidance.md`
 - `aim.profile.yaml`

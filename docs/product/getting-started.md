@@ -177,7 +177,7 @@ Install the AIM skill and run:
 
 ### GitHub Copilot
 
-Select the AIM agent, then run:
+Load the repository AIM skill, then request:
 
 ```text
 /aim start "EPIC: ..."
@@ -185,8 +185,8 @@ Select the AIM agent, then run:
 
 ### Claude
 
-Use the installed AIM start command.
-If command packaging is unavailable, state:
+Load the project AIM skill and run `/aim start "EPIC: ..."`. Legacy installed
+commands remain compatible. If skill routing is unavailable, state:
 
 ```text
 EPIC: ...

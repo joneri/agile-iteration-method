@@ -6,7 +6,8 @@
 ## Product rule
 
 AIM is installed through one adaptive path. The user chooses the suppliers they
-already use; AIM then installs each supplier's native project-agent surface.
+already uses; AIM then installs each supplier's native AIM skill and
+project-agent surface.
 Personal, Team, and Enterprise are not separate AIM products or installer
 editions. Repository sharing, write footprint, and protected-repository needs
 remain explicit policy settings and compatibility inputs.
@@ -45,6 +46,12 @@ inspects those facts, proposes role expertise, and regenerates only AIM-owned
 native files after showing collisions or user edits.
 
 ## Native orchestration
+
+The supplier-native AIM skill is the workflow orchestrator. It recognizes the
+complete command family, loads AIM core plus project configuration, and delegates
+bounded role work to the native specialists below. The skill does not flatten
+those specialists into generic prompts: `aim.roles.yaml` continues to define
+their project-specific expertise, tools, validation, and boundaries.
 
 Every adapter should use the strongest stable native mechanism available:
 

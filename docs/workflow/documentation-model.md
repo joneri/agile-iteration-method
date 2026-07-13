@@ -51,12 +51,11 @@ It separates:
 | Repo-awareness calibration and persistent memory | `docs/workflow/repo-awareness-calibration.md` |
 | Structured profile and repo operational-doc boundary | `docs/workflow/repo-awareness-two-layer-model.md` |
 | Working-state boundaries | `docs/workflow/working-state-boundaries.md` |
-| Personal profile storage | `docs/workflow/personal-local-profile-storage.md` |
 | Profile-source reporting | `docs/workflow/profile-source-summary.md` |
-| Team profile artifact | `docs/workflow/team-profile-artifact.md` |
 | Codex skill onboarding | `docs/workflow/codex-skill-onboarding.md` |
 | Front-door routing | `docs/workflow/light-front-door.md` |
 | Adapter command intents and upgrade behavior | `docs/workflow/adapter-command-contract.md` |
+| Adapter skill discovery, readiness, and migration | `docs/workflow/adapter-skill-bootstrap.md` |
 | Validator tiers, coherence findings, and release readiness | `docs/workflow/product-coherence-validation.md` |
 | Cost profile behavior | `docs/workflow/cost-control-mode.md` |
 | Cost review behavior | `docs/workflow/cost-review-checklist.md` |
@@ -82,6 +81,9 @@ It must not become a second source of truth for gates, runtime state, installer 
 Those rules remain canonical under `docs/workflow/`.
 
 Public product docs should link deeper only when the reader needs operational or reference detail.
+`docs/product/features.md` is the concise inventory of current product
+capabilities; it summarizes and links to canonical owners without redefining
+their behavior.
 
 ## Root-file rule
 
@@ -218,6 +220,7 @@ The validator should:
 - `docs/workflow/repo-profile-schema.md`
 - `docs/workflow/release-publication-model.md`
 - `docs/product/README.md`
+- `docs/product/features.md`
 - `docs/features/README.md`
 - `docs/workflow/operating-modes.md`
 - `docs/workflow/repository-surface-classification.md`

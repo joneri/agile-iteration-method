@@ -199,6 +199,6 @@ The installer and chat calibration share:
 
 - `aim.profile.yaml`
 - `docs/workflow/repo-awareness.md`
-- `docs/workflow/personal-local-profile-storage.md`
+- `docs/workflow/repo-profile-and-footprint-model.md`
 - `install/aim-install-manifest.yaml`
 - `scripts/validate_aim_runtime.py`

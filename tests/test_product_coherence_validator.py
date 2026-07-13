@@ -128,7 +128,7 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
     def test_stale_unreleased_claim_fails_release_readiness(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)
-            guide = copied / "docs/workflow/aim-2-low-footprint-adoption.md"
+            guide = copied / "docs/workflow/agile-iteration-method.md"
             guide.write_text(
                 guide.read_text(encoding="utf-8")
                 + "\nAIM 2.0 is not released as a final runtime yet.\n",

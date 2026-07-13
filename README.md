@@ -1,253 +1,126 @@
-# Agile Iteration Method (AIM) 2
+# Agile Iteration Method (AIM) 2.2
 
-![AIM 2.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 2.2 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
-**A structured AI delivery system for building real software with clarity, quality, and human control.**
+AIM is a delivery method for AI-assisted software work. You describe the
+outcome. AIM plans one useful increment, builds it, reviews it, validates it,
+and asks for the decisions that still belong to you.
 
-AIM helps you turn a desired outcome into reviewed, validated increments instead of an expanding prompt conversation.
-It works with Codex, Claude, and GitHub Copilot, adapts to the repository in front of it, and keeps important decisions visible.
+It works with Codex, Claude Code, and GitHub Copilot.
 
-## Install AIM
-
-From the repository where you want to use AIM, run the public release bootstrap:
+## Install
 
 ```bash
 curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
 ```
 
-The bootstrap fetches the current maintained `main` archive and starts the
-guided installer. The installer asks which repository to install AIM into; it
-does not assume your current shell directory is the target repository.
+The installer asks for a repository and the adapters you use. It shows every
+write and collision before applying anything.
 
-To test a specific branch or tag:
-
-```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | AIM_REF=main bash
-```
-
-For automation, pass the target explicitly:
-
-```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash -s -- --target /path/to/repo --non-interactive
-```
-
-## Already Have AIM 1.x Or Older AIM Files?
-
-If a target repository already contains AIM runtime files, helper prompts,
-commands, or adapter packages, use the packaged upgrade path before continuing:
+Already using AIM? Run:
 
 ```text
 /aim upgrade
 ```
 
-Upgrade refreshes installed AIM-owned surfaces through the reviewed installer
-plan and preserves active `.aim/` runtime state. If the installed command surface
-is stale or unavailable, rerun the public bootstrap first. After upgrade, run
-`/aim calibrate-repo` when repository knowledge may have changed, then resume
-with `/aim continue` if an Epic was already in progress.
+## Start
 
-## What AIM Does
-
-AIM brings planning, implementation, review, correction, validation, and approval into one repeatable delivery loop:
+First verify the repository knowledge AIM will reuse:
 
 ```text
-Product intent -> next useful increment -> implementation -> review -> validation -> approval
+/aim calibrate-repo
 ```
 
-In practice, AIM helps you:
+Record a durable project rule when AIM should remember it on later runs:
 
-- build what you actually asked for
-- keep work aligned to an Epic and the current increment
-- detect mistakes before they become accepted work
-- reuse repository knowledge without loading everything into every session
-- choose how much context and verification the work deserves
-- keep people in control of scope, risk, and completion
+```text
+/aim remember-repo habits "Keep user-facing language direct and calm."
+```
 
-## What AIM Is Not
+Then start with an outcome, not a task list:
 
-AIM is not:
+```text
+/aim start "EPIC: Make checkout recovery clear and reliable when payment confirmation is delayed"
+```
 
-- a programming language, framework, or hosting platform
-- a replacement for tests, CI, engineering judgment, or product ownership
-- a promise that AI output is automatically correct
-- a requirement to commit a large process framework into every repository
+Use `/aim help` when you want the next useful action. The same command family
+also covers continue, status, validation, configuration, upgrade, memory,
+execution mode, cost depth, and replanning.
 
-AIM gives AI-assisted work a delivery structure.
-Your existing tools and engineering standards remain part of the evidence AIM uses.
+## How AIM works
 
-## Why AIM Exists
+```text
+PO -> TDO -> Dev -> Reviewer -> TDO -> PO
+```
 
-AI coding tools are fast, but speed alone does not keep work coherent.
-Long sessions can drift from the goal, forget earlier decisions, accumulate unnecessary context, and produce changes that look complete before they have been reviewed.
+- **PO** owns the outcome and acceptance.
+- **TDO** chooses the next end-to-end Done Increment and validates delivery.
+- **Dev** implements the approved increment.
+- **Reviewer** looks for correctness problems, regressions, and risk.
 
-AIM responds with a few durable ideas:
+Gate A approves the Epic. Gate B approves the next increment. Gate E accepts
+the result. Review and technical validation happen before acceptance.
 
-- one clear Epic describes the outcome
-- one Done Increment is built at a time
-- review and validation happen before acceptance
-- repository facts are reused instead of repeatedly rediscovered
-- deeper context is loaded only when the work needs it
-- humans retain meaningful approval points
+`Strict` pauses at every hard gate. `Auto` continues while the approved
+direction remains clear, but still stops for risk, scope changes, and final Epic
+acceptance.
 
-The result is less guesswork and a clearer path from idea to accepted software.
+## Repository-aware, not repository-heavy
 
-## Quality First
+AIM keeps four things separate:
 
-AIM does not stop at generation.
-
-Each increment moves through implementation, review, technical validation, and product acceptance.
-When evidence shows the work is wrong or incomplete, the increment returns for correction instead of quietly moving forward.
-
-This does not make AI infallible.
-It makes verification and repair part of the normal workflow.
-
-## Repository-Aware Without Context Bloat
-
-AIM can learn the repository's:
-
-- technologies and commands
-- test and validation paths
-- important folders
-- conventions and risk zones
-- documents that matter for specific work
-- remembered team or personal habits
-
-Shared repository knowledge can live in the small `aim.profile.yaml` profile.
-Personal hints stay outside the repository.
-Detailed operational guidance loads only when relevant, and active work state stays separate under `.aim/`.
-
-The standard install also creates `aim.roles.yaml`: an editable project profile
-for PO, TDO, Dev, and Reviewer expertise. AIM derives native project agents for
-Codex, Claude, and Copilot from that shared intent, so a React repository can
-teach Dev its React practices and Reviewer its Playwright checks without making
-all suppliers use the same configuration format.
-
-Your tokens are valuable.
-AIM is designed to reuse compact knowledge, start with the smallest useful context, and expand only for evidence, uncertainty, or risk.
-
-## Human Control
-
-AIM has two execution styles:
-
-- **Strict** pauses at the important approval gates.
-- **Auto** continues between increments when the direction remains clear, but preserves review, escalation, traceability, and explicit approval before the Epic is closed.
-
-People still own product intent, scope changes, trust decisions, and final acceptance.
-
-## One Adaptive Installation
-
-AIM no longer asks newcomers to choose a Personal, Team, or Enterprise edition.
-There is one guided installation: choose the repository and the suppliers you
-use, review the plan, and apply it. The installer creates project-native role
-specialists and a small shared configuration that can be edited manually or
-refreshed with `/aim configure-agents`.
-
-Protected or local-only setups remain available as advanced storage and sharing
-policies. Older mode flags still work during migration, but they are no longer
-separate AIM products.
-
-## Codex, Claude, and GitHub Copilot
-
-AIM keeps one method while using a native entrypoint for each platform:
-
-| Platform | Native start |
+| Surface | Purpose |
 | --- | --- |
-| **Codex** | AIM skill front door plus project `.codex/agents/*.toml` specialists |
-| **GitHub Copilot** | AIM orchestrator plus repository `.github/agents/*.agent.md` specialists |
-| **Claude** | AIM commands plus project `.claude/agents/*.md` specialists |
+| `docs/workflow/agile-iteration-method.md` | canonical AIM method |
+| `aim.profile.yaml` | reusable repository knowledge |
+| `aim.roles.yaml` | project-specific PO, TDO, Dev, and Reviewer expertise |
+| `.aim/` | active local runtime state and review evidence |
 
-If a native command is unavailable, explicit AIM intent remains the supported fallback.
-Platform packaging may differ; the delivery loop, gates, ownership, and acceptance rules do not.
+The standard installation adds the selected supplier skills and native project
+specialists. It never needs to create `AGENTS.md` or `CLAUDE.md`.
 
-## AIM 2
+## Native adapters
 
-AIM 2 is the current release line. The current source release is **v2.1.0**. See the [changelog](CHANGELOG.md) for what shipped and the [release and publication model](docs/workflow/release-publication-model.md) for how releases are validated.
+| Platform | AIM skill | Project specialists |
+| --- | --- | --- |
+| Codex | `~/.agents/skills/agile-iteration-method/` | `.codex/agents/aim-*.toml` |
+| Claude Code | `.claude/skills/aim/` | `.claude/agents/aim-*.md` |
+| GitHub Copilot | `.github/skills/aim/` | `.github/agents/aim-*.agent.md` |
 
-AIM 2.0 was rebuilt as a cleaner product while preserving the proven AIM core.
+All adapters use the same AIM roles, gates, state ownership, and `/aim` command
+semantics. Supplier-specific files define how each project specialist works.
 
-The rewrite separates:
+## What is new in v2.2.0
 
-- workflow behavior
-- repository awareness
-- active runtime state
-- installation
-- platform adapters
+- one adaptive installation instead of Personal, Team, and Enterprise editions
+- project-specific native role specialists generated from `aim.roles.yaml`
+- supplier-native skills for the full `/aim` command family
+- adapter readiness receipts after install and upgrade
+- current Codex skill discovery through `$HOME/.agents/skills`
+- shorter product documentation and stronger release/documentation checks
 
-That makes AIM easier to install, safer to place in existing repositories, and cheaper to operate across repeated sessions.
+The AIM runtime contract remains 2.0. Product release, runtime contract,
+installer manifest, and profile schema versions are tracked separately.
 
-The guided installer provides:
+## Safety
 
-- filesystem path completion
-- adapter selection
-- project-specific role-profile detection and native agent installation
-- a compact preview
-- file-by-file collision decisions
-- final confirmation before writing
-- rollback-protected, idempotent apply
-- JSON and non-interactive modes for automation
+- one main AIM thread owns `.aim/state.json` and gate transitions
+- native specialists never accept work or create parallel AIM runtimes
+- existing files are collision-protected
+- apply is rollback-protected and idempotent
+- unavailable native delegation falls back to the same sequential role loop
+- tags, releases, deploys, and other external changes still need explicit scope
 
-## Start in Seven Steps
+## Documentation
 
-1. **Install AIM**
-
-   ```bash
-   curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
-   ```
-
-   If AIM is already installed, or the repository still has AIM 1.x-era files, run `/aim upgrade` before continuing.
-
-2. **Calibrate repository awareness**
-
-   ```text
-   /aim calibrate-repo
-   ```
-
-3. **Remember important project context**
-
-   Capture product facts, tone, constraints, or team habits AIM should reuse:
-
-   ```text
-   /aim remember-repo habits "Product context: This app helps people find new homes for cats. User-facing language should be nuanced, calm, and empathetic toward both the cats and future owners."
-   ```
-
-4. **Start an Epic**
-
-   ```text
-   /aim start "EPIC: <the outcome you want>"
-   ```
-
-5. **Review Gate A**
-
-   Confirm the outcome, boundaries, and acceptance intent.
-
-6. **Approve the next increment**
-
-   AIM proposes one useful, reviewable slice at a time.
-
-7. **Build with confidence**
-
-   AIM implements, reviews, validates, corrects when needed, and returns the result for acceptance.
-
-## Read Next
-
-- [Product overview](docs/product/README.md)
-- [Why AIM is different](docs/product/what-is-aim.md)
+- [Feature guide](docs/product/features.md)
 - [First-time journey](docs/product/getting-started.md)
-- [Platforms and project agents](docs/product/platforms-and-adoption.md)
-- [Installation guide](docs/workflow/install-aim-2.0.md)
-- [Release and publication model](docs/workflow/release-publication-model.md)
-- [Canonical workflow](docs/workflow/agile-iteration-method.md)
+- [Platforms and project specialists](docs/product/platforms-and-adoption.md)
+- [Install and upgrade](docs/workflow/install-aim-2.0.md)
+- [Canonical AIM method](docs/workflow/agile-iteration-method.md)
+- [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md)
+- [Release and publication](docs/workflow/release-publication-model.md)
 
-## Documentation Map
-
-- `docs/product/`: public product story and newcomer guidance
-- `docs/workflow/`: canonical AIM behavior, installation, and operating guidance
-- `docs/features/`: advanced support and reference material
-- `.github/workflows/release-readiness.yml`: independently runnable public release gate
-- `CONTRIBUTING.md`: AIM source-repository maintainer guidance only
-
-## License
+Current product release: **v2.2.0**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).
-
-Created by Jonas Eriksson with contributions from the AIM community.

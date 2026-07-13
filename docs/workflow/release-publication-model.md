@@ -71,6 +71,8 @@ release-facing Pages tree.
 
 It includes:
 
+- `VERSION`
+- `install/aim-install-manifest.yaml`
 - `index.html`
 - `install.sh`
 - `robots.txt`
@@ -82,6 +84,10 @@ It includes:
 - documentation attribution at `licenses/LICENSE-DOCS`
 - `.nojekyll`
 - deterministic `release-manifest.json`
+
+The release manifest records three different contracts explicitly: the AIM
+product release from `VERSION`, the stable runtime contract version, and the
+installer manifest version. They must not be collapsed into one number.
 
 The builder validates source URLs before copying and validates the assembled
 artifact afterward. Pages must use this builder rather than maintaining a
@@ -100,9 +106,9 @@ The public website and README must expose this command:
 curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
 ```
 
-## AIM 2.0 Release Artifact
+## AIM 2.x release artifact
 
-An official AIM 2.0 release requires:
+An official AIM 2.x release requires:
 
 - a reviewed source commit
 - a `v2`-family source tag pointing to that commit

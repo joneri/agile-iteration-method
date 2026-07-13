@@ -257,7 +257,7 @@ def _adapter_closure_findings(repo_root: Path) -> list[dict[str, Any]]:
                     for match in closure.PACKAGE_REFERENCE_RE.finditer(content):
                         reference = match.group(1)
                         expected_suffix = (
-                            "/.codex/skills/agile-iteration-method/" + reference
+                            "/.agents/skills/agile-iteration-method/" + reference
                         )
                         if any(
                             destination.endswith(expected_suffix)
@@ -432,7 +432,10 @@ def _release_claim_findings(repo_root: Path) -> list[dict[str, Any]]:
         _read(repo_root, path)
         for path in ("README.md", "docs/product/README.md", "docs/product/getting-started.md")
     )
-    if "AIM 2.0" not in public_front_door:
+    # Product releases can advance within AIM 2 while the runtime contract
+    # remains 2.0. Any current AIM front door makes this old pre-release claim
+    # contradictory; do not couple the check to one product-version string.
+    if "AIM" not in public_front_door:
         return []
 
     stale_release_pattern = re.compile(

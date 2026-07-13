@@ -63,6 +63,9 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
+            self.assertEqual(manifest["aimVersion"], "2.2.0")
+            self.assertEqual(manifest["runtimeContractVersion"], "2.0")
+            self.assertEqual(manifest["installerManifestVersion"], "0.7")
             self.assertEqual(manifest["publicOrigin"], PUBLIC_ORIGIN)
             self.assertEqual(manifest["install"]["command"], PUBLIC_INSTALL_COMMAND)
             self.assertEqual(manifest["install"]["defaultRef"], "main")
@@ -169,6 +172,7 @@ class PublicationContractTests(unittest.TestCase):
             "workflow_dispatch:",
             "python3 -m compileall -q scripts tests",
             "python3 -m unittest discover -s tests -v",
+            "python3 scripts/audit_documentation.py .",
             "python3 scripts/validate_aim_runtime.py . --release",
             "python3 scripts/validate_publication.py --output site",
             "include-hidden-files: true",
@@ -191,6 +195,7 @@ class PublicationContractTests(unittest.TestCase):
             "gh release create",
             "gh release upload",
             "--verify-tag",
+            'declared="v$(tr -d',
         ):
             self.assertIn(marker, release_workflow)
 

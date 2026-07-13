@@ -14,6 +14,7 @@ from aim_installer import planner as installer_planner
 from aim_installer import seed as installer_seed
 from aim_installer.manifest import ManifestError, load_manifest
 from aim_installer.yaml_lite import YamlLiteError, loads as load_aim_yaml
+from aim_docs import audit as audit_documentation
 from aim_validator.coherence import evaluate_product_coherence
 from aim_validator.profile_contract import (
     PERSONAL_HINTS_SCHEMA_PATH,
@@ -204,6 +205,7 @@ AIM_2_MIGRATION_CLASSIFICATION = {
     "adapter_helpers": [
         ".claude",
         ".github/agents",
+        ".github/skills",
         ".github/prompts",
         "adapters/codex/agile-iteration-method/SKILL.md",
     ],
@@ -275,10 +277,11 @@ OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
-        "A structured AI delivery system",
-        "## What AIM Is Not",
-        "## Start in Seven Steps",
-        "docs/product/",
+        "# Agile Iteration Method (AIM) 2.2",
+        "## Install",
+        "## How AIM works",
+        "## What is new in v2.2.0",
+        "docs/product/features.md",
     ],
     "docs/product/README.md": [
         "public product guide",
@@ -321,6 +324,7 @@ INSTALL_MANIFEST_PATH = "install/aim-install-manifest.yaml"
 
 ADAPTER_ENTRY_MODEL_DOC_PATH = "docs/workflow/adapter-entry-model.md"
 ADAPTER_COMMAND_CONTRACT_DOC_PATH = "docs/workflow/adapter-command-contract.md"
+ADAPTER_SKILL_BOOTSTRAP_DOC_PATH = "docs/workflow/adapter-skill-bootstrap.md"
 LIGHT_FRONT_DOOR_DOC_PATH = "docs/workflow/light-front-door.md"
 PRODUCT_COHERENCE_DOC_PATH = "docs/workflow/product-coherence-validation.md"
 REPO_PROFILE_SCHEMA_DOC_PATH = "docs/workflow/repo-profile-schema.md"
@@ -364,16 +368,15 @@ CLAUDE_COMMAND_SURFACES = {
 
 COMMAND_FAMILY_SURFACES = {
     "Codex": "adapters/codex/agile-iteration-method/SKILL.md",
-    "GitHub Copilot": ".github/agents/aim.agent.md",
+    "Claude": ".claude/skills/aim/SKILL.md",
+    "GitHub Copilot": ".github/skills/aim/SKILL.md",
 }
 
 REQUIRED_ADAPTER_ENTRY_MODEL_MARKERS = [
     "user-facing entry surface",
     "internal helper surface",
     "fallback",
-    "skill/package-first",
-    "agent-first",
-    "command-first",
+    "skill-led",
     "/aim start",
     "/aim continue",
     "/aim validate",
@@ -392,18 +395,23 @@ REQUIRED_ADAPTER_ENTRY_MODEL_MARKERS = [
     "GitHub Copilot",
     "Claude",
     ".claude/commands/",
+    ".claude/skills/aim/",
     ".claude/agents/",
     ".github/agents/",
+    ".github/skills/aim/",
+    ADAPTER_SKILL_BOOTSTRAP_DOC_PATH,
 ]
 
 ADAPTER_ENTRY_SURFACE_MARKERS = {
-    ".github/agents/aim.agent.md": ["agent-first", ADAPTER_ENTRY_MODEL_DOC_PATH],
     "adapters/codex/agile-iteration-method/SKILL.md": [
         "skill/package-first",
         "references/adapter-entry-model.md",
+        "references/adapter-skill-bootstrap.md",
     ],
-    ".claude/commands/start-aim.md": ["command-first", ADAPTER_ENTRY_MODEL_DOC_PATH],
-    ".claude/agents/aim.md": ["internal helper surface", "command-first"],
+    ".claude/skills/aim/SKILL.md": ["primary AIM front door", ADAPTER_SKILL_BOOTSTRAP_DOC_PATH],
+    ".github/skills/aim/SKILL.md": ["AIM workflow source", ADAPTER_SKILL_BOOTSTRAP_DOC_PATH],
+    ".claude/agents/aim.md": ["internal helper surface", "skill-led"],
+    ".github/agents/aim.agent.md": ["skill-led", ADAPTER_ENTRY_MODEL_DOC_PATH],
 }
 
 REQUIRED_ONBOARDING_DOC_MARKERS = [
@@ -455,7 +463,7 @@ ONBOARDING_SURFACES = {
         "command\ninventory",
         "new homes for cats",
     ],
-    ".github/agents/aim.agent.md": [
+    ".github/skills/aim/SKILL.md": [
         "detect onboarding state first",
         "recommend exactly one next action",
         "You are here",
@@ -469,7 +477,23 @@ ONBOARDING_SURFACES = {
         '/aim start "EPIC:',
         "do not lead with internal file paths",
         "command inventory",
-        "new homes for cats",
+        "new homeowner",
+    ],
+    ".claude/skills/aim/SKILL.md": [
+        "Detect onboarding state first",
+        "recommend exactly one next action",
+        "You are here",
+        "Recommended next action",
+        "installed but not calibrated",
+        "calibrated but no Epic exists",
+        "an unapproved Epic",
+        "an approved Epic",
+        "blocked",
+        "/aim calibrate-repo",
+        '/aim start "EPIC:',
+        "Do not lead with internal file paths",
+        "command inventory",
+        "new homeowner",
     ],
     ".github/prompts/help-aim.prompt.md": [
         "Detect onboarding state first",
@@ -629,6 +653,12 @@ REQUIRED_INSTALL_MANIFEST_MARKERS = [
     "readyRequiresCalibration: true",
     "calibrationCommand: /aim calibrate-repo",
     "runtimeProfileStorage: forbidden",
+    "adapterSkills:",
+    "source: .claude/skills/aim/SKILL.md",
+    "source: .github/skills/aim/SKILL.md",
+    "source: adapters/codex/agile-iteration-method/SKILL.md",
+    "scope: user",
+    "scope: project",
 ]
 
 CALIBRATION_ADAPTER_MARKERS = {
@@ -728,9 +758,7 @@ PROMOTED_CANONICAL_DOC_PATHS = {
     "docs/workflow/working-state-boundaries.md": "docs/features/aim-2-working-state-boundaries.md",
     "docs/workflow/cost-control-mode.md": "docs/features/aim-cost-control-mode.md",
     "docs/workflow/modularity-context-efficiency.md": "docs/features/aim-modularity-context-efficiency.md",
-    "docs/workflow/personal-local-profile-storage.md": "docs/features/aim-2-personal-local-profile-storage.md",
     "docs/workflow/profile-source-summary.md": "docs/features/aim-2-profile-source-summary.md",
-    "docs/workflow/team-profile-artifact.md": "docs/features/aim-2-tiny-team-profile-example.md",
     "docs/workflow/codex-skill-onboarding.md": "docs/features/aim-codex-bundled-skill-onboarding.md",
     "docs/workflow/light-front-door.md": "docs/features/aim-light-front-door.md",
     "docs/workflow/cost-review-checklist.md": "docs/features/aim-cost-review-checklist.md",
@@ -1332,6 +1360,16 @@ def main() -> int:
     repo_root = Path(positional[0] if positional else ".").resolve()
     checked: list[str] = []
     issues: list[dict[str, object]] = []
+
+    checked.append("AIM 2.2 documentation audit")
+    for documentation_error in audit_documentation(repo_root):
+        add_issue(
+            issues,
+            "blocked",
+            "documentation release surfaces",
+            documentation_error,
+            "Fix the link, version, feature coverage, front-door length, or website structure before release.",
+        )
 
     required_repo_files = [
         repo_root / "README.md",
@@ -1949,6 +1987,8 @@ def main() -> int:
                 ".codex/agents/",
                 ".claude/agents/",
                 ".github/agents/",
+                ".claude/skills/aim/",
+                ".github/skills/aim/",
             )
             if (
                 "aim.profile.yaml" not in standard_destinations
@@ -2117,6 +2157,44 @@ def main() -> int:
             "Restore docs/workflow/adapter-entry-model.md before relying on native adapter entry guidance.",
         )
 
+    skill_bootstrap_path = repo_root / ADAPTER_SKILL_BOOTSTRAP_DOC_PATH
+    checked.append(ADAPTER_SKILL_BOOTSTRAP_DOC_PATH)
+    if skill_bootstrap_path.is_file():
+        skill_bootstrap_content = skill_bootstrap_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        required_skill_markers = [
+            "skill-led",
+            "~/.agents/skills/agile-iteration-method/SKILL.md",
+            ".claude/skills/aim/SKILL.md",
+            ".github/skills/aim/SKILL.md",
+            "aim.roles.yaml",
+            "Readiness receipt",
+            "AGENTS.md",
+            "CLAUDE.md",
+        ] + CANONICAL_AIM_COMMANDS
+        missing_skill_markers = [
+            marker for marker in required_skill_markers
+            if marker not in skill_bootstrap_content
+        ]
+        if missing_skill_markers:
+            add_issue(
+                issues,
+                "blocked",
+                ADAPTER_SKILL_BOOTSTRAP_DOC_PATH,
+                "adapter skill bootstrap contract is incomplete: "
+                + ", ".join(missing_skill_markers),
+                "Restore skill discovery, command parity, project-role delegation, readiness receipts, and root-file independence.",
+            )
+    else:
+        add_issue(
+            issues,
+            "blocked",
+            ADAPTER_SKILL_BOOTSTRAP_DOC_PATH,
+            "canonical adapter skill bootstrap contract is missing",
+            "Restore the bootstrap contract before relying on adapter skill discovery.",
+        )
+
     command_contract_path = repo_root / ADAPTER_COMMAND_CONTRACT_DOC_PATH
     checked.append(ADAPTER_COMMAND_CONTRACT_DOC_PATH)
     if command_contract_path.is_file():
@@ -2271,8 +2349,8 @@ def main() -> int:
                 issues,
                 "blocked",
                 relative_path,
-                f"Claude native command surface is missing for {command}",
-                "Restore the command-first file or remove the unsupported parity claim.",
+                f"Claude legacy compatibility command is missing for {command}",
+                "Restore the compatibility command or remove the supported migration claim.",
             )
             continue
         content = command_path.read_text(encoding="utf-8", errors="replace")
@@ -2373,6 +2451,11 @@ def main() -> int:
             ),
             *(
                 path
+                for path in (repo_root / ".github/skills/aim").rglob("*")
+                if path.is_file()
+            ),
+            *(
+                path
                 for path in (repo_root / ".claude").rglob("*.md")
                 if path.is_file()
             ),
@@ -2418,7 +2501,7 @@ def main() -> int:
                 "recoverable",
                 relative_path,
                 f"adapter native entry surface is unclear: {', '.join(missing_surface_entry_markers)}",
-                "Declare the adapter native front door (agent-first, skill/package-first, command-first, or internal-helper) and link docs/workflow/adapter-entry-model.md.",
+                "Declare the adapter's skill-led front door or secondary helper role and link docs/workflow/adapter-entry-model.md.",
             )
 
     checked.append("AIM 2.0 repo profile readiness")
@@ -2968,9 +3051,10 @@ def main() -> int:
     print(f"- canonical doc: {ADAPTER_ENTRY_MODEL_DOC_PATH}")
     print(f"- command contract: {ADAPTER_COMMAND_CONTRACT_DOC_PATH}")
     print(f"- canonical command intents: {len(CANONICAL_AIM_COMMANDS)}")
-    print("- Codex: skill/package-first")
-    print("- GitHub Copilot: agent-first")
-    print("- Claude: command-first (.claude/agents/ internal helper)")
+    print(f"- skill bootstrap: {ADAPTER_SKILL_BOOTSTRAP_DOC_PATH}")
+    print("- Codex: user skill plus native project agents")
+    print("- GitHub Copilot: project skill plus native custom agents")
+    print("- Claude: project skill plus native subagents and legacy commands")
     for relative_path in ADAPTER_ENTRY_SURFACE_MARKERS:
         entry_surface_present = (repo_root / relative_path).is_file()
         print(

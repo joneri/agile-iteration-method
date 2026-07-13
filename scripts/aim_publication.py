@@ -14,6 +14,8 @@ SCHEMA_RELATIVE_PATHS = (
     "schemas/aim-personal-hints.schema.json",
 )
 ROOT_PUBLIC_FILES = (
+    "VERSION",
+    "install/aim-install-manifest.yaml",
     "index.html",
     "install.sh",
     "robots.txt",
@@ -138,9 +140,25 @@ def validate_source(repo_root: Path) -> None:
             raise PublicationError(f"{label} does not match {PUBLIC_ORIGIN}")
 
 
-def release_manifest() -> dict[str, Any]:
+def product_version(root: Path) -> str:
+    version = _read_text(root / "VERSION").strip()
+    if not version or any(part == "" for part in version.split(".")):
+        raise PublicationError("VERSION must contain a dotted AIM product version")
+    return version
+
+
+def installer_manifest_version(root: Path) -> str:
+    for line in _read_text(root / "install/aim-install-manifest.yaml").splitlines():
+        if line.strip().startswith("manifestVersion:"):
+            return line.split(":", 1)[1].strip().strip('"')
+    raise PublicationError("installer manifest version is missing")
+
+
+def release_manifest(root: Path) -> dict[str, Any]:
     return {
-        "aimVersion": "2.0",
+        "aimVersion": product_version(root),
+        "runtimeContractVersion": "2.0",
+        "installerManifestVersion": installer_manifest_version(root),
         "artifactType": "github-pages",
         "publicOrigin": PUBLIC_ORIGIN,
         "install": {
@@ -198,7 +216,7 @@ def build_artifact(repo_root: Path, output_root: Path) -> None:
     shutil.copy2(repo_root / "docs/LICENSE-DOCS", license_destination)
     (output_root / ".nojekyll").touch()
     (output_root / RELEASE_MANIFEST_PATH).write_text(
-        json.dumps(release_manifest(), indent=2, sort_keys=True) + "\n",
+        json.dumps(release_manifest(repo_root), indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     validate_artifact(output_root)
@@ -239,7 +257,7 @@ def validate_artifact(output_root: Path) -> None:
         raise PublicationError(
             f"{RELEASE_MANIFEST_PATH}: invalid JSON: {exc.msg}"
         ) from exc
-    if manifest != release_manifest():
+    if manifest != release_manifest(output_root):
         raise PublicationError(
             f"{RELEASE_MANIFEST_PATH}: content differs from canonical release manifest"
         )

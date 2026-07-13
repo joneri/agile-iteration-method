@@ -31,7 +31,7 @@
     "url": "https://joneri.github.io/agile-iteration-method/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
-    "softwareVersion": "2.1.0",
+    "softwareVersion": "2.2.0",
     "author": { "@type": "Person", "name": "Jonas Eriksson" },
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "codeRepository": "https://github.com/joneri/agile-iteration-method"
@@ -665,7 +665,7 @@
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="container nav-inner">
       <a class="brand" href="#top" aria-label="AIM 2 home">
-        <span>AIM</span><span class="brand-version">2</span>
+        <span>AIM</span><span class="brand-version">2.2</span>
       </a>
       <div class="nav-links">
         <a href="#why">Why AIM</a>
@@ -686,7 +686,7 @@
     <div class="container hero-content">
       <div class="hero-copy">
         <p class="eyebrow">AI operating system for agentic software delivery</p>
-        <h1 id="hero-title">Agile Iteration Method 2</h1>
+        <h1 id="hero-title">Agile Iteration Method 2.2</h1>
         <p class="hero-lead">Build what you want without losing the goal. AIM turns AI-assisted development into a clear loop of planning, implementation, review, validation, correction, and human approval.</p>
         <div class="hero-actions">
           <a class="button button-primary" href="#start">Start with AIM</a>
@@ -894,19 +894,19 @@
           <article class="platform">
             <span class="platform-tag">Skill-first</span>
             <h3>Codex</h3>
-            <p>Use the AIM skill plus project custom agents under <code>.codex/agents/</code>.</p>
+            <p>Use the AIM skill under <code>~/.agents/skills/</code> for the complete <code>/aim</code> command family, plus project custom agents under <code>.codex/agents/</code>.</p>
             <code class="platform-start">/aim start "EPIC: ..."</code>
           </article>
           <article class="platform">
-            <span class="platform-tag">Command-first</span>
+            <span class="platform-tag">Skill-led</span>
             <h3>Claude</h3>
-            <p>Use installed AIM commands with project subagents under <code>.claude/agents/</code>.</p>
+            <p>Use the project AIM skill under <code>.claude/skills/aim/</code>, with project subagents under <code>.claude/agents/</code>.</p>
             <code class="platform-start">/aim start "EPIC: ..."</code>
           </article>
           <article class="platform">
-            <span class="platform-tag">Agent-first</span>
+            <span class="platform-tag">Skill-led</span>
             <h3>GitHub Copilot</h3>
-            <p>Select the AIM orchestrator, backed by repository custom agents under <code>.github/agents/</code>.</p>
+            <p>Use the project AIM skill under <code>.github/skills/aim/</code>, backed by repository custom agents under <code>.github/agents/</code>.</p>
             <code class="platform-start">/aim start "EPIC: ..."</code>
           </article>
         </div>
@@ -930,7 +930,7 @@
         <div class="installer">
           <div>
             <h3>One installation, native to your tools</h3>
-            <p>Select Codex, Claude, GitHub Copilot, or any combination. AIM installs only the shared contract and native surfaces those adapters need.</p>
+            <p>Select Codex, Claude, GitHub Copilot, or any combination. AIM installs each native skill, its project specialists, and only the shared contracts they need.</p>
           </div>
           <div class="install-choice-grid" aria-label="Adaptive installation behavior">
             <article class="install-choice">

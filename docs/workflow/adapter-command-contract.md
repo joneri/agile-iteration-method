@@ -7,8 +7,10 @@
 
 Define one command-intent contract for Codex, Claude, and GitHub Copilot.
 
-Adapters keep their native front doors, but a command must mean the same thing
-everywhere. This contract is secondary to AIM core in
+Adapters route through supplier-native AIM skills, but a command must mean the
+same thing everywhere. `/aim <intent>` is the shared documented command family;
+supplier-specific explicit skill selection is an equivalent route to the same
+intent, not a second command language. This contract is secondary to AIM core in
 `docs/workflow/agile-iteration-method.md` and does not redefine roles, gates,
 ownership, or acceptance.
 
@@ -115,15 +117,15 @@ has explicitly decided to overwrite.
 
 ### Claude
 
-- Primary surface: command files under `.claude/commands/`.
-- Each required command has a packaged command file.
+- Primary surface: project skill `.claude/skills/aim/SKILL.md`.
+- Existing command files under `.claude/commands/` remain compatibility routes.
 - Fallback: when command-file routing is unavailable, use `/aim <command>` as
   explicit text or state the intent in plain language; preserve this contract.
 
 ### GitHub Copilot
 
-- Primary surface: the AIM agent in chat.
-- The agent recognizes the complete command family as typed intents.
+- Primary surface: project skill `.github/skills/aim/SKILL.md`.
+- The AIM custom agent remains a native orchestration and handoff surface.
 - Fallback: when agent or slash routing is unavailable, use explicit AIM intent
   in chat and report that the native route was unavailable.
 
@@ -144,10 +146,13 @@ Every adapter must:
 The validator must reject:
 
 - a missing canonical command
-- a missing Claude command file
-- a Codex or Copilot surface without the complete command family
+- a missing selected-adapter AIM skill or legacy Claude compatibility file
+- a Codex, Claude, or Copilot skill without the complete command family
 - an empty advertised command behavior section
 - an AIM 1.x `aimVersion` example in an AIM 2.0 adapter surface
+
+Skill discovery, install receipts, reload behavior, and compatibility migration
+are defined in `docs/workflow/adapter-skill-bootstrap.md`.
 - an adapter with no explicit fallback rule
 - onboarding wording that lacks state-first guidance, one-next-action behavior,
   progressive disclosure, or realistic start examples

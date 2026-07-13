@@ -255,6 +255,24 @@ def _copilot_actions(
                 optional=False,
             )
         )
+    skill_base = source_root / ".github" / "skills" / "aim"
+    for item in sorted(skill_base.rglob("*"), key=lambda path: path.as_posix()):
+        if not item.is_file():
+            continue
+        suffix = item.relative_to(skill_base).as_posix()
+        rel = f".github/skills/aim/{suffix}"
+        actions.append(
+            _action(
+                action_id=rel,
+                category="package",
+                classification=_classify_copy(item, target_root / rel),
+                source=rel,
+                destination=rel,
+                reason="Copilot AIM project skill (primary workflow surface)",
+                adapter="copilot",
+                optional=False,
+            )
+        )
     if not include_optional:
         return actions
     for prompt in _sorted_glob(source_root / ".github" / "prompts", "*.prompt.md"):
@@ -292,13 +310,31 @@ def _claude_actions(source_root: Path, target_root: Path) -> list[dict[str, Any]
                     optional=False,
                 )
             )
+    skill_base = source_root / ".claude" / "skills" / "aim"
+    for item in sorted(skill_base.rglob("*"), key=lambda path: path.as_posix()):
+        if not item.is_file():
+            continue
+        suffix = item.relative_to(skill_base).as_posix()
+        rel = f".claude/skills/aim/{suffix}"
+        actions.append(
+            _action(
+                action_id=rel,
+                category="package",
+                classification=_classify_copy(item, target_root / rel),
+                source=rel,
+                destination=rel,
+                reason="Claude AIM project skill (primary workflow surface)",
+                adapter="claude",
+                optional=False,
+            )
+        )
     return actions
 
 
 def _codex_actions(source_root: Path, home_root: Path) -> list[dict[str, Any]]:
     actions: list[dict[str, Any]] = []
     base = source_root / "adapters" / "codex" / "agile-iteration-method"
-    dest_base = home_root / ".codex" / "skills" / "agile-iteration-method"
+    dest_base = home_root / ".agents" / "skills" / "agile-iteration-method"
     for item in sorted(base.rglob("*"), key=lambda p: p.as_posix()):
         if not item.is_file():
             continue
@@ -671,6 +707,7 @@ def compute_plan(
                 footprint_profile.get("externalRepoAwareness", False)
             ),
         },
+        "adapterSkillContract": manifest.adapter_skills,
         "rootFileExclusions": excluded,
         "actions": actions,
         "scopeSummary": {
@@ -693,4 +730,5 @@ def compute_plan(
     }
     plan["guidance"] = guidance.build_guidance(plan)
     plan["installState"] = plan["guidance"]["installState"]
+    plan["skillReadiness"] = plan["guidance"]["adapterReadiness"]
     return plan

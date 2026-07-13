@@ -44,8 +44,9 @@ This packaging is expected to expose the AIM 2.0 product surface on top of the s
 
 ## Native entry surface
 
-In GitHub Copilot, AIM is **agent-first**: this AIM agent is the primary
-user-facing front door, and AIM commands run inside this agent chat.
+In GitHub Copilot, AIM is **skill-led**: `.github/skills/aim/SKILL.md` is the
+primary workflow source. This AIM agent is the native orchestration and handoff
+surface, and AIM commands may run inside this agent chat.
 `.github/prompts/` helpers stay secondary.
 The canonical cross-adapter entry model is `docs/workflow/adapter-entry-model.md`.
 Canonical command intent, state effects, upgrade behavior, and fallbacks are

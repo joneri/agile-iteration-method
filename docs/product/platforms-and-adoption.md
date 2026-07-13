@@ -11,13 +11,15 @@ validation, and boundaries. It is readable, editable, and supplier-neutral.
 
 | Platform | Front door | Project specialists |
 | --- | --- | --- |
-| Codex | installed AIM skill | `.codex/agents/aim-*.toml` |
-| GitHub Copilot | AIM custom agent | `.github/agents/aim-*.agent.md` |
-| Claude | AIM commands | `.claude/agents/aim-*.md` |
+| Codex | user `agile-iteration-method` skill | `.codex/agents/aim-*.toml` |
+| GitHub Copilot | project `.github/skills/aim/` | `.github/agents/aim-*.agent.md` |
+| Claude | project `.claude/skills/aim/` | `.claude/agents/aim-*.md` |
 
 The standard install inherits supplier model defaults. Users and organizations
 can refine models, tools, skills, MCP servers, permissions, and hooks in the
-native files supported by their supplier.
+native files supported by their supplier. The skill owns workflow routing; the
+specialists remain project-specific through `aim.roles.yaml` and supplier-native
+configuration.
 
 ## Configure or Refresh
 

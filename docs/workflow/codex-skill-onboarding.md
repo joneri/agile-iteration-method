@@ -10,7 +10,7 @@ Make it obvious for Codex users that AIM ships a repository-bundled Codex skill 
 
 On the first AIM command in Codex, AIM should show:
 - the repo-bundled skill path: `adapters/codex/agile-iteration-method/SKILL.md`
-- the local Codex install target: `~/.codex/skills/agile-iteration-method/SKILL.md`
+- the local Codex install target: `~/.agents/skills/agile-iteration-method/SKILL.md`
 - the install command when the local skill is missing or stale
 
 The repository remains the AIM source of truth.
@@ -46,7 +46,7 @@ Outputs:
 - If `/aim` command routing is unavailable, use the explicit AIM intent fallback and show the same install guidance.
 - If the local skill is older than the repo-bundled skill, recommend the
   reviewed installer update path.
-- If `SKILL.md` shows the current AIM version but the Codex picker still shows an older version, check `~/.codex/skills/agile-iteration-method/agents/openai.yaml` and restart or refresh Codex after reinstalling.
+- If `SKILL.md` is current but the Codex picker still shows an older version, check `~/.agents/skills/agile-iteration-method/agents/openai.yaml` and restart Codex after reinstalling.
 - If the repository lacks required AIM files, follow install or validation guidance instead of pretending the skill alone is sufficient.
 - If adapter policy conflicts with repository AIM rules, escalate according to the normal AIM conflict rule.
 

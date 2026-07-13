@@ -1,8 +1,10 @@
-# Discover AIM 2.0
+# Discover AIM 2.2
 
 This is the public product guide for Agile Iteration Method.
 
 Start here when you want to understand AIM before reading its detailed workflow or reference documentation.
+
+For a two-minute inventory, read the [feature guide](features.md).
 
 ## The Short Version
 

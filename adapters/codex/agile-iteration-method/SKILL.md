@@ -17,6 +17,12 @@ primary user-facing front door, and the AIM command family and intents run throu
 it. If the skill is unavailable, fall back to explicit AIM intent while preserving
 the canonical behavior model.
 The package-local cross-adapter entry model is `references/adapter-entry-model.md`.
+Skill discovery, readiness, and reload behavior are defined in
+`references/adapter-skill-bootstrap.md`.
+
+Treat `/aim <intent>` and explicit `$agile-iteration-method <intent>` as two
+ways to select this same skill contract. They must expose the same complete
+command family and state effects.
 
 ## First Response
 
@@ -82,7 +88,7 @@ or stale-skill troubleshooting, make the bundled skill path obvious before
 continuing:
 
 - repo-bundled skill: `adapters/codex/agile-iteration-method/SKILL.md`
-- local Codex install path: `~/.codex/skills/agile-iteration-method/SKILL.md`
+- local Codex install path: `~/.agents/skills/agile-iteration-method/SKILL.md`
 
 If the local Codex skill is missing or appears older than the repo-bundled skill, state that AIM can continue from explicit AIM intent and canonical workflow docs for this run, but `/aim` works best after installing the bundled skill:
 
@@ -94,6 +100,10 @@ python3 scripts/aim_install.py --target . --mode personal \
 Review the plan, then rerun with `--apply`. The installer adds picker metadata
 and the package-local canonical references required by `SKILL.md`; a raw copy of
 only the source adapter directory is incomplete.
+
+When an install or upgrade plan provides `skillReadiness`, report the Codex
+skill path, user scope, manifest version/classification, required fresh-session
+reload, first `/aim` command, and explicit `$agile-iteration-method` fallback.
 
 For ordinary first-run `/aim start`, `/aim continue`, `/aim help`, or "what
 should I do now" requests, do not lead with internal file paths, local skill

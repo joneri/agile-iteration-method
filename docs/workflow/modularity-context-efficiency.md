@@ -49,7 +49,7 @@ At Gate B, check whether the planned file boundaries reduce future context load 
 
 - `aim.profile.yaml`
 - `docs/workflow/agile-iteration-method.md`
-- `docs/workflow/copilot-layer.md`
+- `docs/workflow/adapter-entry-model.md`
 - `docs/workflow/documentation-model.md`
 - `.github/agents/aim-tdo.agent.md`
 - `.github/agents/aim-dev.agent.md`

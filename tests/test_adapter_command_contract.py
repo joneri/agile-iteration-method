@@ -59,9 +59,19 @@ class AdapterCommandContractTests(unittest.TestCase):
         self.assertIn("Result: contradictory", completed.stdout)
         self.assertIn("Release readiness: FAIL", completed.stdout)
         self.assertIn(
-            "Claude native command surface is missing for /aim status",
+            "Claude legacy compatibility command is missing for /aim status",
             completed.stdout,
         )
+
+    def test_missing_primary_supplier_skill_is_blocked(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            (copied / ".github/skills/aim/SKILL.md").unlink()
+            completed = self._validate(copied)
+
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn("Result: blocked", completed.stdout)
+        self.assertIn("onboarding adapter surface is missing", completed.stdout)
 
     def test_stale_adapter_version_is_blocked(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -161,7 +171,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             skill_destination = next(
                 destination
                 for destination in plan["scopeSummary"]["localDestinations"]
-                if destination.endswith("/.codex/skills/agile-iteration-method/SKILL.md")
+                if destination.endswith("/.agents/skills/agile-iteration-method/SKILL.md")
             )
             content = Path(skill_destination).read_text(encoding="utf-8")
         self.assertIn("Detect onboarding state first", content)
@@ -197,6 +207,7 @@ class AdapterCommandContractTests(unittest.TestCase):
         plan = json.loads(completed.stdout)
         destinations = set(plan["scopeSummary"]["repoDestinations"])
         expected = {
+            ".claude/skills/aim/SKILL.md",
             ".claude/commands/start-aim.md",
             ".claude/commands/continue-aim.md",
             ".claude/commands/status-aim.md",
@@ -248,7 +259,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
                 if adapter == "codex":
                     package_root = (
-                        home / ".codex/skills/agile-iteration-method"
+                        home / ".agents/skills/agile-iteration-method"
                     )
                     surfaces = [package_root / "SKILL.md"]
                 elif adapter == "claude":

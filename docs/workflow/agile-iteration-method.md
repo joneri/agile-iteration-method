@@ -986,7 +986,9 @@ In Codex, AIM runs through the installed AIM skill or explicit AIM intent plus t
   - preserve the same AIM core and repo-aware policy interpretation as other adapters
 - recommended launcher:
   - install or enable the shipped `agile-iteration-method` skill from `adapters/codex/agile-iteration-method/SKILL.md` when `/aim` command routing is wanted
-  - keep the skill as a launcher/runtime guide that points to canonical workflow docs
+  - keep the skill as a launcher/runtime guide that points back to this canonical core
+  - treat `/aim <intent>` and `$agile-iteration-method <intent>` as equivalent
+    selections of the same command contract
 - supported capability areas:
   - start and resume AIM through the shared runtime flow
   - create and read `.aim`
@@ -1007,7 +1009,8 @@ In Codex, AIM runs through the installed AIM skill or explicit AIM intent plus t
 
 ### Claude Code adapter
 
-In Claude, AIM runs through AIM-owned `.claude/` entrypoints or explicit AIM intent.
+In Claude, AIM runs through the project skill at `.claude/skills/aim/SKILL.md`
+or explicit AIM intent. Legacy `.claude/commands/` remain compatibility entrypoints.
 
 - shared goal:
   - preserve the same AIM core and repo-aware policy interpretation as other adapters
@@ -1015,9 +1018,11 @@ In Claude, AIM runs through AIM-owned `.claude/` entrypoints or explicit AIM int
   - start and resume AIM through the shared runtime flow
   - create and read `.aim`
   - update shared runtime state through the main AIM thread
-  - use repository-defined Claude commands or helpers without taking ownership of gates or acceptance
+  - use the project AIM skill and repository-defined Claude subagents without
+    taking ownership of gates or acceptance
 - adapter differences:
-  - the interaction surface is Claude plus optional `.claude/commands/` and `.claude/agents/`
+  - the interaction surface is the AIM skill plus `.claude/agents/`; optional
+    `.claude/commands/` preserve migration compatibility
   - `.claude/agents/` may provide bounded helper agents for analysis, discovery, verification, or option generation
   - helper agents must remain subordinate to the shared runtime contract and repo-aware policy
 - `.aim` behavior:
@@ -1030,11 +1035,14 @@ In Claude, AIM runs through AIM-owned `.claude/` entrypoints or explicit AIM int
 
 Setup and usage are documented in:
 - `.claude/agents/`
+- `.claude/skills/aim/`
 - `.claude/commands/`
 
 ### Copilot adapter
 
-In GitHub Copilot, AIM runs through the shipped AIM custom-agent layer.
+In GitHub Copilot, AIM runs through the project skill at
+`.github/skills/aim/SKILL.md`. The shipped custom-agent layer provides native
+orchestration, role specialists, and handoff UX.
 
 - shared goal:
   - preserve the same AIM core and repo-aware policy interpretation as Codex
@@ -1042,7 +1050,8 @@ In GitHub Copilot, AIM runs through the shipped AIM custom-agent layer.
   - start and resume AIM through the shared runtime flow
   - create and read `.aim`
   - update shared runtime state through the main AIM thread
-  - use prompt files, agent handoffs, and command routing as interface helpers
+  - use the project skill for command routing and prompt files, custom agents,
+    and handoffs as interface helpers
 - adapter differences:
   - commands, handoff UI, and agent wiring can differ
   - runtime state must still map to the same conceptual `.aim` workspace
@@ -1053,7 +1062,8 @@ In GitHub Copilot, AIM runs through the shipped AIM custom-agent layer.
   - if bounded parallel capability is unavailable, Copilot must fall back to sequential execution without changing ownership or gate rules
 
 Setup and usage are documented in:
-- `docs/workflow/copilot-layer.md`
+- `docs/workflow/adapter-entry-model.md`
+- `.github/skills/aim/`
 - `.github/agents/`
 - `.github/prompts/`
 

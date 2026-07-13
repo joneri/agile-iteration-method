@@ -31,7 +31,7 @@ Actions:
    - `docs/workflow/install-aim-2.0.md`
    - `docs/workflow/quick-start-aim-2.0.md`
    - `docs/workflow/troubleshoot-aim-2.0.md`
-   - `docs/workflow/copilot-layer.md`
+   - `docs/workflow/adapter-entry-model.md`
 4. Return a short checklist and tell me the next command to run.
 
 After setup, suggest:

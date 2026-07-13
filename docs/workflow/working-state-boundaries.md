@@ -267,8 +267,7 @@ The fix is to move active Epic, increment, gate, review, or acceptance state bac
 ## Related files
 
 - `docs/workflow/repo-profile-and-footprint-model.md`
-- `docs/workflow/team-profile-artifact.md`
-- `docs/workflow/aim-2-low-footprint-adoption.md`
+- `docs/workflow/repo-profile-and-footprint-model.md`
 - `docs/workflow/aim-adapter-guidance.md`
 - `scripts/validate_aim_runtime.py`
 

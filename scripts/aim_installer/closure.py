@@ -33,17 +33,25 @@ def adapter_surface_files(
             key=lambda path: path.as_posix(),
         )
     if adapter == "claude":
-        return sorted(
-            (
-                path
-                for subdir in ("agents", "commands")
-                for path in (source_root / ".claude" / subdir).glob("*.md")
-                if path.is_file()
-            ),
-            key=lambda path: path.as_posix(),
+        files = [
+            path
+            for subdir in ("agents", "commands")
+            for path in (source_root / ".claude" / subdir).glob("*.md")
+            if path.is_file()
+        ]
+        files.extend(
+            path
+            for path in (source_root / ".claude" / "skills").rglob("*")
+            if path.is_file()
         )
+        return sorted(files, key=lambda path: path.as_posix())
     if adapter == "copilot":
         files = list((source_root / ".github/agents").glob("aim*.agent.md"))
+        files.extend(
+            path
+            for path in (source_root / ".github" / "skills" / "aim").rglob("*")
+            if path.is_file()
+        )
         if include_optional:
             files.extend((source_root / ".github/prompts").glob("*.prompt.md"))
         return sorted(

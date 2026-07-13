@@ -93,7 +93,7 @@ aimPersonalHints:
 
 Personal hints are a user-level compatibility layer, not a second shared
 profile. Their meaning and precedence are defined by
-`docs/workflow/personal-local-profile-storage.md`; the validator rejects
+`docs/workflow/repo-profile-and-footprint-model.md`; the validator rejects
 attempts to place shared ownership, risk, security, migration, deployment, or
 validation policy in this layer.
 
@@ -160,7 +160,7 @@ reviewed increment.
 - `schemas/aim-personal-hints.schema.json`
 - `docs/workflow/repo-awareness.md`
 - `docs/workflow/repo-profile-and-footprint-model.md`
-- `docs/workflow/personal-local-profile-storage.md`
+- `docs/workflow/repo-profile-and-footprint-model.md`
 - `scripts/aim_validator/profile_contract.py`
 - `scripts/aim_validator/schema_subset.py`
 - `scripts/validate_aim_runtime.py`

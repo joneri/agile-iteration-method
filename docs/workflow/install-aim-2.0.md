@@ -35,9 +35,10 @@ The standard adapter footprint installs:
 - `aim.profile.yaml` as uncalibrated shared repository knowledge
 - `aim.roles.yaml` as uncalibrated, editable project-role intent
 - `.gitignore` additions for local `.aim/` runtime state
-- each selected supplier's native AIM front door and PO/TDO/Dev/Reviewer agents
+- each selected supplier's native AIM skill and PO/TDO/Dev/Reviewer agents
 - only the canonical workflow contracts directly required by those surfaces
-- the Codex AIM skill in user scope when Codex is selected
+- the Codex AIM skill in user scope and Claude/Copilot skills in project scope
+  when those adapters are selected
 
 `aim.roles.yaml` is conservatively seeded from observable files such as
 `package.json`, `pyproject.toml`, `Package.swift`, `Cargo.toml`, and `go.mod`.
@@ -48,9 +49,9 @@ Detection never claims verified mastery. Run `/aim calibrate-repo`, then
 
 | Supplier | Native project files |
 | --- | --- |
-| Codex | `.codex/agents/aim-*.toml` |
-| Claude | `.claude/agents/aim-*.md` plus AIM commands |
-| GitHub Copilot | `.github/agents/aim-*.agent.md` plus the AIM orchestrator |
+| Codex | user `~/.agents/skills/agile-iteration-method/` plus `.codex/agents/aim-*.toml` |
+| Claude | `.claude/skills/aim/`, `.claude/agents/aim-*.md`, and legacy compatibility commands |
+| GitHub Copilot | `.github/skills/aim/` plus `.github/agents/aim-*.agent.md` |
 
 The installer inherits supplier model defaults. Users may edit native files to
 pin supported models, tools, skills, MCP servers, permissions, or hooks.
@@ -67,6 +68,11 @@ Select multiple suppliers by repeating `--adapter`. Use `--format json` for a
 machine-readable plan and `--non-interactive --apply` for reviewed automation.
 Unresolved collisions fail; `--force` is the explicit overwrite mechanism and
 still uses rollback backups.
+
+Every preview includes an adapter skill-readiness receipt: installed path and
+scope, manifest classification, whether apply is required, reload behavior,
+first `/aim` command, and explicit fallback. After apply, follow the adapter's
+reload instruction before testing discovery.
 
 Advanced footprints remain available for storage and repository policy:
 
@@ -99,8 +105,8 @@ Legacy `aim-planner` and `aim-builder` helpers map to canonical `aim-tdo` and
 `aim-dev` specialists. A reviewed upgrade installs the canonical names; remove
 legacy files after confirming no local customization remains.
 
-After agent or command files change, start a fresh supplier session so native
-configuration is reloaded. Run `/aim configure-agents` when project frameworks,
+After skill or agent files change, follow the receipt's supplier reload advice.
+Run `/aim configure-agents` when project frameworks,
 test tools, architecture, commands, or policy change.
 
 ## Safety boundaries
@@ -119,4 +125,5 @@ test tools, architecture, commands, or policy change.
 
 See [Project-agent configuration](project-agent-configuration.md),
 [Adapter entry model](adapter-entry-model.md), and
+[Adapter skill bootstrap](adapter-skill-bootstrap.md), and
 [Repository surface classification](repository-surface-classification.md).

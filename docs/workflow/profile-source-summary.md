@@ -144,9 +144,7 @@ What "bad" looks like:
 - `adapters/codex/agile-iteration-method/SKILL.md`
 - `scripts/validate_aim_runtime.py`
 - `docs/workflow/repo-profile-and-footprint-model.md`
-- `docs/workflow/personal-local-profile-storage.md`
-- `docs/workflow/team-profile-artifact.md`
-- `docs/workflow/aim-2-low-footprint-adoption.md`
+- `docs/workflow/repo-profile-and-footprint-model.md`
 - `docs/workflow/aim-adapter-guidance.md`
 
 ## Change log

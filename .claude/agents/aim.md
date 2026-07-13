@@ -1,6 +1,6 @@
 ---
 name: aim
-description: Internal AIM orchestration helper used by AIM commands; not the user-facing front door.
+description: Internal AIM orchestration helper used by the AIM project skill; not the user-facing front door.
 tools: Read, Grep, Glob
 ---
 
@@ -9,8 +9,9 @@ tools: Read, Grep, Glob
 This helper exists to make AIM easier to use in Claude Code.
 
 This file is an **internal helper surface** only. It is **not the primary
-user-facing** AIM entrypoint in Claude. Claude is command-first: users start AIM
-through `.claude/commands/`. See `docs/workflow/adapter-entry-model.md`.
+user-facing** AIM entrypoint in Claude. Claude is skill-led: users start AIM
+through `.claude/skills/aim/SKILL.md`; `.claude/commands/` remains a legacy
+compatibility surface. See `docs/workflow/adapter-entry-model.md`.
 
 It must follow:
 - `docs/workflow/agile-iteration-method.md` as the canonical AIM core contract

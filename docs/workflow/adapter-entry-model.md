@@ -6,22 +6,23 @@
 This document is the canonical AIM 2.0 definition of how a user **natively starts
 and uses AIM** in each adapter.
 
-AIM keeps **one canonical behavior model** but exposes **adapter-specific native
-entry surfaces**. Canonical AIM behavior lives in
+AIM keeps **one canonical behavior model** and exposes it through a
+supplier-native **AIM skill** in every supported adapter. Canonical AIM behavior lives in
 `docs/workflow/agile-iteration-method.md`. This document never redefines AIM core,
 gate semantics, role order, ownership, or acceptance — it only defines the
 user-facing entry surfaces that lead into that one behavior model.
 
 ## Product rule
 
-- The user invokes **commands or a native AIM entrypoint**.
+- The user invokes the complete `/aim <intent>` command family through the
+  adapter's native AIM skill.
 - Internal helper agents remain internal.
 - Each adapter uses its native project-agent mechanism for AIM role specialists.
 - Adapter packaging supports native use without changing AIM core behavior.
 - Every required local document reference resolves after installation.
 
 A user should never have to guess whether to use a command, an agent, a prompt, or
-a helper file. Each adapter has exactly one primary front door.
+a helper file. Each adapter has exactly one primary skill-led front door.
 
 ## Referential closure
 
@@ -61,6 +62,7 @@ The canonical AIM command family is defined in
 - `/aim validate`
 - `/aim help`
 - `/aim config`
+- `/aim configure-agents`
 - `/aim calibrate-repo`
 - `/aim remember-repo`
 - `/aim forget-repo`
@@ -74,30 +76,32 @@ If an adapter cannot express these literally, it must still support the same
 
 ## Per-adapter native front door
 
-### Codex — skill/package-first, native project agents
+### Codex — user skill, native project agents
 
 - Primary user-facing surface: the installed AIM **skill/package**
   (`adapters/codex/agile-iteration-method/SKILL.md`, installed to
-  `~/.codex/skills/agile-iteration-method/`).
+  `~/.agents/skills/agile-iteration-method/`).
 - The user runs the AIM command family / intents through that package.
-- **Codex is skill/package-first.**
+- `/aim <intent>` and explicit `$agile-iteration-method <intent>` select the
+  same command semantics.
 - Bounded role specialists use project `.codex/agents/aim-*.toml` files.
 
-### GitHub Copilot — agent-first
+### GitHub Copilot — project skill, native project agents
 
-- Primary user-facing surface: the **AIM agent**
-  (`.github/agents/aim.agent.md`), selected in chat.
-- The user runs the AIM command family inside that agent.
+- Primary user-facing surface: `.github/skills/aim/SKILL.md`.
+- The user requests the `/aim <intent>` family through that project skill.
+- `.github/agents/aim.agent.md` is a native orchestration and handoff surface.
 - Optional `.github/prompts/` helpers stay secondary.
-- **GitHub Copilot is agent-first.**
+- **GitHub Copilot is skill-led.**
 - PO, TDO, Dev, and Reviewer specialists use repository custom-agent profiles.
 
-### Claude — command-first
+### Claude — project skill, native subagents
 
-- Primary user-facing surface: AIM **commands** in `.claude/commands/`.
+- Primary user-facing surface: `.claude/skills/aim/SKILL.md`.
+- Legacy AIM commands in `.claude/commands/` remain compatibility entrypoints.
 - `.claude/agents/` is an internal helper surface, not the primary front door.
 - Users normally invoke AIM through commands, not by manually picking a helper agent.
-- **Claude is command-first.**
+- **Claude is skill-led.**
 - Bounded role specialists use project `.claude/agents/aim-*.md` subagents.
 
 ## Internal helper surfaces
@@ -106,6 +110,8 @@ These are internal helper surfaces only. They may exist and assist, but they mus
 not be presented as the primary user-facing AIM entrypoint:
 
 - `.claude/agents/` (Claude helper agents)
+- `.claude/commands/` (legacy compatibility commands)
+- `.github/agents/aim.agent.md` (Copilot orchestration and handoff UX)
 - `.github/prompts/` (Copilot prompt helpers)
 - adapter-local helper packages and internal mapping layers
 - internal subagents (planner/builder/reviewer helpers), which never own `.aim/state.json`
@@ -114,11 +120,10 @@ not be presented as the primary user-facing AIM entrypoint:
 
 A new user should be told exactly one first action per adapter:
 
-- **Codex**: install/enable the AIM skill, then run `/aim start "EPIC: ..."` (or the
-  plain-language equivalent) through the package.
-- **GitHub Copilot**: select the AIM agent in chat, then run `/aim start "EPIC: ..."`.
-- **Claude**: run the AIM start command from `.claude/commands/`, then continue with
-  `/aim continue`.
+- **Codex**: install/enable the user AIM skill, then run `/aim start "EPIC: ..."`
+  or explicitly select `$agile-iteration-method` with the same intent.
+- **GitHub Copilot**: load the project AIM skill, then request `/aim start "EPIC: ..."`.
+- **Claude**: load the project AIM skill, then run `/aim start "EPIC: ..."`.
 
 After starting, the next commands are the same everywhere: `/aim continue`,
 `/aim validate`, `/aim help`.
@@ -168,6 +173,8 @@ If adapter entry guidance conflicts with canonical workflow docs or
 - `docs/workflow/agile-iteration-method.md` — canonical AIM core
 - `docs/workflow/adapter-command-contract.md` — canonical command intents,
   state effects, upgrade behavior, and fallbacks
+- `docs/workflow/adapter-skill-bootstrap.md` — skill discovery, readiness,
+  reload, migration, and first-run receipt
 - `docs/workflow/aim-adapter-guidance.md` — adapter mechanics and helper boundaries
 - `docs/workflow/repo-awareness.md` — progressive loading and adapter boundaries
 - `docs/workflow/project-agent-configuration.md` — shared role intent and native specialist generation

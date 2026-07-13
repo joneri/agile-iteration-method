@@ -24,9 +24,13 @@ Use this file when changing:
 The canonical, user-facing native entry model lives in
 `docs/workflow/adapter-entry-model.md`. It defines the per-adapter front door:
 
-- Codex is **skill/package-first**
-- GitHub Copilot is **agent-first**
-- Claude is **command-first** (with `.claude/agents/` as an internal helper surface)
+- Codex uses a user-scoped AIM skill
+- GitHub Copilot uses a project AIM skill plus native custom agents
+- Claude uses a project AIM skill plus native subagents
+
+The shared architecture is skill-led. Legacy Claude command files and the
+Copilot orchestrator remain compatibility or native orchestration surfaces; they
+do not own separate command semantics.
 
 The canonical command intent, state-effect, upgrade, and fallback contract is
 `docs/workflow/adapter-command-contract.md`. Adapter files may choose native
@@ -186,7 +190,7 @@ This preserves the AIM 2.0 cost story while extending it to install, startup, sc
 ## Optional adapter layers
 
 Copilot layer:
-- documented in `docs/workflow/copilot-layer.md`
+- documented in `docs/workflow/adapter-entry-model.md`
 - uses `.github/agents/aim*.agent.md` as native Copilot custom-agent files
 - uses `.github/prompts/` for optional Copilot-style prompt helpers
 
@@ -229,7 +233,7 @@ Claude Code:
 
 Installation boundary:
 - `adapters/codex/agile-iteration-method/SKILL.md` is the shipped Codex convenience layer; copy it into the local Codex skills directory when `/aim` support is wanted.
-- The local Codex target is `~/.codex/skills/agile-iteration-method/SKILL.md`; if that file is missing or stale, Codex may continue from explicit AIM intent and canonical workflow docs but should surface the install command before relying on `/aim` routing.
+- The local Codex target is `~/.agents/skills/agile-iteration-method/SKILL.md`; if that file is missing or stale, Codex may continue from explicit AIM intent and canonical workflow docs but should surface the install command before relying on `/aim` routing.
 - `.github/agents/aim*.agent.md` are Copilot-native AIM entrypoints.
 - `.github/prompts/` are optional Copilot-style prompt helpers, not the canonical AIM contract.
 - `.claude/` provides Claude-native AIM entrypoints without a generic root bridge.
@@ -280,7 +284,7 @@ Fallback rule:
 - `docs/workflow/adapter-command-contract.md`
 - `docs/workflow/adapter-entry-model.md`
 - `docs/workflow/repo-awareness.md`
-- `docs/workflow/copilot-layer.md`
+- `docs/workflow/adapter-entry-model.md`
 - `aim.profile.yaml`
 - `.github/agents/`
 - `.github/prompts/`

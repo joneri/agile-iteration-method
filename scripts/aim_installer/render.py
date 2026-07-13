@@ -82,6 +82,12 @@ def render_compact_text(
         "Source validation  "
         + _paint(str(validator.get("resultClass", "unknown")), "32", color)
     )
+    readiness = plan.get("skillReadiness", [])
+    if readiness:
+        lines.append("Skill readiness")
+        for item in readiness:
+            state = "ready" if item.get("ready") else item.get("classification", "unknown")
+            lines.append(f"  {item['adapter']}: {state} · {item['path']}")
     if plan.get("operation") == "apply":
         if collisions:
             lines.append("Next  resolve each collision, then apply")
@@ -141,6 +147,26 @@ def render_verbose_text(
         "Bootstrap        : "
         f"{bootstrap.get('status')} -> {bootstrap.get('calibrationCommand')}"
     )
+
+    readiness = plan.get("skillReadiness", [])
+    if readiness:
+        lines.append("")
+        lines.append("Adapter skill readiness:")
+        for item in readiness:
+            lines.append(
+                f"  - {item['adapter']}: {item['classification']} "
+                f"({item['scope']}) at {item['path']}"
+            )
+            lines.append(
+                f"    ready={str(item['ready']).lower()} · reload={item['reload']} · "
+                f"first={item['firstCommand']}"
+            )
+            lines.append(f"    fallback={item['fallback']} · {item['note']}")
+            if item.get("legacyPath"):
+                lines.append(
+                    f"    legacy={item['legacyPath']} · migrate to the current path; "
+                    "the installer does not delete the legacy copy"
+                )
 
     lines.append("")
     lines.append("Planned actions:")

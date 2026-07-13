@@ -1,5 +1,5 @@
 aimInstallManifest:
-  manifestVersion: "0.6"
+  manifestVersion: "0.7"
   status: one-adaptive-install
 
   canonicalCommand: "python3 scripts/aim_install.py"
@@ -124,7 +124,7 @@ aimInstallManifest:
       targetOwned: true
     codex:
       source: adapters/codex/agile-iteration-method/
-      destination: ~/.codex/skills/agile-iteration-method/
+      destination: ~/.agents/skills/agile-iteration-method/
       optional: true
     projectRoles:
       source: aim.roles.yaml
@@ -134,6 +134,10 @@ aimInstallManifest:
     codexProjectAgents:
       source: .codex/agents/aim-*.toml
       destination: .codex/agents/
+      optional: true
+    copilotSkill:
+      source: .github/skills/aim/
+      destination: .github/skills/aim/
       optional: true
     externalDistribution:
       source: docs/workflow/, schemas/, adapters/
@@ -151,6 +155,10 @@ aimInstallManifest:
       source: .claude/
       destination: .claude/
       optional: true
+    claudeSkill:
+      source: .claude/skills/aim/
+      destination: .claude/skills/aim/
+      optional: true
 
   adapterClosure:
     rule: every-required-adapter-document-reference-must-resolve-after-install
@@ -159,7 +167,7 @@ aimInstallManifest:
     canonicalSourcePrefix: docs/workflow/
     codex:
       strategy: embedded-package
-      destination: ~/.codex/skills/agile-iteration-method/references/
+      destination: ~/.agents/skills/agile-iteration-method/references/
     claude:
       strategy: installed-canonical-subset
       destination: docs/workflow/
@@ -179,6 +187,28 @@ aimInstallManifest:
     readyRequiresCalibration: true
     calibrationCommand: /aim calibrate-repo
     runtimeProfileStorage: forbidden
+
+  adapterSkills:
+    codex:
+      source: adapters/codex/agile-iteration-method/SKILL.md
+      destination: ~/.agents/skills/agile-iteration-method/SKILL.md
+      legacyDestination: ~/.codex/skills/agile-iteration-method/SKILL.md
+      scope: user
+      reload: fresh-session
+      firstCommand: /aim start "EPIC: <desired outcome>"
+      explicitFallback: $agile-iteration-method <intent>
+    claude:
+      source: .claude/skills/aim/SKILL.md
+      destination: .claude/skills/aim/SKILL.md
+      scope: project
+      reload: live-reload-or-fresh-session
+      firstCommand: /aim start "EPIC: <desired outcome>"
+    copilot:
+      source: .github/skills/aim/SKILL.md
+      destination: .github/skills/aim/SKILL.md
+      scope: project
+      reload: reload-skills-or-fresh-session
+      firstCommand: /aim start "EPIC: <desired outcome>"
 
   runtimeExclusions:
     - .aim/

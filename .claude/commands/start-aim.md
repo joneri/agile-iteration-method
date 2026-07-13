@@ -4,9 +4,10 @@ Use this command to start a new AIM loop in Claude Code for this repository.
 Map it to `/aim start "EPIC: ..."` from
 `docs/workflow/adapter-command-contract.md`.
 
-In Claude, AIM is **command-first**: these `.claude/commands/` entrypoints are the
-primary user-facing front door. `.claude/agents/` helpers are internal and are not
-the primary surface. The canonical cross-adapter entry model is
+In Claude, AIM is **skill-led** through `.claude/skills/aim/SKILL.md`. These
+`.claude/commands/` entrypoints remain supported compatibility routes.
+`.claude/agents/` helpers are internal and are not the primary surface. The
+canonical cross-adapter entry model is
 `docs/workflow/adapter-entry-model.md`.
 Command intent and fallback semantics come from
 `docs/workflow/adapter-command-contract.md`.

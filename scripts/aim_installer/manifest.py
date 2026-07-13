@@ -97,6 +97,11 @@ class Manifest:
         return bootstrap if isinstance(bootstrap, dict) else {}
 
     @property
+    def adapter_skills(self) -> dict[str, Any]:
+        skills = self._root.get("adapterSkills", {})
+        return skills if isinstance(skills, dict) else {}
+
+    @property
     def runtime_exclusions(self) -> list[str]:
         return [str(e) for e in self._root.get("runtimeExclusions", [])]
 
