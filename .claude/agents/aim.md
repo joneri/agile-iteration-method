@@ -1,3 +1,9 @@
+---
+name: aim
+description: Internal AIM orchestration helper used by AIM commands; not the user-facing front door.
+tools: Read, Grep, Glob
+---
+
 # AIM helper agent for Claude Code
 
 This helper exists to make AIM easier to use in Claude Code.
@@ -11,6 +17,7 @@ It must follow:
 - `aim.profile.yaml` as the primary shared repo-awareness source when present
 - `docs/workflow/repo-awareness.md` for progressive loading and adapter boundaries
 - `docs/workflow/light-front-door.md` for state-first onboarding guidance
+- `aim.roles.yaml` for project-specialist role expertise and boundaries
 
 Core constraints:
 - preserve canonical role order:

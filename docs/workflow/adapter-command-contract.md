@@ -22,6 +22,7 @@ ownership, or acceptance.
 | `/aim validate` | run or explain Structural, Behavioral, Product coherence, and Release readiness checks | read-only |
 | `/aim help` | show the thin front door and the next useful command | read-only |
 | `/aim config` | show effective mode, cost, profile, ownership, validation, and adapter fallback configuration | read-only |
+| `/aim configure-agents` | inspect or update project role expertise and regenerate selected supplier-native specialists through a reviewed plan | may update `aim.roles.yaml` and AIM-owned adapter files; never `.aim/` runtime state |
 | `/aim calibrate-repo` | verify and persist reusable repository knowledge using the canonical calibration flow | writes only approved profile or user-hint facts; never active state |
 | `/aim remember-repo <category> "<rule>"` | add one structured shared or personal repository rule | writes the owning profile or user-hint file; never `.aim/` |
 | `/aim forget-repo <category> "<rule-id>"` | remove one structured repository rule after showing the proposed change | writes the owning profile or user-hint file; never `.aim/` |

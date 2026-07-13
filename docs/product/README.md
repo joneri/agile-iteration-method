@@ -48,14 +48,14 @@ It takes you through:
 
 ### I need to choose a setup
 
-Read [Platforms and adoption modes](platforms-and-adoption.md).
+Read [Platforms and project agents](platforms-and-adoption.md).
 
 It explains:
 
-- Personal, Team, and Enterprise
+- one adaptive installation with explicit storage and sharing policy
 - Codex, Claude, and GitHub Copilot
-- what is shared across platforms
-- what native support means
+- project-specific PO, TDO, Dev, and Reviewer specialists
+- what stays shared and what uses supplier-native configuration
 
 ## Documentation Layers
 

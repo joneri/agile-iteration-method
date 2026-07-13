@@ -110,6 +110,7 @@ Approve, request adjustment, continue, or close.
 - `/aim upgrade`
 - `/aim status`
 - `/aim validate`
+- `/aim configure-agents`
 - `/aim calibrate-repo`
 - `/aim remember-repo <category> "<rule>"`
 - `/aim forget-repo <category> "<rule-id>"`
@@ -129,13 +130,21 @@ Upgrade refreshes installed AIM surfaces.
 Calibration refreshes repo-awareness.
 They are related, but not the same action.
 
-## Choose an Adoption Mode
+## Tune Project Specialists
 
-- **Personal**: freedom mode for one developer; local or repo-writing footprints are user choice
-- **Team**: small shared repo-awareness by agreement
-- **Enterprise**: install AIM outside the target repo and protect AIM internals by default
+The standard installation creates the native AIM role files supported by the
+selected adapter and a shared `aim.roles.yaml` profile. Run:
 
-See [Platforms and adoption modes](../product/platforms-and-adoption.md) for the newcomer explanation and [Operating modes](operating-modes.md) for the canonical rules.
+```text
+/aim configure-agents
+```
+
+Use it after installation, when the stack changes, or when PO, TDO, Dev, and
+Reviewer need stronger project-specific instructions. AIM previews the proposed
+profile and native-file changes before applying them.
+
+There is no edition to choose. Older Personal, Team, and Enterprise flags are
+migration inputs only; see [Operating modes](operating-modes.md).
 
 ## Need Help?
 

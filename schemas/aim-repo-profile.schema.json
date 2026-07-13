@@ -240,6 +240,7 @@
             "mode": {
               "type": "string",
               "enum": [
+                "standard",
                 "personal",
                 "team",
                 "enterprise"

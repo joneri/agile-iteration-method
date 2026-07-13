@@ -112,6 +112,7 @@ Treat these as AIM intents when the current adapter supports them or when the us
 - `/aim validate`
 - `/aim help`
 - `/aim config`
+- `/aim configure-agents`
 - `/aim calibrate-repo`
 - `/aim remember-repo <category> "<rule>"`
 - `/aim forget-repo <category> "<rule-id>"`
@@ -130,6 +131,10 @@ plain-language request to the same command intent, and perform the equivalent
 workflow directly. Syntax may fall back; command semantics may not.
 
 `/aim calibrate-repo` uses the package-local canonical flow in `references/repo-awareness-calibration.md`.
+`/aim configure-agents` uses the package-local
+`references/project-agent-configuration.md` contract to inspect or update
+`aim.roles.yaml`, then refreshes selected supplier-native project specialists
+through a reviewed, collision-safe plan. It never writes `.aim/` runtime state.
 Remember and forget intents must persist structured rules to the correct
 repo-awareness store for the operating mode: `aim.profile.yaml` for shared
 Team/repo opt-in, `~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml` for

@@ -1,516 +1,80 @@
-# AIM 2.0 Repo Profile And Footprint Model
+# AIM repo profile and footprint model
 
 ## Purpose
 
-Define the concrete AIM 2.0 model for operating modes, low-footprint adoption, and reusable repo intelligence.
+AIM separates product behavior from repository storage. There is one AIM
+product and one guided installation; footprint and sharing policy decide where
+configuration lives.
 
-This model turns the AIM 2.0 strategy into a practical product surface:
-
-- Personal AIM may run with no committed AIM files or with a user-chosen
-  committed AIM footprint.
-- Team AIM can share repo adaptation through a tiny committed profile surface.
-- Enterprise AIM can attach organization policy, external memory storage, stricter ignore defaults, and approved shared profile registries.
-- Repo-aware context can be reused across branches and sessions without repeating broad cold-start scans.
-
-## User experience
-
-AIM 2.0 should start by asking which operating mode applies and how much the repository should share, not which AIM files should be copied.
-
-The canonical operating modes are:
-
-| Mode | Default footprint | Primary user | Shared by default | Best for |
-| --- | --- | --- | --- | --- |
-| Personal AIM | user-chosen, from zero-footprint to full embedded | one developer | no | solo work, trials, personal repos, maximum flexibility |
-| Team AIM | tiny-footprint by default | one team | yes, intentionally | shared repo conventions, features, and validation paths |
-| Enterprise AIM | external by default | strict repo or organization | no repo files by default | protected repos, larger orgs, regulated environments |
-
-Full embedded AIM remains a footprint choice, not a fourth operating mode.
-It is valid when a repo owner intentionally wants AIM product docs and adapter helpers in the repository.
-
-## How it works
-
-AIM 2.0 separates four layers.
+## Four layers
 
 ### AIM runtime
 
-The runtime lives in the tool, adapter, or user environment.
+The active supplier or installed package executes roles, gates, modes, cost
+profiles, validation, and resume behavior.
 
-It owns:
+### Repository knowledge
 
-- role and gate execution
-- mode and cost-profile behavior
-- startup and resume rules
-- validation
-- local runtime bookkeeping
-
-The runtime is not copied wholesale into every repository by default.
-
-### AIM repo profile
-
-The repo profile is reusable repo intelligence.
-
-It describes how this repository works, independent of any one Epic or branch.
-
-For Team AIM, the default tiny artifact is:
-
-```text
-aim.profile.yaml
-```
-
-It lives at the repository root and may either contain the small shared profile directly or point to managed/internal profile storage.
-
-For Personal AIM, the default local artifact is outside the repository:
-
-```text
-~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
-```
-
-There is no `.aim/` profile fallback.
-
-The smallest useful profile should capture:
-
-- repo identity and profile version
-- adoption mode and footprint level
-- profile storage location and sharing intent
-- package, service, or module boundaries
-- build, test, lint, and validation commands
-- coding conventions and local norms
-- ownership boundaries
-- risk zones
-- migration, deployment, and security constraints
-- known context hogs
-- locality-first discovery hints
-- freshness markers
-- cost-observability hints
-
-### AIM working state
-
-Working state is branch/run-local execution state.
-
-It includes:
-
-- active Epic
-- active Done Increment
-- current gate
-- role handoff state
-- concise decisions and review artifacts
-- branch-local assumptions
-
-Working state should not be shared by default.
-Sharing active state is a team decision, not a requirement for using AIM.
-
-### AIM docs and reference material
-
-AIM docs explain the method.
-
-They should be available through the AIM repository, installed adapter package, generated help, or links from a repo profile.
-
-They should not be copied into every repository by default.
-
-## Repo profile shape
-
-The structural source of truth is
-`schemas/aim-repo-profile.schema.json`. The canonical repository
-representation is YAML at `aim.profile.yaml`.
-
-This document owns field meaning and rationale. The schema owns
-machine-readable shape, and the validator owns cross-field product rules.
-
-```text
-aimRepoProfile:
-  profileVersion:
-  repoIdentity:
-    name:
-    root:
-    remote:
-    defaultBranch:
-  adoption:
-    mode: personal | team | enterprise
-    footprint: zero | tiny | isolated | full
-    sharing: local | committed | explicit | registry
-    profileOwner:
-  storage:
-    runtimeLocation:
-    profileLocation:
-    workingStateLocation:
-    docsSource:
-  locality:
-    primaryAreas:
-    packageBoundaries:
-    nearestMetadata:
-    defaultDiscoveryOrder:
-  commands:
-    install:
-    build:
-    test:
-    lint:
-    typecheck:
-    validate:
-  conventions:
-    codeStyle:
-    docs:
-    branching:
-    review:
-  risk:
-    highRiskAreas:
-    migrationRules:
-    deploymentRules:
-    securityRules:
-    dataCorrectnessRules:
-  ownership:
-    owners:
-    approvalNotes:
-  context:
-    knownContextHogs:
-    shortAuthoritativeDocs:
-    avoidByDefault:
-  freshness:
-    generatedAt:
-    baseBranch:
-    baseCommit:
-    refreshTriggers:
-    lastValidated:
-  cost:
-    startupBudget:
-    scanDepth:
-    reusedProfile:
-    refreshReason:
-    reviewDepth:
-    subagentPolicy:
-```
-
-## Storage and footprint rules
-
-### Personal AIM
-
-Default storage:
-
-- runtime: installed tool or local adapter
-- personal hints: `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
-- working state: local, ignored, or committed by user choice
-- docs: AIM distribution, links, or repo-embedded by user choice
-
-Repository mutation:
-
-- allowed
-- profile, adapter, docs, ignore, and runtime choices belong to the solo user
-- no Team sharing review or Enterprise isolation rule is imposed
-
-When user-level persistence is unavailable:
-
-- use session-only hints only
-- or create a repo-local profile when the user chooses that footprint
-- do not store stable repo-awareness anywhere under `.aim/`
-
-Use this when one developer owns the AIM setup choice, whether they prefer a
-cheap local trial or a fully embedded personal workflow.
-
-### Team AIM
-
-Default storage:
-
-- runtime: installed tool or local adapter
-- repo profile: root `aim.profile.yaml` as a tiny committed profile or pointer
-- working state: local by default
-- docs: AIM distribution or links
-
-Repository mutation:
-
-- one small `aim.profile.yaml` profile surface, or one small pointer to shared profile storage
-
-Use this when:
-
-- teammates should reuse commands, conventions, risk zones, and validation paths
-- the team wants shared AIM behavior without copying full docs
-- adoption should be reviewable as repo metadata
-
-The Team AIM profile must not contain active Epic state, current Done Increment state, gate approval state, review findings for one branch, secrets, or copied AIM reference docs.
-
-When both Personal and Team profiles exist, use Personal profile facts as local reuse hints and Team profile facts as the shared baseline.
-Personal facts must not silently contradict Team commands, ownership, risk, or policy.
-
-### Enterprise AIM
-
-Default storage:
-
-- runtime: local adapter, approved adapter, or organization environment
-- repo profile: external repo-awareness memory by default, or a governed equivalent when policy requires it
-- working state: local/private and ignored by default
-- docs: installed external distribution, canonical links, or approved internal package
-
-Repository mutation:
-
-- none by default
-- external AIM distribution and selected home-scope packages by default
-- optional reviewed pointer to managed policy/profile when policy requires it
-- adapters, feature docs, or embedded AIM docs only when the repo owner explicitly chooses a broader footprint
-
-Use this when:
-
-- accidental AIM artifact commits or pushes are a real risk
-- the repository is protected or policy-constrained
-- an organization needs central policy or profile governance
-- repo profiles need ownership and lifecycle rules
-- shared AIM surfaces need explicit approval
-
-Enterprise AIM is not required for AIM 2.0 to be useful.
-It exists to make safe isolation the default in stricter environments.
-
-Symlinks are not the Enterprise default. They make external storage look
-repo-local, but they are brittle across platforms, CI, containers, and moved
-checkouts. They also increase the chance that repo tooling surfaces external
-state. Use an external store directly; allow symlinks only under explicit
-organization policy.
-
-Enterprise AIM should protect these AIM-internal surfaces from accidental commit or push:
-
-- `/.aim`
-- `/.aim-local`
-- `/aim.local.*`
-- `/*.aim.local.md`
-- `/*.aim.process.md`
+`aim.profile.yaml` stores reusable project facts such as commands, localities,
+ownership, risks, short authoritative docs, freshness triggers, and
+avoid-by-default context. Local hints may narrow the shared baseline from
+`~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`.
 
-### Full embedded AIM
-
-Default storage:
-
-- runtime: repository docs and adapter helpers may be included
-- repo profile: committed
-- working state: still local or runtime-owned unless intentionally shared
-- docs: committed
-
-Repository mutation:
-
-- full AIM footprint by explicit repo-owner choice
-
-Use this for:
-
-- AIM itself
-- templates
-- training repos
-- public examples
-- repos that intentionally want AIM fully visible
-
-Full embedded use remains supported, but it is not an operating mode by itself.
-It is a footprint choice that may be used in Personal, Team, or Enterprise only by explicit repo-owner approval.
-
-## Locality-first discovery
-
-AIM 2.0 startup should expand context in this order:
-
-1. current working state
-2. reusable team repo profile, normally root `aim.profile.yaml`
-3. compatible personal local profile hints when present
-4. directly affected files
-5. nearest package, module, or service metadata
-6. nearest build/test/lint commands
-7. short authoritative repo docs named by the profile
-8. broader repository docs only when risk or missing evidence requires them
-
-This keeps large repositories from paying for repo-wide rediscovery when the active work is local and low-risk.
-
-Operational startup behavior:
-
-- read `.aim/state.json` first when it exists
-- read `aim.profile.yaml` next when it exists as the shared baseline
-- apply compatible Personal AIM local profile hints when they exist
-- use the profile to select locality, commands, short authoritative docs, risk zones, freshness checks, and avoid-by-default context
-- read broader docs only after profile/state evidence shows they are needed
-- report profile reuse and avoided broad context at startup or Gate B
-
-Escalate discovery depth when:
-
-- the profile is missing or stale
-- the affected area crosses ownership boundaries
-- migrations, deployment, security, data correctness, or public API behavior are involved
-- commands or conventions are contradictory
-- Gate B cannot define a safe Done Increment from local evidence
-
-## Reuse and freshness rules
-
-Reusable repo intelligence must be safe enough to trust.
-
-Before AIM treats a profile as reusable, the validator should report repo-profile readiness.
-
-Repo-awareness readiness has three states:
-
-- `needs_calibration`: no trustworthy reusable shared profile exists or required knowledge is missing.
-- `partially_ready`: useful knowledge exists, but non-blocking uncertainty remains.
-- `ready`: required knowledge is verified and no blocking uncertainty remains.
-
-AIM may reuse a profile when:
-
-- profile ownership is clear
-- the profile applies to the current repo identity
-- branch or base commit differences are understood
-- the validator reports `ready`
-- no refresh trigger has fired
-- the active work is inside a known locality boundary
-- the selected cost profile allows profile reuse
-
-AIM should refresh or revalidate the smallest affected area when:
-
-- lockfiles changed
-- package scripts changed
-- test framework or build tooling changed
-- ownership metadata changed
-- relevant docs changed
-- the profile is older than the team threshold
-- current branch differs materially from the profile base
-- the user asks for Deep or trust-sensitive work
-
-Profile refresh should be partial by default.
-Do not rescan the whole repository when one package-level check is enough.
-
-## Cost observability
-
-AIM 2.0 should explain the main cost drivers without pretending to provide exact price accounting.
-
-At startup or Gate B, AIM should be able to report:
-
-- operating mode
-- footprint level
-- whether a repo profile was reused
-- what profile facts were reused
-- profile freshness result
-- scan depth used
-- locality selected from the profile or current task
-- reason for any profile refresh
-- docs or scans avoided because the profile was enough
-- review depth expected
-- whether subagents are disabled, allowed, or escalated
-- which docs or areas were intentionally avoided
-
-At Gate E, AIM should be able to report:
-
-- what repo intelligence was reused
-- what had to be rescanned
-- whether review depth matched risk
-- whether branch switching caused profile refresh
-- whether any context hogs were found
-
-## Inputs and outputs
-
-- Inputs:
-  - operating mode
-  - repository identity
-  - current branch
-  - current task scope
-  - existing repo profile, if any
-  - active working state, if any
-  - cost profile
-  - repo policy and trust constraints
-
-- Outputs:
-  - selected footprint level
-  - repo profile or profile pointer
-  - working-state location
-  - locality-first scan plan
-  - freshness decision
-  - visible cost-observability summary
-
-## Key decisions
-
-- Repo profile is a product asset, not a one-run note.
-- Working state is not the repo profile.
-- Runtime is not repository documentation.
-- Docs are reference material, not mandatory install payload.
-- Personal AIM has no required sharing rule; footprint is the user's choice.
-- Team AIM defaults to a tiny shared profile surface.
-- Enterprise AIM protects AIM-internal artifacts by default.
-- Full embedded AIM remains valid only by explicit repo-owner choice.
-
-## Defaults and fallbacks
-
-- Default operating mode: Personal AIM when ownership is unclear.
-- Default footprint: `external` for Enterprise, `adapters` for Personal and Team.
-- Default profile sharing: root profile for Team; external repo-awareness memory for Enterprise; local hints for Personal unless the user chooses repo sharing.
-- Default working state: local and ignored.
-- Default discovery: locality-first.
-- Default cost reporting: short startup or Gate B summary.
-- If no profile exists, report `needs_calibration` and run the cheap-first calibration flow.
-- If useful facts exist with uncertainty, report `partially_ready`.
-- If a profile contains active state, block reuse and move active Epic, gate, role, review, or acceptance state back to `.aim`.
-- Fallback if profile is stale: refresh the smallest affected locality.
-- Fallback if policy conflicts: stop and escalate before continuing.
-- Fallback if a team wants sharing: export or commit only the tiny profile surface, not full AIM docs.
-- Team AIM artifact: use root `aim.profile.yaml` unless Enterprise policy explicitly chooses another approved pointer path.
-- Personal AIM artifact: use `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`; never use `.aim/`.
-- Enterprise AIM artifact: use external repo-awareness memory by default; `aim.profile.yaml`, broader repo-awareness docs, or repo adapter files require explicit approval or a repo-approved static docs path.
-
-## Edge cases
-
-- A repo may intentionally use full embedded AIM.
-- A security-sensitive repo may forbid local profile persistence.
-- An Enterprise organization may require profile storage outside developer machines.
-- A stale profile may be more dangerous than no profile.
-- A profile can accidentally leak proprietary architecture if exported publicly.
-- Cross-cutting work may legitimately require broad discovery.
-
-## Data correctness and trust
-
-Low footprint must not weaken AIM.
-
-The model preserves:
-
-- PO ownership of Epic intent
-- TDO ownership of Done Increment scope
-- Dev ownership of implementation inside approved scope
-- Reviewer ownership of correctness and risk review
-- Gate A, B, and E semantics
-- escalation on trust, data correctness, security, migration, deployment, public API, unclear scope, or policy conflict
-
-If profile reuse conflicts with trust, trust wins.
-
-## Debugging
-
-The single best check is whether AIM can answer:
-
-> What did you reuse, where did it come from, and why was it fresh enough?
-
-- Primary log: startup or Gate B profile-source summary
-- Validator check: `AIM 2.0 repo profile readiness`
-- Summary shape: [AIM 2.0 profile source summary](profile-source-summary.md)
-- What "good" looks like:
-  - operating mode is explicit
-  - footprint level is explicit
-  - profile location is explicit
-  - working-state location is explicit
-  - reused repo facts are listed briefly
-  - refresh reason is stated when scanning expands
-- What "bad" looks like:
-  - AIM asks users to copy full docs before proving value
-  - AIM rereads broad docs on every branch
-  - AIM cannot distinguish profile from working state
-  - AIM shares local state accidentally
-  - AIM trusts stale repo facts without a freshness check
-
-## Related files
-
-- `schemas/aim-repo-profile.schema.json`
-- `schemas/aim-personal-hints.schema.json`
-- `docs/workflow/repo-profile-schema.md`
-- `docs/workflow/personal-local-profile-storage.md`
-- `docs/workflow/profile-source-summary.md`
-- `docs/workflow/team-profile-artifact.md`
-- `docs/workflow/working-state-boundaries.md`
-- `docs/workflow/operating-modes.md`
-- `docs/features/aim-cost-comparison.md`
-- `docs/workflow/cost-control-mode.md`
-- `docs/workflow/cost-saving-method.md`
-- `docs/workflow/modularity-context-efficiency.md`
-- `docs/workflow/install-aim-2.0.md`
-- `docs/workflow/quick-start-aim-2.0.md`
-
-## Change log
-
-- 2026-06-05: Added profile-first startup behavior so adapters consume `aim.profile.yaml` before broader docs.
-- 2026-06-05: Linked the compact startup/Gate B profile-source summary.
-- 2026-06-05: Added Personal AIM local profile storage path and Team profile layering rules.
-- 2026-06-05: Defined root `aim.profile.yaml` as the concrete tiny Team AIM profile artifact/pointer.
-- 2026-06-05: Added repo-profile readiness states for validator-backed Personal/Team profile reuse.
-- 2026-06-05: Replaced the loose Managed mode wording with the canonical Enterprise operating mode and explicit ignore baseline.
-- 2026-06-05: Linked the tiny Team AIM profile example.
-- 2026-06-05: Linked the working-state boundary model.
-- 2026-06-05: Linked current migration classification checks.
-- 2026-06-04: Initial concrete AIM 2.0 repo profile and footprint model.
+### Project role intent
+
+`aim.roles.yaml` stores PO, TDO, Dev, and Reviewer expertise, validation,
+delegation policy, and write boundaries. Supplier-native project-agent files
+derive their behavior from this shared intent.
+
+### Working state
+
+`.aim/` stores branch/run-local Epic, increment, gate, decision, and review
+state. It is never a durable repository-profile or project-role store.
+
+## Footprints
+
+| Footprint | Repository effect |
+| --- | --- |
+| `adapters` | standard role/profile configuration, selected native adapters, required contracts, and runtime ignore |
+| `full` | standard result plus full workflow docs, schemas, and license metadata |
+| `profile` | repository profile and runtime ignore only |
+| `local` | home-scope packages only |
+| `external` | external distribution and home-scope packages only |
+
+Footprint is not an AIM edition. Sharing, protection, ownership, and commit
+policy remain repository or organization decisions.
+
+## Profile contract
+
+The structural source of truth for `aim.profile.yaml` is
+`schemas/aim-repo-profile.schema.json`. The project-role contract is
+`schemas/aim-project-roles.schema.json`.
+
+A repo profile should capture only stable reusable knowledge. It must not
+contain the active Epic, Done Increment, gate state, branch-specific review
+findings, secrets, or copied runtime artifacts.
+
+When personal hints and a shared profile both exist, local hints may narrow
+discovery but must not override shared commands, ownership, risk, or policy.
+
+## Protected repositories
+
+Use `--footprint local` or `--footprint external` when repository writes are not
+allowed. Managed organization policy may supply native agents outside the repo.
+Do not use repo-local symlinks as a default bridge to external storage; they are
+brittle across CI, containers, worktrees, and operating systems.
+
+## Legacy migration
+
+Older profiles may contain `adoption.mode: personal`, `team`, or `enterprise`.
+The schema accepts them during migration. A reviewed calibration should replace
+edition-like assumptions with explicit footprint, sharing, storage, ownership,
+and protection fields. Active `.aim/` state is never rewritten during that
+migration.
+
+## Cost and freshness
+
+Profiles reduce cold-start cost only while current. Refresh the smallest
+affected facts after dependency, framework, test-tool, architecture, ownership,
+deployment, security, or adapter changes. Broad repository scans remain a last
+resort prompted by missing evidence, staleness, risk, or explicit Deep work.

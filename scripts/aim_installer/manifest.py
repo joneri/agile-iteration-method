@@ -40,6 +40,10 @@ class Manifest:
         return [str(m) for m in self._root.get("modes", [])]
 
     @property
+    def legacy_modes(self) -> list[str]:
+        return [str(m) for m in self._root.get("legacyModes", [])]
+
+    @property
     def adapters(self) -> list[str]:
         return [str(a) for a in self._root.get("adapters", [])]
 

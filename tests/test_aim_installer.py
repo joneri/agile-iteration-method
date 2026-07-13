@@ -372,14 +372,15 @@ class ModeFootprintContractTests(unittest.TestCase):
                 home_root=Path(home),
             )
 
-    def test_personal_default_is_permissive_adapter_setup(self) -> None:
+    def test_legacy_personal_default_migrates_to_project_specialists(self) -> None:
         plan = self._plan(mode="personal")
         destinations = set(plan["scopeSummary"]["repoDestinations"])
         self.assertEqual(plan["footprint"], "adapters")
-        self.assertFalse(plan["footprintProfile"]["sharedProfile"])
+        self.assertTrue(plan["footprintProfile"]["sharedProfile"])
+        self.assertIn("aim.roles.yaml", destinations)
         self.assertIn(".github/agents/aim.agent.md", destinations)
         self.assertIn(".claude/commands/start-aim.md", destinations)
-        self.assertNotIn("aim.profile.yaml", destinations)
+        self.assertIn("aim.profile.yaml", destinations)
         self.assertIn(
             "docs/workflow/agile-iteration-method.md", destinations
         )
@@ -406,6 +407,17 @@ class ModeFootprintContractTests(unittest.TestCase):
             "references/agile-iteration-method.md",
             plan["adapterClosure"]["packageLocalDocs"]["codex"],
         )
+
+    def test_standard_install_contains_all_native_project_specialists(self) -> None:
+        plan = self._plan(mode="standard")
+        destinations = set(plan["scopeSummary"]["repoDestinations"])
+        self.assertIn("aim.profile.yaml", destinations)
+        self.assertIn("aim.roles.yaml", destinations)
+        self.assertIn(".gitignore", destinations)
+        for role in ("po", "tdo", "dev", "reviewer"):
+            self.assertIn(f".codex/agents/aim-{role}.toml", destinations)
+            self.assertIn(f".claude/agents/aim-{role}.md", destinations)
+            self.assertIn(f".github/agents/aim-{role}.agent.md", destinations)
 
     def test_enterprise_default_is_external_zero_repo_write_install(self) -> None:
         plan = self._plan(mode="enterprise")
@@ -609,8 +621,8 @@ class ModeFootprintContractTests(unittest.TestCase):
                 text=True,
                 timeout=20,
             )
-            self.assertEqual(completed.returncode, 3)
-            self.assertIn("Result: contradictory", completed.stdout)
+            self.assertEqual(completed.returncode, 2)
+            self.assertIn("Result: blocked", completed.stdout)
             self.assertIn("Release readiness: FAIL", completed.stdout)
             self.assertIn("mode footprint defaults drifted", completed.stdout)
 
@@ -653,15 +665,15 @@ class CliTests(unittest.TestCase):
                 (Path(target) / "docs/workflow/agile-iteration-method.md").exists()
             )
 
-    def test_guided_non_default_footprint_is_recorded_as_explicit(self) -> None:
+    def test_guided_path_uses_one_standard_install_without_mode_or_footprint_prompt(self) -> None:
         output = io.StringIO()
         with tempfile.TemporaryDirectory() as temporary, mock.patch.object(
             guided, "is_interactive", return_value=True
         ), mock.patch.object(
-            guided, "prompt_mode", return_value="enterprise"
-        ), mock.patch.object(
-            guided, "prompt_footprint", return_value="adapters"
-        ), mock.patch.object(
+            guided, "prompt_mode"
+        ) as mode_prompt, mock.patch.object(
+            guided, "prompt_footprint"
+        ) as footprint_prompt, mock.patch.object(
             guided, "prompt_adapters", return_value=["copilot"]
         ), mock.patch.object(
             guided, "confirm_apply", return_value=False
@@ -677,8 +689,12 @@ class CliTests(unittest.TestCase):
             plan = json.loads(plan_path.read_text(encoding="utf-8"))
 
         self.assertEqual(result, 0)
-        self.assertTrue(plan["footprintExplicit"])
-        self.assertTrue(plan["scopeSummary"]["explicitApproval"])
+        self.assertEqual(plan["mode"], "standard")
+        self.assertEqual(plan["footprint"], "adapters")
+        self.assertFalse(plan["footprintExplicit"])
+        self.assertIn("aim.roles.yaml", plan["scopeSummary"]["repoDestinations"])
+        mode_prompt.assert_not_called()
+        footprint_prompt.assert_not_called()
 
     def test_guided_preview_decline_is_successful_and_writes_nothing(self) -> None:
         with tempfile.TemporaryDirectory() as target, mock.patch.object(

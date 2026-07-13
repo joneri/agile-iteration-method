@@ -26,8 +26,8 @@ curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | AIM_REF=
 The guided installer:
 
 - completes filesystem paths with Tab
-- lets you choose a mode with arrow keys
 - lets you select one or more adapters
+- creates an editable project role profile and supplier-native specialists
 - shows a compact preview
 - protects collisions with explicit choices
 - asks before writing
@@ -35,17 +35,10 @@ The guided installer:
 
 Installation is manifest-driven, rollback-protected, and safe to rerun.
 
-The mode choice controls how AIM touches the repository:
-
-| Mode | Default behavior | Use when |
-| --- | --- | --- |
-| Personal | flexible solo setup; repo-writing footprints are available when you want AIM helpers or docs in the repo | you own the repo, are trying AIM, or want maximum freedom |
-| Team | shared repo-awareness and selected adapter surfaces by agreement | teammates should reuse the same commands, risks, and project knowledge |
-| Enterprise | external AIM package and external durable memory by default; zero repo writes unless a broader footprint is explicitly selected | the repo is protected, policy-constrained, or should not show AIM files in Git status |
-
-In Enterprise mode, `/aim remember-repo` stores durable memory outside the
-target repository by default. Repo files such as `aim.profile.yaml`, adapter
-helpers, or embedded AIM docs are explicit opt-ins.
+There is one standard installation. Protected repositories can still select an
+advanced local-only or external footprint, but they do not install a different
+edition of AIM. Older Personal, Team, and Enterprise flags remain migration
+compatibility inputs only.
 
 Already have AIM 1.x or older AIM helper files in the target repository?
 Run `/aim upgrade` before continuing.
@@ -67,6 +60,17 @@ Calibration starts with cheap, obvious repository evidence.
 It identifies likely technologies, commands, important folders, validation paths, and documents that should load only when needed.
 
 Review uncertain or trust-sensitive facts before they become reusable repository knowledge.
+
+The installer also seeds `aim.roles.yaml` from cheap observable evidence. After
+calibration, inspect or improve the role specialists:
+
+```text
+/aim configure-agents
+```
+
+AIM shows proposed changes before refreshing Codex, Claude, or Copilot native
+agent files. You can also edit `aim.roles.yaml` or the supplier-native files
+manually.
 
 If your platform does not expose slash commands, ask AIM to verify and refine repo awareness for the repository.
 
@@ -193,7 +197,7 @@ Cost profile: Standard
 ## Where To Go Next
 
 - [What AIM is](what-is-aim.md)
-- [Platforms and adoption modes](platforms-and-adoption.md)
+- [Platforms and project agents](platforms-and-adoption.md)
 - [Detailed installation](../workflow/install-aim-2.0.md)
 - [Canonical workflow](../workflow/agile-iteration-method.md)
 - [Troubleshooting](../workflow/troubleshoot-aim-2.0.md)

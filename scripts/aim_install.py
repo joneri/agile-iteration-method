@@ -7,7 +7,7 @@ JSON preserve advanced plan inspection. ``--dry-run`` previews without writing;
 ``--apply`` uses explicit collision decisions, rollback, and idempotent re-runs.
 
 Examples:
-    python3 scripts/aim_install.py --target /path/to/repo --mode team --adapter copilot
+    python3 scripts/aim_install.py --target /path/to/repo --adapter copilot
     python3 scripts/aim_install.py --target /path/to/repo --format json
     python3 scripts/aim_install.py --target /path/to/repo --apply
     python3 scripts/aim_install.py --target /path/to/repo --apply --force
@@ -52,7 +52,7 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     )
     parser.add_argument(
         "--mode",
-        help="Install mode: team, personal, or enterprise. Guided default: personal.",
+        help="Deprecated compatibility policy: personal, team, or enterprise. New installs use standard.",
     )
     parser.add_argument(
         "--footprint",
@@ -160,25 +160,12 @@ def main(argv: list[str] | None = None) -> int:
         return EXIT_USAGE
 
     try:
-        if args.mode:
-            mode = args.mode.strip().lower()
-        elif interactive:
-            mode = guided.prompt_mode(manifest.modes)
-        else:
-            mode = "team"
+        mode = args.mode.strip().lower() if args.mode else "standard"
 
         mode_profile = manifest.mode_profile(mode)
         default_footprint = str(mode_profile.get("defaultFootprint", "local"))
         if args.footprint:
             footprint = args.footprint.strip().lower()
-            footprint_explicit = True
-        elif interactive:
-            guided_default = default_footprint
-            if mode != "enterprise" and "full" in manifest.footprints:
-                guided_default = "full"
-            footprint = guided.prompt_footprint(
-                manifest.footprints, default=guided_default, mode=mode
-            )
             footprint_explicit = True
         else:
             footprint = default_footprint
@@ -194,9 +181,10 @@ def main(argv: list[str] | None = None) -> int:
         print("\ninstallation cancelled.", file=sys.stderr)
         return EXIT_USAGE
 
-    if mode not in manifest.modes:
+    known_modes = manifest.modes + manifest.legacy_modes
+    if mode not in known_modes:
         print(
-            f"error: unknown mode '{mode}'. Known modes: {', '.join(manifest.modes)}.",
+            f"error: unknown mode '{mode}'. Known modes: {', '.join(known_modes)}.",
             file=sys.stderr,
         )
         return EXIT_USAGE

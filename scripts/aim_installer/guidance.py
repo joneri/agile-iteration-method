@@ -51,9 +51,10 @@ def build_guidance(plan: dict[str, Any]) -> dict[str, Any]:
     steps: list[str] = []
 
     if state in ("fresh", "partial"):
+        mode_arg = "" if plan["mode"] == "standard" else f" --mode {plan['mode']}"
         steps.append(
             f"Apply the plan: {command} --target {target} "
-            f"--mode {plan['mode']} --footprint {plan['footprint']} --apply"
+            f"--footprint {plan['footprint']}{mode_arg} --apply"
         )
         if state == "partial":
             steps.append(
@@ -81,7 +82,7 @@ def build_guidance(plan: dict[str, Any]) -> dict[str, Any]:
         steps.append("Install is current; no apply needed.")
 
     steps.append(
-        "Reconfigure later by re-running with different --mode / --footprint / "
+        "Reconfigure later by re-running with a different --footprint / "
         "--adapter; "
         "update or repair by re-running with --apply (use --force to overwrite drift)."
     )
@@ -103,6 +104,11 @@ def build_guidance(plan: dict[str, Any]) -> dict[str, Any]:
         "Calibrate repo knowledge: /aim calibrate-repo  "
         "(bootstrap is NOT 'ready' until you calibrate)."
     )
+    if plan["footprint"] in ("adapters", "full"):
+        steps.append(
+            "Review project specialists: /aim configure-agents  "
+            "(updates aim.roles.yaml and selected native agent files through a reviewed plan)."
+        )
     steps.append(
         'Capture knowledge: /aim remember-repo <category> "<rule>"  '
         "(remove with /aim forget-repo)."

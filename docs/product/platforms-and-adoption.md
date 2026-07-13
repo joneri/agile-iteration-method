@@ -1,124 +1,53 @@
-# Platforms and Adoption Modes
+# Platforms and Project Agents
 
-AIM is one delivery system with several ways to adopt and start it.
+AIM is one delivery system with one adaptive installation. Select the suppliers
+already used by the project; AIM installs each supplier's native front door and
+project-agent format without changing the shared role-and-gate loop.
 
-Operating mode controls sharing and safety.
-Platform support controls how you invoke AIM.
-Neither changes the core delivery loop.
+## One Product, Project-Specific Specialists
 
-## Choose an Adoption Mode
+`aim.roles.yaml` describes the project's PO, TDO, Dev, and Reviewer expertise,
+validation, and boundaries. It is readable, editable, and supplier-neutral.
 
-### Personal
+| Platform | Front door | Project specialists |
+| --- | --- | --- |
+| Codex | installed AIM skill | `.codex/agents/aim-*.toml` |
+| GitHub Copilot | AIM custom agent | `.github/agents/aim-*.agent.md` |
+| Claude | AIM commands | `.claude/agents/aim-*.md` |
 
-Use Personal AIM when one developer wants maximum flexibility.
+The standard install inherits supplier model defaults. Users and organizations
+can refine models, tools, skills, MCP servers, permissions, and hooks in the
+native files supported by their supplier.
 
-- there are no Team or Enterprise sharing constraints
-- AIM docs, repo-awareness, profiles, adapters, and runtime artifacts may stay
-  local or be written and committed when the user chooses
-- local personal hints remain available when the user prefers no repo footprint
-- AIM can be tried or fully embedded without asking a team to adopt it
+## Configure or Refresh
 
-Personal is the guided installer default.
-Its suggested adapter footprint is a convenience, not a restriction; the user
-may choose local, profile, adapters, or full.
-
-### Team
-
-Use Team AIM when repository knowledge should be shared deliberately.
-
-- `aim.profile.yaml` holds a small shared baseline
-- commands, localities, risk zones, and loading hints become reusable
-- active runtime state may remain private
-- shared AIM surfaces stay small and reviewable
-
-Team mode creates shared understanding, not a requirement to commit every AIM artifact.
-
-### Enterprise
-
-Use Enterprise AIM when AIM should work from outside the target repository and repository protection should be the default.
-
-- AIM-internal artifacts stay ignored unless explicitly approved
-- installation keeps AIM package files and repo-awareness memory outside the repo by default
-- installation does not assume the repo root is empty
-- generic instruction files are never overwritten
-- adapter packages, embedded docs, and broader shared AIM surfaces require deliberate adoption
-- product output can be shared without sharing AIM's internal process state
-
-Enterprise is not simply Team mode for a larger company.
-It is a stricter safety posture with a full external default.
-
-## Choose a Platform
-
-### Codex
-
-Codex support is skill-first.
-
-The AIM skill provides the native command experience:
-
-```text
-/aim start "EPIC: ..."
-```
-
-Explicit AIM intent remains a fallback when the skill is unavailable.
-
-### GitHub Copilot
-
-Copilot support is agent-first.
-
-Select the AIM agent in chat, then use the AIM command family.
-Optional prompt helpers may improve discoverability, but they do not redefine AIM behavior.
-
-### Claude
-
-Claude support is command-first.
-
-Use the installed AIM commands.
-Helper agents may support the command implementation, but users should not need to understand those internal surfaces.
-
-Explicit Epic intent remains a fallback.
-
-## What Native Support Means
-
-Native support means:
-
-- AIM has a natural entrypoint for the platform
-- the platform can start, continue, validate, and calibrate AIM intent
-- the adapter maps available tools into the shared AIM behavior
-- unavailable capabilities fall back safely instead of changing the method
-
-Native support does not mean every platform has identical UI or tool capabilities.
+Run `/aim configure-agents`. AIM reads `aim.roles.yaml`, `aim.profile.yaml`, and
+freshness-triggered project evidence, then shows a reviewed update plan. It does
+not silently overwrite hand-written native configuration. Use
+`/aim calibrate-repo` first when repository facts are still unverified.
 
 ## What Stays Shared
 
-Across Codex, Claude, and Copilot:
-
-- the Epic remains the outcome
-- one Done Increment is active at a time
-- review happens before acceptance
-- active progress can resume from AIM's durable runtime state
-- `aim.profile.yaml` is the shared repo-awareness source when present
-- role order, gates, ownership, escalation, and acceptance remain consistent
+- PO, TDO, Dev, and Reviewer keep their canonical responsibilities.
+- One Done Increment is active at a time.
+- The main AIM thread alone owns `.aim/state.json` and gate transitions.
+- Review happens before acceptance.
+- Unavailable native delegation falls back to the sequential AIM loop.
 
 ## What May Differ
 
-Platforms may differ in:
+Platforms may differ in agent format, automatic delegation, concurrency,
+available tools, models, permissions, and UI. AIM uses those differences
+deliberately. Native support means equivalent method semantics, not identical
+supplier mechanics.
 
-- command routing
-- available tools
-- whether bounded helper agents are available
-- how browser or terminal actions are exposed
-- how the user sees prompts and checkpoints
+## Storage and Sharing Policy
 
-When a capability is unavailable, AIM falls back to sequential work or explicit intent.
-It does not silently weaken quality or change who owns the decision.
+The normal installation writes the small project configuration and selected
+native adapter files after a reviewed preview. Advanced local-only, external,
+or fuller embedded footprints remain available for protected repositories and
+automation. Older Personal, Team, and Enterprise flags are accepted only as
+migration compatibility inputs, not product editions.
 
-## A Simple Choice
-
-Choose:
-
-1. the mode that matches your sharing and safety needs
-2. the platform adapter you already use
-3. Strict or Auto for the amount of interruption you want
-4. a cost profile for the amount of runtime depth the work deserves
-
-The workflow remains AIM.
+See [Project-agent configuration](../workflow/project-agent-configuration.md)
+and [Install AIM](../workflow/install-aim-2.0.md).

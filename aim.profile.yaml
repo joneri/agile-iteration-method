@@ -11,7 +11,7 @@ aimRepoProfile:
     defaultBranch: main
 
   adoption:
-    mode: team
+    mode: standard
     footprint: tiny
     sharing: committed
     profileOwner: repository-maintainers

@@ -17,9 +17,11 @@ Actions:
    - `aim.profile.yaml` when Team repo-awareness is selected
    - `docs/workflow/agile-iteration-method.md`
    - `.github/agents/aim.agent.md`
-   - `.github/agents/aim-planner.agent.md`
-   - `.github/agents/aim-builder.agent.md`
+   - `.github/agents/aim-po.agent.md`
+   - `.github/agents/aim-tdo.agent.md`
+   - `.github/agents/aim-dev.agent.md`
    - `.github/agents/aim-reviewer.agent.md`
+   - `aim.roles.yaml`
 2. Verify optional Copilot prompt files exist when packaged command entrypoints are desired:
    - `.github/prompts/install-aim.prompt.md`
    - `.github/prompts/start-aim.prompt.md`

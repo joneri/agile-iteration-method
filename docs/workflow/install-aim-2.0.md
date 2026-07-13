@@ -3,403 +3,120 @@
 
 # Install AIM 2.0
 
-## Already installed or upgrading from AIM 1.x
+## One adaptive installation
 
-If the target repository already contains AIM 1.x-era files, older AIM helper prompts, command files, adapter packages, or an existing `.aim/` runtime, use the packaged upgrade path before starting or resuming work:
+AIM has one guided installation. A user chooses the target repository and the
+suppliers already used there. The installer plans the smallest complete native
+package for those suppliers, previews every write or collision, and applies only
+after confirmation.
 
-```text
-/aim upgrade
-```
-
-The upgrade intent inspects installed AIM-owned packages through the deterministic installer plan, shows stale files and collisions before apply, preserves rollback behavior, and does not silently replace active `.aim/` runtime state.
-
-After upgrade:
-
-1. Run `/aim calibrate-repo` when repository knowledge or shared profiles may have changed.
-2. Start a fresh adapter session when skill, agent, prompt, or command files changed.
-3. Resume an active Epic with `/aim continue`.
-
-## Guided installer
-
-For public release installs, run this from the repository where you want to use
-AIM:
+Run:
 
 ```bash
 curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
 ```
 
-The bootstrap downloads the current maintained `main` archive, runs the packaged
-installer from a temporary directory, and asks which repository should receive
-AIM. It does not assume your current shell directory is the target repository.
+The bootstrap downloads the maintained release to a temporary directory. It
+does not assume the current shell directory is the target.
 
-To test another branch or tag, set `AIM_REF`:
+The guided flow asks for:
 
-```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | AIM_REF=main bash
-```
+1. target repository, with filesystem completion
+2. Codex, Claude, and/or GitHub Copilot adapters
+3. collision decisions when existing files differ
+4. final apply confirmation
 
-From an already downloaded AIM source release, run:
+It does not ask the user to choose a Personal, Team, or Enterprise edition.
 
-```bash
-python3 scripts/aim_install.py
-```
+## Standard result
 
-In a terminal, the installer asks only for required information that was not supplied by flags:
+The standard adapter footprint installs:
 
-- target repository supports filesystem Tab completion
-- mode uses Up/Down and Enter, with Personal highlighted by default
-- footprint uses Up/Down and Enter, with the selected mode's suggested
-  footprint highlighted
-- adapters use Up/Down, Space to toggle, and Enter to confirm
+- `aim.profile.yaml` as uncalibrated shared repository knowledge
+- `aim.roles.yaml` as uncalibrated, editable project-role intent
+- `.gitignore` additions for local `.aim/` runtime state
+- each selected supplier's native AIM front door and PO/TDO/Dev/Reviewer agents
+- only the canonical workflow contracts directly required by those surfaces
+- the Codex AIM skill in user scope when Codex is selected
 
-Flags such as `--target`, `--mode`, `--footprint`, and `--adapter` are used directly and are not asked again.
+`aim.roles.yaml` is conservatively seeded from observable files such as
+`package.json`, `pyproject.toml`, `Package.swift`, `Cargo.toml`, and `go.mod`.
+Detection never claims verified mastery. Run `/aim calibrate-repo`, then
+`/aim configure-agents`, to verify and improve the project specialists.
 
-The default text view is compact: it shows the target, selected mode, footprint and adapters, action counts, blockers, and files that need a decision.
-Use `--verbose` (or `--raw`) for the complete file-by-file plan and `--format json` for machine-readable output.
-JSON and `--non-interactive` runs never prompt.
-When using the public bootstrap, pass installer flags after `bash -s --`:
+## Supplier-native files
 
-```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash -s -- --dry-run
-```
-
-For unattended installs, provide the target explicitly:
-
-```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash -s -- --target /path/to/repo --non-interactive
-```
-
-The compact preview and reviewed apply are one guided session.
-After preview and any collision decisions, the final confirmation can apply immediately without restarting with `--apply`.
-Declining leaves the target unchanged.
-
-For an explicit preview-only guided run, use:
-
-```bash
-python3 scripts/aim_install.py --dry-run
-```
-
-In an interactive terminal, each collision uses:
-
-- `y`: overwrite this file
-- `n`: keep the existing file
-- `a`: overwrite this file and all remaining AIM-owned collisions
-- `q`: quit before applying
-
-Enter defaults to `n`.
-After all collision decisions, the guided flow asks `Apply this plan now? [y/N]`.
-No files are written unless the user answers `y`.
-
-The prompt flow is a concise sequential terminal interaction.
-It keeps the active question visually clear by avoiding the old raw plan dump, but it is not a sticky prompt fixed to the bottom of the terminal.
-For automation, unresolved collisions fail; `--force` remains the explicit non-interactive overwrite mechanism.
-Color is automatic on supported terminals and can be controlled with `--color always|never`.
-
-Use this guide when repository setup is still missing and you want a current AIM 2.0 installation path.
-
-This guide is about repository setup.
-Use [Quick start AIM 2.0](quick-start-aim-2.0.md) for the first run after setup.
-
-## Choose the operating mode
-
-- Personal AIM:
-  - freedom mode for one developer
-  - repo mutation and committed AIM files are allowed
-  - docs, repo-awareness, profiles, adapters, and runtime state may live locally
-    or in the repo as the user chooses
-- Team AIM:
-  - shared AIM understanding by agreement
-  - share a small root `aim.profile.yaml` or approved shared profile pointer
-  - share selected features/docs when the team wants common behavior
-  - private runtime state may still stay local
-- Enterprise AIM:
-  - full AIM available outside the target repository by default
-  - keep AIM package files, runtime state, and repo-awareness memory external unless explicitly approved
-  - share product output, not AIM internals
-  - do not assume the repo root is empty or instruction files can be overwritten
-
-These are the canonical AIM 2.0 operating modes.
-Full embedded AIM remains a footprint choice when the repo owner intentionally wants AIM product docs and adapter helpers in the repository.
-
-For the canonical mode model, see [AIM 2.0 operating modes](operating-modes.md).
-
-## Choose the installation footprint
-
-Mode and footprint are separate:
-
-- mode defines who is using AIM and the default sharing/safety posture
-- footprint defines which files are installed
-
-Available footprints:
-
-| Footprint | Repository effect |
+| Supplier | Native project files |
 | --- | --- |
-| `external` | full AIM distribution and selected home-scope adapter packages outside the target repository; no repo writes |
-| `local` | no target-repository mutation; home-scope packages such as Codex may be installed |
-| `profile` | repo profile and runtime ignore policy, without repo adapters or embedded docs |
-| `adapters` | selected adapter surfaces plus their required canonical contract subset; Team also receives the shared profile |
-| `full` | selected adapters, repo profile, runtime ignore, and embedded workflow docs |
+| Codex | `.codex/agents/aim-*.toml` |
+| Claude | `.claude/agents/aim-*.md` plus AIM commands |
+| GitHub Copilot | `.github/agents/aim-*.agent.md` plus the AIM orchestrator |
 
-Suggested defaults:
+The installer inherits supplier model defaults. Users may edit native files to
+pin supported models, tools, skills, MCP servers, permissions, or hooks.
 
-- Personal: `adapters`, as a useful solo setup; all footprints remain
-  unrestricted user choices
-- Team: `adapters`, with intentional shared repo-awareness
-- Enterprise: `external`, as a full AIM install outside the target repository.
-  `profile`, `adapters`, and `full` are explicit repo-writing opt-ins.
+## Preview, automation, and advanced footprint
 
-Selecting Personal never applies Team review ownership or Enterprise isolation
-rules. Selecting Enterprise never installs adapters or embedded docs silently.
+Preview without writing:
 
-Enterprise must not use symlinks as the default way to make external AIM files
-look repo-local. Symlinks can break across operating systems, CI, containers,
-and checked-out paths, and they can accidentally expose external state through
-Git status or tooling. If an organization approves symlinks, treat them as an
-advanced explicit policy with validation, never as the portable default.
-
-### Adapter package closure
-
-The `adapters` footprint is smaller than `full`, but it is not an incomplete
-adapter-only copy:
-
-- Codex receives required contracts inside its home-scoped skill package under
-  `references/`; this does not mutate the target repository.
-- Claude and Copilot receive only the canonical workflow documents directly
-  required by their installed instructions.
-- `full` remains the only footprint that embeds the complete canonical workflow
-  library, schemas, and distribution license metadata.
-
-Required adapter references are release-blocking. Optional links inside copied
-canonical documents remain further reading and do not expand the closure payload
-recursively.
-
-The full footprint includes `docs/aim/LICENSE` and
-`docs/aim/LICENSE-DOCS` so copied AIM documentation retains its attribution and
-CC BY 4.0 context without colliding with the target repository's root license.
-
-## Installation boundary model
-
-Before copying files, classify the target surface.
-
-Use [AIM 2.0 repository surface classification](repository-surface-classification.md) as the operational boundary model.
-
-Installer actions must follow these defaults:
-
-| Surface class | Default action |
-| --- | --- |
-| Static AIM product docs and adapter packages | may be copied into an AIM-owned package path selected by the user |
-| Shared repo-awareness | Team installs it by default; Enterprise stores durable memory externally by default; Personal may create or update it by solo choice |
-| Runtime state | never install as product; AIM creates `.aim/` at runtime |
-| Team profile | create or update only by explicit Team AIM choice |
-| Personal profile | local hints are available, but a repo profile is also allowed by user choice |
-| Generic root files | never create, modify, or overwrite for AIM |
-| Internal build-memory | do not install by default |
-
-Mode-specific defaults:
-
-| Mode | Installer default |
-| --- | --- |
-| Personal | suggest a practical adapter setup while allowing external, local, profile, adapters, or full without Team/Enterprise restrictions |
-| Team | create or update shared repo-awareness only through small reviewed surfaces such as `aim.profile.yaml` |
-| Enterprise | install AIM and repo-awareness memory outside the target repository; require explicit approval for repo profiles, adapters, embedded docs, or broader shared AIM surfaces |
-
-Enterprise safety and collision protection matter more than convenience.
-Personal remains permissive; choosing a repo-writing footprint is itself the
-solo user's reviewed choice.
-Generic root files may still exist for repository purposes, but AIM installation ignores them.
-
-### Root-file independence
-
-These generic root files are outside the AIM architecture:
-
-- `AGENTS.md`
-- `CLAUDE.md`
-- `CONTRIBUTING.md`
-
-An AIM installer must not create, modify, merge into, or overwrite them.
-Repository-owned content in those files remains untouched and is not needed for AIM core, repo-awareness, or adapter startup.
-
-`CONTRIBUTING.md` is a source-repository-only maintainer file.
-In a target repository, AIM must never copy, create, modify, require, or read it.
-Every installer manifest, package definition, and export boundary must explicitly exclude `CONTRIBUTING.md`.
-The canonical machine-readable boundary is `install/aim-install-manifest.yaml`.
-
-These repo-owned configuration surfaces still require collision handling:
-
-- `aim.profile.yaml`
-- `.gitignore`
-
-Rules:
-
-- inspect before writing
-- create only when absent and explicitly requested
-- modify only through a reviewed merge or patch
-- never blind overwrite
-- never store active Epic, gate, role, review, or acceptance state in repo profiles or instruction files
-
-For `.gitignore`, suggest this fragment instead of replacing the target file:
-
-```gitignore
-/.aim
-/.aim-local
-/aim.local.*
-/*.aim.local.md
-/*.aim.process.md
+```bash
+python3 scripts/aim_install.py --target /path/to/repo --adapter codex --dry-run
 ```
 
-## Minimum setup for full embedded AIM
+Select multiple suppliers by repeating `--adapter`. Use `--format json` for a
+machine-readable plan and `--non-interactive --apply` for reviewed automation.
+Unresolved collisions fail; `--force` is the explicit overwrite mechanism and
+still uses rollback backups.
 
-Required in the repository:
+Advanced footprints remain available for storage and repository policy:
 
-- `docs/workflow/agile-iteration-method.md`
-- `docs/workflow/repo-awareness.md`
-- `aim.profile.yaml` when shared repo-awareness is wanted
-- `.aim/` created automatically when AIM starts if missing
+| Footprint | Effect |
+| --- | --- |
+| `adapters` | standard project role profile, selected native adapters, required contracts, and runtime ignore |
+| `full` | standard result plus complete embedded workflow docs, schemas, and license metadata |
+| `profile` | repo-awareness profile and runtime ignore only |
+| `local` | home-scope packages only; no target-repository writes |
+| `external` | external AIM distribution and home-scope packages; no target-repository writes |
 
-Important:
+These are installation footprints, not product editions. Protected repository
+policy can choose `local` or `external` without changing AIM core behavior.
 
-- full embedded is a footprint choice, not a separate operating mode
-- adapter packages are selected independently and remain secondary to canonical workflow docs
-- `.aim/` is runtime state, not an install payload
-- `CONTRIBUTING.md` is excluded from every target-repository installation footprint
+## Upgrades and migration
 
-Optional Copilot prompt helpers:
-
-- `.github/prompts/start-aim.prompt.md`
-- `.github/prompts/install-aim.prompt.md`
-- `.github/prompts/help-aim.prompt.md`
-- `.github/prompts/upgrade-aim.prompt.md`
-
-Optional Claude Code package:
-
-- `.claude/agents/aim.md`
-- the complete native AIM command family under `.claude/commands/`, as defined
-  by [AIM 2.0 adapter command contract](adapter-command-contract.md)
-- `.claude/commands/install-aim.md` as the additional install/onboarding helper
-
-## Updating an existing AIM install
-
-Use this path when AIM is already present in the repository, including older AIM 1.x installations, but AIM 2.0 instruction files, helper prompts, or adapter packages changed and the repository should start following the newer behavior.
-
-Recommended flow:
-
-1. Run the normal user-facing upgrade command when available:
+If AIM is already installed, run:
 
 ```text
 /aim upgrade
 ```
 
-If slash routing is unavailable, run the installer directly:
+Upgrade uses the same deterministic plan, reports stale files and collisions,
+and never rewrites active `.aim/` state. Existing `--mode personal`, `--mode
+team`, and `--mode enterprise` flags are accepted temporarily as compatibility
+inputs and mapped to their former storage/footprint policies. They are not
+shown in the guided flow and do not identify different AIM products.
 
-```bash
-python3 scripts/aim_install.py
-```
+Legacy `aim-planner` and `aim-builder` helpers map to canonical `aim-tdo` and
+`aim-dev` specialists. A reviewed upgrade installs the canonical names; remove
+legacy files after confirming no local customization remains.
 
-2. Refresh repo-awareness when repository knowledge may have changed:
+After agent or command files change, start a fresh supplier session so native
+configuration is reloaded. Run `/aim configure-agents` when project frameworks,
+test tools, architecture, commands, or policy change.
 
-```text
-/aim calibrate-repo
-```
+## Safety boundaries
 
-3. Start a fresh adapter session when the active platform uses installed helper files, such as:
-  - Copilot agents or prompt helpers
-  - Claude command files
-  - Codex local skill packaging
+- `CONTRIBUTING.md` is a source-repository-only maintainer file. A target
+  installer must never copy, create, modify, require, or read it, and the
+  installer manifest must explicitly exclude `CONTRIBUTING.md`.
+- The installer never creates, reads, merges, or overwrites generic root
+  `AGENTS.md` or `CLAUDE.md` files.
+- AIM-owned collisions require explicit keep/overwrite decisions.
+- Apply is rollback-protected and safe to rerun.
+- `.aim/` is runtime state, not installed product documentation.
+- Only the main AIM thread may write `.aim/state.json` or advance gates.
+- Native specialists fall back to sequential main-thread execution when the
+  supplier, repository policy, task, or cost profile does not allow delegation.
 
-4. If an Epic was already active, resume it with:
-
-```text
-/aim continue
-```
-
-Use `/aim upgrade` as the normal user-facing command for this flow when the active adapter supports packaged AIM command entrypoints.
-
-Important:
-
-- upgrade refreshes installed AIM surfaces
-- calibration refreshes repo-awareness
-- active `.aim/` runtime state is not silently replaced by upgrade
-
-## Adapter packaging
-
-### Codex
-
-Use the shipped skill when you want the `/aim` command surface and Codex bootstrap help.
-
-Required for `/aim` in Codex:
-
-- `adapters/codex/agile-iteration-method/SKILL.md`
-
-If the local skill is missing or stale, install the repo-bundled skill before relying on `/aim` command routing:
-
-```sh
-python3 scripts/aim_install.py --target . --mode personal \
-  --footprint local --adapter codex --dry-run
-```
-
-Review the plan, then rerun with `--apply`. The installer includes package
-metadata and required canonical contracts under `references/`; copying the
-source adapter directory alone does not produce a closed package.
-
-### Copilot
-
-1. Install the selected `.github/agents/aim*.agent.md` files as the native Copilot entrypoint package.
-2. Add `.github/prompts/` when you want packaged Copilot prompt entrypoints.
-3. Start with `/aim start "EPIC: ..."` or `Start working according to AIM`.
-
-### Claude Code
-
-1. Ensure canonical AIM workflow docs are available from the selected product footprint.
-2. Install the selected `.claude/agents/` and `.claude/commands/` files.
-3. Start with the shipped Claude starter command or the explicit `EPIC: <desired outcome>` fallback.
-
-No adapter requires a generic root instruction file.
-
-## Repo-awareness bootstrap
-
-Installation and calibration are two stages of one model.
-
-The installer may:
-
-- create a schema-valid `aim.profile.yaml` from cheap, obvious repository evidence
-- declare `needs_calibration` when required knowledge is absent
-- declare `partially_ready` when useful facts exist with unresolved uncertainty
-- point Personal hints to `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
-
-The installer must not claim `ready`.
-Run `/aim calibrate-repo`, or start an AIM Epic to verify and refine repo-awareness, to confirm facts and promote readiness.
-
-After installation, report:
-
-- repo-awareness readiness
-- bootstrap evidence used
-- unresolved uncertainties
-- the `/aim calibrate-repo` next action when readiness is not `ready`
-
-## First-run checks
-
-After setup, a user should be able to:
-
-- start AIM
-- resume AIM
-- inspect status with `/aim status`
-- inspect config with `/aim config`
-- validate runtime state with `/aim validate`
-- read help with `/aim help`
-- select runtime depth with `/aim cost standard|control|deep`
-- calibrate repository knowledge with `/aim calibrate-repo`
-- remember and forget structured repository rules
-
-## If setup is incomplete
-
-- if the user starts AIM in recognizable language, treat it as a start intent
-- if a helper prompt is missing, explain the equivalent manual command
-- if `.aim` is missing, create it before continuing
-- if repo policy is contradictory, stop and escalate instead of guessing
-
-## Next documents
-
-- [Quick start AIM 2.0](quick-start-aim-2.0.md)
-- [Troubleshoot AIM 2.0](troubleshoot-aim-2.0.md)
-- [AIM 2.0 low-footprint adoption](aim-2-low-footprint-adoption.md)
-- [AIM adapter guidance](aim-adapter-guidance.md)
+See [Project-agent configuration](project-agent-configuration.md),
+[Adapter entry model](adapter-entry-model.md), and
+[Repository surface classification](repository-surface-classification.md).

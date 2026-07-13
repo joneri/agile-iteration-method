@@ -341,6 +341,45 @@ def _codex_actions(source_root: Path, home_root: Path) -> list[dict[str, Any]]:
     return actions
 
 
+def _codex_project_agent_actions(
+    source_root: Path, target_root: Path
+) -> list[dict[str, Any]]:
+    actions: list[dict[str, Any]] = []
+    source_dir = source_root / ".codex" / "agents"
+    for item in _sorted_glob(source_dir, "aim-*.toml"):
+        rel = f".codex/agents/{item.name}"
+        actions.append(
+            _action(
+                action_id=rel,
+                category="package",
+                classification=_classify_copy(item, target_root / rel),
+                source=rel,
+                destination=rel,
+                reason="Codex native project-scoped AIM specialist",
+                adapter="codex",
+                optional=False,
+            )
+        )
+    return actions
+
+
+def _project_role_profile_action(target_root: Path) -> dict[str, Any]:
+    desired = seed.project_roles_seed(target_root)
+    action = _action(
+        action_id="aim.roles.yaml",
+        category="bootstrap",
+        classification=_classify_content(target_root / "aim.roles.yaml", desired),
+        source=None,
+        destination="aim.roles.yaml",
+        reason="Seed editable project role expertise for native AIM specialists",
+        adapter="core",
+        optional=False,
+    )
+    action["content"] = desired
+    action["bootstrapKind"] = "project-roles"
+    return action
+
+
 def _bootstrap_actions(
     target_root: Path, manifest: Manifest, committed: bool, mode: str
 ) -> list[dict[str, Any]]:
@@ -468,6 +507,7 @@ def compute_plan(
     shared_profile_rule = footprint_profile.get("sharedProfile", False)
     shared_profile = bool(
         shared_profile_rule is True
+        or (shared_profile_rule == "standard-default" and mode == "standard")
         or (shared_profile_rule == "team-default" and mode == "team")
     )
 
@@ -497,9 +537,13 @@ def compute_plan(
         actions.extend(_copilot_actions(source_root, target_root, include_optional))
     if repo_adapters and "claude" in adapters:
         actions.extend(_claude_actions(source_root, target_root))
+    if repo_adapters and "codex" in adapters:
+        actions.extend(_codex_project_agent_actions(source_root, target_root))
     if home_adapters and "codex" in adapters:
         actions.extend(_codex_actions(source_root, home_root))
     actions.extend(_bootstrap_actions(target_root, manifest, shared_profile, mode))
+    if repo_adapters:
+        actions.append(_project_role_profile_action(target_root))
     fragments = mode_fragments or manifest.gitignore_fragments or manifest.runtime_exclusions
     if repo_ignore:
         actions.extend(_ignore_actions(target_root, manifest, fragments))
@@ -526,6 +570,10 @@ def compute_plan(
             "repo-writing footprint was explicitly selected."
         )
     local_policy = {
+        "standard": [
+            "Project role and repo-awareness configuration is reviewable in the repository",
+            "Runtime state stays local by default unless repository policy chooses otherwise",
+        ],
         "personal": [
             "User-level personal hints remain outside the repository",
             "Runtime state is created later; keeping or committing it is the solo user's choice",

@@ -13,6 +13,7 @@ from aim_installer import closure as installer_closure
 from aim_installer import planner as installer_planner
 from aim_installer import seed as installer_seed
 from aim_installer.manifest import ManifestError, load_manifest
+from aim_installer.yaml_lite import YamlLiteError, loads as load_aim_yaml
 from aim_validator.coherence import evaluate_product_coherence
 from aim_validator.profile_contract import (
     PERSONAL_HINTS_SCHEMA_PATH,
@@ -30,7 +31,7 @@ from aim_validator.reporting import (
     summarize_result as summarize_typed_result,
     tier_statuses,
 )
-from aim_validator.schema_subset import unsupported_keywords
+from aim_validator.schema_subset import unsupported_keywords, validate as validate_schema
 
 
 EXIT_CODES = {
@@ -303,13 +304,12 @@ PUBLIC_PRODUCT_DOC_PATHS = {
         "## 7. Build With Confidence",
     ],
     "docs/product/platforms-and-adoption.md": [
-        "### Personal",
-        "### Team",
-        "### Enterprise",
-        "### Codex",
-        "### GitHub Copilot",
-        "### Claude",
-        "## What Native Support Means",
+        "# Platforms and Project Agents",
+        "## One Product, Project-Specific Specialists",
+        "## Configure or Refresh",
+        "## What Stays Shared",
+        "## What May Differ",
+        "## Storage and Sharing Policy",
     ],
 }
 SURFACE_MODEL_DOC_PATH = "docs/workflow/repository-surface-classification.md"
@@ -325,6 +325,8 @@ LIGHT_FRONT_DOOR_DOC_PATH = "docs/workflow/light-front-door.md"
 PRODUCT_COHERENCE_DOC_PATH = "docs/workflow/product-coherence-validation.md"
 REPO_PROFILE_SCHEMA_DOC_PATH = "docs/workflow/repo-profile-schema.md"
 RELEASE_PUBLICATION_DOC_PATH = "docs/workflow/release-publication-model.md"
+PROJECT_ROLES_SCHEMA_PATH = "schemas/aim-project-roles.schema.json"
+PROJECT_ROLES_PATH = "aim.roles.yaml"
 
 CANONICAL_AIM_COMMANDS = [
     "/aim start",
@@ -333,6 +335,7 @@ CANONICAL_AIM_COMMANDS = [
     "/aim validate",
     "/aim help",
     "/aim config",
+    "/aim configure-agents",
     "/aim calibrate-repo",
     "/aim remember-repo",
     "/aim forget-repo",
@@ -349,6 +352,7 @@ CLAUDE_COMMAND_SURFACES = {
     "/aim validate": ".claude/commands/validate-aim.md",
     "/aim help": ".claude/commands/help-aim.md",
     "/aim config": ".claude/commands/config-aim.md",
+    "/aim configure-agents": ".claude/commands/configure-agents-aim.md",
     "/aim calibrate-repo": ".claude/commands/calibrate-repo.md",
     "/aim remember-repo": ".claude/commands/remember-repo.md",
     "/aim forget-repo": ".claude/commands/forget-repo.md",
@@ -661,15 +665,13 @@ CALIBRATION_ADAPTER_MARKERS = {
 }
 
 REQUIRED_OPERATING_MODE_MARKERS = [
-    "Personal AIM",
-    "Team AIM",
-    "Enterprise AIM",
-    "permissive",
-    "shared AIM understanding",
-    "external and protected by default",
+    "one adaptive installation",
+    "Legacy flag mapping",
+    "Strict or Auto",
+    "Standard, Cost Control, or Deep",
     "AGENTS.md",
     "CLAUDE.md",
-    "Enterprise ignore baseline",
+    "aim.roles.yaml",
 ]
 
 ENTERPRISE_IGNORE_MARKERS = [
@@ -681,6 +683,7 @@ ENTERPRISE_IGNORE_MARKERS = [
 ]
 
 OPERATING_MODE_VALUES = {
+    "standard": "Standard installation policy",
     "personal": "Personal",
     "team": "Team",
     "enterprise": "Enterprise",
@@ -1346,6 +1349,8 @@ def main() -> int:
         repo_root / INSTALL_MANIFEST_PATH,
         repo_root / REPO_PROFILE_SCHEMA_PATH,
         repo_root / PERSONAL_HINTS_SCHEMA_PATH,
+        repo_root / PROJECT_ROLES_SCHEMA_PATH,
+        repo_root / PROJECT_ROLES_PATH,
     ]
 
     required_runtime_paths = [
@@ -1370,9 +1375,11 @@ def main() -> int:
 
     repo_profile_schema = None
     personal_hints_schema = None
+    project_roles_schema = None
     for relative_path, schema_name in (
         (REPO_PROFILE_SCHEMA_PATH, "repo profile"),
         (PERSONAL_HINTS_SCHEMA_PATH, "Personal hints"),
+        (PROJECT_ROLES_SCHEMA_PATH, "project roles"),
     ):
         checked.append(f"{schema_name} JSON Schema")
         try:
@@ -1391,8 +1398,10 @@ def main() -> int:
             continue
         if relative_path == REPO_PROFILE_SCHEMA_PATH:
             repo_profile_schema = loaded_schema
-        else:
+        elif relative_path == PERSONAL_HINTS_SCHEMA_PATH:
             personal_hints_schema = loaded_schema
+        else:
+            project_roles_schema = loaded_schema
         for schema_issue in unsupported_keywords(loaded_schema):
             add_issue(
                 issues,
@@ -1404,6 +1413,76 @@ def main() -> int:
                 category="Error",
                 release_impact="fail",
             )
+
+    checked.append("AIM project role profile")
+    if project_roles_schema is not None and (repo_root / PROJECT_ROLES_PATH).is_file():
+        try:
+            project_roles = load_aim_yaml(
+                (repo_root / PROJECT_ROLES_PATH).read_text(encoding="utf-8")
+            )
+        except (OSError, YamlLiteError, IndexError) as exc:
+            add_issue(
+                issues,
+                "blocked",
+                PROJECT_ROLES_PATH,
+                f"project role profile is invalid AIM YAML: {exc}",
+                "Repair aim.roles.yaml before generating supplier-native agents.",
+                tier="Structural",
+                category="Error",
+                release_impact="fail",
+            )
+        else:
+            for schema_issue in validate_schema(project_roles, project_roles_schema):
+                add_issue(
+                    issues,
+                    "blocked",
+                    PROJECT_ROLES_PATH,
+                    f"project role profile violates the schema at {schema_issue.path}: {schema_issue.message}",
+                    "Align aim.roles.yaml with schemas/aim-project-roles.schema.json.",
+                    tier="Behavioral",
+                    category="Error",
+                    release_impact="fail",
+                )
+
+    native_specialists = {
+        "Codex": [f".codex/agents/aim-{role}.toml" for role in ("po", "tdo", "dev", "reviewer")],
+        "Claude": [f".claude/agents/aim-{role}.md" for role in ("po", "tdo", "dev", "reviewer")],
+        "GitHub Copilot": [f".github/agents/aim-{role}.agent.md" for role in ("po", "tdo", "dev", "reviewer")],
+    }
+    checked.append("supplier-native AIM project specialists")
+    for supplier, paths in native_specialists.items():
+        for relative_path in paths:
+            checked.append(relative_path)
+            path = repo_root / relative_path
+            if not path.is_file():
+                add_issue(
+                    issues,
+                    "blocked",
+                    relative_path,
+                    f"{supplier} native AIM specialist is missing",
+                    "Restore all four canonical project role specialists.",
+                    tier="Behavioral",
+                    category="Error",
+                    release_impact="fail",
+                )
+                continue
+            content = path.read_text(encoding="utf-8", errors="replace")
+            missing = [
+                marker
+                for marker in ("aim.roles.yaml", ".aim/state.json")
+                if marker not in content
+            ]
+            if missing:
+                add_issue(
+                    issues,
+                    "blocked",
+                    relative_path,
+                    f"{supplier} specialist lacks project-role or runtime-ownership markers: {', '.join(missing)}",
+                    "Reference aim.roles.yaml and explicitly deny specialist ownership of .aim/state.json.",
+                    tier="Behavioral",
+                    category="Error",
+                    release_impact="fail",
+                )
 
     checked.append("AIM 2.0 generic root-file independence")
     for relative_path in REMOVED_GENERIC_AIM_ROOT_PATHS:
@@ -1727,6 +1806,7 @@ def main() -> int:
         try:
             install_manifest = load_manifest(repo_root)
             expected_defaults = {
+                "standard": "adapters",
                 "personal": "adapters",
                 "team": "adapters",
                 "enterprise": "external",
@@ -1820,6 +1900,7 @@ def main() -> int:
             }
             if (
                 "aim.profile.yaml" not in team_destinations
+                or "aim.roles.yaml" not in team_destinations
                 or ".gitignore" not in team_destinations
                 or team_adapter_docs != required_adapter_docs
             ):
@@ -1840,7 +1921,7 @@ def main() -> int:
                 if path.startswith("docs/workflow/")
             }
             if (
-                "aim.profile.yaml" in personal_destinations
+                "aim.roles.yaml" not in personal_destinations
                 or not any(
                     path.startswith((".github/agents/", ".claude/"))
                     for path in personal_destinations
@@ -1851,8 +1932,40 @@ def main() -> int:
                     issues,
                     "blocked",
                     "scripts/aim_installer/planner.py",
-                    "Personal default does not provide the canonical permissive solo adapter setup",
-                    "Install selected repo adapters and only their closure contracts without forcing a shared profile; allow explicit local/profile/full choices.",
+                    "Legacy Personal compatibility plan does not provide native project specialists",
+                    "Keep the compatibility plan deterministic while installing the shared role profile and selected native adapters.",
+                )
+
+            standard_plan = generated_plans["standard"]
+            standard_destinations = set(
+                standard_plan["scopeSummary"]["repoDestinations"]
+            )
+            standard_adapter_docs = {
+                path
+                for path in standard_destinations
+                if path.startswith("docs/workflow/")
+            }
+            required_native_prefixes = (
+                ".codex/agents/",
+                ".claude/agents/",
+                ".github/agents/",
+            )
+            if (
+                "aim.profile.yaml" not in standard_destinations
+                or "aim.roles.yaml" not in standard_destinations
+                or ".gitignore" not in standard_destinations
+                or standard_adapter_docs != required_adapter_docs
+                or any(
+                    not any(path.startswith(prefix) for path in standard_destinations)
+                    for prefix in required_native_prefixes
+                )
+            ):
+                add_issue(
+                    issues,
+                    "blocked",
+                    "scripts/aim_installer/planner.py",
+                    "standard installation does not produce all native project specialists",
+                    "Plan the role profile, repo profile, runtime ignore, native Codex/Claude/Copilot agents, and closure contracts.",
                 )
         except (ManifestError, installer_planner.PlanError, OSError, KeyError) as exc:
             add_issue(
@@ -2823,12 +2936,12 @@ def main() -> int:
         else:
             print(f"- {category}: none")
 
-    print("AIM 2.0 operating mode model:")
+    print("AIM 2.0 installation policy model:")
     print(f"- canonical doc: {OPERATING_MODE_DOC_PATH}")
     print(
-        f"- configured mode: {configured_operating_mode if configured_operating_mode else 'not declared'}"
+        f"- configured policy: {configured_operating_mode if configured_operating_mode else 'not declared'}"
     )
-    print(f"- mode source: {operating_mode_source}")
+    print(f"- policy source: {operating_mode_source}")
     if configured_operating_mode == "Enterprise":
         print(f"- Enterprise ignore baseline: {', '.join(ENTERPRISE_IGNORE_MARKERS)}")
 

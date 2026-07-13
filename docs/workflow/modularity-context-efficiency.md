@@ -51,7 +51,7 @@ At Gate B, check whether the planned file boundaries reduce future context load 
 - `docs/workflow/agile-iteration-method.md`
 - `docs/workflow/copilot-layer.md`
 - `docs/workflow/documentation-model.md`
-- `.github/agents/aim-planner.agent.md`
-- `.github/agents/aim-builder.agent.md`
+- `.github/agents/aim-tdo.agent.md`
+- `.github/agents/aim-dev.agent.md`
 - `.github/agents/aim-reviewer.agent.md`
 - active `.claude/` helper files when Claude mechanics are relevant

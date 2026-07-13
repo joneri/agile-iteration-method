@@ -35,6 +35,7 @@ CANONICAL_COMMANDS = (
     "/aim validate",
     "/aim help",
     "/aim config",
+    "/aim configure-agents",
     "/aim calibrate-repo",
     "/aim remember-repo",
     "/aim forget-repo",
@@ -118,7 +119,7 @@ def _generate_default_plans(
     try:
         manifest = load_manifest(repo_root)
         with tempfile.TemporaryDirectory() as target, tempfile.TemporaryDirectory() as home:
-            for mode in ("personal", "team", "enterprise"):
+            for mode in ("standard",):
                 footprint = str(
                     manifest.mode_profile(mode).get("defaultFootprint", "")
                 )
@@ -153,11 +154,11 @@ def _mode_plan_findings(
     plans: dict[str, dict[str, Any]],
 ) -> list[dict[str, Any]]:
     findings: list[dict[str, Any]] = []
-    if set(plans) != {"personal", "team", "enterprise"}:
+    if set(plans) != {"standard"}:
         return findings
 
-    personal = plans["personal"]
-    personal_destinations = set(personal["scopeSummary"]["repoDestinations"])
+    standard = plans["standard"]
+    standard_destinations = set(standard["scopeSummary"]["repoDestinations"])
     expected_closure_docs: set[str] = set()
     for adapter in ("claude", "copilot"):
         expected_closure_docs.update(
@@ -165,82 +166,34 @@ def _mode_plan_findings(
                 repo_root, adapter, include_optional=True
             )
         )
-    personal_closure_docs = {
+    standard_closure_docs = {
         path
-        for path in personal_destinations
+        for path in standard_destinations
         if path.startswith("docs/workflow/")
     }
     if (
-        personal["footprint"] != "adapters"
-        or "aim.profile.yaml" in personal_destinations
+        standard["footprint"] != "adapters"
+        or "aim.profile.yaml" not in standard_destinations
+        or "aim.roles.yaml" not in standard_destinations
+        or ".gitignore" not in standard_destinations
         or not any(
-            path.startswith((".github/agents/", ".claude/"))
-            for path in personal_destinations
+            path.startswith((".codex/agents/", ".github/agents/", ".claude/"))
+            for path in standard_destinations
         )
-        or personal_closure_docs != expected_closure_docs
+        or standard_closure_docs != expected_closure_docs
     ):
         findings.append(
             make_finding(
                 "contradictory",
-                "Personal docs ↔ generated installer plan",
-                "Personal freedom-mode default is not the documented practical adapter setup",
-                "Restore the adapters default with only the selected adapter closure contracts.",
+                "one-install docs ↔ generated installer plan",
+                "standard install does not produce the documented native project-agent setup",
+                "Restore the standard role profile, native agents, runtime ignore, and adapter closure contracts.",
                 tier="Product coherence",
                 category="Contradiction",
                 release_impact="fail",
                 evidence=(
-                    f"footprint={personal['footprint']}, "
-                    f"repoActions={personal['scopeSummary']['repoActionCount']}"
-                ),
-            )
-        )
-
-    team = plans["team"]
-    team_destinations = set(team["scopeSummary"]["repoDestinations"])
-    team_closure_docs = {
-        path for path in team_destinations if path.startswith("docs/workflow/")
-    }
-    if (
-        team["footprint"] != "adapters"
-        or "aim.profile.yaml" not in team_destinations
-        or ".gitignore" not in team_destinations
-        or team_closure_docs != expected_closure_docs
-    ):
-        findings.append(
-            make_finding(
-                "contradictory",
-                "Team docs ↔ generated installer plan",
-                "Team default does not match the documented reviewed shared setup",
-                "Generate the shared profile, ignore policy, selected adapters, and only their closure contracts.",
-                tier="Product coherence",
-                category="Contradiction",
-                release_impact="fail",
-                evidence=(
-                    f"footprint={team['footprint']}, "
-                    f"repoActions={team['scopeSummary']['repoActionCount']}"
-                ),
-            )
-        )
-
-    enterprise = plans["enterprise"]
-    enterprise_destinations = set(enterprise["scopeSummary"]["repoDestinations"])
-    if (
-        enterprise["footprint"] != "external"
-        or enterprise_destinations
-        or enterprise["scopeSummary"]["localActionCount"] == 0
-    ):
-        findings.append(
-            make_finding(
-                "contradictory",
-                "Enterprise docs ↔ generated installer plan",
-                "Enterprise default plan is not the external zero-repo-write install",
-                "Restore the external default: install AIM outside the repository and require explicit broader footprint approval for repo files.",
-                tier="Product coherence",
-                category="Contradiction",
-                release_impact="fail",
-                evidence=(
-                    f"footprint={enterprise['footprint']}, "
-                    f"repoActions={enterprise['scopeSummary']['repoActionCount']}"
+                    f"footprint={standard['footprint']}, "
+                    f"repoActions={standard['scopeSummary']['repoActionCount']}"
                 ),
             )
         )

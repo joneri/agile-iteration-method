@@ -8,9 +8,13 @@ Actions:
 1. Verify whether AIM-owned instruction, adapter, and helper files are present but stale for the selected footprint.
 2. Refresh the installed AIM package surface when needed:
    - `.github/agents/aim.agent.md`
-   - `.github/agents/aim-planner.agent.md`
-   - `.github/agents/aim-builder.agent.md`
+   - `.github/agents/aim-po.agent.md`
+   - `.github/agents/aim-tdo.agent.md`
+   - `.github/agents/aim-dev.agent.md`
    - `.github/agents/aim-reviewer.agent.md`
+   - `.codex/agents/aim-*.toml`
+   - `.claude/agents/aim-*.md`
+   - `aim.roles.yaml`
    - optional `.github/prompts/*.prompt.md`
    - optional adapter helper files for the active platform
 3. Re-check supporting AIM docs:

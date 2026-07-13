@@ -845,39 +845,39 @@
 
     <section class="band" id="modes">
       <div class="container">
-        <p class="eyebrow">One product, three operating modes</p>
-        <h2 class="section-title">Adopt AIM at the level that fits your environment.</h2>
-        <p class="section-lead">The workflow remains familiar. What changes is how AIM knowledge is shared and how strongly the repository is protected by default.</p>
+        <p class="eyebrow">One product, adapted to each project</p>
+        <h2 class="section-title">Install AIM once. Let every role become a project specialist.</h2>
+        <p class="section-lead">AIM keeps one delivery method while configuring native PO, TDO, Dev, and Reviewer specialists for the suppliers and technologies your project actually uses.</p>
 
         <div class="mode-grid">
           <article class="mode">
-            <span class="mode-tag">Flexible</span>
-            <h3>Personal</h3>
-            <p>Maximum freedom for one developer. Keep AIM local, share selected files, or evolve the setup over time.</p>
-            <strong>Default: local-first</strong>
-            <ul>
-              <li>Best when you own the repo or are trying AIM alone.</li>
-              <li>Repo-writing footprints are available when you want native helpers committed.</li>
-            </ul>
-          </article>
-          <article class="mode">
             <span class="mode-tag">Shared</span>
-            <h3>Team</h3>
-            <p>Commit a small, deliberate repository understanding while private runtime state remains separate.</p>
-            <strong>Default: intentional sharing</strong>
+            <h3>One AIM method</h3>
+            <p>Every adapter preserves the same role order, gates, runtime state, and acceptance contract.</p>
+            <strong>Consistent where consistency matters</strong>
             <ul>
-              <li>Best when teammates should reuse the same repo knowledge.</li>
-              <li>Creates reviewable shared surfaces such as <code>aim.profile.yaml</code>.</li>
+              <li>The main AIM thread always owns scope, gates, and acceptance.</li>
+              <li>Sequential fallback keeps the method reliable when delegation is unavailable.</li>
             </ul>
           </article>
           <article class="mode">
-            <span class="mode-tag">Protected</span>
-            <h3>Enterprise</h3>
-            <p>Run AIM from an external package and memory store while keeping the target repository free of AIM files by default.</p>
-            <strong>Default: external install</strong>
+            <span class="mode-tag">Native</span>
+            <h3>Project specialists</h3>
+            <p>Each supplier uses its own project-agent format, tuned from one readable role profile.</p>
+            <strong>Specific where specificity helps</strong>
             <ul>
-              <li>Best when repo writes, helper files, or process artifacts need approval.</li>
-              <li>Durable AIM memory stays outside the repo unless policy opts in.</li>
+              <li>React projects can teach Dev the right architecture and commands.</li>
+              <li>Playwright projects can give Reviewer the strongest relevant test workflow.</li>
+            </ul>
+          </article>
+          <article class="mode">
+            <span class="mode-tag">Controlled</span>
+            <h3>Your policy</h3>
+            <p>Sharing, repository writes, permissions, models, and tools remain explicit project or organization choices.</p>
+            <strong>Safe without separate editions</strong>
+            <ul>
+              <li>Defaults inherit supplier and organization settings.</li>
+              <li>Legacy install flags remain available for reviewed migrations.</li>
             </ul>
           </article>
         </div>
@@ -894,19 +894,19 @@
           <article class="platform">
             <span class="platform-tag">Skill-first</span>
             <h3>Codex</h3>
-            <p>Install the AIM skill for the native command family and guided AIM runtime.</p>
+            <p>Use the AIM skill plus project custom agents under <code>.codex/agents/</code>.</p>
             <code class="platform-start">/aim start "EPIC: ..."</code>
           </article>
           <article class="platform">
             <span class="platform-tag">Command-first</span>
             <h3>Claude</h3>
-            <p>Use installed AIM commands, with explicit Epic intent as the reliable fallback.</p>
+            <p>Use installed AIM commands with project subagents under <code>.claude/agents/</code>.</p>
             <code class="platform-start">/aim start "EPIC: ..."</code>
           </article>
           <article class="platform">
             <span class="platform-tag">Agent-first</span>
             <h3>GitHub Copilot</h3>
-            <p>Select the AIM agent and continue with the same AIM command and approval model.</p>
+            <p>Select the AIM orchestrator, backed by repository custom agents under <code>.github/agents/</code>.</p>
             <code class="platform-start">/aim start "EPIC: ..."</code>
           </article>
         </div>
@@ -917,7 +917,7 @@
       <div class="container">
         <p class="eyebrow">Your first AIM journey</p>
         <h2 class="section-title">Install once. Start building with confidence.</h2>
-        <p class="section-lead">The guided installer asks only for missing choices, previews the plan, protects collisions, and lets you apply in the same session.</p>
+        <p class="section-lead">The guided installer asks for the repository and adapters, previews one adaptive plan, protects collisions, and lets you apply in the same session.</p>
 
         <div class="installer">
           <div>
@@ -929,19 +929,19 @@
 
         <div class="installer">
           <div>
-            <h3>The installer asks how AIM should touch your repo</h3>
-            <p>Choose Personal for a flexible solo setup, Team for shared repo awareness, or Enterprise when AIM should work from outside the target repository by default.</p>
+            <h3>One installation, native to your tools</h3>
+            <p>Select Codex, Claude, GitHub Copilot, or any combination. AIM installs only the shared contract and native surfaces those adapters need.</p>
           </div>
-          <div class="install-choice-grid" aria-label="Personal and Enterprise install behavior">
+          <div class="install-choice-grid" aria-label="Adaptive installation behavior">
             <article class="install-choice">
-              <h4>Personal</h4>
-              <p>A practical solo setup. You can install adapter helpers, repo awareness, or full AIM docs when you want them in the repository.</p>
-              <strong>Good for trials, personal projects, and repos you control.</strong>
+              <h4>Project-aware</h4>
+              <p>AIM detects conservative stack and validation facts and writes them to a readable <code>aim.roles.yaml</code> profile.</p>
+              <strong>No guessed model pins or fashionable tools.</strong>
             </article>
             <article class="install-choice">
-              <h4>Enterprise</h4>
-              <p>A protected setup. AIM installs externally and keeps repo memory outside the repository unless an approved repo-writing footprint is selected.</p>
-              <strong>Good for protected repos, strict policies, and teams avoiding accidental AIM files.</strong>
+              <h4>User-controlled</h4>
+              <p>Review native role files, edit them directly, or ask AIM to refresh them when the stack or test strategy changes.</p>
+              <strong>Existing customizations remain collision-protected.</strong>
             </article>
           </div>
         </div>
@@ -963,6 +963,11 @@
               <code class="command">/aim calibrate-repo</code>
             </article>
             <article class="next-command">
+              <h4>Tune project agents</h4>
+              <p>Preview role expertise and native agent updates for the current stack.</p>
+              <code class="command">/aim configure-agents</code>
+            </article>
+            <article class="next-command">
               <h4>Remember context</h4>
               <p>Capture product facts, tone, constraints, or team habits AIM should reuse.</p>
               <code class="command">/aim remember-repo habits "Product context: This app helps people find new homes for cats. User-facing language should be nuanced, calm, and empathetic toward both the cats and future owners."</code>
@@ -974,7 +979,7 @@
           <article class="journey-step">
             <span class="journey-number">1</span>
             <h3>Install AIM</h3>
-            <p>Choose the repository, operating mode, and adapters.</p>
+            <p>Choose the repository and the adapters you use.</p>
           </article>
           <article class="journey-step">
             <span class="journey-number">2</span>

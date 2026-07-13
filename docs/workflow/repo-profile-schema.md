@@ -111,7 +111,7 @@ The validator:
 2. decodes `aim.profile.yaml`
 3. applies AIM's dependency-free JSON Schema subset
 4. applies product rules separately
-5. validates Personal, Team, and Enterprise installer profile seeds
+5. validates the standard installer seed and legacy migration seeds
 6. validates the canonical empty Personal-hints seed
 
 The dependency-free subset supports the schema keywords AIM publishes:

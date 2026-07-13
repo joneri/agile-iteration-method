@@ -47,9 +47,11 @@ Adapter layers may improve UX and discoverability, but they must preserve:
 
 If adapter guidance conflicts with canonical workflow docs or `aim.profile.yaml`, escalate instead of guessing.
 
-## AIM 2.0 low-footprint adapter expectations
+## AIM 2.0 adaptive-install expectations
 
-AIM 2.0 introduces a low-footprint adoption model without changing AIM core.
+AIM 2.0 uses one adaptive installation without changing AIM core. Older
+Personal, Team, and Enterprise labels are compatibility inputs, not separate
+products or current adapter behavior models.
 
 Adapters should treat these as separate concerns:
 
@@ -61,30 +63,18 @@ Adapters should treat these as separate concerns:
 The main AIM thread still owns `.aim/state.json`, gate progression, and acceptance decisions.
 Repo profile reuse must not move that authority into helper files, subagents, or adapter metadata.
 
-### Adoption footprints
+### Installation policy layers
 
-Adapters should support or gracefully describe these adoption depths:
+Adapters should apply the same four layers in every repository:
 
-- Personal AIM:
-  - freedom mode with no Team or Enterprise sharing restrictions
-  - runtime may come from the tool, local adapter, or repo package
-  - repo profile may be local or committed by user choice
-  - working state may be local, ignored, or committed by user choice
-  - full embedded docs and adapter surfaces are allowed
-- Team AIM:
-  - tiny committed repo profile or pointer
-  - shared repo adaptation by intentional team choice
-  - working state local by default unless the team explicitly chooses otherwise
-  - full AIM docs linked or installed, not copied wholesale by default
-- Enterprise AIM:
-  - safe isolation by default
-  - local/private AIM internals unless sharing is explicitly approved
-  - future organization-managed profile or policy source may be used
-  - optional repository pointer to managed policy
-  - must not be required for Personal or Team AIM
-- Full embedded AIM:
-  - full docs and adapter helpers committed by explicit repo-owner choice
-  - remains valid for AIM itself, templates, training repos, and public examples
+- shared method and runtime contract
+- repo-owned `aim.profile.yaml` and `aim.roles.yaml`
+- supplier-native role files for each selected adapter
+- user-local hints or organization policy when present
+
+The installer chooses the smallest complete file set for the selected adapters.
+Repository owners may still choose local, shared, external, or fully embedded
+storage policies, but those are footprint decisions rather than product editions.
 
 ### Locality-first startup
 
@@ -102,15 +92,16 @@ Adapters should report when they cannot preserve this order and should fall back
 
 ### Profile-first adapter behavior
 
-Adapters that can read files should support both Personal and Team profile sources.
+Adapters that can read files should support shared repo profiles plus optional
+user-local hints.
 
-Personal AIM local-hints option:
+User-local hints option:
 
 ```text
 ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
 ```
 
-Team AIM default:
+Shared repository default:
 
 ```text
 aim.profile.yaml
@@ -120,7 +111,7 @@ On `/aim start`, `/aim continue`, `/aim status`, `/aim validate`, `/aim calibrat
 
 1. read `.aim/state.json` first when it exists
 2. read root `aim.profile.yaml` as the shared repo-awareness baseline when it exists
-3. apply compatible Personal AIM profile hints when they exist
+3. apply compatible user-local profile hints when they exist
 4. use profile facts to select directly affected areas, nearest commands, short authoritative docs, and avoid-by-default context
 5. run or report validator readiness when available
 6. read broader AIM docs, adapter docs, or repo-wide context only when the current state, risk, missing evidence, or user request requires it
@@ -135,8 +126,9 @@ static memory document under `docs/features/`, `docs/workflow/`,
 `docs/architecture/`, or another repo-configured stable docs path, then reference
 that static source from `aim.profile.yaml`.
 
-When Personal and Team profiles both exist, the Team profile is the shared baseline.
-Personal profile facts may narrow local startup, but must not silently contradict shared commands, ownership, risk, or policy.
+When both sources exist, `aim.profile.yaml` is the shared baseline. User-local
+facts may narrow local startup, but must not silently contradict shared commands,
+ownership, risk, or policy.
 
 The visible startup or Gate B summary should state whether the profile was reused, which locality it selected, and which broader docs were intentionally avoided.
 Use this compact shape when profile reuse affects context selection:

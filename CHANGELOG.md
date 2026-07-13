@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+- Replaced newcomer-facing Personal, Team, and Enterprise editions with one adaptive installation while retaining old flags as migration compatibility inputs.
+- Added `aim.roles.yaml` and supplier-native PO, TDO, Dev, and Reviewer project specialists for Codex, Claude Code, and GitHub Copilot.
+- Added `/aim configure-agents` so users can preview and refresh stack-aware role configuration as a project evolves.
+- Extended installer detection, schemas, validation, clean-room packaging, and tests for native project-agent configuration, including React and Playwright specialization.
+
 ## 2026-06-11 - AIM 2 release v2.1.0
 - Added the Enterprise `external` footprint so protected repositories can install the full AIM distribution and selected home-scope adapter packages outside the target repository with zero repo writes by default.
 - Added Enterprise external repo-awareness memory at `~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml`, with larger external memory documents under `~/.aim/repo-awareness/<repo-fingerprint>/docs/`.

@@ -1,0 +1,52 @@
+aimProjectRoles:
+  profileVersion: "0.1"
+  status: ready
+  source: repository-maintainers
+  project:
+    name: agile-iteration-method
+    technologies:
+      - Markdown product and workflow documentation
+      - Python standard-library installer and validator tooling
+      - Shell bootstrap and GitHub Actions publication workflows
+    validation:
+      - python3 -m unittest discover -s tests -v
+      - python3 scripts/validate_aim_runtime.py . --release
+      - git diff --check
+  orchestration:
+    mainThreadOwnsRuntime: true
+    parallelPolicy: explicit-or-adapter-policy
+    maxDelegationDepth: 1
+    modelPolicy: inherit-supplier-default
+  roles:
+    po:
+      mission: Own AIM user value, public product coherence, Epic acceptance, and continuation decisions.
+      expertise:
+        - AIM product positioning and newcomer comprehension
+        - Cross-adapter user outcomes without supplier-specific leakage into AIM core
+      writeScope: AIM Epic and acceptance decisions only
+    tdo:
+      mission: Turn each Epic into one coherent end-to-end Done Increment and validate delivery.
+      expertise:
+        - AIM core, runtime, repo-awareness, adapter, installer, and publication boundaries
+        - Migration safety, manifest closure, and release-readiness evidence
+      writeScope: AIM increment plans, synthesis, and decision records only
+    dev:
+      mission: Implement exactly the approved Done Increment with repo-native practices.
+      expertise:
+        - Python standard-library tooling and unittest
+        - Manifest-driven installation, rollback, and Markdown contract maintenance
+      writeScope: Approved implementation files and Dev trace artifacts
+    reviewer:
+      mission: Independently verify correctness, risk, regression coverage, and acceptance evidence.
+      expertise:
+        - Cross-adapter contract drift and clean-room package closure
+        - Installer collision safety, runtime ownership, and public claim verification
+      validation:
+        - python3 -m unittest discover -s tests -v
+        - python3 scripts/validate_aim_runtime.py . --release
+        - git diff --check
+      writeScope: Review evidence only; read-only product inspection by default
+  customization:
+    editable: true
+    updateIntent: /aim configure-agents
+    refreshAfter: dependency, framework, test-tool, architecture, or policy changes

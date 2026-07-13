@@ -12,8 +12,7 @@ tools:
     "search/textSearch",
     "edit/createDirectory"
   ]
-agents: ["aim-planner", "aim-builder", "aim-reviewer"]
-model: ["GPT-5.4 (copilot)", "GPT-5.5 (copilot)", "GPT-5.3-Codex (copilot)", "Claude Sonnet 4.6 (copilot)", "Claude Opus 4.8 (copilot)"]
+agents: ["aim-po", "aim-tdo", "aim-dev", "aim-reviewer"]
 handoffs:
   - label: "✅ Send \"approve\""
     agent: aim
@@ -98,11 +97,12 @@ example such as:
 
 Repository-aware loading order:
 1. resume checkpoint from `.aim/state.json` when present
-2. root `aim.profile.yaml` when present, used as the primary shared repo-awareness baseline
-3. compatible Personal AIM hints from `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
-4. directly affected repository evidence
-5. canonical workflow docs needed for the current role, gate, command, or risk
-6. active Copilot agent or prompt policy only when Copilot mechanics matter
+2. `aim.roles.yaml` for project-specialist role expertise and boundaries
+3. root `aim.profile.yaml` when present, used as the primary shared repo-awareness baseline
+4. compatible local AIM hints from `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
+5. directly affected repository evidence
+6. canonical workflow docs needed for the current role, gate, command, or risk
+7. active Copilot agent or prompt policy only when Copilot mechanics matter
 
 Load only the context needed for the current state, command, cost profile, and risk.
 Avoid broad rereads on `/aim continue`; after the June 1, 2026 AI Credits shift, unnecessary context loading is a budget bug.
@@ -125,6 +125,7 @@ If instructions conflict, escalate.
 - `/aim help` - show the thin front door: start, continue, validate, and the next command
 - `/aim validate` - run or explain AIM runtime integrity checks
 - `/aim config` - show effective runtime configuration and key repo-aware policy
+- `/aim configure-agents` - inspect or refresh `aim.roles.yaml` and supplier-native project specialists
 - `/aim calibrate-repo` - cheaply inspect, verify, and persist repository knowledge
 - `/aim remember-repo <category> "<rule>"` - persist a structured shared or personal repository rule
 - `/aim forget-repo <category> "<rule-id>"` - remove a structured repository rule
@@ -208,8 +209,8 @@ Suggested state shape:
    Also set `mode: Strict` unless user explicitly chooses `Auto`.
    Also set `costProfile: Standard` unless user explicitly chooses `Cost Control` or `Deep`.
    The thin front door may suggest `Cost Control` for ordinary low-risk work, but omitted cost profile still resolves to `Standard`.
-6. Run `aim-planner` in `mode: PO` to create `.aim/epic.md`.
-7. Run `aim-planner` in `mode: TDO` to draft `.aim/plan.md` only as an optional helper for the next increment.
+6. Delegate bounded PO analysis to `aim-po` when it materially improves Epic framing.
+7. Delegate bounded TDO analysis to `aim-tdo` when it materially improves the next increment plan.
 8. Present Gate A only (Epic approval). Do not auto-approve Gate B unless PO policy explicitly allows it.
 
 Epic candidate rule:
@@ -232,7 +233,7 @@ Route by the current AIM checkpoint and user intent (`approve`, `change:`, or ex
   - set the runtime checkpoint to Gate B pending
   - present the next single Done Increment plan
 - If `change:`:
-  - rerun `aim-planner` in PO mode and re-present Gate A
+  - delegate to `aim-po` when useful and re-present Gate A
 
 ### Gate B (`gate_b_pending`)
 
@@ -240,11 +241,11 @@ Route by the current AIM checkpoint and user intent (`approve`, `change:`, or ex
   - record the increment decision in `.aim/decisions/`
   - continue to Gate C -> Gate D -> Gate E automatically
 - If `change:`:
-  - rerun `aim-planner` in TDO mode and re-present Gate B
+  - delegate to `aim-tdo` when useful and re-present Gate B
 
 ### Gate C (`increment_in_progress`)
 
-- Run `aim-builder` and write `.aim/increments/{increment:03d}-wip.md`
+- Delegate bounded implementation to `aim-dev` when useful and write `.aim/increments/{increment:03d}-wip.md`
 - Then proceed to Gate D
 
 ### Gate D (`review_in_progress`)

@@ -16,6 +16,7 @@ user-facing entry surfaces that lead into that one behavior model.
 
 - The user invokes **commands or a native AIM entrypoint**.
 - Internal helper agents remain internal.
+- Each adapter uses its native project-agent mechanism for AIM role specialists.
 - Adapter packaging supports native use without changing AIM core behavior.
 - Every required local document reference resolves after installation.
 
@@ -73,13 +74,14 @@ If an adapter cannot express these literally, it must still support the same
 
 ## Per-adapter native front door
 
-### Codex — skill/package-first
+### Codex — skill/package-first, native project agents
 
 - Primary user-facing surface: the installed AIM **skill/package**
   (`adapters/codex/agile-iteration-method/SKILL.md`, installed to
   `~/.codex/skills/agile-iteration-method/`).
 - The user runs the AIM command family / intents through that package.
 - **Codex is skill/package-first.**
+- Bounded role specialists use project `.codex/agents/aim-*.toml` files.
 
 ### GitHub Copilot — agent-first
 
@@ -88,6 +90,7 @@ If an adapter cannot express these literally, it must still support the same
 - The user runs the AIM command family inside that agent.
 - Optional `.github/prompts/` helpers stay secondary.
 - **GitHub Copilot is agent-first.**
+- PO, TDO, Dev, and Reviewer specialists use repository custom-agent profiles.
 
 ### Claude — command-first
 
@@ -95,6 +98,7 @@ If an adapter cannot express these literally, it must still support the same
 - `.claude/agents/` is an internal helper surface, not the primary front door.
 - Users normally invoke AIM through commands, not by manually picking a helper agent.
 - **Claude is command-first.**
+- Bounded role specialists use project `.claude/agents/aim-*.md` subagents.
 
 ## Internal helper surfaces
 
@@ -166,3 +170,4 @@ If adapter entry guidance conflicts with canonical workflow docs or
   state effects, upgrade behavior, and fallbacks
 - `docs/workflow/aim-adapter-guidance.md` — adapter mechanics and helper boundaries
 - `docs/workflow/repo-awareness.md` — progressive loading and adapter boundaries
+- `docs/workflow/project-agent-configuration.md` — shared role intent and native specialist generation

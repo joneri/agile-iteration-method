@@ -47,7 +47,7 @@ class AdapterCommandContractTests(unittest.TestCase):
     def test_complete_adapter_command_contract_is_healthy(self) -> None:
         completed = self._validate(REPO_ROOT)
         self.assertEqual(completed.returncode, 0, completed.stdout)
-        self.assertIn("canonical command intents: 13", completed.stdout)
+        self.assertIn("canonical command intents: 14", completed.stdout)
 
     def test_missing_claude_command_is_blocked(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

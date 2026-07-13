@@ -98,8 +98,9 @@ Fallback rule:
 ## Files used by the Copilot layer
 
 - `.github/agents/aim.agent.md`
-- `.github/agents/aim-planner.agent.md`
-- `.github/agents/aim-builder.agent.md`
+- `.github/agents/aim-po.agent.md`
+- `.github/agents/aim-tdo.agent.md`
+- `.github/agents/aim-dev.agent.md`
 - `.github/agents/aim-reviewer.agent.md`
 - `.github/prompts/install-aim.prompt.md`
 - `.github/prompts/help-aim.prompt.md`

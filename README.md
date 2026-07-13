@@ -116,6 +116,12 @@ Shared repository knowledge can live in the small `aim.profile.yaml` profile.
 Personal hints stay outside the repository.
 Detailed operational guidance loads only when relevant, and active work state stays separate under `.aim/`.
 
+The standard install also creates `aim.roles.yaml`: an editable project profile
+for PO, TDO, Dev, and Reviewer expertise. AIM derives native project agents for
+Codex, Claude, and Copilot from that shared intent, so a React repository can
+teach Dev its React practices and Reviewer its Playwright checks without making
+all suppliers use the same configuration format.
+
 Your tokens are valuable.
 AIM is designed to reuse compact knowledge, start with the smallest useful context, and expand only for evidence, uncertainty, or risk.
 
@@ -128,16 +134,17 @@ AIM has two execution styles:
 
 People still own product intent, scope changes, trust decisions, and final acceptance.
 
-## Personal, Team, and Enterprise
+## One Adaptive Installation
 
-| Mode | Best for | Default posture |
-| --- | --- | --- |
-| **Personal** | solo work, trials, personal repositories | maximum freedom; sharing is the user's choice |
-| **Team** | shared repository understanding | small, deliberate, reviewable sharing |
-| **Enterprise** | protected or stricter environments | full external AIM install; zero repo writes by default |
+AIM no longer asks newcomers to choose a Personal, Team, or Enterprise edition.
+There is one guided installation: choose the repository and the suppliers you
+use, review the plan, and apply it. The installer creates project-native role
+specialists and a small shared configuration that can be edited manually or
+refreshed with `/aim configure-agents`.
 
-The AIM workflow stays familiar across all three modes.
-The difference is what is shared and how cautiously AIM touches the repository.
+Protected or local-only setups remain available as advanced storage and sharing
+policies. Older mode flags still work during migration, but they are no longer
+separate AIM products.
 
 ## Codex, Claude, and GitHub Copilot
 
@@ -145,9 +152,9 @@ AIM keeps one method while using a native entrypoint for each platform:
 
 | Platform | Native start |
 | --- | --- |
-| **Codex** | install the AIM skill, then use `/aim start "EPIC: ..."` |
-| **GitHub Copilot** | select the AIM agent, then use `/aim start "EPIC: ..."` |
-| **Claude** | use the installed AIM command, or state the Epic explicitly |
+| **Codex** | AIM skill front door plus project `.codex/agents/*.toml` specialists |
+| **GitHub Copilot** | AIM orchestrator plus repository `.github/agents/*.agent.md` specialists |
+| **Claude** | AIM commands plus project `.claude/agents/*.md` specialists |
 
 If a native command is unavailable, explicit AIM intent remains the supported fallback.
 Platform packaging may differ; the delivery loop, gates, ownership, and acceptance rules do not.
@@ -171,7 +178,8 @@ That makes AIM easier to install, safer to place in existing repositories, and c
 The guided installer provides:
 
 - filesystem path completion
-- mode and adapter selection menus
+- adapter selection
+- project-specific role-profile detection and native agent installation
 - a compact preview
 - file-by-file collision decisions
 - final confirmation before writing
@@ -225,7 +233,7 @@ The guided installer provides:
 - [Product overview](docs/product/README.md)
 - [Why AIM is different](docs/product/what-is-aim.md)
 - [First-time journey](docs/product/getting-started.md)
-- [Platforms and adoption modes](docs/product/platforms-and-adoption.md)
+- [Platforms and project agents](docs/product/platforms-and-adoption.md)
 - [Installation guide](docs/workflow/install-aim-2.0.md)
 - [Release and publication model](docs/workflow/release-publication-model.md)
 - [Canonical workflow](docs/workflow/agile-iteration-method.md)

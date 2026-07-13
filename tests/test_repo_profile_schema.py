@@ -15,7 +15,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from aim_installer.seed import personal_hints_seed, shared_profile_seed
+from aim_installer.seed import personal_hints_seed, project_roles_seed, shared_profile_seed
 from aim_installer.yaml_lite import loads
 from aim_validator.profile_contract import (
     PERSONAL_HINTS_SCHEMA_PATH,
@@ -25,6 +25,7 @@ from aim_validator.profile_contract import (
     validate_repo_profile,
 )
 from aim_validator.schema_subset import unsupported_keywords
+from aim_validator.schema_subset import validate as validate_schema
 
 
 PUBLIC_SCHEMA_ORIGIN = "https://joneri.github.io/agile-iteration-method/"
@@ -50,7 +51,11 @@ class RepoProfileSchemaTests(unittest.TestCase):
         self.assertTrue(matching, [str(issue) for issue in issues])
 
     def test_public_schemas_are_draft_2020_12_json(self) -> None:
-        for relative_path in (REPO_PROFILE_SCHEMA_PATH, PERSONAL_HINTS_SCHEMA_PATH):
+        for relative_path in (
+            REPO_PROFILE_SCHEMA_PATH,
+            PERSONAL_HINTS_SCHEMA_PATH,
+            "schemas/aim-project-roles.schema.json",
+        ):
             schema = json.loads((REPO_ROOT / relative_path).read_text(encoding="utf-8"))
             self.assertEqual(
                 schema["$schema"], "https://json-schema.org/draft/2020-12/schema"
@@ -69,7 +74,7 @@ class RepoProfileSchemaTests(unittest.TestCase):
 
     def test_current_profile_and_all_installer_seeds_validate(self) -> None:
         self.assertEqual(validate_repo_profile(self.profile, self.profile_schema), [])
-        for mode in ("personal", "team", "enterprise"):
+        for mode in ("standard", "personal", "team", "enterprise"):
             seed = loads(shared_profile_seed(mode))
             self.assertEqual(
                 validate_repo_profile(seed, self.profile_schema),
@@ -78,6 +83,32 @@ class RepoProfileSchemaTests(unittest.TestCase):
             )
         hints = loads(personal_hints_seed("repo-123"))
         self.assertEqual(validate_personal_hints(hints, self.hints_schema), [])
+
+    def test_project_role_profile_and_react_playwright_seed_validate(self) -> None:
+        schema = load_schema(REPO_ROOT, "schemas/aim-project-roles.schema.json")
+        current = loads((REPO_ROOT / "aim.roles.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(validate_schema(current, schema), [])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary) / "web-app"
+            target.mkdir()
+            (target / "package.json").write_text(
+                json.dumps(
+                    {
+                        "dependencies": {"react": "latest"},
+                        "devDependencies": {"@playwright/test": "latest"},
+                        "scripts": {"test": "vitest", "build": "vite build"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            seeded = loads(project_roles_seed(target))
+
+        self.assertEqual(validate_schema(seeded, schema), [])
+        project = seeded["aimProjectRoles"]["project"]
+        self.assertIn("React", project["technologies"])
+        self.assertIn("Playwright", project["technologies"])
+        self.assertIn("npx playwright test", project["validation"])
 
     def test_repo_profile_schema_accepts_external_footprint(self) -> None:
         profile = copy.deepcopy(self.profile)

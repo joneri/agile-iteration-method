@@ -1,10 +1,13 @@
 aimInstallManifest:
-  manifestVersion: "0.5"
-  status: guided-first
+  manifestVersion: "0.6"
+  status: one-adaptive-install
 
   canonicalCommand: "python3 scripts/aim_install.py"
 
   modes:
+    - standard
+
+  legacyModes:
     - team
     - personal
     - enterprise
@@ -25,6 +28,11 @@ aimInstallManifest:
     - .aim/
 
   modeProfiles:
+    standard:
+      defaultFootprint: adapters
+      includeOptionalSurfaces: true
+      gitignore:
+        - .aim/
     team:
       defaultFootprint: adapters
       includeOptionalSurfaces: true
@@ -73,11 +81,11 @@ aimInstallManifest:
       repoIgnore: true
       homeAdapters: true
     adapters:
-      description: Selected adapter packages and required contract subset; Team also gets the shared profile.
+      description: Standard project role/profile configuration, selected native adapters, and required contract subset.
       embeddedDocs: false
       externalDocs: false
       repoAdapters: true
-      sharedProfile: team-default
+      sharedProfile: true
       repoIgnore: true
       homeAdapters: true
     full:
@@ -118,6 +126,15 @@ aimInstallManifest:
       source: adapters/codex/agile-iteration-method/
       destination: ~/.codex/skills/agile-iteration-method/
       optional: true
+    projectRoles:
+      source: aim.roles.yaml
+      destination: aim.roles.yaml
+      schema: schemas/aim-project-roles.schema.json
+      generated: true
+    codexProjectAgents:
+      source: .codex/agents/aim-*.toml
+      destination: .codex/agents/
+      optional: true
     externalDistribution:
       source: docs/workflow/, schemas/, adapters/
       destination: ~/.aim/installs/agile-iteration-method/
@@ -152,6 +169,7 @@ aimInstallManifest:
 
   repoAwarenessBootstrap:
     sharedProfile: aim.profile.yaml
+    projectRoles: aim.roles.yaml
     personalHints: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
     enterpriseMemory: ~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml
     enterpriseMemoryDocs: ~/.aim/repo-awareness/<repo-fingerprint>/docs/

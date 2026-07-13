@@ -75,15 +75,15 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
             completed.stdout,
         )
 
-    def test_enterprise_plan_drift_is_a_product_contradiction(self) -> None:
+    def test_standard_install_plan_drift_is_a_product_contradiction(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)
             manifest = copied / "install/aim-install-manifest.yaml"
             content = manifest.read_text(encoding="utf-8")
             manifest.write_text(
                 content.replace(
-                    "enterprise:\n      defaultFootprint: external",
-                    "enterprise:\n      defaultFootprint: adapters",
+                    "standard:\n      defaultFootprint: adapters",
+                    "standard:\n      defaultFootprint: local",
                     1,
                 ),
                 encoding="utf-8",
@@ -93,7 +93,7 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 3)
         self.assertIn("Release readiness: FAIL", completed.stdout)
         self.assertIn(
-            "Enterprise default plan is not the external zero-repo-write install",
+            "standard install does not produce the documented native project-agent setup",
             completed.stdout,
         )
 

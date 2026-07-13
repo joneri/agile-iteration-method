@@ -36,7 +36,6 @@ def render_compact_text(
     lines = [
         _paint(f"AIM 2.0 installer · {operation}", "1;36", color),
         f"Target    {plan['target']}",
-        f"Mode      {plan['mode']}",
         f"Footprint {plan['footprint']}",
         f"           {plan.get('footprintDescription', '')}",
         f"Adapters  {', '.join(plan['adapters']) or '(none)'}",
@@ -49,6 +48,8 @@ def render_compact_text(
             f"{counts.get('collision', 0)} need attention"
         ),
     ]
+    if plan.get("mode") != "standard":
+        lines.insert(2, f"Legacy policy  {plan['mode']}")
     scope = plan.get("scopeSummary", {})
     lines.extend(
         [
@@ -109,7 +110,8 @@ def render_verbose_text(
     lines.append(f"AIM 2.0 install plan ({operation})")
     lines.append("=" * 32)
     lines.append(f"Manifest version : {plan['manifestVersion']}")
-    lines.append(f"Mode             : {plan['mode']}")
+    if plan.get("mode") != "standard":
+        lines.append(f"Legacy policy    : {plan['mode']}")
     lines.append(f"Footprint        : {plan['footprint']}")
     lines.append(f"Footprint meaning: {plan.get('footprintDescription', '')}")
     lines.append(f"Default footprint: {plan.get('defaultFootprint')}")

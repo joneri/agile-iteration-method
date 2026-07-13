@@ -27,7 +27,8 @@ Checks that:
 
 Checks executable or generated evidence:
 
-- Personal, Team, and Enterprise default plans can be generated
+- the standard adaptive install and legacy compatibility plans can be generated
+- all selected suppliers receive PO, TDO, Dev, and Reviewer native agents plus `aim.roles.yaml`
 - installer plans preserve root-file exclusions and mode-specific behavior
 - adapter packages contain required command and fallback capabilities
 - upgrade behavior is actionable and collision-safe

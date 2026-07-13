@@ -100,6 +100,8 @@ def _desired_bytes(
     if category in ("file", "package"):
         return (source_root / action["source"]).read_bytes()
     if category == "bootstrap":
+        if "content" in action:
+            return str(action["content"]).encode("utf-8")
         return seed.shared_profile_seed(mode).encode("utf-8")
     if category == "ignore":
         existing = seed.read_text_or_none(target_root / ".gitignore")
