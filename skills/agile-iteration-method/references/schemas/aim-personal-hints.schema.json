@@ -1,0 +1,144 @@
+{
+  "$comment": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
+  "$defs": {
+    "documentHint": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "loading": {
+          "enum": [
+            "authoritative",
+            "load_when_relevant",
+            "avoid_by_default",
+            "stale_or_uncertain"
+          ],
+          "type": "string"
+        },
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "loading"
+      ],
+      "type": "object"
+    },
+    "hintEntry": {
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "hints": {
+      "additionalProperties": false,
+      "properties": {
+        "avoidByDefault": {
+          "items": {
+            "$ref": "#/$defs/hintEntry"
+          },
+          "type": "array"
+        },
+        "commands": {
+          "items": {
+            "$ref": "#/$defs/hintEntry"
+          },
+          "type": "array"
+        },
+        "docs": {
+          "items": {
+            "$ref": "#/$defs/documentHint"
+          },
+          "type": "array"
+        },
+        "freshness": {
+          "items": {
+            "$ref": "#/$defs/hintEntry"
+          },
+          "type": "array"
+        },
+        "habits": {
+          "items": {
+            "$ref": "#/$defs/hintEntry"
+          },
+          "type": "array"
+        },
+        "localities": {
+          "items": {
+            "$ref": "#/$defs/hintEntry"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "commands",
+        "localities",
+        "docs",
+        "habits",
+        "avoidByDefault",
+        "freshness"
+      ],
+      "type": "object"
+    },
+    "personalHints": {
+      "additionalProperties": false,
+      "properties": {
+        "hints": {
+          "$ref": "#/$defs/hints"
+        },
+        "hintsVersion": {
+          "const": "0.1"
+        },
+        "profileOwner": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "repoFingerprint": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "updatedAt": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "hintsVersion",
+        "repoFingerprint",
+        "profileOwner",
+        "hints"
+      ],
+      "type": "object"
+    },
+    "stableId": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "type": "string"
+    }
+  },
+  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-personal-hints.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Structural contract for user-level Personal hints version 0.1.",
+  "properties": {
+    "aimPersonalHints": {
+      "$ref": "#/$defs/personalHints"
+    }
+  },
+  "required": [
+    "aimPersonalHints"
+  ],
+  "title": "AIM Personal repo-awareness hints",
+  "type": "object",
+  "x-aim-source": "schemas/aim-personal-hints.schema.json"
+}

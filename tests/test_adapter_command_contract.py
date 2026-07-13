@@ -116,7 +116,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             completed.stdout,
         )
 
-    def test_onboarding_guidance_drift_is_blocked(self) -> None:
+    def test_onboarding_guidance_drift_is_contradictory_until_regenerated(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)
             codex = copied / "adapters/codex/agile-iteration-method/SKILL.md"
@@ -131,10 +131,11 @@ class AdapterCommandContractTests(unittest.TestCase):
             )
             completed = self._validate(copied)
 
-        self.assertEqual(completed.returncode, 2)
-        self.assertIn("Result: blocked", completed.stdout)
+        self.assertEqual(completed.returncode, 3)
+        self.assertIn("Result: contradictory", completed.stdout)
         self.assertIn("Release readiness: FAIL", completed.stdout)
         self.assertIn("adapter onboarding guidance drifted", completed.stdout)
+        self.assertIn("generated public skill validation failed", completed.stdout)
 
     def test_codex_adapter_install_contains_state_first_onboarding(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

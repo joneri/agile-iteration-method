@@ -23,11 +23,22 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Set up Node.js for the official skills CLI
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       - name: Compile Python
         run: python3 -m compileall -q scripts tests
 
       - name: Run tests
         run: python3 -m unittest discover -s tests -v
+
+      - name: Verify generated public Agent Skill
+        run: python3 scripts/build_public_skill.py --check
+
+      - name: Validate official skills CLI discovery and installations
+        run: python3 scripts/validate_public_skill_cli.py --source .
 
       - name: Audit documentation and website
         run: python3 scripts/audit_documentation.py .

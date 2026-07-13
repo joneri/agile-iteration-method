@@ -172,6 +172,8 @@ class PublicationContractTests(unittest.TestCase):
             "workflow_dispatch:",
             "python3 -m compileall -q scripts tests",
             "python3 -m unittest discover -s tests -v",
+            "python3 scripts/build_public_skill.py --check",
+            "python3 scripts/validate_public_skill_cli.py --source .",
             "python3 scripts/audit_documentation.py .",
             "python3 scripts/validate_aim_runtime.py . --release",
             "python3 scripts/validate_publication.py --output site",

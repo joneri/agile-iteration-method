@@ -10,12 +10,53 @@ It works with Codex, Claude Code, and GitHub Copilot.
 
 ## Install
 
+Install the complete, self-contained AIM Agent Skill through the open skills
+ecosystem:
+
+[![skills.sh](https://skills.sh/b/joneri/agile-iteration-method)](https://skills.sh/joneri/agile-iteration-method)
+
+```bash
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method
+```
+
+This is full AIM, not AIM Lite. The package is generated from the same canonical
+workflow, adapter, installer, and schema sources as the adaptive AIM
+distribution. It does not require a separate AIM npm publication.
+
+Target one supported agent explicitly when needed:
+
+```bash
+# Codex
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method --agent codex --yes
+
+# GitHub Copilot
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method --agent github-copilot --yes
+
+# Claude Code
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method --agent claude-code --yes
+```
+
+Update an installed public skill with:
+
+```bash
+npx skills update agile-iteration-method --yes
+```
+
+The adaptive AIM installer remains available when you want reviewed repository
+calibration, native project specialists, or a broader supplier-specific
+footprint:
+
 ```bash
 curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
 ```
 
 The installer asks for a repository and the adapters you use. It shows every
-write and collision before applying anything.
+write and collision before applying anything. Native project specialists can
+also be refreshed later through `/aim configure-agents` from `aim.roles.yaml`.
 
 Already using AIM? Run:
 
@@ -120,6 +161,14 @@ installer manifest, and profile schema versions are tracked separately.
 - [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md)
 - [Release and publication](docs/workflow/release-publication-model.md)
+- [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
+
+Maintainers regenerate and verify the public package with:
+
+```bash
+python3 scripts/build_public_skill.py
+python3 scripts/build_public_skill.py --check
+```
 
 Current product release: **v2.2.0**. See [CHANGELOG.md](CHANGELOG.md).
 

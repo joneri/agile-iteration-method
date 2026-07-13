@@ -1,0 +1,128 @@
+{
+  "description": "Plan and deliver repository-aware AI-assisted software work through Agile Iteration Method using PO, TDO, Dev, and Reviewer roles, end-to-end Done Increments, explicit gates, review, validation, and user-owned acceptance. Use for creating and refining Epics, planning increments, implementing work, reviewing delivery, configuring project specialists, calibrating repositories, controlling AIM modes and cost profiles, and continuing AIM runs.",
+  "files": [
+    "SKILL.md",
+    "manifest.json",
+    "references/LICENSE-DOCS",
+    "references/adapter-command-contract.md",
+    "references/adapter-entry-model.md",
+    "references/adapter-skill-bootstrap.md",
+    "references/agile-iteration-method.md",
+    "references/install/aim-install-manifest.yaml",
+    "references/operating-modes.md",
+    "references/project-agent-configuration.md",
+    "references/repo-awareness-calibration.md",
+    "references/schemas/aim-personal-hints.schema.json",
+    "references/schemas/aim-project-roles.schema.json",
+    "references/schemas/aim-repo-profile.schema.json",
+    "references/version-and-installation.md"
+  ],
+  "generatedNotice": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
+  "generator": "python3 scripts/build_public_skill.py",
+  "installerManifestVersion": "0.7",
+  "name": "agile-iteration-method",
+  "officialSkillsCli": {
+    "installCommand": "npx skills add joneri/agile-iteration-method --skill agile-iteration-method",
+    "supportedAgents": [
+      "codex",
+      "github-copilot",
+      "claude-code"
+    ],
+    "validatedVersion": "1.5.17"
+  },
+  "productVersion": "2.2.0",
+  "profileSchemaVersions": {
+    "personalHints": "0.1",
+    "projectRoles": "0.1",
+    "repoProfile": "0.2"
+  },
+  "publicSkillPackageVersion": 1,
+  "runtimeContractVersion": "2.0",
+  "sourceProvenance": [
+    {
+      "output": "SKILL.md",
+      "sha256": "62d8d4894712c570130f22638706a22855ee9a6ae1d41e941ef87e43625ca3a9",
+      "source": "adapters/codex/agile-iteration-method/SKILL.md"
+    },
+    {
+      "output": "references/agile-iteration-method.md",
+      "sha256": "9562a5d218b0da13344e321f082c12e2635980ca083373b82a17fbfe778f4cbb",
+      "source": "docs/workflow/agile-iteration-method.md"
+    },
+    {
+      "output": "references/adapter-command-contract.md",
+      "sha256": "8703852be8578d79e5754fee27b874d66a7651cf6e66d87d32d2a74cfe28b022",
+      "source": "docs/workflow/adapter-command-contract.md"
+    },
+    {
+      "output": "references/adapter-entry-model.md",
+      "sha256": "4b5aefc78363fefbfa35f13c6cf0857996569644770cd538be1d3e0ba69eddf4",
+      "source": "docs/workflow/adapter-entry-model.md"
+    },
+    {
+      "output": "references/adapter-skill-bootstrap.md",
+      "sha256": "353b5be83f1c03fbe5cc7993fd16452d86d6b263a2aa47f755ecc1e4a6218952",
+      "source": "docs/workflow/adapter-skill-bootstrap.md"
+    },
+    {
+      "output": "references/project-agent-configuration.md",
+      "sha256": "8afea232621542e5bf6ba0262d8b2eda3429d9d3723e197cf122d970178d7d7d",
+      "source": "docs/workflow/project-agent-configuration.md"
+    },
+    {
+      "output": "references/operating-modes.md",
+      "sha256": "81fa98e10fa2e99e121b5b7d1dc668e1b519521785b140130944c39528541e29",
+      "source": "docs/workflow/operating-modes.md"
+    },
+    {
+      "output": "references/repo-awareness-calibration.md",
+      "sha256": "73ee3b64d85e95421d2a3bd427120f0f57056e50277f7c4d5fdef6e8291cd34d",
+      "source": "docs/workflow/repo-awareness-calibration.md"
+    },
+    {
+      "output": "references/version-and-installation.md",
+      "sha256": "1304364d7ca68bbac7a2daca1e041fd1f1329d864fffe77b7a8c837ca061f368",
+      "source": "docs/workflow/version-and-installation.md"
+    },
+    {
+      "output": "references/schemas/aim-repo-profile.schema.json",
+      "sha256": "7703cb84e1744420542ef317ebdbf7e047009c53519f30f23e8c234d7afffae9",
+      "source": "schemas/aim-repo-profile.schema.json"
+    },
+    {
+      "output": "references/schemas/aim-personal-hints.schema.json",
+      "sha256": "a9db65dcb50106009a66b4b0c9a8a5bf32230fd031885c5bc107177e9337edf0",
+      "source": "schemas/aim-personal-hints.schema.json"
+    },
+    {
+      "output": "references/schemas/aim-project-roles.schema.json",
+      "sha256": "d859eca8c12702384e0c1a1a0341c082489b07782b2c1043242320a72d965e3e",
+      "source": "schemas/aim-project-roles.schema.json"
+    },
+    {
+      "output": "references/install/aim-install-manifest.yaml",
+      "sha256": "f7e9a9f10d9b134392d33d29f54b644c06565290fa8b4c33afe3dbb339953ee4",
+      "source": "install/aim-install-manifest.yaml"
+    },
+    {
+      "output": "references/LICENSE-DOCS",
+      "sha256": "68ca802462062a00b670f33f0a29614aadb9525117c0094d1cab6345e7dd555e",
+      "source": "docs/LICENSE-DOCS"
+    },
+    {
+      "output": "references/version-and-installation.md",
+      "sha256": "c4a2383a03bdb6739d16a0e24058e4b9c7da4e63d203e0be2f448868cc03c530",
+      "source": "VERSION"
+    },
+    {
+      "output": "references/version-and-installation.md",
+      "sha256": "d5c94a36efd5a3ca4ff64ece68d0e079b51dc22b5960ece9a0ba65ba4f510a61",
+      "source": "scripts/aim_publication.py"
+    },
+    {
+      "output": "manifest.json",
+      "sha256": "07158409db682cd4d7d3e89b164a8719eea50ba483dd252deff9cf03fa20333a",
+      "source": "scripts/build_public_skill.py"
+    }
+  ]
+}

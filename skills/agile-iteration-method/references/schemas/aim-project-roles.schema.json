@@ -1,0 +1,178 @@
+{
+  "$comment": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
+  "$defs": {
+    "role": {
+      "additionalProperties": true,
+      "properties": {
+        "expertise": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "mission": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "validation": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "writeScope": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "mission",
+        "expertise",
+        "writeScope"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-project-roles.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Human-editable shared intent for supplier-native AIM role specialists.",
+  "properties": {
+    "aimProjectRoles": {
+      "additionalProperties": false,
+      "properties": {
+        "customization": {
+          "additionalProperties": true,
+          "properties": {
+            "editable": {
+              "const": true
+            },
+            "refreshAfter": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "updateIntent": {
+              "const": "/aim configure-agents"
+            }
+          },
+          "required": [
+            "editable",
+            "updateIntent",
+            "refreshAfter"
+          ],
+          "type": "object"
+        },
+        "orchestration": {
+          "additionalProperties": false,
+          "properties": {
+            "mainThreadOwnsRuntime": {
+              "const": true
+            },
+            "maxDelegationDepth": {
+              "type": "integer"
+            },
+            "modelPolicy": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "parallelPolicy": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "mainThreadOwnsRuntime",
+            "parallelPolicy",
+            "maxDelegationDepth",
+            "modelPolicy"
+          ],
+          "type": "object"
+        },
+        "profileVersion": {
+          "const": "0.1"
+        },
+        "project": {
+          "additionalProperties": true,
+          "properties": {
+            "name": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "technologies": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "validation": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "name",
+            "technologies",
+            "validation"
+          ],
+          "type": "object"
+        },
+        "roles": {
+          "additionalProperties": false,
+          "properties": {
+            "dev": {
+              "$ref": "#/$defs/role"
+            },
+            "po": {
+              "$ref": "#/$defs/role"
+            },
+            "reviewer": {
+              "$ref": "#/$defs/role"
+            },
+            "tdo": {
+              "$ref": "#/$defs/role"
+            }
+          },
+          "required": [
+            "po",
+            "tdo",
+            "dev",
+            "reviewer"
+          ],
+          "type": "object"
+        },
+        "source": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "needs_calibration"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "profileVersion",
+        "status",
+        "project",
+        "orchestration",
+        "roles",
+        "customization"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "aimProjectRoles"
+  ],
+  "title": "AIM project role profile",
+  "type": "object",
+  "x-aim-source": "schemas/aim-project-roles.schema.json"
+}

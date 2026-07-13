@@ -595,7 +595,7 @@ class ModeFootprintContractTests(unittest.TestCase):
             )
         )
 
-    def test_validator_blocks_mode_default_drift(self) -> None:
+    def test_validator_rejects_mode_and_public_package_drift(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = Path(temporary) / "repo"
             shutil.copytree(
@@ -621,10 +621,11 @@ class ModeFootprintContractTests(unittest.TestCase):
                 text=True,
                 timeout=20,
             )
-            self.assertEqual(completed.returncode, 2)
-            self.assertIn("Result: blocked", completed.stdout)
+            self.assertEqual(completed.returncode, 3)
+            self.assertIn("Result: contradictory", completed.stdout)
             self.assertIn("Release readiness: FAIL", completed.stdout)
             self.assertIn("mode footprint defaults drifted", completed.stdout)
+            self.assertIn("generated public skill validation failed", completed.stdout)
 
 
 class CliTests(unittest.TestCase):

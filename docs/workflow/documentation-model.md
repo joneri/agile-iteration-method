@@ -29,6 +29,7 @@ It separates:
 | Validator and safety behavior | executable safety checks | canonical for what the validator enforces | `scripts/validate_aim_runtime.py` |
 | Machine-readable repo-awareness structure | versioned profile and Personal-hints shape | canonical for structure | `schemas/aim-repo-profile.schema.json`, `schemas/aim-personal-hints.schema.json` |
 | Release and publication | public artifact, schema URL, license, and release-gate contract | canonical for publication | `docs/workflow/release-publication-model.md` |
+| Public Agent Skill distribution | portable package generation, version, install, update, and skills.sh publication contract | canonical for the open skills ecosystem surface | `docs/workflow/version-and-installation.md` |
 | Adapter docs and helpers | platform-specific entry and packaging behavior | adapter-specific, secondary to core | `docs/workflow/aim-adapter-guidance.md`, `adapters/`, `.github/agents/`, `.github/prompts/`, `.claude/` |
 | Repo-aware policy | reusable target repository guidance | repo-owned, non-core | `aim.profile.yaml`, optional Personal profile |
 | User-created support docs | repo-local feature or workflow notes | non-core by default | repo-created files under `docs/features/` or other local docs |
@@ -61,6 +62,7 @@ It separates:
 | Cost review behavior | `docs/workflow/cost-review-checklist.md` |
 | Cost-saving and escalation behavior | `docs/workflow/cost-saving-method.md` |
 | Modularity and context efficiency | `docs/workflow/modularity-context-efficiency.md` |
+| Public Agent Skill packaging and skills.sh publication | `docs/workflow/version-and-installation.md` |
 
 If two canonical AIM-owned docs conflict, treat the conflict as a documentation bug and escalate instead of guessing.
 If public product docs conflict with canonical workflow docs, correct the public explanation; public narrative does not redefine AIM behavior.
@@ -194,6 +196,7 @@ Internal maintainer/build-memory docs:
 | `docs/workflow/modularity-context-efficiency.md` | canonical file-boundary and context-efficiency behavior |
 | `docs/workflow/install-aim-2.0.md` | canonical install guidance constrained by model docs |
 | `docs/workflow/release-publication-model.md` | canonical public artifact and release-gate model |
+| `docs/workflow/version-and-installation.md` | canonical public Agent Skill distribution and skills.sh publication model |
 | `docs/features/` as a folder | support/reference by default; promote behavior-defining docs to `docs/workflow/` |
 | `AGENTS.md` | outside AIM architecture; remove from AIM product surfaces |
 | `CLAUDE.md` | outside AIM architecture; use optional `.claude/` packaging |
@@ -219,6 +222,7 @@ The validator should:
 - `docs/workflow/product-coherence-validation.md`
 - `docs/workflow/repo-profile-schema.md`
 - `docs/workflow/release-publication-model.md`
+- `docs/workflow/version-and-installation.md`
 - `docs/product/README.md`
 - `docs/product/features.md`
 - `docs/features/README.md`

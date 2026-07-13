@@ -1,0 +1,343 @@
+{
+  "$comment": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
+  "$defs": {
+    "confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "type": "string"
+    },
+    "documentEntry": {
+      "additionalProperties": true,
+      "properties": {
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "loading": {
+          "enum": [
+            "authoritative",
+            "load_when_relevant",
+            "avoid_by_default",
+            "stale_or_uncertain"
+          ],
+          "type": "string"
+        },
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "loading"
+      ],
+      "type": "object"
+    },
+    "knowledgeEntry": {
+      "additionalProperties": true,
+      "properties": {
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "id": {
+          "$ref": "#/$defs/stableId"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "repoKnowledge": {
+      "additionalProperties": false,
+      "properties": {
+        "avoidByDefault": {
+          "items": {
+            "$ref": "#/$defs/knowledgeEntry"
+          },
+          "type": "array"
+        },
+        "commands": {
+          "items": {
+            "$ref": "#/$defs/knowledgeEntry"
+          },
+          "type": "array"
+        },
+        "docs": {
+          "items": {
+            "$ref": "#/$defs/documentEntry"
+          },
+          "type": "array"
+        },
+        "freshness": {
+          "items": {
+            "$ref": "#/$defs/knowledgeEntry"
+          },
+          "type": "array"
+        },
+        "habits": {
+          "items": {
+            "$ref": "#/$defs/knowledgeEntry"
+          },
+          "type": "array"
+        },
+        "localities": {
+          "items": {
+            "$ref": "#/$defs/knowledgeEntry"
+          },
+          "type": "array"
+        },
+        "riskZones": {
+          "items": {
+            "$ref": "#/$defs/knowledgeEntry"
+          },
+          "type": "array"
+        },
+        "technologies": {
+          "items": {
+            "$ref": "#/$defs/knowledgeEntry"
+          },
+          "type": "array"
+        },
+        "uiTesting": {
+          "items": {
+            "$ref": "#/$defs/knowledgeEntry"
+          },
+          "type": "array"
+        },
+        "validation": {
+          "items": {
+            "$ref": "#/$defs/knowledgeEntry"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "technologies",
+        "commands",
+        "validation",
+        "uiTesting",
+        "docs",
+        "localities",
+        "riskZones",
+        "habits",
+        "avoidByDefault",
+        "freshness"
+      ],
+      "type": "object"
+    },
+    "repoProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "adoption": {
+          "additionalProperties": false,
+          "properties": {
+            "footprint": {
+              "enum": [
+                "zero",
+                "external",
+                "tiny",
+                "isolated",
+                "full"
+              ],
+              "type": "string"
+            },
+            "mode": {
+              "enum": [
+                "standard",
+                "personal",
+                "team",
+                "enterprise"
+              ],
+              "type": "string"
+            },
+            "profileOwner": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "sharing": {
+              "enum": [
+                "local",
+                "committed",
+                "explicit",
+                "registry"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode",
+            "footprint",
+            "sharing",
+            "profileOwner"
+          ],
+          "type": "object"
+        },
+        "calibration": {
+          "additionalProperties": false,
+          "properties": {
+            "confidence": {
+              "$ref": "#/$defs/confidence"
+            },
+            "openUncertainties": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "source": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "ready",
+                "partially_ready",
+                "needs_calibration"
+              ],
+              "type": "string"
+            },
+            "verifiedAt": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "status",
+            "source",
+            "confidence",
+            "openUncertainties"
+          ],
+          "type": "object"
+        },
+        "commands": {
+          "type": "object"
+        },
+        "context": {
+          "type": "object"
+        },
+        "conventions": {
+          "type": "object"
+        },
+        "cost": {
+          "type": "object"
+        },
+        "freshness": {
+          "type": "object"
+        },
+        "locality": {
+          "type": "object"
+        },
+        "note": {
+          "type": "string"
+        },
+        "ownership": {
+          "type": "object"
+        },
+        "profileVersion": {
+          "const": "0.2"
+        },
+        "repoIdentity": {
+          "additionalProperties": false,
+          "properties": {
+            "defaultBranch": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "remote": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "root": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "defaultBranch"
+          ],
+          "type": "object"
+        },
+        "repoKnowledge": {
+          "$ref": "#/$defs/repoKnowledge"
+        },
+        "risk": {
+          "type": "object"
+        },
+        "storage": {
+          "additionalProperties": false,
+          "properties": {
+            "docsSource": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "personalHintsLocation": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "profileLocation": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "runtimeLocation": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "workingStateLocation": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "profileLocation",
+            "personalHintsLocation",
+            "workingStateLocation",
+            "docsSource"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "profileVersion",
+        "calibration",
+        "repoIdentity",
+        "adoption",
+        "storage",
+        "repoKnowledge"
+      ],
+      "type": "object"
+    },
+    "stableId": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "type": "string"
+    }
+  },
+  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-repo-profile.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Structural contract for aim.profile.yaml profileVersion 0.2.",
+  "properties": {
+    "aimRepoProfile": {
+      "$ref": "#/$defs/repoProfile"
+    }
+  },
+  "required": [
+    "aimRepoProfile"
+  ],
+  "title": "AIM repo-awareness profile",
+  "type": "object",
+  "x-aim-source": "schemas/aim-repo-profile.schema.json"
+}

@@ -11,6 +11,12 @@
   path while preserving `.codex/agents` for project specialists.
 - Added product-versioned release manifests, documentation quality checks, a
   concise feature guide, and a refreshed v2.2.0 website.
+- Added the generated, self-contained `agile-iteration-method` public Agent
+  Skill for official skills CLI installation across Codex, GitHub Copilot, and
+  Claude Code without creating an AIM Lite fork.
+- Added deterministic public-skill generation, canonical-source provenance,
+  semantic parity tests, isolated official-CLI installation validation, and
+  release-gate drift protection.
 
 ## 2026-06-11 - AIM 2 release v2.1.0
 - Added the Enterprise `external` footprint so protected repositories can install the full AIM distribution and selected home-scope adapter packages outside the target repository with zero repo writes by default.

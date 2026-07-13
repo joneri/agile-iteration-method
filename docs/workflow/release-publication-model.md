@@ -37,6 +37,8 @@ pass:
 4. schema structure and public-ID checks
 5. installer and adapter package integrity
 6. deterministic public artifact assembly and revalidation
+7. deterministic public Agent Skill drift checks and isolated official skills
+   CLI discovery/install validation
 
 The workflow supports both `workflow_call` and `workflow_dispatch`. Pages calls
 it before build. Maintainers may run it independently before a release.
@@ -47,6 +49,28 @@ publication checks. Normal validator mode still checks local resume state.
 
 Release-gate failure does not prevent local edits, local tests, or local AIM
 loops. It prevents public publication.
+
+## Public Agent Skill
+
+`skills/agile-iteration-method/` is AIM's portable Agent Skill distribution.
+It is generated from canonical AIM sources by
+`scripts/build_public_skill.py`; it is not an independently edited method
+surface. Release readiness runs `python3 scripts/build_public_skill.py --check`
+and rejects missing files, invalid frontmatter, local-reference drift,
+inconsistent versions, non-deterministic output, or canonical changes that were
+not regenerated.
+
+The release gate also uses the pinned current official skills CLI to validate
+repository discovery, copied project installs for Codex, GitHub Copilot, and
+Claude Code, package closure, and `skills use` prompt generation in isolated
+temporary repositories. Test installations disable telemetry and do not modify
+the AIM development repository.
+
+Publishing the skill requires no separate npm package or skills.sh upload. A
+valid package on the public GitHub default branch plus one genuine installation
+through the official CLI makes it eligible for skills.sh discovery. Anonymous
+aggregate install telemetry may be indexed asynchronously and must never be
+artificially inflated.
 
 ## GitHub Release Workflow
 
@@ -165,6 +189,8 @@ These are not Pages or release payloads:
 ```sh
 python3 -m compileall -q scripts tests
 python3 -m unittest discover -s tests -v
+python3 scripts/build_public_skill.py --check
+python3 scripts/validate_public_skill_cli.py --source .
 python3 scripts/validate_aim_runtime.py . --release
 python3 scripts/validate_publication.py --output /tmp/aim-site
 python3 scripts/validate_publication.py --output /tmp/aim-site --check-only

@@ -9,6 +9,13 @@ description: >
   controlling AIM modes and cost profiles, and continuing AIM runs.
 ---
 
+<!--
+GENERATED FILE. DO NOT EDIT DIRECTLY.
+Generated from canonical Agile Iteration Method sources.
+Regenerate with: python3 scripts/build_public_skill.py
+Source: adapters/codex/agile-iteration-method/SKILL.md
+-->
+
 # Agile Iteration Method
 
 Use this skill to operate AIM 2.0 as a continuous role-and-gate delivery loop.
@@ -99,7 +106,7 @@ When the user runs AIM in Codex for install, upgrade, validate, status, config,
 or stale-skill troubleshooting, make the bundled skill path obvious before
 continuing:
 
-- optional source-checkout skill: `adapters/codex/agile-iteration-method/SKILL.md`
+- optional source-checkout skill: `SKILL.md`
 - adaptive-installer user path: `~/.agents/skills/agile-iteration-method/SKILL.md`
 - public skills-CLI project path: `.agents/skills/agile-iteration-method/SKILL.md`
 - public skills-CLI global path: `~/.codex/skills/agile-iteration-method/SKILL.md`

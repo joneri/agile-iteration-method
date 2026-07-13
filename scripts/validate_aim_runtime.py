@@ -15,6 +15,7 @@ from aim_installer import seed as installer_seed
 from aim_installer.manifest import ManifestError, load_manifest
 from aim_installer.yaml_lite import YamlLiteError, loads as load_aim_yaml
 from aim_docs import audit as audit_documentation
+from build_public_skill import PublicSkillError, validate_committed_package
 from aim_validator.coherence import evaluate_product_coherence
 from aim_validator.profile_contract import (
     PERSONAL_HINTS_SCHEMA_PATH,
@@ -329,6 +330,7 @@ LIGHT_FRONT_DOOR_DOC_PATH = "docs/workflow/light-front-door.md"
 PRODUCT_COHERENCE_DOC_PATH = "docs/workflow/product-coherence-validation.md"
 REPO_PROFILE_SCHEMA_DOC_PATH = "docs/workflow/repo-profile-schema.md"
 RELEASE_PUBLICATION_DOC_PATH = "docs/workflow/release-publication-model.md"
+PUBLIC_SKILL_DISTRIBUTION_DOC_PATH = "docs/workflow/version-and-installation.md"
 PROJECT_ROLES_SCHEMA_PATH = "schemas/aim-project-roles.schema.json"
 PROJECT_ROLES_PATH = "aim.roles.yaml"
 
@@ -737,6 +739,7 @@ REQUIRED_DOCUMENTATION_MODEL_MARKERS = [
     PRODUCT_COHERENCE_DOC_PATH,
     REPO_PROFILE_SCHEMA_DOC_PATH,
     RELEASE_PUBLICATION_DOC_PATH,
+    PUBLIC_SKILL_DISTRIBUTION_DOC_PATH,
     "docs/features/",
     "AGENTS.md",
     "CLAUDE.md",
@@ -764,6 +767,7 @@ PROMOTED_CANONICAL_DOC_PATHS = {
     "docs/workflow/cost-review-checklist.md": "docs/features/aim-cost-review-checklist.md",
     "docs/workflow/cost-saving-method.md": "docs/features/aim-cost-saving-method.md",
     RELEASE_PUBLICATION_DOC_PATH: "docs/features/aim-release-publication-model.md",
+    PUBLIC_SKILL_DISTRIBUTION_DOC_PATH: "docs/features/aim-public-skill-distribution.md",
 }
 
 FEATURE_SUPPORT_ROLE_MARKERS = {
@@ -1371,6 +1375,21 @@ def main() -> int:
             "Fix the link, version, feature coverage, front-door length, or website structure before release.",
         )
 
+    checked.append("generated public Agent Skill package")
+    try:
+        validate_committed_package(repo_root)
+    except (OSError, json.JSONDecodeError, PublicSkillError) as exc:
+        add_issue(
+            issues,
+            "contradictory",
+            "skills/agile-iteration-method",
+            f"generated public skill validation failed: {exc}",
+            "Regenerate with python3 scripts/build_public_skill.py and commit the exact deterministic output.",
+            tier="Release readiness",
+            category="Contradiction",
+            release_impact="fail",
+        )
+
     required_repo_files = [
         repo_root / "README.md",
         *[repo_root / path for path in PUBLIC_PRODUCT_DOC_PATHS if path != "README.md"],
@@ -1384,6 +1403,7 @@ def main() -> int:
         repo_root / PRODUCT_COHERENCE_DOC_PATH,
         repo_root / REPO_PROFILE_SCHEMA_DOC_PATH,
         repo_root / RELEASE_PUBLICATION_DOC_PATH,
+        repo_root / PUBLIC_SKILL_DISTRIBUTION_DOC_PATH,
         repo_root / INSTALL_MANIFEST_PATH,
         repo_root / REPO_PROFILE_SCHEMA_PATH,
         repo_root / PERSONAL_HINTS_SCHEMA_PATH,

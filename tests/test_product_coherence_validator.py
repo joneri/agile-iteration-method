@@ -143,6 +143,20 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
             completed.stdout,
         )
 
+    def test_stale_public_skill_fails_release_readiness(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            canonical = copied / "docs/workflow/adapter-command-contract.md"
+            canonical.write_text(
+                canonical.read_text(encoding="utf-8") + "\nUnpackaged drift.\n",
+                encoding="utf-8",
+            )
+            completed = self._validate(copied)
+
+        self.assertEqual(completed.returncode, 3)
+        self.assertIn("Release readiness: FAIL", completed.stdout)
+        self.assertIn("generated public skill validation failed", completed.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
