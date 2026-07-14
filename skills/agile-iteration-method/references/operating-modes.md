@@ -9,9 +9,12 @@ Source: docs/workflow/operating-modes.md
 
 ## Current product model
 
-AIM uses one adaptive installation. Personal, Team, and Enterprise are no
+AIM is one product with two maintained distribution paths: the public portable
+Agent Skill installed through the standard skills CLI, and one adaptive guided
+installer for repository-aware setup. Personal, Team, and Enterprise are no
 longer separate operating modes presented to users. AIM core, roles, gates,
-runtime ownership, and adapter semantics are identical for every user.
+runtime ownership, and adapter semantics are identical for every user and both
+distribution paths.
 
 The current choices are independent configuration dimensions:
 
@@ -60,9 +63,11 @@ Regardless of storage:
 
 Release validation generates the standard install plan and representative
 advanced footprint plans. It also verifies that legacy flags still produce
-deterministic upgrade plans while public docs and the guided installer expose
-only one AIM product path.
+deterministic upgrade plans while public docs, the public Agent Skill, and the
+guided installer expose one AIM product through clearly distinguished setup
+paths.
 
 See [Install AIM](https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/install-aim-2.0.md),
+[Public Agent Skill distribution](version-and-installation.md),
 [Project-agent configuration](project-agent-configuration.md), and
 [Repo profile and footprint model](https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repo-profile-and-footprint-model.md).

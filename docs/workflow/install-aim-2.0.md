@@ -1,14 +1,30 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# Install AIM 2.0
+# Install AIM 2.0 with the adaptive installer
 
-## One adaptive installation
+This guide covers AIM's guided repository setup. For the standard portable Agent
+Skill installation, run:
 
-AIM has one guided installation. A user chooses the target repository and the
-suppliers already used there. The installer plans the smallest complete native
-package for those suppliers, previews every write or collision, and applies only
-after confirmation.
+```bash
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method
+```
+
+The public skill delivers complete AIM. After installing it, calibrate the
+repository and configure project specialists when wanted. See
+[Public Agent Skill distribution](version-and-installation.md).
+
+Use the adaptive installer below when you want one reviewed flow to select the
+target repository and suppliers, seed repository configuration, and install
+native project specialists.
+
+## One guided adaptive installer
+
+AIM has one guided adaptive installer. A user chooses the target repository and
+the suppliers already used there. The installer plans the smallest complete
+native package for those suppliers, previews every write or collision, and
+applies only after confirmation.
 
 Run:
 

@@ -7,6 +7,11 @@ Use this page when AIM is installed and you want to begin real work.
 
 New to the product? Read the [public first-time journey](../product/getting-started.md) first.
 
+The public Agent Skill is the standard portable installation. It provides the
+complete AIM method, then guides repository setup through calibration and
+project-specialist configuration. The adaptive installer may seed those project
+files during its guided setup instead.
+
 ## 1. Check Repository Readiness
 
 Run:
@@ -132,16 +137,17 @@ They are related, but not the same action.
 
 ## Tune Project Specialists
 
-The standard installation creates the native AIM role files supported by the
-selected adapter and a shared `aim.roles.yaml` profile. Run:
+The adaptive standard setup creates native AIM role files for the selected
+adapters and a shared `aim.roles.yaml` profile. A portable public-skill install
+does not claim those project files already exist. After calibration, run:
 
 ```text
 /aim configure-agents
 ```
 
-Use it after installation, when the stack changes, or when PO, TDO, Dev, and
-Reviewer need stronger project-specific instructions. AIM previews the proposed
-profile and native-file changes before applying them.
+Use it after a public-skill installation, when the stack changes, or when PO,
+TDO, Dev, and Reviewer need stronger project-specific instructions. AIM previews
+the proposed profile and native-file changes before applying them.
 
 There is no edition to choose. Older Personal, Team, and Enterprise flags are
 migration inputs only; see [Operating modes](operating-modes.md).

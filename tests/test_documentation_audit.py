@@ -39,3 +39,29 @@ class DocumentationAuditTests(unittest.TestCase):
             index.write_text(index.read_text().replace("</article>", "</div>", 1), encoding="utf-8")
             errors = audit(copied)
         self.assertTrue(any("unexpected" in error for error in errors))
+
+    def test_installation_path_drift_and_internal_jargon_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy(temporary)
+            onboarding = copied / "docs/workflow/codex-skill-onboarding.md"
+            onboarding.write_text(
+                onboarding.read_text(encoding="utf-8").replace(
+                    "npx skills add joneri/agile-iteration-method",
+                    "install the skill somehow",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            index = copied / "index.html"
+            index.write_text(
+                index.read_text(encoding="utf-8").replace(
+                    "Preview before changes",
+                    "Collision protection",
+                    1,
+                ),
+                encoding="utf-8",
+            )
+            errors = audit(copied)
+        self.assertTrue(any("installation-path marker" in error for error in errors))
+        self.assertTrue(any("internal installer jargon" in error for error in errors))
+        self.assertTrue(any("plain-language setup benefit" in error for error in errors))

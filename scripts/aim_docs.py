@@ -71,6 +71,55 @@ def audit(repo_root: Path) -> list[str]:
         if marker not in features:
             errors.append(f"docs/product/features.md: missing feature group {marker!r}")
 
+    installation_contract = {
+        "docs/workflow/codex-skill-onboarding.md": (
+            "npx skills add joneri/agile-iteration-method",
+            "/aim calibrate-repo",
+            "/aim configure-agents",
+            "adaptive installer",
+        ),
+        "docs/workflow/operating-modes.md": (
+            "two maintained distribution paths",
+            "public portable Agent Skill",
+            "adaptive guided installer",
+        ),
+        "docs/workflow/aim-adapter-guidance.md": (
+            "portable public Agent Skill",
+            "adaptive guided installer",
+            "npx skills add joneri/agile-iteration-method",
+        ),
+        "docs/workflow/install-aim-2.0.md": (
+            "npx skills add joneri/agile-iteration-method",
+            "One guided adaptive installer",
+            "Public Agent Skill distribution",
+        ),
+        "docs/workflow/quick-start-aim-2.0.md": (
+            "public Agent Skill",
+            "/aim calibrate-repo",
+            "/aim configure-agents",
+            "does not claim those project files already exist",
+        ),
+    }
+    for relative_path, markers in installation_contract.items():
+        content = _text(repo_root / relative_path)
+        normalized = " ".join(content.split())
+        for marker in markers:
+            if marker not in normalized:
+                errors.append(
+                    f"{relative_path}: missing installation-path marker {marker!r}"
+                )
+
+    if "Collision protection" in index:
+        errors.append(
+            "index.html: internal installer jargon must not appear: "
+            "'Collision protection'"
+        )
+    if "Preview before changes" not in index:
+        errors.append(
+            "index.html: missing plain-language setup benefit "
+            "'Preview before changes'"
+        )
+
     markdown_files = [repo_root / "README.md", *sorted((repo_root / "docs").rglob("*.md"))]
     for path in markdown_files:
         for target in LINK_RE.findall(_text(path)):

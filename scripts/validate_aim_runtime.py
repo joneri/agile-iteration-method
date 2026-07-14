@@ -703,7 +703,9 @@ CALIBRATION_ADAPTER_MARKERS = {
 }
 
 REQUIRED_OPERATING_MODE_MARKERS = [
-    "one adaptive installation",
+    "two maintained distribution paths",
+    "standard skills CLI",
+    "repository-aware setup",
     "Legacy flag mapping",
     "Strict or Auto",
     "Standard, Cost Control, or Deep",

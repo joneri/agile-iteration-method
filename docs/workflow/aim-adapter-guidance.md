@@ -51,11 +51,17 @@ Adapter layers may improve UX and discoverability, but they must preserve:
 
 If adapter guidance conflicts with canonical workflow docs or `aim.profile.yaml`, escalate instead of guessing.
 
-## AIM 2.0 adaptive-install expectations
+## AIM 2.0 distribution expectations
 
-AIM 2.0 uses one adaptive installation without changing AIM core. Older
-Personal, Team, and Enterprise labels are compatibility inputs, not separate
-products or current adapter behavior models.
+AIM 2.0 is one product available through a portable public Agent Skill and one
+adaptive guided installer. Both preserve AIM core. Older Personal, Team, and
+Enterprise labels are compatibility inputs, not separate products or current
+adapter behavior models.
+
+The public skill is the normal portable entry point. Its onboarding guidance
+must not pretend that repository configuration already exists: users calibrate,
+then configure project specialists when wanted, before starting the first Epic.
+The adaptive installer may seed those files in one reviewed setup flow.
 
 Adapters should treat these as separate concerns:
 
@@ -233,7 +239,9 @@ Claude Code:
 
 Installation boundary:
 - `adapters/codex/agile-iteration-method/SKILL.md` is the shipped Codex convenience layer; copy it into the local Codex skills directory when `/aim` support is wanted.
-- The local Codex target is `~/.agents/skills/agile-iteration-method/SKILL.md`; if that file is missing or stale, Codex may continue from explicit AIM intent and canonical workflow docs but should surface the install command before relying on `/aim` routing.
+- The public Codex skill installs with `npx skills add joneri/agile-iteration-method --skill agile-iteration-method --agent codex --yes`.
+- The local Codex target is `~/.agents/skills/agile-iteration-method/SKILL.md`; if that file is missing or stale, Codex may continue from explicit AIM intent and canonical workflow docs but should surface the public install or update command before relying on `/aim` routing.
+- The adaptive installer remains the path for a reviewed repository footprint, `aim.roles.yaml`, and supplier-native project specialists.
 - `.github/agents/aim*.agent.md` are Copilot-native AIM entrypoints.
 - `.github/prompts/` are optional Copilot-style prompt helpers, not the canonical AIM contract.
 - `.claude/` provides Claude-native AIM entrypoints without a generic root bridge.

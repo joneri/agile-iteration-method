@@ -1,23 +1,44 @@
-# AIM Codex Bundled Skill Onboarding
+# AIM Codex Skill Onboarding
 
-This document defines canonical Codex onboarding behavior for the shipped AIM skill.
+This document defines canonical Codex onboarding behavior for both the public
+portable AIM skill and the source-repository adaptive installation.
 
 ## Purpose
 
-Make it obvious for Codex users that AIM ships a repository-bundled Codex skill and that `/aim` works best when that skill is installed locally.
+Make it obvious that the public Agent Skill is the normal portable Codex entry
+point, while the adaptive installer remains available for a reviewed repository
+footprint and native project specialists.
 
 ## How it works
 
-On the first AIM command in Codex, AIM should show:
-- the repo-bundled skill path: `adapters/codex/agile-iteration-method/SKILL.md`
-- the local Codex install target: `~/.agents/skills/agile-iteration-method/SKILL.md`
-- the install command when the local skill is missing or stale
+Install the public skill with:
+
+```sh
+npx skills add joneri/agile-iteration-method \
+  --skill agile-iteration-method \
+  --agent codex \
+  --yes
+```
+
+For a public-skill first run, use this sequence:
+
+1. run `/aim calibrate-repo` when repository knowledge is not calibrated
+2. after calibration, run `/aim configure-agents` when project-specific
+   specialists are wanted but `aim.roles.yaml` or native role files are absent
+3. run `/aim start "EPIC: ..."` when the repository is ready
 
 The repository remains the AIM source of truth.
 The local Codex skill is the launcher and runtime guide for the Codex command surface.
-The install command uses AIM's deterministic installer because the installed
-package includes generated package-local canonical references as well as files
-from the source adapter directory.
+The public package includes its generated package-local canonical references and
+works without the source repository.
+
+The adaptive installer remains available when a user wants one guided flow to
+select a repository and adapters, seed `aim.profile.yaml` and `aim.roles.yaml`,
+and create Codex project specialists:
+
+```sh
+curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+```
 
 ## Key decisions
 
@@ -44,15 +65,19 @@ Outputs:
 ## Edge cases
 
 - If `/aim` command routing is unavailable, use the explicit AIM intent fallback and show the same install guidance.
-- If the local skill is older than the repo-bundled skill, recommend the
-  reviewed installer update path.
+- If a public skill install is stale, recommend
+  `npx skills update agile-iteration-method --yes`.
+- If the repository's AIM profile or native specialists are missing or stale,
+  recommend `/aim calibrate-repo`, `/aim configure-agents`, or the reviewed
+  adaptive installer according to the user's setup goal.
 - If `SKILL.md` is current but the Codex picker still shows an older version, check `~/.agents/skills/agile-iteration-method/agents/openai.yaml` and restart Codex after reinstalling.
 - If the repository lacks required AIM files, follow install or validation guidance instead of pretending the skill alone is sufficient.
 - If adapter policy conflicts with repository AIM rules, escalate according to the normal AIM conflict rule.
 
-## Debugging
+## Source-checkout debugging
 
-The fastest check is a dry-run:
+When working from the AIM source checkout, the adaptive install plan remains the
+fastest way to inspect the broader Codex package without writing:
 
 ```sh
 python3 scripts/aim_install.py --target . --mode personal \
@@ -70,6 +95,9 @@ Do not replace this with a raw `cp -R`: the installer also packages required
 canonical contracts under `references/`. If the visible skill card still looks
 stale after apply, restart or refresh Codex so it reloads the picker metadata.
 
+For a portable public install, use `npx skills update` instead of assuming the
+source checkout or `scripts/aim_install.py` is available.
+
 ## Related files
 
 - `adapters/codex/agile-iteration-method/SKILL.md`
@@ -78,3 +106,4 @@ stale after apply, restart or refresh Codex so it reloads the picker metadata.
 - `docs/workflow/install-aim-2.0.md`
 - `docs/workflow/quick-start-aim-2.0.md`
 - `docs/workflow/aim-adapter-guidance.md`
+- `docs/workflow/version-and-installation.md`
