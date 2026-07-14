@@ -67,7 +67,7 @@ deterministic upgrade plans while public docs, the public Agent Skill, and the
 guided installer expose one AIM product through clearly distinguished setup
 paths.
 
-See [Install AIM](https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/install-aim-2.0.md),
+See [Install AIM](version-and-installation.md),
 [Public Agent Skill distribution](version-and-installation.md),
 [Project-agent configuration](project-agent-configuration.md), and
-[Repo profile and footprint model](https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repo-profile-and-footprint-model.md).
+[Repo profile and footprint model](repo-awareness.md).

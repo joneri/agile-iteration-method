@@ -117,17 +117,16 @@ The builder validates source URLs before copying and validates the assembled
 artifact afterward. Pages must use this builder rather than maintaining a
 separate shell copy list.
 
-`install.sh` is the public install bootstrap. It defaults to the current
-maintained `main` archive so the one-command installer stays maintainable
-between formal release tags. Operators may override the source with `AIM_REF`
-when they need a specific branch or tag.
-The bootstrap must not inject the current shell directory as `--target`; the
-guided installer asks for the target repository unless automation passes
-`--target` explicitly.
-The public website and README must expose this command:
+`install.sh` is a compatibility tombstone for previously published links. It
+must fail closed: it may print current safe installation guidance, but it must
+not download, extract, or execute remote repository code.
+
+The public website and README expose the standard portable skill command and a
+reviewable source-checkout path for adaptive setup:
 
 ```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+npx skills add joneri/agile-iteration-method --skill agile-iteration-method
+git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source
 ```
 
 ## AIM 2.x release artifact

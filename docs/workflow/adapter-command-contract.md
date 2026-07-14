@@ -95,15 +95,12 @@ Stale packages are AIM-owned source/destination pairs whose installed content
 differs from the selected package source. A missing optional adapter is not
 stale when that adapter or footprint is not selected.
 
-The actionable CLI fallback is:
-
-```bash
-python3 scripts/aim_install.py --target <repo> --mode <mode> \
-  --footprint <footprint> --adapter <adapter> --dry-run
-```
-
-After review, rerun with `--apply`. Add `--force` only for collisions the user
-has explicitly decided to overwrite.
+The portable Agent Skill updates through the standard skills CLI. It must not
+execute installer or validator scripts found in a target repository, even when
+their names resemble AIM maintainer tooling. A broader adaptive refresh is a
+separate source-checkout workflow: the user reviews its source and no-write
+`--dry-run` preview before making an explicit `--apply` decision. The portable
+skill does not invoke either operation.
 
 ## Native adapter mapping
 

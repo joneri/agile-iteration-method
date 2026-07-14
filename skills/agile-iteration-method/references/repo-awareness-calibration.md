@@ -92,7 +92,7 @@ The shared profile supports these categories:
 Remembered rules must be entries in one of those categories.
 Loose prose memory blobs are invalid.
 
-Repo-awareness uses the two-layer model in `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repo-awareness-two-layer-model.md`.
+Repo-awareness uses the two-layer model in `repo-awareness-two-layer-model.md`.
 Calibration stores atomic, compressed facts in the profile and moves procedural,
 exception-heavy, or larger memory content into static docs such as
 `docs/features/`, `docs/workflow/`, `docs/architecture/`, or another
@@ -205,7 +205,7 @@ The installer and chat calibration share:
 ## Related files
 
 - `aim.profile.yaml`
-- `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repo-awareness.md`
-- `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repo-profile-and-footprint-model.md`
-- `install/aim-install-manifest.yaml`
-- `scripts/validate_aim_runtime.py`
+- `repo-awareness.md`
+- `repo-awareness.md`
+- `source-only/aim-install-manifest.yaml`
+- `source-only validator tooling`

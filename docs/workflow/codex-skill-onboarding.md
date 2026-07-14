@@ -34,10 +34,13 @@ works without the source repository.
 
 The adaptive installer remains available when a user wants one guided flow to
 select a repository and adapters, seed `aim.profile.yaml` and `aim.roles.yaml`,
-and create Codex project specialists:
+and create Codex project specialists. Its source must be checked out locally so
+the user can review it before execution:
 
 ```sh
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source
+cd aim-source
+python3 scripts/aim_install.py --dry-run
 ```
 
 ## Key decisions

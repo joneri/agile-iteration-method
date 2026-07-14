@@ -8,10 +8,12 @@
     "references/adapter-entry-model.md",
     "references/adapter-skill-bootstrap.md",
     "references/agile-iteration-method.md",
-    "references/install/aim-install-manifest.yaml",
     "references/operating-modes.md",
+    "references/product-coherence-validation.md",
     "references/project-agent-configuration.md",
     "references/repo-awareness-calibration.md",
+    "references/repo-awareness-two-layer-model.md",
+    "references/repo-awareness.md",
     "references/schemas/aim-personal-hints.schema.json",
     "references/schemas/aim-project-roles.schema.json",
     "references/schemas/aim-repo-profile.schema.json",
@@ -36,12 +38,12 @@
     "projectRoles": "0.1",
     "repoProfile": "0.2"
   },
-  "publicSkillPackageVersion": 1,
+  "publicSkillPackageVersion": 2,
   "runtimeContractVersion": "2.0",
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "62d8d4894712c570130f22638706a22855ee9a6ae1d41e941ef87e43625ca3a9",
+      "sha256": "f5c018a2eaa86c00f170f54abc8f31e743d8a08d60e4c0dabf3741e6df433bc8",
       "source": "adapters/codex/agile-iteration-method/SKILL.md"
     },
     {
@@ -51,7 +53,7 @@
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "8703852be8578d79e5754fee27b874d66a7651cf6e66d87d32d2a74cfe28b022",
+      "sha256": "58b1b27817f41dd3f4180c388a1080c64b9eb0dc0f112c41fcbb5e767f3b3f86",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -75,13 +77,28 @@
       "source": "docs/workflow/operating-modes.md"
     },
     {
+      "output": "references/product-coherence-validation.md",
+      "sha256": "4f9d1ef9420127532f9b14fc0d3b78792eb4016ad35f89cc9e5ca08203b639c1",
+      "source": "docs/workflow/product-coherence-validation.md"
+    },
+    {
       "output": "references/repo-awareness-calibration.md",
       "sha256": "73ee3b64d85e95421d2a3bd427120f0f57056e50277f7c4d5fdef6e8291cd34d",
       "source": "docs/workflow/repo-awareness-calibration.md"
     },
     {
+      "output": "references/repo-awareness-two-layer-model.md",
+      "sha256": "530db2ef71e4d746fe59ba6a0506a70be536c238fc2a27a73e06045023e8895b",
+      "source": "docs/workflow/repo-awareness-two-layer-model.md"
+    },
+    {
+      "output": "references/repo-awareness.md",
+      "sha256": "1069a40d83f90530ae699002f20ef93824edfba4cea42ed8dc69131be1ef12fb",
+      "source": "docs/workflow/repo-awareness.md"
+    },
+    {
       "output": "references/version-and-installation.md",
-      "sha256": "1304364d7ca68bbac7a2daca1e041fd1f1329d864fffe77b7a8c837ca061f368",
+      "sha256": "ef15e837feea1c289dd15a2bb6898458a791cd7e9b837a6f4162b760bb3eac51",
       "source": "docs/workflow/version-and-installation.md"
     },
     {
@@ -116,12 +133,12 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "ccffbff914fa3f83327c89b2b5d8c1c322610fc05e7c1961ff19dae33a9a2df9",
+      "sha256": "bf828725ef96f65688493fda981f9d4a4ee6f90130c9bdaf366cc46d3da60600",
       "source": "scripts/aim_publication.py"
     },
     {
       "output": "manifest.json",
-      "sha256": "07158409db682cd4d7d3e89b164a8719eea50ba483dd252deff9cf03fa20333a",
+      "sha256": "d4dd9650539a99cc2ead7beced64d99ef57ec2279080a01e0fd5b5ccad4ab498",
       "source": "scripts/build_public_skill.py"
     }
   ]

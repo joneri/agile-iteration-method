@@ -26,14 +26,19 @@ the suppliers already used there. The installer plans the smallest complete
 native package for those suppliers, previews every write or collision, and
 applies only after confirmation.
 
-Run:
+Clone the public repository so the installer source is present and reviewable
+before execution. Then run the local installer in preview mode:
 
 ```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source
+cd aim-source
+python3 scripts/aim_install.py --dry-run
 ```
 
-The bootstrap downloads the maintained release to a temporary directory. It
-does not assume the current shell directory is the target.
+Inspect the checkout and the preview. Rerun with `--apply` only when the plan is
+correct. AIM does not recommend downloading a remote shell script and piping it
+directly to a shell. The old Pages bootstrap now fails closed and points users
+to these reviewed paths.
 
 The guided flow asks for:
 
@@ -74,7 +79,7 @@ pin supported models, tools, skills, MCP servers, permissions, or hooks.
 
 ## Preview, automation, and advanced footprint
 
-Preview without writing:
+From the reviewed AIM source checkout, preview without writing:
 
 ```bash
 python3 scripts/aim_install.py --target /path/to/repo --adapter codex --dry-run

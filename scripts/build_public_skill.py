@@ -17,15 +17,11 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 1
+PUBLIC_SKILL_PACKAGE_VERSION = 2
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/codex/agile-iteration-method/SKILL.md")
 PUBLIC_DESCRIPTION_NAME = "agile-iteration-method"
-GITHUB_WORKFLOW_BASE = (
-    "https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/"
-)
-
 REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
     (Path("docs/workflow/agile-iteration-method.md"), Path("agile-iteration-method.md")),
     (Path("docs/workflow/adapter-command-contract.md"), Path("adapter-command-contract.md")),
@@ -33,9 +29,22 @@ REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
     (Path("docs/workflow/adapter-skill-bootstrap.md"), Path("adapter-skill-bootstrap.md")),
     (Path("docs/workflow/project-agent-configuration.md"), Path("project-agent-configuration.md")),
     (Path("docs/workflow/operating-modes.md"), Path("operating-modes.md")),
+    (Path("docs/workflow/product-coherence-validation.md"), Path("product-coherence-validation.md")),
     (Path("docs/workflow/repo-awareness-calibration.md"), Path("repo-awareness-calibration.md")),
+    (Path("docs/workflow/repo-awareness-two-layer-model.md"), Path("repo-awareness-two-layer-model.md")),
+    (Path("docs/workflow/repo-awareness.md"), Path("repo-awareness.md")),
     (Path("docs/workflow/version-and-installation.md"), Path("version-and-installation.md")),
 )
+
+REFERENCE_ALIASES: dict[str, str] = {
+    "aim-adapter-guidance.md": "adapter-entry-model.md",
+    "cost-control-mode.md": "operating-modes.md",
+    "documentation-model.md": "agile-iteration-method.md",
+    "install-aim-2.0.md": "version-and-installation.md",
+    "light-front-door.md": "SKILL.md",
+    "repo-profile-and-footprint-model.md": "repo-awareness.md",
+    "repository-surface-classification.md": "version-and-installation.md",
+}
 
 SCHEMA_SOURCES: tuple[Path, ...] = (
     Path("schemas/aim-repo-profile.schema.json"),
@@ -149,10 +158,13 @@ def _workflow_link_rewriter(root: Path, *, from_skill: bool):
 
     def replace(match: re.Match[str]) -> str:
         name = match.group(1)
-        if name in selected:
+        target = selected.get(name, REFERENCE_ALIASES.get(name))
+        if target == "SKILL.md":
+            return "SKILL.md" if from_skill else "../SKILL.md"
+        if target is not None:
             prefix = "references/" if from_skill else ""
-            return prefix + selected[name]
-        return GITHUB_WORKFLOW_BASE + name
+            return prefix + target
+        return "source-only/" + name
 
     return lambda content: pattern.sub(replace, content)
 
@@ -186,6 +198,14 @@ def _rewrite_package_paths(content: str, *, from_skill: bool) -> str:
         "adapters/codex/agile-iteration-method/SKILL.md",
         skill_target,
     )
+    content = content.replace(
+        "install/aim-install-manifest.yaml",
+        "source-only/aim-install-manifest.yaml",
+    )
+    content = content.replace(
+        "scripts/validate_aim_runtime.py",
+        "source-only validator tooling",
+    )
     return content
 
 
@@ -205,6 +225,8 @@ def _render_skill(root: Path) -> tuple[str, dict[str, Any]]:
 def _render_reference(root: Path, source: Path, output: Path, versions: dict[str, Any]) -> str:
     content = _workflow_link_rewriter(root, from_skill=False)(_read(root, source))
     content = _rewrite_package_paths(content, from_skill=False)
+    if output.name == "version-and-installation.md":
+        content = content.split("## Generation and verification", 1)[0].rstrip() + "\n"
     content = _normalize_markdown_whitespace(content)
     header = _markdown_header(source)
     if output.name == "version-and-installation.md":
@@ -229,6 +251,7 @@ def _render_schema(root: Path, source: Path) -> str:
         raise PublicSkillError(f"{source}: invalid JSON: {exc.msg}") from exc
     if not isinstance(schema, dict):
         raise PublicSkillError(f"{source}: schema root must be an object")
+    schema["$id"] = f"urn:aim:public-skill:{source.stem}"
     schema["$comment"] = GENERATED_NOTICE.replace("\n", " ")
     schema["x-aim-source"] = source.as_posix()
     return json.dumps(schema, indent=2, sort_keys=True) + "\n"
@@ -270,12 +293,6 @@ def _render_package_once(root: Path) -> dict[Path, bytes]:
     for source in SCHEMA_SOURCES:
         rendered[Path("references") / source] = _render_schema(root, source).encode("utf-8")
 
-    install_content = _read(root, INSTALL_MANIFEST_SOURCE)
-    rendered[Path("references") / INSTALL_MANIFEST_SOURCE] = (
-        "# " + GENERATED_NOTICE.replace("\n", " ") + "\n"
-        f"# Source: {INSTALL_MANIFEST_SOURCE.as_posix()}\n"
-        + install_content
-    ).encode("utf-8")
     rendered[Path("references/LICENSE-DOCS")] = (
         GENERATED_NOTICE
         + f"\nSource: {DOCUMENTATION_LICENSE_SOURCE.as_posix()}\n\n"
@@ -369,6 +386,19 @@ def validate_rendered_package(rendered: dict[Path, bytes]) -> None:
     ):
         if marker not in all_text:
             raise PublicSkillError(f"generated package lacks required semantic marker: {marker}")
+
+    forbidden_security_markers = {
+        "remote pipe-to-shell bootstrap": "| bash",
+        "untrusted target-repository installer execution": "python3 scripts/aim_install.py",
+        "target-repository validator dependency": "scripts/validate_aim_runtime.py",
+        "external AIM schema identifier": "https://joneri.github.io/agile-iteration-method/",
+        "external source-repository runtime reference": (
+            "https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/"
+        ),
+    }
+    for label, marker in forbidden_security_markers.items():
+        if marker in all_text:
+            raise PublicSkillError(f"generated package contains {label}: {marker}")
 
     for path, payload in rendered.items():
         if path.suffix not in {".md", ""} and path.name != "SKILL.md":

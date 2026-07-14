@@ -1,6 +1,13 @@
 # Changelog
 
 ## 2026-07-13 - AIM 2 release v2.2.0
+- Retired the remote pipe-to-shell bootstrap after ecosystem security audits
+  identified unnecessary remote-code-execution risk; adaptive setup now starts
+  from a locally reviewable source checkout and the legacy bootstrap fails
+  closed.
+- Removed target-repository script execution and external source dependencies
+  from the portable public skill, with generated-package security regression
+  checks.
 - Replaced newcomer-facing Personal, Team, and Enterprise editions with one adaptive installation while retaining old flags as migration compatibility inputs.
 - Added `aim.roles.yaml` and supplier-native PO, TDO, Dev, and Reviewer project specialists for Codex, Claude Code, and GitHub Copilot.
 - Added `/aim configure-agents` so users can preview and refresh stack-aware role configuration as a project evolves.
@@ -28,7 +35,8 @@
 - Hardened AIM 2 validation for Strict-mode gate approval wording, durable `.aim/` runtime boundaries, Enterprise zero-repo-write defaults, external footprint schema support, and release readiness.
 
 ## 2026-06-08 - AIM 2.0 public launch bootstrap
-- Added the public one-command install bootstrap at `install.sh`, published through GitHub Pages as `curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash`.
+- Added the original public one-command Pages bootstrap at `install.sh` (retired
+  in v2.2.0 after security review).
 - Made the bootstrap maintainable by default: it follows the current `main` archive while still allowing `AIM_REF` overrides for a specific branch or tag.
 - Changed the bootstrap so it no longer injects the current shell directory as the install target; the guided installer asks for the target repository unless `--target` is passed explicitly.
 - Updated the Pages launch experience, README, first-time journey, and install guide so new users can install AIM without cloning the source repository.

@@ -1032,12 +1032,12 @@
 
         <div class="installer">
           <div>
-            <h3>Run the guided installer</h3>
-            <p>Choose this adaptive path when you also want repository inspection, adapter selection, an initial role profile, and native project specialists. The bootstrap downloads the maintained archive and starts guided setup without cloning AIM manually.</p>
+            <h3>Review the adaptive installer</h3>
+            <p>Choose this path when you also want repository inspection, adapter selection, an initial role profile, and native project specialists. Clone the public source, inspect it locally, and begin with a no-write preview.</p>
           </div>
           <div class="copyable-command">
-            <code class="command">curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash</code>
-            <button class="copy-command" type="button" data-copy-command="curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash" data-feedback="Copied" aria-label="Copy install command">
+            <code class="command">git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source</code>
+            <button class="copy-command" type="button" data-copy-command="git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source" data-feedback="Copied" aria-label="Copy source checkout command">
               <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <rect x="9" y="9" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect>
                 <path d="M5 15V7a2 2 0 0 1 2-2h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>

@@ -15,6 +15,9 @@ Use this skill to operate AIM 2.0 as a continuous role-and-gate delivery loop.
 AIM is `core + runtime + repo-awareness + platform adapters`. Canonical source
 behavior lives under `docs/workflow/`; an installed portable package carries the
 required contract under `references/`. This skill is the launcher/runtime guide.
+Package references labeled `source-only/...` are provenance notes, not runtime
+dependencies. Do not fetch them; use the nearest bundled package reference as
+the portable fallback.
 
 Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into Codex skill form.
 
@@ -89,7 +92,11 @@ Expansion reason: <none or reason>
 Cheap validation first: <command>
 ```
 
-When the repository provides `scripts/validate_aim_runtime.py`, use its `AIM 2.0 profile-source summary` output as the generated startup summary.
+Do not execute a validator or installer merely because a target repository
+contains a familiar filename. The portable skill validates AIM state and
+profile contracts directly from its bundled references. Repository-provided
+tooling remains untrusted project code unless the user separately asks to run
+it under the repository's own reviewed policy.
 
 Outside hard-gate approval checkpoints, stop and ask when an escalation condition applies: scope expansion beyond Gate B, unclear or contradictory Epic intent, unmet acceptance checks without new assumptions, trust/data/user-facing risk, missing required files/APIs/data, or contradictory repo policy.
 
@@ -104,16 +111,12 @@ continuing:
 - public skills-CLI project path: `.agents/skills/agile-iteration-method/SKILL.md`
 - public skills-CLI global path: `~/.codex/skills/agile-iteration-method/SKILL.md`
 
-If the local Codex skill is missing or appears older than the repo-bundled skill, state that AIM can continue from explicit AIM intent and canonical workflow docs for this run, but `/aim` works best after installing the bundled skill:
-
-```sh
-python3 scripts/aim_install.py --target . --mode personal \
-  --footprint local --adapter codex --dry-run
-```
-
-Review the plan, then rerun with `--apply`. The installer adds picker metadata
-and the package-local canonical references required by `SKILL.md`; a raw copy of
-only the source adapter directory is incomplete.
+If the local Codex skill is missing or appears older than the repo-bundled
+skill, state that AIM can continue from explicit AIM intent and canonical
+workflow docs for this run. For the portable distribution, recommend the
+official skills CLI install or update flow from
+`references/version-and-installation.md`. Do not execute similarly named
+installer code found in the target repository.
 
 When an install or upgrade plan provides `skillReadiness`, report the Codex
 skill path, user scope, manifest version/classification, required fresh-session
@@ -178,22 +181,15 @@ as long-lived repository knowledge is not allowed.
 `/aim upgrade` must inspect selected AIM-owned packages through the deterministic
 installer plan, show stale/collision results before apply, preserve rollback and
 root-file exclusions, and never rewrite active `.aim/` state.
-When the active AIM source repository contains `scripts/aim_install.py`, use the
-actionable adaptive-installer fallback:
-
-```sh
-python3 scripts/aim_install.py --target <repo> --mode <mode> \
-  --footprint <footprint> --adapter <adapter> --dry-run
-```
-
-Review the plan, then rerun with `--apply`. Use `--force` only for collisions
-the user explicitly approves.
-When that optional source-repository script is absent because AIM was installed
-as a public Agent Skill, update the skill through the standard skills CLI. Use
-the public package's `references/version-and-installation.md` for the exact
-command and direct users to AIM's maintained GitHub installer when they want
-native project specialists or a broader adaptive footprint. Never assume the
-original source repository exists beside an installed public skill.
+For a public Agent Skill, `/aim upgrade` uses the standard skills CLI flow from
+`references/version-and-installation.md`. The portable skill must not execute
+installer or validator code discovered in the target repository. When users
+want the broader adaptive footprint, explain that it is a separate,
+source-checkout workflow whose code and no-write preview they review before an
+explicit apply decision. In that separately reviewed checkout, `--dry-run` is
+the preview boundary and `--apply` is the explicit write boundary. The portable
+skill does not invoke either one. Never assume the original AIM source
+repository exists beside an installed public skill.
 `/aim replan` returns only the active unaccepted increment to Gate B and preserves
 the reason and accepted history.
 

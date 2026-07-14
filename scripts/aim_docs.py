@@ -109,6 +109,23 @@ def audit(repo_root: Path) -> list[str]:
                     f"{relative_path}: missing installation-path marker {marker!r}"
                 )
 
+    security_guidance_paths = (
+        "README.md",
+        "index.html",
+        "docs/product/getting-started.md",
+        "docs/product/platforms-and-adoption.md",
+        "docs/workflow/codex-skill-onboarding.md",
+        "docs/workflow/install-aim-2.0.md",
+        "docs/workflow/release-publication-model.md",
+        "docs/workflow/version-and-installation.md",
+    )
+    for relative_path in security_guidance_paths:
+        content = _text(repo_root / relative_path)
+        if "| bash" in content:
+            errors.append(
+                f"{relative_path}: remote pipe-to-shell installation is forbidden"
+            )
+
     if "Collision protection" in index:
         errors.append(
             "index.html: internal installer jargon must not appear: "

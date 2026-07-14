@@ -13,7 +13,7 @@ Source: docs/workflow/version-and-installation.md
 - Repo-profile schema: `0.2`
 - Personal-hints schema: `0.1`
 - Project-role schema: `0.1`
-- Public skill package format: `1`
+- Public skill package format: `2`
 
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
@@ -95,18 +95,21 @@ fallback; it does not justify flattening AIM into generic task planning.
 ## Adaptive installer relationship
 
 The public Agent Skill installs AIM's portable workflow entry point. The
-adaptive AIM installer remains the path for a reviewed repository footprint,
-native project specialists, and supplier-specific configuration:
+adaptive installer remains a separate source-checkout workflow for a reviewed
+repository footprint, native project specialists, and supplier-specific
+configuration.
 
-```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
-```
+The portable skill must never download or execute a remote bootstrap, and it
+must never execute installer or validator scripts discovered in a target
+repository. It performs package-local validation directly from the bundled AIM
+contracts. When broader adaptive setup is wanted, direct the user to the
+maintained install guide so they can clone and inspect AIM's source, run a
+no-write preview, and explicitly decide whether to apply it.
 
-If `scripts/aim_install.py` exists in the active AIM source checkout, `/aim
-upgrade` may use its reviewed dry-run/apply workflow. If that optional script is
-absent, `/aim upgrade` must not invent it: update the public skill with the
-standard skills CLI and offer the maintained adaptive installer for broader
-configuration. Neither path may rewrite active `.aim/` runtime state.
+`/aim upgrade` updates a public skill through the standard skills CLI. A
+separately reviewed AIM source checkout may use its own adaptive installer, but
+the portable skill does not execute that checkout. Neither path may rewrite
+active `.aim/` runtime state.
 
 `/aim configure-agents` reads or creates `aim.roles.yaml` from the package-local
 project-role schema, shows proposed supplier-native changes, preserves user
@@ -120,42 +123,10 @@ The generated package records these independent contracts:
 - AIM product release from `VERSION`
 - AIM runtime contract from the canonical release manifest
 - adaptive installer manifest version from
-  `install/aim-install-manifest.yaml`
+  `source-only/aim-install-manifest.yaml`
 - repo-profile, Personal-hints, and project-role schema versions
 - public Agent Skill package-format version
 
 The package-format version changes only when the generated public package
 structure or compatibility contract changes. It is not a second AIM product
 version.
-
-## Generation and verification
-
-```bash
-python3 scripts/build_public_skill.py
-python3 scripts/build_public_skill.py --check
-```
-
-Generation must be deterministic, validate YAML frontmatter and local package
-references, record source provenance, and fail on missing or inconsistent
-canonical inputs. Check mode is read-only and fails when canonical sources and
-the committed public package differ.
-
-Release readiness must run check mode. Canonical behavior, version, manifest,
-schema, or public-package changes cannot pass release validation while the
-generated package is stale.
-
-## GitHub and skills.sh publication
-
-There is no separate AIM upload API or manual skills.sh release. Publication is:
-
-1. place a valid generated skill on the public GitHub default branch through the
-   repository's normal protection and review workflow
-2. perform a real installation from that public GitHub source with the official
-   skills CLI
-3. allow anonymous aggregate CLI installation telemetry to make the skill
-   eligible for skills.sh discovery and ranking
-
-Indexing may be asynchronous. Report the public commit, successful installation
-command, expected skills.sh URL, and current HTTP or CLI evidence. Never claim a
-separate upload, guarantee a ranking, or generate artificial installations to
-manipulate telemetry.
