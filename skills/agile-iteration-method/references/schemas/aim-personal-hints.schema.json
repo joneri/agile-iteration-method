@@ -126,7 +126,7 @@
       "type": "string"
     }
   },
-  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-personal-hints.schema.json",
+  "$id": "urn:aim:public-skill:aim-personal-hints.schema",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "description": "Structural contract for user-level Personal hints version 0.1.",

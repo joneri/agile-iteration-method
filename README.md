@@ -48,15 +48,18 @@ npx skills update agile-iteration-method --yes
 
 The adaptive AIM installer remains available when you want reviewed repository
 calibration, native project specialists, or a broader supplier-specific
-footprint:
+footprint. Clone the public source so you can inspect exactly what will run:
 
 ```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source
+cd aim-source
+python3 scripts/aim_install.py --dry-run
 ```
 
-The installer asks for a repository and the adapters you use. It shows every
-write and collision before applying anything. Native project specialists can
-also be refreshed later through `/aim configure-agents` from `aim.roles.yaml`.
+Review the source and preview, then rerun with `--apply` only when the plan is
+correct. The installer asks for a repository and the adapters you use. Native
+project specialists can also be refreshed later through `/aim configure-agents`
+from `aim.roles.yaml`.
 
 Already using AIM? Run:
 

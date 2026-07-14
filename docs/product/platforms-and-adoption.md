@@ -21,10 +21,13 @@ generated from canonical AIM sources and is full AIM, not AIM Lite.
 
 Use the adaptive installer when the repository also needs a reviewed footprint,
 adapter selection, initial `aim.roles.yaml`, and supplier-native project
-specialists:
+specialists. Clone and inspect its public source before running a no-write
+preview:
 
 ```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source
+cd aim-source
+python3 scripts/aim_install.py --dry-run
 ```
 
 Both paths support later `/aim configure-agents` work. See the

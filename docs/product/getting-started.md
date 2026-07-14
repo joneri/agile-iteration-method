@@ -41,22 +41,19 @@ for agent-specific commands, versioning, generation, and publication details.
 
 Use the adaptive installer when you want AIM to inspect a target repository,
 offer one or more native adapters, seed project-specific role configuration,
-and apply the selected repository footprint:
+and apply the selected repository footprint. Keep the source visible and begin
+with a no-write preview:
 
 ```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
+git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source
+cd aim-source
+python3 scripts/aim_install.py --dry-run
 ```
 
-The public bootstrap fetches the current maintained `main` archive and starts
-the guided installer from a temporary directory. The installer asks which
-repository to install AIM into; it does not assume the current shell directory is
-the target. You do not need to clone the AIM source repository.
-
-To test a specific branch or tag:
-
-```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | AIM_REF=main bash
-```
+Review the checkout and the preview, then rerun with `--apply` only when the
+plan is correct. The installer asks which repository to install AIM into; it
+does not assume the current shell directory is the target. AIM no longer
+recommends a remote pipe-to-shell bootstrap.
 
 The guided installer:
 
@@ -79,8 +76,8 @@ Already have AIM 1.x or older AIM helper files in the target repository?
 Run `/aim upgrade` before continuing.
 Upgrade refreshes installed AIM-owned surfaces through the reviewed installer plan and keeps active `.aim/` runtime state intact.
 
-For automation, pass installer flags after `bash -s --`, such as
-`--target /path/to/repo`, `--non-interactive`, or `--format json`.
+For automation, pass installer flags directly, such as `--target
+/path/to/repo`, `--non-interactive`, or `--format json`.
 For preview only, use `--dry-run`.
 
 ## 2. Calibrate the Repository

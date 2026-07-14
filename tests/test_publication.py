@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from aim_publication import (  # noqa: E402
-    PUBLIC_INSTALL_COMMAND,
+    PUBLIC_ADAPTIVE_SOURCE_COMMAND,
     PUBLIC_ORIGIN,
     PUBLIC_SKILL_INSTALL_COMMAND,
     PublicationError,
@@ -46,14 +46,10 @@ class PublicationContractTests(unittest.TestCase):
             install_script = output / "install.sh"
             self.assertTrue(install_script.is_file())
             self.assertTrue(install_script.stat().st_mode & 0o111)
-            self.assertIn(
-                "archive/${AIM_REF}.tar.gz",
-                install_script.read_text(encoding="utf-8"),
-            )
-            self.assertNotIn(
-                'set -- --target "$AIM_TARGET"',
-                install_script.read_text(encoding="utf-8"),
-            )
+            install_content = install_script.read_text(encoding="utf-8")
+            self.assertIn("retired for security", install_content)
+            for marker in ("curl ", "tar ", "scripts/aim_install.py", "| bash"):
+                self.assertNotIn(marker, install_content)
             self.assertTrue((output / "LICENSE").is_file())
             self.assertTrue((output / "licenses/LICENSE-DOCS").is_file())
             for relative_path in SCHEMA_RELATIVE_PATHS:
@@ -68,8 +64,18 @@ class PublicationContractTests(unittest.TestCase):
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["installerManifestVersion"], "0.7")
             self.assertEqual(manifest["publicOrigin"], PUBLIC_ORIGIN)
-            self.assertEqual(manifest["install"]["command"], PUBLIC_INSTALL_COMMAND)
-            self.assertEqual(manifest["install"]["defaultRef"], "main")
+            self.assertEqual(
+                manifest["install"]["portableSkillCommand"],
+                PUBLIC_SKILL_INSTALL_COMMAND,
+            )
+            self.assertEqual(
+                manifest["install"]["adaptiveSourceCommand"],
+                PUBLIC_ADAPTIVE_SOURCE_COMMAND,
+            )
+            self.assertEqual(
+                manifest["install"]["remoteBootstrap"]["status"],
+                "retired-fail-closed",
+            )
             self.assertIn("publication-artifact", manifest["requiredChecks"])
 
     def test_public_install_choices_are_visible_from_public_sources(self) -> None:
@@ -86,12 +92,13 @@ class PublicationContractTests(unittest.TestCase):
         def collapsed(content: str) -> str:
             return " ".join(content.replace("\\\n", " ").split())
 
-        self.assertIn(PUBLIC_INSTALL_COMMAND, readme)
-        self.assertIn(PUBLIC_INSTALL_COMMAND, index)
-        self.assertIn(PUBLIC_INSTALL_COMMAND, getting_started)
-        self.assertIn(PUBLIC_INSTALL_COMMAND, platforms)
+        self.assertIn(PUBLIC_ADAPTIVE_SOURCE_COMMAND, readme)
+        self.assertIn(PUBLIC_ADAPTIVE_SOURCE_COMMAND, index)
+        self.assertIn(PUBLIC_ADAPTIVE_SOURCE_COMMAND, getting_started)
+        self.assertIn(PUBLIC_ADAPTIVE_SOURCE_COMMAND, platforms)
         for content in (readme, index, getting_started, platforms):
             self.assertIn(PUBLIC_SKILL_INSTALL_COMMAND, collapsed(content))
+            self.assertNotIn("| bash", content)
         self.assertIn(
             "https://skills.sh/joneri/agile-iteration-method/agile-iteration-method",
             index,
@@ -119,34 +126,28 @@ class PublicationContractTests(unittest.TestCase):
             with self.assertRaisesRegex(PublicationError, "robots.txt"):
                 validate_source(copied)
 
-    def test_tag_only_install_bootstrap_blocks_publication(self) -> None:
+    def test_remote_downloading_bootstrap_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)
             install_script = copied / "install.sh"
-            content = install_script.read_text(encoding="utf-8")
             install_script.write_text(
-                content.replace(
-                    'AIM_REF="${AIM_REF:-${AIM_VERSION:-main}}"',
-                    'AIM_VERSION="${AIM_VERSION:-v2.0}"',
-                ),
+                install_script.read_text(encoding="utf-8")
+                + "\ncurl https://example.invalid/archive.tar.gz\n",
                 encoding="utf-8",
             )
-            with self.assertRaisesRegex(PublicationError, "default branch"):
+            with self.assertRaisesRegex(PublicationError, "download remote code"):
                 validate_source(copied)
 
-    def test_bootstrap_forcing_current_directory_target_blocks_publication(self) -> None:
+    def test_remote_execution_bootstrap_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)
             install_script = copied / "install.sh"
-            content = install_script.read_text(encoding="utf-8")
             install_script.write_text(
-                content.replace(
-                    'if ! has_arg "--source" "$@"; then',
-                    'set -- --target "$AIM_TARGET" "$@"\nif ! has_arg "--source" "$@"; then',
-                ),
+                install_script.read_text(encoding="utf-8")
+                + "\npython3 scripts/aim_install.py\n",
                 encoding="utf-8",
             )
-            with self.assertRaisesRegex(PublicationError, "current directory target"):
+            with self.assertRaisesRegex(PublicationError, "execute repository code"):
                 validate_source(copied)
 
     def test_incomplete_assembled_artifact_is_rejected(self) -> None:

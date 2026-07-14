@@ -78,18 +78,21 @@ fallback; it does not justify flattening AIM into generic task planning.
 ## Adaptive installer relationship
 
 The public Agent Skill installs AIM's portable workflow entry point. The
-adaptive AIM installer remains the path for a reviewed repository footprint,
-native project specialists, and supplier-specific configuration:
+adaptive installer remains a separate source-checkout workflow for a reviewed
+repository footprint, native project specialists, and supplier-specific
+configuration.
 
-```bash
-curl -fsSL https://joneri.github.io/agile-iteration-method/install.sh | bash
-```
+The portable skill must never download or execute a remote bootstrap, and it
+must never execute installer or validator scripts discovered in a target
+repository. It performs package-local validation directly from the bundled AIM
+contracts. When broader adaptive setup is wanted, direct the user to the
+maintained install guide so they can clone and inspect AIM's source, run a
+no-write preview, and explicitly decide whether to apply it.
 
-If `scripts/aim_install.py` exists in the active AIM source checkout, `/aim
-upgrade` may use its reviewed dry-run/apply workflow. If that optional script is
-absent, `/aim upgrade` must not invent it: update the public skill with the
-standard skills CLI and offer the maintained adaptive installer for broader
-configuration. Neither path may rewrite active `.aim/` runtime state.
+`/aim upgrade` updates a public skill through the standard skills CLI. A
+separately reviewed AIM source checkout may use its own adaptive installer, but
+the portable skill does not execute that checkout. Neither path may rewrite
+active `.aim/` runtime state.
 
 `/aim configure-agents` reads or creates `aim.roles.yaml` from the package-local
 project-role schema, shows proposed supplier-native changes, preserves user

@@ -325,7 +325,7 @@
       "type": "string"
     }
   },
-  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-repo-profile.schema.json",
+  "$id": "urn:aim:public-skill:aim-repo-profile.schema",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "description": "Structural contract for aim.profile.yaml profileVersion 0.2.",

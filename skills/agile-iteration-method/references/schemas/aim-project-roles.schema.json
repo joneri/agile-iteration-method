@@ -35,7 +35,7 @@
       "type": "object"
     }
   },
-  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-project-roles.schema.json",
+  "$id": "urn:aim:public-skill:aim-project-roles.schema",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "description": "Human-editable shared intent for supplier-native AIM role specialists.",

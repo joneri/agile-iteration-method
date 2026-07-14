@@ -197,8 +197,31 @@ class PublicSkillTests(unittest.TestCase):
             if file.is_file()
         )
         self.assertNotIn("../../../docs/", content)
-        self.assertIn("optional source-repository", content)
+        self.assertIn("source-only/...", content)
         validate_committed_package(REPO_ROOT)
+
+    def test_package_has_no_untrusted_execution_or_external_aim_runtime_dependency(self) -> None:
+        package = REPO_ROOT / PACKAGE_RELATIVE_PATH
+        content = "\n".join(
+            file.read_text(encoding="utf-8", errors="replace")
+            for file in package.rglob("*")
+            if file.is_file()
+        )
+        forbidden = (
+            "| bash",
+            "scripts/aim_install.py",
+            "scripts/validate_aim_runtime.py",
+            "https://joneri.github.io/agile-iteration-method/",
+            "https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/",
+        )
+        for marker in forbidden:
+            with self.subTest(marker=marker):
+                self.assertNotIn(marker, content)
+        self.assertIn("source-only/...", content)
+        self.assertNotIn(
+            "references/install/aim-install-manifest.yaml",
+            json.loads((package / "manifest.json").read_text(encoding="utf-8"))["files"],
+        )
 
 
 if __name__ == "__main__":

@@ -26,9 +26,12 @@ ROOT_PUBLIC_FILES = (
 PUBLIC_DIRECTORIES = ("github-pages/assets",)
 PUBLIC_LICENSE_PATH = "licenses/LICENSE-DOCS"
 RELEASE_MANIFEST_PATH = "release-manifest.json"
-PUBLIC_INSTALL_COMMAND = f"curl -fsSL {PUBLIC_ORIGIN}install.sh | bash"
 PUBLIC_SKILL_INSTALL_COMMAND = (
     "npx skills add joneri/agile-iteration-method --skill agile-iteration-method"
+)
+PUBLIC_ADAPTIVE_SOURCE_COMMAND = (
+    "git clone --depth 1 https://github.com/joneri/agile-iteration-method.git "
+    "aim-source"
 )
 
 
@@ -94,8 +97,10 @@ def validate_source(repo_root: Path) -> None:
     if not install_script_path.stat().st_mode & 0o111:
         raise PublicationError("install.sh must be executable")
     forbidden_install_markers = {
-        "install.sh must not force current directory target": 'set -- --target "$AIM_TARGET" "$@"',
-        "install.sh must not default AIM_TARGET to pwd": 'AIM_TARGET="${AIM_TARGET:-$(pwd)}"',
+        "install.sh must not download remote code": "curl ",
+        "install.sh must not extract remote code": "tar ",
+        "install.sh must not execute repository code": "scripts/aim_install.py",
+        "install.sh must not contain pipe-to-shell guidance": "| bash",
     }
     for label, marker in forbidden_install_markers.items():
         if marker in install_script:
@@ -105,13 +110,13 @@ def validate_source(repo_root: Path) -> None:
             index,
             f'<link rel="canonical" href="{PUBLIC_ORIGIN}">',
         ),
-        "index.html public install command": (
-            index,
-            PUBLIC_INSTALL_COMMAND,
-        ),
         "index.html public Agent Skill install command": (
             index,
             PUBLIC_SKILL_INSTALL_COMMAND,
+        ),
+        "index.html adaptive source command": (
+            index,
+            PUBLIC_ADAPTIVE_SOURCE_COMMAND,
         ),
         "index.html public Agent Skill page": (
             index,
@@ -125,13 +130,9 @@ def validate_source(repo_root: Path) -> None:
             index,
             "/aim remember-repo",
         ),
-        "install.sh default branch": (
+        "install.sh fail-closed notice": (
             install_script,
-            'AIM_REF="${AIM_REF:-${AIM_VERSION:-main}}"',
-        ),
-        "install.sh branch archive": (
-            install_script,
-            "archive/${AIM_REF}.tar.gz",
+            "AIM remote bootstrap has been retired for security.",
         ),
         "index.html Open Graph URL": (
             index,
@@ -173,10 +174,15 @@ def release_manifest(root: Path) -> dict[str, Any]:
         "artifactType": "github-pages",
         "publicOrigin": PUBLIC_ORIGIN,
         "install": {
-            "path": "install.sh",
-            "command": PUBLIC_INSTALL_COMMAND,
-            "defaultRef": "main",
-            "sourceArchive": "https://github.com/joneri/agile-iteration-method/archive/main.tar.gz",
+            "portableSkillCommand": PUBLIC_SKILL_INSTALL_COMMAND,
+            "adaptiveSourceCommand": PUBLIC_ADAPTIVE_SOURCE_COMMAND,
+            "adaptiveGuide": (
+                "docs/workflow/install-aim-2.0.md"
+            ),
+            "remoteBootstrap": {
+                "path": "install.sh",
+                "status": "retired-fail-closed",
+            },
         },
         "schemas": [
             {"path": path, "id": expected_schema_id(path)}

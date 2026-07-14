@@ -362,9 +362,9 @@ Generic root files are not AIM control surfaces.
 
 The detailed load order, profile behavior, native adapter continuity, and failure rules live in:
 
-- `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repo-awareness.md`
+- `repo-awareness.md`
 
-When the profile points to richer repo-specific policy, use the two-layer contract in `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repo-awareness-two-layer-model.md` and load the pointed operational doc only when one of its triggers matches.
+When the profile points to richer repo-specific policy, use the two-layer contract in `repo-awareness-two-layer-model.md` and load the pointed operational doc only when one of its triggers matches.
 
 The core rule is simple: load state first, profile second, affected evidence third, and deeper AIM or adapter docs only when the current role, gate, command, or risk needs them.
 
@@ -386,7 +386,7 @@ The validator should check:
   plans, and packaged adapter surfaces
 
 The tiered coherence and release-readiness contract lives in
-`https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/product-coherence-validation.md`.
+`product-coherence-validation.md`.
 
 ### Result classes
 
@@ -490,8 +490,8 @@ Active-adapter helpers are optional and secondary.
 Do not preload the workflow family.
 Load a supporting document only when its behavior area becomes relevant.
 
-The detailed documentation hierarchy lives in `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/documentation-model.md`.
-The repo-awareness load order lives in `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repo-awareness.md`.
+The detailed documentation hierarchy lives in `agile-iteration-method.md`.
+The repo-awareness load order lives in `repo-awareness.md`.
 
 Startup triggers (no manual bootstrap expected):
 - `Install AIM`
@@ -1077,7 +1077,7 @@ Setup and usage are documented in:
 ### Feature parity matrix
 
 Use the adapter guidance as the detailed source of truth:
-- `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/aim-adapter-guidance.md`
+- `adapter-entry-model.md`
 
 At minimum, the matrix must classify:
 - start AIM session
@@ -1150,13 +1150,13 @@ Start with this core document, active `.aim` state, and `aim.profile.yaml`.
 
 Load deeper documents only when their area becomes relevant:
 
-- repo-awareness or adapter loading: `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repo-awareness.md`
+- repo-awareness or adapter loading: `repo-awareness.md`
 - calibration, persistent memory, remember, or forget: `repo-awareness-calibration.md`
-- rich repo-specific policy or an operational-doc pointer: `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repo-awareness-two-layer-model.md`, then only the pointed doc
+- rich repo-specific policy or an operational-doc pointer: `repo-awareness-two-layer-model.md`, then only the pointed doc
 - operating modes: `operating-modes.md`
-- installation or file ownership: `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/install-aim-2.0.md` and `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/repository-surface-classification.md`
-- cost behavior: `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/cost-control-mode.md`
-- documentation authority: `https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/documentation-model.md`
+- installation or file ownership: `version-and-installation.md` and `version-and-installation.md`
+- cost behavior: `operating-modes.md`
+- documentation authority: `agile-iteration-method.md`
 - active adapter mechanics: the matching adapter guide or helper only
 
 Other workflow docs remain canonical for their named area, but they are not startup prerequisites.
