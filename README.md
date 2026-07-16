@@ -134,7 +134,7 @@ specialists. It never needs to create `AGENTS.md` or `CLAUDE.md`.
 All adapters use the same AIM roles, gates, state ownership, and `/aim` command
 semantics. Supplier-specific files define how each project specialist works.
 
-## What is new in v2.2.0
+## What is new in v2.2.1
 
 - one adaptive installation instead of Personal, Team, and Enterprise editions
 - project-specific native role specialists generated from `aim.roles.yaml`
@@ -173,6 +173,6 @@ python3 scripts/build_public_skill.py
 python3 scripts/build_public_skill.py --check
 ```
 
-Current product release: **v2.2.0**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.2.1**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

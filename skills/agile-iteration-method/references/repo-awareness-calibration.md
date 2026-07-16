@@ -206,6 +206,6 @@ The installer and chat calibration share:
 
 - `aim.profile.yaml`
 - `repo-awareness.md`
-- `repo-awareness.md`
-- `source-only/aim-install-manifest.yaml`
+- `source-only/repo-profile-and-footprint-model.md`
+- `install/aim-install-manifest.yaml`
 - `source-only validator tooling`

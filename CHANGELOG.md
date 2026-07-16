@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-07-16 - AIM 2 patch release v2.2.1
+- Replaced the Codex-specific public Agent Skill launcher with a portable front
+  door for Codex, GitHub Copilot, and Claude Code.
+- Improved the skills.sh opening with AIM's user outcome before package details.
+- Removed misleading canonical-reference aliases and made omitted source-only
+  documents explicit.
+- Added a safe data-only installer-manifest contract and truthful package
+  inventory and provenance.
+- Added portability, closure, YAML, provenance-hash, and security regression
+  checks; public package format is now version 3.
+
 ## 2026-07-13 - AIM 2 release v2.2.0
 - Retired the remote pipe-to-shell bootstrap after ecosystem security audits
   identified unnecessary remote-code-execution risk; adaptive setup now starts

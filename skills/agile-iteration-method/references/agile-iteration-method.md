@@ -490,7 +490,7 @@ Active-adapter helpers are optional and secondary.
 Do not preload the workflow family.
 Load a supporting document only when its behavior area becomes relevant.
 
-The detailed documentation hierarchy lives in `agile-iteration-method.md`.
+The detailed documentation hierarchy lives in `source-only/documentation-model.md`.
 The repo-awareness load order lives in `repo-awareness.md`.
 
 Startup triggers (no manual bootstrap expected):
@@ -1077,7 +1077,7 @@ Setup and usage are documented in:
 ### Feature parity matrix
 
 Use the adapter guidance as the detailed source of truth:
-- `adapter-entry-model.md`
+- `source-only/aim-adapter-guidance.md`
 
 At minimum, the matrix must classify:
 - start AIM session
@@ -1154,9 +1154,9 @@ Load deeper documents only when their area becomes relevant:
 - calibration, persistent memory, remember, or forget: `repo-awareness-calibration.md`
 - rich repo-specific policy or an operational-doc pointer: `repo-awareness-two-layer-model.md`, then only the pointed doc
 - operating modes: `operating-modes.md`
-- installation or file ownership: `version-and-installation.md` and `version-and-installation.md`
-- cost behavior: `operating-modes.md`
-- documentation authority: `agile-iteration-method.md`
+- installation or file ownership: `source-only/install-aim-2.0.md` and `source-only/repository-surface-classification.md`
+- cost behavior: `source-only/cost-control-mode.md`
+- documentation authority: `source-only/documentation-model.md`
 - active adapter mechanics: the matching adapter guide or helper only
 
 Other workflow docs remain canonical for their named area, but they are not startup prerequisites.

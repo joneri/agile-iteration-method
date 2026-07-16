@@ -8,6 +8,7 @@
     "references/adapter-entry-model.md",
     "references/adapter-skill-bootstrap.md",
     "references/agile-iteration-method.md",
+    "references/install/aim-install-manifest.yaml",
     "references/operating-modes.md",
     "references/product-coherence-validation.md",
     "references/project-agent-configuration.md",
@@ -32,19 +33,19 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.2.0",
+  "productVersion": "2.2.1",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
     "repoProfile": "0.2"
   },
-  "publicSkillPackageVersion": 2,
+  "publicSkillPackageVersion": 3,
   "runtimeContractVersion": "2.0",
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "f5c018a2eaa86c00f170f54abc8f31e743d8a08d60e4c0dabf3741e6df433bc8",
-      "source": "adapters/codex/agile-iteration-method/SKILL.md"
+      "sha256": "a2d025d9bfe955a49f789751746d811c5a0cb87c6695beb1666f19a33d90ceff",
+      "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
@@ -128,7 +129,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "c4a2383a03bdb6739d16a0e24058e4b9c7da4e63d203e0be2f448868cc03c530",
+      "sha256": "fe650098093fad42070e8a2cacfb216a6c416af57bd26dd6ff479fef69f8bc71",
       "source": "VERSION"
     },
     {
@@ -138,7 +139,7 @@
     },
     {
       "output": "manifest.json",
-      "sha256": "d4dd9650539a99cc2ead7beced64d99ef57ec2279080a01e0fd5b5ccad4ab498",
+      "sha256": "2e8619d076f10c8e0a551281bfa87da7a77f2ad92cbd70d9f24d82ddc2a24d93",
       "source": "scripts/build_public_skill.py"
     }
   ]

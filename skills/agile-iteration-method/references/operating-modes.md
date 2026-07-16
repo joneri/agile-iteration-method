@@ -67,7 +67,7 @@ deterministic upgrade plans while public docs, the public Agent Skill, and the
 guided installer expose one AIM product through clearly distinguished setup
 paths.
 
-See [Install AIM](version-and-installation.md),
+See [Install AIM](source-only/install-aim-2.0.md),
 [Public Agent Skill distribution](version-and-installation.md),
 [Project-agent configuration](project-agent-configuration.md), and
-[Repo profile and footprint model](repo-awareness.md).
+[Repo profile and footprint model](source-only/repo-profile-and-footprint-model.md).

@@ -19,12 +19,14 @@ from build_public_skill import (  # noqa: E402
     GENERATED_NOTICE,
     PACKAGE_RELATIVE_PATH,
     PUBLIC_SKILL_PACKAGE_VERSION,
+    SKILL_SOURCE,
     PublicSkillError,
     render_package,
     resolved_versions,
     validate_committed_package,
     write_package,
 )
+from aim_installer.yaml_lite import loads as load_yaml  # noqa: E402
 
 
 class PublicSkillTests(unittest.TestCase):
@@ -106,7 +108,7 @@ class PublicSkillTests(unittest.TestCase):
     def test_invalid_canonical_frontmatter_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)
-            source = copied / "adapters/codex/agile-iteration-method/SKILL.md"
+            source = copied / SKILL_SOURCE
             source.write_text(
                 source.read_text(encoding="utf-8").replace(
                     "name: agile-iteration-method",
@@ -117,6 +119,47 @@ class PublicSkillTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(PublicSkillError, "frontmatter 'name' is required"):
                 render_package(copied)
+
+    def test_public_launcher_is_adapter_neutral(self) -> None:
+        self.assertEqual(
+            SKILL_SOURCE,
+            Path("adapters/portable/agile-iteration-method/SKILL.md"),
+        )
+        skill = render_package(REPO_ROOT)[Path("SKILL.md")].decode("utf-8")
+        for platform in ("Codex", "GitHub Copilot", "Claude Code"):
+            with self.subTest(platform=platform):
+                self.assertIn(platform, skill)
+        self.assertNotIn("adapts the method into Codex skill form", skill)
+        self.assertNotIn("In Codex, AIM is", skill)
+
+    def test_every_provenance_output_exists_in_package(self) -> None:
+        rendered = render_package(REPO_ROOT)
+        manifest = json.loads(rendered[Path("manifest.json")])
+        for item in manifest["sourceProvenance"]:
+            with self.subTest(item=item):
+                self.assertIn(Path(item["output"]), rendered)
+                self.assertEqual(
+                    item["sha256"],
+                    hashlib.sha256((REPO_ROOT / item["source"]).read_bytes()).hexdigest(),
+                )
+        self.assertIn(
+            Path("references/install/aim-install-manifest.yaml"),
+            rendered,
+        )
+
+    def test_installer_manifest_projection_is_data_only(self) -> None:
+        rendered = render_package(REPO_ROOT)
+        payload = rendered[
+            Path("references/install/aim-install-manifest.yaml")
+        ].decode("utf-8")
+        parsed = load_yaml(payload)["aimInstallManifest"]
+        self.assertEqual(parsed["manifestVersion"], "0.7")
+        self.assertEqual(set(parsed["adapters"]), {"codex", "copilot", "claude"})
+        self.assertEqual(
+            parsed["canonicalCommand"],
+            "source-only adaptive installer; not executable from the portable package",
+        )
+        self.assertNotIn("python3 scripts/aim_install.py", payload)
 
     def test_generation_never_mutates_active_runtime_state(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -218,7 +261,7 @@ class PublicSkillTests(unittest.TestCase):
             with self.subTest(marker=marker):
                 self.assertNotIn(marker, content)
         self.assertIn("source-only/...", content)
-        self.assertNotIn(
+        self.assertIn(
             "references/install/aim-install-manifest.yaml",
             json.loads((package / "manifest.json").read_text(encoding="utf-8"))["files"],
         )
