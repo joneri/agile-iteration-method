@@ -187,9 +187,9 @@ See `repo-awareness-calibration.md` for readiness, confidence, categories, docum
 - `schemas/aim-personal-hints.schema.json`
 - `source-only/repo-profile-schema.md`
 - `agile-iteration-method.md`
-- `repo-awareness.md`
-- `repo-awareness.md`
+- `source-only/repo-profile-and-footprint-model.md`
+- `source-only/repo-profile-and-footprint-model.md`
 - `repo-awareness-calibration.md`
-- `adapter-entry-model.md`
+- `source-only/aim-adapter-guidance.md`
 - `aim.profile.yaml`
 - `source-only validator tooling`

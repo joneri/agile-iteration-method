@@ -9,13 +9,6 @@ description: >
   controlling AIM modes and cost profiles, and continuing AIM runs.
 ---
 
-<!--
-GENERATED FILE. DO NOT EDIT DIRECTLY.
-Generated from canonical Agile Iteration Method sources.
-Regenerate with: python3 scripts/build_public_skill.py
-Source: adapters/portable/agile-iteration-method/SKILL.md
--->
-
 # Agile Iteration Method
 
 Build what you want without losing the goal. AIM turns AI-assisted development

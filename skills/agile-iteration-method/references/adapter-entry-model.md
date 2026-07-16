@@ -182,6 +182,6 @@ If adapter entry guidance conflicts with canonical workflow docs or
   state effects, upgrade behavior, and fallbacks
 - `adapter-skill-bootstrap.md` — skill discovery, readiness,
   reload, migration, and first-run receipt
-- `adapter-entry-model.md` — adapter mechanics and helper boundaries
+- `source-only/aim-adapter-guidance.md` — adapter mechanics and helper boundaries
 - `repo-awareness.md` — progressive loading and adapter boundaries
 - `project-agent-configuration.md` — shared role intent and native specialist generation

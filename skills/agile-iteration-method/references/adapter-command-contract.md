@@ -55,7 +55,7 @@ onboarding state first:
 - blocked
 
 Adapters must recommend exactly one next action whenever possible and use the
-shape from `../SKILL.md`:
+shape from `source-only/light-front-door.md`:
 
 ```text
 You are here: <state>.

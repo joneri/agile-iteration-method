@@ -1,0 +1,218 @@
+# GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py
+# Source: install/aim-install-manifest.yaml
+# Data-only contract projection. The portable skill never executes this manifest.
+
+aimInstallManifest:
+  manifestVersion: "0.7"
+  status: one-adaptive-install
+
+  canonicalCommand: "source-only adaptive installer; not executable from the portable package"
+
+  modes:
+    - standard
+
+  legacyModes:
+    - team
+    - personal
+    - enterprise
+
+  adapters:
+    - copilot
+    - codex
+    - claude
+
+  footprints:
+    - external
+    - local
+    - profile
+    - adapters
+    - full
+
+  gitignoreFragments:
+    - .aim/
+
+  modeProfiles:
+    standard:
+      defaultFootprint: adapters
+      includeOptionalSurfaces: true
+      gitignore:
+        - .aim/
+    team:
+      defaultFootprint: adapters
+      includeOptionalSurfaces: true
+      gitignore:
+        - .aim/
+    personal:
+      defaultFootprint: adapters
+      includeOptionalSurfaces: true
+      gitignore:
+        - .aim/
+    enterprise:
+      defaultFootprint: external
+      includeOptionalSurfaces: false
+      enterpriseSafe: true
+      gitignore:
+        - /.aim
+        - /.aim-local
+        - /aim.local.*
+        - /*.aim.local.md
+        - /*.aim.process.md
+
+  footprintProfiles:
+    external:
+      description: Full AIM distribution and selected home-scope adapter packages outside the target repository; no repo writes.
+      embeddedDocs: false
+      externalDocs: true
+      repoAdapters: false
+      sharedProfile: false
+      repoIgnore: false
+      homeAdapters: true
+      externalRepoAwareness: true
+    local:
+      description: Local packages only; no target-repository mutation.
+      embeddedDocs: false
+      externalDocs: false
+      repoAdapters: false
+      sharedProfile: false
+      repoIgnore: false
+      homeAdapters: true
+    profile:
+      description: Minimal reviewed repo-awareness profile and runtime ignore policy; no repo adapters or docs.
+      embeddedDocs: false
+      externalDocs: false
+      repoAdapters: false
+      sharedProfile: true
+      repoIgnore: true
+      homeAdapters: true
+    adapters:
+      description: Standard project role/profile configuration, selected native adapters, and required contract subset.
+      embeddedDocs: false
+      externalDocs: false
+      repoAdapters: true
+      sharedProfile: true
+      repoIgnore: true
+      homeAdapters: true
+    full:
+      description: Shared profile, selected adapters, and embedded workflow docs.
+      embeddedDocs: true
+      externalDocs: false
+      repoAdapters: true
+      sharedProfile: true
+      repoIgnore: true
+      homeAdapters: true
+
+  targetExclusions:
+    - path: CONTRIBUTING.md
+      reason: AIM-source-repository-maintainer-only
+      operations:
+        copy: forbidden
+        create: forbidden
+        modify: forbidden
+        require: forbidden
+        read: forbidden
+
+  packageBoundaries:
+    licenses:
+      sourceLicense: LICENSE
+      sourceDocumentationLicense: docs/LICENSE-DOCS
+      destination: docs/aim/
+      includedWith: embeddedDocs
+      targetOwned: true
+    canonicalDocs:
+      source: docs/workflow/
+      targetOwned: true
+    schemas:
+      source: schemas/
+      destination: schemas/
+      includedWith: embeddedDocs
+      targetOwned: true
+    codex:
+      source: adapters/codex/agile-iteration-method/
+      destination: ~/.agents/skills/agile-iteration-method/
+      optional: true
+    projectRoles:
+      source: aim.roles.yaml
+      destination: aim.roles.yaml
+      schema: schemas/aim-project-roles.schema.json
+      generated: true
+    codexProjectAgents:
+      source: .codex/agents/aim-*.toml
+      destination: .codex/agents/
+      optional: true
+    copilotSkill:
+      source: .github/skills/aim/
+      destination: .github/skills/aim/
+      optional: true
+    externalDistribution:
+      source: docs/workflow/, schemas/, adapters/
+      destination: ~/.aim/installs/agile-iteration-method/
+      optional: true
+    copilotAgents:
+      source: .github/agents/aim*.agent.md
+      destination: .github/agents/
+      optional: true
+    copilotPrompts:
+      source: .github/prompts/
+      destination: .github/prompts/
+      optional: true
+    claude:
+      source: .claude/
+      destination: .claude/
+      optional: true
+    claudeSkill:
+      source: .claude/skills/aim/
+      destination: .claude/skills/aim/
+      optional: true
+
+  adapterClosure:
+    rule: every-required-adapter-document-reference-must-resolve-after-install
+    requiredReferenceScope: direct-adapter-instruction-references
+    optionalReferenceScope: links-inside-canonical-documents-are-further-reading
+    canonicalSourcePrefix: docs/workflow/
+    codex:
+      strategy: embedded-package
+      destination: ~/.agents/skills/agile-iteration-method/references/
+    claude:
+      strategy: installed-canonical-subset
+      destination: docs/workflow/
+    copilot:
+      strategy: installed-canonical-subset
+      destination: docs/workflow/
+
+  repoAwarenessBootstrap:
+    sharedProfile: aim.profile.yaml
+    projectRoles: aim.roles.yaml
+    personalHints: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
+    enterpriseMemory: ~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml
+    enterpriseMemoryDocs: ~/.aim/repo-awareness/<repo-fingerprint>/docs/
+    initialStatus:
+      - needs_calibration
+      - partially_ready
+    readyRequiresCalibration: true
+    calibrationCommand: /aim calibrate-repo
+    runtimeProfileStorage: forbidden
+
+  adapterSkills:
+    codex:
+      source: adapters/codex/agile-iteration-method/SKILL.md
+      destination: ~/.agents/skills/agile-iteration-method/SKILL.md
+      legacyDestination: ~/.codex/skills/agile-iteration-method/SKILL.md
+      scope: user
+      reload: fresh-session
+      firstCommand: /aim start "EPIC: <desired outcome>"
+      explicitFallback: $agile-iteration-method <intent>
+    claude:
+      source: .claude/skills/aim/SKILL.md
+      destination: .claude/skills/aim/SKILL.md
+      scope: project
+      reload: live-reload-or-fresh-session
+      firstCommand: /aim start "EPIC: <desired outcome>"
+    copilot:
+      source: .github/skills/aim/SKILL.md
+      destination: .github/skills/aim/SKILL.md
+      scope: project
+      reload: reload-skills-or-fresh-session
+      firstCommand: /aim start "EPIC: <desired outcome>"
+
+  runtimeExclusions:
+    - .aim/

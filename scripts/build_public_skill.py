@@ -17,10 +17,10 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 2
+PUBLIC_SKILL_PACKAGE_VERSION = 3
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
-SKILL_SOURCE = Path("adapters/codex/agile-iteration-method/SKILL.md")
+SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
 PUBLIC_DESCRIPTION_NAME = "agile-iteration-method"
 REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
     (Path("docs/workflow/agile-iteration-method.md"), Path("agile-iteration-method.md")),
@@ -35,16 +35,6 @@ REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
     (Path("docs/workflow/repo-awareness.md"), Path("repo-awareness.md")),
     (Path("docs/workflow/version-and-installation.md"), Path("version-and-installation.md")),
 )
-
-REFERENCE_ALIASES: dict[str, str] = {
-    "aim-adapter-guidance.md": "adapter-entry-model.md",
-    "cost-control-mode.md": "operating-modes.md",
-    "documentation-model.md": "agile-iteration-method.md",
-    "install-aim-2.0.md": "version-and-installation.md",
-    "light-front-door.md": "SKILL.md",
-    "repo-profile-and-footprint-model.md": "repo-awareness.md",
-    "repository-surface-classification.md": "version-and-installation.md",
-}
 
 SCHEMA_SOURCES: tuple[Path, ...] = (
     Path("schemas/aim-repo-profile.schema.json"),
@@ -158,9 +148,7 @@ def _workflow_link_rewriter(root: Path, *, from_skill: bool):
 
     def replace(match: re.Match[str]) -> str:
         name = match.group(1)
-        target = selected.get(name, REFERENCE_ALIASES.get(name))
-        if target == "SKILL.md":
-            return "SKILL.md" if from_skill else "../SKILL.md"
+        target = selected.get(name)
         if target is not None:
             prefix = "references/" if from_skill else ""
             return prefix + target
@@ -199,8 +187,14 @@ def _rewrite_package_paths(content: str, *, from_skill: bool) -> str:
         skill_target,
     )
     content = content.replace(
+        "adapters/portable/agile-iteration-method/SKILL.md",
+        skill_target,
+    )
+    content = content.replace(
         "install/aim-install-manifest.yaml",
-        "source-only/aim-install-manifest.yaml",
+        "references/install/aim-install-manifest.yaml"
+        if from_skill
+        else "install/aim-install-manifest.yaml",
     )
     content = content.replace(
         "scripts/validate_aim_runtime.py",
@@ -257,6 +251,20 @@ def _render_schema(root: Path, source: Path) -> str:
     return json.dumps(schema, indent=2, sort_keys=True) + "\n"
 
 
+def _render_install_manifest(root: Path) -> str:
+    content = _read(root, INSTALL_MANIFEST_SOURCE).replace(
+        'canonicalCommand: "python3 scripts/aim_install.py"',
+        'canonicalCommand: "source-only adaptive installer; not executable from the portable package"',
+    )
+    return (
+        "# "
+        + GENERATED_NOTICE.replace("\n", " ")
+        + f"\n# Source: {INSTALL_MANIFEST_SOURCE.as_posix()}\n"
+        + "# Data-only contract projection. The portable skill never executes this manifest.\n\n"
+        + content
+    )
+
+
 def _source_provenance(root: Path) -> list[dict[str, str]]:
     mappings = [(SKILL_SOURCE, Path("SKILL.md"))]
     mappings.extend((source, Path("references") / output) for source, output in REFERENCE_SOURCES)
@@ -292,6 +300,10 @@ def _render_package_once(root: Path) -> dict[Path, bytes]:
         ).encode("utf-8")
     for source in SCHEMA_SOURCES:
         rendered[Path("references") / source] = _render_schema(root, source).encode("utf-8")
+
+    rendered[Path("references") / INSTALL_MANIFEST_SOURCE] = _render_install_manifest(
+        root
+    ).encode("utf-8")
 
     rendered[Path("references/LICENSE-DOCS")] = (
         GENERATED_NOTICE
@@ -410,6 +422,8 @@ def validate_rendered_package(rendered: dict[Path, bytes]) -> None:
             target = raw_target.split("#", 1)[0].strip()
             if not target or target.startswith(("http://", "https://", "mailto:")):
                 continue
+            if target.startswith("source-only/"):
+                continue
             normalized = posixpath.normpath((path.parent / target).as_posix())
             if normalized == ".." or normalized.startswith("../"):
                 raise PublicSkillError(f"{path}: reference escapes the package: {raw_target}")
@@ -420,6 +434,12 @@ def validate_rendered_package(rendered: dict[Path, bytes]) -> None:
     manifest = json.loads(rendered[Path("manifest.json")])
     if manifest["files"] != sorted(path.as_posix() for path in rendered):
         raise PublicSkillError("manifest file inventory does not match generated output")
+    for item in manifest["sourceProvenance"]:
+        output = Path(item["output"])
+        if output not in rendered:
+            raise PublicSkillError(
+                f"source provenance names an output that was not generated: {output}"
+            )
     _validate_manifest_version_fields(manifest)
 
 

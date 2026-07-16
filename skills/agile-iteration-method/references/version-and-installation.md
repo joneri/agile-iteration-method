@@ -7,13 +7,13 @@ Source: docs/workflow/version-and-installation.md
 
 ## Resolved package metadata
 
-- AIM product release: `2.2.0`
+- AIM product release: `2.2.1`
 - Runtime contract: `2.0`
 - Installer manifest: `0.7`
 - Repo-profile schema: `0.2`
 - Personal-hints schema: `0.1`
 - Project-role schema: `0.1`
-- Public skill package format: `2`
+- Public skill package format: `3`
 
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
@@ -123,7 +123,7 @@ The generated package records these independent contracts:
 - AIM product release from `VERSION`
 - AIM runtime contract from the canonical release manifest
 - adaptive installer manifest version from
-  `source-only/aim-install-manifest.yaml`
+  `install/aim-install-manifest.yaml`
 - repo-profile, Personal-hints, and project-role schema versions
 - public Agent Skill package-format version
 
