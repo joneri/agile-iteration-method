@@ -132,6 +132,77 @@ class PublicSkillTests(unittest.TestCase):
         self.assertNotIn("adapts the method into Codex skill form", skill)
         self.assertNotIn("In Codex, AIM is", skill)
 
+    def test_public_front_door_is_newcomer_first_and_english(self) -> None:
+        skill = render_package(REPO_ROOT)[Path("SKILL.md")].decode("utf-8")
+        ordered_headings = (
+            "## Why AIM",
+            "## How AIM Delivers Software",
+            "## Start Here",
+            "## Your First AIM Journey",
+            "## Complete Command Guide",
+            "## Native Entry Surface",
+        )
+        positions = [skill.index(heading) for heading in ordered_headings]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn("Build what you want without losing the goal", skill)
+        self.assertIn("PO -> TDO -> Dev -> Reviewer -> TDO -> PO", skill)
+        self.assertIn("1. Install AIM", skill)
+        self.assertIn("2. Calibrate the repository", skill)
+        self.assertIn("3. Start with an outcome", skill)
+        self.assertIn("default `Strict` experience", skill)
+        self.assertIn("Final Epic acceptance always remains yours", skill)
+        for marker in ("å", "ä", "ö", "Använd när", "Vad gör"):
+            with self.subTest(marker=marker):
+                self.assertNotIn(marker, skill)
+
+    def test_complete_command_guide_explains_every_supported_intent(self) -> None:
+        skill = render_package(REPO_ROOT)[Path("SKILL.md")].decode("utf-8")
+        commands = (
+            '/aim start "EPIC: ..."',
+            "/aim continue",
+            "/aim status",
+            "/aim validate",
+            "/aim help",
+            "/aim config",
+            "/aim configure-agents",
+            "/aim calibrate-repo",
+            '/aim remember-repo <category> "<rule>"',
+            '/aim forget-repo <category> "<rule-id>"',
+            "/aim upgrade",
+            "/aim mode strict|auto",
+            "/aim cost standard|control|deep",
+            "/aim replan",
+            "Install AIM",
+            "Start working according to AIM",
+        )
+        guide = skill.split("## Complete Command Guide", 1)[1].split(
+            "## Native Entry Surface", 1
+        )[0]
+        for command in commands:
+            with self.subTest(command=command):
+                self.assertIn(command, guide.replace("\\|", "|"))
+                matching_rows = [
+                    line
+                    for line in guide.splitlines()
+                    if line.startswith("|")
+                    and line.replace("\\|", "<PIPE>").split("|")[1]
+                    .strip()
+                    .strip("`")
+                    .replace("<PIPE>", "|")
+                    == command
+                ]
+                self.assertEqual(len(matching_rows), 1)
+                self.assertEqual(
+                    len(matching_rows[0].replace("\\|", "<PIPE>").split("|")),
+                    6,
+                )
+        for explanation in ("Use when", "What it does", "What happens next"):
+            self.assertGreaterEqual(guide.count(explanation), 5)
+        self.assertIn("Boundary", guide)
+        self.assertIn("accepted history", guide)
+        self.assertIn("active state is unchanged", guide)
+        self.assertIn("never transfer acceptance", guide)
+
     def test_every_provenance_output_exists_in_package(self) -> None:
         rendered = render_package(REPO_ROOT)
         manifest = json.loads(rendered[Path("manifest.json")])

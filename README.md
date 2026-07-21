@@ -134,14 +134,16 @@ specialists. It never needs to create `AGENTS.md` or `CLAUDE.md`.
 All adapters use the same AIM roles, gates, state ownership, and `/aim` command
 semantics. Supplier-specific files define how each project specialist works.
 
-## What is new in v2.2.1
+## What is new in v2.2.2
 
-- one adaptive installation instead of Personal, Team, and Enterprise editions
-- project-specific native role specialists generated from `aim.roles.yaml`
-- supplier-native skills for the full `/aim` command family
-- adapter readiness receipts after install and upgrade
-- current Codex skill discovery through `$HOME/.agents/skills`
-- shorter product documentation and stronger release/documentation checks
+- newcomer-first public Agent Skill documentation based on AIM's product value and delivery loop
+- a concrete first journey from installation and calibration to the first
+  accepted Done Increment
+- a complete guide explaining when to use every AIM command and what happens
+  next
+- clearer Strict and Auto behavior without changing roles, gates, or human acceptance
+- regression coverage for English-only public copy, command-table completeness,
+  package determinism, and security boundaries
 
 The AIM runtime contract remains 2.0. Product release, runtime contract,
 installer manifest, and profile schema versions are tracked separately.
@@ -173,6 +175,6 @@ python3 scripts/build_public_skill.py
 python3 scripts/build_public_skill.py --check
 ```
 
-Current product release: **v2.2.1**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.2.2**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).
