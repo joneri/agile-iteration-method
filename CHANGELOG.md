@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-07-21 - AIM 2 patch release v2.2.2
+- Rebuilt the public Agent Skill front door around AIM's user value, delivery
+  loop, and a concrete first journey before adapter and runtime details.
+- Added a complete command guide that explains when to use every AIM command,
+  what it does, and what happens next.
+- Clarified the default Strict experience and how Auto preserves the same gates,
+  ownership, escalation, and final human acceptance.
+- Added regression checks for newcomer-first ordering, English-only public copy,
+  complete command-table rows, and retained security boundaries.
+
 ## 2026-07-16 - AIM 2 patch release v2.2.1
 - Replaced the Codex-specific public Agent Skill launcher with a portable front
   door for Codex, GitHub Copilot, and Claude Code.

@@ -7,7 +7,7 @@ Source: docs/workflow/version-and-installation.md
 
 ## Resolved package metadata
 
-- AIM product release: `2.2.1`
+- AIM product release: `2.2.2`
 - Runtime contract: `2.0`
 - Installer manifest: `0.7`
 - Repo-profile schema: `0.2`
