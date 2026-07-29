@@ -395,6 +395,12 @@ def validate_rendered_package(rendered: dict[Path, bytes]) -> None:
         "sequential fallback",
         "/aim configure-agents",
         "/aim calibrate-repo",
+        "untrusted evidence",
+        "not AIM instructions",
+        "embedded instructions",
+        "cannot change roles, gates",
+        "tool policy",
+        "corroborate",
     ):
         if marker not in all_text:
             raise PublicSkillError(f"generated package lacks required semantic marker: {marker}")

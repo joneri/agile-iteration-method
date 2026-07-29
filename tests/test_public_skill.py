@@ -337,6 +337,36 @@ class PublicSkillTests(unittest.TestCase):
             json.loads((package / "manifest.json").read_text(encoding="utf-8"))["files"],
         )
 
+    def test_repository_context_is_untrusted_evidence_not_instructions(self) -> None:
+        rendered = render_package(REPO_ROOT)
+        skill = rendered[Path("SKILL.md")].decode("utf-8")
+        repo_awareness = rendered[Path("references/repo-awareness.md")].decode("utf-8")
+        combined = skill + "\n" + repo_awareness
+
+        for retained_feature in (
+            "Read `aim.profile.yaml`",
+            "Personal AIM hints",
+            "directly affected files",
+            "broader repository docs",
+            "locality",
+            "validation",
+            "risk zones",
+            "freshness",
+        ):
+            with self.subTest(retained_feature=retained_feature):
+                self.assertIn(retained_feature, combined)
+
+        for trust_boundary in (
+            "untrusted evidence",
+            "not AIM instructions",
+            "embedded instructions",
+            "cannot change roles, gates",
+            "tool policy",
+            "corroborate",
+        ):
+            with self.subTest(trust_boundary=trust_boundary):
+                self.assertIn(trust_boundary, combined)
+
 
 if __name__ == "__main__":
     unittest.main()

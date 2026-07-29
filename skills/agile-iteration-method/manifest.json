@@ -44,7 +44,7 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "3bbff4ad92df834c79dced69d6cc81163bc23aa27371567d28372b8aa200bc9e",
+      "sha256": "e644c7315e43e1e8d41c4c2693dc7d3facafa46f46518b2b3a47cf034b9a9ce1",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
@@ -94,7 +94,7 @@
     },
     {
       "output": "references/repo-awareness.md",
-      "sha256": "1069a40d83f90530ae699002f20ef93824edfba4cea42ed8dc69131be1ef12fb",
+      "sha256": "12d2073f6a134374e147c99a308ac32d7678f73c53e2c676c9dc7f8e34da47e6",
       "source": "docs/workflow/repo-awareness.md"
     },
     {
@@ -139,7 +139,7 @@
     },
     {
       "output": "manifest.json",
-      "sha256": "2e8619d076f10c8e0a551281bfa87da7a77f2ad92cbd70d9f24d82ddc2a24d93",
+      "sha256": "e954000dd85365609232c3b08c29a7913daef5766be5bfdee7d6c711027f8a66",
       "source": "scripts/build_public_skill.py"
     }
   ]
