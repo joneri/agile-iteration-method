@@ -281,7 +281,7 @@ PUBLIC_PRODUCT_DOC_PATHS = {
         "# Agile Iteration Method (AIM) 2.2",
         "## Install",
         "## How AIM works",
-        "## What is new in v2.2.2",
+        "## What is new in v2.2.3",
         "docs/product/features.md",
     ],
     "docs/product/README.md": [

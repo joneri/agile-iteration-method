@@ -49,6 +49,30 @@ class AdapterCommandContractTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 0, completed.stdout)
         self.assertIn("canonical command intents: 14", completed.stdout)
 
+    def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
+        version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        self.assertEqual(version, "2.2.3")
+
+        status_surfaces = {
+            "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",
+            "portable": REPO_ROOT / "adapters/portable/agile-iteration-method/SKILL.md",
+            "copilot": REPO_ROOT / ".github/agents/aim.agent.md",
+            "claude": REPO_ROOT / ".claude/commands/status-aim.md",
+        }
+        for surface, path in status_surfaces.items():
+            with self.subTest(surface=surface):
+                content = " ".join(path.read_text(encoding="utf-8").split())
+                self.assertIn("product release", content)
+                self.assertIn("VERSION", content)
+                self.assertIn("runtime contract", content)
+                self.assertIn("aimVersion", content)
+                self.assertIn("separately", content)
+
+        state_example = (REPO_ROOT / ".github/agents/aim.agent.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('"aimVersion": "2.0"', state_example)
+
     def test_missing_claude_command_is_blocked(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)

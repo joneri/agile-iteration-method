@@ -33,7 +33,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.2.2",
+  "productVersion": "2.2.3",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -44,7 +44,7 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "e644c7315e43e1e8d41c4c2693dc7d3facafa46f46518b2b3a47cf034b9a9ce1",
+      "sha256": "ded6a2dbeaba608afd4386eb353fc9aec0d7005a16b763006a2ba5a5f89373ab",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
@@ -54,7 +54,7 @@
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "58b1b27817f41dd3f4180c388a1080c64b9eb0dc0f112c41fcbb5e767f3b3f86",
+      "sha256": "5a9c16d44112269fc5a46d881adeb315e9b616050464351e73222c0784ed6c64",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -129,7 +129,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "91930425f31d5132e78e0ad7195620e435121a2fdf87cf655f8323aa45ae0468",
+      "sha256": "4d66ce434c5ffb80f286227e918f77e14a9bc80e7bcc445353c02d484c33b699",
       "source": "VERSION"
     },
     {

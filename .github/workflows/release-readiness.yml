@@ -2,6 +2,12 @@ name: AIM Release Readiness
 
 on:
   workflow_call:
+    inputs:
+      release_ref:
+        description: "Optional tag or ref to validate"
+        required: false
+        type: string
+        default: ""
   workflow_dispatch:
   pull_request:
 
@@ -17,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.release_ref || github.ref }}
 
       - name: Set up Python
         uses: actions/setup-python@v5

@@ -156,7 +156,7 @@ state transitions through the platform's native skill route.
 | Command | Use when | What it does | What happens next |
 | --- | --- | --- | --- |
 | `/aim help` | You are unsure what to do now. | Detects the current onboarding or runtime state and recommends one action. | Follow the named command or resolve the named blocker. |
-| `/aim status` | You want a concise progress report. | Shows the active Epic, increment, role, mode, cost profile, gate, and expected next step. | Continue automatically or make the decision the status identifies. |
+| `/aim status` | You want a concise progress report. | Shows the AIM product release from `VERSION` separately from the runtime contract in `.aim/state.json` `aimVersion`, then the active Epic, increment, role, mode, cost profile, gate, and expected next step. | Continue automatically or make the decision the status identifies. |
 | `/aim config` | You need to understand effective AIM policy. | Shows repository awareness, role configuration, validation preferences, ownership, and adapter fallback behavior. | Adjust configuration only when the reported policy is wrong or incomplete. |
 
 ### Inspect and validate

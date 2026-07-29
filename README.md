@@ -134,16 +134,15 @@ specialists. It never needs to create `AGENTS.md` or `CLAUDE.md`.
 All adapters use the same AIM roles, gates, state ownership, and `/aim` command
 semantics. Supplier-specific files define how each project specialist works.
 
-## What is new in v2.2.2
+## What is new in v2.2.3
 
-- newcomer-first public Agent Skill documentation based on AIM's product value and delivery loop
-- a concrete first journey from installation and calibration to the first
-  accepted Done Increment
-- a complete guide explaining when to use every AIM command and what happens
-  next
-- clearer Strict and Auto behavior without changing roles, gates, or human acceptance
-- regression coverage for English-only public copy, command-table completeness,
-  package determinism, and security boundaries
+- an explicit instruction/data trust boundary for repository-owned context
+- preserved repository awareness without granting embedded directives authority
+  over AIM behavior
+- consistent protection across portable, Codex, GitHub Copilot, and Claude Code
+  entry routes
+- `/aim status` reporting of the current product release alongside runtime state
+- focused Snyk W011 and cross-adapter ordering regression coverage
 
 The AIM runtime contract remains 2.0. Product release, runtime contract,
 installer manifest, and profile schema versions are tracked separately.
@@ -175,6 +174,6 @@ python3 scripts/build_public_skill.py
 python3 scripts/build_public_skill.py --check
 ```
 
-Current product release: **v2.2.2**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.2.3**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

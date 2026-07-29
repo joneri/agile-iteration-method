@@ -60,7 +60,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "2.2.2")
+            self.assertEqual(manifest["aimVersion"], "2.2.3")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["installerManifestVersion"], "0.7")
             self.assertEqual(manifest["publicOrigin"], PUBLIC_ORIGIN)
@@ -213,8 +213,39 @@ class PublicationContractTests(unittest.TestCase):
             "gh release upload",
             "--verify-tag",
             'declared="v$(tr -d',
+            "REQUESTED_VERSION: ${{ inputs.version }}",
+            'version="${REQUESTED_VERSION}"',
+            'git rev-parse "${version}^{commit}"',
+            "Checked-out source does not match release tag",
         ):
             self.assertIn(marker, release_workflow)
+        run_blocks = release_workflow.split("run: |", 1)[1]
+        self.assertNotIn("${{ inputs.version }}", run_blocks)
+        requested_ref = (
+            "${{ github.event_name == 'workflow_dispatch' "
+            "&& inputs.version || github.ref }}"
+        )
+        self.assertIn(
+            "release-gate:\n"
+            "    uses: ./.github/workflows/release-readiness.yml\n"
+            "    with:\n"
+            f"      release_ref: {requested_ref}",
+            release_workflow,
+        )
+        self.assertIn(
+            "- name: Checkout\n"
+            "        uses: actions/checkout@v4\n"
+            "        with:\n"
+            "          fetch-depth: 0\n"
+            f"          ref: {requested_ref}",
+            release_workflow,
+        )
+
+        readiness_workflow = (
+            REPO_ROOT / ".github/workflows/release-readiness.yml"
+        ).read_text(encoding="utf-8")
+        self.assertIn("release_ref:", readiness_workflow)
+        self.assertIn("ref: ${{ inputs.release_ref || github.ref }}", readiness_workflow)
 
     def test_release_validator_passes_without_local_runtime_workspace(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

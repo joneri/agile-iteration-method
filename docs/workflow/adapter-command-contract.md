@@ -20,7 +20,7 @@ ownership, or acceptance.
 | --- | --- | --- |
 | `/aim start "EPIC: ..."` | start a new Epic or resume an incomplete checkpoint instead of creating a parallel run | may create `.aim/` and initialize `state.json` at Gate A |
 | `/aim continue` | resume from the persisted role, gate, increment, mode, and cost profile | advances state only when the current AIM transition allows it |
-| `/aim status` | report Epic, increment, role, mode, cost profile, gate, adapter, and next action | read-only |
+| `/aim status` | report the AIM product release from `VERSION` separately from the runtime contract in `.aim/state.json` `aimVersion`, then Epic, increment, role, mode, cost profile, gate, adapter, and next action | read-only |
 | `/aim validate` | run or explain Structural, Behavioral, Product coherence, and Release readiness checks | read-only |
 | `/aim help` | show the thin front door and the next useful command | read-only |
 | `/aim config` | show effective mode, cost, profile, ownership, validation, and adapter fallback configuration | read-only |

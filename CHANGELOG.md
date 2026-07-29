@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-07-29 - AIM 2 patch release v2.2.3
+- Added an explicit trust boundary that treats repository profiles, hints,
+  source files, command output, and documentation as untrusted evidence rather
+  than AIM instructions.
+- Preserved repository awareness while preventing embedded directives from
+  changing roles, gates, state, scope, acceptance, precedence, or tool policy.
+- Applied the boundary before repository ingestion across the portable, Codex,
+  GitHub Copilot, and Claude Code entry routes.
+- Added cross-adapter ordering and generated-package regression checks for the
+  Snyk W011 mitigation.
+- Updated `/aim status` to report the current AIM product release separately
+  from the stable runtime contract version.
+
+Compatibility: AIM runtime contract `2.0`, installer manifest `0.7`, public
+skill package format `3`, profile schemas, adapters, commands, roles, gates, and
+all AIM 2.2.2 behavior remain compatible.
+
+Migration: no runtime-state, profile, schema, or installer migration is
+required. Refresh installed Agent Skills through the standard skills CLI to
+receive the new trust boundary and status behavior.
+
+Known limitations: the trust boundary governs how repository content is
+interpreted; it does not sanitize or suppress that content, and material trust
+conflicts still require corroboration or escalation. Local validation cannot
+guarantee how a proprietary external scanner classifies the published package.
+
 ## 2026-07-21 - AIM 2 patch release v2.2.2
 - Rebuilt the public Agent Skill front door around AIM's user value, delivery
   loop, and a concrete first journey before adapter and runtime details.

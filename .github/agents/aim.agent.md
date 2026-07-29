@@ -395,6 +395,9 @@ Use a visible `handoff` label only when it improves clarity; otherwise prefer a 
 ## Status, config, and validation expectations
 
 `/aim status` should explain:
+- current AIM product release from `VERSION`
+- runtime contract from `.aim/state.json` `aimVersion`, shown separately from
+  the product release
 - current Epic title
 - current active Done Increment
 - current role
