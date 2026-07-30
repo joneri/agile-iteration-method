@@ -74,6 +74,18 @@ can list a room and understand the next review step"`; an unapproved Epic to its
 Gate A decision; an approved Epic to `/aim continue`; and blocked work to the
 named blocker. Do not lead with internal file paths or a command inventory.
 
+## Audience-context integrity
+
+Every generated product artifact must communicate the intended current meaning
+inside its audience's context. Do not put private conversation, rejected drafts,
+prior AI mistakes, prompts, or review feedback into user-facing copy, UI labels
+or headlines, code comments, or documentation when the audience did not witness
+that process. Prefer direct present-context language over unexplained
+reassurance such as “this time,” “no longer,” or “not too long anymore,” and
+remove drafting residue during review. Preserve relevant history when the
+artifact is intentionally historical, such as a changelog, migration note,
+decision record, audit trail, retrospective, or requested comparison.
+
 ## Native role delegation
 
 Use `aim-po`, `aim-tdo`, `aim-dev`, and `aim-reviewer` from `.github/agents/`

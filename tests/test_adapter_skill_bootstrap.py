@@ -101,6 +101,32 @@ class AdapterSkillBootstrapTests(unittest.TestCase):
                 for control in protected_controls:
                     self.assertIn(control, normalized)
 
+    def test_every_runtime_route_enforces_audience_context_integrity(self) -> None:
+        routes = {
+            **{name: path for name, path in SKILLS.items()},
+            "portable": "adapters/portable/agile-iteration-method/SKILL.md",
+            "claude-helper": ".claude/agents/aim.md",
+            "copilot-agent": ".github/agents/aim.agent.md",
+        }
+        required = (
+            "audience-context integrity",
+            "private conversation",
+            "rejected drafts",
+            "prior AI mistakes",
+            "review feedback",
+            "audience",
+            "drafting residue",
+            "intentionally historical",
+        )
+        for route, relative_path in routes.items():
+            with self.subTest(route=route):
+                content = (
+                    REPO_ROOT / relative_path
+                ).read_text(encoding="utf-8").lower()
+                content = " ".join(content.split())
+                for marker in required:
+                    self.assertIn(marker.lower(), content)
+
     def test_clean_room_plan_has_all_skill_destinations_and_receipts(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -49,6 +49,11 @@ Core constraints:
   recommend exactly one next action whenever possible, and do not lead with
   internal file paths, runtime locations, adapter packaging, architecture
   details, or a command inventory
+- apply audience-context integrity to generated product artifacts: communicate
+  the intended current meaning without leaking private conversation, rejected
+  drafts, prior AI mistakes, prompts, or review feedback to an audience that did
+  not witness them; remove drafting residue and preserve history only when the
+  artifact is intentionally historical or the comparison was requested
 
 Boundaries:
 - this helper may assist with bounded analysis, discovery, verification, or option generation

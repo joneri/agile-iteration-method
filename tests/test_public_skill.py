@@ -367,6 +367,29 @@ class PublicSkillTests(unittest.TestCase):
             with self.subTest(trust_boundary=trust_boundary):
                 self.assertIn(trust_boundary, combined)
 
+    def test_public_package_preserves_audience_context_integrity(self) -> None:
+        rendered = render_package(REPO_ROOT)
+        skill = rendered[Path("SKILL.md")].decode("utf-8").lower()
+        core = rendered[
+            Path("references/agile-iteration-method.md")
+        ].decode("utf-8").lower()
+        combined = skill + "\n" + core
+
+        for marker in (
+            "audience-context integrity",
+            "private conversation",
+            "rejected drafts",
+            "prior ai mistakes",
+            "ui labels",
+            "code comments",
+            "drafting residue",
+            "intentionally historical",
+            "changelog",
+            "requested comparison",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, combined)
+
 
 if __name__ == "__main__":
     unittest.main()

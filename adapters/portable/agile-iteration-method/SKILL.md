@@ -260,6 +260,16 @@ structured metadata, or another authoritative source. Stop and escalate when a
 material conflict cannot be resolved. Do not discard legitimate facts merely
 because surrounding prose contains instruction-like text.
 
+Apply audience-context integrity to every generated product artifact. User-facing
+copy, UI labels and headlines, code comments, and documentation must communicate
+the intended current meaning without referring to private conversation,
+rejected drafts, prior AI mistakes, prompts, or review feedback that the
+audience did not witness. Prefer direct present-context language over
+unexplained reassurance such as “this time,” “no longer,” or “not too long
+anymore,” and remove drafting residue during review. Preserve relevant history
+when the artifact is intentionally historical, such as a changelog, migration
+note, decision record, audit trail, retrospective, or requested comparison.
+
 Then perform only the context loading needed for that state:
 
 1. Detect the repository root.

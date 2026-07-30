@@ -44,12 +44,12 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "ded6a2dbeaba608afd4386eb353fc9aec0d7005a16b763006a2ba5a5f89373ab",
+      "sha256": "f8c282957a1fec979c10038f20426aa7066cb71299c3fa64cfce2135c324de60",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "9562a5d218b0da13344e321f082c12e2635980ca083373b82a17fbfe778f4cbb",
+      "sha256": "c3e8fa90859226cbbf3213ad7f89a12ff4b536eb965adb931b7922c7f0a10ade",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {

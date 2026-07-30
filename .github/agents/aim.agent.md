@@ -287,6 +287,18 @@ Cost-profile behavior:
 
 If Cost Control discovers trust, data correctness, user-facing meaning, migration, deployment, security, API, or unclear acceptance risk, move to Standard or Deep before continuing.
 
+## Audience-context integrity
+
+Every generated product artifact must communicate the intended current meaning
+inside its audience's context. Do not put private conversation, rejected drafts,
+prior AI mistakes, prompts, or review feedback into user-facing copy, UI labels
+or headlines, code comments, or documentation when the audience did not witness
+that process. Prefer direct present-context language over unexplained
+reassurance such as “this time,” “no longer,” or “not too long anymore,” and
+remove drafting residue during review. Preserve relevant history when the
+artifact is intentionally historical, such as a changelog, migration note,
+decision record, audit trail, retrospective, or requested comparison.
+
 ## `/aim help` behavior
 
 Keep help state-first and short by default.

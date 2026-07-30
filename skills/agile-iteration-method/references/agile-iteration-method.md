@@ -80,6 +80,29 @@ In short, the PO owns the Epic and the TDO owns the Done Increment.
 The AI never changes direction on its own.
 Execution may proceed autonomously within an explicitly approved Done Increment but must stop and ask for guidance if scope, intent or assumptions change.
 
+## Audience-context integrity
+
+AIM-generated product content must stand on its own inside the intended
+audience's present context. Human-AI conversation history, rejected drafts,
+prompts, corrections, and review feedback may shape the result, but they must
+not leak into user-facing copy, UI labels or headlines, code comments,
+documentation, or other product artifacts when the audience did not witness
+that process.
+
+Write the intended current meaning directly. Do not reassure an audience about
+an earlier mistake they never saw with unexplained phrases such as “this time,”
+“no longer,” “still,” or “not too long anymore.” Do not leave comments that
+explain what the AI previously tried, or headings that argue with a discarded
+version. Review from the audience's point of view and remove drafting residue,
+private conversational callbacks, and comparisons that require unavailable
+context.
+
+History is valid when history is part of the artifact's actual purpose.
+Changelogs, migration notes, decision records, audit trails, retrospectives, and
+explicitly requested comparisons may describe prior states for an audience that
+needs them. The test is not whether past context exists; it is whether the
+intended audience needs that context to understand or use the artifact.
+
 ## Stable runtime architecture
 
 AIM keeps the same architecture split and uses an explicit runtime-depth layer.
