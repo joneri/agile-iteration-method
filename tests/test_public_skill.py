@@ -168,6 +168,8 @@ class PublicSkillTests(unittest.TestCase):
             "/aim calibrate-repo",
             '/aim remember-repo <category> "<rule>"',
             '/aim forget-repo <category> "<rule-id>"',
+            "/aim reflect",
+            "/aim reflect-all",
             "/aim upgrade",
             "/aim mode strict|auto",
             "/aim cost standard|control|deep",
@@ -224,7 +226,7 @@ class PublicSkillTests(unittest.TestCase):
             Path("references/install/aim-install-manifest.yaml")
         ].decode("utf-8")
         parsed = load_yaml(payload)["aimInstallManifest"]
-        self.assertEqual(parsed["manifestVersion"], "0.7")
+        self.assertEqual(parsed["manifestVersion"], "0.8")
         self.assertEqual(set(parsed["adapters"]), {"codex", "copilot", "claude"})
         self.assertEqual(
             parsed["canonicalCommand"],

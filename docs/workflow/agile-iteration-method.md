@@ -1168,6 +1168,7 @@ Load deeper documents only when their area becomes relevant:
 
 - repo-awareness or adapter loading: `docs/workflow/repo-awareness.md`
 - calibration, persistent memory, remember, or forget: `docs/workflow/repo-awareness-calibration.md`
+- current-project or cross-project knowledge reflection: `docs/workflow/reflection.md`
 - rich repo-specific policy or an operational-doc pointer: `docs/workflow/repo-awareness-two-layer-model.md`, then only the pointed doc
 - operating modes: `docs/workflow/operating-modes.md`
 - installation or file ownership: `docs/workflow/install-aim-2.0.md` and `docs/workflow/repository-surface-classification.md`

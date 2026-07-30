@@ -47,11 +47,11 @@ class AdapterCommandContractTests(unittest.TestCase):
     def test_complete_adapter_command_contract_is_healthy(self) -> None:
         completed = self._validate(REPO_ROOT)
         self.assertEqual(completed.returncode, 0, completed.stdout)
-        self.assertIn("canonical command intents: 14", completed.stdout)
+        self.assertIn("canonical command intents: 16", completed.stdout)
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "2.2.3")
+        self.assertEqual(version, "2.3.0")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",
@@ -241,6 +241,8 @@ class AdapterCommandContractTests(unittest.TestCase):
             ".claude/commands/calibrate-repo.md",
             ".claude/commands/remember-repo.md",
             ".claude/commands/forget-repo.md",
+            ".claude/commands/reflect-aim.md",
+            ".claude/commands/reflect-all-aim.md",
             ".claude/commands/upgrade-aim.md",
             ".claude/commands/mode-aim.md",
             ".claude/commands/cost-aim.md",

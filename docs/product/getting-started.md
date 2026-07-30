@@ -122,7 +122,27 @@ AIM maps the request into structured repo-awareness, shows the proposed change,
 and stores stable shared facts in `aim.profile.yaml` or personal preferences in
 user-level hints. It should not store reusable project knowledge in `.aim/`.
 
-## 4. Start an Epic
+## 4. Reflect on Completed Work
+
+When the repository already has completed AIM history, ask it to propose
+knowledge worth keeping:
+
+```text
+/aim reflect
+```
+
+To compare selected local AIM projects:
+
+```text
+/aim reflect-all
+```
+
+Reflect-all previews discovery roots, repositories, exclusions, and workload
+before reading unapproved project content. Both commands create temporary
+candidate reports; use remember, forget, or a reviewed documentation update to
+promote individual findings.
+
+## 5. Start an Epic
 
 Describe the outcome, not a list of files to edit.
 
@@ -138,7 +158,7 @@ Choose:
 Start with Cost Control for narrow, reversible work.
 Use Standard or Deep when risk and uncertainty justify more context and verification.
 
-## 5. Review Gate A
+## 6. Review Gate A
 
 Gate A confirms the Epic.
 
@@ -152,7 +172,7 @@ Check:
 Approve when AIM is solving the right problem.
 Request a change when the framing is wrong.
 
-## 6. Approve the Next Increment
+## 7. Approve the Next Increment
 
 AIM proposes one Done Increment at a time.
 
@@ -166,7 +186,7 @@ A good increment:
 In Strict mode, Gate B waits for approval.
 In Auto mode, AIM may continue when the approved Epic makes the next step unambiguous and no escalation condition is present.
 
-## 7. Build With Confidence
+## 8. Build With Confidence
 
 AIM implements the increment, reviews it, validates it, and corrects blocking findings.
 

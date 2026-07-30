@@ -1175,6 +1175,7 @@ Load deeper documents only when their area becomes relevant:
 
 - repo-awareness or adapter loading: `repo-awareness.md`
 - calibration, persistent memory, remember, or forget: `repo-awareness-calibration.md`
+- current-project or cross-project knowledge reflection: `reflection.md`
 - rich repo-specific policy or an operational-doc pointer: `repo-awareness-two-layer-model.md`, then only the pointed doc
 - operating modes: `operating-modes.md`
 - installation or file ownership: `source-only/install-aim-2.0.md` and `source-only/repository-surface-classification.md`

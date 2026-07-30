@@ -138,6 +138,8 @@ If instructions conflict, escalate.
 - `/aim calibrate-repo` - cheaply inspect, verify, and persist repository knowledge
 - `/aim remember-repo <category> "<rule>"` - persist a structured shared or personal repository rule
 - `/aim forget-repo <category> "<rule-id>"` - remove a structured repository rule
+- `/aim reflect` - verify current-project delivery evidence and propose durable knowledge candidates
+- `/aim reflect-all` - preview and synthesize an approved set of local AIM projects
 - `/aim upgrade` - inspect and refresh selected AIM-owned packages through a reviewed installer plan
 - `/aim replan` - return to Gate B planning
 - `/aim commit-mode optional|required` - set commit policy
@@ -157,6 +159,14 @@ footprint or policy is explicitly selected. If remembered knowledge is too large
 for a short entry, create or update a static memory document in the selected
 durable store, then reference that static source from the profile or external
 memory index.
+
+Reflect and reflect-all behavior must follow `docs/workflow/reflection.md`.
+Reflection writes only temporary reports under `.aim/analysis/`; it never
+changes durable knowledge, active state, or discovered repositories.
+Reflect-all resolves only explicit or configured roots, or the current
+repository's parent fallback, and previews the inventory before unapproved
+content analysis. It must never infer a recursive home-directory or
+filesystem-root scan.
 
 ## Core constraints
 

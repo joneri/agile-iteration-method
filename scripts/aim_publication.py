@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import struct
 from pathlib import Path
 from typing import Any
 
@@ -24,6 +25,12 @@ ROOT_PUBLIC_FILES = (
     "LICENSE",
 )
 PUBLIC_DIRECTORIES = ("github-pages/assets",)
+PUBLIC_BRAND_IMAGE_PATHS = (
+    "AIM_OG.png",
+    "github-pages/assets/images/aim-2-hero-dark.png",
+    "github-pages/assets/images/aim-2-logo-light.png",
+)
+PUBLIC_BRAND_IMAGE_SIZE = (1730, 909)
 PUBLIC_LICENSE_PATH = "licenses/LICENSE-DOCS"
 RELEASE_MANIFEST_PATH = "release-manifest.json"
 PUBLIC_SKILL_INSTALL_COMMAND = (
@@ -47,6 +54,15 @@ def _read_text(path: Path) -> str:
     if not path.is_file():
         raise PublicationError(f"required publication file is missing: {path}")
     return path.read_text(encoding="utf-8", errors="replace")
+
+
+def _png_dimensions(path: Path) -> tuple[int, int]:
+    if not path.is_file():
+        raise PublicationError(f"required publication image is missing: {path}")
+    header = path.read_bytes()[:24]
+    if len(header) < 24 or header[:8] != b"\x89PNG\r\n\x1a\n":
+        raise PublicationError(f"publication image is not a valid PNG: {path}")
+    return struct.unpack(">II", header[16:24])
 
 
 def _schema_contract(repo_root: Path, relative_path: str) -> dict[str, Any]:
@@ -88,6 +104,18 @@ def validate_source(repo_root: Path) -> None:
             )
     for relative_path in SCHEMA_RELATIVE_PATHS:
         _schema_contract(repo_root, relative_path)
+    for relative_path in PUBLIC_BRAND_IMAGE_PATHS:
+        dimensions = _png_dimensions(repo_root / relative_path)
+        if dimensions != PUBLIC_BRAND_IMAGE_SIZE:
+            raise PublicationError(
+                f"{relative_path}: expected {PUBLIC_BRAND_IMAGE_SIZE[0]}x"
+                f"{PUBLIC_BRAND_IMAGE_SIZE[1]}, got {dimensions[0]}x{dimensions[1]}"
+            )
+    image_readme = _read_text(repo_root / "github-pages/assets/images/README.md")
+    if image_readme.count("AIM 2.3") < 2:
+        raise PublicationError(
+            "github-pages image inventory must identify both website assets as AIM 2.3"
+        )
 
     index = _read_text(repo_root / "index.html")
     install_script_path = repo_root / "install.sh"
@@ -129,6 +157,26 @@ def validate_source(repo_root: Path) -> None:
         "index.html remember command": (
             index,
             "/aim remember-repo",
+        ),
+        "index.html reflect command": (
+            index,
+            "/aim reflect",
+        ),
+        "index.html reflect-all command": (
+            index,
+            "/aim reflect-all",
+        ),
+        "index.html Reflect positioning": (
+            index,
+            "AIM Reflect goes beyond memory cleanup for repository work",
+        ),
+        "index.html audience-context integrity": (
+            index,
+            "Writes for the reader, not its own chat",
+        ),
+        "index.html AIM 2.3 logo alt text": (
+            index,
+            'alt="AIM 2.3 Agile Iteration Method logo"',
         ),
         "install.sh fail-closed notice": (
             install_script,
@@ -263,6 +311,13 @@ def validate_artifact(output_root: Path) -> None:
         if not (output_root / relative_path).is_dir():
             raise PublicationError(
                 f"publication artifact is missing directory: {relative_path}"
+            )
+    for relative_path in PUBLIC_BRAND_IMAGE_PATHS:
+        dimensions = _png_dimensions(output_root / relative_path)
+        if dimensions != PUBLIC_BRAND_IMAGE_SIZE:
+            raise PublicationError(
+                f"{relative_path}: expected {PUBLIC_BRAND_IMAGE_SIZE[0]}x"
+                f"{PUBLIC_BRAND_IMAGE_SIZE[1]}, got {dimensions[0]}x{dimensions[1]}"
             )
     for relative_path in SCHEMA_RELATIVE_PATHS:
         _schema_contract(output_root, relative_path)

@@ -1,5 +1,5 @@
 aimInstallManifest:
-  manifestVersion: "0.7"
+  manifestVersion: "0.8"
   status: one-adaptive-install
 
   canonicalCommand: "python3 scripts/aim_install.py"
@@ -181,6 +181,9 @@ aimInstallManifest:
     personalHints: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml
     enterpriseMemory: ~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml
     enterpriseMemoryDocs: ~/.aim/repo-awareness/<repo-fingerprint>/docs/
+    reflectionRoots: ~/.aim/reflection-roots.yaml
+    reflectionReports: .aim/analysis/
+    reflectionDurableWrites: forbidden
     initialStatus:
       - needs_calibration
       - partially_ready

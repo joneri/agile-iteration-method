@@ -278,10 +278,15 @@ OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
-        "# Agile Iteration Method (AIM) 2.2",
+        "# Agile Iteration Method (AIM) 2.3",
         "## Install",
         "## How AIM works",
-        "## What is new in v2.2.3",
+        "## What is new in v2.3.0",
+        "/aim reflect",
+        "/aim reflect-all",
+        "goes beyond memory cleanup for repository work",
+        "## Smarter output from the start",
+        "audience-context integrity",
         "docs/product/features.md",
     ],
     "docs/product/README.md": [
@@ -306,10 +311,11 @@ PUBLIC_PRODUCT_DOC_PATHS = {
         "full AIM",
         "## 2. Calibrate the Repository",
         "## 3. Remember Important Project Context",
-        "## 4. Start an Epic",
-        "## 5. Review Gate A",
-        "## 6. Approve the Next Increment",
-        "## 7. Build With Confidence",
+        "## 4. Reflect on Completed Work",
+        "## 5. Start an Epic",
+        "## 6. Review Gate A",
+        "## 7. Approve the Next Increment",
+        "## 8. Build With Confidence",
     ],
     "docs/product/platforms-and-adoption.md": [
         "# Platforms and Project Agents",
@@ -337,6 +343,7 @@ PRODUCT_COHERENCE_DOC_PATH = "docs/workflow/product-coherence-validation.md"
 REPO_PROFILE_SCHEMA_DOC_PATH = "docs/workflow/repo-profile-schema.md"
 RELEASE_PUBLICATION_DOC_PATH = "docs/workflow/release-publication-model.md"
 PUBLIC_SKILL_DISTRIBUTION_DOC_PATH = "docs/workflow/version-and-installation.md"
+REFLECTION_DOC_PATH = "docs/workflow/reflection.md"
 PROJECT_ROLES_SCHEMA_PATH = "schemas/aim-project-roles.schema.json"
 PROJECT_ROLES_PATH = "aim.roles.yaml"
 
@@ -351,6 +358,8 @@ CANONICAL_AIM_COMMANDS = [
     "/aim calibrate-repo",
     "/aim remember-repo",
     "/aim forget-repo",
+    "/aim reflect",
+    "/aim reflect-all",
     "/aim upgrade",
     "/aim mode",
     "/aim cost",
@@ -368,6 +377,8 @@ CLAUDE_COMMAND_SURFACES = {
     "/aim calibrate-repo": ".claude/commands/calibrate-repo.md",
     "/aim remember-repo": ".claude/commands/remember-repo.md",
     "/aim forget-repo": ".claude/commands/forget-repo.md",
+    "/aim reflect": ".claude/commands/reflect-aim.md",
+    "/aim reflect-all": ".claude/commands/reflect-all-aim.md",
     "/aim upgrade": ".claude/commands/upgrade-aim.md",
     "/aim mode": ".claude/commands/mode-aim.md",
     "/aim cost": ".claude/commands/cost-aim.md",
@@ -392,6 +403,8 @@ REQUIRED_ADAPTER_ENTRY_MODEL_MARKERS = [
     "/aim calibrate-repo",
     "/aim remember-repo",
     "/aim forget-repo",
+    "/aim reflect",
+    "/aim reflect-all",
     "/aim status",
     "/aim config",
     "/aim upgrade",
@@ -578,6 +591,31 @@ REQUIRED_CALIBRATION_DOC_MARKERS = [
     "`stale_or_uncertain`",
 ]
 
+REQUIRED_REFLECTION_DOC_MARKERS = [
+    "/aim reflect",
+    "/aim reflect-all",
+    ".aim/analysis/",
+    "~/.aim/reflection-roots.yaml",
+    "aimReflectionRoots:",
+    'version: "0.1"',
+    "/absolute/path/to/projects",
+    "parent directory of the current repository",
+    "Never use the home directory",
+    "untrusted evidence",
+    "current code",
+    "provenance",
+    "confidence",
+    "contradictions",
+    "proposed durable destination",
+    "explicit promotion action",
+    "never modifies",
+    "project",
+    "cross-project",
+    "aim-product",
+    "personal",
+    "goes beyond memory cleanup for repository work",
+]
+
 REQUIRED_TWO_LAYER_MARKERS = [
     "Layer 1: structured profile",
     "Layer 2: static memory and operational documents",
@@ -658,6 +696,9 @@ REQUIRED_INSTALL_MANIFEST_MARKERS = [
     "repoAwarenessBootstrap:",
     "personalHints: ~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml",
     "enterpriseMemory: ~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml",
+    "reflectionRoots: ~/.aim/reflection-roots.yaml",
+    "reflectionReports: .aim/analysis/",
+    "reflectionDurableWrites: forbidden",
     "readyRequiresCalibration: true",
     "calibrationCommand: /aim calibrate-repo",
     "runtimeProfileStorage: forbidden",
@@ -776,6 +817,7 @@ PROMOTED_CANONICAL_DOC_PATHS = {
     "docs/workflow/cost-saving-method.md": "docs/features/aim-cost-saving-method.md",
     RELEASE_PUBLICATION_DOC_PATH: "docs/features/aim-release-publication-model.md",
     PUBLIC_SKILL_DISTRIBUTION_DOC_PATH: "docs/features/aim-public-skill-distribution.md",
+    REFLECTION_DOC_PATH: "docs/features/aim-reflection.md",
 }
 
 FEATURE_SUPPORT_ROLE_MARKERS = {
@@ -1373,7 +1415,7 @@ def main() -> int:
     checked: list[str] = []
     issues: list[dict[str, object]] = []
 
-    checked.append("AIM 2.2 documentation audit")
+    checked.append("AIM 2.3 documentation audit")
     for documentation_error in audit_documentation(repo_root):
         add_issue(
             issues,
@@ -1744,6 +1786,35 @@ def main() -> int:
             REPO_CALIBRATION_DOC_PATH,
             "canonical repo-awareness calibration contract is missing",
             "Restore the calibration contract before using persistent repo memory.",
+        )
+
+    reflection_doc_path = repo_root / REFLECTION_DOC_PATH
+    checked.append(REFLECTION_DOC_PATH)
+    if reflection_doc_path.is_file():
+        reflection_doc_content = reflection_doc_path.read_text(
+            encoding="utf-8", errors="replace"
+        )
+        missing_reflection_markers = [
+            marker
+            for marker in REQUIRED_REFLECTION_DOC_MARKERS
+            if marker not in reflection_doc_content
+        ]
+        if missing_reflection_markers:
+            add_issue(
+                issues,
+                "blocked",
+                REFLECTION_DOC_PATH,
+                "reflection contract is incomplete: "
+                + ", ".join(missing_reflection_markers),
+                "Restore safe discovery, temporary reports, provenance, current-evidence verification, classification, and approval-controlled promotion.",
+            )
+    else:
+        add_issue(
+            issues,
+            "blocked",
+            REFLECTION_DOC_PATH,
+            "canonical reflection contract is missing",
+            "Restore docs/workflow/reflection.md before exposing Reflect commands.",
         )
 
     two_layer_doc_path = repo_root / TWO_LAYER_DOC_PATH

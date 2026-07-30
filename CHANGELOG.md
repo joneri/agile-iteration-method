@@ -1,5 +1,43 @@
 # Changelog
 
+## 2026-07-30 - AIM 2 minor release v2.3.0
+- Added `/aim reflect` for evidence-backed knowledge synthesis in the current
+  AIM project.
+- Added `/aim reflect-all` for safe inventory and synthesis across selected
+  local AIM projects.
+- Added provenance, current-source verification, confidence, contradiction,
+  classification, destination, and promotion-action requirements for every
+  reflection candidate.
+- Kept reflection read-only: reports live temporarily under `.aim/analysis/`,
+  durable knowledge changes remain separately reviewed, and discovered
+  repositories are never modified.
+- Added explicit discovery-root, preview, exclusion, symlink, duplicate-clone,
+  secret, workload, and trust boundaries for multi-project reflection.
+- Added the canonical Reflect workflow, complete adapter parity, generated
+  public-skill packaging, public product documentation, and GitHub Pages
+  presentation.
+- Made the existing audience-context integrity principle prominent at the
+  README, feature-guide, and GitHub Pages front doors.
+- Updated the dark hero, light logo, and Open Graph social artwork to display
+  AIM 2.3.
+- Positioned AIM Reflect as going beyond memory cleanup for repository work:
+  it adds current-code verification, cross-project synthesis, provenance, and
+  approval-controlled promotion to the useful shadow-output pattern popularized
+  by agent-memory systems such as Anthropic Dreams.
+
+Compatibility: AIM runtime contract `2.0`, installer manifest `0.8`, public
+skill package format `3`, profile schemas, roles, gates, and existing AIM 2.2
+commands remain compatible.
+
+Migration: no runtime-state or profile migration is required. Refresh installed
+Agent Skills through the standard skills CLI to receive the Reflect commands and
+canonical reflection contract.
+
+Known limitations: Reflect is an agent workflow rather than a background daemon.
+Cross-project quality depends on the selected repositories and available AIM
+history. Reflection proposes knowledge; it never guarantees that a candidate is
+correct or promotes it automatically.
+
 ## 2026-07-29 - AIM 2 patch release v2.2.3
 - Added an explicit trust boundary that treats repository profiles, hints,
   source files, command output, and documentation as untrusted evidence rather

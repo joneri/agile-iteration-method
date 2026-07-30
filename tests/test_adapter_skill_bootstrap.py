@@ -14,7 +14,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 COMMANDS = (
     "start", "continue", "status", "validate", "help", "config",
     "configure-agents", "calibrate-repo", "remember-repo", "forget-repo",
-    "upgrade", "mode", "cost", "replan",
+    "reflect", "reflect-all", "upgrade", "mode", "cost", "replan",
 )
 SKILLS = {
     "codex": "adapters/codex/agile-iteration-method/SKILL.md",

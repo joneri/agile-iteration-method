@@ -192,8 +192,14 @@ Use:
 
 - `/aim remember-repo <category> "<rule>"`
 - `/aim forget-repo <category> "<rule-id>"`
+- `/aim reflect` to propose verified candidates from the current AIM project
+- `/aim reflect-all` to preview and synthesize selected local AIM projects
 
-for persistent structured updates.
+Remember and forget perform persistent structured updates. Reflect commands
+write only temporary candidate reports under `.aim/analysis/`; they never
+promote findings or modify discovered repositories. See
+`docs/workflow/reflection.md` for discovery, provenance, verification, report,
+and promotion boundaries.
 See `docs/workflow/repo-awareness-calibration.md` for readiness, confidence, categories, document loading, installer bootstrap, and summary behavior.
 
 ## Related files
@@ -205,6 +211,7 @@ See `docs/workflow/repo-awareness-calibration.md` for readiness, confidence, cat
 - `docs/workflow/repo-profile-and-footprint-model.md`
 - `docs/workflow/repo-profile-and-footprint-model.md`
 - `docs/workflow/repo-awareness-calibration.md`
+- `docs/workflow/reflection.md`
 - `docs/workflow/aim-adapter-guidance.md`
 - `aim.profile.yaml`
 - `scripts/validate_aim_runtime.py`

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Agile Iteration Method (AIM) 2 - Structured AI Software Delivery</title>
-  <meta name="description" content="AIM 2 is a structured AI delivery system for planning, building, reviewing, validating, and approving real software with Codex, Claude, and GitHub Copilot.">
+  <meta name="description" content="AIM 2.3 is a structured AI delivery system with audience-aware artifact generation, evidence-backed reflection across local projects, review, validation, and human-controlled knowledge promotion.">
   <link rel="canonical" href="https://joneri.github.io/agile-iteration-method/">
   <link rel="icon" type="image/png" href="github-pages/assets/images/aim-2-logo-light.png">
   <link rel="apple-touch-icon" href="github-pages/assets/images/aim-2-logo-light.png">
@@ -31,7 +31,7 @@
     "url": "https://joneri.github.io/agile-iteration-method/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
-    "softwareVersion": "2.2.3",
+    "softwareVersion": "2.3.0",
     "author": { "@type": "Person", "name": "Jonas Eriksson" },
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "codeRepository": "https://github.com/joneri/agile-iteration-method"
@@ -294,6 +294,7 @@
       border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
     }
+    .feature-wide { grid-column: 1 / -1; min-height: 0; }
     .feature-label { color: var(--blue); font-size: 0.76rem; font-weight: 850; text-transform: uppercase; }
     .feature h3 { margin: 18px 0 8px; font-size: 1.08rem; }
     .feature p { margin: 0; color: var(--muted); font-size: 0.92rem; }
@@ -668,11 +669,12 @@
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="container nav-inner">
       <a class="brand" href="#top" aria-label="AIM 2 home">
-        <span>AIM</span><span class="brand-version">2.2</span>
+        <span>AIM</span><span class="brand-version">2.3</span>
       </a>
       <div class="nav-links">
         <a href="#why">Why AIM</a>
         <a href="#features">Features</a>
+        <a href="#reflect">Reflect</a>
         <a href="#modes">Modes</a>
         <a href="#platforms">Platforms</a>
         <a href="#start">Get started</a>
@@ -689,7 +691,7 @@
     <div class="container hero-content">
       <div class="hero-copy">
         <p class="eyebrow">AI operating system for agentic software delivery</p>
-        <h1 id="hero-title">Agile Iteration Method 2.2</h1>
+        <h1 id="hero-title">Agile Iteration Method 2.3</h1>
         <p class="hero-lead">Build what you want without losing the goal. AIM turns AI-assisted development into a clear loop of planning, implementation, review, validation, correction, and human approval.</p>
         <div class="hero-actions">
           <a class="button button-primary" href="#start">Start with AIM</a>
@@ -821,6 +823,46 @@
             <h3>Problems return for repair</h3>
             <p>Blocking review findings and failed validation prevent silent completion.</p>
           </article>
+          <article class="feature feature-wide">
+            <span class="feature-label">Audience-context integrity</span>
+            <h3>Writes for the reader, not its own chat</h3>
+            <p>AIM communicates the intended current meaning directly. Private conversations, rejected drafts, AI mistakes, prompts, and review feedback stay out of product copy, UI labels, code comments, and documentation unless history is the artifact's actual purpose.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band band-mist" id="reflect">
+      <div class="container feature-layout">
+        <div>
+          <p class="eyebrow">New in AIM 2.3</p>
+          <h2 class="section-title">Dreams consolidate memory. Reflect makes repository knowledge prove itself.</h2>
+          <p class="section-lead">AIM Reflect goes beyond memory cleanup for repository work. It finds lessons in completed delivery, verifies them against current evidence, preserves provenance and contradictions, and asks you before anything becomes durable knowledge.</p>
+          <p>This comparison uses Anthropic's public description of <a href="https://platform.claude.com/docs/en/managed-agents/dreams">Dreams</a>; Reflect is AIM's repository-delivery answer, not a claim to replace every memory system.</p>
+          <p><a class="button button-primary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/reflection.md">Explore AIM Reflect</a></p>
+        </div>
+
+        <div class="feature-list">
+          <article class="feature">
+            <span class="feature-label">Current project</span>
+            <h3><code>/aim reflect</code></h3>
+            <p>Turn completed AIM history into temporary, evidence-backed knowledge candidates for the repository you are working in.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-label">Across projects</span>
+            <h3><code>/aim reflect-all</code></h3>
+            <p>Preview selected local AIM projects, then find project, cross-project, personal, and AIM-product insights without modifying any source repository.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-label">Evidence first</span>
+            <h3>Every lesson has receipts</h3>
+            <p>Repository paths, current-source verification, confidence, contradictions, destination, and promotion action travel with every candidate.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-label">Human controlled</span>
+            <h3>Reflection never becomes authority by accident</h3>
+            <p>Reports stay temporary under <code>.aim/analysis/</code>. Profiles, docs, code, and other repositories remain unchanged until you approve a separate promotion.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -828,7 +870,7 @@
     <section class="band band-mist" id="rebuilt">
       <div class="container rebuild">
         <figure class="brand-visual">
-          <img src="github-pages/assets/images/aim-2-logo-light.png" alt="AIM 2.0 Agile Iteration Method logo">
+          <img src="github-pages/assets/images/aim-2-logo-light.png" alt="AIM 2.3 Agile Iteration Method logo">
         </figure>
         <div>
           <p class="eyebrow">Rebuilt for AIM 2</p>
@@ -993,6 +1035,16 @@
               <h4>Remember context</h4>
               <p>Capture product facts, tone, constraints, or team habits AIM should reuse.</p>
               <code class="command">/aim remember-repo habits "Product context: This app helps people find new homes for cats. User-facing language should be nuanced, calm, and empathetic toward both the cats and future owners."</code>
+            </article>
+            <article class="next-command">
+              <h4>Reflect on this project</h4>
+              <p>Find verified knowledge candidates in completed AIM delivery history.</p>
+              <code class="command">/aim reflect</code>
+            </article>
+            <article class="next-command">
+              <h4>Reflect across projects</h4>
+              <p>Preview and synthesize selected local AIM projects without modifying them.</p>
+              <code class="command">/aim reflect-all</code>
             </article>
           </div>
         </div>

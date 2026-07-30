@@ -36,6 +36,10 @@ Core constraints:
 - do not redefine gates, ownership, or acceptance semantics
 - load other workflow docs only when their behavior area is relevant
 - use `docs/workflow/repo-awareness-calibration.md` for calibrate, remember, and forget intents
+- use `docs/workflow/reflection.md` for `/aim reflect` and `/aim reflect-all`;
+  reflection writes temporary candidate reports only, previews cross-project
+  discovery before unapproved content analysis, and never modifies durable
+  knowledge, active state, or discovered repositories
 - store Personal hints only at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 - store Enterprise external memory at `~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml` and larger external memory docs under `~/.aim/repo-awareness/<repo-fingerprint>/docs/`
 - in Enterprise external mode, do not create repo docs, repo profiles, symlinks, or adapter files unless a broader repo-writing footprint or policy is explicitly selected

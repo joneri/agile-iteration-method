@@ -28,6 +28,7 @@ REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
     (Path("docs/workflow/adapter-entry-model.md"), Path("adapter-entry-model.md")),
     (Path("docs/workflow/adapter-skill-bootstrap.md"), Path("adapter-skill-bootstrap.md")),
     (Path("docs/workflow/project-agent-configuration.md"), Path("project-agent-configuration.md")),
+    (Path("docs/workflow/reflection.md"), Path("reflection.md")),
     (Path("docs/workflow/operating-modes.md"), Path("operating-modes.md")),
     (Path("docs/workflow/product-coherence-validation.md"), Path("product-coherence-validation.md")),
     (Path("docs/workflow/repo-awareness-calibration.md"), Path("repo-awareness-calibration.md")),

@@ -60,9 +60,9 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "2.2.3")
+            self.assertEqual(manifest["aimVersion"], "2.3.0")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
-            self.assertEqual(manifest["installerManifestVersion"], "0.7")
+            self.assertEqual(manifest["installerManifestVersion"], "0.8")
             self.assertEqual(manifest["publicOrigin"], PUBLIC_ORIGIN)
             self.assertEqual(
                 manifest["install"]["portableSkillCommand"],
@@ -103,10 +103,28 @@ class PublicationContractTests(unittest.TestCase):
             "https://skills.sh/joneri/agile-iteration-method/agile-iteration-method",
             index,
         )
-        for command in ("/aim upgrade", "/aim calibrate-repo", "/aim remember-repo"):
+        self.assertIn("## Smarter output from the start", readme)
+        self.assertIn("audience-context integrity", readme)
+        self.assertIn("Writes for the reader, not its own chat", index)
+        self.assertIn("Private conversations, rejected drafts", index)
+        self.assertIn('alt="AIM 2.3 Agile Iteration Method logo"', index)
+        for command in (
+            "/aim upgrade",
+            "/aim calibrate-repo",
+            "/aim remember-repo",
+            "/aim reflect",
+            "/aim reflect-all",
+        ):
             self.assertIn(command, readme)
             self.assertIn(command, index)
             self.assertIn(command, getting_started)
+
+    def test_brand_artwork_has_release_dimensions_and_version_inventory(self) -> None:
+        validate_source(REPO_ROOT)
+        inventory = (
+            REPO_ROOT / "github-pages/assets/images/README.md"
+        ).read_text(encoding="utf-8")
+        self.assertGreaterEqual(inventory.count("AIM 2.3"), 2)
 
     def test_schema_id_drift_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

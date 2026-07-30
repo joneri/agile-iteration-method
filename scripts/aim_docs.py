@@ -63,7 +63,8 @@ def audit(repo_root: Path) -> list[str]:
             errors.append(f"public front door contains stale marker: {stale}")
 
     required_features = (
-        "Delivery loop", "Control and cost", "Repository knowledge",
+        "Delivery loop", "Audience-context integrity", "Control and cost", "Repository knowledge",
+        "Reflect",
         "Project specialists", "Adapters and commands",
         "Installation and upgrades", "Validation and release safety",
     )

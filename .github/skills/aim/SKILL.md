@@ -1,6 +1,6 @@
 ---
 name: aim
-description: Run the complete AIM 2.0 command family and orchestrate project-specific PO, TDO, Dev, and Reviewer agents. Use for /aim intents, Epics, Done Increments, gates, repo calibration, agent configuration, upgrades, and AIM validation.
+description: Run the complete AIM 2.0 command family and orchestrate project-specific PO, TDO, Dev, and Reviewer agents. Use for /aim intents, Epics, Done Increments, gates, repo calibration, current-project and cross-project reflection, agent configuration, upgrades, and AIM validation.
 ---
 
 # AIM 2.0 for GitHub Copilot
@@ -30,6 +30,8 @@ Recognize and execute the equivalent intent for:
 - `/aim calibrate-repo`
 - `/aim remember-repo`
 - `/aim forget-repo`
+- `/aim reflect`
+- `/aim reflect-all`
 - `/aim upgrade`
 - `/aim mode`
 - `/aim cost`
@@ -38,6 +40,11 @@ Recognize and execute the equivalent intent for:
 If skill or slash routing is unavailable, report that limitation and preserve
 the same intent in the selected AIM agent or plain language. Syntax may fall
 back; semantics may not.
+
+Reflect commands follow `docs/workflow/reflection.md`. They write temporary
+candidate reports only, never durable knowledge or discovered repositories.
+Reflect-all previews reviewed local discovery roots and the project inventory
+before unapproved content analysis.
 
 ## Bootstrap
 

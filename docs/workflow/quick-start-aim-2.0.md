@@ -119,6 +119,8 @@ Approve, request adjustment, continue, or close.
 - `/aim calibrate-repo`
 - `/aim remember-repo <category> "<rule>"`
 - `/aim forget-repo <category> "<rule-id>"`
+- `/aim reflect`
+- `/aim reflect-all`
 - `/aim cost standard|control|deep`
 - `/aim help`
 

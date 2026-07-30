@@ -87,6 +87,24 @@ AIM separates persistent repository knowledge from active runtime context:
 
 This allows future sessions to reuse what matters without carrying the whole repository manual all the time.
 
+## Reflection Without Automatic Memory Mutation
+
+Completed work contains useful lessons, but delivery history is evidence rather
+than permanent truth.
+
+`/aim reflect` verifies the current project's historical lessons against current
+repository evidence. `/aim reflect-all` previews and analyzes selected local AIM
+projects to find project-specific, cross-project, personal, and AIM-product
+insights.
+
+Reflect reports remain temporary. Every candidate shows provenance, confidence,
+contradictions, a proposed destination, and an explicit promotion action.
+Nothing becomes durable knowledge until a person approves the separate write.
+
+This goes beyond memory cleanup for repository work: AIM asks not only what can
+be merged, but whether it is still true, where it belongs, and who owns the
+decision to keep it.
+
 ## Your Tokens Are Valuable
 
 AIM treats unnecessary context as a delivery cost.
