@@ -140,7 +140,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "07b1b0d1e8d0ecfe42ac8ade8c5205b6ffe321541687cd2144c09ac83597dade",
+      "sha256": "9621a07d5d389085dc20c744b12a7f3127b8892003db7bf9d2a25635448c976a",
       "source": "scripts/aim_publication.py"
     },
     {
