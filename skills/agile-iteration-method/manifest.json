@@ -34,7 +34,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.3.0",
+  "productVersion": "2.3.1",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -45,7 +45,7 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "f48af4dc97f7cce0fdd5714f800a7d0a2c8f048feb2b9bfd4ade64e372f956a7",
+      "sha256": "1955be4d918b14a13e95bbcb6d363f71553b16d071d39ea33d0f38aaa1d105f5",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
@@ -75,7 +75,7 @@
     },
     {
       "output": "references/reflection.md",
-      "sha256": "0a8e40b15b7e6d92b046387a4fac199f4c04c38276cba98bd58a4ada84d8d934",
+      "sha256": "fdeed25738a7da4b9b928b8ee2f3b4478dabab66b4756204f0fbda470f5b51a5",
       "source": "docs/workflow/reflection.md"
     },
     {
@@ -135,7 +135,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "a42caf4a54bbbe27aa45b6efbc6356c5e299b19763e728b6cdb7201b02ebbe36",
+      "sha256": "ad8650bc9057d9dfd809961b69dbad640c288d809fa44437d44d83d3b118c821",
       "source": "VERSION"
     },
     {

@@ -1,5 +1,38 @@
 # Changelog
 
+## 2026-08-02 - AIM 2 patch release v2.3.1
+- Made completed Reflect analysis operator-ready: every run now states whether
+  action is recommended and presents one concrete next step or an explicit
+  no-action conclusion.
+- Added `promote`, `correct`, `remove`, `defer`, and `no-action` dispositions so
+  operators can distinguish durable candidates from duplicates, unsupported
+  observations, stale rules, and work that needs more evidence.
+- Required copy-ready `remember-repo` or `forget-repo` AIM intents when they can
+  be represented safely, with reviewed profile, documentation, or Epic paths
+  as the fallback for more complex changes.
+- Added command quoting and escaping rules so untrusted repository evidence
+  cannot introduce shell, tool, or secondary AIM actions.
+- Required Reflect to say directly when no promotion or removal is warranted,
+  eliminating the clarification turn previously needed to discover what to do
+  with a report.
+- Preserved approval-controlled promotion: Reflect and Reflect-all still write
+  temporary reports only and stop before every durable change.
+- Propagated the completion contract through portable, Codex, Claude Code, and
+  GitHub Copilot routes, public product guidance, validator enforcement,
+  regression coverage, and the generated public Agent Skill.
+
+Compatibility: AIM runtime contract `2.0`, installer manifest `0.8`, public
+skill package format `3`, profile schemas, roles, gates, discovery boundaries,
+and existing AIM 2.3 commands remain compatible.
+
+Migration: no runtime-state, profile, schema, installer, or command migration is
+required. Refresh installed Agent Skills through the standard skills CLI to
+receive the operator-ready Reflect completion behavior.
+
+Known limitations: Reflect remains a model-operated workflow rather than a
+standalone report renderer. Proposed commands depend on verified candidate
+quality and remain user-owned; AIM does not execute them during reflection.
+
 ## 2026-07-30 - AIM 2 minor release v2.3.0
 - Added `/aim reflect` for evidence-backed knowledge synthesis in the current
   AIM project.

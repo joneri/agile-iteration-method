@@ -78,7 +78,7 @@ Turn completed AIM work into reviewable knowledge candidates:
 /aim reflect-all
 ```
 
-Reflect verifies historical lessons against current repository evidence, preserves provenance and contradictions, and keeps promotion under your control. `reflect-all` previews its local project inventory before analyzing the selected set and never modifies discovered repositories.
+Reflect verifies historical lessons against current repository evidence, preserves provenance and contradictions, and keeps promotion under your control. It finishes by saying whether action is recommended and gives one concrete next step—or states that nothing needs to be remembered or forgotten. `reflect-all` previews its local project inventory before analyzing the selected set and never modifies discovered repositories.
 
 Then start with an outcome, not a task list:
 
@@ -131,7 +131,7 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.3.0
+## What is new in v2.3.1
 
 ### AIM Reflect: go beyond memory cleanup
 
@@ -139,7 +139,7 @@ Agent-memory systems such as [Anthropic Dreams](https://platform.claude.com/docs
 
 - `/aim reflect` finds reusable knowledge in the current AIM project
 - `/aim reflect-all` finds project, cross-project, personal, and AIM-product insights across a reviewed set of local AIM projects
-- every candidate carries repository provenance, current-source verification, confidence, contradictions, a proposed destination, and a promotion action
+- every candidate carries provenance, verification, confidence, contradictions, a destination, a disposition, and a promotion action; Reflect recommends one concrete action or explicitly says none is needed
 - reflection reports are temporary and read-only; profiles, docs, source, and other repositories do not change until you approve a separate promotion
 - multi-project discovery previews roots, repositories, exclusions, and workload before content analysis
 
@@ -175,6 +175,6 @@ python3 scripts/build_public_skill.py
 python3 scripts/build_public_skill.py --check
 ```
 
-Current product release: **v2.3.0**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.3.1**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

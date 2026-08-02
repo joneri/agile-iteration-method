@@ -93,7 +93,8 @@ Completed work contains useful lessons, but delivery history is evidence rather
 than permanent truth.
 
 `/aim reflect` verifies the current project's historical lessons against current
-repository evidence. `/aim reflect-all` previews and analyzes selected local AIM
+repository evidence and concludes with one concrete next action or an explicit
+no-action result. `/aim reflect-all` previews and analyzes selected local AIM
 projects to find project-specific, cross-project, personal, and AIM-product
 insights.
 

@@ -54,6 +54,9 @@ See [repo awareness](../workflow/repo-awareness.md).
   projects without changing any of them.
 - Candidates carry provenance, current-evidence verification, confidence,
   contradictions, classification, destination, and a promotion action.
+- Each completed reflection says whether action is recommended, assigns every
+  candidate a disposition, and supplies one concrete next action or an explicit
+  no-action conclusion.
 - Reports remain temporary under `.aim/analysis/`; durable knowledge changes
   require a separate reviewed promotion.
 - Reflect goes beyond memory cleanup for repository work by combining

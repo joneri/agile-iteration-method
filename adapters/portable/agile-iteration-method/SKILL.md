@@ -185,8 +185,8 @@ state transitions through the platform's native skill route.
 | --- | --- | --- | --- |
 | `/aim remember-repo <category> "<rule>"` | A stable project fact should guide later runs. | Stores a structured shared or personal rule in the correct durable knowledge layer. | Future planning reuses the rule when relevant. |
 | `/aim forget-repo <category> "<rule-id>"` | A remembered rule is obsolete or incorrect. | Removes the identified rule without rewriting active runtime evidence. | Later runs stop treating that rule as repository truth. |
-| `/aim reflect` | Completed AIM work may contain reusable knowledge. | Verifies current-project evidence and writes a temporary, provenance-rich candidate report. | Review individual candidates and promote only the ones you approve. |
-| `/aim reflect-all` | Several selected local AIM projects may reveal shared lessons. | Previews safe discovery scope, then synthesizes the approved project set without modifying it. | Review project, cross-project, personal, and AIM-product candidates separately. |
+| `/aim reflect` | Completed AIM work may contain reusable knowledge. | Verifies current-project evidence, writes a temporary candidate report, and concludes whether action is recommended. | Follow the one concrete recommended action, or stop when AIM says no action is needed. |
+| `/aim reflect-all` | Several selected local AIM projects may reveal shared lessons. | Previews safe discovery scope, synthesizes the approved project set, and concludes with an operator-ready next action. | Follow the named promotion path only after reviewing it; discovered projects remain unchanged. |
 
 ### Configure and maintain AIM
 
@@ -397,7 +397,9 @@ material claims against current sources, and never promotes knowledge or
 modifies discovered repositories. Reflect-all must preview explicit,
 configured, or current-parent discovery roots before unapproved content
 analysis; it must never infer a recursive home-directory or filesystem-root
-scan.
+scan. After analysis, both commands must state whether action is recommended,
+assign every candidate a disposition, and provide one concrete safe next action
+or say explicitly that no `remember-repo` or `forget-repo` action is needed.
 `/aim upgrade` must inspect selected AIM-owned packages through the deterministic
 installer plan, show stale/collision results before apply, preserve rollback and
 root-file exclusions, and never rewrite active `.aim/` state.

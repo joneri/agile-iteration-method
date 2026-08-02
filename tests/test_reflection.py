@@ -52,6 +52,31 @@ class ReflectionContractTests(unittest.TestCase):
             content,
         )
 
+    def test_completed_reflection_is_operator_ready_without_promoting(self) -> None:
+        content = REFLECTION_DOC.read_text(encoding="utf-8")
+        required = (
+            "## Action conclusion",
+            "Reflection conclusion:",
+            "Recommended next action:",
+            "`promote`",
+            "`correct`",
+            "`remove`",
+            "`defer`",
+            "`no-action`",
+            "No action recommended",
+            "/aim remember-repo ...",
+            "/aim forget-repo ...",
+            "safe AIM intents, not shell commands",
+            "separate user-owned operation",
+        )
+        for marker in required:
+            with self.subTest(marker=marker):
+                self.assertIn(marker, content)
+
+        self.assertIn("For multiple candidates", content)
+        self.assertIn("one reviewable next action", content)
+        self.assertIn("no `remember-repo` or `forget-repo`", content)
+
     def test_all_adapter_routes_expose_both_commands_and_read_only_semantics(self) -> None:
         surfaces = (
             "adapters/portable/agile-iteration-method/SKILL.md",
@@ -69,6 +94,8 @@ class ReflectionContractTests(unittest.TestCase):
                 normalized = " ".join(content.lower().split())
                 self.assertIn("temporary", normalized)
                 self.assertIn("never", normalized)
+                self.assertIn("disposition", normalized)
+                self.assertIn("next action", normalized)
 
     def test_claude_compatibility_routes_are_present_and_non_mutating(self) -> None:
         for filename, command in (
@@ -82,6 +109,8 @@ class ReflectionContractTests(unittest.TestCase):
             self.assertIn("docs/workflow/reflection.md", content)
             self.assertIn("docs/workflow/adapter-command-contract.md", content)
             self.assertIn("routing is unavailable", content)
+            self.assertIn("disposition", content)
+            self.assertIn("Do not execute", content)
 
     def test_installer_declares_reflection_storage_boundaries(self) -> None:
         content = (
@@ -101,7 +130,9 @@ class ReflectionContractTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("/aim reflect", skill)
         self.assertIn("/aim reflect-all", skill)
+        self.assertIn("concludes whether action is recommended", skill)
         self.assertIn("AIM Reflect", reflection)
+        self.assertIn("## Action conclusion", reflection)
 
 
 if __name__ == "__main__":

@@ -281,7 +281,7 @@ PUBLIC_PRODUCT_DOC_PATHS = {
         "# Agile Iteration Method (AIM) 2.3",
         "## Install",
         "## How AIM works",
-        "## What is new in v2.3.0",
+        "## What is new in v2.3.1",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",
@@ -608,6 +608,17 @@ REQUIRED_REFLECTION_DOC_MARKERS = [
     "contradictions",
     "proposed durable destination",
     "explicit promotion action",
+    "## Action conclusion",
+    "Reflection conclusion:",
+    "Recommended next action:",
+    "`promote`",
+    "`correct`",
+    "`remove`",
+    "`defer`",
+    "`no-action`",
+    "No action recommended",
+    "safe AIM intents, not shell commands",
+    "separate user-owned operation",
     "never modifies",
     "project",
     "cross-project",
@@ -1806,7 +1817,7 @@ def main() -> int:
                 REFLECTION_DOC_PATH,
                 "reflection contract is incomplete: "
                 + ", ".join(missing_reflection_markers),
-                "Restore safe discovery, temporary reports, provenance, current-evidence verification, classification, and approval-controlled promotion.",
+                "Restore safe discovery, temporary reports, provenance, current-evidence verification, classification, operator-ready action conclusions, and approval-controlled promotion.",
             )
     else:
         add_issue(

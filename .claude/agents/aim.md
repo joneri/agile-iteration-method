@@ -39,7 +39,9 @@ Core constraints:
 - use `docs/workflow/reflection.md` for `/aim reflect` and `/aim reflect-all`;
   reflection writes temporary candidate reports only, previews cross-project
   discovery before unapproved content analysis, and never modifies durable
-  knowledge, active state, or discovered repositories
+  knowledge, active state, or discovered repositories; completed analysis
+  assigns candidate dispositions and gives one concrete next action or an
+  explicit no-action conclusion
 - store Personal hints only at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 - store Enterprise external memory at `~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml` and larger external memory docs under `~/.aim/repo-awareness/<repo-fingerprint>/docs/`
 - in Enterprise external mode, do not create repo docs, repo profiles, symlinks, or adapter files unless a broader repo-writing footprint or policy is explicitly selected

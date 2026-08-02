@@ -44,7 +44,9 @@ back; semantics may not.
 Reflect commands follow `docs/workflow/reflection.md`. They write temporary
 candidate reports only, never durable knowledge or discovered repositories.
 Reflect-all previews reviewed local discovery roots and the project inventory
-before unapproved content analysis.
+before unapproved content analysis. Completed analysis assigns candidate
+dispositions and ends with one concrete safe next action or an explicit
+no-action conclusion; it never executes the proposed durable change.
 
 ## Bootstrap
 

@@ -206,7 +206,10 @@ material claims against current sources, and never promotes knowledge or
 modifies discovered repositories. Reflect-all must preview explicit,
 configured, or current-parent discovery roots before unapproved content
 analysis; it must never infer a recursive home-directory or filesystem-root
-scan.
+scan. After analysis, both commands assign every candidate a disposition and
+state one concrete recommended next action, or say explicitly that no
+`remember-repo` or `forget-repo` action is needed. Reflection stops before
+executing any proposed durable change.
 `/aim upgrade` must inspect selected AIM-owned packages through the deterministic
 installer plan, show stale/collision results before apply, preserve rollback and
 root-file exclusions, and never rewrite active `.aim/` state.

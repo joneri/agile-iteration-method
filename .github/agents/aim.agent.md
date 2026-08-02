@@ -166,7 +166,10 @@ changes durable knowledge, active state, or discovered repositories.
 Reflect-all resolves only explicit or configured roots, or the current
 repository's parent fallback, and previews the inventory before unapproved
 content analysis. It must never infer a recursive home-directory or
-filesystem-root scan.
+filesystem-root scan. After analysis, assign every candidate a disposition and
+present one concrete recommended next action, or state explicitly that no
+`remember-repo` or `forget-repo` action is needed. Do not execute the proposed
+promotion during reflection.
 
 ## Core constraints
 

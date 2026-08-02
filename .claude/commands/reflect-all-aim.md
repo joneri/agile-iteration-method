@@ -13,6 +13,9 @@ parent fallback. Preview the cheap repository inventory and workload before
 unapproved content analysis. Never scan the home directory or filesystem root
 implicitly, never modify discovered repositories, and write only a temporary
 candidate report in the initiating repository's `.aim/analysis/`.
+After approved content analysis, assign every candidate a disposition and name
+one concrete safe next action, or state explicitly that no promotion or removal
+is needed. Do not execute the proposed durable change.
 
 If literal routing is unavailable, execute the same intent in ordinary
 Claude chat.

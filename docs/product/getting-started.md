@@ -139,8 +139,10 @@ To compare selected local AIM projects:
 
 Reflect-all previews discovery roots, repositories, exclusions, and workload
 before reading unapproved project content. Both commands create temporary
-candidate reports; use remember, forget, or a reviewed documentation update to
-promote individual findings.
+candidate reports. Their completion response tells you whether anything needs
+attention and gives one concrete `remember-repo`, `forget-repo`, reviewed edit,
+or Epic path. When no durable change is justified, Reflect says that no action
+is needed. You still decide whether to run or approve the proposed action.
 
 ## 5. Start an Epic
 
