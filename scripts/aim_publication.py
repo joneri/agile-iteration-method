@@ -16,6 +16,7 @@ SCHEMA_RELATIVE_PATHS = (
 )
 ROOT_PUBLIC_FILES = (
     "VERSION",
+    "googlea5ce5061b9ad1e90.html",
     "install/aim-install-manifest.yaml",
     "index.html",
     "install.sh",
