@@ -80,6 +80,30 @@ not advance or reinterpret the active Epic. If the report proposes changing
 active scope, AIM treats that as ordinary scope feedback and follows the normal
 gate rules.
 
+### Reference-quality artifact decomposition
+
+When the user identifies a prior artifact as the best result or asks why it
+worked, treat the artifact itself and its delivery evidence as the benchmark.
+Do not promote admiration, a conversation summary, or surface metrics as method
+truth.
+
+1. Compare the exact benchmark with the current or weaker artifact.
+2. Separate the outcome the user values, mechanisms plausibly responsible for
+   it, and non-transferable surface traits such as length, tone, technology,
+   celebrity, controversy, or implementation style.
+3. Verify proposed mechanisms against source artifacts, review findings, tests,
+   measurements or maintained records. Preserve uncertainty about causation.
+4. Name the smallest durable destination that can improve later work: project
+   role configuration, a domain skill/reference/template, maintained product
+   documentation, a testable contract, or an AIM-product proposal.
+5. Keep the decomposition in the temporary reflection report until the user
+   explicitly approves promotion through the destination's normal gate or
+   contribution workflow.
+
+The goal is transfer, not imitation. Never turn a successful artifact's word
+count, framework, stack or aesthetic into a universal quality rule without
+independent evidence that the trait generalizes.
+
 ## `/aim reflect-all`
 
 Reflect-all is cross-project reflection, not an unrestricted filesystem scan.

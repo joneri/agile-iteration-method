@@ -77,6 +77,22 @@ class ReflectionContractTests(unittest.TestCase):
         self.assertIn("one reviewable next action", content)
         self.assertIn("no `remember-repo` or `forget-repo`", content)
 
+    def test_reference_quality_artifacts_are_decomposed_without_cargo_culting(self) -> None:
+        content = REFLECTION_DOC.read_text(encoding="utf-8")
+        required = (
+            "## Reference-quality artifact decomposition",
+            "exact benchmark",
+            "mechanisms plausibly responsible",
+            "non-transferable surface traits",
+            "smallest durable destination",
+            "temporary reflection report",
+            "explicitly approves promotion",
+            "transfer, not imitation",
+        )
+        for marker in required:
+            with self.subTest(marker=marker):
+                self.assertIn(marker, content)
+
     def test_all_adapter_routes_expose_both_commands_and_read_only_semantics(self) -> None:
         surfaces = (
             "adapters/portable/agile-iteration-method/SKILL.md",
