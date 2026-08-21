@@ -186,6 +186,58 @@ def _license_actions(source_root: Path, target_root: Path) -> list[dict[str, Any
     return actions
 
 
+def _aim_ui_actions(
+    source_root: Path,
+    target_root: Path,
+    home_root: Path,
+    manifest: Manifest,
+    *,
+    repo_install: bool,
+) -> list[dict[str, Any]]:
+    boundary = manifest.aim_ui_boundary
+    files = boundary.get("files", [])
+    if not isinstance(files, list) or not files:
+        raise PlanError("installer manifest must declare the AIM UI payload files")
+    repo_destination = Path(str(boundary.get("repoDestination", ".")))
+    home_destination = Path(
+        str(boundary.get("homeDestination", ".aim/installs/agile-iteration-method/"))
+    )
+    actions: list[dict[str, Any]] = []
+    for item in files:
+        source_rel = str(item)
+        source_path = source_root / source_rel
+        if not source_path.is_file():
+            raise PlanError(f"required AIM UI payload is missing: {source_rel}")
+        if repo_install:
+            destination_path = repo_destination / source_rel
+            destination = destination_path.as_posix()
+            compare_path = target_root / destination_path
+            scope = "repo"
+        else:
+            destination_path = home_root / home_destination / source_rel
+            destination = str(destination_path)
+            compare_path = destination_path
+            scope = "home"
+        actions.append(
+            _action(
+                action_id=("ui:" if repo_install else "external-ui:") + source_rel,
+                category="package",
+                classification=_classify_copy(source_path, compare_path),
+                source=source_rel,
+                destination=destination,
+                reason=(
+                    "AIM UI read-only control room payload in the target repository"
+                    if repo_install
+                    else "AIM UI read-only control room payload in the home-scope distribution"
+                ),
+                adapter="core",
+                optional=False,
+                scope=scope,
+            )
+        )
+    return actions
+
+
 def _external_distribution_actions(source_root: Path, home_root: Path) -> list[dict[str, Any]]:
     actions: list[dict[str, Any]] = []
     dest_base = home_root / EXTERNAL_DISTRIBUTION_DEST
@@ -577,6 +629,15 @@ def compute_plan(
         actions.extend(_codex_project_agent_actions(source_root, target_root))
     if home_adapters and "codex" in adapters:
         actions.extend(_codex_actions(source_root, home_root))
+    actions.extend(
+        _aim_ui_actions(
+            source_root,
+            target_root,
+            home_root,
+            manifest,
+            repo_install=repo_adapters,
+        )
+    )
     actions.extend(_bootstrap_actions(target_root, manifest, shared_profile, mode))
     if repo_adapters:
         actions.append(_project_role_profile_action(target_root))

@@ -24,7 +24,7 @@
   ],
   "generatedNotice": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
   "generator": "python3 scripts/build_public_skill.py",
-  "installerManifestVersion": "0.8",
+  "installerManifestVersion": "0.9",
   "name": "agile-iteration-method",
   "officialSkillsCli": {
     "installCommand": "npx skills add joneri/agile-iteration-method --skill agile-iteration-method",
@@ -35,7 +35,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.3.2",
+  "productVersion": "2.4.0",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -107,7 +107,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "0b46c94c49ace09ec22334f2fd1a22a8645383262d0a50115ab4b4b052e86915",
+      "sha256": "a25030cee504fc749c356a42aa8c16720f0ee9052ba130090332271ee81f5471",
       "source": "docs/workflow/version-and-installation.md"
     },
     {
@@ -132,7 +132,7 @@
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
-      "sha256": "8d48f5b3982107a1f32f221bbd0682f059d6d668c2371ea765db490d50e32574",
+      "sha256": "7737728089fa18dd0f520ab8380c4a0a47e794352536e55a6887e1c07c6f6cd3",
       "source": "install/aim-install-manifest.yaml"
     },
     {
@@ -142,12 +142,12 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "e1d31f14bed34a1c7e6227931673f0bb4ec1e26ee4278d00dac169809c4d9539",
+      "sha256": "2ad7b0c3f0ede58c3165b7a8a5479e890a758d39bfe8683eaef50ce6afad7232",
       "source": "VERSION"
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "04db48e801e930f178c9591ef08ed11a392d0e43a64c11779864929c1dd290dc",
+      "sha256": "1fe030aa60830eb9001d55ba32660a8db21aa6b87d8ac0329524d6d72db3a2ca",
       "source": "scripts/aim_publication.py"
     },
     {

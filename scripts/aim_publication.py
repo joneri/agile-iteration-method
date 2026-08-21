@@ -114,9 +114,9 @@ def validate_source(repo_root: Path) -> None:
                 f"{PUBLIC_BRAND_IMAGE_SIZE[1]}, got {dimensions[0]}x{dimensions[1]}"
             )
     image_readme = _read_text(repo_root / "github-pages/assets/images/README.md")
-    if image_readme.count("AIM 2.3") < 2:
+    if image_readme.count("AIM 2.4") < 2:
         raise PublicationError(
-            "github-pages image inventory must identify both website assets as AIM 2.3"
+            "github-pages image inventory must identify both website assets as AIM 2.4"
         )
 
     index = _read_text(repo_root / "index.html")
@@ -168,6 +168,14 @@ def validate_source(repo_root: Path) -> None:
             index,
             "/aim reflect-all",
         ),
+        "index.html AIM UI section": (
+            index,
+            'id="ui"',
+        ),
+        "index.html AIM UI guide": (
+            index,
+            "docs/product/aim-ui.md",
+        ),
         "index.html Reflect positioning": (
             index,
             "AIM Reflect goes beyond memory cleanup for repository work",
@@ -176,9 +184,9 @@ def validate_source(repo_root: Path) -> None:
             index,
             "Writes for the reader, not its own chat",
         ),
-        "index.html AIM 2.3 logo alt text": (
+        "index.html AIM 2.4 logo alt text": (
             index,
-            'alt="AIM 2.3 Agile Iteration Method logo"',
+            'alt="AIM 2.4 Agile Iteration Method logo"',
         ),
         "install.sh fail-closed notice": (
             install_script,
@@ -235,6 +243,16 @@ def release_manifest(root: Path) -> dict[str, Any]:
         "runtimeContractVersion": "2.0",
         "runtimeStateSchemaVersion": runtime_state_schema_version(root),
         "installerManifestVersion": installer_manifest_version(root),
+        "aimUi": {
+            "version": "1",
+            "availability": "adaptive-installer",
+            "repoLaunch": "python3 scripts/aim_ui.py",
+            "externalLaunch": (
+                "python3 ~/.aim/installs/agile-iteration-method/scripts/aim_ui.py "
+                "--repo /path/to/repository"
+            ),
+            "readOnly": True,
+        },
         "artifactType": "github-pages",
         "publicOrigin": PUBLIC_ORIGIN,
         "install": {

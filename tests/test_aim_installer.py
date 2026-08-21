@@ -418,6 +418,13 @@ class ModeFootprintContractTests(unittest.TestCase):
             self.assertIn(f".codex/agents/aim-{role}.toml", destinations)
             self.assertIn(f".claude/agents/aim-{role}.md", destinations)
             self.assertIn(f".github/agents/aim-{role}.agent.md", destinations)
+        for path in (
+            "scripts/aim_ui.py",
+            "aim-ui/index.html",
+            "aim-ui/styles.css",
+            "aim-ui/app.js",
+        ):
+            self.assertIn(path, destinations)
 
     def test_enterprise_default_is_external_zero_repo_write_install(self) -> None:
         plan = self._plan(mode="enterprise")
@@ -435,6 +442,15 @@ class ModeFootprintContractTests(unittest.TestCase):
                 for path in local_destinations
             )
         )
+        for path in (
+            "scripts/aim_ui.py",
+            "aim-ui/index.html",
+            "aim-ui/styles.css",
+            "aim-ui/app.js",
+        ):
+            self.assertTrue(
+                any(item.endswith(path) for item in local_destinations), path
+            )
         self.assertFalse(plan["scopeSummary"]["explicitApproval"])
         self.assertTrue(plan["modeProfile"]["enterpriseSafe"])
 
@@ -542,7 +558,48 @@ class ModeFootprintContractTests(unittest.TestCase):
         self.assertFalse(any("open chat and run" in step for step in steps))
         rendered = render.render_text(plan)
         self.assertIn("keeping or committing it is the solo user's choice", rendered)
-        self.assertIn("No files are selected", rendered)
+        self.assertEqual(plan["scopeSummary"]["repoActionCount"], 0)
+        self.assertEqual(plan["scopeSummary"]["localActionCount"], 4)
+
+    def test_ui_payload_apply_is_idempotent_and_collision_reviewed(self) -> None:
+        manifest = load_manifest(REPO_ROOT)
+        with tempfile.TemporaryDirectory() as target, tempfile.TemporaryDirectory() as home:
+            target_root = Path(target)
+            home_root = Path(home)
+
+            def ui_plan() -> dict:
+                return planner.compute_plan(
+                    source_root=REPO_ROOT,
+                    target_root=target_root,
+                    mode="standard",
+                    footprint="adapters",
+                    footprint_explicit=False,
+                    adapters=["codex"],
+                    manifest=manifest,
+                    validator_result={"resultClass": "healthy", "exitCode": 0},
+                    home_root=home_root,
+                )
+
+            first = ui_plan()
+            apply.apply_plan(
+                plan=first,
+                source_root=REPO_ROOT,
+                target_root=target_root,
+                manifest=manifest,
+                force=False,
+            )
+            self.assertEqual(
+                (target_root / "scripts/aim_ui.py").read_bytes(),
+                (REPO_ROOT / "scripts/aim_ui.py").read_bytes(),
+            )
+            second = ui_plan()
+            ui_actions = [a for a in second["actions"] if a["id"].startswith("ui:")]
+            self.assertEqual({a["classification"] for a in ui_actions}, {"untouched"})
+
+            (target_root / "aim-ui/app.js").write_text("target-owned change\n")
+            third = ui_plan()
+            changed = next(a for a in third["actions"] if a["id"] == "ui:aim-ui/app.js")
+            self.assertEqual(changed["classification"], "collision")
 
     def test_existing_install_guidance_points_to_upgrade(self) -> None:
         with tempfile.TemporaryDirectory() as target, tempfile.TemporaryDirectory() as home:

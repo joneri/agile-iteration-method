@@ -35,6 +35,12 @@ Both paths support later `/aim configure-agents` work. See the
 [adaptive installer](../workflow/install-aim-2.0.md) for their complete
 contracts.
 
+The adaptive installer also packages the [AIM UI control room](aim-ui.md).
+Repo-writing footprints launch it from `scripts/aim_ui.py`; zero-repo-write
+footprints launch the home-scope copy with `--repo`. Public Agent Skill-only
+installation remains a non-executable workflow package and does not silently
+place UI code in a target repository.
+
 ## One Product, Project-Specific Specialists
 
 `aim.roles.yaml` describes the project's PO, TDO, Dev, and Reviewer expertise,

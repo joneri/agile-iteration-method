@@ -87,6 +87,11 @@ class Manifest:
         return boundaries if isinstance(boundaries, dict) else {}
 
     @property
+    def aim_ui_boundary(self) -> dict[str, Any]:
+        boundary = self.package_boundaries.get("aimUi", {})
+        return boundary if isinstance(boundary, dict) else {}
+
+    @property
     def adapter_closure(self) -> dict[str, Any]:
         closure = self._root.get("adapterClosure", {})
         return closure if isinstance(closure, dict) else {}

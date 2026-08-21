@@ -1,4 +1,4 @@
-# Discover AIM 2.3
+# Discover AIM 2.4
 
 This is the public product guide for Agile Iteration Method.
 

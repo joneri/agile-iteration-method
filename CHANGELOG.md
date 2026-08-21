@@ -1,5 +1,43 @@
 # Changelog
 
+## 2026-08-21 - AIM 2 minor release v2.4.0
+- Added AIM UI v1, a dependency-free browser control room that projects the
+  active local Epic and related Done Increments into a live five-column Kanban.
+- Made Epic provenance structural: the active Epic is the visual board rail and
+  every increment card carries its Epic identity in a multi-Epic-shaped read
+  model while v1 execution remains single-Epic.
+- Separated canonical PO, TDO, Dev, and Reviewer ownership from optional bounded
+  helper-agent activity, with explicit unavailable states instead of inferred
+  supplier telemetry.
+- Added deterministic state-to-column movement, automatic polling, evidence
+  links, attention states, malformed-input handling, responsive behavior,
+  keyboard focus, contrast, and reduced-motion support.
+- Kept the UI read-only through loopback defaults, GET/HEAD-only HTTP behavior,
+  `.aim`-restricted evidence resolution, path-traversal protection, restrictive
+  browser policy, and byte-preservation regression tests.
+- Added collision-safe AIM UI packaging to every adaptive installer footprint:
+  repo-writing footprints receive `scripts/aim_ui.py` and `aim-ui/`, while
+  zero-repo-write footprints receive the same payload under the user's external
+  AIM installation.
+- Advanced the adaptive installer manifest from 0.8 to 0.9 for the new payload
+  boundary, with idempotence, collision, scope, and installation coverage.
+- Refreshed public product guidance, website presentation, and AIM 2.4 release
+  artwork while keeping portable Agent Skill installation non-executable.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, public skill package format remains `4`, and existing profile schemas,
+roles, gates, state ownership, and `.aim` artifacts remain compatible. Installer
+manifest version advances to `0.9`.
+
+Migration: no runtime-state or profile migration is required. Rerun the adaptive
+installer through its reviewed preview/apply path to add AIM UI to an existing
+installation. Public Agent Skill-only users continue to receive the complete AIM
+workflow and may select the adaptive path separately when they want UI files.
+
+Known limitations: v1 reads one local repository and one active Epic. It does not
+provide writable workflow controls, remote aggregation, user accounts, multi-Epic
+execution, AIM DATA analytics, or a portable supplier-native agent telemetry API.
+
 ## 2026-08-21 - AIM 2 patch release v2.3.2
 - Added a public Draft 2020-12 schema for canonical `.aim/state.json`, with
   independently versioned `stateSchemaVersion: 1.0`, documented extension

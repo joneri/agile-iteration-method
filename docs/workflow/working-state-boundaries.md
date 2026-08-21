@@ -44,6 +44,13 @@ It includes:
 - reviews for the current work
 - branch-local notes needed to resume safely
 
+An optional `.aim/agent-activity.json` may record bounded helper activity for a
+read-only operator view. The main AIM thread owns this observation evidence and
+may record helper identity, scoped task, lifecycle status, canonical-role
+relationship, increment relationship, and timestamps. The artifact never owns
+role handoff, gate progression, card position, acceptance, or Epic completion.
+Missing activity means telemetry is unavailable; it must not be inferred.
+
 It does not include durable repo knowledge that should be reused across unrelated work.
 That belongs in the repo profile.
 

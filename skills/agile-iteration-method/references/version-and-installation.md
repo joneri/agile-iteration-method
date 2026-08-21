@@ -7,10 +7,10 @@ Source: docs/workflow/version-and-installation.md
 
 ## Resolved package metadata
 
-- AIM product release: `2.3.2`
+- AIM product release: `2.4.0`
 - Runtime contract: `2.0`
 - Runtime-state schema: `1.0`
-- Installer manifest: `0.8`
+- Installer manifest: `0.9`
 - Repo-profile schema: `0.2`
 - Personal-hints schema: `0.1`
 - Project-role schema: `0.1`
@@ -98,7 +98,10 @@ fallback; it does not justify flattening AIM into generic task planning.
 The public Agent Skill installs AIM's portable workflow entry point. The
 adaptive installer remains a separate source-checkout workflow for a reviewed
 repository footprint, native project specialists, and supplier-specific
-configuration.
+configuration. It also packages the read-only AIM UI: repo-writing footprints
+receive `scripts/aim_ui.py` and `aim-ui/`, while zero-repo-write footprints place
+the same payload below `~/.aim/installs/agile-iteration-method/` and require an
+explicit `--repo` target at launch.
 
 The portable skill must never download or execute a remote bootstrap, and it
 must never execute installer or validator scripts discovered in a target
@@ -106,6 +109,10 @@ repository. It performs package-local validation directly from the bundled AIM
 contracts. When broader adaptive setup is wanted, direct the user to the
 maintained install guide so they can clone and inspect AIM's source, run a
 no-write preview, and explicitly decide whether to apply it.
+
+The public Agent Skill does not contain or execute the UI server payload. This
+keeps portable skill installation non-executable and prevents target-repository
+writes; users who want AIM UI select the separately reviewed adaptive path.
 
 `/aim upgrade` updates a public skill through the standard skills CLI. A
 separately reviewed AIM source checkout may use its own adaptive installer, but

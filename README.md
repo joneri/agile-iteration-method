@@ -1,6 +1,6 @@
-# Agile Iteration Method (AIM) 2.3
+# Agile Iteration Method (AIM) 2.4
 
-![AIM 2.3 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 2.4 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -86,7 +86,7 @@ Then start with an outcome, not a task list:
 /aim start "EPIC: Make checkout recovery clear and reliable when payment confirmation is delayed"
 ```
 
-Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning.
+Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning. Follow the current local run in the read-only [AIM UI control room](docs/product/aim-ui.md) with `python3 scripts/aim_ui.py` from source or an adaptive repo install.
 
 ## How AIM works
 
@@ -131,10 +131,10 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.3.2
-### Versioned runtime state and proportional cost depth
-AIM now publishes a Draft 2020-12 schema for `.aim/state.json` with independent `stateSchemaVersion: 1.0`. New Epics select cost depth afresh, incomplete Epics resume their persisted profile, and Gate B can justify escalation or de-escalation. Supported legacy state is normalized read-only; validation, installation, and upgrade never silently rewrite active state.
-The schema ships through GitHub Pages and the complete 20-file public Agent Skill. AIM cost depth remains separate from supplier model and reasoning effort, and Cost Control has an explicit compact trace and validation budget.
+## What is new in v2.4.0
+### AIM UI v1
+AIM now includes a browser-based, read-only control room for the active Epic. Its live Kanban shows increments across Backlog, Work in progress, In review, Ready for release, and Done while preserving `.aim` as the only runtime authority.
+Every card retains its Epic identity and separates canonical PO, TDO, Dev, and Reviewer ownership from optional bounded helper-agent activity. The adaptive installer packages the UI collision-safely in either the target repository or a zero-repo-write home distribution.
 ### AIM Reflect: go beyond memory cleanup
 
 Agent-memory systems such as [Anthropic Dreams](https://platform.claude.com/docs/en/managed-agents/dreams) reorganize accumulated memories and session history. AIM Reflect brings the useful consolidation idea into evidence-controlled software delivery:
@@ -158,7 +158,7 @@ The AIM runtime contract remains 2.0. Product release, runtime contract, install
 
 ## Documentation
 
-- [Feature guide](docs/product/features.md)
+- [Feature guide](docs/product/features.md) · [AIM UI control room](docs/product/aim-ui.md)
 - [First-time journey](docs/product/getting-started.md)
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md)
 - [Install and upgrade](docs/workflow/install-aim-2.0.md)
@@ -175,6 +175,6 @@ python3 scripts/build_public_skill.py
 python3 scripts/build_public_skill.py --check
 ```
 
-Current product release: **v2.3.2**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.4.0**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

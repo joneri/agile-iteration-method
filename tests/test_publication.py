@@ -60,14 +60,20 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "2.3.2")
+            self.assertEqual(manifest["aimVersion"], "2.4.0")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
                 "schemas/aim-runtime-state.schema.json",
                 [item["path"] for item in manifest["schemas"]],
             )
-            self.assertEqual(manifest["installerManifestVersion"], "0.8")
+            self.assertEqual(manifest["installerManifestVersion"], "0.9")
+            self.assertEqual(manifest["aimUi"]["version"], "1")
+            self.assertEqual(manifest["aimUi"]["availability"], "adaptive-installer")
+            self.assertTrue(manifest["aimUi"]["readOnly"])
+            self.assertEqual(
+                manifest["aimUi"]["repoLaunch"], "python3 scripts/aim_ui.py"
+            )
             self.assertEqual(manifest["publicOrigin"], PUBLIC_ORIGIN)
             self.assertEqual(
                 manifest["install"]["portableSkillCommand"],
@@ -112,7 +118,9 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("audience-context integrity", readme)
         self.assertIn("Writes for the reader, not its own chat", index)
         self.assertIn("Private conversations, rejected drafts", index)
-        self.assertIn('alt="AIM 2.3 Agile Iteration Method logo"', index)
+        self.assertIn('id="ui"', index)
+        self.assertIn("docs/product/aim-ui.md", index)
+        self.assertIn('alt="AIM 2.4 Agile Iteration Method logo"', index)
         for command in (
             "/aim upgrade",
             "/aim calibrate-repo",
@@ -129,7 +137,7 @@ class PublicationContractTests(unittest.TestCase):
         inventory = (
             REPO_ROOT / "github-pages/assets/images/README.md"
         ).read_text(encoding="utf-8")
-        self.assertGreaterEqual(inventory.count("AIM 2.3"), 2)
+        self.assertGreaterEqual(inventory.count("AIM 2.4"), 2)
 
     def test_schema_id_drift_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

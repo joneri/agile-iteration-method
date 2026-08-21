@@ -283,10 +283,10 @@ OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
-        "# Agile Iteration Method (AIM) 2.3",
+        "# Agile Iteration Method (AIM) 2.4",
         "## Install",
         "## How AIM works",
-        "## What is new in v2.3.2",
+        "## What is new in v2.4.0",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",
@@ -1446,7 +1446,7 @@ def main() -> int:
             finding.action,
         )
 
-    checked.append("AIM 2.3 documentation audit")
+    checked.append("AIM 2.4 documentation audit")
     for documentation_error in audit_documentation(repo_root):
         add_issue(
             issues,

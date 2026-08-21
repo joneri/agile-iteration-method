@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#06142d">
+  <title>AIM Control Room</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#board">Skip to board</a>
+  <header class="command-bar">
+    <div class="brand-lockup" aria-label="Agile Iteration Method control room">
+      <span class="aim-mark" aria-hidden="true">AIM</span>
+      <div>
+        <p class="product-name">Control room</p>
+        <p class="product-note">Read-only runtime view</p>
+      </div>
+    </div>
+    <div class="connection" role="status" aria-live="polite">
+      <span class="connection-light" id="connection-light" aria-hidden="true"></span>
+      <span id="connection-label">Connecting to AIM…</span>
+    </div>
+  </header>
+
+  <main id="board" tabindex="-1">
+    <section class="empty-state" id="empty-state" hidden>
+      <p class="eyebrow">Runtime unavailable</p>
+      <h1>No active AIM board can be read</h1>
+      <p id="empty-message">Check that this repository contains a valid <code>.aim</code> workspace.</p>
+    </section>
+
+    <section id="control-room" hidden>
+      <div class="epic-rail" id="epic-rail">
+        <div class="epic-signal" aria-hidden="true"><span></span></div>
+        <div class="epic-copy">
+          <p class="eyebrow">Active Epic</p>
+          <h1 id="epic-title"></h1>
+          <p class="epic-id" id="epic-id"></p>
+        </div>
+        <dl class="runtime-facts" id="runtime-facts"></dl>
+      </div>
+
+      <section class="people-strip" aria-labelledby="people-title">
+        <div class="section-intro">
+          <p class="eyebrow">People and agents</p>
+          <h2 id="people-title">Who is carrying the work?</h2>
+        </div>
+        <div class="role-lane" id="role-lane" aria-label="Canonical AIM roles"></div>
+        <div class="helper-lane" id="helper-lane"></div>
+      </section>
+
+      <section class="workflow" aria-labelledby="workflow-title">
+        <div class="workflow-heading">
+          <div>
+            <p class="eyebrow">Delivery flow</p>
+            <h2 id="workflow-title">Increment board</h2>
+          </div>
+          <p class="last-refresh" id="last-refresh"></p>
+        </div>
+        <div class="kanban" id="kanban" aria-label="AIM increment Kanban"></div>
+      </section>
+    </section>
+  </main>
+
+  <template id="role-template">
+    <div class="role-chip">
+      <span class="role-dot" aria-hidden="true"></span>
+      <span class="role-name"></span>
+    </div>
+  </template>
+
+  <template id="helper-template">
+    <article class="helper-card">
+      <div class="helper-head">
+        <span class="helper-id"></span>
+        <span class="status-pill"></span>
+      </div>
+      <p class="helper-task"></p>
+      <p class="helper-link"></p>
+    </article>
+  </template>
+
+  <template id="column-template">
+    <section class="kanban-column">
+      <header class="column-head">
+        <h3></h3>
+        <span class="column-count" aria-label="0 increments">0</span>
+      </header>
+      <div class="card-stack"></div>
+    </section>
+  </template>
+
+  <template id="card-template">
+    <article class="increment-card">
+      <div class="card-topline">
+        <span class="increment-id"></span>
+        <span class="owner-badge"></span>
+      </div>
+      <h4 class="increment-title"></h4>
+      <p class="epic-link"></p>
+      <dl class="card-facts"></dl>
+      <p class="attention" hidden></p>
+      <nav class="evidence-links" aria-label="Increment evidence"></nav>
+    </article>
+  </template>
+</body>
+</html>

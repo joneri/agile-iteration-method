@@ -3,7 +3,7 @@
 # Data-only contract projection. The portable skill never executes this manifest.
 
 aimInstallManifest:
-  manifestVersion: "0.8"
+  manifestVersion: "0.9"
   status: one-adaptive-install
 
   canonicalCommand: "source-only adaptive installer; not executable from the portable package"
@@ -121,6 +121,17 @@ aimInstallManifest:
     canonicalDocs:
       source: docs/workflow/
       targetOwned: true
+    aimUi:
+      files:
+        - scripts/aim_ui.py
+        - aim-ui/index.html
+        - aim-ui/styles.css
+        - aim-ui/app.js
+      repoDestination: .
+      homeDestination: .aim/installs/agile-iteration-method/
+      includedWith: all-footprints
+      targetOwned: true
+      readOnlyRuntime: true
     schemas:
       source: schemas/
       destination: schemas/

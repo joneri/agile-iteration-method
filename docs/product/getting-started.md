@@ -64,6 +64,8 @@ The guided installer:
 - protects collisions with explicit choices
 - asks before writing
 - can apply in the same session
+- installs the read-only AIM UI into repo-writing footprints or the external AIM
+  home distribution for zero-repo-write footprints
 
 Installation is manifest-driven, rollback-protected, and safe to rerun.
 
@@ -79,6 +81,10 @@ Upgrade refreshes installed AIM-owned surfaces through the reviewed installer pl
 For automation, pass installer flags directly, such as `--target
 /path/to/repo`, `--non-interactive`, or `--format json`.
 For preview only, use `--dry-run`.
+
+After a standard apply, launch the target repository's control room with
+`python3 scripts/aim_ui.py`. For a zero-repo-write footprint, run the home-scope
+copy with `--repo /path/to/repository`. See [AIM UI v1](aim-ui.md).
 
 ## 2. Calibrate the Repository
 

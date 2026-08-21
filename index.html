@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Agile Iteration Method (AIM) 2 - Structured AI Software Delivery</title>
-  <meta name="description" content="AIM 2.3 is a structured AI delivery system with audience-aware artifact generation, evidence-backed reflection across local projects, review, validation, and human-controlled knowledge promotion.">
+  <title>Agile Iteration Method (AIM) 2.4 - Structured AI Software Delivery</title>
+  <meta name="description" content="AIM 2.4 is a structured AI delivery system with a live read-only control room, evidence-backed reflection, review, validation, and human-controlled acceptance.">
   <link rel="canonical" href="https://joneri.github.io/agile-iteration-method/">
   <link rel="icon" type="image/png" href="github-pages/assets/images/aim-2-logo-light.png">
   <link rel="apple-touch-icon" href="github-pages/assets/images/aim-2-logo-light.png">
@@ -31,7 +31,7 @@
     "url": "https://joneri.github.io/agile-iteration-method/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
-    "softwareVersion": "2.3.2",
+    "softwareVersion": "2.4.0",
     "author": { "@type": "Person", "name": "Jonas Eriksson" },
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "codeRepository": "https://github.com/joneri/agile-iteration-method"
@@ -669,11 +669,12 @@
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="container nav-inner">
       <a class="brand" href="#top" aria-label="AIM 2 home">
-        <span>AIM</span><span class="brand-version">2.3</span>
+        <span>AIM</span><span class="brand-version">2.4</span>
       </a>
       <div class="nav-links">
         <a href="#why">Why AIM</a>
         <a href="#features">Features</a>
+        <a href="#ui">AIM UI</a>
         <a href="#reflect">Reflect</a>
         <a href="#modes">Modes</a>
         <a href="#platforms">Platforms</a>
@@ -691,7 +692,7 @@
     <div class="container hero-content">
       <div class="hero-copy">
         <p class="eyebrow">AI operating system for agentic software delivery</p>
-        <h1 id="hero-title">Agile Iteration Method 2.3</h1>
+        <h1 id="hero-title">Agile Iteration Method 2.4</h1>
         <p class="hero-lead">Build what you want without losing the goal. AIM turns AI-assisted development into a clear loop of planning, implementation, review, validation, correction, and human approval.</p>
         <div class="hero-actions">
           <a class="button button-primary" href="#start">Start with AIM</a>
@@ -832,10 +833,44 @@
       </div>
     </section>
 
+    <section class="band" id="ui">
+      <div class="container feature-layout">
+        <div>
+          <p class="eyebrow">New in AIM 2.4</p>
+          <h2 class="section-title">Watch the delivery loop move.</h2>
+          <p class="section-lead">AIM UI turns the active local Epic into a live, read-only Kanban. See increment provenance, canonical ownership, gates, evidence, attention, and available helper-agent activity without giving the browser control of runtime state.</p>
+          <p><a class="button button-primary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/aim-ui.md">Explore AIM UI v1</a></p>
+        </div>
+
+        <div class="feature-list">
+          <article class="feature">
+            <span class="feature-label">Live Kanban</span>
+            <h3>State changes become card movement</h3>
+            <p>Backlog, Work in progress, In review, Ready for release, and Done map directly from authoritative AIM runtime evidence.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-label">Clear provenance</span>
+            <h3>Every increment belongs to an Epic</h3>
+            <p>The active Epic forms the board's visual rail and every related card carries the same Epic identity.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-label">People and agents</span>
+            <h3>Ownership stays canonical</h3>
+            <p>PO, TDO, Dev, and Reviewer remain distinct from optional bounded helper-agent activity.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-label">Read-only by design</span>
+            <h3>The board observes; AIM decides</h3>
+            <p>The loopback server accepts GET and HEAD only. The main AIM thread still owns gates, acceptance, and completion.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section class="band band-mist" id="reflect">
       <div class="container feature-layout">
         <div>
-          <p class="eyebrow">New in AIM 2.3</p>
+          <p class="eyebrow">Introduced in AIM 2.3</p>
           <h2 class="section-title">Dreams consolidate memory. Reflect makes repository knowledge prove itself.</h2>
           <p class="section-lead">AIM Reflect goes beyond memory cleanup for repository work. It finds lessons in completed delivery, verifies them against current evidence, preserves provenance and contradictions, and asks you before anything becomes durable knowledge.</p>
           <p>This comparison uses Anthropic's public description of <a href="https://platform.claude.com/docs/en/managed-agents/dreams">Dreams</a>; Reflect is AIM's repository-delivery answer, not a claim to replace every memory system.</p>
@@ -870,7 +905,7 @@
     <section class="band band-mist" id="rebuilt">
       <div class="container rebuild">
         <figure class="brand-visual">
-          <img src="github-pages/assets/images/aim-2-logo-light.png" alt="AIM 2.3 Agile Iteration Method logo">
+          <img src="github-pages/assets/images/aim-2-logo-light.png" alt="AIM 2.4 Agile Iteration Method logo">
         </figure>
         <div>
           <p class="eyebrow">Rebuilt for AIM 2</p>

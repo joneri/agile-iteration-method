@@ -1,6 +1,6 @@
 # AIM feature guide
 
-This is the short map of what AIM 2.3 does. Follow the links only when you need
+This is the short map of what AIM 2.4 does. Follow the links only when you need
 the operating detail.
 
 ## Delivery loop
@@ -35,6 +35,18 @@ This makes AIM audience-aware from the first generated artifact. See the
   they never remove roles, gates, or escalation.
 
 See [cost profiles](../workflow/cost-control-mode.md).
+
+## AIM UI
+
+- A local browser control room projects the active Epic and related increments
+  into a live five-column Kanban.
+- Every card retains its Epic identity and separates canonical role ownership
+  from optional bounded helper-agent activity.
+- Auto mode appears as automatic card movement because the UI polls canonical
+  runtime evidence; the UI itself cannot advance a gate or write `.aim` state.
+- The v1 read model is multi-Epic-shaped while execution remains single-Epic.
+
+See [AIM UI v1](aim-ui.md).
 
 ## Repository knowledge
 
