@@ -24,6 +24,12 @@ The current choices are independent configuration dimensions:
   organization policy
 - execution mode: Strict or Auto
 - runtime depth: Standard, Cost Control, or Deep
+- supplier model and reasoning effort: selected by the host or explicit user
+  policy, never inferred from AIM runtime depth
+
+Cost profile controls AIM's context, narration, verification, and parallel-help
+budget. Model or reasoning effort controls the supplier runtime. Changing one
+must not silently change or imply the other.
 
 Do not confuse the legacy installation-mode names with Strict/Auto execution
 mode or Standard/Cost Control/Deep runtime depth.

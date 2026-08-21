@@ -28,6 +28,10 @@ The user should not need to commit active AIM state just to use AIM personally.
 
 Working state is the temporary, resumable state for active AIM work.
 
+The canonical `.aim/state.json` uses the public Draft 2020-12 runtime-state
+schema and declares `stateSchemaVersion: "1.0"`. Project extension fields are
+allowed, but canonical fields retain their meaning and ownership.
+
 It includes:
 
 - active Epic id and status
@@ -42,6 +46,11 @@ It includes:
 
 It does not include durable repo knowledge that should be reused across unrelated work.
 That belongs in the repo profile.
+
+Legacy state may be read through a documented, in-memory normalized view. A
+validator, installer, upgrade, helper agent, or adapter must not silently write
+that view back. Unsupported versions, conflicting aliases, or state/decision
+disagreement stop progression for an explicit main-thread repair decision.
 
 ## Working state vs repo profile
 

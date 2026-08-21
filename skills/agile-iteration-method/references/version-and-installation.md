@@ -7,13 +7,14 @@ Source: docs/workflow/version-and-installation.md
 
 ## Resolved package metadata
 
-- AIM product release: `2.3.1`
+- AIM product release: `2.3.2`
 - Runtime contract: `2.0`
+- Runtime-state schema: `1.0`
 - Installer manifest: `0.8`
 - Repo-profile schema: `0.2`
 - Personal-hints schema: `0.1`
 - Project-role schema: `0.1`
-- Public skill package format: `3`
+- Public skill package format: `4`
 
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
@@ -122,10 +123,17 @@ The generated package records these independent contracts:
 
 - AIM product release from `VERSION`
 - AIM runtime contract from the canonical release manifest
+- runtime-state schema version from
+  `schemas/aim-runtime-state.schema.json`
 - adaptive installer manifest version from
   `install/aim-install-manifest.yaml`
 - repo-profile, Personal-hints, and project-role schema versions
 - public Agent Skill package-format version
+
+The public package and Pages artifact include the Draft 2020-12 runtime-state
+schema. Install, update, validation, and package generation may inspect or
+normalize legacy state read-only, but never migrate or rewrite active `.aim`
+artifacts automatically.
 
 The package-format version changes only when the generated public package
 structure or compatibility contract changes. It is not a second AIM product

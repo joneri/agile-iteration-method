@@ -551,3 +551,11 @@ Validation reports should classify the result as `healthy`, `recoverable`,
 `blocked`, or `contradictory`; report Structural, Behavioral, Product coherence,
 and Release readiness tiers; name the failed artifact or rule; and avoid
 mutating runtime state.
+
+Canonical state declares `stateSchemaVersion: "1.0"`. Resume incomplete state
+with its persisted cost profile. A new Epic selects cost afresh and never
+inherits a completed Epic's profile. Gate B may escalate or de-escalate when
+the visible rationale and persisted value agree. Treat model/reasoning effort
+as independent supplier configuration. Use a read-only in-memory normalization
+for supported legacy state; never rewrite it during validation, installation,
+or upgrade.

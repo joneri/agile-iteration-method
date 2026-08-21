@@ -1,5 +1,42 @@
 # Changelog
 
+## 2026-08-21 - AIM 2 patch release v2.3.2
+- Added a public Draft 2020-12 schema for canonical `.aim/state.json`, with
+  independently versioned `stateSchemaVersion: 1.0`, documented extension
+  fields, and publication through Pages and the portable Agent Skill.
+- Added dependency-free, read-only legacy-state normalization and explicit
+  current, legacy-compatible, blocked, unsupported, and contradictory
+  classifications without automatic state rewriting.
+- Made new Epics choose cost depth afresh instead of inheriting a completed
+  Epic's `Deep` profile, while incomplete Epics retain their persisted profile.
+- Allowed Gate B to de-escalate as well as escalate cost depth when rationale,
+  visible decision, and persisted state agree.
+- Defined Cost Control's trace and validation budget and separated AIM cost
+  depth from supplier model or reasoning-effort selection.
+- Enforced runtime schema, Gate B state/decision alignment, missing-schema
+  handling, adapter parity, public package inventory, and publication behavior
+  with expanded regression and product-coherence tests.
+- Raised the public Agent Skill package format to 4 for the added runtime-state
+  schema and kept generation deterministic across its 20-file package.
+- Included the post-v2.3.1 mainline additions for Google site verification,
+  refreshed public-skill provenance, and reference-quality Done Increment
+  decomposition guidance in the v2.3.2 source tag.
+
+Compatibility: AIM runtime contract remains `2.0`; installer manifest remains
+`0.8`; repo-profile, Personal-hints, and project-role schemas remain unchanged.
+The new runtime-state schema is version `1.0`, and public skill package format
+advances from `3` to `4` because the package inventory gains one schema file.
+
+Migration: existing active state without `stateSchemaVersion` remains readable
+through a read-only normalized view. AIM does not rewrite active or historical
+state during validation, install, or upgrade. Add the version only through an
+explicit main-thread migration or when initializing new canonical state.
+
+Known limitations: cost selection and legacy normalization remain part of the
+instruction-led AIM runtime rather than a new deterministic execution engine.
+Project-specific state extensions are allowed, but cannot replace canonical
+fields or take ownership of gates and acceptance.
+
 ## 2026-08-02 - AIM 2 patch release v2.3.1
 - Made completed Reflect analysis operator-ready: every run now states whether
   action is recommended and presents one concrete next step or an explicit

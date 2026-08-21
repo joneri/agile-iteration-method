@@ -277,6 +277,11 @@ class PublicSkillTests(unittest.TestCase):
         self.assertNotEqual(
             manifest["productVersion"], manifest["runtimeContractVersion"]
         )
+        self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
+        self.assertIn(
+            "references/schemas/aim-runtime-state.schema.json",
+            manifest["files"],
+        )
         self.assertEqual(
             set(manifest["profileSchemaVersions"]),
             {"personalHints", "projectRoles", "repoProfile"},

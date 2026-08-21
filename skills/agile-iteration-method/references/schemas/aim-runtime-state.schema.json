@@ -1,0 +1,124 @@
+{
+  "$comment": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
+  "$id": "urn:aim:public-skill:aim-runtime-state.schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "description": "Canonical, resumable checkpoint for one active AIM Epic. Project-specific extension fields are allowed but cannot replace canonical fields.",
+  "properties": {
+    "activeIncrementId": {
+      "description": "Canonical DI identifier, or null before Gate B."
+    },
+    "aimVersion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "commitMode": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "costProfile": {
+      "enum": [
+        "Standard",
+        "Cost Control",
+        "Deep"
+      ],
+      "type": "string"
+    },
+    "currentRole": {
+      "enum": [
+        "PO",
+        "TDO",
+        "Dev",
+        "Reviewer"
+      ],
+      "type": "string"
+    },
+    "epicId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "epicStatus": {
+      "enum": [
+        "epic_initialized",
+        "gate_a_pending",
+        "gate_b_pending",
+        "increment_in_progress",
+        "review_in_progress",
+        "tdo_validation_in_progress",
+        "po_approval_pending",
+        "done_increment_accepted",
+        "epic_paused",
+        "blocked",
+        "epic_complete"
+      ],
+      "type": "string"
+    },
+    "lastGatePassed": {
+      "enum": [
+        null,
+        "Gate A",
+        "Gate B",
+        "Gate C",
+        "Gate D",
+        "Gate E"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "Strict",
+        "Auto"
+      ],
+      "type": "string"
+    },
+    "parallelSupport": {
+      "additionalProperties": true,
+      "properties": {
+        "available": {
+          "type": "boolean"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "policy": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "available",
+        "enabled",
+        "policy"
+      ],
+      "type": "object"
+    },
+    "platform": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "stateSchemaVersion": {
+      "const": "1.0"
+    },
+    "updatedAt": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "stateSchemaVersion",
+    "aimVersion",
+    "mode",
+    "costProfile",
+    "epicId",
+    "epicStatus",
+    "activeIncrementId",
+    "currentRole",
+    "lastGatePassed",
+    "platform",
+    "parallelSupport",
+    "commitMode",
+    "updatedAt"
+  ],
+  "title": "AIM runtime state",
+  "type": "object",
+  "x-aim-source": "schemas/aim-runtime-state.schema.json"
+}

@@ -13,6 +13,7 @@ PUBLIC_ORIGIN = "https://joneri.github.io/agile-iteration-method/"
 SCHEMA_RELATIVE_PATHS = (
     "schemas/aim-repo-profile.schema.json",
     "schemas/aim-personal-hints.schema.json",
+    "schemas/aim-runtime-state.schema.json",
 )
 ROOT_PUBLIC_FILES = (
     "VERSION",
@@ -215,10 +216,24 @@ def installer_manifest_version(root: Path) -> str:
     raise PublicationError("installer manifest version is missing")
 
 
+def runtime_state_schema_version(root: Path) -> str:
+    schema = _schema_contract(root, "schemas/aim-runtime-state.schema.json")
+    try:
+        version = schema["properties"]["stateSchemaVersion"]["const"]
+    except (KeyError, TypeError) as exc:
+        raise PublicationError(
+            "runtime-state schema version is missing"
+        ) from exc
+    if not isinstance(version, str) or not version:
+        raise PublicationError("runtime-state schema version must be a string")
+    return version
+
+
 def release_manifest(root: Path) -> dict[str, Any]:
     return {
         "aimVersion": product_version(root),
         "runtimeContractVersion": "2.0",
+        "runtimeStateSchemaVersion": runtime_state_schema_version(root),
         "installerManifestVersion": installer_manifest_version(root),
         "artifactType": "github-pages",
         "publicOrigin": PUBLIC_ORIGIN,

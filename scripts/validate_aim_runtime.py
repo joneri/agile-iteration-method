@@ -33,6 +33,11 @@ from aim_validator.reporting import (
     summarize_result as summarize_typed_result,
     tier_statuses,
 )
+from aim_validator.runtime_state import (
+    RUNTIME_STATE_SCHEMA_PATH,
+    SUPPORTED_STATE_SCHEMA_VERSION,
+    load_runtime_state,
+)
 from aim_validator.schema_subset import unsupported_keywords, validate as validate_schema
 
 
@@ -281,7 +286,7 @@ PUBLIC_PRODUCT_DOC_PATHS = {
         "# Agile Iteration Method (AIM) 2.3",
         "## Install",
         "## How AIM works",
-        "## What is new in v2.3.1",
+        "## What is new in v2.3.2",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",
@@ -1425,6 +1430,21 @@ def main() -> int:
     repo_root = Path(positional[0] if positional else ".").resolve()
     checked: list[str] = []
     issues: list[dict[str, object]] = []
+
+    runtime_state_result = load_runtime_state(repo_root)
+    checked.append("AIM runtime-state schema contract")
+    checked.append(
+        f"runtime-state schema: {RUNTIME_STATE_SCHEMA_PATH} ({SUPPORTED_STATE_SCHEMA_VERSION})"
+    )
+    checked.append(f"runtime-state compatibility: {runtime_state_result.classification}")
+    for finding in runtime_state_result.findings:
+        add_issue(
+            issues,
+            finding.result,
+            ".aim/state.json",
+            finding.rule,
+            finding.action,
+        )
 
     checked.append("AIM 2.3 documentation audit")
     for documentation_error in audit_documentation(repo_root):

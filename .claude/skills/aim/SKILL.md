@@ -104,3 +104,12 @@ accepts increments or Epics. Report sequential fallback when subagents are
 unavailable or disallowed.
 
 Never require or create `AGENTS.md` or `CLAUDE.md` for AIM bootstrap.
+
+## Runtime state and cost depth
+
+Use canonical `stateSchemaVersion: "1.0"`. Resume an incomplete Epic with its
+persisted cost profile; select cost afresh for a new Epic and never inherit a
+completed Epic's profile. Gate B may escalate or de-escalate when its visible
+decision matches persisted state. Model/reasoning effort is independent of AIM
+cost depth. Normalize supported legacy state read-only and stop on conflicts or
+unsupported versions.

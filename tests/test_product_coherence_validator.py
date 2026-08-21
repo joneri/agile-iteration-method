@@ -56,6 +56,20 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
         ):
             self.assertIn(heading, completed.stdout)
 
+    def test_runtime_state_contract_drift_fails_release(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            skill = copied / "adapters/codex/agile-iteration-method/SKILL.md"
+            skill.write_text(
+                skill.read_text(encoding="utf-8").replace(
+                    "stateSchemaVersion", "removedSchemaMarker"
+                ),
+                encoding="utf-8",
+            )
+            completed = self._validate(copied)
+        self.assertEqual(completed.returncode, 3)
+        self.assertIn("runtime-state contract", completed.stdout)
+
     def test_documented_enterprise_contradiction_fails_release(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)

@@ -28,6 +28,18 @@ AIM separates approval flow from runtime depth:
 `Standard` also becomes cheaper in AIM 2.0 by using state-first resume and progressive context loading.
 Agents read `.aim/state.json` before rebuilding runtime context, then load the shortest authoritative context first and load deeper docs only when the task needs them.
 
+For a new Epic, select cost depth afresh; never copy it from an
+`epic_complete` checkpoint. Resume preserves an incomplete Epic's persisted
+choice. Gate B may move depth in either direction when the visible decision,
+risk rationale, and persisted state agree.
+
+Cost Control's default trace budget keeps Gate A, Gate B, Gate E, the active
+increment, and required review evidence. Gates C and D remain visible but do
+not create separate decision artifacts unless risk, policy, or a failed cheaper
+check makes that evidence necessary. Validation starts with syntax, direct
+focused tests, and the cheapest canonical validator, expanding only after a
+named risk or failure.
+
 ## Key decisions
 
 - Cost Control is not a weaker method. It changes runtime depth, not acceptance.
@@ -61,6 +73,9 @@ Outputs:
 - `Auto` plus `Cost Control` is allowed, but final Epic completion still requires the normal AIM final review rule.
 - `Deep` does not allow scope creep. It only permits broader inspection and stronger evidence inside approved scope.
 - Repository policy may require `Standard` or `Deep` for some work.
+- An established, reversible public release path does not by itself require
+  `Deep`; deployment mechanics, migration, public API, trust, or unresolved
+  release risk may still require escalation.
 
 ## Debugging
 

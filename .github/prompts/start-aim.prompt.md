@@ -27,5 +27,11 @@ If Epic is provided:
 - ensure TDO owns Done Increment spec at Gate B
 - ensure canonical role names are used in reporting: `PO`, `TDO`, `Dev`, `Reviewer`
 - apply `Standard` if no cost profile is provided, and suggest `Cost Control` when the work is ordinary and low risk
+- resume an incomplete Epic with its persisted cost profile; for a genuinely
+  new Epic select cost afresh and never inherit an `epic_complete` profile
+- read canonical `stateSchemaVersion: "1.0"`; use a read-only in-memory
+  normalization for documented legacy state and stop on conflicts or
+  unsupported versions
+- keep supplier model/reasoning effort independent from AIM cost profile
 - run `/aim start "EPIC: ..."`
 - remind me that approvals are meaningful at Gate A, B, and E

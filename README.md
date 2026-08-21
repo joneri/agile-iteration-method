@@ -131,17 +131,17 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.3.1
-
+## What is new in v2.3.2
+### Versioned runtime state and proportional cost depth
+AIM now publishes a Draft 2020-12 schema for `.aim/state.json` with independent `stateSchemaVersion: 1.0`. New Epics select cost depth afresh, incomplete Epics resume their persisted profile, and Gate B can justify escalation or de-escalation. Supported legacy state is normalized read-only; validation, installation, and upgrade never silently rewrite active state.
+The schema ships through GitHub Pages and the complete 20-file public Agent Skill. AIM cost depth remains separate from supplier model and reasoning effort, and Cost Control has an explicit compact trace and validation budget.
 ### AIM Reflect: go beyond memory cleanup
 
 Agent-memory systems such as [Anthropic Dreams](https://platform.claude.com/docs/en/managed-agents/dreams) reorganize accumulated memories and session history. AIM Reflect brings the useful consolidation idea into evidence-controlled software delivery:
 
-- `/aim reflect` finds reusable knowledge in the current AIM project
-- `/aim reflect-all` finds project, cross-project, personal, and AIM-product insights across a reviewed set of local AIM projects
-- every candidate carries provenance, verification, confidence, contradictions, a destination, a disposition, and a promotion action; Reflect recommends one concrete action or explicitly says none is needed
-- reflection reports are temporary and read-only; profiles, docs, source, and other repositories do not change until you approve a separate promotion
-- multi-project discovery previews roots, repositories, exclusions, and workload before content analysis
+- `/aim reflect` and `/aim reflect-all` find verified project, cross-project, personal, and AIM-product knowledge
+- every candidate carries provenance, confidence, contradictions, destination, disposition, and one recommended action or an explicit no-action result
+- reports stay temporary and read-only; multi-project discovery previews scope before analysis, and durable promotion remains user-owned
 
 Dreams consolidates memory. **AIM Reflect goes beyond memory cleanup for repository work** by asking every proposed lesson to show where it came from, whether it is still true, where it belongs, and who approved keeping it.
 
@@ -175,6 +175,6 @@ python3 scripts/build_public_skill.py
 python3 scripts/build_public_skill.py --check
 ```
 
-Current product release: **v2.3.1**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.3.2**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

@@ -21,13 +21,20 @@ class DocumentationAuditTests(unittest.TestCase):
     def test_current_repository_passes(self) -> None:
         self.assertEqual([], audit(ROOT))
 
+    def test_runtime_schema_version_is_documented_separately(self) -> None:
+        content = (ROOT / "docs/workflow/version-and-installation.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("runtime-state schema version", content)
+        self.assertIn("schemas/aim-runtime-state.schema.json", content)
+
     def test_broken_link_and_version_drift_fail(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy(temporary)
             readme = copied / "README.md"
             readme.write_text(readme.read_text() + "\n[missing](docs/nope.md)\n", encoding="utf-8")
             index = copied / "index.html"
-            index.write_text(index.read_text().replace('"softwareVersion": "2.3.1"', '"softwareVersion": "2.1.0"'), encoding="utf-8")
+            index.write_text(index.read_text().replace('"softwareVersion": "2.3.2"', '"softwareVersion": "2.1.0"'), encoding="utf-8")
             errors = audit(copied)
         self.assertTrue(any("broken link" in error for error in errors))
         self.assertTrue(any("softwareVersion" in error for error in errors))

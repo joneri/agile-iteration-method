@@ -40,6 +40,13 @@ ownership, or acceptance.
 | `/aim upgrade` | inspect installed AIM-owned packages, plan a reviewed refresh, and report follow-up calibration or resume actions | must not rewrite active `.aim/` state |
 | `/aim mode strict\|auto` | set execution mode for the active Epic | updates mode in `state.json`; does not approve a gate |
 | `/aim cost standard\|control\|deep` | set runtime depth for the active Epic or increment | updates cost profile in `state.json`; does not approve a gate |
+
+Startup reads and classifies the versioned runtime state before selecting cost.
+Incomplete state resumes its persisted cost profile. A genuinely new Epic makes
+a fresh explicit/policy/default choice and never inherits a completed Epic's
+profile. Gate B may escalate or de-escalate only when the visible decision and
+persisted state agree. Supported legacy state is normalized read-only;
+unsupported or contradictory state stops without mutation.
 | `/aim replan` | return the active, unaccepted increment to Gate B planning with the reason preserved | updates the active checkpoint; never rewrites accepted history |
 
 `/aim calibrate-repo`, `/aim remember-repo`, and `/aim forget-repo` follow

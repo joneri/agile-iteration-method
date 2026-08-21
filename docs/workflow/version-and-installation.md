@@ -105,10 +105,17 @@ The generated package records these independent contracts:
 
 - AIM product release from `VERSION`
 - AIM runtime contract from the canonical release manifest
+- runtime-state schema version from
+  `schemas/aim-runtime-state.schema.json`
 - adaptive installer manifest version from
   `install/aim-install-manifest.yaml`
 - repo-profile, Personal-hints, and project-role schema versions
 - public Agent Skill package-format version
+
+The public package and Pages artifact include the Draft 2020-12 runtime-state
+schema. Install, update, validation, and package generation may inspect or
+normalize legacy state read-only, but never migrate or rewrite active `.aim`
+artifacts automatically.
 
 The package-format version changes only when the generated public package
 structure or compatibility contract changes. It is not a second AIM product

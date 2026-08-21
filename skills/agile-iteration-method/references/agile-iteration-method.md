@@ -190,6 +190,12 @@ The runtime must also keep `.aim` clean enough to inspect:
 
 `state.json` is the durable runtime checkpoint for the current Epic and active increment.
 
+The canonical file declares `stateSchemaVersion: "1.0"`. This schema version is
+separate from the AIM product release and the `aimVersion` runtime contract.
+Validation may construct a read-only normalized view of documented legacy
+state that lacks the field or uses a supported alias, but it must never rewrite
+the source. Conflicting aliases or an unsupported schema version stop resume.
+
 At minimum, it should answer:
 - which AIM version is active
 - which mode is active
@@ -284,9 +290,14 @@ If `.aim/state.json` exists and points to an incomplete Epic:
 - the runtime resumes from that checkpoint
 - the runtime does not silently create a new Epic
 - the active Epic, increment, gate, and mode come from the checkpoint unless repo policy or explicit user direction requires a stop-and-ask decision
+- the persisted cost profile remains authoritative unless the user explicitly
+  changes it or Gate B records a justified escalation or de-escalation
 
 If no active checkpoint exists:
 - the runtime starts a new Epic at Gate A
+- cost profile is selected afresh from an explicit user choice, repository
+  minimum policy, current risk, or the `Standard` default; a completed Epic's
+  persisted profile is history and must not be inherited
 
 ### Fallback behavior
 
@@ -361,6 +372,8 @@ The state model does not replace Gate A-E.
 It makes the runtime meaning of those gates durable:
 - Gate A approval moves the runtime from `gate_a_pending` to `gate_b_pending`
 - Gate B approval moves the runtime into `increment_in_progress`
+- Gate B may escalate or de-escalate cost depth when its visible rationale and
+  persisted `costProfile` agree
 - Gate D review output supports transition into `tdo_validation_in_progress`
 - Gate E approval moves the runtime into `done_increment_accepted` or `epic_complete`
 

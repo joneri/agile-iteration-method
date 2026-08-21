@@ -17,7 +17,7 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 3
+PUBLIC_SKILL_PACKAGE_VERSION = 4
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
@@ -41,6 +41,7 @@ SCHEMA_SOURCES: tuple[Path, ...] = (
     Path("schemas/aim-repo-profile.schema.json"),
     Path("schemas/aim-personal-hints.schema.json"),
     Path("schemas/aim-project-roles.schema.json"),
+    Path("schemas/aim-runtime-state.schema.json"),
 )
 
 INSTALL_MANIFEST_SOURCE = Path("install/aim-install-manifest.yaml")
@@ -119,6 +120,7 @@ def resolved_versions(root: Path) -> dict[str, Any]:
     repo_schema = json.loads(_read(root, SCHEMA_SOURCES[0]))
     hints_schema = json.loads(_read(root, SCHEMA_SOURCES[1]))
     roles_schema = json.loads(_read(root, SCHEMA_SOURCES[2]))
+    runtime_state_schema = json.loads(_read(root, SCHEMA_SOURCES[3]))
     return {
         "productVersion": release["aimVersion"],
         "runtimeContractVersion": release["runtimeContractVersion"],
@@ -128,6 +130,9 @@ def resolved_versions(root: Path) -> dict[str, Any]:
             "personalHints": _schema_version(hints_schema, "hintsVersion", SCHEMA_SOURCES[1]),
             "projectRoles": _schema_version(roles_schema, "profileVersion", SCHEMA_SOURCES[2]),
         },
+        "runtimeStateSchemaVersion": _schema_version(
+            runtime_state_schema, "stateSchemaVersion", SCHEMA_SOURCES[3]
+        ),
         "publicSkillPackageVersion": PUBLIC_SKILL_PACKAGE_VERSION,
     }
 
@@ -230,6 +235,7 @@ def _render_reference(root: Path, source: Path, output: Path, versions: dict[str
             "## Resolved package metadata\n\n"
             f"- AIM product release: `{versions['productVersion']}`\n"
             f"- Runtime contract: `{versions['runtimeContractVersion']}`\n"
+            f"- Runtime-state schema: `{versions['runtimeStateSchemaVersion']}`\n"
             f"- Installer manifest: `{versions['installerManifestVersion']}`\n"
             f"- Repo-profile schema: `{schema_versions['repoProfile']}`\n"
             f"- Personal-hints schema: `{schema_versions['personalHints']}`\n"
@@ -454,6 +460,7 @@ def _validate_manifest_version_fields(manifest: dict[str, Any]) -> None:
     for key in (
         "productVersion",
         "runtimeContractVersion",
+        "runtimeStateSchemaVersion",
         "installerManifestVersion",
     ):
         if not isinstance(manifest.get(key), str) or not manifest[key]:

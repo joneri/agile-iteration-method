@@ -196,12 +196,17 @@ Optional adapter helper artifacts:
 
 Authoritative rule:
 - `.aim/state.json` is the shared runtime checkpoint
+- canonical state declares `stateSchemaVersion: "1.0"`; supported legacy state
+  is normalized read-only and never rewritten by validation or upgrade
+- incomplete Epics preserve persisted cost depth; new Epics select it afresh
+  instead of inheriting completed state, independently of model/reasoning effort
 - helper files may support Copilot UX, but must not redefine gate, role, increment, or acceptance state
 
 Suggested state shape:
 
 ```json
 {
+  "stateSchemaVersion": "1.0",
   "aimVersion": "2.0",
   "mode": "Strict",
   "costProfile": "Standard",

@@ -5,7 +5,10 @@ Map this command to `/aim cost standard|control|deep` from
 
 Validate the requested profile, update `costProfile` for the active Epic or
 increment, and preserve all gate and approval semantics. Escalate depth when
-risk requires it.
+risk requires it. Gate B may also de-escalate depth when the visible rationale
+and persisted `costProfile` agree. Resume preserves an incomplete Epic's
+profile; a new Epic never inherits an `epic_complete` profile. Cost profile
+does not select or imply model/reasoning effort.
 
 If command-file routing is unavailable, state that limitation and handle the
 same `/aim cost` intent in ordinary Claude chat.

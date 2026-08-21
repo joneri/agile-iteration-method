@@ -19,6 +19,7 @@
     "references/schemas/aim-personal-hints.schema.json",
     "references/schemas/aim-project-roles.schema.json",
     "references/schemas/aim-repo-profile.schema.json",
+    "references/schemas/aim-runtime-state.schema.json",
     "references/version-and-installation.md"
   ],
   "generatedNotice": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
@@ -34,28 +35,29 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.3.1",
+  "productVersion": "2.3.2",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
     "repoProfile": "0.2"
   },
-  "publicSkillPackageVersion": 3,
+  "publicSkillPackageVersion": 4,
   "runtimeContractVersion": "2.0",
+  "runtimeStateSchemaVersion": "1.0",
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "1955be4d918b14a13e95bbcb6d363f71553b16d071d39ea33d0f38aaa1d105f5",
+      "sha256": "9897581a975e5ed4351eedfc9bdf5ff0422c7b986a0fa02ef8fb0046b0f57465",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "954615a0acccc7b0ff5c43ef194756feb6297149a4165d77f2f91e9b39750abe",
+      "sha256": "bb2916530210439238ce9aae5e2eb7b7e85a0aceea80a44e47ee138009444de2",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "e86a98c1c7e90a0acdc17fb717305c2acdba403948f21913320a55cdb3247e46",
+      "sha256": "feb6970cc74ff1d975040206fb9db930617244dfc219e02833388ff2a10998e9",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -80,7 +82,7 @@
     },
     {
       "output": "references/operating-modes.md",
-      "sha256": "406f96ad2336776835f89bf37e72a403f55520d6e35a373fe979dcde7f6af42a",
+      "sha256": "2c181811e138462ee75ba44681cfd07a3b787fc89a5664759c27194183c24478",
       "source": "docs/workflow/operating-modes.md"
     },
     {
@@ -105,7 +107,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "ef15e837feea1c289dd15a2bb6898458a791cd7e9b837a6f4162b760bb3eac51",
+      "sha256": "0b46c94c49ace09ec22334f2fd1a22a8645383262d0a50115ab4b4b052e86915",
       "source": "docs/workflow/version-and-installation.md"
     },
     {
@@ -124,6 +126,11 @@
       "source": "schemas/aim-project-roles.schema.json"
     },
     {
+      "output": "references/schemas/aim-runtime-state.schema.json",
+      "sha256": "2ae4003fd41053bb936e1fd2cca01803867b29189d1afadd5caaad310a9d2e8c",
+      "source": "schemas/aim-runtime-state.schema.json"
+    },
+    {
       "output": "references/install/aim-install-manifest.yaml",
       "sha256": "8d48f5b3982107a1f32f221bbd0682f059d6d668c2371ea765db490d50e32574",
       "source": "install/aim-install-manifest.yaml"
@@ -135,17 +142,17 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "ad8650bc9057d9dfd809961b69dbad640c288d809fa44437d44d83d3b118c821",
+      "sha256": "e1d31f14bed34a1c7e6227931673f0bb4ec1e26ee4278d00dac169809c4d9539",
       "source": "VERSION"
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "9621a07d5d389085dc20c744b12a7f3127b8892003db7bf9d2a25635448c976a",
+      "sha256": "04db48e801e930f178c9591ef08ed11a392d0e43a64c11779864929c1dd290dc",
       "source": "scripts/aim_publication.py"
     },
     {
       "output": "manifest.json",
-      "sha256": "e6a6fda1b5da2b10f02d46faae88286d6ea00372a64b7e08d99662f0b5f6b251",
+      "sha256": "205347447d4fb8d7c24680e9f39263f1c1fc78e5b35923b004976a834e75027d",
       "source": "scripts/build_public_skill.py"
     }
   ]

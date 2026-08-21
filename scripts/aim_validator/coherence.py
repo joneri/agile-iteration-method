@@ -426,6 +426,34 @@ def _adapter_claim_findings(repo_root: Path) -> list[dict[str, Any]]:
                 evidence=match.group(0),
             )
         )
+
+    runtime_contract_surfaces = {
+        "canonical workflow": _read(repo_root, "docs/workflow/agile-iteration-method.md"),
+        "portable": _read(repo_root, "adapters/portable/agile-iteration-method/SKILL.md"),
+        "Codex": surfaces["Codex"],
+        "GitHub Copilot": surfaces["GitHub Copilot"],
+        "Claude": _read(repo_root, ".claude/skills/aim/SKILL.md"),
+    }
+    for surface, content in runtime_contract_surfaces.items():
+        normalized = " ".join(content.lower().split())
+        missing = [
+            marker
+            for marker in ("stateschemaversion", "read-only", "cost profile")
+            if marker not in normalized
+        ]
+        if missing:
+            findings.append(
+                make_finding(
+                    "contradictory",
+                    f"runtime-state contract ↔ {surface}",
+                    "Versioned state compatibility or cost selection is incomplete: "
+                    + ", ".join(missing),
+                    "Align the surface with the canonical versioned, read-only runtime-state contract.",
+                    tier="Product coherence",
+                    category="Contradiction",
+                    release_impact="fail",
+                )
+            )
     return findings
 
 

@@ -33,6 +33,10 @@ Core constraints:
   - `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
 - preserve `.aim` as the official AIM runtime workspace
 - preserve `.aim/state.json` as the authoritative runtime checkpoint
+- require canonical `stateSchemaVersion: "1.0"`, normalize supported legacy
+  state read-only, and never let a helper persist compatibility output
+- preserve an incomplete Epic's cost profile; select cost afresh for a new Epic
+  and keep model/reasoning effort independent
 - do not redefine gates, ownership, or acceptance semantics
 - load other workflow docs only when their behavior area is relevant
 - use `docs/workflow/repo-awareness-calibration.md` for calibrate, remember, and forget intents

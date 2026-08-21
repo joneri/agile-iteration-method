@@ -27,6 +27,11 @@ Expected input:
 
 Command behavior:
 - if `.aim/state.json` describes an incomplete Epic, resume it instead of silently starting a parallel Epic
+- resume its persisted cost profile; when no incomplete Epic exists, select a
+  fresh cost profile and never inherit one from `epic_complete`
+- use `stateSchemaVersion: "1.0"`; normalize supported legacy aliases read-only
+  and stop on conflicts or unsupported versions
+- keep model/reasoning effort independent from AIM cost profile
 - otherwise initialize a new Epic at Gate A
 - keep canonical role order:
   - `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`

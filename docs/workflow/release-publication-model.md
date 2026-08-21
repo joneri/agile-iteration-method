@@ -22,6 +22,7 @@ Published JSON Schema IDs use stable paths below that origin:
 ```text
 https://joneri.github.io/agile-iteration-method/schemas/aim-repo-profile.schema.json
 https://joneri.github.io/agile-iteration-method/schemas/aim-personal-hints.schema.json
+https://joneri.github.io/agile-iteration-method/schemas/aim-runtime-state.schema.json
 ```
 
 Schema `$id` values, source files, and assembled artifact paths must agree.
@@ -103,15 +104,17 @@ It includes:
 - `sitemap.xml`
 - `AIM_OG.png`
 - `github-pages/assets/`
-- both JSON Schemas under `schemas/`
+- all published JSON Schemas under `schemas/`, including runtime-state schema
+  version `1.0`
 - `LICENSE`
 - documentation attribution at `licenses/LICENSE-DOCS`
 - `.nojekyll`
 - deterministic `release-manifest.json`
 
-The release manifest records three different contracts explicitly: the AIM
-product release from `VERSION`, the stable runtime contract version, and the
-installer manifest version. They must not be collapsed into one number.
+The release manifest records the AIM product release from `VERSION`, the stable
+runtime contract version, runtime-state schema version, installer manifest
+version, and published schema inventory. They must not be collapsed into one
+number.
 
 The builder validates source URLs before copying and validates the assembled
 artifact afterward. Pages must use this builder rather than maintaining a

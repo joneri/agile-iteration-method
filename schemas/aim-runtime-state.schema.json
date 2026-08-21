@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-runtime-state.schema.json",
+  "title": "AIM runtime state",
+  "description": "Canonical, resumable checkpoint for one active AIM Epic. Project-specific extension fields are allowed but cannot replace canonical fields.",
+  "type": "object",
+  "required": [
+    "stateSchemaVersion",
+    "aimVersion",
+    "mode",
+    "costProfile",
+    "epicId",
+    "epicStatus",
+    "activeIncrementId",
+    "currentRole",
+    "lastGatePassed",
+    "platform",
+    "parallelSupport",
+    "commitMode",
+    "updatedAt"
+  ],
+  "properties": {
+    "stateSchemaVersion": {"const": "1.0"},
+    "aimVersion": {"type": "string", "minLength": 1},
+    "mode": {"type": "string", "enum": ["Strict", "Auto"]},
+    "costProfile": {"type": "string", "enum": ["Standard", "Cost Control", "Deep"]},
+    "epicId": {"type": "string", "minLength": 1},
+    "epicStatus": {
+      "type": "string",
+      "enum": [
+        "epic_initialized",
+        "gate_a_pending",
+        "gate_b_pending",
+        "increment_in_progress",
+        "review_in_progress",
+        "tdo_validation_in_progress",
+        "po_approval_pending",
+        "done_increment_accepted",
+        "epic_paused",
+        "blocked",
+        "epic_complete"
+      ]
+    },
+    "activeIncrementId": {"description": "Canonical DI identifier, or null before Gate B."},
+    "currentRole": {"type": "string", "enum": ["PO", "TDO", "Dev", "Reviewer"]},
+    "lastGatePassed": {"enum": [null, "Gate A", "Gate B", "Gate C", "Gate D", "Gate E"]},
+    "platform": {"type": "string", "minLength": 1},
+    "parallelSupport": {
+      "type": "object",
+      "required": ["available", "enabled", "policy"],
+      "properties": {
+        "available": {"type": "boolean"},
+        "enabled": {"type": "boolean"},
+        "policy": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "commitMode": {"type": "string", "minLength": 1},
+    "updatedAt": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": true
+}
