@@ -1,6 +1,6 @@
 # AIM feature guide
 
-This is the short map of what AIM 2.5 does. Follow the links only when you need
+This is the short map of what AIM 2.6 does. Follow the links only when you need
 the operating detail.
 
 ## Delivery loop
@@ -38,6 +38,11 @@ See [cost profiles](../workflow/cost-control-mode.md).
 
 ## AIM UI
 
+- `/aim ui` starts or reopens the current repository's local control room;
+  `start`, `open`, `status`, and `stop` also accept an explicit repo path.
+- Source, adaptive, and public Agent Skill distributions carry the same trusted
+  launcher, and a new repo can open truthful onboarding without creating
+  `.aim`.
 - AIM UI Beta projects several independently authoritative Epic workspaces and
   their Increments into one live five-column Kanban.
 - Delivery flow is the primary surface; portfolio summaries, People and agents,

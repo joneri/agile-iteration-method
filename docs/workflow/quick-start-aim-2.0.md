@@ -12,6 +12,16 @@ complete AIM method, then guides repository setup through calibration and
 project-specialist configuration. The adaptive installer may seed those project
 files during its guided setup instead.
 
+Open the repository's local read-only control room at any point with:
+
+```text
+/aim ui
+```
+
+It starts or reopens the current repo's UI and returns a clickable loopback
+URL. `/aim ui start /path/to/repo` targets another repository. A repo without
+`.aim` opens an onboarding view without initializing runtime state.
+
 ## 1. Check Repository Readiness
 
 Run:
@@ -111,6 +121,7 @@ Approve, request adjustment, continue, or close.
 
 ## Common Commands
 
+- `/aim ui [start|open|status|stop] [repo]`
 - `/aim continue`
 - `/aim upgrade`
 - `/aim status`

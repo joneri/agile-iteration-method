@@ -17,7 +17,7 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 4
+PUBLIC_SKILL_PACKAGE_VERSION = 5
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
@@ -46,6 +46,15 @@ SCHEMA_SOURCES: tuple[Path, ...] = (
 
 INSTALL_MANIFEST_SOURCE = Path("install/aim-install-manifest.yaml")
 DOCUMENTATION_LICENSE_SOURCE = Path("docs/LICENSE-DOCS")
+UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
+    Path("scripts/aim_actions.py"),
+    Path("scripts/aim_portfolio.py"),
+    Path("scripts/aim_ui.py"),
+    Path("scripts/aim_ui_control.py"),
+    Path("aim-ui/index.html"),
+    Path("aim-ui/styles.css"),
+    Path("aim-ui/app.js"),
+)
 
 GENERATED_NOTICE = (
     "GENERATED FILE. DO NOT EDIT DIRECTLY.\n"
@@ -272,6 +281,26 @@ def _render_install_manifest(root: Path) -> str:
     )
 
 
+def _render_ui_payload(root: Path, source: Path) -> bytes:
+    content = (root / source).read_text(encoding="utf-8")
+    notice = f"{GENERATED_NOTICE}\nSource: {source.as_posix()}"
+    if source.suffix == ".py":
+        header = (
+            f"# {GENERATED_NOTICE.replace(chr(10), ' ')}\n"
+            f"# Source: {source.as_posix()}\n"
+        )
+        if content.startswith("#!"):
+            first, remainder = content.split("\n", 1)
+            content = first + "\n" + header + remainder
+        else:
+            content = header + content
+    elif source.suffix == ".html":
+        content = "<!--\n" + notice + "\n-->\n" + content
+    else:
+        content = "/*\n" + notice + "\n*/\n" + content
+    return content.encode("utf-8")
+
+
 def _source_provenance(root: Path) -> list[dict[str, str]]:
     mappings = [(SKILL_SOURCE, Path("SKILL.md"))]
     mappings.extend((source, Path("references") / output) for source, output in REFERENCE_SOURCES)
@@ -285,6 +314,7 @@ def _source_provenance(root: Path) -> list[dict[str, str]]:
             (Path("scripts/build_public_skill.py"), Path("manifest.json")),
         )
     )
+    mappings.extend((source, source) for source in UI_PAYLOAD_SOURCES)
     return [
         {
             "source": source.as_posix(),
@@ -317,6 +347,9 @@ def _render_package_once(root: Path) -> dict[Path, bytes]:
         + f"\nSource: {DOCUMENTATION_LICENSE_SOURCE.as_posix()}\n\n"
         + _read(root, DOCUMENTATION_LICENSE_SOURCE)
     ).encode("utf-8")
+
+    for source in UI_PAYLOAD_SOURCES:
+        rendered[source] = _render_ui_payload(root, source)
 
     expected_files = sorted([path.as_posix() for path in rendered] + ["manifest.json"])
     manifest = {

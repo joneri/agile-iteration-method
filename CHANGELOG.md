@@ -1,5 +1,38 @@
 # Changelog
 
+## 2026-08-22 - AIM 2 minor release v2.6.0
+- Made AIM UI a first-class, chat-controlled AIM surface. Bare `/aim ui`
+  starts or reopens the current repository, while `start`, `open`, `status`,
+  and `stop` provide explicit lifecycle control for any local repository.
+- Added truthful onboarding for repositories that do not yet contain `.aim`.
+  The UI can open immediately without creating runtime state and points the
+  user back to `/aim calibrate-repo` in the authoritative chat.
+- Added a repo-aware local launcher with loopback-only binding, per-repository
+  instance identity, free-port allocation, concurrent-start serialization,
+  stale-metadata protection, verified stop behavior, and bounded quiet logs.
+- Promoted `/aim ui` through the canonical command contract and Codex, Claude
+  Code, and GitHub Copilot adapters, including supplier-native slash-command
+  entry points where supported.
+- Advanced the public Agent Skill to package format `5` and bundled the
+  executable AIM UI server, launcher, and web assets so public-skill users get
+  the same chat-driven UI capability as adaptive installations.
+- Expanded launcher, installer, adapter, publication, and browser-level
+  validation, and rewrote the empty state around a clear chat-first next step.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, and installer manifest remains `0.9`. Public skill package format
+advances from `4` to `5`. No runtime-state or profile migration is required.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`. Adaptive installations can
+rerun the reviewed preview/apply installer flow to receive the launcher and
+updated adapters.
+
+Known limitations: AIM UI remains a local loopback Beta rather than a hosted
+service. Literal slash-command routing depends on the supplier; the portable
+skill and plain-language AIM intent remain the fallback. The UI projects AIM
+state and routes decisions to chat—it does not become a second state writer.
+
 ## 2026-08-22 - AIM 2 minor release v2.5.0
 - Introduced AIM UI Beta as a multi-Epic control room where independently
   authoritative AIM workspaces share one delivery-first Kanban without giving

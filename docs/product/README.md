@@ -1,4 +1,4 @@
-# Discover AIM 2.5
+# Discover AIM 2.6
 
 This is the public product guide for Agile Iteration Method.
 
@@ -7,7 +7,8 @@ Start here when you want to understand AIM before reading its detailed workflow 
 For a two-minute inventory, read the [feature guide](features.md).
 
 To see Epics, Increments, roles, Gates, evidence, decisions, and helper agents
-move through a shared delivery board, explore [AIM UI Beta](aim-ui.md).
+move through a shared delivery board, run `/aim ui` from chat and explore [AIM
+UI Beta](aim-ui.md).
 
 For AIM's evidence-backed alternative to opaque memory consolidation, read
 [AIM Reflect](../workflow/reflection.md).
@@ -49,10 +50,10 @@ It takes you through:
 
 1. choosing the portable public Agent Skill or adaptive installer
 2. repository calibration
-3. the first Epic
-4. Gate A
-5. the first increment
-6. acceptance
+3. opening AIM UI from chat
+4. the first Epic
+5. Gate A
+6. the first increment and acceptance
 
 ### I need to choose a setup
 

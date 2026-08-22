@@ -20,6 +20,22 @@ Switching tabs is presentation-only and never changes AIM runtime state.
 
 ## Launch the control room
 
+From AIM chat, use the first-class command:
+
+```text
+/aim ui
+```
+
+Bare `/aim ui` starts or reopens the control room for the current repository.
+The same chat surface supports `/aim ui start [repo]`, `/aim ui open [repo]`,
+`/aim ui status [repo]`, and `/aim ui stop [repo]`. AIM resolves the trusted
+bundled launcher, selects a free loopback port, and returns a clickable URL.
+A repository does not need an existing `.aim` directory: the UI opens with a
+truthful onboarding state and does not initialize or mutate runtime data.
+
+The terminal commands below remain supported as foreground diagnostics and
+compatibility entry points.
+
 From an AIM source checkout or a target repository written by the adaptive
 installer:
 
@@ -39,8 +55,10 @@ python3 ~/.aim/installs/agile-iteration-method/scripts/aim_ui.py \
   --repo /path/to/repository
 ```
 
-The portable public Agent Skill remains non-executable. Use the separately
-reviewed adaptive installer when a public-skill user also wants UI files.
+The portable public Agent Skill now bundles the same dependency-free launcher,
+server, and UI assets used by `/aim ui`. It does not write those files into the
+target repository. Adaptive installations continue to place the payload in the
+selected repo or external AIM home according to their reviewed footprint.
 
 ## Declare several Epic workspaces
 

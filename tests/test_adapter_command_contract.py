@@ -68,6 +68,26 @@ class AdapterCommandContractTests(unittest.TestCase):
             with self.subTest(marker=marker):
                 self.assertIn(marker, canonical + portable)
 
+    def test_ui_is_a_first_class_cross_adapter_command(self) -> None:
+        surfaces = (
+            "docs/workflow/adapter-command-contract.md",
+            "adapters/portable/agile-iteration-method/SKILL.md",
+            "adapters/codex/agile-iteration-method/SKILL.md",
+            ".github/skills/aim/SKILL.md",
+            ".github/agents/aim.agent.md",
+            ".github/prompts/ui-aim.prompt.md",
+            ".claude/skills/aim/SKILL.md",
+            ".claude/commands/ui-aim.md",
+        )
+        for relative in surfaces:
+            content = (REPO_ROOT / relative).read_text(encoding="utf-8")
+            with self.subTest(surface=relative):
+                self.assertIn("/aim ui", content)
+                self.assertIn("loopback", content.lower())
+        canonical = (REPO_ROOT / surfaces[0]).read_text(encoding="utf-8")
+        for intent in ("start", "open", "status", "stop"):
+            self.assertIn(intent, canonical)
+
     def test_start_surfaces_preserve_versioned_cost_selection(self) -> None:
         surfaces = (
             "adapters/portable/agile-iteration-method/SKILL.md",
@@ -86,7 +106,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "2.5.0")
+        self.assertEqual(version, "2.6.0")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",

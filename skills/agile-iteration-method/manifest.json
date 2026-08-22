@@ -1,7 +1,10 @@
 {
-  "description": "Plan and deliver repository-aware AI-assisted software work through Agile Iteration Method using PO, TDO, Dev, and Reviewer roles, end-to-end Done Increments, explicit gates, review, validation, and user-owned acceptance. Use for creating and refining Epics, planning increments, implementing work, reviewing delivery, configuring project specialists, calibrating and reflecting on repositories, consolidating knowledge across local AIM projects, controlling AIM modes and cost profiles, and continuing AIM runs.",
+  "description": "Plan and deliver repository-aware AI-assisted software work through Agile Iteration Method using PO, TDO, Dev, and Reviewer roles, end-to-end Done Increments, explicit gates, review, validation, and user-owned acceptance. Use for creating and refining Epics, planning increments, implementing work, reviewing delivery, configuring project specialists, calibrating and reflecting on repositories, consolidating knowledge across local AIM projects, controlling AIM modes and cost profiles, opening and controlling local AIM UI, and continuing AIM runs.",
   "files": [
     "SKILL.md",
+    "aim-ui/app.js",
+    "aim-ui/index.html",
+    "aim-ui/styles.css",
     "manifest.json",
     "references/LICENSE-DOCS",
     "references/adapter-command-contract.md",
@@ -20,7 +23,11 @@
     "references/schemas/aim-project-roles.schema.json",
     "references/schemas/aim-repo-profile.schema.json",
     "references/schemas/aim-runtime-state.schema.json",
-    "references/version-and-installation.md"
+    "references/version-and-installation.md",
+    "scripts/aim_actions.py",
+    "scripts/aim_portfolio.py",
+    "scripts/aim_ui.py",
+    "scripts/aim_ui_control.py"
   ],
   "generatedNotice": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
   "generator": "python3 scripts/build_public_skill.py",
@@ -35,19 +42,19 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.5.0",
+  "productVersion": "2.6.0",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
     "repoProfile": "0.2"
   },
-  "publicSkillPackageVersion": 4,
+  "publicSkillPackageVersion": 5,
   "runtimeContractVersion": "2.0",
   "runtimeStateSchemaVersion": "1.0",
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "65d17fcacde7a9c6bc27754027b2a92319769f8e8a5ee8314506dff309f96364",
+      "sha256": "9a7dba81fd2131798aaa6dc200b64f1a0ea075aca9c750a8e3d4099aebd6439a",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
@@ -57,17 +64,17 @@
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "2c40103ffdc30f972025048b599405cadf3a5e1dbe4edd6039fdd1280954151d",
+      "sha256": "8fc8f8298c8b49274f096c25812725cb6af36a0afdc6a716dbf96ba5cd2f1b04",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
       "output": "references/adapter-entry-model.md",
-      "sha256": "8b298d67aadfe89ca09599b2efd5afb25bc5d519d5f683e4ed62a1260960adee",
+      "sha256": "423387f9594b0526e2e650fe8ac6c0ad17a0251b173446f91766de5cf2656340",
       "source": "docs/workflow/adapter-entry-model.md"
     },
     {
       "output": "references/adapter-skill-bootstrap.md",
-      "sha256": "eab7dafef9b90dc815684d399369ca7bc2d16e12b616c5bcb442ff302cca9b54",
+      "sha256": "4384f839350e2b6d3c2d3451498edfe20048abbe25d34c164db30a60dad655d4",
       "source": "docs/workflow/adapter-skill-bootstrap.md"
     },
     {
@@ -107,7 +114,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "a25030cee504fc749c356a42aa8c16720f0ee9052ba130090332271ee81f5471",
+      "sha256": "2f16b5253a559afaa14ceefa5daf130790fe5826d78fe01efb72b8105d25a70e",
       "source": "docs/workflow/version-and-installation.md"
     },
     {
@@ -132,7 +139,7 @@
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
-      "sha256": "f1bb2b707ed1abd7e0a201a20ab07116077ba613d4d4020b18d404e826813189",
+      "sha256": "163ac70d46b2f5929f5bb24fcfd06ac6acde96f88b2fa1c76d4afe56c745eff1",
       "source": "install/aim-install-manifest.yaml"
     },
     {
@@ -142,18 +149,53 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "732f64d874f90788c0199b0c19bfd9b3b6436e140114e53e462832532d74c61c",
+      "sha256": "6693435eadb673dda297a0652d241e293e361200bc40db949cf2501d18dd01ee",
       "source": "VERSION"
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "92d294bc9c518002addb781f8bbeafc8e167887e750b1be388c254b5bc70dbc1",
+      "sha256": "31305ad9a624375f4602fcaf7fdb678081e68eb09e0828aa016d72b6bb0e624c",
       "source": "scripts/aim_publication.py"
     },
     {
       "output": "manifest.json",
-      "sha256": "205347447d4fb8d7c24680e9f39263f1c1fc78e5b35923b004976a834e75027d",
+      "sha256": "aec340531786c55d46e10f18337006dddeeab1946796368a5b2765d65d99433c",
       "source": "scripts/build_public_skill.py"
+    },
+    {
+      "output": "scripts/aim_actions.py",
+      "sha256": "454f2b622666fc4bbbaf3165b31be4bb8739708f9b7c3417236439a9f23a5064",
+      "source": "scripts/aim_actions.py"
+    },
+    {
+      "output": "scripts/aim_portfolio.py",
+      "sha256": "234da104f310a196c0c97706d1a4ebdf9b9be09516a9912aed543b0892342ce4",
+      "source": "scripts/aim_portfolio.py"
+    },
+    {
+      "output": "scripts/aim_ui.py",
+      "sha256": "600909ffd78400c9f3eb0bb8a6f3a317788f910418a6abaffd1a823b899cf799",
+      "source": "scripts/aim_ui.py"
+    },
+    {
+      "output": "scripts/aim_ui_control.py",
+      "sha256": "4c703de4bc7c166c774de60adaea04deb92374f631af322bbab547e82e083d82",
+      "source": "scripts/aim_ui_control.py"
+    },
+    {
+      "output": "aim-ui/index.html",
+      "sha256": "1e470f4a82527111a280348596feb08bcc41d58b9a0a2d650847905972883fc0",
+      "source": "aim-ui/index.html"
+    },
+    {
+      "output": "aim-ui/styles.css",
+      "sha256": "e4e6f9e5d72b9dffe534a6d7a898ee2e01777d09004e19bb4c11aeccd6b93db5",
+      "source": "aim-ui/styles.css"
+    },
+    {
+      "output": "aim-ui/app.js",
+      "sha256": "adef8cb2a7a68510bd7f7b32d1425693b432773869c8490353ef7dda93162476",
+      "source": "aim-ui/app.js"
     }
   ]
 }

@@ -134,6 +134,7 @@ If instructions conflict, escalate.
 - `/aim help` - show the thin front door: start, continue, validate, and the next command
 - `/aim validate` - run or explain AIM runtime integrity checks
 - `/aim config` - show effective runtime configuration and key repo-aware policy
+- `/aim ui [start|open|status|stop] [repo]` - control the trusted repo-bound, loopback-only AIM UI
 - `/aim configure-agents` - inspect or refresh `aim.roles.yaml` and supplier-native project specialists
 - `/aim calibrate-repo` - cheaply inspect, verify, and persist repository knowledge
 - `/aim remember-repo <category> "<rule>"` - persist a structured shared or personal repository rule

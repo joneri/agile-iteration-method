@@ -7,14 +7,14 @@ Source: docs/workflow/version-and-installation.md
 
 ## Resolved package metadata
 
-- AIM product release: `2.5.0`
+- AIM product release: `2.6.0`
 - Runtime contract: `2.0`
 - Runtime-state schema: `1.0`
 - Installer manifest: `0.9`
 - Repo-profile schema: `0.2`
 - Personal-hints schema: `0.1`
 - Project-role schema: `0.1`
-- Public skill package format: `4`
+- Public skill package format: `5`
 
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
@@ -95,13 +95,16 @@ fallback; it does not justify flattening AIM into generic task planning.
 
 ## Adaptive installer relationship
 
-The public Agent Skill installs AIM's portable workflow entry point. The
-adaptive installer remains a separate source-checkout workflow for a reviewed
-repository footprint, native project specialists, and supplier-specific
-configuration. It also packages the read-only AIM UI: repo-writing footprints
-receive `scripts/aim_ui.py` and `aim-ui/`, while zero-repo-write footprints place
-the same payload below `~/.aim/installs/agile-iteration-method/` and require an
-explicit `--repo` target at launch.
+The public Agent Skill installs AIM's portable workflow entry point and the
+dependency-free, package-local AIM UI payload used by `/aim ui`. The launcher
+runs from the skill package and stores only bounded process metadata under the
+user's AIM home; it does not place UI code or runtime state in target repos.
+The adaptive installer remains a separate source-checkout workflow for a
+reviewed repository footprint, native project specialists, and
+supplier-specific configuration. Repo-writing footprints receive
+`scripts/aim_ui_control.py`, `scripts/aim_ui.py`, and `aim-ui/`, while
+zero-repo-write footprints place the same payload below
+`~/.aim/installs/agile-iteration-method/`.
 
 The portable skill must never download or execute a remote bootstrap, and it
 must never execute installer or validator scripts discovered in a target
@@ -110,9 +113,10 @@ contracts. When broader adaptive setup is wanted, direct the user to the
 maintained install guide so they can clone and inspect AIM's source, run a
 no-write preview, and explicitly decide whether to apply it.
 
-The public Agent Skill does not contain or execute the UI server payload. This
-keeps portable skill installation non-executable and prevents target-repository
-writes; users who want AIM UI select the separately reviewed adaptive path.
+The public Agent Skill contains and may execute only its own package-local AIM
+UI payload in response to explicit `/aim ui` intent. The UI binds to loopback,
+remains read-only, and may observe a repo without creating `.aim`. This does not
+authorize installer or validator execution from a target repository.
 
 `/aim upgrade` updates a public skill through the standard skills CLI. A
 separately reviewed AIM source checkout may use its own adaptive installer, but

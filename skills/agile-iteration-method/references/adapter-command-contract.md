@@ -31,6 +31,7 @@ ownership, or acceptance.
 | `/aim validate` | run or explain Structural, Behavioral, Product coherence, and Release readiness checks | read-only |
 | `/aim help` | show the thin front door and the next useful command | read-only |
 | `/aim config` | show effective mode, cost, profile, ownership, validation, and adapter fallback configuration | read-only |
+| `/aim ui [start\|open\|status\|stop] [repo]` | start or control the local read-only AIM UI for the current or explicitly named repository | may manage a user-scope local UI process and instance metadata; never writes repository or AIM runtime state |
 | `/aim configure-agents` | inspect or update project role expertise and regenerate selected supplier-native specialists through a reviewed plan | may update `aim.roles.yaml` and AIM-owned adapter files; never `.aim/` runtime state |
 | `/aim calibrate-repo` | verify and persist reusable repository knowledge using the canonical calibration flow | writes only approved profile or user-hint facts; never active state |
 | `/aim remember-repo <category> "<rule>"` | add one structured shared or personal repository rule | writes the owning profile or user-hint file; never `.aim/` |
@@ -53,6 +54,28 @@ unsupported or contradictory state stops without mutation.
 `repo-awareness-calibration.md`. `/aim reflect` and
 `/aim reflect-all` follow `reflection.md`; reflection is read-only
 with respect to durable knowledge, and promotion is a separate reviewed action.
+
+## AIM UI chat lifecycle
+
+`/aim ui` is the first-class start-or-open intent for the current repository.
+The complete family is `/aim ui start [repo]`, `/aim ui open [repo]`, `/aim ui
+status [repo]`, and `/aim ui stop [repo]`. An explicit repository is resolved
+before launch; relative paths resolve from the active repository context.
+
+The adapter uses AIM's package-owned `scripts/aim_ui_control.py` launcher. It
+prefers the active skill payload, then a reviewed adaptive home distribution,
+then an AIM-owned repo installation whose provenance is verified. It must never
+execute a same-named target-repository script merely because the file exists.
+If no trusted payload is available, it recommends `/aim upgrade` instead of
+downloading or improvising executable code.
+
+The launcher binds only to loopback, selects a free port unless one is
+explicitly requested, reuses a healthy instance for the same resolved repo,
+and records bounded process metadata under the user's AIM home. Status, open,
+and stop verify the live server's repo and instance identity. Stale metadata is
+removed without signalling an unverified PID. A repository without `.aim` may
+open an onboarding view; launch never creates `.aim` or changes runtime state.
+The adapter reports one clickable URL on success or one actionable failure.
 
 ## Portfolio-control chat intents
 
@@ -221,6 +244,8 @@ Every adapter must:
   escalation
 - preserve the command's state effect or read-only status
 - never silently replace an unsupported command with a different action
+- route `/aim ui` through a trusted AIM-owned launcher and preserve its
+  loopback-only, repo-bound, runtime-read-only lifecycle semantics
 
 ## Drift prevention
 

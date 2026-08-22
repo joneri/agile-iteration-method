@@ -69,6 +69,7 @@ The canonical AIM command family is defined in
 - `/aim validate`
 - `/aim help`
 - `/aim config`
+- `/aim ui`
 - `/aim configure-agents`
 - `/aim calibrate-repo`
 - `/aim remember-repo`

@@ -1,6 +1,6 @@
 ---
 name: aim
-description: Run the complete AIM 2.0 command family and orchestrate project-specific PO, TDO, Dev, and Reviewer subagents. Use for /aim intents, Epics, Done Increments, gates, repo calibration, current-project and cross-project reflection, agent configuration, upgrades, and AIM validation.
+description: Run the complete AIM 2.0 command family and orchestrate project-specific PO, TDO, Dev, and Reviewer subagents. Use for /aim intents, AIM UI lifecycle, Epics, Done Increments, gates, repo calibration, reflection, agent configuration, upgrades, and AIM validation.
 ---
 
 # AIM 2.0 for Claude Code
@@ -26,6 +26,7 @@ Recognize and execute the equivalent intent for:
 - `/aim validate`
 - `/aim help`
 - `/aim config`
+- `/aim ui`
 - `/aim configure-agents`
 - `/aim calibrate-repo`
 - `/aim remember-repo`
@@ -39,6 +40,11 @@ Recognize and execute the equivalent intent for:
 
 If literal routing is unavailable, report that limitation and preserve the same
 intent in plain language. Syntax may fall back; semantics may not.
+
+For `/aim ui`, follow the trusted launcher resolution and loopback-only
+lifecycle contract in `docs/workflow/adapter-command-contract.md`. Bare `/aim
+ui` means start-or-open for the current repository. Never create `.aim` as a UI
+launch side effect or execute a same-named unverified repository script.
 
 Reflect commands follow `docs/workflow/reflection.md`. They write temporary
 candidate reports only, never durable knowledge or discovered repositories.

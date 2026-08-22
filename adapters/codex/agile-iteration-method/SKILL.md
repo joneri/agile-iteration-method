@@ -7,7 +7,8 @@ description: >
   Use for creating and refining Epics, planning increments, implementing work,
   reviewing delivery, configuring project specialists, calibrating and reflecting
   on repositories, consolidating knowledge across local AIM projects, controlling
-  AIM modes and cost profiles, and continuing AIM runs.
+  AIM modes and cost profiles, opening and controlling local AIM UI, and
+  continuing AIM runs.
 ---
 
 # Agile Iteration Method
@@ -158,6 +159,7 @@ Treat these as AIM intents when the current adapter supports them or when the us
 - `/aim validate`
 - `/aim help`
 - `/aim config`
+- `/aim ui [start|open|status|stop] [repo]`
 - `/aim configure-agents`
 - `/aim calibrate-repo`
 - `/aim remember-repo <category> "<rule>"`
@@ -177,6 +179,15 @@ defined in `references/adapter-command-contract.md`.
 If literal slash routing is unavailable, report that limitation, map the user's
 plain-language request to the same command intent, and perform the equivalent
 workflow directly. Syntax may fall back; command semantics may not.
+
+`/aim ui` is start-or-open for the current repository. Route the complete UI
+lifecycle through the active package-owned `scripts/aim_ui_control.py`, a
+reviewed adaptive home distribution, or a verified AIM-owned repo installation
+in that order. Do not execute a same-named repository script merely because it
+exists. The launcher may open a repository without `.aim`, remains
+loopback-only, writes lifecycle metadata only under the user's AIM home, and
+never creates or changes AIM runtime state. Report the clickable URL or one
+actionable failure; recommend `/aim upgrade` when no trusted payload exists.
 
 `/aim calibrate-repo` uses the package-local canonical flow in `references/repo-awareness-calibration.md`.
 `/aim configure-agents` uses the package-local

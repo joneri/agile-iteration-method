@@ -82,9 +82,11 @@ For automation, pass installer flags directly, such as `--target
 /path/to/repo`, `--non-interactive`, or `--format json`.
 For preview only, use `--dry-run`.
 
-After a standard apply, launch the target repository's control room with
-`python3 scripts/aim_ui.py`. For a zero-repo-write footprint, run the home-scope
-copy with `--repo /path/to/repository`. See [AIM UI Beta](aim-ui.md).
+From the target repository's AIM chat, launch the control room with `/aim ui`.
+Use `/aim ui start /path/to/repository` to target another repo, and `/aim ui
+status`, `/aim ui open`, or `/aim ui stop` for lifecycle control. Foreground
+`python3 scripts/aim_ui.py` remains available for diagnostics. See [AIM UI
+Beta](aim-ui.md).
 
 ## 2. Calibrate the Repository
 

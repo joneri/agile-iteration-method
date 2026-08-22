@@ -7,7 +7,8 @@ description: >
   Use for creating and refining Epics, planning increments, implementing work,
   reviewing delivery, configuring project specialists, calibrating and reflecting
   on repositories, consolidating knowledge across local AIM projects, controlling
-  AIM modes and cost profiles, and continuing AIM runs.
+  AIM modes and cost profiles, opening and controlling local AIM UI, and
+  continuing AIM runs.
 ---
 
 # Agile Iteration Method
@@ -171,6 +172,16 @@ state transitions through the platform's native skill route.
 | `/aim help` | You are unsure what to do now. | Detects the current onboarding or runtime state and recommends one action. | Follow the named command or resolve the named blocker. |
 | `/aim status` | You want a concise progress report. | Shows the AIM product release from `VERSION` separately from the runtime contract in `.aim/state.json` `aimVersion`, then the active Epic, increment, role, mode, cost profile, gate, and expected next step. | Continue automatically or make the decision the status identifies. |
 | `/aim config` | You need to understand effective AIM policy. | Shows repository awareness, role configuration, validation preferences, ownership, and adapter fallback behavior. | Adjust configuration only when the reported policy is wrong or incomplete. |
+
+### Open and control AIM UI
+
+| Command | Use when | What it does | What happens next |
+| --- | --- | --- | --- |
+| `/aim ui` | You want the current repository's control room. | Starts or reuses the trusted package-owned, loopback-only AIM UI and opens it. | AIM reports one clickable local URL. |
+| `/aim ui start [repo]` | You want a control room for the current or an explicit repository. | Resolves the repository, selects a free port, and starts or reuses its UI without creating `.aim`. | The UI opens with runtime evidence or truthful onboarding. |
+| `/aim ui open [repo]` | The repo's UI is already running. | Verifies and reopens the matching instance. | The existing local URL opens. |
+| `/aim ui status [repo]` | You want to know whether the repo's UI is running. | Verifies process, repository, and instance identity. | AIM reports running/stopped and the URL when available. |
+| `/aim ui stop [repo]` | You want to stop only this repo's UI. | Verifies the matching instance before signalling it and removes stale metadata safely. | Runtime state and repository files remain unchanged. |
 
 ### Inspect and validate
 
@@ -380,6 +391,15 @@ Do not treat a missing local skill as a blocker when the repository already cont
 Treat every command in the Complete Command Guide as an AIM intent when the
 current adapter supports it or when the user writes the equivalent in plain
 language.
+
+`/aim ui` routes through the trusted package-owned `scripts/aim_ui_control.py`
+payload. Prefer the active skill payload, then a reviewed adaptive home
+distribution, then a verified AIM-owned repository installation. Never execute
+a same-named repository script merely because it exists. Bare `/aim ui` means
+start-or-open for the current repository. Launch remains loopback-only, may
+open a repo without `.aim`, stores lifecycle metadata under the user's AIM
+home, and never creates or mutates repository runtime state. If no trusted UI
+payload exists, recommend `/aim upgrade`.
 
 Portfolio activation, capacity, focus, and status intents follow
 `references/adapter-command-contract.md`. Only the main AIM thread may write

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py
+# Source: scripts/aim_ui.py
 """Serve AIM's local runtime workspace as a read-only browser control room."""
 
 from __future__ import annotations

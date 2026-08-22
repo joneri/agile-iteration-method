@@ -123,9 +123,9 @@ def validate_source(repo_root: Path) -> None:
             f"{PUBLIC_FEATURE_IMAGE_SIZE[1]}, got "
             f"{feature_dimensions[0]}x{feature_dimensions[1]}"
         )
-    if image_readme.count("AIM 2.5") < 2:
+    if image_readme.count("AIM 2") < 2:
         raise PublicationError(
-            "github-pages image inventory must identify both website assets as AIM 2.5"
+            "github-pages image inventory must identify both website assets as AIM 2"
         )
     if "AIM UI Beta" not in image_readme:
         raise PublicationError(
@@ -205,9 +205,9 @@ def validate_source(repo_root: Path) -> None:
             index,
             "Writes for the reader, not its own chat",
         ),
-        "index.html AIM 2.5 logo alt text": (
+        "index.html AIM 2 logo alt text": (
             index,
-            'alt="AIM 2.5 Agile Iteration Method logo"',
+            'alt="AIM 2 Agile Iteration Method logo"',
         ),
         "install.sh fail-closed notice": (
             install_script,
@@ -267,7 +267,8 @@ def release_manifest(root: Path) -> dict[str, Any]:
         "aimUi": {
             "version": "1",
             "releaseStage": "beta",
-            "availability": "adaptive-installer",
+            "availability": "public-skill-and-adaptive-installer",
+            "chatLaunch": "/aim ui",
             "repoLaunch": "python3 scripts/aim_ui.py",
             "externalLaunch": (
                 "python3 ~/.aim/installs/agile-iteration-method/scripts/aim_ui.py "

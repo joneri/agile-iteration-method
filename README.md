@@ -1,6 +1,6 @@
-# Agile Iteration Method (AIM) 2.5
+# Agile Iteration Method (AIM) 2.6
 
-![AIM 2.5 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 2 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -86,7 +86,7 @@ Then start with an outcome, not a task list:
 /aim start "EPIC: Make checkout recovery clear and reliable when payment confirmation is delayed"
 ```
 
-Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning. Follow the current local run in the read-only [AIM UI control room](docs/product/aim-ui.md) with `python3 scripts/aim_ui.py` from source or an adaptive repo install.
+Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning. Open the current repo's read-only [AIM UI control room](docs/product/aim-ui.md) directly from chat with `/aim ui`; use `/aim ui start /path/to/repo` for another repository.
 
 ## How AIM works
 
@@ -131,16 +131,16 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.5.0
-### AIM UI Beta: a control room for agentic delivery
+## What is new in v2.6.0
+### AIM UI is a first-class chat surface
 
-AIM UI Beta makes the delivery process visible without weakening it. Multiple Epics and their Increments share one living Kanban, every card keeps its Epic identity, and canonical roles, Gates, evidence, decisions, and bounded helper agents remain readable in one place.
+AIM UI makes the delivery process visible without weakening it. Start or reopen the current repository directly from the authoritative AIM chat with `/aim ui`. Use `/aim ui start /path/to/repo`, `/aim ui status`, and `/aim ui stop` when you need explicit lifecycle control—including for a repository that has not initialized AIM yet.
 
-The board is calm by design: polling does not make cards flash, and only a real runtime transition produces a short column-to-column movement. Activate, Approve, and Change can start from a card, but the UI never writes AIM state. Instead it opens a user-owned, freshness-checked intent in Codex and leaves the authoritative AIM chat in control.
+The public Agent Skill now bundles the same executable launcher, server, and web UI as adaptive installations. The launcher keeps one verified loopback instance per repository, handles concurrent starts and stale metadata safely, and leaves AIM state ownership in chat. Multiple Epics and their Increments still share one calm Kanban with visible roles, Gates, evidence, and decisions.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
-See the [AIM UI Beta guide](docs/product/aim-ui.md) or launch it from an adaptive installation with `python3 scripts/aim_ui.py`.
+See the [AIM UI Beta guide](docs/product/aim-ui.md) or launch it from AIM chat with `/aim ui`.
 
 ### AIM Reflect: go beyond memory cleanup
 
@@ -175,6 +175,6 @@ The AIM runtime contract remains 2.0. Product release, runtime contract, install
 - [Release and publication](docs/workflow/release-publication-model.md)
 - [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v2.5.0**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.6.0**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).
