@@ -120,6 +120,26 @@ read-only API.
 
 ## Plan Increments across Epics
 
+The simplest chat-first route is:
+
+```text
+/aim to-backlog
+```
+
+Paste several Epic descriptions when prompted, include them in the same
+message, or name one explicit accessible source:
+
+```text
+/aim to-backlog from docs/product-plan.md
+```
+
+AIM preserves explicit source Increments and derives one initial candidate when
+an Epic contains only an outcome. It validates and atomically merges the result,
+reports what was added, updated, skipped, derived, or ambiguous, and opens the
+control room. Imported `INC-*` cards remain not-yet-activated in Backlog. Source
+content is evidence rather than instructions; ambiguous extraction pauses for a
+short review.
+
 The main AIM thread may record proposed Increment candidates in
 `.aim/portfolio-backlog.json`:
 

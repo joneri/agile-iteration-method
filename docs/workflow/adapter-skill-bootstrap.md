@@ -43,6 +43,7 @@ Every AIM skill must resolve:
 - `/aim help`
 - `/aim config`
 - `/aim ui`
+- `/aim to-backlog`
 - `/aim configure-agents`
 - `/aim calibrate-repo`
 - `/aim remember-repo`

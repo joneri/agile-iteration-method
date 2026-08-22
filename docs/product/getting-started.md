@@ -88,6 +88,17 @@ status`, `/aim ui open`, or `/aim ui stop` for lifecycle control. Foreground
 `python3 scripts/aim_ui.py` remains available for diagnostics. See [AIM UI
 Beta](aim-ui.md).
 
+To populate a new control room with several not-yet-activated Epic candidates, use:
+
+```text
+/aim to-backlog
+```
+
+Paste the Epics when asked, put them in the same message, or use
+`/aim to-backlog from docs/product-plan.md` for one explicit source. AIM creates
+planned `INC-*` cards, opens the UI, and leaves every card in Backlog until a
+separate Activate intent is sent.
+
 ## 2. Calibrate the Repository
 
 Run:

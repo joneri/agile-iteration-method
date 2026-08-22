@@ -47,7 +47,7 @@ class AdapterCommandContractTests(unittest.TestCase):
     def test_complete_adapter_command_contract_is_healthy(self) -> None:
         completed = self._validate(REPO_ROOT)
         self.assertEqual(completed.returncode, 0, completed.stdout)
-        self.assertIn("canonical command intents: 16", completed.stdout)
+        self.assertIn("canonical command intents: 17", completed.stdout)
 
     def test_portfolio_chat_intents_preserve_main_thread_ownership(self) -> None:
         canonical = (REPO_ROOT / "docs/workflow/adapter-command-contract.md").read_text(
@@ -87,6 +87,33 @@ class AdapterCommandContractTests(unittest.TestCase):
         canonical = (REPO_ROOT / surfaces[0]).read_text(encoding="utf-8")
         for intent in ("start", "open", "status", "stop"):
             self.assertIn(intent, canonical)
+
+    def test_to_backlog_is_a_first_class_cross_adapter_command(self) -> None:
+        surfaces = (
+            "docs/workflow/adapter-command-contract.md",
+            "adapters/portable/agile-iteration-method/SKILL.md",
+            "adapters/codex/agile-iteration-method/SKILL.md",
+            ".github/skills/aim/SKILL.md",
+            ".github/agents/aim.agent.md",
+            ".github/prompts/to-backlog-aim.prompt.md",
+            ".claude/skills/aim/SKILL.md",
+            ".claude/commands/to-backlog-aim.md",
+        )
+        for relative in surfaces:
+            content = (REPO_ROOT / relative).read_text(encoding="utf-8")
+            with self.subTest(surface=relative):
+                self.assertIn("/aim to-backlog", content)
+        combined = "\n".join(
+            (REPO_ROOT / relative).read_text(encoding="utf-8") for relative in surfaces
+        )
+        for marker in (
+            "untrusted evidence",
+            "scripts/aim_backlog.py",
+            "portfolio-backlog.json",
+            "never activate",
+            "AIM UI",
+        ):
+            self.assertIn(marker, combined)
 
     def test_start_surfaces_preserve_versioned_cost_selection(self) -> None:
         surfaces = (
@@ -293,6 +320,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             ".claude/commands/validate-aim.md",
             ".claude/commands/help-aim.md",
             ".claude/commands/config-aim.md",
+            ".claude/commands/to-backlog-aim.md",
             ".claude/commands/calibrate-repo.md",
             ".claude/commands/remember-repo.md",
             ".claude/commands/forget-repo.md",

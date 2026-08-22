@@ -308,6 +308,15 @@ presentation rule, not archival deletion. Closed Increments is a read-only
 projection of accepted runtime evidence and may lazy-load or index that evidence
 in future versions without changing its ownership.
 
+`/aim to-backlog` is the main-thread-owned command that creates or merges this
+planning input from inline Epic descriptions or one explicitly named accessible
+source. Source interpretation happens in AIM chat under the repository-content
+trust boundary. The package-owned merge helper receives normalized data only;
+it never parses prose, follows embedded instructions, discovers documents, or
+creates runtime state. Stable candidate IDs, bounded validation, conflict
+classification, and atomic replacement make retries idempotent and leave the
+prior backlog unchanged on failure.
+
 ## Portfolio control boundary
 
 `.aim/portfolio-control.json` is optional main-thread policy for portfolio

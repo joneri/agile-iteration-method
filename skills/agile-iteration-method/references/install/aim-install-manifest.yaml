@@ -123,6 +123,7 @@ aimInstallManifest:
       targetOwned: true
     aimUi:
       files:
+        - scripts/aim_backlog.py
         - scripts/aim_portfolio.py
         - scripts/aim_actions.py
         - scripts/aim_ui_control.py
@@ -135,6 +136,7 @@ aimInstallManifest:
       includedWith: all-footprints
       targetOwned: true
       readOnlyRuntime: true
+      planningWrite: portfolio-backlog-only
     schemas:
       source: schemas/
       destination: schemas/

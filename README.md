@@ -86,7 +86,7 @@ Then start with an outcome, not a task list:
 /aim start "EPIC: Make checkout recovery clear and reliable when payment confirmation is delayed"
 ```
 
-Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning. Open the current repo's read-only [AIM UI control room](docs/product/aim-ui.md) directly from chat with `/aim ui`; use `/aim ui start /path/to/repo` for another repository.
+Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning. Populate several planned Epic cards with `/aim to-backlog`, then open the current repo's read-only [AIM UI control room](docs/product/aim-ui.md) with `/aim ui`; use `/aim ui start /path/to/repo` for another repository.
 
 ## How AIM works
 

@@ -14,7 +14,7 @@ Source: docs/workflow/version-and-installation.md
 - Repo-profile schema: `0.2`
 - Personal-hints schema: `0.1`
 - Project-role schema: `0.1`
-- Public skill package format: `5`
+- Public skill package format: `6`
 
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
