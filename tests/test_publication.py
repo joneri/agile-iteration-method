@@ -60,7 +60,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "2.4.0")
+            self.assertEqual(manifest["aimVersion"], "2.5.0")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
@@ -69,8 +69,11 @@ class PublicationContractTests(unittest.TestCase):
             )
             self.assertEqual(manifest["installerManifestVersion"], "0.9")
             self.assertEqual(manifest["aimUi"]["version"], "1")
+            self.assertEqual(manifest["aimUi"]["releaseStage"], "beta")
             self.assertEqual(manifest["aimUi"]["availability"], "adaptive-installer")
             self.assertTrue(manifest["aimUi"]["readOnly"])
+            self.assertTrue(manifest["aimUi"]["multiEpic"])
+            self.assertTrue(manifest["aimUi"]["cardActions"])
             self.assertEqual(
                 manifest["aimUi"]["repoLaunch"], "python3 scripts/aim_ui.py"
             )
@@ -120,7 +123,9 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("Private conversations, rejected drafts", index)
         self.assertIn('id="ui"', index)
         self.assertIn("docs/product/aim-ui.md", index)
-        self.assertIn('alt="AIM 2.4 Agile Iteration Method logo"', index)
+        self.assertIn('alt="AIM 2.5 Agile Iteration Method logo"', index)
+        self.assertIn("A control room for agentic software delivery.", index)
+        self.assertIn("github-pages/assets/images/aim-ui-beta-control-room.png", index)
         for command in (
             "/aim upgrade",
             "/aim calibrate-repo",
@@ -137,7 +142,8 @@ class PublicationContractTests(unittest.TestCase):
         inventory = (
             REPO_ROOT / "github-pages/assets/images/README.md"
         ).read_text(encoding="utf-8")
-        self.assertGreaterEqual(inventory.count("AIM 2.4"), 2)
+        self.assertGreaterEqual(inventory.count("AIM 2.5"), 2)
+        self.assertIn("AIM UI Beta", inventory)
 
     def test_schema_id_drift_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

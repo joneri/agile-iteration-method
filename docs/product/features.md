@@ -1,6 +1,6 @@
 # AIM feature guide
 
-This is the short map of what AIM 2.4 does. Follow the links only when you need
+This is the short map of what AIM 2.5 does. Follow the links only when you need
 the operating detail.
 
 ## Delivery loop
@@ -38,15 +38,22 @@ See [cost profiles](../workflow/cost-control-mode.md).
 
 ## AIM UI
 
-- A local browser control room projects the active Epic and related increments
-  into a live five-column Kanban.
+- AIM UI Beta projects several independently authoritative Epic workspaces and
+  their Increments into one live five-column Kanban.
+- Delivery flow is the primary surface; portfolio summaries, People and agents,
+  and complete Closed Increment history live in dedicated tabs.
+- The main AIM chat owns portfolio capacity, focus, backlog planning, activation,
+  Gates, and runtime state.
 - Every card retains its Epic identity and separates canonical role ownership
   from optional bounded helper-agent activity.
 - Auto mode appears as automatic card movement because the UI polls canonical
   runtime evidence; the UI itself cannot advance a gate or write `.aim` state.
-- The v1 read model is multi-Epic-shaped while execution remains single-Epic.
+- Polling stays visually quiet and only genuine workflow movement is animated.
+- Activate, Approve, and Change open bounded, freshness-checked Codex intents;
+  decision buttons appear only after AIM publishes a ready handoff.
+- Existing single-Epic state remains compatible without migration.
 
-See [AIM UI v1](aim-ui.md).
+See [AIM UI Beta](aim-ui.md).
 
 ## Repository knowledge
 

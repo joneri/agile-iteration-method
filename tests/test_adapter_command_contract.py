@@ -49,6 +49,25 @@ class AdapterCommandContractTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 0, completed.stdout)
         self.assertIn("canonical command intents: 16", completed.stdout)
 
+    def test_portfolio_chat_intents_preserve_main_thread_ownership(self) -> None:
+        canonical = (REPO_ROOT / "docs/workflow/adapter-command-contract.md").read_text(
+            encoding="utf-8"
+        )
+        portable = (
+            REPO_ROOT / "adapters/portable/agile-iteration-method/SKILL.md"
+        ).read_text(encoding="utf-8")
+        for marker in (
+            "Activate INC-UI-CONTROL-001",
+            "Set portfolio capacity to 2",
+            "Focus EPIC-BACKLOG-AIM-UI",
+            "Show portfolio status",
+            "main AIM thread",
+            "fails closed",
+            "read-only",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, canonical + portable)
+
     def test_start_surfaces_preserve_versioned_cost_selection(self) -> None:
         surfaces = (
             "adapters/portable/agile-iteration-method/SKILL.md",
@@ -67,7 +86,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "2.4.0")
+        self.assertEqual(version, "2.5.0")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",
@@ -344,6 +363,21 @@ class AdapterCommandContractTests(unittest.TestCase):
             "required adapter contract is missing",
             completed.stdout,
         )
+
+    def test_card_action_envelopes_remain_intent_not_authority(self) -> None:
+        contract = (REPO_ROOT / "docs/workflow/adapter-command-contract.md").read_text(
+            encoding="utf-8"
+        )
+        for marker in (
+            "Targeted AIM UI action envelopes",
+            "never auto-send or execute",
+            "user intent, not authority",
+            "changed admission",
+            "expectedLastGatePassed",
+            "portfolio discovery yields exactly",
+            "Epic closure remains a separate explicit",
+        ):
+            self.assertIn(marker, contract)
 
 
 if __name__ == "__main__":

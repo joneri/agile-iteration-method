@@ -419,6 +419,8 @@ class ModeFootprintContractTests(unittest.TestCase):
             self.assertIn(f".claude/agents/aim-{role}.md", destinations)
             self.assertIn(f".github/agents/aim-{role}.agent.md", destinations)
         for path in (
+            "scripts/aim_portfolio.py",
+            "scripts/aim_actions.py",
             "scripts/aim_ui.py",
             "aim-ui/index.html",
             "aim-ui/styles.css",
@@ -443,6 +445,8 @@ class ModeFootprintContractTests(unittest.TestCase):
             )
         )
         for path in (
+            "scripts/aim_portfolio.py",
+            "scripts/aim_actions.py",
             "scripts/aim_ui.py",
             "aim-ui/index.html",
             "aim-ui/styles.css",
@@ -559,7 +563,7 @@ class ModeFootprintContractTests(unittest.TestCase):
         rendered = render.render_text(plan)
         self.assertIn("keeping or committing it is the solo user's choice", rendered)
         self.assertEqual(plan["scopeSummary"]["repoActionCount"], 0)
-        self.assertEqual(plan["scopeSummary"]["localActionCount"], 4)
+        self.assertEqual(plan["scopeSummary"]["localActionCount"], 6)
 
     def test_ui_payload_apply_is_idempotent_and_collision_reviewed(self) -> None:
         manifest = load_manifest(REPO_ROOT)
@@ -589,9 +593,25 @@ class ModeFootprintContractTests(unittest.TestCase):
                 force=False,
             )
             self.assertEqual(
+                (target_root / "scripts/aim_portfolio.py").read_bytes(),
+                (REPO_ROOT / "scripts/aim_portfolio.py").read_bytes(),
+            )
+            self.assertEqual(
+                (target_root / "scripts/aim_actions.py").read_bytes(),
+                (REPO_ROOT / "scripts/aim_actions.py").read_bytes(),
+            )
+            self.assertEqual(
                 (target_root / "scripts/aim_ui.py").read_bytes(),
                 (REPO_ROOT / "scripts/aim_ui.py").read_bytes(),
             )
+            installed_ui = subprocess.run(
+                [sys.executable, str(target_root / "scripts/aim_ui.py"), "--help"],
+                cwd=target_root,
+                capture_output=True,
+                text=True,
+                timeout=10,
+            )
+            self.assertEqual(installed_ui.returncode, 0, installed_ui.stderr)
             second = ui_plan()
             ui_actions = [a for a in second["actions"] if a["id"].startswith("ui:")]
             self.assertEqual({a["classification"] for a in ui_actions}, {"untouched"})

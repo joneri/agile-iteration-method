@@ -283,10 +283,10 @@ OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
-        "# Agile Iteration Method (AIM) 2.4",
+        "# Agile Iteration Method (AIM) 2.5",
         "## Install",
         "## How AIM works",
-        "## What is new in v2.4.0",
+        "## What is new in v2.5.0",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",
@@ -351,6 +351,12 @@ PUBLIC_SKILL_DISTRIBUTION_DOC_PATH = "docs/workflow/version-and-installation.md"
 REFLECTION_DOC_PATH = "docs/workflow/reflection.md"
 PROJECT_ROLES_SCHEMA_PATH = "schemas/aim-project-roles.schema.json"
 PROJECT_ROLES_PATH = "aim.roles.yaml"
+AIM_UI_PORTFOLIO_SCHEMA_PATH = "schemas/aim-ui-portfolio.schema.json"
+AIM_UI_PORTFOLIO_PATH = ".aim/ui-portfolio.json"
+AIM_UI_BACKLOG_SCHEMA_PATH = "schemas/aim-ui-backlog.schema.json"
+AIM_UI_BACKLOG_PATH = ".aim/portfolio-backlog.json"
+AIM_PORTFOLIO_CONTROL_SCHEMA_PATH = "schemas/aim-portfolio-control.schema.json"
+AIM_PORTFOLIO_CONTROL_PATH = ".aim/portfolio-control.json"
 
 CANONICAL_AIM_COMMANDS = [
     "/aim start",
@@ -1446,7 +1452,7 @@ def main() -> int:
             finding.action,
         )
 
-    checked.append("AIM 2.4 documentation audit")
+    checked.append("AIM 2.5 documentation audit")
     for documentation_error in audit_documentation(repo_root):
         add_issue(
             issues,
@@ -1515,10 +1521,16 @@ def main() -> int:
     repo_profile_schema = None
     personal_hints_schema = None
     project_roles_schema = None
+    aim_ui_portfolio_schema = None
+    aim_ui_backlog_schema = None
+    aim_portfolio_control_schema = None
     for relative_path, schema_name in (
         (REPO_PROFILE_SCHEMA_PATH, "repo profile"),
         (PERSONAL_HINTS_SCHEMA_PATH, "Personal hints"),
         (PROJECT_ROLES_SCHEMA_PATH, "project roles"),
+        (AIM_UI_PORTFOLIO_SCHEMA_PATH, "AIM UI portfolio"),
+        (AIM_UI_BACKLOG_SCHEMA_PATH, "AIM UI portfolio backlog"),
+        (AIM_PORTFOLIO_CONTROL_SCHEMA_PATH, "AIM portfolio control"),
     ):
         checked.append(f"{schema_name} JSON Schema")
         try:
@@ -1539,8 +1551,14 @@ def main() -> int:
             repo_profile_schema = loaded_schema
         elif relative_path == PERSONAL_HINTS_SCHEMA_PATH:
             personal_hints_schema = loaded_schema
-        else:
+        elif relative_path == PROJECT_ROLES_SCHEMA_PATH:
             project_roles_schema = loaded_schema
+        elif relative_path == AIM_UI_PORTFOLIO_SCHEMA_PATH:
+            aim_ui_portfolio_schema = loaded_schema
+        elif relative_path == AIM_UI_BACKLOG_SCHEMA_PATH:
+            aim_ui_backlog_schema = loaded_schema
+        else:
+            aim_portfolio_control_schema = loaded_schema
         for schema_issue in unsupported_keywords(loaded_schema):
             add_issue(
                 issues,
@@ -1552,6 +1570,107 @@ def main() -> int:
                 category="Error",
                 release_impact="fail",
             )
+
+    checked.append("AIM UI portfolio catalog")
+    portfolio_path = repo_root / AIM_UI_PORTFOLIO_PATH
+    if aim_ui_portfolio_schema is not None and portfolio_path.is_file():
+        try:
+            portfolio = json.loads(portfolio_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            add_issue(
+                issues,
+                "contradictory",
+                AIM_UI_PORTFOLIO_PATH,
+                f"AIM UI portfolio is invalid JSON: {exc}",
+                "Repair or remove the optional portfolio catalog.",
+            )
+        else:
+            for schema_issue in validate_schema(portfolio, aim_ui_portfolio_schema):
+                add_issue(
+                    issues,
+                    "contradictory",
+                    AIM_UI_PORTFOLIO_PATH,
+                    f"AIM UI portfolio violates the schema at {schema_issue.path}: {schema_issue.message}",
+                    "Align the optional catalog with schemas/aim-ui-portfolio.schema.json.",
+                )
+
+    checked.append("AIM UI portfolio backlog")
+    backlog_path = repo_root / AIM_UI_BACKLOG_PATH
+    if aim_ui_backlog_schema is not None and backlog_path.is_file():
+        try:
+            backlog = json.loads(backlog_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            add_issue(
+                issues,
+                "contradictory",
+                AIM_UI_BACKLOG_PATH,
+                f"AIM UI portfolio backlog is invalid JSON: {exc}",
+                "Repair or remove the optional portfolio backlog.",
+            )
+        else:
+            for schema_issue in validate_schema(backlog, aim_ui_backlog_schema):
+                add_issue(
+                    issues,
+                    "contradictory",
+                    AIM_UI_BACKLOG_PATH,
+                    f"AIM UI portfolio backlog violates the schema at {schema_issue.path}: {schema_issue.message}",
+                    "Align the optional planning input with schemas/aim-ui-backlog.schema.json.",
+                )
+            identifiers = [
+                item.get("id")
+                for item in backlog.get("items", [])
+                if isinstance(item, dict) and isinstance(item.get("id"), str)
+            ] if isinstance(backlog, dict) else []
+            duplicates = sorted({item for item in identifiers if identifiers.count(item) > 1})
+            if duplicates:
+                add_issue(
+                    issues,
+                    "contradictory",
+                    AIM_UI_BACKLOG_PATH,
+                    f"AIM UI portfolio backlog contains duplicate ids: {', '.join(duplicates)}",
+                    "Give every planned Increment candidate a unique stable id.",
+                )
+            priorities = [
+                item.get("priority")
+                for item in backlog.get("items", [])
+                if isinstance(item, dict)
+            ] if isinstance(backlog, dict) else []
+            if any(
+                not isinstance(priority, int)
+                or isinstance(priority, bool)
+                or priority < 1
+                for priority in priorities
+            ):
+                add_issue(
+                    issues,
+                    "contradictory",
+                    AIM_UI_BACKLOG_PATH,
+                    "AIM UI portfolio backlog priorities must be positive integers",
+                    "Use a positive integer priority for every planned Increment candidate.",
+                )
+
+    checked.append("AIM portfolio control")
+    control_path = repo_root / AIM_PORTFOLIO_CONTROL_PATH
+    if aim_portfolio_control_schema is not None and control_path.is_file():
+        try:
+            control = json.loads(control_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            add_issue(
+                issues,
+                "contradictory",
+                AIM_PORTFOLIO_CONTROL_PATH,
+                f"AIM portfolio control is invalid JSON: {exc}",
+                "Repair or remove the optional chat-owned portfolio control.",
+            )
+        else:
+            for schema_issue in validate_schema(control, aim_portfolio_control_schema):
+                add_issue(
+                    issues,
+                    "contradictory",
+                    AIM_PORTFOLIO_CONTROL_PATH,
+                    f"AIM portfolio control violates the schema at {schema_issue.path}: {schema_issue.message}",
+                    "Align the optional control with schemas/aim-portfolio-control.schema.json.",
+                )
 
     checked.append("AIM project role profile")
     if project_roles_schema is not None and (repo_root / PROJECT_ROLES_PATH).is_file():

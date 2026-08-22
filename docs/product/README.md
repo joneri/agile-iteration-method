@@ -1,10 +1,13 @@
-# Discover AIM 2.4
+# Discover AIM 2.5
 
 This is the public product guide for Agile Iteration Method.
 
 Start here when you want to understand AIM before reading its detailed workflow or reference documentation.
 
 For a two-minute inventory, read the [feature guide](features.md).
+
+To see Epics, Increments, roles, Gates, evidence, decisions, and helper agents
+move through a shared delivery board, explore [AIM UI Beta](aim-ui.md).
 
 For AIM's evidence-backed alternative to opaque memory consolidation, read
 [AIM Reflect](../workflow/reflection.md).

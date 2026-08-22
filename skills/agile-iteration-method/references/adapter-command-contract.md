@@ -54,6 +54,72 @@ unsupported or contradictory state stops without mutation.
 `/aim reflect-all` follow `reflection.md`; reflection is read-only
 with respect to durable knowledge, and promotion is a separate reviewed action.
 
+## Portfolio-control chat intents
+
+Portfolio control is expressed as explicit chat intent rather than a second
+workflow engine. Portable examples are `Activate INC-UI-CONTROL-001`, `Set
+portfolio capacity to 2`, `Focus EPIC-BACKLOG-AIM-UI`, and `Show portfolio
+status`.
+
+The main AIM thread resolves these intents against optional
+`.aim/portfolio-control.json` and the independently authoritative workspaces in
+`.aim/ui-portfolio.json`.
+
+- activation counts workspaces whose canonical state is still running before
+  creating a new runtime
+- an already-running Epic can resume even when capacity is full
+- a new Epic is rejected when running count equals or exceeds
+  `maxActiveEpics`
+- lowering capacity below running count reports over-capacity and blocks new
+  activation; it never pauses or rewrites a workspace
+- focus selects default chat targeting and UI emphasis only; it does not
+  approve gates, stop other Epics, or authorize agents
+- missing control state preserves legacy unbounded activation
+- malformed configured control state fails closed for new activation
+
+Only the main AIM thread may write control state or the canonical `INC-*` to
+`DI-*` activation link. The browser remains read-only. Portfolio control must
+never contain roles, gates, acceptance, workspace status, or agent-spawn
+instructions.
+
+### Targeted AIM UI action envelopes
+
+AIM UI may prefill, but never auto-send or execute, a bounded action envelope
+for `activate`, `approve`, or `change`. It identifies the Epic, candidate or
+Increment, expected hard gate/runtime status, timestamps, and contract version.
+Change additionally carries the operator's bounded correction request.
+
+Version 1.2 gate envelopes carry `authorityStatePath`, the exact bounded POSIX
+path to the authoritative `state.json` relative to the repository root, and
+`expectedLastGatePassed`, the raw checkpoint observed in that file. The path
+must begin with `.aim/`, end with `state.json`, and remain contained under the
+repository's `.aim` directory. `gate` is the decision
+being requested, not a copy of `lastGatePassed`. A Gate E action therefore
+names Gate E while normally expecting raw Gate D and
+`po_approval_pending`. Absolute paths, empty/dot/traversal segments,
+backslashes, missing files, and symlink escape fail closed. Version 1.2 does
+not accept the older, directory-shaped `workspace` field.
+
+The receiving main AIM thread treats the envelope as user intent, not authority.
+For a v1.2 gate action it resolves and containment-checks `authorityStatePath`
+from the repository root and reads that exact file before any other runtime
+state; it must not begin with `.aim/state.json` when another path is named. It
+compares Epic, candidate/Increment, requested decision,
+raw checkpoint, status, timestamp, replay, and admission as applicable, then
+performs the same freshness check immediately before writing. Consumed
+candidates or changed admission reject without mutation.
+
+Version 1.1 remains a bounded compatibility input: its `workspace` selector is
+resolved relative to `.aim`, with `.` meaning root `.aim`. Version 1.0 has no
+direct runtime locator. Its receiver may proceed only when portfolio discovery yields exactly
+one contained workspace whose canonical Epic, candidate/Increment, status, and
+timestamp match. Zero or multiple matches reject the action; root state is never
+an implicit fallback. Unknown action versions reject without mutation.
+
+Host handoff success never implies gate success. Approve at Gate E accepts the
+Increment; it does not close the Epic. Epic closure remains a separate explicit
+PO decision.
+
 ## First-run onboarding contract
 
 Before showing help, status, or a first-run response, adapters must detect

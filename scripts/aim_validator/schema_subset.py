@@ -22,6 +22,8 @@ SUPPORTED_SCHEMA_KEYWORDS = {
     "description",
     "enum",
     "items",
+    "maxItems",
+    "maxLength",
     "minItems",
     "minLength",
     "pattern",
@@ -148,6 +150,9 @@ def _validate_node(
         minimum = schema.get("minItems")
         if minimum is not None and len(instance) < minimum:
             issues.append(SchemaIssue(path, f"must contain at least {minimum} items"))
+        maximum = schema.get("maxItems")
+        if maximum is not None and len(instance) > maximum:
+            issues.append(SchemaIssue(path, f"must contain at most {maximum} items"))
         item_schema = schema.get("items")
         if isinstance(item_schema, dict):
             for index, value in enumerate(instance):
@@ -160,6 +165,11 @@ def _validate_node(
         if minimum is not None and len(instance) < minimum:
             issues.append(
                 SchemaIssue(path, f"must contain at least {minimum} characters")
+            )
+        maximum = schema.get("maxLength")
+        if maximum is not None and len(instance) > maximum:
+            issues.append(
+                SchemaIssue(path, f"must contain at most {maximum} characters")
             )
         pattern = schema.get("pattern")
         if pattern is not None and re.search(pattern, instance) is None:

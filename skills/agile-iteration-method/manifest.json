@@ -35,7 +35,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.4.0",
+  "productVersion": "2.5.0",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -47,17 +47,17 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "9897581a975e5ed4351eedfc9bdf5ff0422c7b986a0fa02ef8fb0046b0f57465",
+      "sha256": "65d17fcacde7a9c6bc27754027b2a92319769f8e8a5ee8314506dff309f96364",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "bb2916530210439238ce9aae5e2eb7b7e85a0aceea80a44e47ee138009444de2",
+      "sha256": "2e3e78d3955d6256d2c38520cb4bc104499e0f54443c8e524a9f09318bfe5419",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "feb6970cc74ff1d975040206fb9db930617244dfc219e02833388ff2a10998e9",
+      "sha256": "2c40103ffdc30f972025048b599405cadf3a5e1dbe4edd6039fdd1280954151d",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -132,7 +132,7 @@
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
-      "sha256": "7737728089fa18dd0f520ab8380c4a0a47e794352536e55a6887e1c07c6f6cd3",
+      "sha256": "f1bb2b707ed1abd7e0a201a20ab07116077ba613d4d4020b18d404e826813189",
       "source": "install/aim-install-manifest.yaml"
     },
     {
@@ -142,12 +142,12 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "2ad7b0c3f0ede58c3165b7a8a5479e890a758d39bfe8683eaef50ce6afad7232",
+      "sha256": "732f64d874f90788c0199b0c19bfd9b3b6436e140114e53e462832532d74c61c",
       "source": "VERSION"
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "1fe030aa60830eb9001d55ba32660a8db21aa6b87d8ac0329524d6d72db3a2ca",
+      "sha256": "92d294bc9c518002addb781f8bbeafc8e167887e750b1be388c254b5bc70dbc1",
       "source": "scripts/aim_publication.py"
     },
     {

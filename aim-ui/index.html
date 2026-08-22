@@ -33,37 +33,100 @@
     </section>
 
     <section id="control-room" hidden>
-      <div class="epic-rail" id="epic-rail">
+      <nav class="section-tabs" aria-label="AIM control room views">
+        <button class="section-tab" type="button" data-view="board" aria-pressed="true">Delivery flow</button>
+        <button class="section-tab" type="button" data-view="portfolio" aria-pressed="false">Portfolio</button>
+        <button class="section-tab" type="button" data-view="people" aria-pressed="false">People &amp; agents</button>
+        <button class="section-tab" type="button" data-view="closed" aria-pressed="false">Closed Increments <span id="closed-count">0</span></button>
+      </nav>
+
+      <div class="epic-rail" id="epic-rail" hidden>
         <div class="epic-signal" aria-hidden="true"><span></span></div>
         <div class="epic-copy">
-          <p class="eyebrow">Active Epic</p>
-          <h1 id="epic-title"></h1>
-          <p class="epic-id" id="epic-id"></p>
+          <p class="eyebrow">Active portfolio</p>
+          <h1>Multi-Epic command view</h1>
+          <p class="portfolio-summary" id="portfolio-summary"></p>
+          <dl class="runtime-facts" id="runtime-facts"></dl>
         </div>
-        <dl class="runtime-facts" id="runtime-facts"></dl>
+        <div class="epic-roster" id="epic-roster" aria-label="AIM Epics"></div>
       </div>
 
-      <section class="people-strip" aria-labelledby="people-title">
-        <div class="section-intro">
-          <p class="eyebrow">People and agents</p>
-          <h2 id="people-title">Who is carrying the work?</h2>
+      <section class="portfolio-control" id="portfolio-control-panel" aria-labelledby="portfolio-control-title" hidden>
+        <div class="control-copy">
+          <p class="eyebrow">Chat-owned policy</p>
+          <h2 id="portfolio-control-title">Portfolio capacity</h2>
+          <p id="portfolio-control-summary"></p>
         </div>
-        <div class="role-lane" id="role-lane" aria-label="Canonical AIM roles"></div>
-        <div class="helper-lane" id="helper-lane"></div>
+        <dl class="control-facts" id="portfolio-control-facts"></dl>
+        <div class="control-state">
+          <span class="control-status" id="portfolio-control-status"></span>
+          <p id="portfolio-control-guidance"></p>
+        </div>
       </section>
 
-      <section class="workflow" aria-labelledby="workflow-title">
-        <div class="workflow-heading">
-          <div>
-            <p class="eyebrow">Delivery flow</p>
-            <h2 id="workflow-title">Increment board</h2>
-          </div>
-          <p class="last-refresh" id="last-refresh"></p>
+      <section class="people-strip" id="people-panel" aria-labelledby="people-title" hidden>
+        <div class="section-intro">
+          <p class="eyebrow">People and agents</p>
+          <h2 id="people-title">Who is carrying each Epic?</h2>
         </div>
-        <div class="kanban" id="kanban" aria-label="AIM increment Kanban"></div>
+        <div class="people-grid" id="people-grid"></div>
+      </section>
+
+      <section class="workflow" id="workflow-panel" aria-labelledby="workflow-title">
+        <div class="workflow-heading">
+          <div id="workflow-title-group">
+            <p class="eyebrow">Delivery flow</p>
+            <h2 id="workflow-title">Shared increment board</h2>
+          </div>
+          <div class="workflow-status">
+            <div class="epic-filters" id="epic-filters" aria-label="Filter board by Epic"></div>
+            <p class="last-refresh" id="last-refresh"></p>
+          </div>
+        </div>
+        <div class="runtime-notices" id="runtime-notices" role="status" hidden></div>
+        <div class="kanban-panel" id="kanban-panel">
+          <div class="kanban" id="kanban" aria-label="AIM increment Kanban"></div>
+        </div>
+        <section class="closed-panel" id="closed-panel" aria-labelledby="closed-title" hidden>
+          <header class="closed-heading">
+            <div>
+              <p class="eyebrow">Accepted history</p>
+              <h3 id="closed-title">Closed Increments</h3>
+            </div>
+            <p>Complete evidence stays available here after cards leave Done.</p>
+          </header>
+          <div class="closed-groups" id="closed-groups"></div>
+        </section>
       </section>
     </section>
   </main>
+
+  <dialog class="action-dialog" id="action-dialog" aria-labelledby="action-dialog-title">
+    <form method="dialog" class="action-console" id="action-form">
+      <div class="action-console-head">
+        <div>
+          <p class="eyebrow">Authoritative handoff</p>
+          <h2 id="action-dialog-title">Review AIM action</h2>
+        </div>
+        <button class="dialog-close" value="cancel" aria-label="Close action dialog">×</button>
+      </div>
+      <p class="action-target" id="action-target"></p>
+      <label class="change-field" id="change-field" hidden>
+        <span>What should change?</span>
+        <textarea id="change-request" maxlength="2000" rows="4" placeholder="Describe the correction AIM should make."></textarea>
+      </label>
+      <div class="intent-preview">
+        <span>Intent sent to AIM chat</span>
+        <pre id="action-intent"></pre>
+      </div>
+      <p class="action-boundary">Codex opens this repository with the intent prefilled. Review it, then press Send. AIM revalidates current state before any change.</p>
+      <div class="action-dialog-buttons">
+        <button class="secondary-action" id="copy-action" type="button">Copy intent</button>
+        <button class="primary-action" id="open-action" type="button">Open in Codex</button>
+      </div>
+      <p class="action-feedback" id="action-feedback" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
 
   <template id="role-template">
     <div class="role-chip">
@@ -80,6 +143,32 @@
       </div>
       <p class="helper-task"></p>
       <p class="helper-link"></p>
+    </article>
+  </template>
+
+  <template id="epic-template">
+    <article class="epic-card">
+      <div class="epic-card-head">
+        <span class="epic-index"></span>
+        <span class="epic-state"></span>
+      </div>
+      <h2 class="epic-title"></h2>
+      <p class="epic-id"></p>
+      <dl class="epic-facts"></dl>
+    </article>
+  </template>
+
+  <template id="people-template">
+    <article class="people-epic">
+      <header>
+        <span class="people-signal" aria-hidden="true"></span>
+        <div>
+          <p class="people-epic-id"></p>
+          <h3 class="people-epic-title"></h3>
+        </div>
+      </header>
+      <div class="role-lane" aria-label="Canonical AIM roles"></div>
+      <div class="helper-lane"></div>
     </article>
   </template>
 
@@ -101,9 +190,14 @@
       </div>
       <h4 class="increment-title"></h4>
       <p class="epic-link"></p>
+      <p class="increment-summary" hidden></p>
       <dl class="card-facts"></dl>
       <p class="attention" hidden></p>
       <nav class="evidence-links" aria-label="Increment evidence"></nav>
+      <div class="card-control" hidden>
+        <div class="card-actions"></div>
+        <p class="action-unavailable" hidden></p>
+      </div>
     </article>
   </template>
 </body>

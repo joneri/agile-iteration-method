@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-ui-backlog.schema.json",
+  "title": "AIM UI portfolio backlog",
+  "description": "Bounded planning input written by the main AIM thread and projected read-only by AIM UI. It is not runtime, gate, scheduling, or acceptance authority.",
+  "type": "object",
+  "required": ["backlogVersion", "updatedAt", "items"],
+  "properties": {
+    "backlogVersion": {"const": "1.0"},
+    "updatedAt": {"type": "string", "minLength": 1, "maxLength": 64},
+    "items": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "required": ["id", "epicId", "epicTitle", "title", "priority", "createdAt"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^INC-[A-Z0-9-]+$", "maxLength": 80},
+          "epicId": {"type": "string", "minLength": 1, "maxLength": 120},
+          "epicTitle": {"type": "string", "minLength": 1, "maxLength": 200},
+          "title": {"type": "string", "minLength": 1, "maxLength": 240},
+          "summary": {"type": "string", "maxLength": 1000},
+          "priority": {"type": "integer"},
+          "createdAt": {"type": "string", "minLength": 1, "maxLength": 64},
+          "runtimeIncrementId": {"type": "string", "pattern": "^DI-[0-9]+$", "maxLength": 32}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

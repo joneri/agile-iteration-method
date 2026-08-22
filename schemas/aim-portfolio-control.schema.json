@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-portfolio-control.schema.json",
+  "title": "AIM portfolio control",
+  "description": "Optional chat-owned focus and admission policy for independently authoritative AIM Epic workspaces.",
+  "type": "object",
+  "required": ["controlVersion", "maxActiveEpics", "updatedAt"],
+  "properties": {
+    "controlVersion": {
+      "const": "1.0"
+    },
+    "maxActiveEpics": {
+      "type": "integer",
+      "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+    },
+    "focusedEpicId": {
+      "type": "string",
+      "pattern": "^EPIC-[A-Z0-9-]+$",
+      "maxLength": 120
+    },
+    "updatedAt": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    }
+  },
+  "additionalProperties": false
+}

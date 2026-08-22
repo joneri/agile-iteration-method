@@ -204,6 +204,13 @@ class PublicSkillTests(unittest.TestCase):
         self.assertIn("accepted history", guide)
         self.assertIn("active state is unchanged", guide)
         self.assertIn("never transfer acceptance", guide)
+        for portfolio_intent in (
+            "Activate INC-UI-CONTROL-001",
+            "Set portfolio capacity to 2",
+            "Focus EPIC-BACKLOG-AIM-UI",
+            "Show portfolio status",
+        ):
+            self.assertIn(portfolio_intent, guide)
 
     def test_every_provenance_output_exists_in_package(self) -> None:
         rendered = render_package(REPO_ROOT)
@@ -305,11 +312,33 @@ class PublicSkillTests(unittest.TestCase):
             "sequential fallback": ("sequential fallback", "without changing the runtime contract"),
             "configure agents": ("/aim configure-agents", "aim.roles.yaml", "selected"),
             "main thread owns active state": ("main AIM thread", ".aim/state.json", "sole owner"),
+            "portfolio admission": ("portfolio capacity", "fails closed", "read-only"),
+            "card action handoff": (
+                "AIM_ACTION_ENVELOPE",
+                "authorityStatePath",
+                "expectedLastGatePassed",
+                "`.aim/state.json` when another path is named",
+                "Epic closure remains a separate",
+            ),
         }
         for scenario, markers in scenarios.items():
             with self.subTest(scenario=scenario):
                 for marker in markers:
                     self.assertIn(marker, content)
+
+    def test_public_skill_persists_observable_role_before_work_begins(self) -> None:
+        skill = " ".join(
+            render_package(REPO_ROOT)[Path("SKILL.md")].decode("utf-8").split()
+        )
+        reviewer_rule = skill.index("before Reviewer work begins")
+        reviewer_state = skill.index("`review_in_progress`", reviewer_rule)
+        reviewer_role = skill.index("`currentRole: Reviewer`", reviewer_rule)
+        tdo_rule = skill.index("before post-review TDO validation begins")
+
+        self.assertLess(reviewer_rule, reviewer_state)
+        self.assertLess(reviewer_rule, reviewer_role)
+        self.assertIn("`tdo_validation_in_progress`", skill[tdo_rule:])
+        self.assertIn("Evidence written after a phase does not substitute", skill)
 
     def test_package_contains_no_parent_source_links(self) -> None:
         content = "\n".join(

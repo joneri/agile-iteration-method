@@ -1,5 +1,46 @@
 # Changelog
 
+## 2026-08-22 - AIM 2 minor release v2.5.0
+- Introduced AIM UI Beta as a multi-Epic control room where independently
+  authoritative AIM workspaces share one delivery-first Kanban without giving
+  the browser ownership of gates or runtime state.
+- Added a portfolio backlog for planned Increments across Epics, chat-owned
+  focus and concurrent-capacity controls, the three newest accepted Increments
+  in Done, and complete history in Closed Increments.
+- Added bounded card actions for Activate, Approve, and Change. Each action
+  opens a user-owned Codex intent with an exact authority path, identity,
+  decision point, timestamp, freshness checks, and replay protection.
+- Separated workflow position from decision readiness: cards move when the
+  authoritative process enters the right state, while Approve and Change only
+  appear after AIM has published the completed decision handoff.
+- Made polling visually quiet by preserving stable card nodes and animating
+  only genuine column changes with brief transform-only motion, including a
+  reduced-motion path.
+- Recentered the interface on Delivery flow and moved portfolio summaries,
+  People and agents, and Closed Increments into dedicated tabs.
+- Added malformed-input limits, path containment, partial-workspace warnings,
+  backward-compatible single-Epic discovery, and deterministic resolution of
+  workspace-local authority.
+- Headlined AIM UI Beta on the public website with dedicated release artwork,
+  refreshed AIM 2.5 brand images, social metadata, product guidance, and
+  publication checks.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, public skill package format remains `4`, and installer manifest remains
+`0.9`. Existing single-Epic state remains readable. Older state without an
+explicit UI decision-readiness marker retains its safe legacy mapping.
+
+Migration: no runtime-state or profile migration is required. Rerun the
+adaptive installer through its reviewed preview/apply path to refresh AIM UI in
+an existing installation, or update the public Agent Skill for the latest AIM
+workflow guidance.
+
+Known limitations: AIM UI is Beta and remains a local loopback control room. It
+does not provide hosted accounts, remote portfolio aggregation, autonomous
+agent orchestration, or writable gate control. Multi-Epic presentation combines
+independently authoritative workspaces; it does not permit concurrent writers
+to one shared runtime-state file.
+
 ## 2026-08-21 - AIM 2 minor release v2.4.0
 - Added AIM UI v1, a dependency-free browser control room that projects the
   active local Epic and related Done Increments into a live five-column Kanban.

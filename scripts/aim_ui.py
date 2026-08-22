@@ -16,8 +16,24 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, unquote, urlparse
 
+from aim_actions import (
+    ACTION_PROMPT_PREAMBLE,
+    GATE_EXPECTATIONS,
+    action_envelope,
+    action_prompt,
+    codex_deep_link,
+)
+from aim_portfolio import project_portfolio_control
 
-READ_MODEL_VERSION = "1.0"
+READ_MODEL_VERSION = "5.0"
+PORTFOLIO_VERSION = "1.0"
+PORTFOLIO_FILE = "ui-portfolio.json"
+BACKLOG_VERSION = "1.0"
+BACKLOG_FILE = "portfolio-backlog.json"
+MAX_PORTFOLIO_WORKSPACES = 16
+MAX_BACKLOG_ITEMS = 256
+MAX_BACKLOG_BYTES = 1_000_000
+VISIBLE_DONE_LIMIT = 3
 DEFAULT_REFRESH_MS = 2_000
 KANBAN_COLUMNS = (
     ("backlog", "Backlog"),
@@ -121,7 +137,214 @@ def _decision_is_accepted(aim_root: Path, increment_id: str) -> bool:
     return False
 
 
-def _evidence(aim_root: Path, increment_id: str, plan_path: Path) -> list[dict[str, str]]:
+def _accepted_at(aim_root: Path, increment_id: str) -> str | None:
+    number = increment_id.removeprefix("DI-")
+    decisions = aim_root / "decisions"
+    if not decisions.is_dir():
+        return None
+    decision = decisions / f"{number}-gate-e.md"
+    if not decision.is_file():
+        return None
+    content = _read_markdown(decision)
+    declared = _field(content, "Accepted at") or _field(content, "acceptedAt")
+    if declared:
+        return declared
+    return datetime.fromtimestamp(
+        decision.stat().st_mtime, timezone.utc
+    ).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _increment_sort_key(item: dict[str, Any]) -> tuple[float, int, str]:
+    raw_timestamp = item.get("acceptedAt") or item.get("updatedAt")
+    timestamp = 0.0
+    if isinstance(raw_timestamp, str):
+        try:
+            parsed = datetime.fromisoformat(raw_timestamp.replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            timestamp = parsed.timestamp()
+        except ValueError:
+            timestamp = 0.0
+    match = re.search(r"(\d+)$", str(item.get("id", "")))
+    number = int(match.group(1)) if match else -1
+    return (timestamp, number, str(item.get("id", "")))
+
+
+def _action_descriptor(
+    repo_root: Path,
+    label: str,
+    envelope: dict[str, str],
+    *,
+    enabled: bool = True,
+    reason: str | None = None,
+    requires_input: bool = False,
+) -> dict[str, Any]:
+    descriptor: dict[str, Any] = {
+        "kind": envelope["action"],
+        "label": label,
+        "enabled": enabled,
+        "reason": reason,
+        "requiresInput": requires_input,
+        "envelope": envelope,
+    }
+    if enabled and not requires_input:
+        descriptor["prompt"] = action_prompt(envelope)
+        descriptor["href"] = codex_deep_link(repo_root, envelope)
+    return descriptor
+
+
+def _gate_actions_are_ready(
+    epic: dict[str, Any],
+    increment: dict[str, Any],
+    gate: str,
+    warnings: list[str],
+) -> bool:
+    """Keep legacy actions visible, while honoring explicit AIM handoff readiness."""
+
+    marker = epic.get("uiDecision")
+    if marker is None:
+        return True
+    if not isinstance(marker, dict):
+        warnings.append(f"{epic['id']}: uiDecision must be an object; gate actions are hidden.")
+        return False
+
+    expected = {"gate": gate, "targetId": increment["id"]}
+    if any(marker.get(key) != value for key, value in expected.items()):
+        warnings.append(
+            f"{epic['id']}: uiDecision does not match {gate} for {increment['id']}; "
+            "gate actions are hidden."
+        )
+        return False
+
+    visibility = marker.get("visibility")
+    if visibility == "preparing":
+        increment["attention"] = (
+            "AIM is finishing the decision handoff. Controls will appear when it is ready."
+        )
+        return False
+    if visibility == "ready":
+        return True
+
+    warnings.append(
+        f"{epic['id']}: uiDecision visibility must be preparing or ready; "
+        "gate actions are hidden."
+    )
+    return False
+
+
+def _attach_actions(
+    repo_root: Path,
+    epics: list[dict[str, Any]],
+    control: dict[str, Any],
+    backlog_updated_at: str,
+    warnings: list[str],
+) -> None:
+    for epic in epics:
+        authority_state_path = (
+            ".aim/state.json"
+            if epic["workspace"] == "."
+            else f".aim/{epic['workspace']}/state.json"
+        )
+        for increment in epic["increments"]:
+            increment["actions"] = []
+            if increment["planned"]:
+                if epic["active"] and epic["runtimeStatus"] == "gate_a_pending":
+                    if epic["lastGatePassed"] != GATE_EXPECTATIONS["Gate A"][1]:
+                        warnings.append(
+                            f"{epic['id']}: gate_a_pending conflicts with lastGatePassed; "
+                            "gate actions are hidden."
+                        )
+                        continue
+                    if not _gate_actions_are_ready(epic, increment, "Gate A", warnings):
+                        continue
+                    for kind, label in (("approve", "Approve"), ("change", "Request change")):
+                        envelope = action_envelope(
+                            kind,
+                            epic_id=epic["id"],
+                            candidate_id=increment["id"],
+                            gate="Gate A",
+                            expected_status="gate_a_pending",
+                            expected_updated_at=epic["updatedAt"],
+                            authority_state_path=authority_state_path,
+                            expected_last_gate_passed=epic["lastGatePassed"],
+                        )
+                        increment["actions"].append(
+                            _action_descriptor(
+                                repo_root,
+                                label,
+                                envelope,
+                                requires_input=kind == "change",
+                            )
+                        )
+                    continue
+                envelope = action_envelope(
+                    "activate",
+                    epic_id=epic["id"],
+                    candidate_id=increment["id"],
+                    expected_updated_at=increment["updatedAt"],
+                    backlog_updated_at=backlog_updated_at,
+                )
+                enabled = epic["lifecycle"] == "planned" and control["admission"] in {
+                    "open",
+                    "unbounded",
+                }
+                if epic["lifecycle"] == "closed":
+                    reason = "This planned work belongs to a closed Epic and must be reframed in AIM chat."
+                elif epic["lifecycle"] == "running":
+                    reason = "This Epic already has active runtime work."
+                elif control["admission"] == "full":
+                    reason = "Portfolio capacity is full."
+                elif control["admission"] == "over_capacity":
+                    reason = "The portfolio is over capacity."
+                elif control["admission"] == "blocked":
+                    reason = "Portfolio admission is blocked."
+                else:
+                    reason = None
+                increment["actions"].append(
+                    _action_descriptor(
+                        repo_root, "Activate", envelope, enabled=enabled, reason=reason
+                    )
+                )
+                continue
+
+            if not increment["active"]:
+                continue
+            status = increment["runtimeStatus"]
+            gate = "Gate B" if status == "gate_b_pending" else "Gate E" if status == "po_approval_pending" else None
+            if gate is None:
+                continue
+            if epic["lastGatePassed"] != GATE_EXPECTATIONS[gate][1]:
+                warnings.append(
+                    f"{epic['id']}: {status} conflicts with lastGatePassed; "
+                    "gate actions are hidden."
+                )
+                continue
+            if not _gate_actions_are_ready(epic, increment, gate, warnings):
+                continue
+            for kind, label in (("approve", "Approve"), ("change", "Request change")):
+                envelope = action_envelope(
+                    kind,
+                    epic_id=epic["id"],
+                    increment_id=increment["id"],
+                    gate=gate,
+                    expected_status=status,
+                    expected_updated_at=increment["updatedAt"],
+                    authority_state_path=authority_state_path,
+                    expected_last_gate_passed=epic["lastGatePassed"],
+                )
+                increment["actions"].append(
+                    _action_descriptor(
+                        repo_root,
+                        label,
+                        envelope,
+                        requires_input=kind == "change",
+                    )
+                )
+
+
+def _evidence(
+    repo_root: Path, aim_root: Path, increment_id: str, plan_path: Path
+) -> list[dict[str, str]]:
     number = increment_id.removeprefix("DI-")
     candidates: list[tuple[str, Path]] = [("Increment plan", plan_path)]
     review = aim_root / "reviews" / f"review-{number}.md"
@@ -137,7 +360,7 @@ def _evidence(aim_root: Path, increment_id: str, plan_path: Path) -> list[dict[s
             result.append(
                 {
                     "label": label,
-                    "path": path.relative_to(aim_root.parent).as_posix(),
+                    "path": path.relative_to(repo_root).as_posix(),
                 }
             )
     return result
@@ -231,32 +454,150 @@ def _validate_state(state: dict[str, Any]) -> None:
         raise AimUiError("state.json has an unsupported epicStatus.")
 
 
-def build_board(repo_root: Path) -> dict[str, Any]:
-    """Build a safe UI projection without mutating the repository."""
+def _workspace_roots(aim_root: Path, warnings: list[str]) -> tuple[str, list[Path]]:
+    """Resolve declared Epic workspaces strictly inside the repository .aim root."""
 
-    repo_root = repo_root.resolve()
-    aim_root = repo_root / ".aim"
-    warnings: list[str] = []
-    base = {
-        "readModelVersion": READ_MODEL_VERSION,
-        "generatedAt": utc_now(),
-        "source": {
-            "kind": "local-aim-workspace",
-            "readOnly": True,
-            "refreshMs": DEFAULT_REFRESH_MS,
-        },
-        "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
-        "epics": [],
-        "warnings": warnings,
-    }
+    portfolio_path = aim_root / PORTFOLIO_FILE
+    if not portfolio_path.is_file():
+        return "single-workspace", [aim_root]
     try:
-        state = _read_json(aim_root / "state.json")
-        _validate_state(state)
-        epic_markdown = _read_markdown(aim_root / "epic.md")
+        portfolio = _read_json(portfolio_path)
     except AimUiError as exc:
         warnings.append(str(exc))
-        base["health"] = "degraded"
-        return base
+        return "portfolio", []
+    if portfolio.get("portfolioVersion") != PORTFOLIO_VERSION:
+        warnings.append(
+            f"{PORTFOLIO_FILE} must declare portfolioVersion {PORTFOLIO_VERSION}."
+        )
+        return "portfolio", []
+    declared = portfolio.get("workspaces")
+    if not isinstance(declared, list) or not declared:
+        warnings.append(f"{PORTFOLIO_FILE} must contain a non-empty workspaces array.")
+        return "portfolio", []
+    if len(declared) > MAX_PORTFOLIO_WORKSPACES:
+        warnings.append(
+            f"{PORTFOLIO_FILE} declares more than {MAX_PORTFOLIO_WORKSPACES} workspaces."
+        )
+        return "portfolio", []
+
+    roots: list[Path] = []
+    seen: set[Path] = set()
+    for index, item in enumerate(declared):
+        raw = item.get("path") if isinstance(item, dict) else None
+        if not isinstance(raw, str) or not raw.strip():
+            warnings.append(f"Ignored workspace {index + 1}: missing path.")
+            continue
+        relative = Path(raw.strip())
+        if relative.is_absolute():
+            warnings.append(f"Ignored workspace {index + 1}: path must be relative to .aim.")
+            continue
+        candidate = (aim_root / relative).resolve()
+        try:
+            candidate.relative_to(aim_root)
+        except ValueError:
+            warnings.append(f"Ignored workspace {index + 1}: path leaves .aim.")
+            continue
+        if candidate in seen:
+            warnings.append(f"Ignored workspace {index + 1}: duplicate path.")
+            continue
+        seen.add(candidate)
+        if not candidate.is_dir():
+            warnings.append(f"Ignored workspace {index + 1}: directory was not found.")
+            continue
+        roots.append(candidate)
+    return "portfolio", roots
+
+
+def _load_backlog(aim_root: Path, warnings: list[str]) -> list[dict[str, Any]]:
+    """Read bounded chat-owned planning input without treating it as runtime state."""
+
+    path = aim_root / BACKLOG_FILE
+    if not path.is_file():
+        return []
+    if path.stat().st_size > MAX_BACKLOG_BYTES:
+        warnings.append(f"{BACKLOG_FILE} is larger than {MAX_BACKLOG_BYTES} bytes.")
+        return []
+    try:
+        backlog = _read_json(path)
+    except AimUiError as exc:
+        warnings.append(str(exc))
+        return []
+    if backlog.get("backlogVersion") != BACKLOG_VERSION:
+        warnings.append(f"{BACKLOG_FILE} must declare backlogVersion {BACKLOG_VERSION}.")
+        return []
+    raw_items = backlog.get("items")
+    if not isinstance(raw_items, list):
+        warnings.append(f"{BACKLOG_FILE} must contain an items array.")
+        return []
+    if len(raw_items) > MAX_BACKLOG_ITEMS:
+        warnings.append(f"{BACKLOG_FILE} contains more than {MAX_BACKLOG_ITEMS} items.")
+        return []
+
+    items: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for index, raw in enumerate(raw_items):
+        if not isinstance(raw, dict):
+            warnings.append(f"Ignored backlog item {index + 1}: expected an object.")
+            continue
+        required = ("id", "epicId", "epicTitle", "title", "priority", "createdAt")
+        if any(not raw.get(field) for field in required):
+            warnings.append(f"Ignored backlog item {index + 1}: required fields are missing.")
+            continue
+        identifier = raw["id"]
+        if not isinstance(identifier, str) or not re.fullmatch(r"INC-[A-Z0-9-]+", identifier):
+            warnings.append(f"Ignored backlog item {index + 1}: invalid id.")
+            continue
+        if len(identifier) > 80:
+            warnings.append(f"Ignored backlog item {index + 1}: id is too long.")
+            continue
+        if identifier in seen:
+            warnings.append(f"Ignored backlog item {index + 1}: duplicate id {identifier}.")
+            continue
+        if not all(isinstance(raw[field], str) and raw[field].strip() for field in ("epicId", "epicTitle", "title", "createdAt")):
+            warnings.append(f"Ignored backlog item {index + 1}: text fields must be non-empty strings.")
+            continue
+        limits = {"epicId": 120, "epicTitle": 200, "title": 240, "createdAt": 64}
+        if any(len(raw[field]) > limit for field, limit in limits.items()):
+            warnings.append(f"Ignored backlog item {index + 1}: a text field is too long.")
+            continue
+        if not isinstance(raw["priority"], int) or isinstance(raw["priority"], bool) or raw["priority"] < 1:
+            warnings.append(f"Ignored backlog item {index + 1}: priority must be a positive integer.")
+            continue
+        summary = raw.get("summary")
+        if summary is not None and not isinstance(summary, str):
+            warnings.append(f"Ignored backlog item {index + 1}: summary must be a string.")
+            continue
+        if isinstance(summary, str) and len(summary) > 1000:
+            warnings.append(f"Ignored backlog item {index + 1}: summary is too long.")
+            continue
+        runtime_increment_id = raw.get("runtimeIncrementId")
+        if runtime_increment_id is not None and (
+            not isinstance(runtime_increment_id, str)
+            or not re.fullmatch(r"DI-\d+", runtime_increment_id)
+            or len(runtime_increment_id) > 32
+        ):
+            warnings.append(f"Ignored backlog item {index + 1}: invalid runtimeIncrementId.")
+            continue
+        seen.add(identifier)
+        items.append(
+            {
+                "id": identifier,
+                "epicId": raw["epicId"].strip(),
+                "epicTitle": raw["epicTitle"].strip(),
+                "title": raw["title"].strip(),
+                "summary": summary.strip() if isinstance(summary, str) else None,
+                "priority": raw["priority"],
+                "createdAt": raw["createdAt"].strip(),
+                "runtimeIncrementId": runtime_increment_id,
+            }
+        )
+    return sorted(items, key=lambda item: (item["priority"], item["createdAt"], item["id"]))
+
+
+def _project_epic(repo_root: Path, aim_root: Path) -> dict[str, Any]:
+    state = _read_json(aim_root / "state.json")
+    _validate_state(state)
+    epic_markdown = _read_markdown(aim_root / "epic.md")
 
     epic_id = str(state["epicId"])
     active_id = state.get("activeIncrementId")
@@ -293,22 +634,29 @@ def build_board(repo_root: Path) -> dict[str, Any]:
                     "mode": state["mode"],
                     "costProfile": state["costProfile"],
                     "updatedAt": state["updatedAt"] if is_active else None,
+                    "acceptedAt": _accepted_at(aim_root, increment_id) if accepted else None,
                     "active": is_active,
+                    "planned": False,
+                    "priority": None,
+                    "summary": None,
                     "attention": attention,
-                    "evidence": _evidence(aim_root, increment_id, path),
+                    "evidence": _evidence(repo_root, aim_root, increment_id, path),
                 }
             )
 
-    epic = {
+    return {
         "id": epic_id,
         "title": _heading(epic_markdown, epic_id),
+        "workspace": aim_root.relative_to((repo_root / ".aim").resolve()).as_posix(),
         "active": state["epicStatus"] != "epic_complete",
+        "lifecycle": "closed" if state["epicStatus"] == "epic_complete" else "running",
         "runtimeStatus": state["epicStatus"],
         "mode": state["mode"],
         "costProfile": state["costProfile"],
         "currentRole": state["currentRole"],
         "lastGatePassed": state.get("lastGatePassed"),
         "updatedAt": state["updatedAt"],
+        "uiDecision": state.get("uiDecision"),
         "increments": increment_items,
         "canonicalRoles": [
             {"name": role, "active": role == state["currentRole"]}
@@ -316,8 +664,161 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         ],
         "helperActivity": _load_agents(aim_root, epic_id),
     }
-    base["epics"] = [epic]
-    base["health"] = "healthy"
+
+
+def build_board(repo_root: Path) -> dict[str, Any]:
+    """Build a safe multi-Epic UI projection without mutating the repository."""
+
+    repo_root = repo_root.resolve()
+    aim_root = (repo_root / ".aim").resolve()
+    warnings: list[str] = []
+    source_kind, workspaces = _workspace_roots(aim_root, warnings)
+    base = {
+        "readModelVersion": READ_MODEL_VERSION,
+        "generatedAt": utc_now(),
+        "source": {
+            "kind": source_kind,
+            "readOnly": True,
+            "refreshMs": DEFAULT_REFRESH_MS,
+            "workspaceCount": len(workspaces),
+        },
+        "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
+        "epics": [],
+        "history": {
+            "doneLimit": VISIBLE_DONE_LIMIT,
+            "acceptedCount": 0,
+            "closedIncrements": [],
+        },
+        "control": None,
+        "warnings": warnings,
+    }
+    seen_epics: set[str] = set()
+    for index, workspace in enumerate(workspaces):
+        try:
+            epic = _project_epic(repo_root, workspace)
+        except AimUiError as exc:
+            warnings.append(f"Workspace {index + 1}: {exc}")
+            continue
+        if epic["id"] in seen_epics:
+            warnings.append(f"Workspace {index + 1}: duplicate Epic id {epic['id']}.")
+            continue
+        seen_epics.add(epic["id"])
+        base["epics"].append(epic)
+
+    runtime_keys = {
+        (epic["id"], item["id"])
+        for epic in base["epics"]
+        for item in epic["increments"]
+    }
+    backlog_items = _load_backlog(aim_root, warnings)
+    backlog_updated_at = "unknown"
+    if (aim_root / BACKLOG_FILE).is_file():
+        try:
+            backlog_updated_at = str(_read_json(aim_root / BACKLOG_FILE).get("updatedAt") or "unknown")
+        except AimUiError:
+            pass
+    for candidate in backlog_items:
+        key = (
+            candidate["epicId"],
+            candidate["runtimeIncrementId"] or candidate["id"],
+        )
+        if key in runtime_keys:
+            continue
+        epic = next((item for item in base["epics"] if item["id"] == candidate["epicId"]), None)
+        if epic is None:
+            epic = {
+                "id": candidate["epicId"],
+                "title": candidate["epicTitle"],
+                "workspace": None,
+                "active": False,
+                "lifecycle": "planned",
+                "runtimeStatus": "planned",
+                "mode": "Planning",
+                "costProfile": None,
+                "currentRole": None,
+                "lastGatePassed": None,
+                "updatedAt": candidate["createdAt"],
+                "uiDecision": None,
+                "increments": [],
+                "canonicalRoles": [
+                    {"name": role, "active": False} for role in CANONICAL_ROLES
+                ],
+                "helperActivity": {
+                    "available": False,
+                    "updatedAt": None,
+                    "items": [],
+                    "message": "This Epic is planned; no runtime agents are active.",
+                },
+                "focused": False,
+            }
+            base["epics"].append(epic)
+        elif epic["title"] != candidate["epicTitle"]:
+            warnings.append(
+                f"Backlog item {candidate['id']} uses a different title for {candidate['epicId']}; runtime identity wins."
+            )
+        epic["increments"].append(
+            {
+                "id": candidate["id"],
+                "epicId": candidate["epicId"],
+                "title": candidate["title"],
+                "summary": candidate["summary"],
+                "column": "backlog",
+                "runtimeStatus": "planned",
+                "canonicalOwner": "TDO",
+                "gate": "Not approved",
+                "mode": "Planning",
+                "costProfile": None,
+                "updatedAt": candidate["createdAt"],
+                "acceptedAt": None,
+                "active": False,
+                "planned": True,
+                "priority": candidate["priority"],
+                "attention": None,
+                "evidence": [],
+            }
+        )
+
+    control, control_warnings = project_portfolio_control(aim_root, base["epics"])
+    warnings.extend(control_warnings)
+    base["control"] = control
+    for epic in base["epics"]:
+        epic["focused"] = epic["id"] == control["focusedEpicId"]
+    _attach_actions(repo_root, base["epics"], control, backlog_updated_at, warnings)
+    for epic in base["epics"]:
+        epic.pop("uiDecision", None)
+    base["handoff"] = {
+        "method": "codex_deep_link",
+        "autoSend": False,
+        "fallback": "copy",
+        "workspacePath": str(repo_root.resolve()),
+        "promptPreamble": ACTION_PROMPT_PREAMBLE,
+    }
+
+    accepted: list[dict[str, Any]] = []
+    for epic in base["epics"]:
+        epic["increments"].sort(
+            key=lambda item: (
+                item["column"] != "backlog",
+                item.get("priority") or 10**9,
+                item["id"],
+            )
+        )
+        for item in epic["increments"]:
+            if item["column"] == "done":
+                accepted.append({**item, "epicTitle": epic["title"]})
+    accepted.sort(key=_increment_sort_key, reverse=True)
+    visible_done = {(item["epicId"], item["id"]) for item in accepted[:VISIBLE_DONE_LIMIT]}
+    for epic in base["epics"]:
+        for item in epic["increments"]:
+            item["visibleOnBoard"] = item["column"] != "done" or (item["epicId"], item["id"]) in visible_done
+    base["history"] = {
+        "doneLimit": VISIBLE_DONE_LIMIT,
+        "acceptedCount": len(accepted),
+        "closedIncrements": accepted,
+    }
+    base["health"] = (
+        "degraded" if not base["epics"] else "partial" if warnings else "healthy"
+    )
     return base
 
 

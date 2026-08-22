@@ -150,6 +150,20 @@ When planning the next Done Increment:
 3. load local context for the planned increment
 4. write the Done Increment plan to working state
 
+### Observable role transitions
+
+Before a canonical role starts visible work, the main AIM thread writes that
+phase to `state.json`. In particular, Reviewer work starts only after
+`review_in_progress` and `currentRole: Reviewer` have been persisted; TDO
+validation starts only after `tdo_validation_in_progress` and
+`currentRole: TDO` have been persisted. The transition is not deferred until
+the role's artifact is complete.
+
+This timing makes resume behavior truthful and lets read-only observers show
+the active phase without inferring it from files, chat prose, or completed
+evidence. A missing phase-entry transition is a working-state defect and must
+be repaired before the next gate is presented.
+
 ### Gate E
 
 When an increment is accepted:
@@ -245,6 +259,99 @@ Only the main AIM thread may change:
 - Epic completion state
 
 Subagents and helper adapters may suggest updates, but they do not own state transitions.
+
+## Multi-Epic UI portfolio boundary
+
+AIM UI may combine several independently authoritative working-state directories
+through an optional `.aim/ui-portfolio.json` discovery catalog. This does not
+turn the catalog into shared runtime state and does not change the canonical
+one-active-Epic contract inside any individual workspace.
+
+- each declared workspace owns one ordinary `state.json` and its related Epic,
+  increment, review, decision, and optional helper evidence
+- catalog paths are relative to the repository `.aim` root and must resolve
+  inside that boundary
+- the main AIM thread associated with a workspace remains its only state writer
+- the UI may aggregate, filter, and refresh projections but may not advance a
+  workspace, schedule it, accept it, or spawn agents
+- a missing catalog means legacy root `.aim` behavior with no migration
+- multi-writer orchestration and a shared backlog authority require a separate
+  future contract; they must not be inferred from this read-only portfolio
+
+This lets several real AIM runs be observed together while preserving the
+question each runtime must answer independently: is this Epic active, and which
+Done Increment is next?
+
+## Portfolio planning backlog boundary
+
+`.aim/portfolio-backlog.json` is optional operator planning state. The main AIM
+thread may use it to preserve proposed Increment candidates across Epics before
+activation. It is deliberately separate from every workspace's authoritative
+`state.json`.
+
+- candidate identity uses `INC-*`; canonical active Increment identity remains
+  `DI-*`
+- candidates may carry Epic identity, descriptive text, priority, creation
+  time, and an optional canonical runtime link after activation
+- the planning file never records gate progress, acceptance, canonical role
+  ownership, concurrency locks, or instructions to spawn agents
+- only the main AIM thread writes planning state; AIM UI projects it read-only
+- matching canonical runtime evidence takes precedence over a candidate card
+- invalid or duplicate candidates are isolated and reported rather than being
+  inferred into runtime state
+- the file is bounded to 1 MB, 256 items, and explicit field lengths; accepted
+  history remains in the ordinary Increment, decision, and review artifacts
+  rather than accumulating as copied authority in the backlog
+
+The delivery board may keep only a small recency window in Done. That is a
+presentation rule, not archival deletion. Closed Increments is a read-only
+projection of accepted runtime evidence and may lazy-load or index that evidence
+in future versions without changing its ownership.
+
+## Portfolio control boundary
+
+`.aim/portfolio-control.json` is optional main-thread policy for portfolio
+focus and admission. It is separate from each workspace's canonical
+`state.json` and from planning candidates in `portfolio-backlog.json`.
+
+- `maxActiveEpics` is a bounded admission limit from 1 through 16
+- `focusedEpicId` is optional operator attention and default chat targeting
+- running count comes only from canonical workspace state, never from backlog
+  or browser presentation
+- activating an already-running Epic is a resume and consumes no new slot
+- activating a new Epic at capacity is rejected before runtime creation
+- lowering capacity beneath running count reports over-capacity and blocks new
+  admission; it never silently pauses or edits a workspace
+- missing control state preserves legacy unbounded behavior
+- malformed configured control state fails closed for activation
+- only the main AIM thread writes control state; AIM UI projects it read-only
+
+The control artifact cannot record gates, roles, acceptance, status,
+concurrency locks, or agent instructions. Focus never transfers runtime
+ownership and never implies that non-focused Epics have stopped.
+
+## UI action handoff boundary
+
+A card action is an operator proposal, not a state transition. AIM UI may derive
+a bounded envelope, open a host composer with it prefilled, or copy it. It may
+not auto-send, create runtime state, reserve capacity, or write a decision.
+
+For a v1.2 gate envelope, the receiving main AIM thread first resolves the exact
+repository-root-relative `authorityStatePath`, requires it to name a contained
+`state.json` under `.aim`, rejects containment or symlink escape, and reads that
+file directly. It does not read `.aim/state.json` first when another path is
+named. The requested `gate` and raw
+`expectedLastGatePassed` are separate checks: at Gate E the normal pair is Gate
+E and Gate D. The thread then re-reads backlog and portfolio control when
+applicable and repeats all freshness checks immediately before writing.
+
+Expected timestamps make stale views detectable but are not locks; any mismatch
+stops without mutation. Compatibility v1.1 actions resolve `workspace` relative
+to `.aim`; legacy v1.0 actions may resolve only through one unique
+contained canonical workspace match, never an implicit root fallback. Unknown
+versions fail closed. Gate E approval accepts the Increment and preserves the
+separate PO decision to continue or close the Epic. This keeps the browser
+read-only and the main AIM thread as the sole state writer.
 
 ## Debugging
 

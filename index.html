@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Agile Iteration Method (AIM) 2.4 - Structured AI Software Delivery</title>
-  <meta name="description" content="AIM 2.4 is a structured AI delivery system with a live read-only control room, evidence-backed reflection, review, validation, and human-controlled acceptance.">
+  <title>AIM 2.5 - Meet AIM UI Beta</title>
+  <meta name="description" content="AIM 2.5 introduces AIM UI Beta: a live multi-Epic control room for agentic software delivery, with calm Kanban movement, safe decision handoffs, evidence, roles, and human-controlled acceptance.">
   <link rel="canonical" href="https://joneri.github.io/agile-iteration-method/">
   <link rel="icon" type="image/png" href="github-pages/assets/images/aim-2-logo-light.png">
   <link rel="apple-touch-icon" href="github-pages/assets/images/aim-2-logo-light.png">
   <meta name="theme-color" content="#06142d">
   <meta name="robots" content="index,follow">
-  <meta property="og:title" content="Agile Iteration Method (AIM) 2">
-  <meta property="og:description" content="Build what you want. Stay aligned. Protect quality, context, and human control.">
+  <meta property="og:title" content="AIM 2.5 - AIM UI Beta">
+  <meta property="og:description" content="Your agentic delivery process finally has a control room.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://joneri.github.io/agile-iteration-method/">
   <meta property="og:image" content="https://joneri.github.io/agile-iteration-method/AIM_OG.png">
   <meta property="og:image:width" content="1730">
   <meta property="og:image:height" content="909">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Agile Iteration Method (AIM) 2">
-  <meta name="twitter:description" content="A structured AI delivery system for real software.">
+  <meta name="twitter:title" content="AIM 2.5 - AIM UI Beta">
+  <meta name="twitter:description" content="Watch Epics, Increments, roles, gates, evidence, and agents move through one living delivery board.">
   <meta name="twitter:image" content="https://joneri.github.io/agile-iteration-method/AIM_OG.png">
   <script type="application/ld+json">
   {
@@ -31,7 +31,7 @@
     "url": "https://joneri.github.io/agile-iteration-method/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
-    "softwareVersion": "2.4.0",
+    "softwareVersion": "2.5.0",
     "author": { "@type": "Person", "name": "Jonas Eriksson" },
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "codeRepository": "https://github.com/joneri/agile-iteration-method"
@@ -153,25 +153,35 @@
       border-radius: 6px;
     }
 
-    .hero {
+    .hero-intro {
       position: relative;
       overflow: hidden;
-      background: var(--navy);
-    }
-    .hero-media {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-    .hero-intro {
-      padding: 54px 0 62px;
+      padding: 78px 0 82px;
       color: #fff;
       background: var(--navy);
     }
     .hero-content {
       display: grid;
-      grid-template-columns: minmax(0, 720px);
-      gap: 34px;
+      grid-template-columns: minmax(0, 0.82fr) minmax(420px, 1.18fr);
+      grid-template-rows: auto auto;
+      gap: 34px 56px;
+      align-items: center;
+    }
+    .hero-copy { grid-area: 1 / 1; }
+    .hero-command { grid-area: 2 / 1; }
+    .hero-feature {
+      grid-area: 1 / 2 / 3 / 3;
+      margin: 0;
+      border: 1px solid #29476d;
+      background: #030b18;
+      box-shadow: 0 28px 70px rgba(0,0,0,0.3);
+    }
+    .hero-feature img { width: 100%; aspect-ratio: 1.9 / 1; object-fit: cover; }
+    .hero-feature figcaption {
+      padding: 12px 16px;
+      color: #aac0d9;
+      border-top: 1px solid #29476d;
+      font: 0.72rem/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
     .hero-intro .eyebrow { color: var(--cyan); }
     .hero-intro h1 {
@@ -298,6 +308,102 @@
     .feature-label { color: var(--blue); font-size: 0.76rem; font-weight: 850; text-transform: uppercase; }
     .feature h3 { margin: 18px 0 8px; font-size: 1.08rem; }
     .feature p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+
+    .ui-beta-band {
+      position: relative;
+      overflow: hidden;
+      color: #f5f9ff;
+      background: var(--navy);
+    }
+    .ui-beta-band::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(32,185,236,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(32,185,236,0.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+    .ui-beta-band .container { position: relative; }
+    .ui-beta-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.55fr);
+      gap: 64px;
+      align-items: end;
+    }
+    .ui-beta-band .eyebrow { color: var(--cyan); }
+    .ui-beta-band .section-lead { color: #b8cae2; }
+    .beta-badge {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 18px;
+      padding: 8px 12px;
+      color: var(--navy);
+      background: var(--green);
+      font-size: 0.76rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .beta-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--navy);
+      border-radius: 50%;
+    }
+    .ui-beta-summary {
+      padding: 0 0 4px 24px;
+      border-left: 4px solid var(--green);
+      color: #dce8f7;
+      font-size: 1.05rem;
+    }
+    .ui-beta-stage {
+      margin: 48px 0 0;
+      border: 1px solid #29476d;
+      background: #030b18;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.28);
+    }
+    .ui-beta-stage img {
+      width: 100%;
+      aspect-ratio: 1.9 / 1;
+      object-fit: cover;
+    }
+    .ui-beta-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 16px 20px;
+      color: #aac0d9;
+      border-top: 1px solid #29476d;
+      font: 0.76rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .ui-beta-caption strong { color: var(--cyan); }
+    .ui-beta-points {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 28px;
+      border-top: 1px solid #29476d;
+      border-left: 1px solid #29476d;
+    }
+    .ui-beta-point {
+      min-height: 176px;
+      padding: 24px;
+      border-right: 1px solid #29476d;
+      border-bottom: 1px solid #29476d;
+    }
+    .ui-beta-point span {
+      color: var(--cyan);
+      font-size: 0.74rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+    .ui-beta-point h3 { margin: 22px 0 8px; color: #fff; font-size: 1.05rem; }
+    .ui-beta-point p { margin: 0; color: #b8cae2; font-size: 0.9rem; }
+    .ui-beta-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
 
     .rebuild {
       display: grid;
@@ -618,9 +724,11 @@
 
     @media (max-width: 980px) {
       .nav-links a:not(.github-link) { display: none; }
-      .hero-content { gap: 24px; }
+      .hero-content { grid-template-columns: 1fr; grid-template-rows: auto; gap: 28px; }
+      .hero-copy, .hero-command, .hero-feature { grid-area: auto; }
       .promise-grid, .mode-grid, .platform-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .feature-layout, .rebuild { grid-template-columns: 1fr; gap: 44px; }
+      .feature-layout, .rebuild, .ui-beta-head { grid-template-columns: 1fr; gap: 44px; }
+      .ui-beta-points { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .loop, .journey { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .loop-step:nth-child(3) { border-right: 0; }
       .loop-step:nth-child(3)::after { display: none; }
@@ -660,6 +768,11 @@
       .copyable-command .command { width: auto; flex: 1; }
       .start-actions { flex-direction: column; }
       .start-actions .button { width: 100%; }
+      .ui-beta-points { grid-template-columns: 1fr; }
+      .ui-beta-point { min-height: 0; }
+      .ui-beta-caption { flex-direction: column; gap: 6px; }
+      .ui-beta-actions { flex-direction: column; }
+      .ui-beta-actions .button { width: 100%; }
     }
   </style>
 </head>
@@ -669,7 +782,7 @@
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="container nav-inner">
       <a class="brand" href="#top" aria-label="AIM 2 home">
-        <span>AIM</span><span class="brand-version">2.4</span>
+        <span>AIM</span><span class="brand-version">2.5</span>
       </a>
       <div class="nav-links">
         <a href="#why">Why AIM</a>
@@ -684,19 +797,15 @@
     </div>
   </nav>
 
-  <header class="hero" id="top">
-    <img class="hero-media" src="github-pages/assets/images/aim-2-hero-dark.png" alt="">
-  </header>
-
-  <section class="hero-intro" aria-labelledby="hero-title">
+  <header class="hero-intro" id="top" aria-labelledby="hero-title">
     <div class="container hero-content">
       <div class="hero-copy">
-        <p class="eyebrow">AI operating system for agentic software delivery</p>
-        <h1 id="hero-title">Agile Iteration Method 2.4</h1>
-        <p class="hero-lead">Build what you want without losing the goal. AIM turns AI-assisted development into a clear loop of planning, implementation, review, validation, correction, and human approval.</p>
+        <p class="eyebrow">New in AIM 2.5 · AIM UI Beta</p>
+        <h1 id="hero-title">A control room for agentic software delivery.</h1>
+        <p class="hero-lead">Watch Epics, Increments, roles, gates, evidence, decisions, and helper agents move through one living delivery board — while AIM keeps authority in the chat.</p>
         <div class="hero-actions">
-          <a class="button button-primary" href="#start">Start with AIM</a>
-          <a class="button button-secondary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">Discover the product</a>
+          <a class="button button-primary" href="#ui">Meet AIM UI Beta</a>
+          <a class="button button-secondary" href="#start">Start with AIM</a>
         </div>
       </div>
       <div class="hero-command" aria-label="Public Agent Skill install command">
@@ -714,8 +823,12 @@
           </button>
         </div>
       </div>
+      <figure class="hero-feature">
+        <img src="github-pages/assets/images/aim-ui-beta-control-room.png" alt="AIM UI work tickets flowing through five delivery stations with four specialist roles">
+        <figcaption>AIM UI Beta · multi-Epic delivery flow · read-only authority boundary</figcaption>
+      </figure>
     </div>
-  </section>
+  </header>
 
   <main id="main">
     <section class="band" id="why">
@@ -833,36 +946,52 @@
       </div>
     </section>
 
-    <section class="band" id="ui">
-      <div class="container feature-layout">
-        <div>
-          <p class="eyebrow">New in AIM 2.4</p>
-          <h2 class="section-title">Watch the delivery loop move.</h2>
-          <p class="section-lead">AIM UI turns the active local Epic into a live, read-only Kanban. See increment provenance, canonical ownership, gates, evidence, attention, and available helper-agent activity without giving the browser control of runtime state.</p>
-          <p><a class="button button-primary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/aim-ui.md">Explore AIM UI v1</a></p>
+    <section class="band ui-beta-band" id="ui">
+      <div class="container">
+        <div class="ui-beta-head">
+          <div>
+            <span class="beta-badge">Beta</span>
+            <p class="eyebrow">AIM UI · the delivery loop made visible</p>
+            <h2 class="section-title">This is where AI work stops feeling invisible.</h2>
+            <p class="section-lead">AIM UI brings multiple Epics and their Increments onto one live Kanban. Follow the canonical role, Gate, evidence, decisions, and spawned helper agents on every card — then watch real runtime changes become calm, meaningful movement.</p>
+          </div>
+          <div class="ui-beta-summary">A production control room for your entire AIM portfolio. Read-only at the boundary. Alive everywhere that matters.</div>
         </div>
 
-        <div class="feature-list">
-          <article class="feature">
-            <span class="feature-label">Live Kanban</span>
-            <h3>State changes become card movement</h3>
-            <p>Backlog, Work in progress, In review, Ready for release, and Done map directly from authoritative AIM runtime evidence.</p>
+        <figure class="ui-beta-stage">
+          <img src="github-pages/assets/images/aim-ui-beta-control-room.png" alt="Illustration of AIM work tickets moving through five delivery stations while four specialist roles monitor the flow">
+          <figcaption class="ui-beta-caption">
+            <strong>One living board. Many delivery streams.</strong>
+            <span>Authoritative state in · observable flow out</span>
+          </figcaption>
+        </figure>
+
+        <div class="ui-beta-points">
+          <article class="ui-beta-point">
+            <span>Multi-Epic</span>
+            <h3>See the portfolio move together</h3>
+            <p>Every Increment keeps a clear Epic identity while several independently authoritative workspaces share one board.</p>
           </article>
-          <article class="feature">
-            <span class="feature-label">Clear provenance</span>
-            <h3>Every increment belongs to an Epic</h3>
-            <p>The active Epic forms the board's visual rail and every related card carries the same Epic identity.</p>
+          <article class="ui-beta-point">
+            <span>Living Kanban</span>
+            <h3>Only real work moves</h3>
+            <p>Quiet polling leaves cards still. A genuine state transition moves only the affected ticket between workflow stations.</p>
           </article>
-          <article class="feature">
-            <span class="feature-label">People and agents</span>
-            <h3>Ownership stays canonical</h3>
-            <p>PO, TDO, Dev, and Reviewer remain distinct from optional bounded helper-agent activity.</p>
+          <article class="ui-beta-point">
+            <span>Safe decisions</span>
+            <h3>Approve from the card, safely</h3>
+            <p>Decision controls appear only when AIM finishes its handoff, then open a bounded, freshness-checked intent in Codex.</p>
           </article>
-          <article class="feature">
-            <span class="feature-label">Read-only by design</span>
-            <h3>The board observes; AIM decides</h3>
-            <p>The loopback server accepts GET and HEAD only. The main AIM thread still owns gates, acceptance, and completion.</p>
+          <article class="ui-beta-point">
+            <span>Read-only core</span>
+            <h3>The UI observes. AIM decides.</h3>
+            <p>The browser cannot pass Gates or write runtime state. Human ownership and AIM's canonical role loop stay intact.</p>
           </article>
+        </div>
+
+        <div class="ui-beta-actions">
+          <a class="button button-primary" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/aim-ui.md">Explore AIM UI Beta</a>
+          <a class="button button-secondary" href="https://github.com/joneri/agile-iteration-method">View the source</a>
         </div>
       </div>
     </section>
@@ -905,7 +1034,7 @@
     <section class="band band-mist" id="rebuilt">
       <div class="container rebuild">
         <figure class="brand-visual">
-          <img src="github-pages/assets/images/aim-2-logo-light.png" alt="AIM 2.4 Agile Iteration Method logo">
+          <img src="github-pages/assets/images/aim-2-logo-light.png" alt="AIM 2.5 Agile Iteration Method logo">
         </figure>
         <div>
           <p class="eyebrow">Rebuilt for AIM 2</p>

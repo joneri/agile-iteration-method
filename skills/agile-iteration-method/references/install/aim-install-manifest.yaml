@@ -123,6 +123,8 @@ aimInstallManifest:
       targetOwned: true
     aimUi:
       files:
+        - scripts/aim_portfolio.py
+        - scripts/aim_actions.py
         - scripts/aim_ui.py
         - aim-ui/index.html
         - aim-ui/styles.css

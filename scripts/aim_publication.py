@@ -33,6 +33,8 @@ PUBLIC_BRAND_IMAGE_PATHS = (
     "github-pages/assets/images/aim-2-logo-light.png",
 )
 PUBLIC_BRAND_IMAGE_SIZE = (1730, 909)
+PUBLIC_FEATURE_IMAGE_PATH = "github-pages/assets/images/aim-ui-beta-control-room.png"
+PUBLIC_FEATURE_IMAGE_SIZE = (1729, 910)
 PUBLIC_LICENSE_PATH = "licenses/LICENSE-DOCS"
 RELEASE_MANIFEST_PATH = "release-manifest.json"
 PUBLIC_SKILL_INSTALL_COMMAND = (
@@ -114,9 +116,20 @@ def validate_source(repo_root: Path) -> None:
                 f"{PUBLIC_BRAND_IMAGE_SIZE[1]}, got {dimensions[0]}x{dimensions[1]}"
             )
     image_readme = _read_text(repo_root / "github-pages/assets/images/README.md")
-    if image_readme.count("AIM 2.4") < 2:
+    feature_dimensions = _png_dimensions(repo_root / PUBLIC_FEATURE_IMAGE_PATH)
+    if feature_dimensions != PUBLIC_FEATURE_IMAGE_SIZE:
         raise PublicationError(
-            "github-pages image inventory must identify both website assets as AIM 2.4"
+            f"{PUBLIC_FEATURE_IMAGE_PATH}: expected {PUBLIC_FEATURE_IMAGE_SIZE[0]}x"
+            f"{PUBLIC_FEATURE_IMAGE_SIZE[1]}, got "
+            f"{feature_dimensions[0]}x{feature_dimensions[1]}"
+        )
+    if image_readme.count("AIM 2.5") < 2:
+        raise PublicationError(
+            "github-pages image inventory must identify both website assets as AIM 2.5"
+        )
+    if "AIM UI Beta" not in image_readme:
+        raise PublicationError(
+            "github-pages image inventory must identify the AIM UI Beta feature asset"
         )
 
     index = _read_text(repo_root / "index.html")
@@ -176,6 +189,14 @@ def validate_source(repo_root: Path) -> None:
             index,
             "docs/product/aim-ui.md",
         ),
+        "index.html AIM UI Beta headline": (
+            index,
+            "A control room for agentic software delivery.",
+        ),
+        "index.html AIM UI Beta artwork": (
+            index,
+            PUBLIC_FEATURE_IMAGE_PATH,
+        ),
         "index.html Reflect positioning": (
             index,
             "AIM Reflect goes beyond memory cleanup for repository work",
@@ -184,9 +205,9 @@ def validate_source(repo_root: Path) -> None:
             index,
             "Writes for the reader, not its own chat",
         ),
-        "index.html AIM 2.4 logo alt text": (
+        "index.html AIM 2.5 logo alt text": (
             index,
-            'alt="AIM 2.4 Agile Iteration Method logo"',
+            'alt="AIM 2.5 Agile Iteration Method logo"',
         ),
         "install.sh fail-closed notice": (
             install_script,
@@ -245,6 +266,7 @@ def release_manifest(root: Path) -> dict[str, Any]:
         "installerManifestVersion": installer_manifest_version(root),
         "aimUi": {
             "version": "1",
+            "releaseStage": "beta",
             "availability": "adaptive-installer",
             "repoLaunch": "python3 scripts/aim_ui.py",
             "externalLaunch": (
@@ -252,6 +274,8 @@ def release_manifest(root: Path) -> dict[str, Any]:
                 "--repo /path/to/repository"
             ),
             "readOnly": True,
+            "multiEpic": True,
+            "cardActions": True,
         },
         "artifactType": "github-pages",
         "publicOrigin": PUBLIC_ORIGIN,
@@ -353,6 +377,13 @@ def validate_artifact(output_root: Path) -> None:
                 f"{relative_path}: expected {PUBLIC_BRAND_IMAGE_SIZE[0]}x"
                 f"{PUBLIC_BRAND_IMAGE_SIZE[1]}, got {dimensions[0]}x{dimensions[1]}"
             )
+    feature_dimensions = _png_dimensions(output_root / PUBLIC_FEATURE_IMAGE_PATH)
+    if feature_dimensions != PUBLIC_FEATURE_IMAGE_SIZE:
+        raise PublicationError(
+            f"{PUBLIC_FEATURE_IMAGE_PATH}: expected {PUBLIC_FEATURE_IMAGE_SIZE[0]}x"
+            f"{PUBLIC_FEATURE_IMAGE_SIZE[1]}, got "
+            f"{feature_dimensions[0]}x{feature_dimensions[1]}"
+        )
     for relative_path in SCHEMA_RELATIVE_PATHS:
         _schema_contract(output_root, relative_path)
 

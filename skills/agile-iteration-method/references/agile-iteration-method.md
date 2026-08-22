@@ -366,6 +366,26 @@ Role responsibility:
 - `TDO` synthesizes the transition into the next gate-ready runtime state
 - `PO` owns acceptance decisions that move the increment to `done_increment_accepted` or the Epic to `epic_complete`
 
+### Observable phase-entry rule
+
+The main AIM thread must persist the next runtime state and canonical role
+before that role's visible work begins. State is an observable phase boundary,
+not a summary written after the work:
+
+- before Dev work begins, persist `increment_in_progress` with `currentRole: Dev`
+- before Reviewer work begins, persist `review_in_progress` with
+  `currentRole: Reviewer` and Gate C as the latest passed gate
+- before post-review TDO validation begins, persist
+  `tdo_validation_in_progress` with `currentRole: TDO` and Gate D as the latest
+  passed gate
+- only after TDO validation is complete may the runtime enter
+  `po_approval_pending` with `currentRole: PO`
+
+Writing review or decision evidence after a phase has completed does not replace
+the required phase-entry transition. Read-only observers such as AIM UI must be
+able to render the role that is working from authoritative runtime state while
+that work is happening.
+
 ### Relationship to gates
 
 The state model does not replace Gate A-E.
@@ -657,6 +677,15 @@ At a hard gate, AIM still needs four things to be clear:
 
 These are conceptual minimums, not mandatory universal section headings.
 The visible response may satisfy them through role-specific wording instead of fixed labels.
+
+When AIM UI is active, reaching the hard-gate column and publishing its decision
+controls are distinct transitions. The main thread may persist an optional
+`uiDecision` extension with `visibility: preparing`, the exact Gate, and target
+identity while it completes evidence and handoff work. Changing that marker to
+`ready` with a fresh `updatedAt` must be the final runtime mutation immediately
+before the gate is presented. The UI may use this marker only to time control
+visibility; it cannot infer approval or advance state from it. Missing markers
+retain legacy behavior for existing workspaces.
 
 ### Role-specific response patterns
 

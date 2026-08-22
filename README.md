@@ -1,6 +1,6 @@
-# Agile Iteration Method (AIM) 2.4
+# Agile Iteration Method (AIM) 2.5
 
-![AIM 2.4 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 2.5 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -131,10 +131,17 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.4.0
-### AIM UI v1
-AIM now includes a browser-based, read-only control room for the active Epic. Its live Kanban shows increments across Backlog, Work in progress, In review, Ready for release, and Done while preserving `.aim` as the only runtime authority.
-Every card retains its Epic identity and separates canonical PO, TDO, Dev, and Reviewer ownership from optional bounded helper-agent activity. The adaptive installer packages the UI collision-safely in either the target repository or a zero-repo-write home distribution.
+## What is new in v2.5.0
+### AIM UI Beta: a control room for agentic delivery
+
+AIM UI Beta makes the delivery process visible without weakening it. Multiple Epics and their Increments share one living Kanban, every card keeps its Epic identity, and canonical roles, Gates, evidence, decisions, and bounded helper agents remain readable in one place.
+
+The board is calm by design: polling does not make cards flash, and only a real runtime transition produces a short column-to-column movement. Activate, Approve, and Change can start from a card, but the UI never writes AIM state. Instead it opens a user-owned, freshness-checked intent in Codex and leaves the authoritative AIM chat in control.
+
+![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
+
+See the [AIM UI Beta guide](docs/product/aim-ui.md) or launch it from an adaptive installation with `python3 scripts/aim_ui.py`.
+
 ### AIM Reflect: go beyond memory cleanup
 
 Agent-memory systems such as [Anthropic Dreams](https://platform.claude.com/docs/en/managed-agents/dreams) reorganize accumulated memories and session history. AIM Reflect brings the useful consolidation idea into evidence-controlled software delivery:
@@ -168,13 +175,6 @@ The AIM runtime contract remains 2.0. Product release, runtime contract, install
 - [Release and publication](docs/workflow/release-publication-model.md)
 - [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Maintainers regenerate and verify the public package with:
-
-```bash
-python3 scripts/build_public_skill.py
-python3 scripts/build_public_skill.py --check
-```
-
-Current product release: **v2.4.0**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.5.0**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

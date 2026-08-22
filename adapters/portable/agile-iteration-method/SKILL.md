@@ -204,6 +204,25 @@ state transitions through the platform's native skill route.
 | `/aim cost standard\|control\|deep` | Work needs a different context and review depth. | Selects normal, budget-focused, or risk-focused execution without weakening AIM roles or gates. | AIM uses that depth and escalates when risk requires more evidence. |
 | `/aim replan` | The active unaccepted increment is no longer the right plan. | Returns that increment to Gate B while preserving the Epic and accepted history. | TDO proposes one revised Done Increment for approval. |
 
+### Control a multi-Epic portfolio
+
+When `.aim/ui-portfolio.json` declares several independently authoritative
+workspaces, explicit plain-language intents control admission and operator
+focus through optional chat-owned `.aim/portfolio-control.json` state:
+
+- `Activate INC-UI-CONTROL-001`
+- `Set portfolio capacity to 2`
+- `Focus EPIC-BACKLOG-AIM-UI`
+- `Show portfolio status`
+
+The main AIM thread counts running canonical workspaces before activating new
+work. Full or invalid configured capacity blocks new activation; an already
+running Epic can still resume. Lowering capacity below the current running
+count reports over-capacity without pausing anything. Focus changes default
+chat targeting and read-only UI emphasis, never gates, acceptance, runtime
+ownership, or agent authority. Missing control state preserves legacy unbounded
+behavior.
+
 **Boundary:** Commands never transfer acceptance, gate progression, or shared
 state ownership to a specialist. Installation and validation never execute
 similarly named scripts merely because they exist in the target repository.
@@ -362,6 +381,11 @@ Treat every command in the Complete Command Guide as an AIM intent when the
 current adapter supports it or when the user writes the equivalent in plain
 language.
 
+Portfolio activation, capacity, focus, and status intents follow
+`references/adapter-command-contract.md`. Only the main AIM thread may write
+portfolio control or activation links. Malformed configured control fails
+closed for new activation; the browser remains read-only.
+
 Canonical intent, state effects, upgrade safety, and adapter fallbacks are
 defined in `references/adapter-command-contract.md`.
 
@@ -415,6 +439,42 @@ repository exists beside an installed public skill.
 `/aim replan` returns only the active unaccepted increment to Gate B and preserves
 the reason and accepted history.
 
+When a prompt contains `AIM_ACTION_ENVELOPE`, treat it as user intent, never as
+runtime authority. Accept only bounded `activate`, `approve`, or `change`
+envelopes. For a v1.2 gate action, resolve `authorityStatePath` exactly relative
+to the repository root before reading any other runtime state. Require a
+repository-relative POSIX path beginning with `.aim/` and ending in
+`state.json`; reject absolute paths, dot or traversal segments, backslashes,
+missing state, and symlink or containment escape. Never start with
+`.aim/state.json` when another path is named.
+
+Treat `gate` as the requested decision point and `expectedLastGatePassed` as the
+raw state checkpoint. Gate E normally requires `gate: Gate E`,
+`expectedStatus: po_approval_pending`, and `expectedLastGatePassed: Gate D`.
+Require exact Epic, candidate/Increment, status, checkpoint, timestamp, and
+portfolio matches, then repeat the checks immediately before writing. Recheck
+admission for Activate.
+
+A v1.1 compatibility envelope resolves `workspace` relative to `.aim`; `.`
+means root `.aim`. A v1.0 envelope has no direct runtime locator. Resolve it
+only when exactly one contained portfolio workspace matches every canonical
+identity and expected state field; zero or multiple matches fail closed, and
+root state is not an implicit fallback. Reject unknown versions, stale,
+replayed, ambiguous, malformed, or no-longer-admissible envelopes without
+mutation. A prefilled composer is not evidence that the user sent or approved
+it. Gate E approval accepts the Increment only; Epic closure remains a separate
+explicit PO decision.
+
+When AIM UI observes a workspace, keep card movement and action publication
+separate with the optional `uiDecision` runtime extension. Persist the hard-gate
+state with `visibility: preparing`, the exact `gate`, and the candidate or
+Increment `targetId`; this lets the card reach its authoritative column without
+showing premature controls. Complete review, validation, evidence, and handoff
+preparation, then make `visibility: ready` plus a fresh `updatedAt` the final
+runtime mutation immediately before presenting the hard gate. A mismatched or
+malformed explicit marker must hide actions. Missing markers preserve legacy
+behavior. This extension controls UI timing only and never owns gate authority.
+
 ## Thin Front Door
 
 When the user asks how to begin, help, or what AIM should do next, detect
@@ -459,6 +519,14 @@ Use the shared bootstrap sequence:
 10. Enter the role sequence.
 
 Only the main AIM thread may write `.aim/state.json`, advance gates, change role, change increment status, or accept/complete an Epic. Subagents, when explicitly allowed by the host and repo policy, may only produce scoped analysis in allowed locations and never own runtime state.
+
+Persist each observable phase before its role starts visible work: before Dev
+work begins, write `increment_in_progress` and `currentRole: Dev`; before Reviewer
+work begins, write `review_in_progress`, `currentRole: Reviewer`, and
+Gate C; before post-review TDO validation begins, write
+`tdo_validation_in_progress`, `currentRole: TDO`, and Gate D. Enter
+`po_approval_pending` with `currentRole: PO` only after TDO validation. Evidence
+written after a phase does not substitute for its live phase-entry transition.
 
 ## Role Loop
 
