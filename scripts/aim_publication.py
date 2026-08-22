@@ -36,6 +36,8 @@ PUBLIC_BRAND_IMAGE_PATHS = (
 PUBLIC_BRAND_IMAGE_SIZE = (1730, 909)
 PUBLIC_FEATURE_IMAGE_PATH = "github-pages/assets/images/aim-ui-beta-control-room.png"
 PUBLIC_FEATURE_IMAGE_SIZE = (1729, 910)
+PUBLIC_DEMO_VIDEO_PATH = "github-pages/assets/video/portfolio-auto-demo.mp4"
+PUBLIC_DEMO_POSTER_PATH = "github-pages/assets/images/portfolio-auto-demo-poster.jpg"
 PUBLIC_LICENSE_PATH = "licenses/LICENSE-DOCS"
 RELEASE_MANIFEST_PATH = "release-manifest.json"
 PUBLIC_SKILL_INSTALL_COMMAND = (
@@ -124,6 +126,11 @@ def validate_source(repo_root: Path) -> None:
             f"{PUBLIC_FEATURE_IMAGE_SIZE[1]}, got "
             f"{feature_dimensions[0]}x{feature_dimensions[1]}"
         )
+    for relative_path in (PUBLIC_DEMO_VIDEO_PATH, PUBLIC_DEMO_POSTER_PATH):
+        if not (repo_root / relative_path).is_file():
+            raise PublicationError(
+                f"required Portfolio Auto demo asset is missing: {relative_path}"
+            )
     if image_readme.count("AIM 2") < 2:
         raise PublicationError(
             "github-pages image inventory must identify both website assets as AIM 2"
@@ -190,13 +197,21 @@ def validate_source(repo_root: Path) -> None:
             index,
             "docs/product/aim-ui.md",
         ),
-        "index.html AIM UI Beta headline": (
+        "index.html Portfolio Auto headline": (
             index,
-            "A control room for agentic software delivery.",
+            "Put the backlog in motion.",
         ),
         "index.html AIM UI Beta artwork": (
             index,
             PUBLIC_FEATURE_IMAGE_PATH,
+        ),
+        "index.html Portfolio Auto demo video": (
+            index,
+            PUBLIC_DEMO_VIDEO_PATH,
+        ),
+        "index.html Portfolio Auto demo poster": (
+            index,
+            PUBLIC_DEMO_POSTER_PATH,
         ),
         "index.html Reflect positioning": (
             index,
@@ -278,6 +293,7 @@ def release_manifest(root: Path) -> dict[str, Any]:
             "readOnly": True,
             "multiEpic": True,
             "cardActions": True,
+            "portfolioAutoDemo": PUBLIC_DEMO_VIDEO_PATH,
         },
         "artifactType": "github-pages",
         "publicOrigin": PUBLIC_ORIGIN,
@@ -386,6 +402,11 @@ def validate_artifact(output_root: Path) -> None:
             f"{PUBLIC_FEATURE_IMAGE_SIZE[1]}, got "
             f"{feature_dimensions[0]}x{feature_dimensions[1]}"
         )
+    for relative_path in (PUBLIC_DEMO_VIDEO_PATH, PUBLIC_DEMO_POSTER_PATH):
+        if not (output_root / relative_path).is_file():
+            raise PublicationError(
+                f"publication artifact is missing Portfolio Auto demo asset: {relative_path}"
+            )
     for relative_path in SCHEMA_RELATIVE_PATHS:
         _schema_contract(output_root, relative_path)
 

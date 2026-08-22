@@ -162,7 +162,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "25b00a72f6bd80add2ff1ccbf7517b2d663df0b95bdc4a7eee320b738693256a",
+      "sha256": "ca105440d34d41d3be2c20cc5f14fe31c2ba2614701d7a1cd6ab4293882c886b",
       "source": "scripts/aim_publication.py"
     },
     {

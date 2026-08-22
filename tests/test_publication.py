@@ -16,6 +16,8 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from aim_publication import (  # noqa: E402
     PUBLIC_ADAPTIVE_SOURCE_COMMAND,
+    PUBLIC_DEMO_POSTER_PATH,
+    PUBLIC_DEMO_VIDEO_PATH,
     PUBLIC_ORIGIN,
     PUBLIC_SKILL_INSTALL_COMMAND,
     PublicationError,
@@ -52,6 +54,8 @@ class PublicationContractTests(unittest.TestCase):
                 self.assertNotIn(marker, install_content)
             self.assertTrue((output / "LICENSE").is_file())
             self.assertTrue((output / "licenses/LICENSE-DOCS").is_file())
+            self.assertGreater((output / PUBLIC_DEMO_VIDEO_PATH).stat().st_size, 1_000_000)
+            self.assertGreater((output / PUBLIC_DEMO_POSTER_PATH).stat().st_size, 10_000)
             for relative_path in SCHEMA_RELATIVE_PATHS:
                 schema = json.loads(
                     (output / relative_path).read_text(encoding="utf-8")
@@ -82,6 +86,9 @@ class PublicationContractTests(unittest.TestCase):
             self.assertTrue(manifest["aimUi"]["readOnly"])
             self.assertTrue(manifest["aimUi"]["multiEpic"])
             self.assertTrue(manifest["aimUi"]["cardActions"])
+            self.assertEqual(
+                manifest["aimUi"]["portfolioAutoDemo"], PUBLIC_DEMO_VIDEO_PATH
+            )
             self.assertEqual(
                 manifest["aimUi"]["repoLaunch"], "python3 scripts/aim_ui.py"
             )
@@ -132,8 +139,13 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn('id="ui"', index)
         self.assertIn("docs/product/aim-ui.md", index)
         self.assertIn('alt="AIM 2 Agile Iteration Method logo"', index)
-        self.assertIn("A control room for agentic software delivery.", index)
+        self.assertIn("Put the backlog in motion.", index)
+        self.assertIn("Keep control.", index)
         self.assertIn("github-pages/assets/images/aim-ui-beta-control-room.png", index)
+        self.assertIn(PUBLIC_DEMO_VIDEO_PATH, index)
+        self.assertIn(PUBLIC_DEMO_POSTER_PATH, index)
+        self.assertIn('preload="metadata"', index)
+        self.assertNotIn('autoplay', index)
         for command in (
             "/aim upgrade",
             "/aim calibrate-repo",

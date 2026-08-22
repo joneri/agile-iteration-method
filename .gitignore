@@ -10,3 +10,6 @@
 /aim.local.*
 /*.aim.local.md
 /*.aim.process.md
+
+# Local screen-recording source projects; publish only reviewed exported media.
+/*.screenflow/

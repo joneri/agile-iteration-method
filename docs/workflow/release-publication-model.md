@@ -104,6 +104,7 @@ It includes:
 - `sitemap.xml`
 - `AIM_OG.png`
 - `github-pages/assets/`
+  - the lightweight Portfolio Auto poster and silent MP4 demonstration
 - all published JSON Schemas under `schemas/`, including runtime-state schema
   version `1.0`
 - `LICENSE`

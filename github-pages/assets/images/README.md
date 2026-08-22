@@ -6,6 +6,8 @@ Source images intended for the AIM website published from the `gh-pages` branch.
 - `aim-2-hero-dark.png`: dark AIM 2 website hero artwork
 - `aim-ui-beta-control-room.png`: wide AIM UI Beta feature illustration for the
   dedicated website section
+- `portfolio-auto-demo-poster.jpg`: lightweight poster frame for the real
+  Portfolio Auto demonstration shown in the website hero
 
 The AIM 2 brand artwork and AIM UI Beta illustration were produced with
 OpenAI's built-in image generation. The feature illustration uses AIM's navy,
@@ -13,3 +15,7 @@ cyan, lime, and paper palette to depict five delivery stations, moving work
 tickets, and four specialist roles without embedding UI labels or logos.
 
 Keep website image assets here until they are selected and wired into the Pages layout.
+
+The silent 57-second source video is published from
+`github-pages/assets/video/portfolio-auto-demo.mp4`. The page shows the poster
+immediately and requests only video metadata until the visitor chooses to play.

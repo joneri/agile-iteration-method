@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AIM 2.6 - Start AIM UI from chat</title>
-  <meta name="description" content="AIM 2.6 makes AIM UI a first-class chat-controlled surface: start or reopen a local repository, see multi-Epic delivery flow, and keep gates and acceptance in the authoritative AIM chat.">
+  <title>AIM - Put your software portfolio in motion</title>
+  <meta name="description" content="Watch a real Portfolio Auto run: one bounded mandate moves each Epic through AIM's full delivery loop while evidence, gates, and final decisions stay under human control.">
   <link rel="canonical" href="https://joneri.github.io/agile-iteration-method/">
   <link rel="icon" type="image/png" href="github-pages/assets/images/aim-2-logo-light.png">
   <link rel="apple-touch-icon" href="github-pages/assets/images/aim-2-logo-light.png">
   <meta name="theme-color" content="#06142d">
   <meta name="robots" content="index,follow">
-  <meta property="og:title" content="AIM 2.6 - First-class AIM UI">
-  <meta property="og:description" content="Your agentic delivery process finally has a control room.">
+  <meta property="og:title" content="AIM Portfolio Auto - bounded autonomy you can watch">
+  <meta property="og:description" content="Put a Backlog in motion while every Epic keeps its delivery loop, evidence, and human decision points.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://joneri.github.io/agile-iteration-method/">
   <meta property="og:image" content="https://joneri.github.io/agile-iteration-method/AIM_OG.png">
   <meta property="og:image:width" content="1730">
   <meta property="og:image:height" content="909">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AIM 2.6 - First-class AIM UI">
-  <meta name="twitter:description" content="Watch Epics, Increments, roles, gates, evidence, and agents move through one living delivery board.">
+  <meta name="twitter:title" content="AIM Portfolio Auto - bounded autonomy you can watch">
+  <meta name="twitter:description" content="See six Epics move through one controlled AIM portfolio in 57 seconds.">
   <meta name="twitter:image" content="https://joneri.github.io/agile-iteration-method/AIM_OG.png">
   <script type="application/ld+json">
   {
@@ -176,7 +176,9 @@
       background: #030b18;
       box-shadow: 0 28px 70px rgba(0,0,0,0.3);
     }
-    .hero-feature img { width: 100%; aspect-ratio: 1.9 / 1; object-fit: cover; }
+    .hero-feature img,
+    .hero-feature video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+    .hero-feature video { display: block; background: #030b18; }
     .hero-feature figcaption {
       padding: 12px 16px;
       color: #aac0d9;
@@ -241,6 +243,101 @@
     }
     .promise h3 { margin: 26px 0 8px; font-size: 1.06rem; }
     .promise p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+
+    .portfolio-auto-band {
+      position: relative;
+      overflow: hidden;
+      background: #f7fbfe;
+    }
+    .portfolio-auto-band::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(90deg, rgba(8,103,232,0.04) 1px, transparent 1px);
+      background-size: 25% 100%;
+      pointer-events: none;
+    }
+    .portfolio-auto-band .container { position: relative; z-index: 1; }
+    .portfolio-auto-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+      gap: 64px;
+      align-items: end;
+    }
+    .portfolio-command {
+      padding: 22px;
+      color: #dff7ff;
+      border: 1px solid #315782;
+      background: var(--navy);
+      box-shadow: 10px 10px 0 var(--cyan);
+    }
+    .portfolio-command span {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--cyan);
+      font-size: 0.75rem;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+    .portfolio-command code {
+      font: 0.88rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .portfolio-rail {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 52px;
+      border: 1px solid var(--line);
+      background: var(--paper);
+    }
+    .portfolio-rail::before {
+      content: "";
+      position: absolute;
+      top: 47px;
+      right: 12.5%;
+      left: 12.5%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan), var(--yellow), var(--green));
+    }
+    .portfolio-step {
+      position: relative;
+      min-height: 225px;
+      padding: 28px 24px 24px;
+      border-right: 1px solid var(--line);
+    }
+    .portfolio-step:last-child { border-right: 0; }
+    .portfolio-step-number {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      color: #fff;
+      border: 5px solid var(--paper);
+      border-radius: 50%;
+      background: var(--navy);
+      box-shadow: 0 0 0 1px var(--line);
+      font: 800 0.76rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    .portfolio-step h3 { margin: 30px 0 9px; font-size: 1.06rem; }
+    .portfolio-step p { margin: 0; color: var(--muted); font-size: 0.91rem; }
+    .portfolio-payoff {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 54px;
+      align-items: start;
+      margin-top: 34px;
+      padding: 30px 32px;
+      color: #fff;
+      background: var(--navy-2);
+    }
+    .portfolio-payoff strong {
+      color: var(--green);
+      font-size: clamp(1.35rem, 2.4vw, 2rem);
+      line-height: 1.15;
+    }
+    .portfolio-payoff p { margin: 0; color: #c7d8eb; }
 
     .loop {
       display: grid;
@@ -727,7 +824,11 @@
       .hero-content { grid-template-columns: 1fr; grid-template-rows: auto; gap: 28px; }
       .hero-copy, .hero-command, .hero-feature { grid-area: auto; }
       .promise-grid, .mode-grid, .platform-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .feature-layout, .rebuild, .ui-beta-head { grid-template-columns: 1fr; gap: 44px; }
+      .feature-layout, .rebuild, .ui-beta-head, .portfolio-auto-head { grid-template-columns: 1fr; gap: 44px; }
+      .portfolio-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .portfolio-rail::before { display: none; }
+      .portfolio-step:nth-child(2) { border-right: 0; }
+      .portfolio-step:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
       .ui-beta-points { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .loop, .journey { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .loop-step:nth-child(3) { border-right: 0; }
@@ -745,6 +846,8 @@
       .github-link { padding: 7px 10px; }
       .hero-intro { padding: 38px 0 48px; }
       .hero-intro h1 { font-size: clamp(2.2rem, 12vw, 3.3rem); }
+      .hero-feature { order: 2; }
+      .hero-command { order: 3; }
       .hero-lead { font-size: 1rem; }
       .hero-actions { flex-direction: column; max-width: none; }
       .hero-actions .button { width: 100%; }
@@ -773,6 +876,11 @@
       .ui-beta-caption { flex-direction: column; gap: 6px; }
       .ui-beta-actions { flex-direction: column; }
       .ui-beta-actions .button { width: 100%; }
+      .portfolio-rail, .portfolio-payoff { grid-template-columns: 1fr; }
+      .portfolio-step { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
+      .portfolio-step:last-child { border-bottom: 0; }
+      .portfolio-command { box-shadow: 7px 7px 0 var(--cyan); }
+      .portfolio-payoff { gap: 18px; padding: 26px 22px; }
     }
   </style>
 </head>
@@ -782,7 +890,7 @@
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="container nav-inner">
       <a class="brand" href="#top" aria-label="AIM 2 home">
-        <span>AIM</span><span class="brand-version">2.5</span>
+        <span>AIM</span><span class="brand-version">2.6</span>
       </a>
       <div class="nav-links">
         <a href="#why">Why AIM</a>
@@ -800,11 +908,11 @@
   <header class="hero-intro" id="top" aria-labelledby="hero-title">
     <div class="container hero-content">
       <div class="hero-copy">
-        <p class="eyebrow">New in AIM 2.6 · First-class AIM UI</p>
-        <h1 id="hero-title">A control room for agentic software delivery.</h1>
-        <p class="hero-lead">Watch Epics, Increments, roles, gates, evidence, decisions, and helper agents move through one living delivery board — while AIM keeps authority in the chat.</p>
+        <p class="eyebrow">AIM UI · Portfolio Auto · real 57-second run</p>
+        <h1 id="hero-title">Put the backlog in motion.<br>Keep control.</h1>
+        <p class="hero-lead">Approve one bounded portfolio, then watch AIM carry each Epic through planning, implementation, review, validation, and acceptance — one at a time, with every checkpoint visible.</p>
         <div class="hero-actions">
-          <a class="button button-primary" href="#ui">Meet AIM UI Beta</a>
+          <a class="button button-primary" href="#portfolio-auto">How Portfolio Auto works</a>
           <a class="button button-secondary" href="#start">Start with AIM</a>
         </div>
       </div>
@@ -824,13 +932,60 @@
         </div>
       </div>
       <figure class="hero-feature">
-        <img src="github-pages/assets/images/aim-ui-beta-control-room.png" alt="AIM UI work tickets flowing through five delivery stations with four specialist roles">
-        <figcaption>AIM UI Beta · multi-Epic delivery flow · read-only authority boundary</figcaption>
+        <video id="portfolio-demo" controls playsinline preload="metadata" poster="github-pages/assets/images/portfolio-auto-demo-poster.jpg" aria-label="A 57-second silent demonstration of six Epics progressing through AIM Portfolio Auto">
+          <source src="github-pages/assets/video/portfolio-auto-demo.mp4" type="video/mp4">
+          Your browser cannot play the Portfolio Auto demonstration. <a href="github-pages/assets/video/portfolio-auto-demo.mp4">Download the video</a>.
+        </video>
+        <figcaption>Real Portfolio Auto run · six Epics · one bounded mandate · 57 seconds · no audio</figcaption>
       </figure>
     </div>
   </header>
 
   <main id="main">
+    <section class="band portfolio-auto-band" id="portfolio-auto">
+      <div class="container">
+        <div class="portfolio-auto-head">
+          <div>
+            <p class="eyebrow">How Portfolio Auto works</p>
+            <h2 class="section-title">One mandate starts the portfolio. Every Epic still earns Done.</h2>
+            <p class="section-lead">Portfolio Auto turns an ordered AIM UI Backlog into a controlled delivery run. You approve the exact snapshot once. AIM then completes each candidate through the full role loop and pauses when scope, safety, evidence, or a final product decision needs you.</p>
+          </div>
+          <div class="portfolio-command" aria-label="Portfolio Auto start command">
+            <span>Start from chat</span>
+            <code>/aim start "PORTFOLIO" mode:auto</code>
+          </div>
+        </div>
+
+        <div class="portfolio-rail" aria-label="Four steps in a Portfolio Auto run">
+          <article class="portfolio-step">
+            <span class="portfolio-step-number">01</span>
+            <h3>Shape the Backlog</h3>
+            <p>Turn desired outcomes into ordered Epic candidates visible in AIM UI.</p>
+          </article>
+          <article class="portfolio-step">
+            <span class="portfolio-step-number">02</span>
+            <h3>Approve one snapshot</h3>
+            <p>AIM freezes the included cards and asks for one bounded Portfolio mandate.</p>
+          </article>
+          <article class="portfolio-step">
+            <span class="portfolio-step-number">03</span>
+            <h3>Run the full loop</h3>
+            <p>Each Epic moves through PO, TDO, Dev, Reviewer, TDO, and PO with durable evidence.</p>
+          </article>
+          <article class="portfolio-step">
+            <span class="portfolio-step-number">04</span>
+            <h3>Return control at the edge</h3>
+            <p>Changed scope, unsafe effects, weak evidence, and final acceptance come back to you.</p>
+          </article>
+        </div>
+
+        <div class="portfolio-payoff">
+          <strong>Autonomy for the repeatable work. Human authority for the decisions that change the product.</strong>
+          <p>That is the useful trick: Portfolio Auto is not an instruction to “keep coding.” It is an immutable queue, one active candidate at a time, a complete AIM loop per Epic, and an inspectable checkpoint after every transition. You get sustained momentum without turning speed into silent scope or unreviewed completion.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="band" id="why">
       <div class="container">
         <p class="eyebrow">A delivery system, not a coding assistant</p>
