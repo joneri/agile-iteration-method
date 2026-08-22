@@ -339,6 +339,22 @@ The control artifact cannot record gates, roles, acceptance, status,
 concurrency locks, or agent instructions. Focus never transfers runtime
 ownership and never implies that non-focused Epics have stopped.
 
+## Portfolio Auto run boundary
+
+`.aim/portfolio-run.json` is optional chat-owned orchestration state for one
+approved Portfolio Auto run. It contains an immutable ordered Backlog snapshot,
+mandate provenance, progress, the current candidate, and a resumable checkpoint.
+It coordinates contained canonical Epic workspaces but never replaces their
+`state.json`, decisions, reviews, or acceptance evidence.
+
+Only the main AIM thread may invoke the trusted
+`scripts/aim_portfolio_run.py` transition helper. The helper writes this one
+file atomically and performs no agent work or Gate reasoning. The snapshot hash
+is the run boundary, so later Backlog edits do not enter the running Portfolio.
+A stale expected timestamp, changed snapshot, malformed field, symlink,
+duplicate identity, invalid transition, or contradictory active candidate fails
+closed without mutating existing Backlog or Epic state.
+
 ## UI action handoff boundary
 
 A card action is an operator proposal, not a state transition. AIM UI may derive

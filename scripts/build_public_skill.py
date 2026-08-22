@@ -42,6 +42,7 @@ SCHEMA_SOURCES: tuple[Path, ...] = (
     Path("schemas/aim-personal-hints.schema.json"),
     Path("schemas/aim-project-roles.schema.json"),
     Path("schemas/aim-runtime-state.schema.json"),
+    Path("schemas/aim-portfolio-run.schema.json"),
 )
 
 INSTALL_MANIFEST_SOURCE = Path("install/aim-install-manifest.yaml")
@@ -50,6 +51,7 @@ UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_backlog.py"),
     Path("scripts/aim_actions.py"),
     Path("scripts/aim_portfolio.py"),
+    Path("scripts/aim_portfolio_run.py"),
     Path("scripts/aim_ui.py"),
     Path("scripts/aim_ui_control.py"),
     Path("aim-ui/index.html"),

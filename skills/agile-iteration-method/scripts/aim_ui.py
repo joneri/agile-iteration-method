@@ -27,6 +27,7 @@ from aim_actions import (
     codex_deep_link,
 )
 from aim_portfolio import project_portfolio_control
+from aim_portfolio_run import project_portfolio_run
 
 READ_MODEL_VERSION = "5.0"
 PORTFOLIO_VERSION = "1.0"
@@ -696,6 +697,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             "closedIncrements": [],
         },
         "control": None,
+        "portfolioRun": None,
         "warnings": warnings,
         "onboarding": (
             {
@@ -726,6 +728,11 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         for item in epic["increments"]
     }
     backlog_items = _load_backlog(aim_root, warnings)
+    backlog_runtime_candidates = {
+        (item["epicId"], item["runtimeIncrementId"]): item["id"]
+        for item in backlog_items
+        if item["runtimeIncrementId"]
+    }
     backlog_updated_at = "unknown"
     if (aim_root / BACKLOG_FILE).is_file():
         try:
@@ -796,6 +803,24 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     control, control_warnings = project_portfolio_control(aim_root, base["epics"])
     warnings.extend(control_warnings)
     base["control"] = control
+    portfolio_run, run_warnings = project_portfolio_run(aim_root)
+    warnings.extend(run_warnings)
+    base["portfolioRun"] = portfolio_run
+    candidate_states = portfolio_run.get("candidateStates", {})
+    for epic in base["epics"]:
+        for increment in epic["increments"]:
+            candidate_id = (
+                increment["id"]
+                if increment["planned"]
+                else backlog_runtime_candidates.get((epic["id"], increment["id"]))
+            )
+            increment["portfolioCandidateId"] = candidate_id
+            increment["portfolioState"] = candidate_states.get(candidate_id)
+            increment["decisionAuthority"] = (
+                portfolio_run.get("decisionAuthority")
+                if candidate_id == portfolio_run.get("activeCandidateId")
+                else None
+            )
     for epic in base["epics"]:
         epic["focused"] = epic["id"] == control["focusedEpicId"]
     _attach_actions(repo_root, base["epics"], control, backlog_updated_at, warnings)

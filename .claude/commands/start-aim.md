@@ -22,10 +22,15 @@ Before starting:
 
 Expected input:
 - `EPIC: <desired outcome>`
+- `PORTFOLIO` with `Mode: Auto` to preview and authorize one immutable AIM UI Backlog snapshot
 - `Mode: Strict` or `Mode: Auto`
 - `Cost profile: Standard`, `Cost profile: Cost Control`, or `Cost profile: Deep` when resource use matters
 
 Command behavior:
+- for `PORTFOLIO` plus Auto, preview the ordered Backlog, require one bounded
+  user mandate, and then run included Epics sequentially through the complete
+  AIM loop; checkpoint via trusted `scripts/aim_portfolio_run.py` and pause on
+  scope, trust, validation, safety, concurrency, user-stop, or stale-state risk
 - if `.aim/state.json` describes an incomplete Epic, resume it instead of silently starting a parallel Epic
 - resume its persisted cost profile; when no incomplete Epic exists, select a
   fresh cost profile and never inherit one from `epic_complete`
@@ -55,4 +60,10 @@ or:
 EPIC: <desired outcome>
 Mode: Auto
 Cost profile: Standard
+```
+
+Whole-Backlog form:
+
+```text
+/aim start "PORTFOLIO" mode:auto
 ```

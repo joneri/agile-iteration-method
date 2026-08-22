@@ -67,6 +67,10 @@ class PublicationContractTests(unittest.TestCase):
                 "schemas/aim-runtime-state.schema.json",
                 [item["path"] for item in manifest["schemas"]],
             )
+            self.assertIn(
+                "schemas/aim-portfolio-run.schema.json",
+                [item["path"] for item in manifest["schemas"]],
+            )
             self.assertEqual(manifest["installerManifestVersion"], "0.9")
             self.assertEqual(manifest["aimUi"]["version"], "1")
             self.assertEqual(manifest["aimUi"]["releaseStage"], "beta")

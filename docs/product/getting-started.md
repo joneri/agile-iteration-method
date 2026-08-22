@@ -99,6 +99,20 @@ Paste the Epics when asked, put them in the same message, or use
 planned `INC-*` cards, opens the UI, and leaves every card in Backlog until a
 separate Activate intent is sent.
 
+To approve that visible Backlog once and let AIM work through it sequentially,
+run:
+
+```text
+/aim start "PORTFOLIO" mode:auto
+```
+
+Review the ordered snapshot and approve its Portfolio mandate. AIM then keeps
+the complete PO/TDO/Dev/Reviewer/TDO/PO loop for every included Epic while
+skipping repeated approval pauses that remain inside the mandate. AIM UI shows
+progress and labels delegated decisions as Portfolio-mandate decisions. AIM
+pauses for scope, trust, validation, safety, or concurrency escalation, and
+`/aim continue` resumes the preserved checkpoint after resolution.
+
 ## 2. Calibrate the Repository
 
 Run:

@@ -11,7 +11,8 @@ If Personal AIM hints exist at `~/.aim/repo-awareness/<repo-fingerprint>/hints.y
 Use profile facts to choose locality, commands, short authoritative docs, risk zones, freshness triggers, and context to avoid before broader docs.
 
 If no Epic is provided yet:
-- ask for one line: `EPIC: ...`
+- ask for one line: `EPIC: ...`, or offer `/aim start "PORTFOLIO" mode:auto`
+  when the user wants one approved run over the visible AIM UI Backlog
 - default to `Mode: Strict`
 - suggest `Cost profile: Cost Control` for ordinary low-risk work
 - mention that `Deep` is available for trust, data, deployment, migration, security, or API risk
@@ -35,3 +36,12 @@ If Epic is provided:
 - keep supplier model/reasoning effort independent from AIM cost profile
 - run `/aim start "EPIC: ..."`
 - remind me that approvals are meaningful at Gate A, B, and E
+
+If `PORTFOLIO` with `mode:auto` is provided, preview an immutable ordered
+Backlog snapshot and require one bounded user mandate. Then keep the main AIM
+thread as sole orchestrator, run one included Epic at a time through the full
+role/Gate loop, and checkpoint only through trusted
+`scripts/aim_portfolio_run.py`. Record delegated approvals with mandate
+provenance. Pause on scope expansion, unsafe effects, ambiguous evidence,
+failed validation, concurrency conflict, user stop/change, or malformed/stale
+state; `/aim continue` must revalidate before resuming.

@@ -14,6 +14,7 @@ SCHEMA_RELATIVE_PATHS = (
     "schemas/aim-repo-profile.schema.json",
     "schemas/aim-personal-hints.schema.json",
     "schemas/aim-runtime-state.schema.json",
+    "schemas/aim-portfolio-run.schema.json",
 )
 ROOT_PUBLIC_FILES = (
     "VERSION",

@@ -1,0 +1,196 @@
+{
+  "$comment": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
+  "$id": "urn:aim:public-skill:aim-portfolio-run.schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Chat-owned orchestration checkpoint for one approved, immutable AIM Backlog snapshot. It coordinates but never replaces canonical per-Epic runtime state.",
+  "properties": {
+    "activeCandidateId": {
+      "maxLength": 80,
+      "pattern": "^INC-[A-Z0-9-]+$",
+      "type": "string"
+    },
+    "checkpoint": {
+      "additionalProperties": false,
+      "properties": {
+        "candidateId": {
+          "maxLength": 80,
+          "pattern": "^INC-[A-Z0-9-]+$",
+          "type": "string"
+        },
+        "decisionAuthority": {
+          "enum": [
+            "portfolio_mandate",
+            "user",
+            "none"
+          ]
+        },
+        "epicStatus": {
+          "maxLength": 80,
+          "minLength": 1,
+          "type": "string"
+        },
+        "gate": {
+          "enum": [
+            "Gate A",
+            "Gate B",
+            "Gate C",
+            "Gate D",
+            "Gate E",
+            "Epic closure"
+          ]
+        },
+        "updatedAt": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidateId",
+        "epicStatus",
+        "gate",
+        "decisionAuthority",
+        "updatedAt"
+      ],
+      "type": "object"
+    },
+    "completedCandidateIds": {
+      "items": {
+        "maxLength": 80,
+        "pattern": "^INC-[A-Z0-9-]+$",
+        "type": "string"
+      },
+      "maxItems": 256,
+      "type": "array"
+    },
+    "mandate": {
+      "additionalProperties": false,
+      "properties": {
+        "approvedAt": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+        },
+        "approvedBy": {
+          "const": "user"
+        },
+        "id": {
+          "maxLength": 120,
+          "pattern": "^MANDATE-[A-Z0-9-]+$",
+          "type": "string"
+        },
+        "snapshotHash": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "approvedAt",
+        "approvedBy",
+        "snapshotHash"
+      ],
+      "type": "object"
+    },
+    "mode": {
+      "const": "Auto"
+    },
+    "pauseReason": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "type": "string"
+    },
+    "runId": {
+      "maxLength": 120,
+      "pattern": "^PORTFOLIO-[A-Z0-9-]+$",
+      "type": "string"
+    },
+    "runVersion": {
+      "const": "1.0"
+    },
+    "skippedCandidateIds": {
+      "items": {
+        "maxLength": 80,
+        "pattern": "^INC-[A-Z0-9-]+$",
+        "type": "string"
+      },
+      "maxItems": 256,
+      "type": "array"
+    },
+    "snapshot": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "candidateId": {
+            "maxLength": 80,
+            "pattern": "^INC-[A-Z0-9-]+$",
+            "type": "string"
+          },
+          "createdAt": {
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          },
+          "epicId": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string"
+          },
+          "epicTitle": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "title": {
+            "maxLength": 240,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "candidateId",
+          "epicId",
+          "epicTitle",
+          "title",
+          "priority",
+          "createdAt"
+        ],
+        "type": "object"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "running",
+        "paused",
+        "completed",
+        "stopped"
+      ]
+    },
+    "updatedAt": {
+      "maxLength": 64,
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "runVersion",
+    "runId",
+    "mode",
+    "status",
+    "mandate",
+    "snapshot",
+    "completedCandidateIds",
+    "skippedCandidateIds",
+    "updatedAt"
+  ],
+  "title": "AIM Portfolio Auto run",
+  "type": "object",
+  "x-aim-source": "schemas/aim-portfolio-run.schema.json"
+}

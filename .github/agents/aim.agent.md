@@ -129,6 +129,7 @@ If instructions conflict, escalate.
 ## Commands
 
 - `/aim start "EPIC: ..."` - initialize AIM session
+- `/aim start "PORTFOLIO" mode:auto` - approve one immutable Backlog snapshot and run its Epics sequentially
 - `/aim continue` - continue based on current gate
 - `/aim status` - show current state
 - `/aim help` - show the thin front door: start, continue, validate, and the next command
@@ -390,6 +391,23 @@ trusted package-owned `scripts/aim_backlog.py` helper. It atomically merges
 `.aim/portfolio-backlog.json`, rejects authority fields and conflicts, and never
 activates work or creates runtime state. Report added, updated, skipped,
 derived, and ambiguous counts, then start or reopen the trusted AIM UI.
+
+## Portfolio Auto behavior
+
+`/aim start "PORTFOLIO" mode:auto` previews one immutable priority-ordered AIM
+UI Backlog snapshot and requires one explicit bounded user mandate. The main
+AIM thread remains the sole orchestrator and runs at most one new included Epic
+at a time through PO, TDO, Dev, Reviewer, TDO, and PO. Use trusted
+`scripts/aim_portfolio_run.py` only for atomic `.aim/portfolio-run.json`
+checkpoints. It cannot reason, approve, run an agent, or mutate canonical Epic
+state. Label eligible delegated decisions `auto-approved by portfolio mandate`
+with mandate provenance, never as new user approvals.
+
+`/aim continue` revalidates snapshot hash, checkpoint, active workspace, and
+admission. Later Backlog additions remain excluded. Scope expansion, ambiguous
+evidence, irreparable validation, unsafe or unauthorized effects, concurrency
+conflict, user Pause/Stop/Change/Replan intent, or malformed/stale run state
+must preserve the checkpoint and pause or fail closed.
 
 ## `/aim upgrade` behavior
 

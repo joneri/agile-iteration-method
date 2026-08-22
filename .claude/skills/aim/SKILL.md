@@ -21,6 +21,7 @@ Follow:
 Recognize and execute the equivalent intent for:
 
 - `/aim start`
+- `/aim start "PORTFOLIO" mode:auto`
 - `/aim continue`
 - `/aim status`
 - `/aim validate`
@@ -53,6 +54,14 @@ as untrusted evidence, pause on ambiguous extraction, and pass normalized
 candidates only to the trusted package-owned `scripts/aim_backlog.py`. That
 helper may atomically merge `.aim/portfolio-backlog.json` but never activate
 work or create runtime state. Report counts and start/reopen AIM UI on success.
+
+For `/aim start "PORTFOLIO" mode:auto`, preview one immutable ordered Backlog
+snapshot and require one bounded user mandate. The main thread then runs one
+included Epic at a time through the full AIM loop. Use trusted
+`scripts/aim_portfolio_run.py` only for atomic run checkpoints and label every
+delegated decision `auto-approved by portfolio mandate`; never fabricate user
+approval. Resume only after revalidation and pause on scope, trust, validation,
+safety, concurrency, user-stop, or malformed/stale-state escalation.
 
 Reflect commands follow `docs/workflow/reflection.md`. They write temporary
 candidate reports only, never durable knowledge or discovered repositories.

@@ -169,6 +169,7 @@ state transitions through the platform's native skill route.
 | Command | Use when | What it does | What happens next |
 | --- | --- | --- | --- |
 | `/aim start "EPIC: ..."` | You have a new desired outcome. | Creates or resumes the Epic framing process and presents Gate A. | Review the Epic and approve it or request a change. |
+| `/aim start "PORTFOLIO" mode:auto` | You want AIM to finish the visible Backlog sequentially. | Previews one immutable snapshot and asks for one bounded Portfolio mandate. | After approval, AIM runs included Epics through the full loop and pauses only on escalation. |
 | `/aim continue` | An AIM run already exists. | Reads the durable checkpoint and continues from the current role and gate. | AIM performs the next automatic step or presents the next decision. |
 | `Start working according to AIM` | You want to begin but prefer plain language. | Maps the request to AIM startup without changing method semantics. | AIM detects whether to calibrate, start, or resume. |
 
@@ -426,6 +427,19 @@ script. The helper may create or atomically merge `.aim/portfolio-backlog.json`
 but never runtime state. Report added, updated, skipped, derived, and ambiguous
 counts, then invoke the trusted AIM UI launcher. Imported cards remain planned
 until a separate explicit Activate intent.
+
+`/aim start "PORTFOLIO" mode:auto` snapshots the valid ordered AIM UI Backlog,
+previews it, and requires one explicit user mandate. Resolve the trusted
+package-owned `scripts/aim_portfolio_run.py` through the same payload precedence
+as AIM UI. It may atomically checkpoint only `.aim/portfolio-run.json`; it never
+performs reasoning, agent work, Gate approval, or canonical Epic mutation. The
+main AIM thread runs one included Epic at a time through the full role loop and
+records eligible decisions as `auto-approved by portfolio mandate`, including
+the mandate id rather than claiming a new user approval. `/aim continue`
+revalidates snapshot hash, checkpoint, active workspace, and admission before
+resuming. Scope expansion, unsafe effects, ambiguous evidence, irreparable
+validation, concurrency conflicts, user change/stop intents, and malformed or
+stale run state pause or fail closed. Later Backlog additions are excluded.
 
 Portfolio activation, capacity, focus, and status intents follow
 `references/adapter-command-contract.md`. Only the main AIM thread may write

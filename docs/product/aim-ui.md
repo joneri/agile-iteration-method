@@ -174,6 +174,28 @@ a file larger than 1 MB, limits the array to 256 candidates, and enforces
 field-level string ceilings so malformed planning input cannot grow without a
 bound.
 
+## Run the Backlog as one Portfolio
+
+After populating the Backlog, start the whole ordered board from AIM chat:
+
+```text
+/aim start "PORTFOLIO" mode:auto
+```
+
+AIM previews the exact candidate order and asks for one bounded Portfolio
+mandate. Once approved, the main AIM chat runs one Epic at a time through the
+complete AIM lifecycle. The Portfolio view shows the run id, mandate, current
+card, remaining count, pause reason, durable Gate checkpoint, and whether the
+current decision derives from the Portfolio mandate. Individual cards show
+queued, active, completed, or skipped Portfolio state.
+
+The UI remains read-only. `.aim/portfolio-run.json` is a chat-owned checkpoint,
+not a browser scheduler and not a replacement for each Epic workspace. Later
+Backlog additions stay outside the immutable running snapshot. `/aim continue`
+resumes only after AIM revalidates the snapshot and active workspace. Scope,
+trust, validation, safety, concurrency, or user stop/change conditions pause the
+run without losing completed work.
+
 ## What the control-room tabs show
 
 - Delivery flow, selected by default, with a shared five-column Kanban containing increments from every selected Epic

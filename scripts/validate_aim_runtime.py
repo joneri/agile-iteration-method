@@ -39,6 +39,7 @@ from aim_validator.runtime_state import (
     load_runtime_state,
 )
 from aim_validator.schema_subset import unsupported_keywords, validate as validate_schema
+from aim_portfolio_run import validate_run as validate_portfolio_run
 
 
 EXIT_CODES = {
@@ -357,6 +358,8 @@ AIM_UI_BACKLOG_SCHEMA_PATH = "schemas/aim-ui-backlog.schema.json"
 AIM_UI_BACKLOG_PATH = ".aim/portfolio-backlog.json"
 AIM_PORTFOLIO_CONTROL_SCHEMA_PATH = "schemas/aim-portfolio-control.schema.json"
 AIM_PORTFOLIO_CONTROL_PATH = ".aim/portfolio-control.json"
+AIM_PORTFOLIO_RUN_SCHEMA_PATH = "schemas/aim-portfolio-run.schema.json"
+AIM_PORTFOLIO_RUN_PATH = ".aim/portfolio-run.json"
 
 CANONICAL_AIM_COMMANDS = [
     "/aim start",
@@ -1527,6 +1530,7 @@ def main() -> int:
     aim_ui_portfolio_schema = None
     aim_ui_backlog_schema = None
     aim_portfolio_control_schema = None
+    aim_portfolio_run_schema = None
     for relative_path, schema_name in (
         (REPO_PROFILE_SCHEMA_PATH, "repo profile"),
         (PERSONAL_HINTS_SCHEMA_PATH, "Personal hints"),
@@ -1534,6 +1538,7 @@ def main() -> int:
         (AIM_UI_PORTFOLIO_SCHEMA_PATH, "AIM UI portfolio"),
         (AIM_UI_BACKLOG_SCHEMA_PATH, "AIM UI portfolio backlog"),
         (AIM_PORTFOLIO_CONTROL_SCHEMA_PATH, "AIM portfolio control"),
+        (AIM_PORTFOLIO_RUN_SCHEMA_PATH, "AIM Portfolio Auto run"),
     ):
         checked.append(f"{schema_name} JSON Schema")
         try:
@@ -1560,8 +1565,10 @@ def main() -> int:
             aim_ui_portfolio_schema = loaded_schema
         elif relative_path == AIM_UI_BACKLOG_SCHEMA_PATH:
             aim_ui_backlog_schema = loaded_schema
-        else:
+        elif relative_path == AIM_PORTFOLIO_CONTROL_SCHEMA_PATH:
             aim_portfolio_control_schema = loaded_schema
+        else:
+            aim_portfolio_run_schema = loaded_schema
         for schema_issue in unsupported_keywords(loaded_schema):
             add_issue(
                 issues,
@@ -1674,6 +1681,46 @@ def main() -> int:
                     f"AIM portfolio control violates the schema at {schema_issue.path}: {schema_issue.message}",
                     "Align the optional control with schemas/aim-portfolio-control.schema.json.",
                 )
+
+    checked.append("AIM Portfolio Auto run")
+    run_path = repo_root / AIM_PORTFOLIO_RUN_PATH
+    if aim_portfolio_run_schema is not None and (run_path.exists() or run_path.is_symlink()):
+        if run_path.is_symlink():
+            add_issue(
+                issues,
+                "contradictory",
+                AIM_PORTFOLIO_RUN_PATH,
+                "AIM Portfolio Auto run must not be a symbolic link",
+                "Replace it with a repository-contained regular JSON file.",
+            )
+        else:
+            try:
+                portfolio_run = json.loads(run_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                add_issue(
+                    issues,
+                    "contradictory",
+                    AIM_PORTFOLIO_RUN_PATH,
+                    f"AIM Portfolio Auto run is invalid JSON: {exc}",
+                    "Repair the checkpoint from the authoritative AIM chat before resuming.",
+                )
+            else:
+                for schema_issue in validate_schema(portfolio_run, aim_portfolio_run_schema):
+                    add_issue(
+                        issues,
+                        "contradictory",
+                        AIM_PORTFOLIO_RUN_PATH,
+                        f"AIM Portfolio Auto run violates the schema at {schema_issue.path}: {schema_issue.message}",
+                        "Align it with schemas/aim-portfolio-run.schema.json before resuming.",
+                    )
+                for semantic_issue in validate_portfolio_run(portfolio_run):
+                    add_issue(
+                        issues,
+                        "contradictory",
+                        AIM_PORTFOLIO_RUN_PATH,
+                        f"AIM Portfolio Auto run is inconsistent: {semantic_issue}",
+                        "Repair the immutable snapshot or checkpoint from the authoritative AIM chat.",
+                    )
 
     checked.append("AIM project role profile")
     if project_roles_schema is not None and (repo_root / PROJECT_ROLES_PATH).is_file():

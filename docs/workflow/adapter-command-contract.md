@@ -19,6 +19,7 @@ ownership, or acceptance.
 | Command | Intent | State effect |
 | --- | --- | --- |
 | `/aim start "EPIC: ..."` | start a new Epic or resume an incomplete checkpoint instead of creating a parallel run | may create `.aim/` and initialize `state.json` at Gate A |
+| `/aim start "PORTFOLIO" mode:auto` | preview the ordered AIM UI Backlog and request one bounded Portfolio mandate | after explicit mandate approval, may create `.aim/portfolio-run.json` and sequentially coordinate included canonical Epic workspaces |
 | `/aim continue` | resume from the persisted role, gate, increment, mode, and cost profile | advances state only when the current AIM transition allows it |
 | `/aim status` | report the AIM product release from `VERSION` separately from the runtime contract in `.aim/state.json` `aimVersion`, then Epic, increment, role, mode, cost profile, gate, adapter, and next action | read-only |
 | `/aim validate` | run or explain Structural, Behavioral, Product coherence, and Release readiness checks | read-only |
@@ -102,6 +103,38 @@ launcher. UI launch failure does not roll back valid planning input; the adapter
 returns one actionable `/aim ui` retry. Import never activates a candidate,
 creates `DI-*` authority, passes a Gate, changes canonical roles, or starts an
 agent. Only a later explicit Activate intent may create runtime evidence.
+
+## Portfolio Auto start and resume
+
+`/aim start "PORTFOLIO" mode:auto` is the first-class whole-Backlog route. AIM
+sorts the current valid `INC-*` candidates by priority, creation time, and id,
+previews that immutable snapshot, and asks for one explicit Portfolio mandate.
+The mandate names its snapshot and safety boundary. It is not blanket approval
+for later cards, materially changed outcomes, destructive or external effects,
+or work outside repository policy.
+
+After approval, the main AIM chat uses the trusted package-owned
+`scripts/aim_portfolio_run.py` helper to atomically checkpoint only
+`.aim/portfolio-run.json`. The helper validates data and transitions; it cannot
+reason, approve a Gate, activate an agent, or mutate an Epic workspace. The
+main chat activates at most one new candidate, runs its complete canonical
+PO/TDO/Dev/Reviewer/TDO/PO loop, and records eligible decisions as
+`auto-approved by portfolio mandate` with the mandate id. User approval must
+never be fabricated.
+
+Each candidate retains an independently authoritative contained Epic
+workspace. Once its review, validation, Gate E, and Epic closure evidence pass,
+the chat checkpoints completion and advances to the next snapshot candidate.
+`/aim continue` revalidates the immutable snapshot hash, run checkpoint, active
+workspace, and admission state before resuming. It never replays completed work
+or silently incorporates later Backlog changes.
+
+Portfolio Auto pauses with its checkpoint intact for scope expansion,
+ambiguous or untrusted evidence, validation that bounded correction cannot
+restore, unsafe or unauthorized effects, repository/capacity/concurrency
+conflicts, or Pause/Stop/Change/Replan intent. Malformed, symlinked, stale, or
+hash-mismatched run state fails closed. AIM UI projects progress and approval
+provenance read-only; it never drives the loop.
 
 ## Portfolio-control chat intents
 

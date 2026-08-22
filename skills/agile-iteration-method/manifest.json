@@ -20,6 +20,7 @@
     "references/repo-awareness-two-layer-model.md",
     "references/repo-awareness.md",
     "references/schemas/aim-personal-hints.schema.json",
+    "references/schemas/aim-portfolio-run.schema.json",
     "references/schemas/aim-project-roles.schema.json",
     "references/schemas/aim-repo-profile.schema.json",
     "references/schemas/aim-runtime-state.schema.json",
@@ -27,6 +28,7 @@
     "scripts/aim_actions.py",
     "scripts/aim_backlog.py",
     "scripts/aim_portfolio.py",
+    "scripts/aim_portfolio_run.py",
     "scripts/aim_ui.py",
     "scripts/aim_ui_control.py"
   ],
@@ -55,17 +57,17 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "9e7efe57bbafe27006a7e320726fe796038c1b4e6be19d6a233b9052eb108f70",
+      "sha256": "c0c7e8413b4301ade54472911de84a261df6d7a6eb3c3fc7ac8bca1867e8f79f",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "2e3e78d3955d6256d2c38520cb4bc104499e0f54443c8e524a9f09318bfe5419",
+      "sha256": "277a4c3905603c539645976496835892e615353a95eb637151d833da5d09e9e8",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "8a770533072ef06b6b467df0e77972139102d0e78d3cbb4f245ce84ee00e0370",
+      "sha256": "9182b81913585ec0fe0b5b83e7c30ccca21452fbac0621b4fb61f52a5e7a8860",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -139,8 +141,13 @@
       "source": "schemas/aim-runtime-state.schema.json"
     },
     {
+      "output": "references/schemas/aim-portfolio-run.schema.json",
+      "sha256": "3b75c9f37b0c443f1c36274c07136692e43e4478a081bed0c53856f757efaa39",
+      "source": "schemas/aim-portfolio-run.schema.json"
+    },
+    {
       "output": "references/install/aim-install-manifest.yaml",
-      "sha256": "3af461519c1ce4778c156d2ac6109655f1ecd20f1467b1808cd7419a190ccf0f",
+      "sha256": "90c0ac8edfbad0778f25a857f4f57d0e243e005ef405cecc6b7fb15a717c2162",
       "source": "install/aim-install-manifest.yaml"
     },
     {
@@ -155,12 +162,12 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "31305ad9a624375f4602fcaf7fdb678081e68eb09e0828aa016d72b6bb0e624c",
+      "sha256": "25b00a72f6bd80add2ff1ccbf7517b2d663df0b95bdc4a7eee320b738693256a",
       "source": "scripts/aim_publication.py"
     },
     {
       "output": "manifest.json",
-      "sha256": "70b2d549ba2c9163e0c62536f5a53e63e94064cc8f862e4baf7163635421b7e3",
+      "sha256": "c812d98f1c88df35336e6cc87bbde02954f1917caaf7038d16a6d6a7f54ba4b7",
       "source": "scripts/build_public_skill.py"
     },
     {
@@ -179,8 +186,13 @@
       "source": "scripts/aim_portfolio.py"
     },
     {
+      "output": "scripts/aim_portfolio_run.py",
+      "sha256": "f43cf2fbc7487d751380e02cc2a87b4936d702b40bd18f394da07ff5df463da9",
+      "source": "scripts/aim_portfolio_run.py"
+    },
+    {
       "output": "scripts/aim_ui.py",
-      "sha256": "600909ffd78400c9f3eb0bb8a6f3a317788f910418a6abaffd1a823b899cf799",
+      "sha256": "578fb0ed3536c7a31f33b203c39a26366ef6de576c7a74d8063f787a9069dbca",
       "source": "scripts/aim_ui.py"
     },
     {
@@ -190,17 +202,17 @@
     },
     {
       "output": "aim-ui/index.html",
-      "sha256": "1e470f4a82527111a280348596feb08bcc41d58b9a0a2d650847905972883fc0",
+      "sha256": "57f2581ed25ee84e4bdfeaa8446a87648253f0b35f510ee07855fa45be51a12f",
       "source": "aim-ui/index.html"
     },
     {
       "output": "aim-ui/styles.css",
-      "sha256": "e4e6f9e5d72b9dffe534a6d7a898ee2e01777d09004e19bb4c11aeccd6b93db5",
+      "sha256": "37331f4063a9a116b540ed6ac9d62d026cceb6e2fd60013e899c778a314f80f8",
       "source": "aim-ui/styles.css"
     },
     {
       "output": "aim-ui/app.js",
-      "sha256": "adef8cb2a7a68510bd7f7b32d1425693b432773869c8490353ef7dda93162476",
+      "sha256": "ad556532c061898932a141d7edeba3f6ed31e56a0a73777a77918433390c741a",
       "source": "aim-ui/app.js"
     }
   ]

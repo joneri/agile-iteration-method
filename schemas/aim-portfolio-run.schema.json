@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-portfolio-run.schema.json",
+  "title": "AIM Portfolio Auto run",
+  "description": "Chat-owned orchestration checkpoint for one approved, immutable AIM Backlog snapshot. It coordinates but never replaces canonical per-Epic runtime state.",
+  "type": "object",
+  "required": ["runVersion", "runId", "mode", "status", "mandate", "snapshot", "completedCandidateIds", "skippedCandidateIds", "updatedAt"],
+  "properties": {
+    "runVersion": {"const": "1.0"},
+    "runId": {"type": "string", "pattern": "^PORTFOLIO-[A-Z0-9-]+$", "maxLength": 120},
+    "mode": {"const": "Auto"},
+    "status": {"enum": ["running", "paused", "completed", "stopped"]},
+    "mandate": {
+      "type": "object",
+      "required": ["id", "approvedAt", "approvedBy", "snapshotHash"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^MANDATE-[A-Z0-9-]+$", "maxLength": 120},
+        "approvedAt": {"type": "string", "minLength": 1, "maxLength": 64},
+        "approvedBy": {"const": "user"},
+        "snapshotHash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "snapshot": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "type": "object",
+        "required": ["candidateId", "epicId", "epicTitle", "title", "priority", "createdAt"],
+        "properties": {
+          "candidateId": {"type": "string", "pattern": "^INC-[A-Z0-9-]+$", "maxLength": 80},
+          "epicId": {"type": "string", "minLength": 1, "maxLength": 120},
+          "epicTitle": {"type": "string", "minLength": 1, "maxLength": 200},
+          "title": {"type": "string", "minLength": 1, "maxLength": 240},
+          "priority": {"type": "integer"},
+          "createdAt": {"type": "string", "minLength": 1, "maxLength": 64}
+        },
+        "additionalProperties": false
+      }
+    },
+    "activeCandidateId": {"type": "string", "pattern": "^INC-[A-Z0-9-]+$", "maxLength": 80},
+    "completedCandidateIds": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {"type": "string", "pattern": "^INC-[A-Z0-9-]+$", "maxLength": 80}
+    },
+    "skippedCandidateIds": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {"type": "string", "pattern": "^INC-[A-Z0-9-]+$", "maxLength": 80}
+    },
+    "checkpoint": {
+      "type": "object",
+      "required": ["candidateId", "epicStatus", "gate", "decisionAuthority", "updatedAt"],
+      "properties": {
+        "candidateId": {"type": "string", "pattern": "^INC-[A-Z0-9-]+$", "maxLength": 80},
+        "epicStatus": {"type": "string", "minLength": 1, "maxLength": 80},
+        "gate": {"enum": ["Gate A", "Gate B", "Gate C", "Gate D", "Gate E", "Epic closure"]},
+        "decisionAuthority": {"enum": ["portfolio_mandate", "user", "none"]},
+        "updatedAt": {"type": "string", "minLength": 1, "maxLength": 64}
+      },
+      "additionalProperties": false
+    },
+    "pauseReason": {"type": "string", "minLength": 1, "maxLength": 1000},
+    "updatedAt": {"type": "string", "minLength": 1, "maxLength": 64}
+  },
+  "additionalProperties": false
+}

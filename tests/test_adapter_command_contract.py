@@ -115,6 +115,35 @@ class AdapterCommandContractTests(unittest.TestCase):
         ):
             self.assertIn(marker, combined)
 
+    def test_portfolio_auto_start_is_a_first_class_cross_adapter_contract(self) -> None:
+        surfaces = (
+            "docs/workflow/adapter-command-contract.md",
+            "docs/workflow/agile-iteration-method.md",
+            "adapters/portable/agile-iteration-method/SKILL.md",
+            "adapters/codex/agile-iteration-method/SKILL.md",
+            ".github/skills/aim/SKILL.md",
+            ".github/agents/aim.agent.md",
+            ".github/prompts/start-aim.prompt.md",
+            ".claude/skills/aim/SKILL.md",
+            ".claude/commands/start-aim.md",
+        )
+        combined = "\n".join(
+            (REPO_ROOT / relative).read_text(encoding="utf-8")
+            for relative in surfaces
+        )
+        for marker in (
+            '/aim start "PORTFOLIO" mode:auto',
+            "immutable",
+            "portfolio mandate",
+            "scripts/aim_portfolio_run.py",
+            ".aim/portfolio-run.json",
+            "main AIM thread",
+            "/aim continue",
+            "fail closed",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker.lower(), combined.lower())
+
     def test_start_surfaces_preserve_versioned_cost_selection(self) -> None:
         surfaces = (
             "adapters/portable/agile-iteration-method/SKILL.md",

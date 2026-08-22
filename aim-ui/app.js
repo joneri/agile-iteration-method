@@ -164,6 +164,34 @@ function renderPortfolioControl(board) {
   }
 }
 
+function renderPortfolioRun(board) {
+  const run = board.portfolioRun || {};
+  const panel = $("portfolio-run-panel");
+  panel.hidden = !run.configured || state.view !== "portfolio";
+  if (!run.configured) return;
+  const summary = $("portfolio-run-summary");
+  const facts = $("portfolio-run-facts");
+  const status = $("portfolio-run-status");
+  const guidance = $("portfolio-run-guidance");
+  facts.replaceChildren();
+  summary.textContent = run.valid
+    ? `${run.completed} of ${run.total} Backlog cards completed under ${run.mandateId}.`
+    : "Portfolio Auto is paused because its chat-owned run contract is invalid.";
+  addFact(facts, "Portfolio", run.runId || "Invalid");
+  addFact(facts, "Current card", run.activeCandidateId || "None");
+  addFact(facts, "Remaining", run.remaining ?? "Unknown");
+  addFact(facts, "Decision", run.decisionAuthority === "portfolio_mandate" ? "Portfolio mandate" : run.decisionAuthority || "None");
+  status.dataset.status = run.status || "invalid";
+  status.textContent = statusLabel(run.status || "invalid");
+  if (!run.valid) guidance.textContent = run.issue || "Repair the run contract in AIM chat.";
+  else if (run.status === "paused") guidance.textContent = run.pauseReason;
+  else if (run.status === "completed") guidance.textContent = "The approved snapshot is complete.";
+  else if (run.status === "stopped") guidance.textContent = run.pauseReason || "The Portfolio was stopped in AIM chat.";
+  else guidance.textContent = run.activeCandidateId
+    ? `${run.gate || "AIM"} is the durable checkpoint. Auto decisions cite the Portfolio mandate.`
+    : "AIM chat may activate the next queued card.";
+}
+
 function renderRoles(epic, lane) {
   lane.replaceChildren();
   epic.canonicalRoles.forEach((role) => {
@@ -313,6 +341,12 @@ function renderCard(increment, epic, index, existingCard = null) {
     addFact(facts, "Mode", increment.mode);
     addFact(facts, "Cost", increment.costProfile);
     addFact(facts, "State", statusLabel(increment.runtimeStatus));
+  }
+  if (increment.portfolioState) {
+    addFact(facts, "Portfolio", statusLabel(increment.portfolioState));
+  }
+  if (increment.decisionAuthority === "portfolio_mandate") {
+    addFact(facts, "Approval", "Portfolio mandate");
   }
   const attention = card.querySelector(".attention");
   attention.hidden = true;
@@ -544,6 +578,7 @@ function renderView(board, epics) {
   const showingPeople = state.view === "people";
   const showingClosed = state.view === "closed";
   $("epic-rail").hidden = !showingPortfolio;
+  $("portfolio-run-panel").hidden = !showingPortfolio || !board.portfolioRun?.configured;
   $("portfolio-control-panel").hidden = !showingPortfolio;
   $("people-panel").hidden = !showingPeople;
   $("workflow-panel").hidden = !(showingBoard || showingClosed);
@@ -616,6 +651,7 @@ function render(board) {
   addFact(facts, "Attention", attentionCount);
   addFact(facts, "Accepted history", board.history?.acceptedCount || 0);
   renderPortfolioControl(board);
+  renderPortfolioRun(board);
   renderEpicRoster(board);
   renderFilters(board);
   const epics = visibleEpics(board);

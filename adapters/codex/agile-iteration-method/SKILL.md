@@ -154,6 +154,7 @@ Do not treat a missing local skill as a blocker when the repository already cont
 Treat these as AIM intents when the current adapter supports them or when the user writes the equivalent in plain language:
 
 - `/aim start "EPIC: ..."`
+- `/aim start "PORTFOLIO" mode:auto`
 - `/aim continue`
 - `/aim status`
 - `/aim validate`
@@ -199,6 +200,17 @@ pause on ambiguity. Send normalized candidates to the trusted package-owned
 script. The helper atomically merges only `.aim/portfolio-backlog.json`; it
 cannot activate work or create runtime authority. Report counts and open the
 repo through the trusted AIM UI launcher after success.
+
+`/aim start "PORTFOLIO" mode:auto` previews an immutable ordered Backlog
+snapshot and requires one explicit bounded user mandate. The main AIM thread
+then runs one included Epic at a time through every canonical role and Gate.
+Use the trusted package-owned `scripts/aim_portfolio_run.py` only for atomic
+`.aim/portfolio-run.json` checkpoints; it owns no reasoning, agent execution,
+Gate decision, or Epic state. Record delegated decisions as `auto-approved by
+portfolio mandate` with mandate provenance. `/aim continue` revalidates the
+snapshot, checkpoint, active workspace, and admission state. Scope expansion,
+unsafe effects, ambiguous evidence, failed validation, concurrency conflict,
+user change/stop intent, or malformed/stale state pauses or fails closed.
 
 `/aim calibrate-repo` uses the package-local canonical flow in `references/repo-awareness-calibration.md`.
 `/aim configure-agents` uses the package-local

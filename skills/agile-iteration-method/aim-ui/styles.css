@@ -219,12 +219,13 @@ main { padding: clamp(22px, 4vw, 58px); }
 .epic-facts dt { color: #8fa9c6; font: 0.57rem/1 var(--mono); text-transform: uppercase; }
 .epic-facts dd { margin: 4px 0 0; font-size: 0.72rem; font-weight: 800; }
 
-.portfolio-control, .people-strip, .workflow {
+.portfolio-run, .portfolio-control, .people-strip, .workflow {
   margin-top: 18px;
   padding: clamp(24px, 3vw, 38px);
   background: rgba(248, 251, 253, 0.94);
   border: 1px solid var(--line);
 }
+.portfolio-run,
 .portfolio-control {
   display: grid;
   grid-template-columns: minmax(220px, 0.75fr) minmax(320px, 1.25fr) minmax(220px, 0.75fr);
@@ -232,6 +233,7 @@ main { padding: clamp(22px, 4vw, 58px); }
   align-items: center;
   border-left: 7px solid var(--cyan);
 }
+.portfolio-run { border-left-color: var(--lime); }
 .control-copy h2 { margin: 0; font: 800 1.65rem/1 var(--display); }
 .control-copy > p:last-child { margin: 10px 0 0; color: var(--muted); }
 .control-facts {
@@ -407,7 +409,7 @@ main { padding: clamp(22px, 4vw, 58px); }
 
 @media (max-width: 980px) {
   .epic-rail { grid-template-columns: 1fr; }
-  .portfolio-control { grid-template-columns: 1fr 1fr; }
+  .portfolio-run, .portfolio-control { grid-template-columns: 1fr 1fr; }
   .control-copy { grid-column: 1 / -1; }
   .runtime-facts { min-width: 0; }
   .people-strip { grid-template-columns: 1fr; }
@@ -420,9 +422,9 @@ main { padding: clamp(22px, 4vw, 58px); }
   .product-note { display: none; }
   .connection { max-width: 150px; justify-content: flex-end; text-align: right; }
   main { padding: 14px; }
-  .epic-rail, .portfolio-control, .people-strip, .workflow { padding: 22px; }
+  .epic-rail, .portfolio-run, .portfolio-control, .people-strip, .workflow { padding: 22px; }
   .epic-copy h1 { font-size: 2.35rem; }
-  .runtime-facts, .portfolio-control, .control-facts, .people-strip, .epic-roster, .people-grid { grid-template-columns: 1fr; }
+  .runtime-facts, .portfolio-run, .portfolio-control, .control-facts, .people-strip, .epic-roster, .people-grid { grid-template-columns: 1fr; }
   .control-copy { grid-column: auto; }
   .section-intro { grid-column: auto; }
   .workflow-heading { align-items: start; flex-direction: column; }

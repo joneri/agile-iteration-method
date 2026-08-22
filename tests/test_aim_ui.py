@@ -22,6 +22,7 @@ from aim_ui import (  # noqa: E402
     build_board,
     resolve_evidence_path,
 )
+from aim_portfolio_run import activate_next, create_run  # noqa: E402
 from aim_validator.schema_subset import unsupported_keywords, validate  # noqa: E402
 
 
@@ -241,6 +242,54 @@ class AimUiTests(unittest.TestCase):
             ),
             [],
         )
+
+    def test_portfolio_auto_run_is_projected_with_mandate_provenance(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            self._backlog(
+                repo,
+                [
+                    {
+                        "id": "INC-AUTO-001",
+                        "epicId": "EPIC-AUTO",
+                        "epicTitle": "Auto Portfolio",
+                        "title": "Run the first card",
+                        "priority": 1,
+                        "createdAt": "2026-08-21T13:00:00Z",
+                    },
+                    {
+                        "id": "INC-AUTO-002",
+                        "epicId": "EPIC-AUTO-NEXT",
+                        "epicTitle": "Auto Portfolio Next",
+                        "title": "Run the second card",
+                        "priority": 2,
+                        "createdAt": "2026-08-21T13:01:00Z",
+                    },
+                ],
+            )
+            run = create_run(
+                repo,
+                "MANDATE-UI-001",
+                "2026-08-21T13:02:00Z",
+                "2026-08-21T13:02:00Z",
+            )
+            activate_next(repo, run["updatedAt"], "2026-08-21T13:03:00Z")
+            board = build_board(repo)
+
+        self.assertTrue(board["portfolioRun"]["valid"])
+        self.assertEqual(board["portfolioRun"]["activeCandidateId"], "INC-AUTO-001")
+        self.assertEqual(board["portfolioRun"]["decisionAuthority"], "portfolio_mandate")
+        candidates = {
+            item["id"]: item
+            for epic in board["epics"]
+            for item in epic["increments"]
+            if item["planned"]
+        }
+        self.assertEqual(candidates["INC-AUTO-001"]["portfolioState"], "active")
+        self.assertEqual(
+            candidates["INC-AUTO-001"]["decisionAuthority"], "portfolio_mandate"
+        )
+        self.assertEqual(candidates["INC-AUTO-002"]["portfolioState"], "queued")
 
     def test_planned_increments_from_two_epics_are_projected_by_priority(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
