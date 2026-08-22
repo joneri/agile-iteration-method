@@ -60,7 +60,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "2.6.0")
+            self.assertEqual(manifest["aimVersion"], "2.6.1")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(

@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-08-22 - AIM 2 patch release v2.6.1
+- Added `/aim to-backlog` as a first-class cross-adapter planning command for
+  turning pasted Epic descriptions or one explicitly named source into
+  not-yet-activated AIM UI Backlog cards.
+- Added bare, inline, and `from <source>` command forms with a newcomer-first
+  chat flow that reports the import result and starts or reopens AIM UI.
+- Added a package-owned backlog helper with deterministic `EPIC-*` and `INC-*`
+  identities, bounded validation, idempotent related updates, conflict
+  detection, repository containment, symlink defenses, and atomic writes to
+  `.aim/portfolio-backlog.json` only.
+- Preserved AIM authority boundaries: source content remains untrusted evidence,
+  imported cards remain planned and inactive, and the command cannot create
+  runtime state, pass Gates, change roles, or start agents.
+- Shipped the command and helper through Codex, Claude Code, GitHub Copilot, the
+  adaptive installer, and the generated public Agent Skill, with focused UI,
+  installer, adapter, package, safety, and full-repository validation.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, and installer manifest remains `0.9`. Public skill package format
+advances from `5` to `6` because the package gains the executable backlog
+helper. Existing runtime and portfolio-backlog files require no migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`. Adaptive installations can
+rerun the reviewed preview/apply installer flow to receive the command helper
+and updated adapter surfaces.
+
+Known limitations: `/aim to-backlog` reads only pasted input, one explicitly
+named repository-contained file, or an attachment already available to the
+active platform. It does not recursively discover roadmaps or fetch arbitrary
+URLs. AIM UI remains read-only; activation and Gate decisions stay in chat.
+
 ## 2026-08-22 - AIM 2 minor release v2.6.0
 - Made AIM UI a first-class, chat-controlled AIM surface. Bare `/aim ui`
   starts or reopens the current repository, while `start`, `open`, `status`,

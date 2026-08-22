@@ -114,8 +114,7 @@ AIM keeps four things separate:
 | `aim.roles.yaml` | project-specific PO, TDO, Dev, and Reviewer expertise |
 | `.aim/` | active local runtime state and review evidence |
 
-The standard installation adds the selected supplier skills and native project
-specialists. It never needs to create `AGENTS.md` or `CLAUDE.md`.
+The standard installation adds the selected supplier skills and native project specialists. It never needs to create `AGENTS.md` or `CLAUDE.md`.
 
 ## Native adapters
 
@@ -131,7 +130,14 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.6.0
+## What is new in v2.6.1
+
+### Plan several Epics directly from chat
+
+Use `/aim to-backlog` to paste several Epic descriptions, or `/aim to-backlog from <source>` to name one repository-contained file or an available attachment. AIM preserves explicit Increments, derives one initial candidate when an Epic has none, and opens AIM UI with every imported card planned and inactive in Backlog.
+
+The import is bounded, deterministic, and atomic. Source content remains untrusted evidence, and the command cannot activate work, pass Gates, change roles, or start agents.
+
 ### AIM UI is a first-class chat surface
 
 AIM UI makes the delivery process visible without weakening it. Start or reopen the current repository directly from the authoritative AIM chat with `/aim ui`. Use `/aim ui start /path/to/repo`, `/aim ui status`, and `/aim ui stop` when you need explicit lifecycle control—including for a repository that has not initialized AIM yet.
@@ -165,16 +171,10 @@ The AIM runtime contract remains 2.0. Product release, runtime contract, install
 
 ## Documentation
 
-- [Feature guide](docs/product/features.md) · [AIM UI control room](docs/product/aim-ui.md)
-- [First-time journey](docs/product/getting-started.md)
-- [Platforms and project specialists](docs/product/platforms-and-adoption.md)
-- [Install and upgrade](docs/workflow/install-aim-2.0.md)
-- [Canonical AIM method](docs/workflow/agile-iteration-method.md)
-- [AIM Reflect](docs/workflow/reflection.md)
-- [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md)
-- [Release and publication](docs/workflow/release-publication-model.md)
-- [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
+- [Feature guide](docs/product/features.md) · [AIM UI control room](docs/product/aim-ui.md) · [First-time journey](docs/product/getting-started.md)
+- [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
+- [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v2.6.0**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.6.1**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).
