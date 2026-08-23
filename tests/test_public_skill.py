@@ -182,7 +182,7 @@ class PublicSkillTests(unittest.TestCase):
         self.assertIn("2. Calibrate the repository", skill)
         self.assertIn("3. Start with an outcome", skill)
         self.assertIn("default `Strict` experience", skill)
-        self.assertIn("Final Epic acceptance remains yours in", skill)
+        self.assertIn("The disposition remains yours in", skill)
         self.assertIn("a bounded Portfolio Auto mandate carries that authority", skill)
         for marker in ("å", "ä", "ö", "Använd när", "Vad gör"):
             with self.subTest(marker=marker):
@@ -361,6 +361,18 @@ class PublicSkillTests(unittest.TestCase):
                 "`runtimeIncrementId`",
                 "without another user message",
                 "Gate E still accepts",
+            ),
+            "post-Gate-E PO disposition": (
+                "`done_increment_accepted`",
+                "Epic goal",
+                "acceptance criteria",
+                "accepted evidence",
+                "remaining gaps",
+                "recommend exactly one",
+                "`close`, `continue`, or `split`",
+                "rationale",
+                "separate disposition decision",
+                "Resume at this checkpoint",
             ),
         }
         for scenario, markers in scenarios.items():

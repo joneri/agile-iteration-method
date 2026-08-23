@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-08-23 - AIM 2 patch release v2.7.2
+- Made the post-Gate-E PO disposition assessment mandatory: PO now evaluates
+  the Epic goal, acceptance criteria, accepted evidence, non-goals, and
+  remaining gaps before recommending exactly one of `close`, `continue`, or
+  `split`.
+- Required a visible rationale and remaining-scope consequence instead of
+  returning an undirected continuation-or-closure choice to the user.
+- Preserved ordinary Strict and Auto authority with the user; a PO
+  recommendation cannot itself close an Epic or begin another Increment.
+- Made resume from `done_increment_accepted` repeat the PO assessment before
+  any mutation, preventing a restarted run from skipping directly to TDO or
+  Epic closure.
+- Kept Portfolio Auto sequential by recording the same recommendation before a
+  separately revalidated bounded mandate authorizes eligible closure.
+- Synchronized canonical workflow, working-state boundaries, Codex, Copilot,
+  Claude, bounded PO specialists, and the generated public Agent Skill, with
+  cross-surface regression enforcement.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`7`. Existing accepted-Increment checkpoints remain readable and require no
+migration; resume now supplies the required PO recommendation.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`. Adaptive installations can
+rerun the reviewed preview/apply installer flow to receive the aligned native
+adapter and PO-specialist contracts.
+
+Known limitations: the recommendation is derived from canonical Epic and
+accepted evidence on each resume rather than stored as a new runtime-state
+field. Ordinary users must still explicitly decide the Epic disposition.
+
 ## 2026-08-23 - AIM 2 patch release v2.7.1
 - Preserved completed Portfolio Epics on Delivery flow while they own one of
   the latest three accepted Done Increments, preventing accepted outcomes from

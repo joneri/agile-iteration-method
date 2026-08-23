@@ -74,6 +74,14 @@ relations. This sequence needs no additional user message. Gate E accepts the
 Increment only; the bounded mandate is the explicit PO authority for the
 subsequent closure.
 
+At `done_increment_accepted`, PO evaluates the Epic goal, acceptance criteria,
+accepted evidence, non-goals, and remaining gaps. PO must recommend exactly one
+of `close`, `continue`, or `split`, with rationale and remaining-scope
+consequence; it must not merely ask the user to choose. The recommendation is
+not authority. Ordinary Strict and Auto require the user's separate decision,
+resume repeats the assessment before mutation, and Portfolio Auto records it
+before mandate-authorized closure.
+
 Reflect commands follow `docs/workflow/reflection.md`. They write temporary
 candidate reports only, never durable knowledge or discovered repositories.
 Reflect-all previews reviewed local discovery roots and the project inventory

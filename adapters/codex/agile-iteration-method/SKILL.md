@@ -264,6 +264,17 @@ repository exists beside an installed public skill.
 `/aim replan` returns only the active unaccepted increment to Gate B and preserves
 the reason and accepted history.
 
+## Post-Gate-E PO Disposition
+
+At `done_increment_accepted`, PO evaluates the Epic goal, acceptance criteria,
+accepted evidence, non-goals, and remaining gaps. PO must recommend exactly one
+of `close`, `continue`, or `split`, state the rationale and remaining-scope
+consequence, and must not merely ask the user to choose among undirected
+options. The recommendation is not authority: ordinary Strict and Auto require
+the user's separate disposition decision. Resume at this checkpoint repeats the
+assessment before mutation. Portfolio Auto records the same recommendation
+before its separately revalidated mandate may authorize eligible closure.
+
 ## Thin Front Door
 
 When the user asks how to begin, help, or what AIM should do next, detect

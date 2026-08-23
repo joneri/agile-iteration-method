@@ -171,6 +171,23 @@ collision-safe contained `.aim/archive/` path. Running, paused, malformed,
 symlinked, stale, or colliding state is not archived. Start never archives
 implicitly, and archived evidence never grants authority to a later run.
 
+## Post-Gate-E PO disposition contract
+
+Gate E accepts the Increment only. At `done_increment_accepted`, the main AIM
+thread acts as PO and evaluates the Epic goal, acceptance criteria, accepted
+evidence, non-goals, and remaining gaps. It must recommend exactly one of
+`close`, `continue`, or `split`, state the rationale and remaining-scope
+consequence, and must not merely ask the user to choose among undirected
+options.
+
+The recommendation is not a state transition or authority. Ordinary Strict and
+Auto runs require the user's separate disposition decision. `continue` hands a
+bounded remaining outcome to TDO for the next Gate B; `split` keeps new scope
+outside the current Epic. `/aim continue` at `done_increment_accepted` repeats
+the same PO assessment and recommendation before mutation. In Portfolio Auto,
+the same recommendation is recorded before a separately revalidated mandate
+may authorize eligible Epic closure and candidate completion.
+
 ## Portfolio-control chat intents
 
 Portfolio control is expressed as explicit chat intent rather than a second
@@ -235,7 +252,8 @@ an implicit fallback. Unknown action versions reject without mutation.
 
 Host handoff success never implies gate success. Approve at Gate E accepts the
 Increment; it does not close the Epic. Epic closure remains a separate explicit
-PO decision. For ordinary Strict and Auto runs, that decision requires the user.
+disposition based on the PO recommendation. For ordinary Strict and Auto runs,
+that decision requires the user.
 For an active Portfolio Auto run, the already approved, revalidated bounded
 mandate is the explicit PO authority for a subsequent separate Epic-closure
 decision; no Gate E action envelope may itself claim or perform that closure.

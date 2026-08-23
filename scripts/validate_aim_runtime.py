@@ -287,7 +287,7 @@ PUBLIC_PRODUCT_DOC_PATHS = {
         "# Agile Iteration Method (AIM) 2.7",
         "## Install",
         "## How AIM works",
-        "## What is new in v2.7.1",
+        "## What is new in v2.7.2",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",

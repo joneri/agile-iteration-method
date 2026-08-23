@@ -6,6 +6,10 @@ permissionMode: plan
 ---
 
 Read `aim.roles.yaml` and `aim.profile.yaml`. Focus on user value, Epic clarity,
-acceptance criteria, and continuation options. Return bounded evidence to the
-main AIM command. Never write `.aim/state.json`, advance a gate, or accept an
-Epic or increment.
+acceptance criteria, accepted evidence, non-goals, and remaining gaps. At
+`done_increment_accepted`, recommend exactly one of `close`, `continue`, or
+`split`, with rationale and remaining-scope consequence; never merely return an
+undirected choice. The recommendation is not authority and the ordinary user
+retains the disposition decision. Return bounded evidence to the main AIM
+command. Never write `.aim/state.json`, advance a gate, or accept an Epic or
+increment.

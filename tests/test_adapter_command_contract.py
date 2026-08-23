@@ -201,6 +201,74 @@ class AdapterCommandContractTests(unittest.TestCase):
                 self.assertIn("runtimeincrementid", content)
                 self.assertIn("without another user message", content)
 
+    def test_po_recommends_one_restart_safe_epic_disposition_after_gate_e(self) -> None:
+        runtime_surfaces = (
+            "docs/workflow/agile-iteration-method.md",
+            "docs/workflow/adapter-command-contract.md",
+            "docs/workflow/working-state-boundaries.md",
+            "adapters/portable/agile-iteration-method/SKILL.md",
+            "adapters/codex/agile-iteration-method/SKILL.md",
+            ".github/skills/aim/SKILL.md",
+            ".github/agents/aim.agent.md",
+            ".claude/skills/aim/SKILL.md",
+            ".claude/agents/aim.md",
+        )
+        for relative in runtime_surfaces:
+            content = " ".join(
+                (REPO_ROOT / relative).read_text(encoding="utf-8").split()
+            ).lower().replace("-", " ")
+            with self.subTest(surface=relative):
+                for marker in (
+                    "done_increment_accepted",
+                    "epic goal",
+                    "acceptance criteria",
+                    "accepted evidence",
+                    "non goals",
+                    "remaining gaps",
+                    "recommend exactly one",
+                    "rationale",
+                    "resume",
+                ):
+                    self.assertIn(marker, content)
+                self.assertRegex(
+                    content,
+                    r"`close`, `continue`, or `split`|close, continue, or split",
+                )
+                self.assertRegex(content, r"(?:must not|never) merely")
+                self.assertRegex(content, r"ordinary .*user")
+
+        continue_surface = " ".join(
+            (REPO_ROOT / ".claude/commands/continue-aim.md")
+            .read_text(encoding="utf-8")
+            .split()
+        )
+        self.assertIn("done_increment_accepted", continue_surface)
+        self.assertIn("recommend exactly one", continue_surface)
+        self.assertIn("before any mutation", continue_surface)
+
+        portfolio = (REPO_ROOT / "docs/workflow/adapter-command-contract.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("recommendation is recorded before", portfolio)
+        self.assertIn("mandate", portfolio)
+
+        for relative in (
+            ".codex/agents/aim-po.toml",
+            ".github/agents/aim-po.agent.md",
+            ".claude/agents/aim-po.md",
+        ):
+            content = " ".join(
+                (REPO_ROOT / relative).read_text(encoding="utf-8").split()
+            ).lower().replace("-", " ")
+            with self.subTest(po_specialist=relative):
+                self.assertIn("done_increment_accepted", content)
+                self.assertIn("accepted evidence", content)
+                self.assertIn("remaining gaps", content)
+                self.assertIn("recommend exactly one", content)
+                self.assertIn("rationale", content)
+                self.assertRegex(content, r"(?:must not|never) merely")
+                self.assertIn("ordinary user", content)
+
     def test_start_surfaces_preserve_versioned_cost_selection(self) -> None:
         surfaces = (
             "adapters/portable/agile-iteration-method/SKILL.md",
@@ -219,7 +287,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "2.7.1")
+        self.assertEqual(version, "2.7.2")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",

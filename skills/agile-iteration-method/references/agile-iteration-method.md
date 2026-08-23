@@ -71,7 +71,9 @@ Kickoff contract:
 6. A **Reviewer** checks correctness, edge cases and technical risk.
 7. The **TDO** validates the increment against the Epic and the increment acceptance criteria.
 8. The **TDO** presents the increment as a demo, test and feedback checkpoint and asks whether the increment should be accepted or adjusted.
-9. The **PO** decides whether the Epic should continue, close or split new scope into a separate Epic.
+9. The **PO** evaluates the accepted outcome and recommends whether the Epic
+   should close, continue or split new scope into a separate Epic; the user or
+   separately authorized Portfolio mandate owns the resulting decision.
 10. Feedback is carried into the next Done Increment when the Epic continues.
 11. The loop repeats until the Epic is complete.
 
@@ -364,7 +366,10 @@ Only the main AIM thread may persist a transition in `state.json`.
 Role responsibility:
 - `Dev` and `Reviewer` provide evidence that a transition is ready
 - `TDO` synthesizes the transition into the next gate-ready runtime state
-- `PO` owns acceptance decisions that move the increment to `done_increment_accepted` or the Epic to `epic_complete`
+- `PO` owns the evidence-based recommendation for acceptance and Epic
+  disposition; the ordinary user, or a separately revalidated Portfolio
+  mandate, authorizes transitions into `done_increment_accepted` and
+  `epic_complete`
 
 ### Observable phase-entry rule
 
@@ -396,7 +401,8 @@ It makes the runtime meaning of those gates durable:
   persisted `costProfile` agree
 - Gate D review output supports transition into `tdo_validation_in_progress`
 - Gate E approval moves the runtime into `done_increment_accepted`; a subsequent
-  separate PO closure decision moves the Epic into `epic_complete`
+  separately authorized disposition based on the PO recommendation moves the
+  Epic into `epic_complete`
 
 ### Resume rule
 
@@ -738,7 +744,12 @@ retain legacy behavior for existing workspaces.
 - `TDO` after review:
   - turns implementation and review into a demo, test and feedback checkpoint
 - `PO` after accepted increment:
-  - decides whether the Epic continues, closes or should split new scope into a new Epic
+  - evaluates the Epic goal, acceptance criteria, accepted evidence, non-goals,
+    and remaining gaps
+  - recommends exactly one disposition: `close`, `continue`, or `split`, with
+    rationale and the consequence for remaining scope
+  - never substitutes an undirected choice for the PO recommendation
+  - leaves the resulting ordinary Strict/Auto decision to the user
 
 ### Step-specific approval semantics
 
@@ -819,9 +830,13 @@ The PO owns the Epic.
 The PO:
 - defines the Epic and its user-visible value
 - sets scope and non-goals
-- decides whether the Epic continues or closes after accepted increments
+- evaluates accepted evidence against the Epic and recommends exactly one of
+  `close`, `continue`, or `split` before the disposition decision
+- explains the rationale and any remaining gaps instead of asking the user to
+  perform an undirected PO assessment
+- leaves ordinary Strict/Auto disposition authority with the user
 - updates Epic-level completion markers only when outcomes are demonstrably fulfilled
-- decides when the Epic is complete
+- recommends completion only when the Epic outcome is demonstrably fulfilled
 
 The PO does not design technical solutions or break work into increments.
 The PO may explicitly delegate execution of a Done Increment.
@@ -987,7 +1002,8 @@ Gates are reporting checkpoints (A–E). They are mandatory to report, but the l
 - **Gate B**: Done Increment specification ready (approval is meaningful)
 - **Gate C**: Implementation ready (soft gate)
 - **Gate D**: Review findings ready (soft gate)
-- **Gate E**: Increment accepted and next increment proposed (approval is meaningful)
+- **Gate E**: Increment accepted, followed by PO disposition assessment and a
+  separate continuation/closure decision (approval is meaningful)
 
 ### Default gate behaviour
 
@@ -1007,15 +1023,24 @@ Approval is only semantically meaningful at Gate A, Gate B and Gate E.
 
 At Gate E, the workflow must still distinguish two decisions:
 - increment acceptance after TDO demo, test, and feedback framing
-- Epic continuation or closure after the increment is accepted
+- Epic disposition after the increment is accepted
+
+At `done_increment_accepted`, PO must evaluate the Epic goal, acceptance
+criteria, accepted evidence, non-goals, and remaining gaps, then recommend
+exactly one of `close`, `continue`, or `split`. The recommendation must state
+its rationale and remaining-scope consequence; it must not merely ask the user
+to choose among options. A recommendation is not authority. Ordinary Strict and
+Auto require the user's separate disposition decision. Resume from
+`done_increment_accepted` repeats this PO assessment before any transition.
 
 When the Epic continues, TDO must create the next canonical Done Increment and
 return the workspace to Gate B. An incomplete Epic must not remain stranded in
 an accepted-Increment checkpoint, and a planning candidate must not be shown as
 if it were that runtime Increment. Epic closure remains a separate explicit PO
 decision. In Portfolio Auto only, the active revalidated Portfolio mandate is
-that explicit bounded PO authority: after Gate E, the main thread records a
-separate mandate-provenanced Epic closure, completes the candidate, and
+that explicit bounded PO authority: after the same evidence-based PO
+recommendation, the main thread records a separate mandate-provenanced Epic
+closure, completes the candidate, and
 activates the next snapshot candidate without a per-Epic user stop.
 
 ---

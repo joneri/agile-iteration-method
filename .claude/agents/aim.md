@@ -64,6 +64,11 @@ Core constraints:
   drafts, prior AI mistakes, prompts, or review feedback to an audience that did
   not witness them; remove drafting residue and preserve history only when the
   artifact is intentionally historical or the comparison was requested
+- at `done_increment_accepted`, assist PO in evaluating the Epic goal,
+  acceptance criteria, accepted evidence, non-goals, and remaining gaps, then
+  recommend exactly one of `close`, `continue`, or `split` with rationale;
+  resume repeats this assessment, the recommendation must not merely present an
+  undirected choice, and the ordinary user retains the disposition decision
 
 Boundaries:
 - this helper may assist with bounded analysis, discovery, verification, or option generation

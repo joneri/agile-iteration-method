@@ -154,8 +154,9 @@ the same checkpoints but may continue without pausing when no escalation applies
    result independently. AIM corrects local defects before presenting the work.
 4. **Evaluate evidence.** TDO explains what changed, what was verified, and how
    to test or demonstrate it.
-5. **Keep the decision.** PO asks you to accept the increment, request changes,
-   continue the Epic, or close it. Final Epic acceptance remains yours in
+5. **Keep the decision.** PO asks you to accept the increment or request
+   changes. After acceptance, PO evaluates the Epic and recommends exactly one
+   disposition: close, continue, or split. The disposition remains yours in
    ordinary runs; a bounded Portfolio Auto mandate carries that authority for
    its eligible Epics. AIM preserves the checkpoint for the next session.
 
@@ -552,6 +553,17 @@ preparation, then make `visibility: ready` plus a fresh `updatedAt` the final
 runtime mutation immediately before presenting the hard gate. A mismatched or
 malformed explicit marker must hide actions. Missing markers preserve legacy
 behavior. This extension controls UI timing only and never owns gate authority.
+
+## Post-Gate-E PO Disposition
+
+At `done_increment_accepted`, PO evaluates the Epic goal, acceptance criteria,
+accepted evidence, non-goals, and remaining gaps. PO must recommend exactly one
+of `close`, `continue`, or `split`, state the rationale and remaining-scope
+consequence, and must not merely ask the user to choose among undirected
+options. The recommendation is not authority: ordinary Strict and Auto require
+the user's separate disposition decision. Resume at this checkpoint repeats the
+assessment before mutation. Portfolio Auto records the same recommendation
+before its separately revalidated mandate may authorize eligible closure.
 
 ## Thin Front Door
 

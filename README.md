@@ -130,27 +130,19 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.7.1
+## What is new in v2.7.2
 
-Portfolio Auto now preserves the latest accepted Done cards while moving
-between Epics. The next candidate remains Planned during the restart-safe
-`activation_pending` checkpoint and is projected as runtime work only after its
-workspace, state, candidate identity, Increment, and Backlog link agree.
-Contradictory handoffs fail closed; AIM UI stays read-only and the chat retains
-activation and Gate ownership.
+After Gate E accepts an Increment, PO now evaluates the Epic goal, acceptance
+criteria, accepted evidence, non-goals, and remaining gaps, then recommends
+exactly one disposition: `close`, `continue`, or `split`. The recommendation
+includes rationale and remaining-scope consequences instead of returning an
+undirected choice.
 
-`/aim start "PORTFOLIO" mode:auto` locks the valid, unactivated candidates
-visible in AIM UI and runs them sequentially under one bounded mandate.
-Runtime-linked candidates cannot be replayed. Completed or stopped runs can be
-archived explicitly; unsafe or stale state remains fail-closed.
-
-AIM DATA summarizes Epic outcomes, accepted Increments, throughput, median
-delivery time, and evidence-linked history. Invalid or incomplete evidence is
-shown and excluded rather than turned into a fabricated metric.
-
-AIM UI groups work around stationary Epic swimlanes. Delivery shows open work,
-planned Epics start through chat-owned actions, completed outcomes remain in
-history, and polling preserves stable cards, focus, filters, and reduced motion.
+Ordinary Strict and Auto runs preserve the separate user decision. Resume from
+`done_increment_accepted` repeats the assessment before mutation, while
+Portfolio Auto records the same recommendation before its bounded mandate may
+authorize closure. Codex, Copilot, Claude, and the public Agent Skill enforce
+the same contract.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
@@ -174,6 +166,6 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v2.7.1**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.7.2**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

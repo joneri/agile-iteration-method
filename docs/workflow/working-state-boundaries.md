@@ -186,10 +186,19 @@ When an increment is accepted:
 1. mark the Done Increment accepted
 2. preserve the increment decision and review evidence
 3. update accepted increment history and link the Gate E evidence from state
-4. ask whether the Epic continues or closes
+4. persist `done_increment_accepted` with PO ownership
+5. evaluate the Epic goal, acceptance criteria, accepted evidence, non-goals,
+   and remaining gaps
+6. recommend exactly one of `close`, `continue`, or `split`, with rationale and
+   remaining-scope consequence
+7. wait for the separate ordinary user decision, or revalidate the bounded
+   Portfolio mandate before its separately evidenced disposition
 
 An accepted Done Increment does not automatically complete the Epic.
-The Epic closes only when the PO accepts that the Epic outcome is fulfilled.
+The Epic closes only after the ordinary user explicitly approves the PO
+recommendation, or after a separately revalidated Portfolio mandate authorizes
+that disposition. The PO recommendation is not authority and must not merely
+return an undirected choice to the user.
 
 ### Continue
 
@@ -199,6 +208,11 @@ When continuing:
 2. check repo profile freshness
 3. avoid rebuilding context unless needed
 4. continue with the next role/gate from state
+
+If state is `done_increment_accepted`, resume first repeats the PO disposition
+assessment and recommends exactly `close`, `continue`, or `split` before any
+mutation. It does not infer a prior recommendation from chat history and does
+not skip directly to TDO or Epic closure.
 
 If the PO continues an Epic after accepting its active Increment, TDO creates
 the next canonical `DI-*` and returns the workspace to Gate B. Until that
@@ -416,8 +430,8 @@ stops without mutation. Compatibility v1.1 actions resolve `workspace` relative
 to `.aim`; legacy v1.0 actions may resolve only through one unique
 contained canonical workspace match, never an implicit root fallback. Unknown
 versions fail closed. Gate E approval accepts the Increment and preserves the
-separate PO decision to continue or close the Epic. In ordinary Strict and Auto
-runs, that decision requires the user. In an active Portfolio Auto run, the
+separate disposition based on the PO recommendation. In ordinary Strict and
+Auto runs, that decision requires the user. In an active Portfolio Auto run, the
 revalidated bounded mandate is the explicit PO authority for a later, separate
 Epic-closure transition with `portfolio_mandate` authority and mandate
 provenance; the main thread may then complete the active candidate and activate

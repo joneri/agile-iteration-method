@@ -286,9 +286,15 @@ Route by the current AIM checkpoint and user intent (`approve`, `change:`, or ex
 ### Gate E (`po_approval_pending`)
 
 - If `approve`:
-  - mark increment done
+  - mark the Increment accepted and persist `done_increment_accepted`
   - update completion tracking
   - apply commit policy
+  - evaluate the Epic goal, acceptance criteria, accepted evidence, non-goals,
+    and remaining gaps
+  - recommend exactly one of `close`, `continue`, or `split`, with rationale and
+    remaining-scope consequence
+  - treat that recommendation as non-authoritative and wait for the separate
+    ordinary user disposition decision
 - If `change:`:
   - rerun builder with feedback
   - rerun reviewer
@@ -403,8 +409,9 @@ checkpoints. It cannot reason, approve, run an agent, or mutate canonical Epic
 state. Label eligible delegated decisions `auto-approved by portfolio mandate`
 with mandate provenance, never as new user approvals.
 
-After review, validation, and Gate E acceptance, revalidate again and record a
-distinct `Epic closure` with `portfolio_mandate` authority and mandate
+After review, validation, and Gate E acceptance, record the evidence-based PO
+recommendation, then revalidate again and record a distinct `Epic closure` with
+`portfolio_mandate` authority and mandate
 provenance. Preserve the closed workspace, accepted evidence, Backlog runtime
 link, and UI catalog entry before completing the active candidate. Select the
 next snapshot candidate only as `activation_pending`; keep it Planned while
@@ -466,7 +473,15 @@ The orchestrator should preserve one explicit speaker per step.
 - `TDO` after review:
   - explain demo, test, feedback, and increment acceptance next
 - `PO` after accepted increment:
-  - decide whether the Epic continues or closes
+  - evaluate the Epic goal, acceptance criteria, accepted evidence, non-goals,
+    and remaining gaps
+  - recommend exactly one of `close`, `continue`, or `split`, with rationale and
+    remaining-scope consequence
+  - never merely ask the user to choose; ordinary Strict/Auto waits for the
+    user's separate disposition decision
+
+Resume at `done_increment_accepted` repeats the PO assessment before any state
+mutation. It never skips directly to TDO or Epic closure.
 
 CTA wording should match the actual decision instead of reusing one generic `approve` everywhere.
 Use a visible `handoff` label only when it improves clarity; otherwise prefer a short next-step sentence.
