@@ -914,9 +914,38 @@ function renderView(board, epics) {
 
 function renderNotices(board) {
   const notices = $("runtime-notices");
+  const diagnostics = board.workspaceDiagnostics || [];
+  const warnings = (board.warnings || []).filter(
+    (warning) => !diagnostics.some(
+      (diagnostic) => warning.includes(diagnostic.statePath)
+        && warning.includes(diagnostic.epicId),
+    ),
+  );
   notices.replaceChildren();
-  notices.hidden = !board.warnings?.length;
-  board.warnings?.forEach((warning) => notices.append(el("p", "", warning)));
+  notices.hidden = warnings.length === 0;
+  warnings.forEach((warning) => notices.append(el("p", "", warning)));
+}
+
+function renderWorkspaceIntegrity(board) {
+  const panel = $("workspace-integrity");
+  const diagnostics = board.workspaceDiagnostics || [];
+  panel.hidden = diagnostics.length === 0;
+  if (diagnostics.length === 0) return;
+  $("workspace-integrity-summary").textContent =
+    `${diagnostics.length} workspace relation${diagnostics.length === 1 ? "" : "s"} cannot be presented as normal Portfolio runtime.`;
+  const list = $("workspace-integrity-list");
+  list.replaceChildren();
+  diagnostics.forEach((diagnostic) => {
+    const item = el("li", "workspace-integrity-item");
+    const heading = el("p", "workspace-integrity-identity", `${diagnostic.epicId} · ${diagnostic.statePath}`);
+    const reason = el("p", "workspace-integrity-reason", diagnostic.reason);
+    item.append(heading, reason);
+    (diagnostic.contractDrift || []).forEach((drift) => {
+      item.append(el("p", "workspace-integrity-drift", drift));
+    });
+    item.append(el("p", "workspace-integrity-action", diagnostic.nextAction));
+    list.append(item);
+  });
 }
 
 function updateHeartbeat(board) {
@@ -931,6 +960,7 @@ function updateHeartbeat(board) {
 function render(board) {
   const focusToken = captureFocus();
   state.board = board;
+  renderWorkspaceIntegrity(board);
   if (!board.epics || board.epics.length === 0) {
     $("control-room").hidden = true;
     $("empty-state").hidden = false;

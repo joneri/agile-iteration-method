@@ -95,6 +95,22 @@ class RuntimeStateSchemaTests(unittest.TestCase):
         self.assertEqual(result.classification, "current")
         self.assertEqual(result.findings, ())
 
+    def test_portfolio_start_may_reserve_canonical_increment_before_gate_b(self) -> None:
+        state = canonical_state()
+        state.update(
+            {
+                "epicStatus": "gate_a_pending",
+                "activeIncrementId": None,
+                "plannedIncrementId": "DI-042",
+                "currentRole": "PO",
+                "lastGatePassed": None,
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            result = load_runtime_state(self._repo(Path(temporary), state))
+        self.assertEqual(result.classification, "current")
+        self.assertEqual(result.findings, ())
+
     def test_legacy_aliases_normalize_without_writing(self) -> None:
         state = canonical_state()
         del state["stateSchemaVersion"]

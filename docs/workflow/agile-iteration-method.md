@@ -558,6 +558,26 @@ Startup triggers (no manual bootstrap expected):
   - `EPIC: <desired outcome>`
   - `Mode: Strict` or `Mode: Auto`
 
+### Portfolio-aware normal start
+
+Before the first write for a genuinely new Epic, normal `/aim start "EPIC:
+..."` must inspect `.aim/ui-portfolio.json`. When that catalog is present,
+starting in root `.aim/state.json` is forbidden even if root remains registered
+for historical compatibility. The main thread resolves the trusted packaged
+`scripts/aim_start.py`, previews one contained `.aim/portfolio/<EPIC-ID>/`
+workspace and canonical `DI-*` reservation, then explicitly applies the same
+plan. The helper stages the full workspace, rechecks catalog bytes and identity
+allocation, publishes workspace and registration with bounded rollback, and
+verifies the Epic and reserved Increment through AIM UI's read model before
+success is reported.
+
+Invalid, stale, colliding, full, traversing, escaped, or symlinked catalogs stop
+without a root checkpoint or retained partial workspace. A checkpoint outside
+the active catalog, or one carrying legacy status, Gate, or `INC-*` runtime
+identity, is evidence to diagnose—not authority to normalize. `/aim validate`
+and AIM UI name the Epic, state path, failed relation, and explicit repair or
+migration route. They never mutate it.
+
 Front-door rule:
 - show the user the next action before the full method
 - first route to start, continue, or validate

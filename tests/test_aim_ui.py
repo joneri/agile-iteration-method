@@ -622,6 +622,8 @@ class AimUiTests(unittest.TestCase):
             'return epic.lifecycle !== "closed";',
             "renderRecentDeliveries(board)",
             "board.history?.recentDeliveries",
+            "renderWorkspaceIntegrity(board)",
+            "board.workspaceDiagnostics || []",
         ):
             self.assertIn(marker, script)
         self.assertIn('class="card-control" hidden', markup)
@@ -631,6 +633,8 @@ class AimUiTests(unittest.TestCase):
         self.assertIn(".recent-delivery-card:focus-visible", styles)
         self.assertIn('id="recent-deliveries" aria-labelledby="recent-deliveries-title"', markup)
         self.assertIn('id="delivery-dialog" aria-labelledby="delivery-dialog-title"', markup)
+        self.assertIn('id="workspace-integrity" role="alert"', markup)
+        self.assertIn(".workspace-integrity[hidden] { display: none; }", styles)
         self.assertIn('id="follow-up-intent" tabindex="0"', markup)
         follow_up = script[script.index("function followUpPrompt"):script.index("function showCompleteHistory")]
         self.assertIn("do not reopen or reuse its identity", follow_up)
@@ -1053,7 +1057,7 @@ class AimUiTests(unittest.TestCase):
     def test_read_model_links_increment_to_epic_collection(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             board = build_board(self._repo(Path(temporary)))
-        self.assertEqual(board["readModelVersion"], "7.0")
+        self.assertEqual(board["readModelVersion"], "8.0")
         self.assertEqual(board["source"]["kind"], "single-workspace")
         self.assertTrue(board["source"]["readOnly"])
         self.assertEqual(len(board["epics"]), 1)
@@ -1150,6 +1154,57 @@ class AimUiTests(unittest.TestCase):
             by_id["EPIC-TEST-002"]["helperActivity"]["items"][0]["id"],
             "other-helper",
         )
+
+    def test_orphaned_root_checkpoint_is_named_without_mutation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            self._additional_workspace(repo)
+            self._portfolio(repo, "workspaces/other")
+            state_path = repo / ".aim/state.json"
+            before = state_path.read_bytes()
+            board = build_board(repo)
+            after = state_path.read_bytes()
+
+        self.assertEqual(before, after)
+        self.assertEqual([epic["id"] for epic in board["epics"]], ["EPIC-TEST-002"])
+        diagnostic = next(
+            item
+            for item in board["workspaceDiagnostics"]
+            if item["kind"] == "orphaned_invisible_workspace"
+        )
+        self.assertEqual(diagnostic["epicId"], "EPIC-TEST-001")
+        self.assertEqual(diagnostic["statePath"], ".aim/state.json")
+        self.assertTrue(diagnostic["readOnly"])
+        self.assertIn("not declared", diagnostic["reason"])
+        self.assertTrue(any("orphaned/invisible" in item for item in board["warnings"]))
+
+    def test_legacy_checkpoint_names_each_contract_drift_and_is_not_projected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            runtime = json.loads((repo / ".aim/state.json").read_text(encoding="utf-8"))
+            runtime.update(
+                {
+                    "epicStatus": "complete",
+                    "activeIncrementId": "INC-LEGACY-037",
+                    "lastGatePassed": "E",
+                    "currentRole": "PO",
+                }
+            )
+            (repo / ".aim/state.json").write_text(
+                json.dumps(runtime, indent=2) + "\n", encoding="utf-8"
+            )
+            self._portfolio(repo, ".")
+            before = (repo / ".aim/state.json").read_bytes()
+            board = build_board(repo)
+            after = (repo / ".aim/state.json").read_bytes()
+
+        self.assertEqual(after, before)
+        self.assertEqual(board["epics"], [])
+        diagnostic = board["workspaceDiagnostics"][0]
+        joined = " ".join(diagnostic["contractDrift"])
+        self.assertIn("epicStatus 'complete'", joined)
+        self.assertIn("lastGatePassed 'E'", joined)
+        self.assertIn("activeIncrementId 'INC-LEGACY-037'", joined)
 
     def test_one_workspace_moves_without_changing_the_other(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

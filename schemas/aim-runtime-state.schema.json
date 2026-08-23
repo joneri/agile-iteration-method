@@ -42,6 +42,12 @@
       ]
     },
     "activeIncrementId": {"description": "Canonical DI identifier, or null before Gate B."},
+    "plannedIncrementId": {
+      "type": "string",
+      "pattern": "^DI-[0-9]+$",
+      "maxLength": 32,
+      "description": "Optional canonical DI identity reserved by a Portfolio-aware start before Gate B. It is not active or approved runtime authority."
+    },
     "previousIncrementId": {
       "type": "string",
       "pattern": "^DI-[0-9]+$",

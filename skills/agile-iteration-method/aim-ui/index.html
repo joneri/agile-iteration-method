@@ -32,6 +32,15 @@ Source: aim-ui/index.html
   </header>
 
   <main id="board" tabindex="-1">
+    <section class="workspace-integrity" id="workspace-integrity" role="alert" aria-labelledby="workspace-integrity-title" hidden>
+      <div>
+        <p class="eyebrow">Read-only integrity warning</p>
+        <h3 id="workspace-integrity-title">Runtime work exists outside the visible contract</h3>
+        <p id="workspace-integrity-summary"></p>
+      </div>
+      <ul id="workspace-integrity-list"></ul>
+      <p class="workspace-integrity-boundary">AIM UI will not register, migrate, rewrite, merge, or accept these checkpoints. Resolve them explicitly in AIM chat.</p>
+    </section>
     <section class="empty-state" id="empty-state" hidden>
       <p class="eyebrow" id="empty-eyebrow">Runtime unavailable</p>
       <h1 id="empty-title">No active AIM board can be read</h1>

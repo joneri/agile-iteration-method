@@ -29,7 +29,7 @@ from aim_actions import (
 from aim_portfolio import project_portfolio_control
 from aim_portfolio_run import project_portfolio_run
 
-READ_MODEL_VERSION = "7.0"
+READ_MODEL_VERSION = "8.0"
 PORTFOLIO_VERSION = "1.0"
 PORTFOLIO_FILE = "ui-portfolio.json"
 BACKLOG_VERSION = "1.0"
@@ -75,6 +75,7 @@ STATE_TO_OWNER = {
 }
 AGENT_STATUSES = {"working", "waiting", "completed", "failed"}
 CANONICAL_ROLES = ("PO", "TDO", "Dev", "Reviewer")
+CANONICAL_GATES = {None, "Gate A", "Gate B", "Gate C", "Gate D", "Gate E"}
 
 
 class AimUiError(ValueError):
@@ -704,36 +705,130 @@ def _validate_state(state: dict[str, Any]) -> None:
         raise AimUiError("state.json has an unsupported currentRole.")
     if state["epicStatus"] not in STATE_TO_COLUMN:
         raise AimUiError("state.json has an unsupported epicStatus.")
+    if state.get("stateSchemaVersion") != "1.0":
+        raise AimUiError("state.json is not the current stateSchemaVersion 1.0 contract.")
+    if state.get("lastGatePassed") not in CANONICAL_GATES:
+        raise AimUiError("state.json has a non-canonical lastGatePassed value.")
+    for field in ("activeIncrementId", "plannedIncrementId", "previousIncrementId"):
+        identifier = state.get(field)
+        if identifier is not None and (
+            not isinstance(identifier, str) or re.fullmatch(r"DI-[0-9]+", identifier) is None
+        ):
+            raise AimUiError(f"state.json has a non-canonical {field} value.")
 
 
-def _workspace_roots(aim_root: Path, warnings: list[str]) -> tuple[str, list[Path]]:
+def _contract_drift(state: dict[str, Any]) -> list[str]:
+    """Name legacy values without normalizing or authorizing them."""
+
+    drift: list[str] = []
+    if state.get("stateSchemaVersion") != "1.0":
+        drift.append(
+            f"stateSchemaVersion {state.get('stateSchemaVersion')!r} is not current 1.0"
+        )
+    status = state.get("epicStatus")
+    if status not in STATE_TO_COLUMN:
+        drift.append(f"epicStatus {status!r} is not a canonical runtime status")
+    gate = state.get("lastGatePassed")
+    if gate not in CANONICAL_GATES:
+        drift.append(f"lastGatePassed {gate!r} is not a canonical Gate A-E label")
+    for field in ("activeIncrementId", "plannedIncrementId", "previousIncrementId"):
+        identifier = state.get(field)
+        if identifier is not None and (
+            not isinstance(identifier, str) or re.fullmatch(r"DI-[0-9]+", identifier) is None
+        ):
+            drift.append(f"{field} {identifier!r} is not a canonical DI-* identity")
+    return drift
+
+
+def _workspace_diagnostic(
+    repo_root: Path,
+    workspace: Path,
+    *,
+    kind: str,
+    reason: str,
+    epic_id: str | None = None,
+    drift: list[str] | None = None,
+) -> dict[str, Any]:
+    state_path = workspace / "state.json"
+    return {
+        "kind": kind,
+        "severity": "error",
+        "epicId": epic_id or "Unknown Epic",
+        "statePath": state_path.relative_to(repo_root).as_posix(),
+        "reason": reason,
+        "contractDrift": drift or [],
+        "readOnly": True,
+        "nextAction": (
+            "Review the checkpoint in AIM chat and choose an explicit migration or "
+            "catalog repair; AIM UI will not modify it."
+        ),
+    }
+
+
+def _workspace_roots(
+    repo_root: Path, aim_root: Path, warnings: list[str]
+) -> tuple[str, list[Path], list[dict[str, Any]]]:
     """Resolve declared Epic workspaces strictly inside the repository .aim root."""
 
     if not aim_root.is_dir():
-        return "uninitialized", []
+        return "uninitialized", [], []
+
+    diagnostics: list[dict[str, Any]] = []
 
     portfolio_path = aim_root / PORTFOLIO_FILE
     if not portfolio_path.is_file():
-        return "single-workspace", [aim_root]
+        return "single-workspace", [aim_root], diagnostics
     try:
         portfolio = _read_json(portfolio_path)
     except AimUiError as exc:
         warnings.append(str(exc))
-        return "portfolio", []
+        diagnostics.append(
+            _workspace_diagnostic(
+                repo_root,
+                aim_root,
+                kind="invalid_portfolio_catalog",
+                reason=str(exc),
+            )
+        )
+        return "portfolio", [], diagnostics
     if portfolio.get("portfolioVersion") != PORTFOLIO_VERSION:
         warnings.append(
             f"{PORTFOLIO_FILE} must declare portfolioVersion {PORTFOLIO_VERSION}."
         )
-        return "portfolio", []
+        diagnostics.append(
+            _workspace_diagnostic(
+                repo_root,
+                aim_root,
+                kind="invalid_portfolio_catalog",
+                reason=warnings[-1],
+            )
+        )
+        return "portfolio", [], diagnostics
     declared = portfolio.get("workspaces")
     if not isinstance(declared, list) or not declared:
         warnings.append(f"{PORTFOLIO_FILE} must contain a non-empty workspaces array.")
-        return "portfolio", []
+        diagnostics.append(
+            _workspace_diagnostic(
+                repo_root,
+                aim_root,
+                kind="invalid_portfolio_catalog",
+                reason=warnings[-1],
+            )
+        )
+        return "portfolio", [], diagnostics
     if len(declared) > MAX_PORTFOLIO_WORKSPACES:
         warnings.append(
             f"{PORTFOLIO_FILE} declares more than {MAX_PORTFOLIO_WORKSPACES} workspaces."
         )
-        return "portfolio", []
+        diagnostics.append(
+            _workspace_diagnostic(
+                repo_root,
+                aim_root,
+                kind="invalid_portfolio_catalog",
+                reason=warnings[-1],
+            )
+        )
+        return "portfolio", [], diagnostics
 
     roots: list[Path] = []
     seen: set[Path] = set()
@@ -760,7 +855,63 @@ def _workspace_roots(aim_root: Path, warnings: list[str]) -> tuple[str, list[Pat
             warnings.append(f"Ignored workspace {index + 1}: directory was not found.")
             continue
         roots.append(candidate)
-    return "portfolio", roots
+
+    declared_paths = set(roots)
+    candidates = [aim_root]
+    for parent_name in ("portfolio", "workspaces"):
+        parent = aim_root / parent_name
+        if parent.is_dir() and not parent.is_symlink():
+            candidates.extend(
+                child.resolve()
+                for child in parent.iterdir()
+                if child.is_dir() and not child.is_symlink()
+            )
+    seen_candidates: set[Path] = set()
+    for candidate in candidates:
+        if candidate in seen_candidates or not (candidate / "state.json").is_file():
+            continue
+        seen_candidates.add(candidate)
+        try:
+            state = _read_json(candidate / "state.json")
+        except AimUiError as exc:
+            state = {}
+            drift = [str(exc)]
+        else:
+            drift = _contract_drift(state)
+        epic_id = state.get("epicId") if isinstance(state.get("epicId"), str) else None
+        if candidate not in declared_paths:
+            reason = (
+                f"{(candidate / 'state.json').relative_to(repo_root).as_posix()} is not "
+                f"declared in .aim/{PORTFOLIO_FILE}; the active Portfolio board cannot project it."
+            )
+            diagnostic = _workspace_diagnostic(
+                repo_root,
+                candidate,
+                kind="orphaned_invisible_workspace",
+                reason=reason,
+                epic_id=epic_id,
+                drift=drift,
+            )
+            diagnostics.append(diagnostic)
+            warnings.append(
+                f"{diagnostic['epicId']}: orphaned/invisible workspace at "
+                f"{diagnostic['statePath']}. {reason}"
+            )
+        elif drift:
+            diagnostic = _workspace_diagnostic(
+                repo_root,
+                candidate,
+                kind="legacy_contract_drift",
+                reason="The declared checkpoint does not match the current runtime contract.",
+                epic_id=epic_id,
+                drift=drift,
+            )
+            diagnostics.append(diagnostic)
+            warnings.append(
+                f"{diagnostic['epicId']}: contract drift at {diagnostic['statePath']}: "
+                + "; ".join(drift)
+            )
+    return "portfolio", roots, diagnostics
 
 
 def _load_backlog(aim_root: Path, warnings: list[str]) -> list[dict[str, Any]]:
@@ -858,6 +1009,7 @@ def _project_epic(
 
     epic_id = str(state["epicId"])
     active_id = state.get("activeIncrementId")
+    planned_id = state.get("plannedIncrementId")
     increment_items: list[dict[str, Any]] = []
     increments_root = aim_root / "increments"
     if increments_root.is_dir():
@@ -873,6 +1025,11 @@ def _project_epic(
 
         for increment_id, artifacts in grouped_paths.items():
             is_active = increment_id == active_id
+            is_reserved = (
+                increment_id == planned_id
+                and active_id is None
+                and state["epicStatus"] == "gate_a_pending"
+            )
             primary_path, primary_markdown = max(
                 artifacts,
                 key=lambda item: (
@@ -895,8 +1052,10 @@ def _project_epic(
                 if (parsed_acceptance := _parse_timestamp(declared_acceptance)) is not None
                 else None
             )
-            runtime_status = state["epicStatus"] if is_active else (
-                "done_increment_accepted" if accepted else "gate_b_pending"
+            runtime_status = (
+                state["epicStatus"]
+                if is_active or is_reserved
+                else "done_increment_accepted" if accepted else "gate_b_pending"
             )
             column = STATE_TO_COLUMN[runtime_status]
             owner = state["currentRole"] if is_active else STATE_TO_OWNER[runtime_status]
@@ -926,6 +1085,7 @@ def _project_epic(
                         else None
                     ),
                     "active": is_active,
+                    "identityReserved": is_reserved,
                     "planned": False,
                     "priority": None,
                     "summary": None,
@@ -948,6 +1108,7 @@ def _project_epic(
         "lifecycle": "closed" if state["epicStatus"] == "epic_complete" else "running",
         "runtimeStatus": state["epicStatus"],
         "activeIncrementId": active_id,
+        "plannedIncrementId": planned_id,
         "portfolioCandidateId": state.get("portfolioCandidateId"),
         "mode": state["mode"],
         "costProfile": state["costProfile"],
@@ -1077,7 +1238,9 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     repo_root = repo_root.resolve()
     aim_root = (repo_root / ".aim").resolve()
     warnings: list[str] = []
-    source_kind, workspaces = _workspace_roots(aim_root, warnings)
+    source_kind, workspaces, workspace_diagnostics = _workspace_roots(
+        repo_root, aim_root, warnings
+    )
     generated_at = utc_now()
     base = {
         "readModelVersion": READ_MODEL_VERSION,
@@ -1090,6 +1253,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         },
         "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
         "epics": [],
+        "workspaceDiagnostics": workspace_diagnostics,
         "history": {
             "recentLimit": RECENT_DELIVERIES_LIMIT,
             "acceptedCount": 0,
@@ -1116,6 +1280,30 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             epic = _project_epic(repo_root, workspace, warnings)
         except AimUiError as exc:
             warnings.append(f"Workspace {index + 1}: {exc}")
+            state = {}
+            try:
+                state = _read_json(workspace / "state.json")
+            except AimUiError:
+                pass
+            state_path = workspace / "state.json"
+            if not any(
+                item["statePath"] == state_path.relative_to(repo_root).as_posix()
+                for item in workspace_diagnostics
+            ):
+                workspace_diagnostics.append(
+                    _workspace_diagnostic(
+                        repo_root,
+                        workspace,
+                        kind="invalid_declared_workspace",
+                        reason=str(exc),
+                        epic_id=(
+                            state.get("epicId")
+                            if isinstance(state.get("epicId"), str)
+                            else None
+                        ),
+                        drift=_contract_drift(state) if state else [str(exc)],
+                    )
+                )
             continue
         if epic["id"] in seen_epics:
             warnings.append(f"Workspace {index + 1}: duplicate Epic id {epic['id']}.")
@@ -1256,7 +1444,11 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     }
     base["deliveryData"] = _delivery_data(base["epics"], accepted, generated_at)
     base["health"] = (
-        "degraded" if not base["epics"] else "partial" if warnings else "healthy"
+        "degraded"
+        if not base["epics"]
+        else "partial"
+        if warnings or workspace_diagnostics
+        else "healthy"
     )
     return base
 

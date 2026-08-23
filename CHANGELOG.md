@@ -1,5 +1,44 @@
 # Changelog
 
+## 2026-08-23 - AIM 2 minor release v2.8.0
+- Separated active Epic prioritization from accepted delivery history in AIM
+  UI. Recent Deliveries now retains the ten latest validated Increments in
+  stable acceptance order with parent-Epic identity, evidence details, complete
+  history navigation, and safe follow-up proposals.
+- Removed closed Epics from the row-bound Delivery flow without hiding their
+  accepted Increments or fabricating runtime work from Backlog metadata.
+- Made normal `/aim start` Portfolio-aware before its first write. New Epics use
+  dedicated contained `.aim/portfolio/<EPIC-ID>/` workspaces, current Gate and
+  `DI-*` contracts, atomic catalog registration, and board-read-model
+  verification before success is reported.
+- Added fail-closed validation for catalog shape, declared runtime contracts,
+  identity collisions, stale preview digests, capacity, traversal, symlink
+  swaps, and bounded publication failures with rollback and no root checkpoint.
+- Added explicit read-only AIM UI and validator diagnostics for orphaned,
+  invisible, or legacy checkpoints, including exact Epic identity, state path,
+  failed relation, contract drift, and safe next action.
+- Synchronized canonical workflow, Codex, Copilot, Claude, portable adapters,
+  installer payloads, public Agent Skill, website branding, and release artwork
+  around the AIM 2.8.0 contract.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, and installer manifest remains `1.0`. Public skill package format
+advances from `7` to `8` because the package gains the trusted `aim_start.py`
+runtime helper. Existing accepted workspaces remain readable and are never
+rewritten automatically.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`. Adaptive installations can
+rerun the reviewed preview/apply installer flow to receive the Portfolio-aware
+start helper, read-model 8.0, and updated UI assets. Existing orphaned or legacy
+checkpoints require a separate explicit migration or catalog-repair decision.
+
+Known limitations: AIM UI remains read-only. Multi-file workspace/catalog
+publication uses staging, freshness checks, verification, and bounded rollback;
+a process-level interruption is surfaced as explicit preparing, orphaned, or
+contradictory state rather than silently treated as accepted work. Existing
+orphaned checkpoints are diagnosed but never automatically migrated.
+
 ## 2026-08-23 - AIM 2 patch release v2.7.2
 - Made the post-Gate-E PO disposition assessment mandatory: PO now evaluates
   the Epic goal, acceptance criteria, accepted evidence, non-goals, and

@@ -123,6 +123,7 @@ aimInstallManifest:
       targetOwned: true
     aimUi:
       files:
+        - scripts/aim_start.py
         - scripts/aim_backlog.py
         - scripts/aim_portfolio.py
         - scripts/aim_portfolio_run.py

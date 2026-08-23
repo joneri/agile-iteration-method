@@ -87,6 +87,20 @@ acceptance, scheduling, or agent instructions. A workspace's `state.json`
 remains authoritative for its Epic, and the main AIM thread for that workspace
 remains the only state writer.
 
+When this catalog exists, a normal `/aim start "EPIC: ..."` creates new work in
+a dedicated `.aim/portfolio/<EPIC-ID>/` workspace through AIM's trusted start
+transaction. The transaction reserves a canonical `DI-*`, registers the
+workspace, and verifies the same read model served by `/api/board` before Gate A
+is shown as ready. Invalid, stale, full, colliding, escaped, or symlinked input
+leaves no root checkpoint or retained partial workspace.
+
+If a root or contained checkpoint has `state.json` but is not declared, the
+control room shows a prominent **Read-only integrity warning** with its Epic,
+path, and the failed catalog relation. The same panel names legacy status,
+Gate, or runtime Increment values that prevent truthful projection. It never
+registers, migrates, rewrites, merges, accepts, or closes the checkpoint; the
+operator returns to AIM chat for an explicit repair or migration decision.
+
 ## Control focus and concurrent capacity from chat
 
 The main AIM chat may add `.aim/portfolio-control.json` when the operator wants
@@ -163,8 +177,9 @@ The main AIM thread may record proposed Increment candidates in
 
 `schemas/aim-ui-backlog.schema.json` defines the bounded shape. Candidate IDs
 use `INC-*` so planning intent cannot be confused with a canonical `DI-*`
-runtime Increment. Activation starts the Epic; TDO creates the first canonical
-`DI-*` at Gate B. `runtimeIncrementId` may retain traceability to that work.
+runtime Increment. Activation starts the Epic; a Portfolio-aware direct start
+may reserve its first `DI-*` at Gate A, while TDO still defines and approves its
+scope at Gate B. `runtimeIncrementId` may retain traceability to that work.
 
 This file is planning input only. It may contain identity, description,
 priority, and timestamps. It must not contain gate status, role transitions,
@@ -212,7 +227,8 @@ run without losing completed work.
 - aggregate view plus presentation-only focus controls for one Epic
 - each Epic's current role, gate, mode, cost profile, status, and evidence
 - bounded helper agents grouped beneath the Epic that recorded them
-- safe partial warnings when one declared workspace cannot be read
+- explicit read-only integrity warnings when a declared, orphaned, invisible,
+  or legacy-contract workspace cannot be projected truthfully
 - the latest ten accepted Increments in the independent Recent Deliveries ledger
 
 Filtering never changes runtime state. It only changes which already-read Epics

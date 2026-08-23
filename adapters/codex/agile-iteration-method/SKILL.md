@@ -201,6 +201,16 @@ script. The helper atomically merges only `.aim/portfolio-backlog.json`; it
 cannot activate work or create runtime authority. Report counts and open the
 repo through the trusted AIM UI launcher after success.
 
+For a genuinely new `/aim start "EPIC: ..."`, inspect
+`.aim/ui-portfolio.json` before the first runtime write. When present, use the
+trusted package-owned `scripts/aim_start.py` preview and apply the exact
+reviewed catalog digest. Success requires a contained registered
+`.aim/portfolio/<EPIC-ID>/`, a canonical reserved `DI-*`, and matching AIM UI
+read-model projection before Gate A is reported ready. Invalid, stale, full,
+colliding, traversing, escaped, symlinked, or invisible relations fail closed
+without root state or retained partial workspace. Validation and UI diagnose
+existing orphaned or legacy checkpoints read-only; they never migrate them.
+
 `/aim start "PORTFOLIO" mode:auto` previews an immutable ordered Backlog
 snapshot and requires one explicit bounded user mandate. The main AIM thread
 then runs one included Epic at a time through every canonical role and Gate.

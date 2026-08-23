@@ -25,7 +25,7 @@ ownership, or acceptance.
 
 | Command | Intent | State effect |
 | --- | --- | --- |
-| `/aim start "EPIC: ..."` | start a new Epic or resume an incomplete checkpoint instead of creating a parallel run | may create `.aim/` and initialize `state.json` at Gate A |
+| `/aim start "EPIC: ..."` | start a new Epic or resume an incomplete checkpoint instead of creating a parallel run | initializes root Gate A only without Portfolio; with `.aim/ui-portfolio.json`, must use a trusted transaction to publish a dedicated registered workspace |
 | `/aim start "PORTFOLIO" mode:auto` | preview the ordered AIM UI Backlog and request one bounded Portfolio mandate | after explicit mandate approval, may create `.aim/portfolio-run.json` and sequentially coordinate included canonical Epic workspaces |
 | `/aim continue` | resume from the persisted role, gate, increment, mode, and cost profile | advances state only when the current AIM transition allows it |
 | `/aim status` | report the AIM product release from `VERSION` separately from the runtime contract in `.aim/state.json` `aimVersion`, then Epic, increment, role, mode, cost profile, gate, adapter, and next action | read-only |
@@ -56,6 +56,31 @@ unsupported or contradictory state stops without mutation.
 `repo-awareness-calibration.md`. `/aim reflect` and
 `/aim reflect-all` follow `reflection.md`; reflection is read-only
 with respect to durable knowledge, and promotion is a separate reviewed action.
+
+## Portfolio-aware normal Epic start
+
+Before any new-Epic write, every adapter checks for a contained, non-symlink
+`.aim/ui-portfolio.json`. If absent, the ordinary single-workspace Gate A path
+applies. If present, the adapter resolves the trusted package-owned
+`scripts/aim_start.py` through the same package precedence used by AIM UI; it
+must never execute a same-named target-repository helper merely because it
+exists.
+
+The adapter supplies one reviewed `EPIC-*`, one reserved canonical `DI-*`, the
+title, mode, cost profile, platform, and timestamp. Preview is no-write. Apply
+must match the previewed catalog digest. Success means a new contained
+`.aim/portfolio/<EPIC-ID>/` workspace, a catalog entry, current Gate A state,
+and exactly one matching Epic and reserved Increment in the `/api/board` read
+model. Only then may the adapter present Gate A as ready.
+
+Catalog parsing, containment, symlink, capacity, identity collision, stale-byte,
+workspace publication, catalog publication, or board verification failure
+returns one actionable fail-closed error. Previously existing files remain
+byte-identical and no new root checkpoint or partial workspace remains. The
+helper cannot approve a Gate, migrate existing work, or reinterpret legacy
+state. `/aim validate` and AIM UI report orphaned or contract-drifted
+checkpoints read-only with their Epic identity, state path, failed relation, and
+explicit repair/migration next action.
 
 ## AIM UI chat lifecycle
 

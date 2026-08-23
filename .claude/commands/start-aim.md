@@ -27,6 +27,13 @@ Expected input:
 - `Cost profile: Standard`, `Cost profile: Cost Control`, or `Cost profile: Deep` when resource use matters
 
 Command behavior:
+- before any genuinely new Epic write, inspect `.aim/ui-portfolio.json`; when
+  present, use trusted packaged `scripts/aim_start.py` preview and
+  digest-matched apply to create a dedicated registered
+  `.aim/portfolio/<EPIC-ID>/`, reserve a canonical `DI-*`, and verify AIM UI
+  projection before reporting Gate A ready. Fail closed without root state or
+  partial workspace on invalid, stale, colliding, escaped, or symlinked state;
+  diagnose existing orphaned/legacy checkpoints read-only
 - for `PORTFOLIO` plus Auto, preview the ordered Backlog, require one bounded
   user mandate, and then run included Epics sequentially through the complete
   AIM loop; after Gate E, separately record mandate-authorized Epic closure,

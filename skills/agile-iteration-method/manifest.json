@@ -29,6 +29,7 @@
     "scripts/aim_backlog.py",
     "scripts/aim_portfolio.py",
     "scripts/aim_portfolio_run.py",
+    "scripts/aim_start.py",
     "scripts/aim_ui.py",
     "scripts/aim_ui_control.py"
   ],
@@ -45,29 +46,29 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.7.2",
+  "productVersion": "2.8.0",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
     "repoProfile": "0.2"
   },
-  "publicSkillPackageVersion": 7,
+  "publicSkillPackageVersion": 8,
   "runtimeContractVersion": "2.0",
   "runtimeStateSchemaVersion": "1.0",
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "d1774759510643dc49e373b7509e83dbc88b26cb6893f9c31062708350095bee",
+      "sha256": "7e95d13ffc2cc6c921c87bbaa2d284147d459a813dda69503f727ebfac6883bf",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "f5248d062ca0d24a830a30225bc6425a9454c7a451fc981d43df388a40c0591f",
+      "sha256": "b58801e7e44610fad40d6d112a099116fc5c6947453235f480c7bac0bcf5b743",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "c8a97c0d18f5cbf4febfa8d38b71aebf3f4ba1f944d34f5b11c04cc78f671cf0",
+      "sha256": "75ce5b3d8fd1d9354381b7f9263f38db4741e66a4d76acee8cc910622ff76bcc",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -137,7 +138,7 @@
     },
     {
       "output": "references/schemas/aim-runtime-state.schema.json",
-      "sha256": "a1c5e5e4888973ff478d82a4c8cfc547e5b4fd2722ca8c6800d7bbba4a73d417",
+      "sha256": "bcc70cc7d4e17adefb966505b6eb67662a4a6ab398914bd4742fb58749e94244",
       "source": "schemas/aim-runtime-state.schema.json"
     },
     {
@@ -147,7 +148,7 @@
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
-      "sha256": "bfba8e559d09745f988dd6f0a641488d367647aea72c9c4744abbdba5c761042",
+      "sha256": "9cf4adb6c8759fc26ef27f6065414ac8bf472d596b1cf6e69134d8e3b032d31f",
       "source": "install/aim-install-manifest.yaml"
     },
     {
@@ -157,7 +158,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "e6a1eb883b99b3cc3741f764ebdc3b434bb8f52f84e43bb1c6cab7fac66cdbc1",
+      "sha256": "dceb827995520dae388b7283c5bc7847ef58a16e8013318c3bb436feeb5dc51e",
       "source": "VERSION"
     },
     {
@@ -167,8 +168,13 @@
     },
     {
       "output": "manifest.json",
-      "sha256": "25da6aab2aa33dbafad7edaf1efa261b9736a604e3258cd8483e1d319f1fe8f0",
+      "sha256": "7c01909456b4b280a8e7e5351011f0ff66df9ce385e21a884c7dccabccc00fe8",
       "source": "scripts/build_public_skill.py"
+    },
+    {
+      "output": "scripts/aim_start.py",
+      "sha256": "b7ddcb6577bc44191f0bcf3660985932dbf6896beac0c42d560c221f18ea5c90",
+      "source": "scripts/aim_start.py"
     },
     {
       "output": "scripts/aim_backlog.py",
@@ -192,7 +198,7 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "c69a41e81ae12d03a0e24b9a735d7f67dcec5ac8915695d9d695f25d21481ba1",
+      "sha256": "e8a4ece973c6346b7b3778e9c41d1358d2cc8608b6602091da66850c320df628",
       "source": "scripts/aim_ui.py"
     },
     {
@@ -202,17 +208,17 @@
     },
     {
       "output": "aim-ui/index.html",
-      "sha256": "9c59a63b6489d1ad6b73fcb1a0e69d89de42324165bc89f8c48d6728df8c12a6",
+      "sha256": "503d56584b9a117c80912a98ebb36aadbe676b44ffb9d35d90ac0de85a9bbb0a",
       "source": "aim-ui/index.html"
     },
     {
       "output": "aim-ui/styles.css",
-      "sha256": "977eec8d6038c854a5f352867c409561af36bc59be0187f9ccd4649a17be4dd6",
+      "sha256": "9da13408cda88b4f07c7d07bf2e845cdf96d7c571362d9c1b4cc7336a61ac982",
       "source": "aim-ui/styles.css"
     },
     {
       "output": "aim-ui/app.js",
-      "sha256": "c25e9e5edae4e3db80937be22eca69dd7e7283cb08677254144235d154efc7b4",
+      "sha256": "cf2dbb9fb87be4ade015664ebb2b2b58bf397093b86ca75381199a35908aa826",
       "source": "aim-ui/app.js"
     }
   ]

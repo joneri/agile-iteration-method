@@ -284,10 +284,10 @@ OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
-        "# Agile Iteration Method (AIM) 2.7",
+        "# Agile Iteration Method (AIM) 2.8",
         "## Install",
         "## How AIM works",
-        "## What is new in v2.7.2",
+        "## What is new in v2.8.0",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",
@@ -904,6 +904,179 @@ def parse_increment_id(active_increment_id: object) -> tuple[str | None, str | N
     return suffix, None
 
 
+def audit_portfolio_workspace_integrity(
+    repo_root: Path,
+    portfolio: dict[str, object],
+    checked: list[str],
+    issues: list[dict[str, object]],
+) -> None:
+    """Report invisible or contract-drifted checkpoints without normalizing them."""
+
+    repo_root = repo_root.resolve()
+    aim_root = repo_root / ".aim"
+    if aim_root.is_symlink() or not aim_root.is_dir():
+        return
+    aim_root = aim_root.resolve()
+    declared: set[Path] = set()
+    raw_workspaces = portfolio.get("workspaces")
+    if not isinstance(raw_workspaces, list):
+        return
+
+    for index, item in enumerate(raw_workspaces, 1):
+        raw = item.get("path") if isinstance(item, dict) else None
+        if not isinstance(raw, str) or not raw:
+            continue
+        if raw == ".":
+            candidate = aim_root
+        else:
+            if "\\" in raw:
+                add_issue(
+                    issues,
+                    "contradictory",
+                    AIM_UI_PORTFOLIO_PATH,
+                    f"workspace {index} uses a backslash instead of a contained POSIX path",
+                    "Repair the catalog explicitly before starting or resuming Portfolio work.",
+                )
+                continue
+            parts = Path(raw).parts
+            if Path(raw).is_absolute() or any(part in {".", ".."} for part in parts):
+                add_issue(
+                    issues,
+                    "contradictory",
+                    AIM_UI_PORTFOLIO_PATH,
+                    f"workspace {index} contains an absolute, dot, or traversal path: {raw}",
+                    "Repair the catalog explicitly before starting or resuming Portfolio work.",
+                )
+                continue
+            unresolved = aim_root / raw
+            current = aim_root
+            escaped = False
+            for part in parts:
+                current = current / part
+                if current.is_symlink():
+                    escaped = True
+                    break
+            candidate = unresolved.resolve()
+            try:
+                candidate.relative_to(aim_root)
+            except ValueError:
+                escaped = True
+            if escaped:
+                add_issue(
+                    issues,
+                    "contradictory",
+                    AIM_UI_PORTFOLIO_PATH,
+                    f"workspace {index} escapes containment or crosses a symlink: {raw}",
+                    "Replace it with an existing contained non-symlink workspace path.",
+                )
+                continue
+        declared.add(candidate)
+        if not candidate.is_dir() or not (candidate / "state.json").is_file():
+            add_issue(
+                issues,
+                "contradictory",
+                AIM_UI_PORTFOLIO_PATH,
+                f"declared workspace {raw} has no canonical state.json",
+                "Restore the workspace or remove the stale catalog entry explicitly.",
+            )
+
+    candidates = [aim_root]
+    for parent_name in ("portfolio", "workspaces"):
+        parent = aim_root / parent_name
+        if parent.is_dir() and not parent.is_symlink():
+            candidates.extend(
+                child.resolve()
+                for child in parent.iterdir()
+                if child.is_dir() and not child.is_symlink()
+            )
+
+    seen: set[Path] = set()
+    for workspace in candidates:
+        state_path = workspace / "state.json"
+        if workspace in seen or not state_path.exists():
+            continue
+        seen.add(workspace)
+        relative_state = state_path.relative_to(repo_root).as_posix()
+        checked.append(f"Portfolio workspace integrity: {relative_state}")
+        if state_path.is_symlink() or not state_path.is_file():
+            add_issue(
+                issues,
+                "contradictory",
+                relative_state,
+                "workspace state is missing or symbolic",
+                "Review the workspace explicitly; do not migrate or authorize it automatically.",
+            )
+            continue
+        try:
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            add_issue(
+                issues,
+                "contradictory",
+                relative_state,
+                f"workspace state cannot be read as JSON: {exc}",
+                "Repair or migrate it only through a separate explicit decision.",
+            )
+            continue
+        if not isinstance(state, dict):
+            add_issue(
+                issues,
+                "contradictory",
+                relative_state,
+                "workspace state must contain a JSON object",
+                "Repair or migrate it only through a separate explicit decision.",
+            )
+            continue
+        epic_id = state.get("epicId") if isinstance(state.get("epicId"), str) else "Unknown Epic"
+        if workspace not in declared:
+            add_issue(
+                issues,
+                "contradictory",
+                relative_state,
+                f"orphaned/invisible workspace: {epic_id} is not declared in {AIM_UI_PORTFOLIO_PATH} and cannot appear on the active board",
+                "Review the checkpoint and choose an explicit contained catalog repair or migration; do not rewrite it automatically.",
+            )
+        if state.get("stateSchemaVersion") != SUPPORTED_STATE_SCHEMA_VERSION:
+            add_issue(
+                issues,
+                "contradictory",
+                relative_state,
+                f"{epic_id} stateSchemaVersion {state.get('stateSchemaVersion')!r} is not current {SUPPORTED_STATE_SCHEMA_VERSION}",
+                "Use a separate explicit migration after reviewing the accepted history.",
+            )
+        status = state.get("epicStatus")
+        if status not in ALLOWED_STATES:
+            add_issue(
+                issues,
+                "contradictory",
+                relative_state,
+                f"{epic_id} epicStatus {status!r} is not canonical; legacy 'complete' is not 'epic_complete'",
+                "Select a reviewed migration path; validation will not normalize the checkpoint in place.",
+            )
+        gate = state.get("lastGatePassed")
+        if gate not in ALLOWED_LAST_GATES:
+            add_issue(
+                issues,
+                "contradictory",
+                relative_state,
+                f"{epic_id} lastGatePassed {gate!r} is not canonical; legacy 'E' is not 'Gate E'",
+                "Select a reviewed migration path; validation will not infer Gate authority.",
+            )
+        for field in ("activeIncrementId", "plannedIncrementId", "previousIncrementId"):
+            identifier = state.get(field)
+            if identifier is not None and (
+                not isinstance(identifier, str)
+                or re.fullmatch(r"DI-[0-9]+", identifier) is None
+            ):
+                add_issue(
+                    issues,
+                    "contradictory",
+                    relative_state,
+                    f"{epic_id} {field} {identifier!r} is not canonical; runtime Increment identities use DI-*",
+                    "Select a reviewed migration path; do not reinterpret a legacy INC-* value automatically.",
+                )
+
+
 def summarize_result(issues: list[dict[str, object]]) -> str:
     return summarize_typed_result(issues)
 
@@ -1458,7 +1631,7 @@ def main() -> int:
             finding.action,
         )
 
-    checked.append("AIM 2.7 documentation audit")
+    checked.append("AIM 2.8 documentation audit")
     for documentation_error in audit_documentation(repo_root):
         add_issue(
             issues,
@@ -1583,6 +1756,7 @@ def main() -> int:
 
     checked.append("AIM UI portfolio catalog")
     portfolio_path = repo_root / AIM_UI_PORTFOLIO_PATH
+    portfolio: dict[str, object] | None = None
     if aim_ui_portfolio_schema is not None and portfolio_path.is_file():
         try:
             portfolio = json.loads(portfolio_path.read_text(encoding="utf-8"))
@@ -1602,6 +1776,10 @@ def main() -> int:
                     AIM_UI_PORTFOLIO_PATH,
                     f"AIM UI portfolio violates the schema at {schema_issue.path}: {schema_issue.message}",
                     "Align the optional catalog with schemas/aim-ui-portfolio.schema.json.",
+                )
+            if isinstance(portfolio, dict):
+                audit_portfolio_workspace_integrity(
+                    repo_root, portfolio, checked, issues
                 )
 
     checked.append("AIM UI portfolio backlog")

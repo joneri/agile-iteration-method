@@ -427,6 +427,17 @@ counts, then invoke the trusted AIM UI launcher. Imported candidates remain
 planning metadata on stationary Epics until a separate explicit Activate intent;
 they never masquerade as runtime Increment cards.
 
+For a genuinely new `/aim start "EPIC: ..."`, inspect
+`.aim/ui-portfolio.json` before the first runtime write. When present, resolve
+the trusted package-owned `scripts/aim_start.py`, show its no-write preview, and
+apply only that reviewed catalog digest. A successful start creates and
+registers `.aim/portfolio/<EPIC-ID>/`, reserves a canonical `DI-*`, and verifies
+the Epic and reserved Increment through the AIM UI read model before Gate A is
+reported ready. Invalid, stale, full, colliding, traversing, escaped, symlinked,
+or invisible relations fail closed without root state or a partial workspace.
+Existing orphaned or legacy checkpoints are reported by validation and UI with
+an explicit migration/repair next action; neither surface modifies them.
+
 `/aim start "PORTFOLIO" mode:auto` snapshots the valid ordered AIM UI Backlog,
 excluding candidates that already carry a `runtimeIncrementId`, previews it,
 and requires one explicit user mandate. Resolve the trusted

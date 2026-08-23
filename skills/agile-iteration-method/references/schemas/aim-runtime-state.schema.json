@@ -97,6 +97,12 @@
       ],
       "type": "object"
     },
+    "plannedIncrementId": {
+      "description": "Optional canonical DI identity reserved by a Portfolio-aware start before Gate B. It is not active or approved runtime authority.",
+      "maxLength": 32,
+      "pattern": "^DI-[0-9]+$",
+      "type": "string"
+    },
     "platform": {
       "minLength": 1,
       "type": "string"

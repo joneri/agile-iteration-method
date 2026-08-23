@@ -232,16 +232,22 @@ Suggested state shape:
 ## `/aim start` behavior
 
 1. If `.aim/state.json` exists and points to an incomplete Epic, show status and resume that Epic instead of creating a parallel session.
-2. Create missing official runtime artifacts in `.aim/` before continuing.
-3. Read `aim.profile.yaml` when present before broad docs and use it to select locality, commands, short authoritative docs, risk zones, and avoid-by-default context.
-4. Load only the additional repo-aware context needed to validate the current start or resume path.
-5. Create initial state at Gate A with `commitMode: optional`.
+2. Before a genuinely new Epic write, inspect `.aim/ui-portfolio.json`. When it
+   exists, use trusted packaged `scripts/aim_start.py` preview plus
+   digest-matched apply to publish a dedicated `.aim/portfolio/<EPIC-ID>/`,
+   canonical reserved `DI-*`, and catalog entry. Verify the AIM UI read model
+   before reporting Gate A ready. Fail closed without root state or a retained
+   partial workspace on invalid, stale, colliding, escaped, or symlinked state.
+3. Without Portfolio configuration, create missing official runtime artifacts in `.aim/` before continuing.
+4. Read `aim.profile.yaml` when present before broad docs and use it to select locality, commands, short authoritative docs, risk zones, and avoid-by-default context.
+5. Load only the additional repo-aware context needed to validate the current start or resume path.
+6. Create initial state at Gate A with `commitMode: optional`.
    Also set `mode: Strict` unless user explicitly chooses `Auto`.
    Also set `costProfile: Standard` unless user explicitly chooses `Cost Control` or `Deep`.
    The thin front door may suggest `Cost Control` for ordinary low-risk work, but omitted cost profile still resolves to `Standard`.
-6. Delegate bounded PO analysis to `aim-po` when it materially improves Epic framing.
-7. Delegate bounded TDO analysis to `aim-tdo` when it materially improves the next increment plan.
-8. Present Gate A only (Epic approval). Do not auto-approve Gate B unless PO policy explicitly allows it.
+7. Delegate bounded PO analysis to `aim-po` when it materially improves Epic framing.
+8. Delegate bounded TDO analysis to `aim-tdo` when it materially improves the next increment plan.
+9. Present Gate A only (Epic approval). Do not auto-approve Gate B unless PO policy explicitly allows it.
 
 Epic candidate rule:
 - if the user provides a valid Epic candidate, accept it with light normalization instead of forcing a full rewrite
