@@ -196,7 +196,7 @@ state transitions through the platform's native skill route.
 | Command | Use when | What it does | What happens next |
 | --- | --- | --- | --- |
 | `/aim to-backlog` | You want to paste several Epic descriptions. | Asks one short question, interprets supplied text as untrusted evidence, and safely merges planned candidates. | AIM reports the result and opens the control room. |
-| `/aim to-backlog from <source>` | One explicit repository file or available attachment already contains the Epics. | Reads only that source, preserves explicit Increments, derives one initial candidate where needed, and atomically merges valid `INC-*` cards. | Ambiguity pauses for review; success opens AIM UI with cards in Backlog. |
+| `/aim to-backlog from <source>` | One explicit repository file or available attachment already contains the Epics. | Reads only that source, preserves explicit Increment intent, derives one initial candidate where needed, and atomically merges valid `INC-*` candidates. | Ambiguity pauses for review; success opens AIM UI with stationary Epic planning summaries. |
 
 ### Inspect and validate
 
@@ -425,8 +425,9 @@ pause on material ambiguity. Pass normalized data only to the trusted
 package-owned `scripts/aim_backlog.py`; never execute a same-named repository
 script. The helper may create or atomically merge `.aim/portfolio-backlog.json`
 but never runtime state. Report added, updated, skipped, derived, and ambiguous
-counts, then invoke the trusted AIM UI launcher. Imported cards remain planned
-until a separate explicit Activate intent.
+counts, then invoke the trusted AIM UI launcher. Imported candidates remain
+planning metadata on stationary Epics until a separate explicit Activate intent;
+they never masquerade as runtime Increment cards.
 
 `/aim start "PORTFOLIO" mode:auto` snapshots the valid ordered AIM UI Backlog,
 previews it, and requires one explicit user mandate. Resolve the trusted

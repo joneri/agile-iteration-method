@@ -77,6 +77,24 @@ class RuntimeStateSchemaTests(unittest.TestCase):
         self.assertEqual(result.classification, "current")
         self.assertEqual(result.findings, ())
 
+    def test_optional_accepted_history_contract_validates(self) -> None:
+        state = canonical_state()
+        state.update(
+            {
+                "epicStatus": "epic_complete",
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "previousIncrementId": "DI-042",
+                "previousIncrementStatus": "accepted",
+                "gateEAcceptance": ".aim/portfolio/EPIC-TEST/decisions/gate-e-accepted.md",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            result = load_runtime_state(self._repo(Path(temporary), state))
+        self.assertEqual(result.classification, "current")
+        self.assertEqual(result.findings, ())
+
     def test_legacy_aliases_normalize_without_writing(self) -> None:
         state = canonical_state()
         del state["stateSchemaVersion"]

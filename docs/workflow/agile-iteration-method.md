@@ -979,6 +979,12 @@ At Gate E, the visible interaction should still distinguish two decisions:
 - increment acceptance after TDO demo, test, and feedback framing
 - Epic continuation or closure after the increment is accepted
 
+When the Epic continues, TDO must create the next canonical Done Increment and
+return the workspace to Gate B. An incomplete Epic must not remain stranded in
+an accepted-Increment checkpoint, and a planning candidate must not be shown as
+if it were that runtime Increment. Epic closure remains a separate explicit PO
+decision.
+
 ---
 
 ## Gate B checklist: Is this a real Done Increment?

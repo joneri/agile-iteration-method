@@ -167,7 +167,7 @@ class AimBacklogTests(unittest.TestCase):
                 merge_backlog(repo, imported, NOW)
             self.assertEqual(outside.read_text(encoding="utf-8"), "untouched\n")
 
-    def test_imported_candidates_are_visible_as_inactive_backlog_cards(self) -> None:
+    def test_imported_candidates_are_visible_as_stationary_epics(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = Path(temporary)
             imported = normalize_import(
@@ -181,14 +181,12 @@ class AimBacklogTests(unittest.TestCase):
             )
             merge_backlog(repo, imported, NOW)
             board = build_board(repo)
-        cards = [
-            card
-            for epic in board["epics"]
-            for card in epic["increments"]
-        ]
-        self.assertEqual(len(cards), 2)
-        self.assertTrue(all(card["column"] == "backlog" for card in cards))
-        self.assertTrue(all(card["planned"] and not card["active"] for card in cards))
+        self.assertEqual(len(board["epics"]), 2)
+        self.assertTrue(all(epic["increments"] == [] for epic in board["epics"]))
+        self.assertTrue(all(epic["lifecycle"] == "planned" for epic in board["epics"]))
+        self.assertTrue(
+            all(epic["planning"]["candidateCount"] == 1 for epic in board["epics"])
+        )
 
     def test_cli_reads_stdin_and_creates_planning_only(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

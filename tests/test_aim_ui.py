@@ -282,8 +282,7 @@ class AimUiTests(unittest.TestCase):
         candidates = {
             item["id"]: item
             for epic in board["epics"]
-            for item in epic["increments"]
-            if item["planned"]
+            for item in epic["planning"]["candidates"]
         }
         self.assertEqual(candidates["INC-AUTO-001"]["portfolioState"], "active")
         self.assertEqual(
@@ -291,7 +290,7 @@ class AimUiTests(unittest.TestCase):
         )
         self.assertEqual(candidates["INC-AUTO-002"]["portfolioState"], "queued")
 
-    def test_planned_increments_from_two_epics_are_projected_by_priority(self) -> None:
+    def test_planned_candidates_project_epics_without_increment_cards(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))
             self._backlog(
@@ -317,21 +316,19 @@ class AimUiTests(unittest.TestCase):
             )
             board = build_board(repo)
 
-        planned = [
-            item
-            for epic in board["epics"]
-            for item in epic["increments"]
-            if item["planned"]
-        ]
-        self.assertEqual([item["id"] for item in planned], ["INC-UI-001", "INC-DATA-001"])
-        self.assertTrue(all(item["column"] == "backlog" for item in planned))
-        self.assertTrue(all(item["gate"] == "Not approved" for item in planned))
+        planned = [epic for epic in board["epics"] if epic["lifecycle"] == "planned"]
+        self.assertEqual([epic["id"] for epic in planned], ["EPIC-UI", "EPIC-DATA"])
+        self.assertTrue(all(epic["increments"] == [] for epic in planned))
         self.assertEqual(
-            {epic["id"] for epic in board["epics"] if epic["lifecycle"] == "planned"},
-            {"EPIC-UI", "EPIC-DATA"},
+            [epic["planning"]["nextCandidateId"] for epic in planned],
+            ["INC-UI-001", "INC-DATA-001"],
         )
-        self.assertTrue(all(item["actions"][0]["kind"] == "activate" for item in planned))
-        self.assertTrue(all(item["actions"][0]["enabled"] for item in planned))
+        self.assertTrue(all(epic["actions"][0]["kind"] == "activate" for epic in planned))
+        self.assertTrue(all(epic["actions"][0]["label"] == "Start Epic" for epic in planned))
+        self.assertTrue(
+            all(epic["actions"][0]["envelope"]["action"] == "activate" for epic in planned)
+        )
+        self.assertTrue(all(epic["actions"][0]["enabled"] for epic in planned))
 
     def test_full_capacity_disables_planned_activation_with_reason(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -350,8 +347,9 @@ class AimUiTests(unittest.TestCase):
             )
             board = build_board(repo)
 
-        planned = next(epic for epic in board["epics"] if epic["id"] == "EPIC-NEXT")["increments"][0]
+        planned = next(epic for epic in board["epics"] if epic["id"] == "EPIC-NEXT")
         action = planned["actions"][0]
+        self.assertEqual(action["label"], "Start Epic")
         self.assertFalse(action["enabled"])
         self.assertEqual(action["reason"], "Portfolio capacity is full.")
         self.assertNotIn("href", action)
@@ -450,6 +448,13 @@ class AimUiTests(unittest.TestCase):
             "semanticBoardSignature",
             "generatedAt: _generatedAt",
             "data-card-key",
+            "data-epic-card",
+            "data-epic-row",
+            "duplicateCards.forEach((card) => card.remove())",
+            'card.closest(".lane-cell")?.dataset.column',
+            'epic.lifecycle !== "closed"',
+            "epicsForView(board)",
+            "renderFilters(board, viewEpics)",
             "animateCardHandoffs",
             'prefers-reduced-motion: reduce',
             "kanban.scrollLeft = scrollLeft",
@@ -509,8 +514,8 @@ class AimUiTests(unittest.TestCase):
             )
             board = build_board(repo)
 
-        candidate = next(item for item in board["epics"][0]["increments"] if item["planned"])
-        actions = candidate["actions"]
+        candidate = board["epics"][0]["planning"]["candidates"][0]
+        actions = board["epics"][0]["actions"]
         self.assertEqual([item["kind"] for item in actions], ["approve", "change"])
         self.assertEqual(actions[0]["envelope"]["candidateId"], "INC-TEST-001")
         self.assertEqual(actions[0]["envelope"]["gate"], "Gate A")
@@ -544,6 +549,36 @@ class AimUiTests(unittest.TestCase):
         self.assertEqual(board["health"], "healthy")
         self.assertEqual(board["warnings"], [])
 
+    def test_gate_a_workspace_has_epic_without_runtime_increment_card(self) -> None:
+        runtime = state("gate_a_pending")
+        runtime.update(
+            {"activeIncrementId": None, "currentRole": "PO", "lastGatePassed": None}
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            (repo / ".aim/increments/001-wip.md").unlink()
+            board = build_board(repo)
+
+        self.assertEqual(len(board["epics"]), 1)
+        self.assertEqual(board["epics"][0]["increments"], [])
+
+    def test_plan_and_wip_for_one_runtime_increment_project_one_card(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            (repo / ".aim/increments/001-plan.md").write_text(
+                "# DI-001 — Plan title\n\nEpic: EPIC-TEST-001\n",
+                encoding="utf-8",
+            )
+            board = build_board(repo)
+
+        increments = board["epics"][0]["increments"]
+        self.assertEqual([item["id"] for item in increments], ["DI-001"])
+        self.assertEqual(increments[0]["title"], "See the active work")
+        self.assertEqual(
+            {item["label"] for item in increments[0]["evidence"]},
+            {"Increment plan", "Work log"},
+        )
+
     def test_duplicate_backlog_candidate_is_isolated_without_losing_valid_work(self) -> None:
         candidate = {
             "id": "INC-UI-001",
@@ -558,13 +593,12 @@ class AimUiTests(unittest.TestCase):
             self._backlog(repo, [candidate, {**candidate, "title": "Duplicate"}])
             board = build_board(repo)
 
-        planned = [
-            item
-            for epic in board["epics"]
-            for item in epic["increments"]
-            if item["planned"]
-        ]
-        self.assertEqual([item["id"] for item in planned], ["INC-UI-001"])
+        planned = next(epic for epic in board["epics"] if epic["id"] == "EPIC-UI")
+        self.assertEqual(
+            [item["id"] for item in planned["planning"]["candidates"]],
+            ["INC-UI-001"],
+        )
+        self.assertEqual(planned["increments"], [])
         self.assertEqual(board["health"], "partial")
         self.assertTrue(any("duplicate id INC-UI-001" in warning for warning in board["warnings"]))
 
@@ -597,6 +631,152 @@ class AimUiTests(unittest.TestCase):
             if item["column"] == "done" and item["visibleOnBoard"]
         ]
         self.assertEqual(set(visible_done), {"DI-003", "DI-004", "DI-005"})
+
+    def test_completed_epic_projects_state_linked_previous_increment_into_done(self) -> None:
+        runtime = state("epic_complete")
+        runtime.update(
+            {
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "previousIncrementId": "DI-042",
+                "previousIncrementStatus": "accepted",
+                "gateEAcceptance": ".aim/decisions/2026-08-22-gate-e-user-accepted.md",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/042-wip.md").write_text(
+                "# DI-042 — Finish the Portfolio\n\nEpic: EPIC-TEST-001\n",
+                encoding="utf-8",
+            )
+            decision = aim / "decisions/2026-08-22-gate-e-user-accepted.md"
+            decision.write_text(
+                "# Gate E\n\nIncrement: DI-042\n\nStatus: Accepted\n\n"
+                "Accepted at: 2026-08-22T14:00:00Z\n",
+                encoding="utf-8",
+            )
+            board = build_board(repo)
+
+        increments = {item["id"]: item for item in board["epics"][0]["increments"]}
+        accepted = increments["DI-042"]
+        self.assertEqual(accepted["column"], "done")
+        self.assertEqual(accepted["runtimeStatus"], "done_increment_accepted")
+        self.assertEqual(accepted["gate"], "Gate E")
+        self.assertEqual(accepted["acceptedAt"], "2026-08-22T14:00:00Z")
+        self.assertIn(
+            ".aim/decisions/2026-08-22-gate-e-user-accepted.md",
+            [item["path"] for item in accepted["evidence"]],
+        )
+        self.assertEqual(increments["DI-001"]["column"], "backlog")
+        self.assertEqual(increments["DI-001"]["runtimeStatus"], "gate_b_pending")
+        self.assertEqual(board["warnings"], [])
+
+    def test_invalid_state_linked_acceptance_fails_closed_without_legacy_fallback(self) -> None:
+        cases = {
+            "traversal": ".aim/decisions/../outside.md",
+            "missing": ".aim/decisions/missing.md",
+            "wrong_workspace": ".aim/other/decisions/accepted.md",
+        }
+        for label, acceptance_path in cases.items():
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as temporary:
+                runtime = state("epic_complete")
+                runtime.update(
+                    {
+                        "activeIncrementId": None,
+                        "currentRole": "PO",
+                        "lastGatePassed": "Gate E",
+                        "previousIncrementId": "DI-042",
+                        "previousIncrementStatus": "accepted",
+                        "gateEAcceptance": acceptance_path,
+                    }
+                )
+                repo = self._repo(Path(temporary), runtime)
+                aim = repo / ".aim"
+                (aim / "increments/042-wip.md").write_text(
+                    "# DI-042 — Remain unaccepted\n\nEpic: EPIC-TEST-001\n",
+                    encoding="utf-8",
+                )
+                (aim / "decisions/042-gate-e.md").write_text(
+                    "# Accepted\n\nIncrement: DI-042\n", encoding="utf-8"
+                )
+                board = build_board(repo)
+
+            increment = next(
+                item for item in board["epics"][0]["increments"] if item["id"] == "DI-042"
+            )
+            self.assertEqual(increment["column"], "backlog")
+            self.assertEqual(increment["runtimeStatus"], "gate_b_pending")
+            self.assertTrue(any("acceptance is hidden" in item for item in board["warnings"]))
+
+    def test_structured_unaccepted_history_is_not_promoted_by_epic_completion(self) -> None:
+        runtime = state("epic_complete")
+        runtime.update(
+            {
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "previousIncrementId": "DI-042",
+                "previousIncrementStatus": "rejected",
+                "gateEAcceptance": ".aim/decisions/descriptive.md",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/042-wip.md").write_text(
+                "# DI-042 — Not accepted\n\nEpic: EPIC-TEST-001\n",
+                encoding="utf-8",
+            )
+            (aim / "decisions/042-gate-e.md").write_text(
+                "# Accepted\n\nIncrement: DI-042\n", encoding="utf-8"
+            )
+            board = build_board(repo)
+
+        increment = next(
+            item for item in board["epics"][0]["increments"] if item["id"] == "DI-042"
+        )
+        self.assertEqual(increment["column"], "backlog")
+        self.assertEqual(increment["runtimeStatus"], "gate_b_pending")
+        self.assertEqual(board["warnings"], [])
+
+    def test_state_linked_acceptance_rejects_symlink_and_mismatched_decision(self) -> None:
+        for label in ("symlink", "mismatch"):
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as temporary:
+                runtime = state("epic_complete")
+                runtime.update(
+                    {
+                        "activeIncrementId": None,
+                        "currentRole": "PO",
+                        "lastGatePassed": "Gate E",
+                        "previousIncrementId": "DI-042",
+                        "previousIncrementStatus": "accepted",
+                        "gateEAcceptance": ".aim/decisions/descriptive.md",
+                    }
+                )
+                repo = self._repo(Path(temporary), runtime)
+                aim = repo / ".aim"
+                (aim / "increments/042-wip.md").write_text(
+                    "# DI-042 — Remain unaccepted\n\nEpic: EPIC-TEST-001\n",
+                    encoding="utf-8",
+                )
+                decision = aim / "decisions/descriptive.md"
+                if label == "symlink":
+                    outside = repo / "outside.md"
+                    outside.write_text("# Accepted\n\nIncrement: DI-042\n", encoding="utf-8")
+                    decision.symlink_to(outside)
+                else:
+                    decision.write_text(
+                        "# Accepted\n\nIncrement: DI-999\n", encoding="utf-8"
+                    )
+                board = build_board(repo)
+
+            increment = next(
+                item for item in board["epics"][0]["increments"] if item["id"] == "DI-042"
+            )
+            self.assertEqual(increment["column"], "backlog")
+            self.assertTrue(any("acceptance is hidden" in item for item in board["warnings"]))
 
     def test_read_model_links_increment_to_epic_collection(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -793,6 +973,28 @@ class AimUiTests(unittest.TestCase):
         items = {item["id"]: item for item in board["epics"][0]["increments"]}
         self.assertEqual(items["DI-001"]["column"], "done")
         self.assertEqual(items["DI-002"]["column"], "backlog")
+
+    def test_change_requested_gate_e_is_not_acceptance_evidence(self) -> None:
+        runtime = state("gate_b_pending")
+        runtime["activeIncrementId"] = "DI-002"
+        runtime["currentRole"] = "TDO"
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/002-wip.md").write_text(
+                "# DI-002 — Next slice\n\nEpic: EPIC-TEST-001\n", encoding="utf-8"
+            )
+            (aim / "decisions/001-gate-e.md").write_text(
+                "# Gate E — DI-001\n\n"
+                "Decision: Change requested by the user\n\n"
+                "Restart after the Increment is accepted and released.\n",
+                encoding="utf-8",
+            )
+            board = build_board(repo)
+
+        items = {item["id"]: item for item in board["epics"][0]["increments"]}
+        self.assertEqual(items["DI-001"]["column"], "backlog")
+        self.assertIsNone(items["DI-001"]["acceptedAt"])
 
     def test_helper_activity_is_separate_and_scoped_to_epic(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

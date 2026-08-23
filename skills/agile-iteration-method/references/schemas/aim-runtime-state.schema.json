@@ -53,6 +53,12 @@
       ],
       "type": "string"
     },
+    "gateEAcceptance": {
+      "description": "Optional repository-relative POSIX path to contained Gate E acceptance evidence for previousIncrementId.",
+      "maxLength": 1000,
+      "pattern": "^\\.aim/",
+      "type": "string"
+    },
     "lastGatePassed": {
       "enum": [
         null,
@@ -92,6 +98,18 @@
       "type": "object"
     },
     "platform": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "previousIncrementId": {
+      "description": "Optional canonical identity of the most recently transitioned Increment when activeIncrementId is null.",
+      "maxLength": 32,
+      "pattern": "^DI-[0-9]+$",
+      "type": "string"
+    },
+    "previousIncrementStatus": {
+      "description": "Optional explicit status for previousIncrementId. AIM UI recognizes the exact value accepted only with a valid Gate E checkpoint and linked evidence.",
+      "maxLength": 64,
       "minLength": 1,
       "type": "string"
     },

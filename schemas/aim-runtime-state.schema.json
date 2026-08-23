@@ -42,6 +42,24 @@
       ]
     },
     "activeIncrementId": {"description": "Canonical DI identifier, or null before Gate B."},
+    "previousIncrementId": {
+      "type": "string",
+      "pattern": "^DI-[0-9]+$",
+      "maxLength": 32,
+      "description": "Optional canonical identity of the most recently transitioned Increment when activeIncrementId is null."
+    },
+    "previousIncrementStatus": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "Optional explicit status for previousIncrementId. AIM UI recognizes the exact value accepted only with a valid Gate E checkpoint and linked evidence."
+    },
+    "gateEAcceptance": {
+      "type": "string",
+      "pattern": "^\\.aim/",
+      "maxLength": 1000,
+      "description": "Optional repository-relative POSIX path to contained Gate E acceptance evidence for previousIncrementId."
+    },
     "currentRole": {"type": "string", "enum": ["PO", "TDO", "Dev", "Reviewer"]},
     "lastGatePassed": {"enum": [null, "Gate A", "Gate B", "Gate C", "Gate D", "Gate E"]},
     "platform": {"type": "string", "minLength": 1},

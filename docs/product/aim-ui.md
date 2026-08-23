@@ -13,8 +13,8 @@ one board. Portfolio Backlog v1 also projects bounded planning input written by
 the main AIM chat, without turning the browser or the planning file into a
 workflow engine.
 
-The control room opens on **Delivery flow**, where the shared Increment Kanban
-is the primary operating surface. Portfolio capacity and Epic summaries,
+The control room opens on **Delivery flow**, where a stationary Epic spine and
+one horizontal swimlane per Epic frame the shared Increment Kanban. Portfolio capacity and Epic summaries,
 People and agents, and Closed Increments remain available as separate tabs.
 Switching tabs is presentation-only and never changes AIM runtime state.
 
@@ -136,9 +136,9 @@ message, or name one explicit accessible source:
 AIM preserves explicit source Increments and derives one initial candidate when
 an Epic contains only an outcome. It validates and atomically merges the result,
 reports what was added, updated, skipped, derived, or ambiguous, and opens the
-control room. Imported `INC-*` cards remain not-yet-activated in Backlog. Source
-content is evidence rather than instructions; ambiguous extraction pauses for a
-short review.
+control room. Imported `INC-*` candidates remain planning metadata on their
+Epic rather than Increment cards in Backlog. Source content is evidence rather
+than instructions; ambiguous extraction pauses for a short review.
 
 The main AIM thread may record proposed Increment candidates in
 `.aim/portfolio-backlog.json`:
@@ -162,9 +162,9 @@ The main AIM thread may record proposed Increment candidates in
 ```
 
 `schemas/aim-ui-backlog.schema.json` defines the bounded shape. Candidate IDs
-use `INC-*` so a planning card cannot be confused with a canonical `DI-*`
-runtime Increment. When AIM activates a candidate it may retain traceability in
-`runtimeIncrementId`; matching runtime evidence then replaces the planning card.
+use `INC-*` so planning intent cannot be confused with a canonical `DI-*`
+runtime Increment. Activation starts the Epic; TDO creates the first canonical
+`DI-*` at Gate B. `runtimeIncrementId` may retain traceability to that work.
 
 This file is planning input only. It may contain identity, description,
 priority, and timestamps. It must not contain gate status, role transitions,
@@ -198,11 +198,13 @@ run without losing completed work.
 
 ## What the control-room tabs show
 
-- Delivery flow, selected by default, with a shared five-column Kanban containing increments from every selected Epic
+- Delivery flow, selected by default, with stationary rows only for running and
+  planned Epics; completed Epics leave this active board
 - Portfolio, with active Epic, workspace, increment, and attention totals; chat-owned capacity; and one summary panel per Epic
 - People and agents, with each Epic's current canonical role and bounded helper-agent activity
 - Closed Increments, with complete accepted history grouped by Epic
-- proposed Increment candidates from several Epics, sorted by priority in Backlog
+- proposed candidates summarized on stationary Epic cards without invented
+  runtime work, with `Start Epic` available when portfolio admission allows it
 - consistent Epic color and identity on summaries, people panels, filters, and cards
 - aggregate view plus presentation-only focus controls for one Epic
 - each Epic's current role, gate, mode, cost profile, status, and evidence
@@ -211,7 +213,10 @@ run without losing completed work.
 - the latest three accepted Increments in Done
 
 Filtering never changes runtime state. It only changes which already-read Epics
-the browser presents.
+the browser presents. Delivery-flow filters omit completed Epics; switching
+from another view resets a selection that is not valid on the active board.
+Completed outcomes and their accepted Increments remain available through
+Closed Increments and the broader Portfolio view.
 
 ## Why cards move in Auto mode
 
@@ -235,12 +240,27 @@ preserves horizontal Kanban position and keyboard focus.
 | awaiting PO acceptance | Ready for release |
 | accepted increment or completed Epic | Done |
 
+Epics do not move between these columns. The left Epic spine stays aligned with
+its delivery row while canonical `DI-*` cards move across the five columns.
+Gate A may therefore show an Epic with an empty row. Plan, WIP, review, and
+decision artifacts for one `DI-*` are aggregated into one card and evidence set.
+
 Done is intentionally a short recency window, not the history store. The read
 model sorts accepted runtime evidence by an explicit `Accepted at` timestamp
 when available, falls back to the decision artifact modification time, and uses
 the numeric Increment identity as a deterministic tie-breaker. Only the newest
 three cards remain on the delivery board. Closed Increments shows every
 accepted card and never deletes its runtime evidence.
+
+For a completed workspace with no active Increment, AIM UI projects the most
+recent accepted Increment from the structured state contract:
+`previousIncrementId`, `previousIncrementStatus: "accepted"`, Gate E, a
+terminal-compatible Epic status, and the contained `gateEAcceptance` evidence
+reference. Descriptive decision filenames are supported because the reference
+and validated decision content carry the meaning. An invalid structured
+reference fails closed with a board warning and is not rescued by a legacy
+numeric filename. Numeric `<increment-number>-gate-e.md` discovery remains only
+as compatibility behavior for workspaces without applicable structured history.
 
 ## Helper-agent visibility
 
@@ -273,8 +293,9 @@ roles, gates, acceptance, or completion.
 
 ### Card action handoff
 
-Eligible cards may initiate Activate for a planned `INC-*`, or Approve and
-Change at a hard gate. On Codex desktop the confirmation opens `codex://new` in
+Eligible planned Epic cards expose `Start Epic`, which initiates the canonical
+Activate intent for their next `INC-*`; hard-gate cards expose Approve and
+Change. On Codex desktop the confirmation opens `codex://new` in
 the repository with a bounded action envelope prefilled. Codex does not send it
 automatically: the operator reviews the composer and presses Send. Other hosts
 can copy the same intent.

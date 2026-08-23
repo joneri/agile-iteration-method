@@ -311,14 +311,34 @@ main { padding: clamp(22px, 4vw, 58px); }
 .runtime-notices { margin: -8px 0 18px; padding: 11px 14px; color: #6c3d00; background: #fff1d2; border-left: 4px solid var(--amber); font-size: 0.78rem; }
 .runtime-notices p { margin: 0; }
 .runtime-notices p + p { margin-top: 5px; }
+.kanban-panel { overflow-x: auto; overscroll-behavior-inline: contain; }
 .kanban {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(205px, 1fr));
-  gap: 12px;
-  overflow-x: auto;
+  width: 1380px;
+  min-width: 100%;
+  background: var(--line);
+  border: 1px solid var(--line);
+  overflow: visible;
   padding: 0 0 10px;
-  scroll-snap-type: x proximity;
 }
+.kanban-row { display: grid; grid-template-columns: 280px repeat(5, minmax(210px, 1fr)); gap: 1px; }
+.kanban-head-row { position: sticky; top: 0; z-index: 8; color: var(--white); background: var(--navy); }
+.epic-column-head, .lane-column-head { display: flex; align-items: center; justify-content: space-between; min-height: 54px; padding: 12px 14px; font: 800 0.76rem/1.1 var(--display); letter-spacing: 0.04em; text-transform: uppercase; }
+.epic-column-head { position: sticky; left: 0; z-index: 9; color: var(--lime); background: var(--navy); }
+.lane-column-head { border-left: 1px solid rgba(255,255,255,0.18); }
+.lane-cell { min-height: 190px; padding: 10px; background: rgba(244,248,250,0.94); border-top: 4px solid transparent; }
+.lane-cell[data-column="work_in_progress"] { border-top-color: var(--cyan); }
+.lane-cell[data-column="in_review"] { border-top-color: #6b73d6; }
+.lane-cell[data-column="ready_for_release"] { border-top-color: var(--amber); }
+.lane-cell[data-column="done"] { border-top-color: var(--lime); }
+.lane-cell:empty::after { content: "No runtime increment"; display: block; padding: 18px 6px; color: #718496; font-size: 0.72rem; text-align: center; }
+.epic-lane-card { position: sticky; left: 0; z-index: 5; min-height: 190px; border-top-width: 4px; box-shadow: 8px 0 18px rgba(12,43,72,0.09); }
+.epic-lane-card .epic-title { margin-top: 12px; font-size: 1.05rem; }
+.epic-lane-card .epic-facts { margin-top: 12px; }
+.epic-planning { margin: 10px 0 0; color: #405c78; font: 0.65rem/1.4 var(--mono); }
+.epic-control { display: grid; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.15); }
+.epic-control[hidden] { display: none; }
+.epic-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.epic-action-unavailable { margin: 0; color: #8a4d10; font-size: 0.72rem; }
 .kanban-column {
   min-height: 390px;
   background: #edf4f7;
@@ -432,7 +452,8 @@ main { padding: clamp(22px, 4vw, 58px); }
   .section-tabs { margin-inline: -4px; }
   .view-button { flex: 1; }
   .epic-filters { justify-content: flex-start; }
-  .kanban { grid-template-columns: repeat(5, minmax(82vw, 1fr)); }
+  .kanban { width: calc(76vw + 5 * 82vw); min-width: 0; }
+  .kanban-row { grid-template-columns: 76vw repeat(5, minmax(82vw, 1fr)); }
   .closed-heading { align-items: start; flex-direction: column; }
   .closed-list { grid-template-columns: 1fr; }
   .card-actions { display: grid; }

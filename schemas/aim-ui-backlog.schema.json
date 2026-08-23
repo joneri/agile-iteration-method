@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-ui-backlog.schema.json",
   "title": "AIM UI portfolio backlog",
-  "description": "Bounded planning input written by the main AIM thread and projected read-only by AIM UI. It is not runtime, gate, scheduling, or acceptance authority.",
+  "description": "Bounded Epic planning input written by the main AIM thread and projected read-only by AIM UI. INC items preserve candidate intent and activation identity; they are not runtime Increment cards, gate, scheduling, or acceptance authority.",
   "type": "object",
   "required": ["backlogVersion", "updatedAt", "items"],
   "properties": {

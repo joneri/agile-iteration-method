@@ -32,6 +32,21 @@ The canonical `.aim/state.json` uses the public Draft 2020-12 runtime-state
 schema and declares `stateSchemaVersion: "1.0"`. Project extension fields are
 allowed, but canonical fields retain their meaning and ownership.
 
+When no Increment is active, the optional accepted-history contract uses
+`previousIncrementId`, `previousIncrementStatus`, and `gateEAcceptance` together
+with `lastGatePassed: "Gate E"` and a terminal-compatible `epicStatus`. The
+acceptance reference is a repository-relative POSIX path to a regular,
+non-symlink decision file inside the authoritative workspace's `decisions/`
+directory. The referenced decision must record acceptance and, when it names an
+Increment, it must name `previousIncrementId`.
+
+Structured state and its linked evidence are semantic authority; a decision
+filename is not. If the structured contract applies but is incomplete,
+contradictory, missing, outside the workspace, or otherwise invalid, readers
+fail closed and report the problem instead of inferring acceptance from a
+conveniently named file. The historical `<increment-number>-gate-e.md` lookup
+remains a compatibility fallback only when structured history does not apply.
+
 It includes:
 
 - active Epic id and status
@@ -170,7 +185,7 @@ When an increment is accepted:
 
 1. mark the Done Increment accepted
 2. preserve the increment decision and review evidence
-3. update accepted increment history
+3. update accepted increment history and link the Gate E evidence from state
 4. ask whether the Epic continues or closes
 
 An accepted Done Increment does not automatically complete the Epic.
@@ -184,6 +199,12 @@ When continuing:
 2. check repo profile freshness
 3. avoid rebuilding context unless needed
 4. continue with the next role/gate from state
+
+If the PO continues an Epic after accepting its active Increment, TDO creates
+the next canonical `DI-*` and returns the workspace to Gate B. Until that
+identity exists, the Epic may be visible without an Increment card. Planning
+`INC-*` candidates remain intent and activation traceability; they never
+masquerade as runtime Increments or move through runtime columns.
 
 ### Branch switch
 

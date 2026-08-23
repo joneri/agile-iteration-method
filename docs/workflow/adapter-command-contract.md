@@ -103,6 +103,8 @@ launcher. UI launch failure does not roll back valid planning input; the adapter
 returns one actionable `/aim ui` retry. Import never activates a candidate,
 creates `DI-*` authority, passes a Gate, changes canonical roles, or starts an
 agent. Only a later explicit Activate intent may create runtime evidence.
+Before activation, AIM UI groups candidates on their stationary Epic and shows
+no moving Increment card. TDO creates canonical `DI-*` authority at Gate B.
 
 ## Portfolio Auto start and resume
 

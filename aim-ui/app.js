@@ -58,6 +58,15 @@ function captureFocus() {
   if (active.id) return { kind: "id", value: active.id };
   if (active.dataset.view) return { kind: "view", value: active.dataset.view };
   if (active.dataset.epic) return { kind: "epic", value: active.dataset.epic };
+  const epicCard = active.closest?.("[data-epic-card]");
+  if (epicCard && active.dataset.actionKind) {
+    return {
+      kind: "epic-action",
+      epicId: epicCard.dataset.epicCard,
+      actionKind: active.dataset.actionKind,
+      actionIndex: active.dataset.actionIndex,
+    };
+  }
   const card = active.closest?.("[data-card-key]");
   if (card && active.dataset.actionKind) {
     return {
@@ -82,6 +91,13 @@ function restoreFocus(token) {
   if (token.kind === "epic") {
     target = Array.from(document.querySelectorAll("[data-epic]")).find(
       (item) => item.dataset.epic === token.value,
+    );
+  }
+  if (token.kind === "epic-action") {
+    target = Array.from(document.querySelectorAll("[data-epic-card] .card-action")).find(
+      (item) => item.closest("[data-epic-card]")?.dataset.epicCard === token.epicId
+        && item.dataset.actionKind === token.actionKind
+        && item.dataset.actionIndex === token.actionIndex,
     );
   }
   if (token.kind === "card-action") {
@@ -397,20 +413,30 @@ function renderCard(increment, epic, index, existingCard = null) {
   return card;
 }
 
-function visibleEpics(board) {
-  if (state.filter === "all") return board.epics;
-  return board.epics.filter((epic) => epic.id === state.filter);
+function epicsForView(board) {
+  if (state.view === "board") {
+    return board.epics.filter((epic) => epic.lifecycle !== "closed");
+  }
+  return board.epics;
 }
 
-function renderFilters(board) {
+function visibleEpics(epics) {
+  if (state.filter === "all") return epics;
+  return epics.filter((epic) => epic.id === state.filter);
+}
+
+function renderFilters(board, epics) {
   const filters = $("epic-filters");
   filters.replaceChildren();
   const choices = [{ id: "all", label: "All Epics" }].concat(
-    board.epics.map((epic, index) => ({
+    epics.map((epic) => {
+      const index = board.epics.findIndex((item) => item.id === epic.id);
+      return {
       id: epic.id,
       label: `${String(index + 1).padStart(2, "0")} · ${epic.title}`,
       accent: accentFor(index),
-    })),
+      };
+    }),
   );
   choices.forEach((choice) => {
     const button = el("button", "epic-filter", choice.label);
@@ -429,90 +455,135 @@ function renderFilters(board) {
 function renderKanban(board, epics) {
   const kanban = $("kanban");
   const scrollLeft = kanban.scrollLeft;
-  const existingCards = new Map(
-    Array.from(kanban.querySelectorAll(".increment-card[data-card-key]")).map((card) => [
-      card.dataset.cardKey,
-      card,
-    ]),
-  );
+  const existingCards = new Map();
+  const duplicateCards = [];
+  kanban.querySelectorAll(".increment-card[data-card-key]").forEach((card) => {
+    const key = card.dataset.cardKey;
+    if (existingCards.has(key)) duplicateCards.push(card);
+    else existingCards.set(key, card);
+  });
+  duplicateCards.forEach((card) => card.remove());
   const oldPositions = new Map(
     Array.from(existingCards, ([key, card]) => [
       key,
       {
-        column: card.closest(".kanban-column")?.dataset.column,
+        column: card.closest(".lane-cell")?.dataset.column,
         rect: card.getBoundingClientRect(),
       },
     ]),
   );
-  const existingColumns = new Map(
-    Array.from(kanban.querySelectorAll(".kanban-column[data-column]")).map((column) => [
-      column.dataset.column,
-      column,
+  const existingRows = new Map(
+    Array.from(kanban.querySelectorAll(".kanban-row[data-epic-row]")).map((row) => [
+      row.dataset.epicRow,
+      row,
     ]),
   );
   const desiredCards = new Set();
+  const desiredRows = new Set();
   const movedCards = [];
+  const header = kanban.querySelector(".kanban-head-row") || el("div", "kanban-row kanban-head-row");
+  header.replaceChildren(el("div", "epic-column-head", "Epic outcomes"));
   board.columns.forEach((column) => {
-    const section = existingColumns.get(column.id)
-      || $("column-template").content.firstElementChild.cloneNode(true);
-    section.dataset.column = column.id;
-    section.querySelector("h3").textContent = column.label;
-    const items = [];
-    epics.forEach((epic) => {
-      const index = board.epics.findIndex((item) => item.id === epic.id);
+    const count = epics.reduce(
+      (total, epic) => total + epic.increments.filter(
+        (item) => item.column === column.id && item.visibleOnBoard !== false,
+      ).length,
+      0,
+    );
+    const cell = el("div", "lane-column-head");
+    cell.dataset.column = column.id;
+    cell.append(el("span", "", column.id === "done" ? `${column.label} · latest ${board.history.doneLimit}` : column.label));
+    const badge = el("span", "column-count", String(count));
+    badge.setAttribute("aria-label", `${count} increment${count === 1 ? "" : "s"}`);
+    cell.append(badge);
+    header.append(cell);
+  });
+  kanban.append(header);
+
+  epics.forEach((epic) => {
+    const index = board.epics.findIndex((item) => item.id === epic.id);
+    const row = existingRows.get(epic.id) || el("section", "kanban-row");
+    row.dataset.epicRow = epic.id;
+    row.style.setProperty("--epic-accent", accentFor(index));
+    desiredRows.add(epic.id);
+    const epicCard = renderEpicLaneCard(epic, index, row.querySelector(".epic-lane-card"));
+    row.replaceChildren(epicCard);
+    board.columns.forEach((column) => {
+      const cell = el("div", "lane-cell");
+      cell.dataset.column = column.id;
       epic.increments
         .filter((item) => item.column === column.id && item.visibleOnBoard !== false)
-        .forEach((increment) => items.push({ increment, epic, index }));
+        .forEach((increment) => {
+          const key = cardKey(epic.id, increment.id);
+          desiredCards.add(key);
+          const card = renderCard(increment, epic, index, existingCards.get(key));
+          card.dataset.column = column.id;
+          cell.append(card);
+          const previous = oldPositions.get(key);
+          if (previous && previous.column !== column.id) movedCards.push({ card, previousRect: previous.rect });
+        });
+      row.append(cell);
     });
-    if (column.id === "backlog") {
-      items.sort((left, right) => {
-        if (left.increment.planned !== right.increment.planned) {
-          return left.increment.planned ? 1 : -1;
-        }
-        return (left.increment.priority || 10 ** 9) - (right.increment.priority || 10 ** 9);
-      });
-    }
-    if (column.id === "done") {
-      const rank = new Map(
-        (board.history?.closedIncrements || []).map((item, position) => [
-          `${item.epicId}:${item.id}`,
-          position,
-        ]),
-      );
-      items.sort(
-        (left, right) =>
-          (rank.get(`${left.increment.epicId}:${left.increment.id}`) ?? 10 ** 9) -
-          (rank.get(`${right.increment.epicId}:${right.increment.id}`) ?? 10 ** 9),
-      );
-    }
-    if (column.id === "done") {
-      section.querySelector("h3").textContent = `${column.label} · latest ${board.history.doneLimit}`;
-    }
-    const count = section.querySelector(".column-count");
-    count.textContent = items.length;
-    count.setAttribute("aria-label", `${items.length} increment${items.length === 1 ? "" : "s"}`);
-    const stack = section.querySelector(".card-stack");
-    items.forEach(({ increment, epic, index }) => {
-      const key = cardKey(epic.id, increment.id);
-      desiredCards.add(key);
-      const card = renderCard(increment, epic, index, existingCards.get(key));
-      card.dataset.column = column.id;
-      stack.append(card);
-      const previous = oldPositions.get(key);
-      if (previous && previous.column !== column.id) {
-        movedCards.push({ card, previousRect: previous.rect });
-      }
-    });
-    kanban.append(section);
+    kanban.append(row);
   });
   existingCards.forEach((card, key) => {
     if (!desiredCards.has(key)) card.remove();
   });
-  existingColumns.forEach((column, id) => {
-    if (!board.columns.some((item) => item.id === id)) column.remove();
+  existingRows.forEach((row, id) => {
+    if (!desiredRows.has(id)) row.remove();
   });
   kanban.scrollLeft = scrollLeft;
   animateCardHandoffs(movedCards);
+}
+
+function renderEpicLaneCard(epic, index, existingCard = null) {
+  const card = existingCard || $("epic-template").content.firstElementChild.cloneNode(true);
+  const renderSignature = JSON.stringify([epic, index]);
+  card.dataset.epicCard = epic.id;
+  if (card.aimRenderSignature === renderSignature) return card;
+  card.aimRenderSignature = renderSignature;
+  card.classList.add("epic-lane-card");
+  card.style.setProperty("--epic-accent", accentFor(index));
+  card.classList.toggle("is-complete", epic.lifecycle === "closed");
+  card.classList.toggle("is-planned", epic.lifecycle === "planned");
+  card.classList.toggle("is-focused", epic.focused === true);
+  card.querySelector(".epic-index").textContent = String(index + 1).padStart(2, "0");
+  card.querySelector(".epic-state").textContent = statusLabel(epic.runtimeStatus);
+  card.querySelector(".epic-title").textContent = epic.title;
+  card.querySelector(".epic-id").textContent = epic.id;
+  const planning = card.querySelector(".epic-planning");
+  const candidateCount = epic.planning?.candidateCount || 0;
+  planning.hidden = candidateCount === 0;
+  planning.textContent = candidateCount
+    ? `${candidateCount} planned candidate${candidateCount === 1 ? "" : "s"} · next ${epic.planning.nextCandidateId}`
+    : "";
+  const facts = card.querySelector(".epic-facts");
+  facts.replaceChildren();
+  addFact(facts, "Role", epic.currentRole || "Waiting");
+  addFact(facts, "Gate", epic.lastGatePassed || "Not passed");
+  addFact(facts, "Runtime increments", epic.increments.length);
+  addFact(facts, "Focus", epic.focused ? "Operator focus" : "—");
+  const control = card.querySelector(".epic-control");
+  const actions = card.querySelector(".epic-actions");
+  const unavailable = card.querySelector(".epic-action-unavailable");
+  actions.replaceChildren();
+  unavailable.hidden = true;
+  unavailable.textContent = "";
+  const reason = (epic.actions || []).find((action) => !action.enabled && action.reason)?.reason;
+  (epic.actions || []).forEach((action, actionIndex) => {
+    const button = el("button", `card-action action-${action.kind}`, action.label);
+    button.type = "button";
+    button.dataset.actionKind = action.kind;
+    button.dataset.actionIndex = String(actionIndex);
+    button.disabled = !action.enabled;
+    if (action.reason) button.title = action.reason;
+    if (action.enabled) button.addEventListener("click", () => openActionDialog(action));
+    actions.append(button);
+  });
+  unavailable.hidden = !reason;
+  unavailable.textContent = reason || "";
+  control.hidden = actions.childElementCount === 0 && !reason;
+  return card;
 }
 
 function animateCardHandoffs(movedCards) {
@@ -625,20 +696,22 @@ function render(board) {
     setConnection(onboarding ? "live" : "error", onboarding ? "UI ready" : "Runtime needs attention");
     return;
   }
-  if (state.filter !== "all" && !board.epics.some((epic) => epic.id === state.filter)) {
+  const viewEpics = epicsForView(board);
+  if (state.filter !== "all" && !viewEpics.some((epic) => epic.id === state.filter)) {
     state.filter = "all";
   }
   const activeCount = board.epics.filter((epic) => epic.active).length;
-  const incrementCount = board.epics.reduce(
+  const deliveryEpics = board.epics.filter((epic) => epic.lifecycle !== "closed");
+  const incrementCount = deliveryEpics.reduce(
     (total, epic) => total + epic.increments.filter((item) => item.visibleOnBoard !== false).length,
     0,
   );
-  const plannedCount = board.epics.reduce(
-    (total, epic) => total + epic.increments.filter((item) => item.planned).length,
+  const plannedCount = deliveryEpics.reduce(
+    (total, epic) => total + (epic.planning?.candidateCount || 0),
     0,
   );
   const attentionCount = board.epics.reduce(
-    (total, epic) => total + epic.increments.filter((item) => item.attention).length,
+    (total, epic) => total + epic.increments.filter((item) => item.attention).length + (epic.attention ? 1 : 0),
     0,
   );
   $("empty-state").hidden = true;
@@ -653,8 +726,8 @@ function render(board) {
   renderPortfolioControl(board);
   renderPortfolioRun(board);
   renderEpicRoster(board);
-  renderFilters(board);
-  const epics = visibleEpics(board);
+  renderFilters(board, viewEpics);
+  const epics = visibleEpics(viewEpics);
   renderPeople(epics, board);
   renderView(board, epics);
   renderNotices(board);

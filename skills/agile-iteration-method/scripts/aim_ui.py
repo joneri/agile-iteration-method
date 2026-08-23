@@ -37,6 +37,7 @@ BACKLOG_FILE = "portfolio-backlog.json"
 MAX_PORTFOLIO_WORKSPACES = 16
 MAX_BACKLOG_ITEMS = 256
 MAX_BACKLOG_BYTES = 1_000_000
+MAX_ACCEPTANCE_DECISION_BYTES = 1_000_000
 VISIBLE_DONE_LIMIT = 3
 DEFAULT_REFRESH_MS = 2_000
 KANBAN_COLUMNS = (
@@ -129,26 +130,114 @@ def _increment_id(path: Path, markdown: str) -> str:
     return f"DI-{number.group(1)}" if number else path.stem.upper()
 
 
-def _decision_is_accepted(aim_root: Path, increment_id: str) -> bool:
-    number = increment_id.removeprefix("DI-")
-    decisions = aim_root / "decisions"
-    if not decisions.is_dir():
+def _decision_accepts_increment(path: Path, increment_id: str) -> bool:
+    if path.is_symlink() or not path.is_file():
         return False
-    for path in decisions.glob(f"{number}-gate-e.md"):
-        content = _read_markdown(path)
-        if re.search(r"\bAccepted\b|\baccept(?:ed)? by the PO\b", content, re.I):
-            return True
-    return False
+    try:
+        if path.stat().st_size > MAX_ACCEPTANCE_DECISION_BYTES:
+            return False
+    except OSError:
+        return False
+    content = _read_markdown(path)
+    decision = _field(content, "Decision") or ""
+    status = _field(content, "Status") or ""
+    authority_fields = f"{decision}\n{status}"
+    if re.search(r"\b(?:change requested|pending|rejected|not accepted)\b", authority_fields, re.I):
+        return False
+    heading = content.splitlines()[0] if content.splitlines() else ""
+    accepted = any(
+        (
+            re.search(r"\b(?:accept(?:ed)?|approv(?:e|ed))\b", authority_fields, re.I),
+            _field(content, "Accepted at"),
+            re.search(r"\bGate E\b.*\bAccepted\b|\bAccepted\b.*\bGate E\b", heading, re.I),
+            re.search(r"^Accepted\s+(?:by|on|under|as part of)\b", content, re.I | re.M),
+        )
+    )
+    if not accepted:
+        return False
+    mentioned = {item.upper() for item in re.findall(r"\bDI-\d+\b", content, re.I)}
+    return not mentioned or increment_id in mentioned
 
 
-def _accepted_at(aim_root: Path, increment_id: str) -> str | None:
+def _legacy_acceptance_decision(aim_root: Path, increment_id: str) -> Path | None:
     number = increment_id.removeprefix("DI-")
     decisions = aim_root / "decisions"
     if not decisions.is_dir():
         return None
-    decision = decisions / f"{number}-gate-e.md"
-    if not decision.is_file():
-        return None
+    for path in decisions.glob(f"{number}-gate-e.md"):
+        if _decision_accepts_increment(path, increment_id):
+            return path
+    return None
+
+
+def _state_acceptance_decision(
+    repo_root: Path,
+    aim_root: Path,
+    state: dict[str, Any],
+    increment_id: str,
+) -> tuple[Path | None, bool, str | None]:
+    """Resolve optional structured acceptance; bool marks authoritative applicability."""
+
+    previous_id = state.get("previousIncrementId")
+    if previous_id != increment_id:
+        return None, False, None
+    if state.get("previousIncrementStatus") != "accepted":
+        return None, True, None
+    if state.get("epicStatus") not in {"done_increment_accepted", "epic_complete"}:
+        return None, True, "accepted previous Increment requires a terminal-compatible Epic status"
+    if state.get("lastGatePassed") != "Gate E":
+        return None, True, "accepted previous Increment requires lastGatePassed Gate E"
+
+    raw_path = state.get("gateEAcceptance")
+    if not isinstance(raw_path, str) or not raw_path.strip():
+        return None, True, "accepted previous Increment requires gateEAcceptance"
+    if "\\" in raw_path:
+        return None, True, "gateEAcceptance must use repository-relative POSIX separators"
+    relative = Path(raw_path)
+    if (
+        relative.is_absolute()
+        or not relative.parts
+        or relative.parts[0] != ".aim"
+        or any(part in {"", ".", ".."} for part in relative.parts)
+    ):
+        return None, True, "gateEAcceptance must be a contained repository-relative .aim path"
+
+    lexical = repo_root / relative
+    current = repo_root
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink():
+            return None, True, "gateEAcceptance must not traverse a symbolic link"
+    try:
+        decision = lexical.resolve()
+        decision.relative_to(aim_root.resolve())
+    except (OSError, ValueError):
+        return None, True, "gateEAcceptance leaves the authoritative Epic workspace"
+    if decision.parent != (aim_root / "decisions").resolve():
+        return None, True, "gateEAcceptance must name a file in the workspace decisions directory"
+    if not _decision_accepts_increment(decision, increment_id):
+        return None, True, "gateEAcceptance is missing, oversized, mismatched, or not accepted"
+    return decision, True, None
+
+
+def _acceptance_decision(
+    repo_root: Path,
+    aim_root: Path,
+    state: dict[str, Any],
+    increment_id: str,
+    warnings: list[str],
+) -> Path | None:
+    decision, authoritative, issue = _state_acceptance_decision(
+        repo_root, aim_root, state, increment_id
+    )
+    if issue:
+        warnings.append(f"{state['epicId']} {increment_id}: {issue}; acceptance is hidden.")
+    if authoritative:
+        return decision
+    return _legacy_acceptance_decision(aim_root, increment_id)
+
+
+def _accepted_at(decision: Path) -> str:
     content = _read_markdown(decision)
     declared = _field(content, "Accepted at") or _field(content, "acceptedAt")
     if declared:
@@ -199,7 +288,7 @@ def _action_descriptor(
 
 def _gate_actions_are_ready(
     epic: dict[str, Any],
-    increment: dict[str, Any],
+    target: dict[str, Any],
     gate: str,
     warnings: list[str],
 ) -> bool:
@@ -212,17 +301,17 @@ def _gate_actions_are_ready(
         warnings.append(f"{epic['id']}: uiDecision must be an object; gate actions are hidden.")
         return False
 
-    expected = {"gate": gate, "targetId": increment["id"]}
+    expected = {"gate": gate, "targetId": target["id"]}
     if any(marker.get(key) != value for key, value in expected.items()):
         warnings.append(
-            f"{epic['id']}: uiDecision does not match {gate} for {increment['id']}; "
+            f"{epic['id']}: uiDecision does not match {gate} for {target['id']}; "
             "gate actions are hidden."
         )
         return False
 
     visibility = marker.get("visibility")
     if visibility == "preparing":
-        increment["attention"] = (
+        target["attention"] = (
             "AIM is finishing the decision handoff. Controls will appear when it is ready."
         )
         return False
@@ -244,73 +333,62 @@ def _attach_actions(
     warnings: list[str],
 ) -> None:
     for epic in epics:
+        epic["actions"] = []
         authority_state_path = (
             ".aim/state.json"
             if epic["workspace"] == "."
             else f".aim/{epic['workspace']}/state.json"
         )
-        for increment in epic["increments"]:
-            increment["actions"] = []
-            if increment["planned"]:
-                if epic["active"] and epic["runtimeStatus"] == "gate_a_pending":
-                    if epic["lastGatePassed"] != GATE_EXPECTATIONS["Gate A"][1]:
-                        warnings.append(
-                            f"{epic['id']}: gate_a_pending conflicts with lastGatePassed; "
-                            "gate actions are hidden."
-                        )
-                        continue
-                    if not _gate_actions_are_ready(epic, increment, "Gate A", warnings):
-                        continue
+        planning = epic.get("planning") or {}
+        candidates = planning.get("candidates") or []
+        if candidates:
+            candidate = candidates[0]
+            if epic["active"] and epic["runtimeStatus"] == "gate_a_pending":
+                if epic["lastGatePassed"] != GATE_EXPECTATIONS["Gate A"][1]:
+                    warnings.append(
+                        f"{epic['id']}: gate_a_pending conflicts with lastGatePassed; "
+                        "gate actions are hidden."
+                    )
+                elif _gate_actions_are_ready(epic, epic, "Gate A", warnings):
                     for kind, label in (("approve", "Approve"), ("change", "Request change")):
                         envelope = action_envelope(
                             kind,
                             epic_id=epic["id"],
-                            candidate_id=increment["id"],
+                            candidate_id=candidate["id"],
                             gate="Gate A",
                             expected_status="gate_a_pending",
                             expected_updated_at=epic["updatedAt"],
                             authority_state_path=authority_state_path,
                             expected_last_gate_passed=epic["lastGatePassed"],
                         )
-                        increment["actions"].append(
+                        epic["actions"].append(
                             _action_descriptor(
-                                repo_root,
-                                label,
-                                envelope,
-                                requires_input=kind == "change",
+                                repo_root, label, envelope, requires_input=kind == "change"
                             )
                         )
-                    continue
+            elif not epic["active"]:
                 envelope = action_envelope(
                     "activate",
                     epic_id=epic["id"],
-                    candidate_id=increment["id"],
-                    expected_updated_at=increment["updatedAt"],
+                    candidate_id=candidate["id"],
+                    expected_updated_at=candidate["createdAt"],
                     backlog_updated_at=backlog_updated_at,
                 )
                 enabled = epic["lifecycle"] == "planned" and control["admission"] in {
-                    "open",
-                    "unbounded",
+                    "open", "unbounded",
                 }
-                if epic["lifecycle"] == "closed":
-                    reason = "This planned work belongs to a closed Epic and must be reframed in AIM chat."
-                elif epic["lifecycle"] == "running":
-                    reason = "This Epic already has active runtime work."
-                elif control["admission"] == "full":
-                    reason = "Portfolio capacity is full."
-                elif control["admission"] == "over_capacity":
-                    reason = "The portfolio is over capacity."
-                elif control["admission"] == "blocked":
-                    reason = "Portfolio admission is blocked."
-                else:
-                    reason = None
-                increment["actions"].append(
-                    _action_descriptor(
-                        repo_root, "Activate", envelope, enabled=enabled, reason=reason
-                    )
+                reason = (
+                    "Portfolio capacity is full." if control["admission"] == "full"
+                    else "The portfolio is over capacity." if control["admission"] == "over_capacity"
+                    else "Portfolio admission is blocked." if control["admission"] == "blocked"
+                    else None
                 )
-                continue
+                epic["actions"].append(
+                    _action_descriptor(repo_root, "Start Epic", envelope, enabled=enabled, reason=reason)
+                )
 
+        for increment in epic["increments"]:
+            increment["actions"] = []
             if not increment["active"]:
                 continue
             status = increment["runtimeStatus"]
@@ -347,10 +425,17 @@ def _attach_actions(
 
 
 def _evidence(
-    repo_root: Path, aim_root: Path, increment_id: str, plan_path: Path
+    repo_root: Path,
+    aim_root: Path,
+    increment_id: str,
+    increment_paths: list[Path],
+    acceptance_decision: Path | None = None,
 ) -> list[dict[str, str]]:
     number = increment_id.removeprefix("DI-")
-    candidates: list[tuple[str, Path]] = [("Increment plan", plan_path)]
+    candidates: list[tuple[str, Path]] = []
+    for path in increment_paths:
+        label = "Work log" if path.stem.endswith("-wip") else "Increment plan"
+        candidates.append((label, path))
     review = aim_root / "reviews" / f"review-{number}.md"
     if review.is_file():
         candidates.append(("Review", review))
@@ -358,6 +443,10 @@ def _evidence(
     if decisions.is_dir():
         for path in sorted(decisions.glob(f"{number}-gate-*.md")):
             candidates.append((path.stem.replace("-", " ").title(), path))
+    if acceptance_decision is not None and all(
+        path.resolve() != acceptance_decision.resolve() for _, path in candidates
+    ):
+        candidates.append(("Gate E acceptance", acceptance_decision))
     result = []
     for label, path in candidates:
         if path.is_file():
@@ -601,7 +690,9 @@ def _load_backlog(aim_root: Path, warnings: list[str]) -> list[dict[str, Any]]:
     return sorted(items, key=lambda item: (item["priority"], item["createdAt"], item["id"]))
 
 
-def _project_epic(repo_root: Path, aim_root: Path) -> dict[str, Any]:
+def _project_epic(
+    repo_root: Path, aim_root: Path, warnings: list[str]
+) -> dict[str, Any]:
     state = _read_json(aim_root / "state.json")
     _validate_state(state)
     epic_markdown = _read_markdown(aim_root / "epic.md")
@@ -611,6 +702,7 @@ def _project_epic(repo_root: Path, aim_root: Path) -> dict[str, Any]:
     increment_items: list[dict[str, Any]] = []
     increments_root = aim_root / "increments"
     if increments_root.is_dir():
+        grouped_paths: dict[str, list[tuple[Path, str]]] = {}
         for path in sorted(increments_root.glob("*.md")):
             markdown = _read_markdown(path)
             increment_id = _increment_id(path, markdown)
@@ -618,7 +710,22 @@ def _project_epic(repo_root: Path, aim_root: Path) -> dict[str, Any]:
             is_active = increment_id == active_id
             if declared_epic != epic_id and not (is_active and declared_epic is None):
                 continue
-            accepted = _decision_is_accepted(aim_root, increment_id)
+            grouped_paths.setdefault(increment_id, []).append((path, markdown))
+
+        for increment_id, artifacts in grouped_paths.items():
+            is_active = increment_id == active_id
+            primary_path, primary_markdown = max(
+                artifacts,
+                key=lambda item: (
+                    item[0].stem.endswith("-wip"),
+                    item[0].stem.endswith("-plan"),
+                    item[0].name,
+                ),
+            )
+            acceptance_decision = _acceptance_decision(
+                repo_root, aim_root, state, increment_id, warnings
+            )
+            accepted = acceptance_decision is not None
             runtime_status = state["epicStatus"] if is_active else (
                 "done_increment_accepted" if accepted else "gate_b_pending"
             )
@@ -633,7 +740,7 @@ def _project_epic(repo_root: Path, aim_root: Path) -> dict[str, Any]:
                 {
                     "id": increment_id,
                     "epicId": epic_id,
-                    "title": _heading(markdown, increment_id),
+                    "title": _heading(primary_markdown, increment_id),
                     "column": column,
                     "runtimeStatus": runtime_status,
                     "canonicalOwner": owner,
@@ -641,13 +748,19 @@ def _project_epic(repo_root: Path, aim_root: Path) -> dict[str, Any]:
                     "mode": state["mode"],
                     "costProfile": state["costProfile"],
                     "updatedAt": state["updatedAt"] if is_active else None,
-                    "acceptedAt": _accepted_at(aim_root, increment_id) if accepted else None,
+                    "acceptedAt": _accepted_at(acceptance_decision) if acceptance_decision else None,
                     "active": is_active,
                     "planned": False,
                     "priority": None,
                     "summary": None,
                     "attention": attention,
-                    "evidence": _evidence(repo_root, aim_root, increment_id, path),
+                    "evidence": _evidence(
+                        repo_root,
+                        aim_root,
+                        increment_id,
+                        [path for path, _ in artifacts],
+                        acceptance_decision,
+                    ),
                 }
             )
 
@@ -663,6 +776,9 @@ def _project_epic(repo_root: Path, aim_root: Path) -> dict[str, Any]:
         "currentRole": state["currentRole"],
         "lastGatePassed": state.get("lastGatePassed"),
         "updatedAt": state["updatedAt"],
+        "attention": None,
+        "actions": [],
+        "planning": {"candidateCount": 0, "candidates": [], "nextCandidateId": None},
         "uiDecision": state.get("uiDecision"),
         "increments": increment_items,
         "canonicalRoles": [
@@ -712,7 +828,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     seen_epics: set[str] = set()
     for index, workspace in enumerate(workspaces):
         try:
-            epic = _project_epic(repo_root, workspace)
+            epic = _project_epic(repo_root, workspace, warnings)
         except AimUiError as exc:
             warnings.append(f"Workspace {index + 1}: {exc}")
             continue
@@ -760,6 +876,9 @@ def build_board(repo_root: Path) -> dict[str, Any]:
                 "currentRole": None,
                 "lastGatePassed": None,
                 "updatedAt": candidate["createdAt"],
+                "attention": None,
+                "actions": [],
+                "planning": {"candidateCount": 0, "candidates": [], "nextCandidateId": None},
                 "uiDecision": None,
                 "increments": [],
                 "canonicalRoles": [
@@ -778,27 +897,9 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             warnings.append(
                 f"Backlog item {candidate['id']} uses a different title for {candidate['epicId']}; runtime identity wins."
             )
-        epic["increments"].append(
-            {
-                "id": candidate["id"],
-                "epicId": candidate["epicId"],
-                "title": candidate["title"],
-                "summary": candidate["summary"],
-                "column": "backlog",
-                "runtimeStatus": "planned",
-                "canonicalOwner": "TDO",
-                "gate": "Not approved",
-                "mode": "Planning",
-                "costProfile": None,
-                "updatedAt": candidate["createdAt"],
-                "acceptedAt": None,
-                "active": False,
-                "planned": True,
-                "priority": candidate["priority"],
-                "attention": None,
-                "evidence": [],
-            }
-        )
+        epic["planning"]["candidates"].append(candidate)
+        epic["planning"]["candidateCount"] = len(epic["planning"]["candidates"])
+        epic["planning"]["nextCandidateId"] = epic["planning"]["candidates"][0]["id"]
 
     control, control_warnings = project_portfolio_control(aim_root, base["epics"])
     warnings.extend(control_warnings)
@@ -808,6 +909,13 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     base["portfolioRun"] = portfolio_run
     candidate_states = portfolio_run.get("candidateStates", {})
     for epic in base["epics"]:
+        for candidate in epic.get("planning", {}).get("candidates", []):
+            candidate["portfolioState"] = candidate_states.get(candidate["id"])
+            candidate["decisionAuthority"] = (
+                portfolio_run.get("decisionAuthority")
+                if candidate["id"] == portfolio_run.get("activeCandidateId")
+                else None
+            )
         for increment in epic["increments"]:
             candidate_id = (
                 increment["id"]

@@ -57,17 +57,17 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "c0c7e8413b4301ade54472911de84a261df6d7a6eb3c3fc7ac8bca1867e8f79f",
+      "sha256": "fff5a4a469efa7efa0de41e94689b7c68766bfe05ebaf725543f4d3eb469b6bc",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "277a4c3905603c539645976496835892e615353a95eb637151d833da5d09e9e8",
+      "sha256": "c02d065454d47fac1a1bc45fe4fd3919978738edca45af301c5e9962e08f3a3d",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "9182b81913585ec0fe0b5b83e7c30ccca21452fbac0621b4fb61f52a5e7a8860",
+      "sha256": "8db9dfe20790edc0fc7eeafebed5a24a737feec97cf913692b4cd836db9cc2e4",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -137,7 +137,7 @@
     },
     {
       "output": "references/schemas/aim-runtime-state.schema.json",
-      "sha256": "2ae4003fd41053bb936e1fd2cca01803867b29189d1afadd5caaad310a9d2e8c",
+      "sha256": "a1c5e5e4888973ff478d82a4c8cfc547e5b4fd2722ca8c6800d7bbba4a73d417",
       "source": "schemas/aim-runtime-state.schema.json"
     },
     {
@@ -192,7 +192,7 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "578fb0ed3536c7a31f33b203c39a26366ef6de576c7a74d8063f787a9069dbca",
+      "sha256": "0e8ef0b72770a5c27dc6faebfc2f00c5c4360e539664d2cc7d05bd2537b6c198",
       "source": "scripts/aim_ui.py"
     },
     {
@@ -202,17 +202,17 @@
     },
     {
       "output": "aim-ui/index.html",
-      "sha256": "57f2581ed25ee84e4bdfeaa8446a87648253f0b35f510ee07855fa45be51a12f",
+      "sha256": "4b3051a34891a7ba4f4e4ff888188a8da96825ff7b1e49ff584600a4c5dd414f",
       "source": "aim-ui/index.html"
     },
     {
       "output": "aim-ui/styles.css",
-      "sha256": "37331f4063a9a116b540ed6ac9d62d026cceb6e2fd60013e899c778a314f80f8",
+      "sha256": "ca404913cf33415d5496fcc1b94c9fbbb755bb52248779dcb379c1bed3803422",
       "source": "aim-ui/styles.css"
     },
     {
       "output": "aim-ui/app.js",
-      "sha256": "ad556532c061898932a141d7edeba3f6ed31e56a0a73777a77918433390c741a",
+      "sha256": "63650951d60ce9339ba4a357b6f7edfb843c54d86d2d15c184e002d3ebb7fb8e",
       "source": "aim-ui/app.js"
     }
   ]

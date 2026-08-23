@@ -95,7 +95,7 @@ Source: aim-ui/index.html
         <div class="workflow-heading">
           <div id="workflow-title-group">
             <p class="eyebrow">Delivery flow</p>
-            <h2 id="workflow-title">Shared increment board</h2>
+            <h2 id="workflow-title">Epic delivery board</h2>
           </div>
           <div class="workflow-status">
             <div class="epic-filters" id="epic-filters" aria-label="Filter board by Epic"></div>
@@ -104,7 +104,7 @@ Source: aim-ui/index.html
         </div>
         <div class="runtime-notices" id="runtime-notices" role="status" hidden></div>
         <div class="kanban-panel" id="kanban-panel">
-          <div class="kanban" id="kanban" aria-label="AIM increment Kanban"></div>
+          <div class="kanban" id="kanban" aria-label="AIM Epic and Increment Kanban"></div>
         </div>
         <section class="closed-panel" id="closed-panel" aria-labelledby="closed-title" hidden>
           <header class="closed-heading">
@@ -173,7 +173,12 @@ Source: aim-ui/index.html
       </div>
       <h2 class="epic-title"></h2>
       <p class="epic-id"></p>
+      <p class="epic-planning" hidden></p>
       <dl class="epic-facts"></dl>
+      <div class="epic-control" hidden>
+        <div class="epic-actions"></div>
+        <p class="epic-action-unavailable" hidden></p>
+      </div>
     </article>
   </template>
 
