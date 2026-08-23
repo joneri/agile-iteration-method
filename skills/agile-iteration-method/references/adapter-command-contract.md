@@ -140,13 +140,21 @@ the chat checkpoints completion and advances to the next snapshot candidate.
 Gate E accepts the Increment only. Immediately before the distinct Epic-closure
 transition, the chat revalidates the run and workspace, then records
 `auto-approved by portfolio mandate <mandateId>` with decision authority
-`portfolio_mandate`. It then completes the active candidate and activates the
-next snapshot candidate without another user message. This Portfolio Auto
+`portfolio_mandate`. It then completes the active candidate, preserving its
+workspace, Backlog runtime link, Gate E evidence, and UI catalog entry. Only
+after that durable completion may it select the next candidate with the
+`activation_pending` checkpoint. The candidate stays Planned until the chat
+creates and validates its workspace and state, records its canonical
+`runtimeIncrementId` in Backlog, and only then advances the run checkpoint to
+the matching runtime status. This sequence may proceed without another user
+message. This Portfolio Auto
 specialization overrides the ordinary requirement for a new per-Epic operator
 interaction, not the requirement for a separate closure decision or evidence.
 `/aim continue` revalidates the immutable snapshot hash, run checkpoint, active
-workspace, and admission state before resuming. It never replays completed work
-or silently incorporates later Backlog changes.
+workspace, Backlog link, catalog containment, and admission state before
+resuming. `activation_pending` resumes deterministically; a later checkpoint
+without all required runtime relations is contradictory and fails closed. It
+never replays completed work or silently incorporates later Backlog changes.
 
 Portfolio Auto pauses with its checkpoint intact for scope expansion,
 ambiguous or untrusted evidence, validation that bounded correction cannot

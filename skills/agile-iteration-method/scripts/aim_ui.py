@@ -471,6 +471,7 @@ def _attach_actions(
     repo_root: Path,
     epics: list[dict[str, Any]],
     control: dict[str, Any],
+    portfolio_run: dict[str, Any],
     backlog_updated_at: str,
     warnings: list[str],
 ) -> None:
@@ -516,10 +517,27 @@ def _attach_actions(
                     expected_updated_at=candidate["createdAt"],
                     backlog_updated_at=backlog_updated_at,
                 )
-                enabled = epic["lifecycle"] == "planned" and control["admission"] in {
-                    "open", "unbounded",
-                }
+                portfolio_state = candidate.get("portfolioState")
+                run_blocks_activation = (
+                    portfolio_run.get("configured")
+                    and portfolio_run.get("status") in {"running", "paused"}
+                    and portfolio_state in {
+                        "queued", "active", "activation_pending", "contradictory"
+                    }
+                )
+                enabled = (
+                    epic["lifecycle"] == "planned"
+                    and not run_blocks_activation
+                    and control["admission"] in {"open", "unbounded"}
+                )
                 reason = (
+                    "Portfolio Auto has selected this candidate; resume activation in AIM chat."
+                    if portfolio_state == "activation_pending"
+                    else "Portfolio Auto state is contradictory; repair it in AIM chat."
+                    if portfolio_state == "contradictory"
+                    else "Portfolio Auto owns the approved snapshot order."
+                    if run_blocks_activation
+                    else
                     "Portfolio capacity is full." if control["admission"] == "full"
                     else "The portfolio is over capacity." if control["admission"] == "over_capacity"
                     else "Portfolio admission is blocked." if control["admission"] == "blocked"
@@ -930,6 +948,8 @@ def _project_epic(
         "active": state["epicStatus"] != "epic_complete",
         "lifecycle": "closed" if state["epicStatus"] == "epic_complete" else "running",
         "runtimeStatus": state["epicStatus"],
+        "activeIncrementId": active_id,
+        "portfolioCandidateId": state.get("portfolioCandidateId"),
         "mode": state["mode"],
         "costProfile": state["costProfile"],
         "currentRole": state["currentRole"],
@@ -946,6 +966,110 @@ def _project_epic(
         ],
         "helperActivity": _load_agents(aim_root, epic_id),
     }
+
+
+def _reconcile_portfolio_run(
+    epics: list[dict[str, Any]],
+    backlog_items: list[dict[str, Any]],
+    portfolio_run: dict[str, Any],
+    warnings: list[str],
+) -> None:
+    """Fail closed when a Portfolio checkpoint disagrees with canonical runtime state."""
+
+    if not portfolio_run.get("configured") or not portfolio_run.get("valid"):
+        return
+
+    epic_by_id = {epic["id"]: epic for epic in epics if epic.get("workspace")}
+    backlog_by_id = {item["id"]: item for item in backlog_items}
+    candidate_epics = portfolio_run.get("candidateEpics", {})
+    candidate_states = portfolio_run.get("candidateStates", {})
+    issues: list[str] = []
+
+    for candidate_id, candidate_state in candidate_states.items():
+        expected_epic_id = candidate_epics.get(candidate_id)
+        backlog = backlog_by_id.get(candidate_id)
+        runtime_id = backlog.get("runtimeIncrementId") if backlog else None
+        epic = epic_by_id.get(expected_epic_id)
+
+        if candidate_state == "completed":
+            increment = next(
+                (item for item in (epic or {}).get("increments", []) if item["id"] == runtime_id),
+                None,
+            )
+            if not (
+                backlog
+                and runtime_id
+                and epic
+                and epic.get("portfolioCandidateId") == candidate_id
+                and epic.get("lifecycle") == "closed"
+                and increment
+                and increment.get("column") == "done"
+                and increment.get("acceptanceEvidence")
+            ):
+                issues.append(
+                    f"Completed Portfolio candidate {candidate_id} does not resolve to a "
+                    "closed catalogued workspace, matching runtimeIncrementId, and accepted Gate E evidence."
+                )
+
+    active_id = portfolio_run.get("activeCandidateId")
+    if active_id:
+        expected_epic_id = candidate_epics.get(active_id)
+        backlog = backlog_by_id.get(active_id)
+        runtime_id = backlog.get("runtimeIncrementId") if backlog else None
+        epic = epic_by_id.get(expected_epic_id)
+        checkpoint_status = portfolio_run.get("checkpointStatus")
+
+        if not epic and not runtime_id and checkpoint_status == "activation_pending":
+            portfolio_run["relationStatus"] = "recoverable"
+            portfolio_run["transitionState"] = "activation_pending"
+            portfolio_run["guidance"] = (
+                f"{active_id} remains Planned until its workspace, state, and runtimeIncrementId "
+                "have been created and validated. AIM chat may resume activation."
+            )
+            candidate_states[active_id] = "activation_pending"
+        elif not epic or not runtime_id:
+            issues.append(
+                f"Portfolio active candidate {active_id} checkpoint {checkpoint_status or 'unknown'} "
+                "requires both a catalogued workspace and Backlog runtimeIncrementId; "
+                f"workspace={'present' if epic else 'missing'}, runtimeIncrementId={'present' if runtime_id else 'missing'}."
+            )
+        else:
+            increment_ids = {item["id"] for item in epic["increments"]}
+            relation_ok = (
+                epic.get("portfolioCandidateId") == active_id
+                and runtime_id in increment_ids
+                and epic.get("activeIncrementId") == runtime_id
+                and epic.get("lifecycle") == "running"
+                and checkpoint_status == epic.get("runtimeStatus")
+            )
+            if relation_ok:
+                portfolio_run["relationStatus"] = "consistent"
+                portfolio_run["transitionState"] = "runtime_active"
+                candidate_states[active_id] = "active"
+            else:
+                issues.append(
+                    f"Portfolio active candidate {active_id} disagrees with workspace {expected_epic_id}: "
+                    f"candidate={epic.get('portfolioCandidateId') or 'missing'}, "
+                    f"runtimeIncrementId={runtime_id}, activeIncrementId={epic.get('activeIncrementId') or 'missing'}, "
+                    f"checkpoint={checkpoint_status or 'unknown'}, workspaceStatus={epic.get('runtimeStatus') or 'unknown'}."
+                )
+    elif portfolio_run.get("transitionState") == "next_activation_pending":
+        portfolio_run["relationStatus"] = "recoverable"
+        portfolio_run["guidance"] = (
+            "The completed outcome is preserved. AIM chat may deterministically activate "
+            "the next queued Portfolio candidate."
+        )
+    else:
+        portfolio_run["relationStatus"] = "consistent"
+
+    if issues:
+        if active_id:
+            candidate_states[active_id] = "contradictory"
+        portfolio_run["valid"] = False
+        portfolio_run["relationStatus"] = "contradictory"
+        portfolio_run["transitionState"] = "contradictory"
+        portfolio_run["issue"] = " ".join(issues)
+        warnings.extend(issues)
 
 
 def build_board(repo_root: Path) -> dict[str, Any]:
@@ -1032,6 +1156,8 @@ def build_board(repo_root: Path) -> dict[str, Any]:
                 "active": False,
                 "lifecycle": "planned",
                 "runtimeStatus": "planned",
+                "activeIncrementId": None,
+                "portfolioCandidateId": None,
                 "mode": "Planning",
                 "costProfile": None,
                 "currentRole": None,
@@ -1069,6 +1195,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     warnings.extend(run_warnings)
     base["portfolioRun"] = portfolio_run
     candidate_states = portfolio_run.get("candidateStates", {})
+    _reconcile_portfolio_run(base["epics"], backlog_items, portfolio_run, warnings)
     for epic in base["epics"]:
         for candidate in epic.get("planning", {}).get("candidates", []):
             candidate["portfolioState"] = candidate_states.get(candidate["id"])
@@ -1092,7 +1219,9 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             )
     for epic in base["epics"]:
         epic["focused"] = epic["id"] == control["focusedEpicId"]
-    _attach_actions(repo_root, base["epics"], control, backlog_updated_at, warnings)
+    _attach_actions(
+        repo_root, base["epics"], control, portfolio_run, backlog_updated_at, warnings
+    )
     for epic in base["epics"]:
         epic.pop("uiDecision", None)
     base["handoff"] = {

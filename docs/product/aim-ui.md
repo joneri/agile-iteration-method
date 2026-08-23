@@ -198,8 +198,9 @@ run without losing completed work.
 
 ## What the control-room tabs show
 
-- Delivery flow, selected by default, with stationary rows only for running and
-  planned Epics; completed Epics leave this active board
+- Delivery flow, selected by default, with stationary rows for running and
+  planned Epics plus completed Epics that own one of the latest three accepted
+  Increments; older completed Epics leave this bounded active board
 - Portfolio, with active Epic, workspace, increment, and attention totals; chat-owned capacity; and one summary panel per Epic
 - AIM DATA, with auditable delivery counts, throughput, elapsed delivery time,
   and evidence-linked accepted history
@@ -215,10 +216,19 @@ run without losing completed work.
 - the latest three accepted Increments in Done
 
 Filtering never changes runtime state. It only changes which already-read Epics
-the browser presents. Delivery-flow filters omit completed Epics; switching
-from another view resets a selection that is not valid on the active board.
-Completed outcomes and their accepted Increments remain available through
-Closed Increments and the broader Portfolio view.
+the browser presents. A completed Epic remains filterable on Delivery flow
+while it owns a visible latest-three Done card. Switching from another view
+resets a selection that is not valid on the bounded active board. All completed
+outcomes remain available through Closed Increments and the broader Portfolio
+view.
+
+During a Portfolio handoff, `activation_pending` means the next candidate has
+been selected but remains Planned until its contained workspace, canonical
+state, and Backlog `runtimeIncrementId` have all been created and validated.
+The previously accepted Done card remains visible throughout. A later
+checkpoint without those runtime relations, or disagreement among candidate,
+workspace, increment, and checkpoint identities, is projected as contradictory
+and fails closed. The UI never repairs or fabricates runtime work.
 
 ## How AIM DATA measures delivery
 

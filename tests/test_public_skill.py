@@ -356,7 +356,9 @@ class PublicSkillTests(unittest.TestCase):
             "portfolio mandate closure precedence": (
                 "`portfolio_mandate` authority",
                 "complete the active candidate",
-                "activate the next snapshot candidate",
+                "`activation_pending`",
+                "keep it Planned",
+                "`runtimeIncrementId`",
                 "without another user message",
                 "Gate E still accepts",
             ),

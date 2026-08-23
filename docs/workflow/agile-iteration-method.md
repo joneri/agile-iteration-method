@@ -582,13 +582,19 @@ This specialization makes the active, revalidated mandate the explicit PO
 authority for a separate Epic-closure decision; it does not turn Gate E into
 Epic closure. After Gate E accepts the Increment, the main thread records
 `Epic closure` with `portfolio_mandate` authority and mandate provenance,
-completes the active candidate, and activates the next snapshot candidate
-without another user message. The per-Epic review is a required execution
-checkpoint, not an additional operator pause.
+preserves the accepted workspace, evidence, Backlog runtime link, and UI
+catalog entry, then completes the active candidate. It selects the next
+candidate only as `activation_pending`. That candidate remains Planned until
+its contained workspace, canonical state, and `runtimeIncrementId` validate;
+only then does the run checkpoint advance to the exact workspace status. This
+restart-safe sequence needs no additional user message. Missing or mismatched
+relations after the pending checkpoint fail closed. The per-Epic review is a
+required execution checkpoint, not an additional operator pause.
 The mandate never authorizes scope expansion, later Backlog additions, unsafe
 effects, or completion without review and validation. Those conditions pause
 at a durable checkpoint for the user. `/aim continue` resumes only after the
-snapshot, checkpoint, workspace, and admission state are revalidated.
+snapshot, checkpoint, workspace, Backlog link, UI catalog containment, and
+admission state are revalidated.
 
 A terminal `completed` or `stopped` Portfolio run may be archived only through
 an explicit helper transition that matches its observed timestamp. The exact

@@ -65,9 +65,14 @@ approval. Resume only after revalidation and pause on scope, trust, validation,
 safety, concurrency, user-stop, or malformed/stale-state escalation.
 After review, validation, and Gate E acceptance, revalidate again and record a
 distinct `Epic closure` with `portfolio_mandate` authority and mandate
-provenance. Then complete the active candidate and activate the next snapshot
-candidate without another user message. Gate E accepts the Increment only; the
-bounded mandate is the explicit PO authority for the subsequent closure.
+provenance. Preserve the closed workspace, accepted evidence, Backlog runtime
+link, and UI catalog entry before completing the candidate. Select the next
+candidate only as `activation_pending`; keep it Planned until workspace, state,
+and `runtimeIncrementId` validate, then advance the matching checkpoint. Resume
+that boundary deterministically and fail closed on later missing or mismatched
+relations. This sequence needs no additional user message. Gate E accepts the
+Increment only; the bounded mandate is the explicit PO authority for the
+subsequent closure.
 
 Reflect commands follow `docs/workflow/reflection.md`. They write temporary
 candidate reports only, never durable knowledge or discovered repositories.

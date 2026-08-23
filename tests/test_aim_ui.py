@@ -23,7 +23,12 @@ from aim_ui import (  # noqa: E402
     build_board,
     resolve_evidence_path,
 )
-from aim_portfolio_run import activate_next, create_run  # noqa: E402
+from aim_portfolio_run import (  # noqa: E402
+    activate_next,
+    checkpoint,
+    complete_active,
+    create_run,
+)
 from aim_validator.schema_subset import unsupported_keywords, validate  # noqa: E402
 
 
@@ -285,11 +290,165 @@ class AimUiTests(unittest.TestCase):
             for epic in board["epics"]
             for item in epic["planning"]["candidates"]
         }
-        self.assertEqual(candidates["INC-AUTO-001"]["portfolioState"], "active")
+        self.assertEqual(
+            candidates["INC-AUTO-001"]["portfolioState"], "activation_pending"
+        )
         self.assertEqual(
             candidates["INC-AUTO-001"]["decisionAuthority"], "portfolio_mandate"
         )
         self.assertEqual(candidates["INC-AUTO-002"]["portfolioState"], "queued")
+
+    def test_portfolio_handoff_preserves_done_and_projects_activation_atomically(self) -> None:
+        closed = state("epic_complete")
+        closed.update(
+            {
+                "epicId": "EPIC-FIRST",
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "portfolioCandidateId": "INC-FIRST",
+                "previousIncrementId": "DI-001",
+                "previousIncrementStatus": "accepted",
+                "gateEAcceptance": ".aim/decisions/001-gate-e.md",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), closed)
+            (repo / ".aim/epic.md").write_text(
+                "# EPIC-FIRST — Preserve the first outcome\n", encoding="utf-8"
+            )
+            (repo / ".aim/increments/001-wip.md").write_text(
+                "# DI-001 — Accepted first outcome\n\nEpic: EPIC-FIRST\n",
+                encoding="utf-8",
+            )
+            (repo / ".aim/decisions/001-gate-e.md").write_text(
+                "# Gate E\n\nIncrement: DI-001\n\nStatus: Accepted\n\n"
+                "Accepted at: 2026-08-23T14:00:00Z\n",
+                encoding="utf-8",
+            )
+            self._portfolio(repo, ".")
+            self._backlog(
+                repo,
+                [
+                    {
+                        "id": "INC-FIRST",
+                        "epicId": "EPIC-FIRST",
+                        "epicTitle": "Preserve the first outcome",
+                        "title": "Accepted first outcome",
+                        "priority": 1,
+                        "createdAt": "2026-08-23T13:00:00Z",
+                    },
+                    {
+                        "id": "INC-SECOND",
+                        "epicId": "EPIC-SECOND",
+                        "epicTitle": "Activate the second outcome",
+                        "title": "Second runtime",
+                        "priority": 2,
+                        "createdAt": "2026-08-23T13:01:00Z",
+                    },
+                ],
+            )
+            run = create_run(repo, "MANDATE-HANDOFF", "t1", "t1")
+            run = activate_next(repo, run["updatedAt"], "t2")
+            backlog_path = repo / ".aim/portfolio-backlog.json"
+            backlog = json.loads(backlog_path.read_text(encoding="utf-8"))
+            backlog["items"][0]["runtimeIncrementId"] = "DI-001"
+            backlog_path.write_text(json.dumps(backlog, indent=2) + "\n", encoding="utf-8")
+            run = checkpoint(
+                repo, run["updatedAt"], "t3", "INC-FIRST", "epic_complete",
+                "Epic closure", "portfolio_mandate",
+            )
+            run = complete_active(repo, run["updatedAt"], "t4", "INC-FIRST")
+
+            with patch("aim_ui.utc_now", return_value="2026-08-23T15:00:00Z"):
+                between = build_board(repo)
+            self.assertEqual(between["portfolioRun"]["transitionState"], "next_activation_pending")
+            self.assertEqual(between["portfolioRun"]["relationStatus"], "recoverable")
+            self.assertEqual(between["history"]["closedIncrements"][0]["id"], "DI-001")
+            self.assertTrue(
+                next(epic for epic in between["epics"] if epic["id"] == "EPIC-FIRST")
+                ["increments"][0]["visibleOnBoard"]
+            )
+
+            run = activate_next(repo, run["updatedAt"], "t5")
+            with patch("aim_ui.utc_now", return_value="2026-08-23T15:01:00Z"):
+                pending = build_board(repo)
+                reloaded = build_board(repo)
+            self.assertEqual(pending, reloaded)
+            self.assertTrue(pending["portfolioRun"]["valid"])
+            self.assertEqual(pending["portfolioRun"]["transitionState"], "activation_pending")
+            second = next(epic for epic in pending["epics"] if epic["id"] == "EPIC-SECOND")
+            self.assertEqual(second["lifecycle"], "planned")
+            self.assertEqual(second["increments"], [])
+            self.assertEqual(second["planning"]["candidates"][0]["portfolioState"], "activation_pending")
+            self.assertFalse(second["actions"][0]["enabled"])
+            self.assertEqual(pending["history"]["closedIncrements"][0]["id"], "DI-001")
+
+            workspace = self._additional_workspace(
+                repo,
+                "second",
+                epic_id="EPIC-SECOND",
+                increment_id="DI-002",
+                status="gate_a_pending",
+            )
+            runtime = json.loads((workspace / "state.json").read_text(encoding="utf-8"))
+            runtime.update(
+                {
+                    "portfolioCandidateId": "INC-SECOND",
+                    "currentRole": "PO",
+                    "lastGatePassed": None,
+                    "updatedAt": "t6",
+                }
+            )
+            (workspace / "state.json").write_text(
+                json.dumps(runtime, indent=2) + "\n", encoding="utf-8"
+            )
+            self._portfolio(repo, ".", "workspaces/second")
+            partial = build_board(repo)
+            self.assertFalse(partial["portfolioRun"]["valid"])
+            self.assertEqual(partial["portfolioRun"]["relationStatus"], "contradictory")
+            self.assertIn("runtimeIncrementId=missing", partial["portfolioRun"]["issue"])
+            self.assertEqual(partial["history"]["closedIncrements"][0]["id"], "DI-001")
+
+            backlog = json.loads(backlog_path.read_text(encoding="utf-8"))
+            backlog["items"][1]["runtimeIncrementId"] = "DI-002"
+            backlog_path.write_text(json.dumps(backlog, indent=2) + "\n", encoding="utf-8")
+            checkpoint(repo, "t5", "t6", "INC-SECOND", "gate_a_pending", "Gate A", "portfolio_mandate")
+            activated = build_board(repo)
+            self.assertTrue(activated["portfolioRun"]["valid"])
+            self.assertEqual(activated["portfolioRun"]["relationStatus"], "consistent")
+            self.assertEqual(activated["history"]["closedIncrements"][0]["id"], "DI-001")
+            second = next(epic for epic in activated["epics"] if epic["id"] == "EPIC-SECOND")
+            self.assertEqual(second["activeIncrementId"], "DI-002")
+
+    def test_portfolio_checkpoint_without_required_runtime_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            self._backlog(
+                repo,
+                [{
+                    "id": "INC-MISSING",
+                    "epicId": "EPIC-MISSING",
+                    "epicTitle": "Missing runtime",
+                    "title": "Must not look active",
+                    "priority": 1,
+                    "createdAt": "2026-08-23T13:00:00Z",
+                }],
+            )
+            run = create_run(repo, "MANDATE-MISSING", "t1", "t1")
+            run = activate_next(repo, run["updatedAt"], "t2")
+            checkpoint(
+                repo, run["updatedAt"], "t3", "INC-MISSING",
+                "epic_definition_in_progress", "Gate A", "portfolio_mandate",
+            )
+            board = build_board(repo)
+
+        self.assertFalse(board["portfolioRun"]["valid"])
+        self.assertEqual(board["portfolioRun"]["relationStatus"], "contradictory")
+        self.assertTrue(any("INC-MISSING" in warning for warning in board["warnings"]))
+        missing = next(epic for epic in board["epics"] if epic["id"] == "EPIC-MISSING")
+        self.assertFalse(missing["actions"][0]["enabled"])
+        self.assertIn("contradictory", missing["actions"][0]["reason"])
 
     def test_planned_candidates_project_epics_without_increment_cards(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -453,7 +612,8 @@ class AimUiTests(unittest.TestCase):
             "data-epic-row",
             "duplicateCards.forEach((card) => card.remove())",
             'card.closest(".lane-cell")?.dataset.column',
-            'epic.lifecycle !== "closed"',
+            "epicVisibleOnDeliveryBoard",
+            'increment.column === "done" && increment.visibleOnBoard !== false',
             "epicsForView(board)",
             "renderFilters(board, viewEpics)",
             "animateCardHandoffs",

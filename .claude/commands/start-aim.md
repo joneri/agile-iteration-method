@@ -30,8 +30,12 @@ Command behavior:
 - for `PORTFOLIO` plus Auto, preview the ordered Backlog, require one bounded
   user mandate, and then run included Epics sequentially through the complete
   AIM loop; after Gate E, separately record mandate-authorized Epic closure,
-  complete the active candidate, and activate the next snapshot candidate
-  without another user message; checkpoint via trusted
+  preserve its workspace, evidence, Backlog runtime link, and UI catalog entry,
+  then complete the active candidate. Select the next candidate only as
+  `activation_pending`; keep it Planned until its workspace, state, and
+  `runtimeIncrementId` validate, then advance the matching checkpoint without
+  another user message. Resume that boundary deterministically and fail closed
+  on missing or mismatched runtime relations; checkpoint via trusted
   `scripts/aim_portfolio_run.py` and pause on scope, trust, validation, safety,
   concurrency, user-stop, or stale-state risk. Gate E accepts the Increment only
 - if `.aim/state.json` describes an incomplete Epic, resume it instead of silently starting a parallel Epic

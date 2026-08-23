@@ -144,7 +144,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             with self.subTest(marker=marker):
                 self.assertIn(marker.lower(), combined.lower())
 
-    def test_portfolio_mandate_closes_and_advances_without_per_epic_user_stop(self) -> None:
+    def test_portfolio_mandate_closes_and_hands_off_atomically_without_user_stop(self) -> None:
         runtime_surfaces = (
             "docs/workflow/agile-iteration-method.md",
             "docs/workflow/adapter-command-contract.md",
@@ -163,9 +163,17 @@ class AdapterCommandContractTests(unittest.TestCase):
                 self.assertIn("gate e", content)
                 self.assertIn("epic closure", content)
                 self.assertIn("portfolio_mandate", content)
-                self.assertRegex(content, r"completes? the active candidate")
-                self.assertRegex(content, r"activates? the next snapshot candidate")
-                self.assertIn("without another user message", content)
+                self.assertRegex(
+                    content,
+                    r"(?:completes? the active candidate|completing the (?:active )?candidate)",
+                )
+                self.assertIn("activation_pending", content)
+                self.assertIn("planned", content)
+                self.assertIn("runtimeincrementid", content)
+                self.assertRegex(
+                    content,
+                    r"(?:without another user message|no additional user message)",
+                )
 
         contract = (REPO_ROOT / "docs/workflow/adapter-command-contract.md").read_text(
             encoding="utf-8"
@@ -188,7 +196,9 @@ class AdapterCommandContractTests(unittest.TestCase):
             ).lower().replace("-", " ")
             with self.subTest(start_surface=relative):
                 self.assertIn("epic closure", content)
-                self.assertIn("activate the next snapshot candidate", content)
+                self.assertIn("activation_pending", content)
+                self.assertIn("planned", content)
+                self.assertIn("runtimeincrementid", content)
                 self.assertIn("without another user message", content)
 
     def test_start_surfaces_preserve_versioned_cost_selection(self) -> None:
@@ -209,7 +219,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "2.7.0")
+        self.assertEqual(version, "2.7.1")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",

@@ -113,6 +113,11 @@ class PortfolioRunTests(unittest.TestCase):
             run = activate_next(repo, run["updatedAt"], "2026-08-22T10:03:00Z")
             self.assertEqual(run["activeCandidateId"], "INC-FIRST")
             self.assertEqual(run["checkpoint"]["decisionAuthority"], "portfolio_mandate")
+            projection, warnings = project_portfolio_run(repo / ".aim")
+            self.assertEqual(warnings, [])
+            self.assertEqual(projection["transitionState"], "activation_pending")
+            self.assertEqual(projection["checkpointStatus"], "activation_pending")
+            self.assertEqual(projection["candidateEpics"]["INC-FIRST"], "EPIC-FIRST")
             run = checkpoint(
                 repo,
                 run["updatedAt"],
@@ -147,6 +152,7 @@ class PortfolioRunTests(unittest.TestCase):
             self.assertEqual(warnings, [])
             self.assertEqual(projection["completed"], 2)
             self.assertEqual(projection["remaining"], 0)
+            self.assertEqual(projection["transitionState"], "completed")
 
     def test_pause_resume_preserves_active_checkpoint(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

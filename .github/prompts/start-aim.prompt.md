@@ -43,8 +43,12 @@ thread as sole orchestrator, run one included Epic at a time through the full
 role/Gate loop, and checkpoint only through trusted
 `scripts/aim_portfolio_run.py`. Record delegated approvals with mandate
 provenance. After review, validation, and Gate E, separately record mandate-
-authorized Epic closure, complete the active candidate, and activate the next
-snapshot candidate without another user message. Pause on scope expansion,
+authorized Epic closure, preserve its workspace, evidence, Backlog link, and
+UI catalog entry, then complete it. Select the next candidate only as
+`activation_pending`; keep it Planned until workspace, state, and
+`runtimeIncrementId` validate, then advance the matching checkpoint without
+another user message. Resume pending activation deterministically and fail
+closed on missing or mismatched runtime relations. Pause on scope expansion,
 unsafe effects, ambiguous evidence, failed validation, concurrency conflict,
 user stop/change, or malformed/stale state; `/aim continue` must revalidate
 before resuming. Gate E accepts the Increment only.

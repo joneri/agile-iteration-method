@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-08-23 - AIM 2 patch release v2.7.1
+- Preserved completed Portfolio Epics on Delivery flow while they own one of
+  the latest three accepted Done Increments, preventing accepted outcomes from
+  disappearing during the next Epic handoff.
+- Added an explicit read-only transition projection for
+  `next_activation_pending`, `activation_pending`, runtime-active, and
+  contradictory Portfolio checkpoints.
+- Reconciled Portfolio run, Backlog `runtimeIncrementId`, catalogued workspace,
+  candidate identity, active Increment, runtime status, and Gate E evidence;
+  incomplete or mismatched relations now fail closed with a named issue.
+- Kept the next candidate Planned until canonical runtime linkage validates and
+  disabled UI activation proposals while Portfolio Auto owns or cannot safely
+  reconcile the approved snapshot order.
+- Added the two-Epic JonasWorkOS regression, interruption/reload checks,
+  partial-relation and corrupt-checkpoint coverage, and synchronized canonical,
+  native-adapter, and public Agent Skill contracts.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`7`. Existing Portfolio runs and contained Epic workspaces remain readable; no
+migration is required.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`. Adaptive installations can
+rerun the reviewed preview/apply installer flow to receive the corrected UI and
+Portfolio projection.
+
+Known limitations: Delivery flow intentionally shows only the latest three
+accepted Increments. Complete accepted history remains in Closed Increments and
+AIM DATA. Portfolio Auto remains sequential and chat-owned; the browser never
+repairs or advances runtime state.
+
 ## 2026-08-23 - AIM 2 minor release v2.7.0
 - Added Portfolio Auto as a bounded whole-Backlog route: one explicit mandate
   locks an immutable ordered snapshot and coordinates each included Epic

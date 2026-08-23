@@ -474,13 +474,30 @@ def project_portfolio_run(aim_root: Path) -> tuple[dict[str, Any], list[str]]:
     completed_ids = set(value["completedCandidateIds"])
     skipped_ids = set(value["skippedCandidateIds"])
     active_id = value.get("activeCandidateId")
+    remaining = len(value["snapshot"]) - accounted
+    checkpoint_status = checkpoint_value.get("epicStatus")
+    transition_state = (
+        "completed" if value["status"] == "completed" else
+        "stopped" if value["status"] == "stopped" else
+        "paused" if value["status"] == "paused" else
+        "activation_pending" if active_id and checkpoint_status == "activation_pending" else
+        "runtime_active" if active_id else
+        "next_activation_pending" if value["status"] == "running" and remaining > 0 else
+        "idle"
+    )
     return ({
         "configured": True, "valid": True, "runId": value["runId"], "status": value["status"],
         "mandateId": value["mandate"]["id"], "total": len(value["snapshot"]),
         "completed": len(value["completedCandidateIds"]), "skipped": len(value["skippedCandidateIds"]),
-        "remaining": len(value["snapshot"]) - accounted, "activeCandidateId": active_id,
+        "remaining": remaining, "activeCandidateId": active_id,
         "gate": checkpoint_value.get("gate"), "decisionAuthority": checkpoint_value.get("decisionAuthority"),
+        "checkpointStatus": checkpoint_status,
+        "checkpointUpdatedAt": checkpoint_value.get("updatedAt"),
+        "transitionState": transition_state,
         "pauseReason": value.get("pauseReason"), "updatedAt": value["updatedAt"],
+        "candidateEpics": {
+            item["candidateId"]: item["epicId"] for item in value["snapshot"]
+        },
         "candidateStates": {
             item["candidateId"]: (
                 "completed" if item["candidateId"] in completed_ids else

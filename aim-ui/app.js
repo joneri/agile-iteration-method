@@ -204,10 +204,12 @@ function renderPortfolioRun(board) {
   addFact(facts, "Portfolio", run.runId || "Invalid");
   addFact(facts, "Current card", run.activeCandidateId || "None");
   addFact(facts, "Remaining", run.remaining ?? "Unknown");
+  addFact(facts, "Transition", statusLabel(run.transitionState || "unknown"));
   addFact(facts, "Decision", run.decisionAuthority === "portfolio_mandate" ? "Portfolio mandate" : run.decisionAuthority || "None");
   status.dataset.status = run.status || "invalid";
   status.textContent = statusLabel(run.status || "invalid");
   if (!run.valid) guidance.textContent = run.issue || "Repair the run contract in AIM chat.";
+  else if (run.guidance) guidance.textContent = run.guidance;
   else if (run.status === "paused") guidance.textContent = run.pauseReason;
   else if (run.status === "completed") guidance.textContent = "The approved snapshot is complete.";
   else if (run.status === "stopped") guidance.textContent = run.pauseReason || "The Portfolio was stopped in AIM chat.";
@@ -421,9 +423,15 @@ function renderCard(increment, epic, index, existingCard = null) {
   return card;
 }
 
+function epicVisibleOnDeliveryBoard(epic) {
+  return epic.lifecycle !== "closed" || epic.increments.some(
+    (increment) => increment.column === "done" && increment.visibleOnBoard !== false,
+  );
+}
+
 function epicsForView(board) {
   if (state.view === "board") {
-    return board.epics.filter((epic) => epic.lifecycle !== "closed");
+    return board.epics.filter(epicVisibleOnDeliveryBoard);
   }
   return board.epics;
 }
@@ -818,7 +826,7 @@ function render(board) {
     state.filter = "all";
   }
   const activeCount = board.epics.filter((epic) => epic.active).length;
-  const deliveryEpics = board.epics.filter((epic) => epic.lifecycle !== "closed");
+  const deliveryEpics = board.epics.filter(epicVisibleOnDeliveryBoard);
   const incrementCount = deliveryEpics.reduce(
     (total, epic) => total + epic.increments.filter((item) => item.visibleOnBoard !== false).length,
     0,

@@ -405,11 +405,16 @@ with mandate provenance, never as new user approvals.
 
 After review, validation, and Gate E acceptance, revalidate again and record a
 distinct `Epic closure` with `portfolio_mandate` authority and mandate
-provenance. Then complete the active candidate and activate the next snapshot
-candidate without another user message. Gate E accepts the Increment only; the
-bounded mandate is the explicit PO authority for the subsequent closure. The
-required per-Epic full review is an execution checkpoint, not another operator
-pause.
+provenance. Preserve the closed workspace, accepted evidence, Backlog runtime
+link, and UI catalog entry before completing the active candidate. Select the
+next snapshot candidate only as `activation_pending`; keep it Planned while
+creating and validating its workspace, canonical state, and
+`runtimeIncrementId`, then advance the checkpoint to the exact workspace
+status. Resume an interrupted pending activation deterministically and fail
+closed on any later missing or mismatched relation. This sequence needs no
+additional user message. Gate E accepts the Increment only; the bounded mandate
+is the explicit PO authority for the subsequent closure. The required per-Epic
+full review is an execution checkpoint, not another operator pause.
 
 `/aim continue` revalidates snapshot hash, checkpoint, active workspace, and
 admission. Later Backlog additions remain excluded. Scope expansion, ambiguous

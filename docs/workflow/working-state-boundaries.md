@@ -376,6 +376,18 @@ A stale expected timestamp, changed snapshot, malformed field, symlink,
 duplicate identity, invalid transition, or contradictory active candidate fails
 closed without mutating existing Backlog or Epic state.
 
+The cross-Epic handoff is ordered and restart-safe. Completion first preserves
+the closed workspace, its accepted Gate E evidence, its Backlog
+`runtimeIncrementId`, and its UI catalog entry. Selecting the next snapshot
+candidate creates only an `activation_pending` run checkpoint; that candidate
+is still Planned. AIM creates and validates the contained workspace and
+canonical increment, then writes the Backlog runtime link, and only afterward
+advances the checkpoint to the exact workspace status. An interruption at
+either boundary resumes from the durable relation. A later checkpoint with a
+missing or mismatched workspace, candidate identity, runtime link, increment,
+or status is contradictory and fails closed rather than being projected as a
+normal empty board.
+
 The snapshot contains only valid Backlog candidates without
 `runtimeIncrementId`, matching AIM UI's visible planned work. A validated
 terminal run may move unchanged into `.aim/archive/` only through the helper's
