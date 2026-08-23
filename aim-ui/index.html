@@ -128,8 +128,22 @@
           </div>
         </div>
         <div class="runtime-notices" id="runtime-notices" role="status" hidden></div>
-        <div class="kanban-panel" id="kanban-panel">
-          <div class="kanban" id="kanban" aria-label="AIM Epic and Increment Kanban"></div>
+        <div class="delivery-workspace" id="delivery-workspace">
+          <div class="kanban-panel" id="kanban-panel">
+            <div class="kanban" id="kanban" aria-label="AIM Epic and Increment Kanban"></div>
+          </div>
+          <aside class="recent-deliveries" id="recent-deliveries" aria-labelledby="recent-deliveries-title">
+            <header class="recent-deliveries-head">
+              <div>
+                <p class="eyebrow">Accepted history</p>
+                <h3 id="recent-deliveries-title">Recent deliveries</h3>
+              </div>
+              <span class="recent-deliveries-count" id="recent-deliveries-count">0</span>
+            </header>
+            <p class="recent-deliveries-note">Latest accepted Increments, independent of priority.</p>
+            <div class="recent-deliveries-list" id="recent-deliveries-list"></div>
+            <button class="recent-view-all" id="recent-view-all" type="button">View all accepted Increments</button>
+          </aside>
         </div>
         <section class="closed-panel" id="closed-panel" aria-labelledby="closed-title" hidden>
           <header class="closed-heading">
@@ -137,7 +151,7 @@
               <p class="eyebrow">Accepted history</p>
               <h3 id="closed-title">Closed Increments</h3>
             </div>
-            <p>Complete evidence stays available here after cards leave Done.</p>
+            <p>Complete evidence stays available beyond the Recent Deliveries window.</p>
           </header>
           <div class="closed-groups" id="closed-groups"></div>
         </section>
@@ -169,6 +183,35 @@
         <button class="primary-action" id="open-action" type="button">Open in Codex</button>
       </div>
       <p class="action-feedback" id="action-feedback" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
+
+  <dialog class="delivery-dialog" id="delivery-dialog" aria-labelledby="delivery-dialog-title">
+    <form method="dialog" class="delivery-console">
+      <header class="delivery-console-head">
+        <div>
+          <p class="eyebrow">Accepted Increment · read only</p>
+          <h2 id="delivery-dialog-title">Delivery details</h2>
+        </div>
+        <button class="dialog-close" value="cancel" aria-label="Close delivery details">×</button>
+      </header>
+      <p class="delivery-detail-id" id="delivery-detail-id"></p>
+      <p class="delivery-detail-epic" id="delivery-detail-epic"></p>
+      <p class="delivery-detail-summary" id="delivery-detail-summary"></p>
+      <dl class="delivery-detail-facts" id="delivery-detail-facts"></dl>
+      <nav class="delivery-detail-evidence" id="delivery-detail-evidence" aria-label="Accepted Increment evidence"></nav>
+      <section class="follow-up-panel" aria-labelledby="follow-up-title">
+        <p class="eyebrow">New work, preserved history</p>
+        <h3 id="follow-up-title">Create follow-up Epic</h3>
+        <p>This opens a reviewable AIM chat proposal. It does not reopen or change the source Epic.</p>
+        <pre id="follow-up-intent" tabindex="0"></pre>
+        <div class="follow-up-actions">
+          <button class="secondary-action" id="copy-follow-up" type="button">Copy proposal</button>
+          <button class="primary-action" id="open-follow-up" type="button">Open in Codex</button>
+        </div>
+        <p class="action-feedback" id="follow-up-feedback" role="status" aria-live="polite"></p>
+      </section>
+      <button class="delivery-history-link" id="delivery-view-all" type="button">View complete accepted history</button>
     </form>
   </dialog>
 

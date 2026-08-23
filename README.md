@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 2.7
 
-![AIM 2 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 2.7.2 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 

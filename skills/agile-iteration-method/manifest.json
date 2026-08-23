@@ -162,7 +162,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "ca105440d34d41d3be2c20cc5f14fe31c2ba2614701d7a1cd6ab4293882c886b",
+      "sha256": "2940a1f17fba4523ca67ba49a1205c2b6dfc601a13313cabf1e1cef66061b2ae",
       "source": "scripts/aim_publication.py"
     },
     {
@@ -192,7 +192,7 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "2f0429755016625ff4c92f9cf9137c2d53f0eb71877fe28e88d469065acb2c95",
+      "sha256": "c69a41e81ae12d03a0e24b9a735d7f67dcec5ac8915695d9d695f25d21481ba1",
       "source": "scripts/aim_ui.py"
     },
     {
@@ -202,17 +202,17 @@
     },
     {
       "output": "aim-ui/index.html",
-      "sha256": "1f4e88d1ca92ca5401ddb6c6d15ca4248f774adf6a5f99d01262a56b25ad3110",
+      "sha256": "9c59a63b6489d1ad6b73fcb1a0e69d89de42324165bc89f8c48d6728df8c12a6",
       "source": "aim-ui/index.html"
     },
     {
       "output": "aim-ui/styles.css",
-      "sha256": "92229a5da8f437e8e05c0e776ca2a149aed10d819d32a9509a174fa178935981",
+      "sha256": "977eec8d6038c854a5f352867c409561af36bc59be0187f9ccd4649a17be4dd6",
       "source": "aim-ui/styles.css"
     },
     {
       "output": "aim-ui/app.js",
-      "sha256": "28e71232399fe01def3325c9c6b4866a09d8174335650c453052cc8ad140448a",
+      "sha256": "c25e9e5edae4e3db80937be22eca69dd7e7283cb08677254144235d154efc7b4",
       "source": "aim-ui/app.js"
     }
   ]

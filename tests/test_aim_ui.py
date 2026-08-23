@@ -365,7 +365,8 @@ class AimUiTests(unittest.TestCase):
             self.assertEqual(between["portfolioRun"]["transitionState"], "next_activation_pending")
             self.assertEqual(between["portfolioRun"]["relationStatus"], "recoverable")
             self.assertEqual(between["history"]["closedIncrements"][0]["id"], "DI-001")
-            self.assertTrue(
+            self.assertEqual(between["history"]["recentDeliveries"][0]["id"], "DI-001")
+            self.assertFalse(
                 next(epic for epic in between["epics"] if epic["id"] == "EPIC-FIRST")
                 ["increments"][0]["visibleOnBoard"]
             )
@@ -613,18 +614,29 @@ class AimUiTests(unittest.TestCase):
             "duplicateCards.forEach((card) => card.remove())",
             'card.closest(".lane-cell")?.dataset.column',
             "epicVisibleOnDeliveryBoard",
-            'increment.column === "done" && increment.visibleOnBoard !== false',
             "epicsForView(board)",
             "renderFilters(board, viewEpics)",
             "animateCardHandoffs",
             'prefers-reduced-motion: reduce',
             "kanban.scrollLeft = scrollLeft",
+            'return epic.lifecycle !== "closed";',
+            "renderRecentDeliveries(board)",
+            "board.history?.recentDeliveries",
         ):
             self.assertIn(marker, script)
         self.assertIn('class="card-control" hidden', markup)
         self.assertLess(markup.index('class="card-actions"'), markup.index('class="action-unavailable"'))
         self.assertIn(".card-control[hidden] { display: none; }", styles)
         self.assertIn(".card-action:focus-visible", styles)
+        self.assertIn(".recent-delivery-card:focus-visible", styles)
+        self.assertIn('id="recent-deliveries" aria-labelledby="recent-deliveries-title"', markup)
+        self.assertIn('id="delivery-dialog" aria-labelledby="delivery-dialog-title"', markup)
+        self.assertIn('id="follow-up-intent" tabindex="0"', markup)
+        follow_up = script[script.index("function followUpPrompt"):script.index("function showCompleteHistory")]
+        self.assertIn("do not reopen or reuse its identity", follow_up)
+        self.assertIn("untrusted repository data", follow_up)
+        self.assertIn("Source accepted Increment", follow_up)
+        self.assertNotIn("AIM_ACTION_ENVELOPE", follow_up)
         self.assertIn('button.setAttribute("aria-describedby", reasonId)', script)
         self.assertNotIn("ticket-in", styles)
         self.assertNotIn("margin: 14px -15px -15px", styles)
@@ -766,35 +778,45 @@ class AimUiTests(unittest.TestCase):
         self.assertEqual(board["health"], "partial")
         self.assertTrue(any("duplicate id INC-UI-001" in warning for warning in board["warnings"]))
 
-    def test_done_shows_latest_three_while_closed_history_keeps_every_acceptance(self) -> None:
+    def test_recent_deliveries_shows_latest_ten_while_closed_history_keeps_every_acceptance(self) -> None:
         runtime = state("gate_b_pending")
-        runtime.update({"activeIncrementId": "DI-006", "currentRole": "TDO"})
+        runtime.update({"activeIncrementId": "DI-013", "currentRole": "TDO"})
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary), runtime)
             aim = repo / ".aim"
-            (aim / "increments/006-wip.md").write_text(
-                "# DI-006 — Next work\n\nEpic: EPIC-TEST-001\n", encoding="utf-8"
+            (aim / "increments/013-wip.md").write_text(
+                "# DI-013 — Next work\n\nEpic: EPIC-TEST-001\n", encoding="utf-8"
             )
-            for number in range(1, 6):
+            for number in range(1, 13):
                 (aim / f"increments/{number:03d}-wip.md").write_text(
                     f"# DI-{number:03d} — Accepted {number}\n\nEpic: EPIC-TEST-001\n",
                     encoding="utf-8",
                 )
                 (aim / f"decisions/{number:03d}-gate-e.md").write_text(
-                    f"# Accepted\n\nAccepted at: 2026-08-21T1{number}:00:00Z\n",
+                    f"# Accepted\n\nAccepted at: 2026-08-{number + 1:02d}T12:00:00Z\n",
                     encoding="utf-8",
                 )
             board = build_board(repo)
 
         accepted = board["history"]["closedIncrements"]
-        self.assertEqual(len(accepted), 5)
-        self.assertEqual([item["id"] for item in accepted[:3]], ["DI-005", "DI-004", "DI-003"])
-        visible_done = [
-            item["id"]
-            for item in board["epics"][0]["increments"]
-            if item["column"] == "done" and item["visibleOnBoard"]
-        ]
-        self.assertEqual(set(visible_done), {"DI-003", "DI-004", "DI-005"})
+        recent = board["history"]["recentDeliveries"]
+        self.assertEqual(len(accepted), 12)
+        self.assertEqual(board["history"]["recentLimit"], 10)
+        self.assertEqual(
+            [item["id"] for item in recent],
+            [f"DI-{number:03d}" for number in range(12, 2, -1)],
+        )
+        self.assertTrue(
+            all(
+                item["visibleOnBoard"] is False
+                for item in board["epics"][0]["increments"]
+                if item["column"] == "done"
+            )
+        )
+        self.assertEqual(
+            [column["id"] for column in board["columns"]],
+            ["backlog", "work_in_progress", "in_review", "ready_for_release"],
+        )
 
     def test_delivery_data_uses_explicit_evidence_and_labels_fallbacks(self) -> None:
         runtime = state("gate_b_pending")
@@ -1031,7 +1053,7 @@ class AimUiTests(unittest.TestCase):
     def test_read_model_links_increment_to_epic_collection(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             board = build_board(self._repo(Path(temporary)))
-        self.assertEqual(board["readModelVersion"], "6.0")
+        self.assertEqual(board["readModelVersion"], "7.0")
         self.assertEqual(board["source"]["kind"], "single-workspace")
         self.assertTrue(board["source"]["readOnly"])
         self.assertEqual(len(board["epics"]), 1)

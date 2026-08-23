@@ -31,7 +31,6 @@ PUBLIC_DIRECTORIES = ("github-pages/assets",)
 PUBLIC_BRAND_IMAGE_PATHS = (
     "AIM_OG.png",
     "github-pages/assets/images/aim-2-hero-dark.png",
-    "github-pages/assets/images/aim-2-logo-light.png",
 )
 PUBLIC_BRAND_IMAGE_SIZE = (1730, 909)
 PUBLIC_FEATURE_IMAGE_PATH = "github-pages/assets/images/aim-ui-beta-control-room.png"
@@ -94,6 +93,7 @@ def validate_source(repo_root: Path) -> None:
     """Validate release-facing source files before artifact assembly."""
 
     repo_root = repo_root.resolve()
+    product_version = _read_text(repo_root / "VERSION").strip()
     for relative_path in ROOT_PUBLIC_FILES:
         path = repo_root / relative_path
         if not path.is_file():
@@ -118,6 +118,28 @@ def validate_source(repo_root: Path) -> None:
                 f"{relative_path}: expected {PUBLIC_BRAND_IMAGE_SIZE[0]}x"
                 f"{PUBLIC_BRAND_IMAGE_SIZE[1]}, got {dimensions[0]}x{dimensions[1]}"
             )
+    index = _read_text(repo_root / "index.html")
+    expected_badge = f'<span class="brand-version">{product_version}</span>'
+    if expected_badge not in index:
+        raise PublicationError(
+            f"index.html: brand-version must match VERSION ({product_version})"
+        )
+    expected_alt = f'alt="AIM {product_version} Agile Iteration Method logo"'
+    if expected_alt not in index:
+        raise PublicationError(
+            f"index.html: brand artwork alt text must match VERSION ({product_version})"
+        )
+    inventory = _read_text(repo_root / "github-pages/assets/images/README.md")
+    if inventory.count(f"AIM {product_version}") < 3:
+        raise PublicationError(
+            "brand image inventory must identify all version-bearing artwork "
+            f"as AIM {product_version}"
+        )
+    readme = _read_text(repo_root / "README.md")
+    if f"![AIM {product_version} - Agile Iteration Method]" not in readme:
+        raise PublicationError(
+            f"README.md: hero artwork alt text must match VERSION ({product_version})"
+        )
     image_readme = _read_text(repo_root / "github-pages/assets/images/README.md")
     feature_dimensions = _png_dimensions(repo_root / PUBLIC_FEATURE_IMAGE_PATH)
     if feature_dimensions != PUBLIC_FEATURE_IMAGE_SIZE:
@@ -221,9 +243,9 @@ def validate_source(repo_root: Path) -> None:
             index,
             "Writes for the reader, not its own chat",
         ),
-        "index.html AIM 2 logo alt text": (
+        "index.html AIM release logo alt text": (
             index,
-            'alt="AIM 2 Agile Iteration Method logo"',
+            f'alt="AIM {product_version} Agile Iteration Method logo"',
         ),
         "install.sh fail-closed notice": (
             install_script,

@@ -138,7 +138,8 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("Private conversations, rejected drafts", index)
         self.assertIn('id="ui"', index)
         self.assertIn("docs/product/aim-ui.md", index)
-        self.assertIn('alt="AIM 2 Agile Iteration Method logo"', index)
+        self.assertIn('alt="AIM 2.7.2 Agile Iteration Method logo"', index)
+        self.assertIn('<span class="brand-version">2.7.2</span>', index)
         self.assertIn("Put the backlog in motion.", index)
         self.assertIn("Keep control.", index)
         self.assertIn("github-pages/assets/images/aim-ui-beta-control-room.png", index)
@@ -162,8 +163,25 @@ class PublicationContractTests(unittest.TestCase):
         inventory = (
             REPO_ROOT / "github-pages/assets/images/README.md"
         ).read_text(encoding="utf-8")
-        self.assertGreaterEqual(inventory.count("AIM 2"), 2)
+        self.assertGreaterEqual(inventory.count("AIM 2.7.2"), 3)
         self.assertIn("AIM UI Beta", inventory)
+
+    def test_stale_brand_artwork_version_blocks_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            index = copied / "index.html"
+            index.write_text(
+                index.read_text(encoding="utf-8").replace(
+                    '<span class="brand-version">2.7.2</span>',
+                    '<span class="brand-version">2.7</span>',
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(
+                PublicationError, "brand-version must match VERSION"
+            ):
+                validate_source(copied)
 
     def test_schema_id_drift_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

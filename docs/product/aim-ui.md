@@ -199,8 +199,8 @@ run without losing completed work.
 ## What the control-room tabs show
 
 - Delivery flow, selected by default, with stationary rows for running and
-  planned Epics plus completed Epics that own one of the latest three accepted
-  Increments; older completed Epics leave this bounded active board
+  planned Epics plus an independent Recent Deliveries ledger for accepted
+  history; completed Epics never remain in the priority rows merely to host it
 - Portfolio, with active Epic, workspace, increment, and attention totals; chat-owned capacity; and one summary panel per Epic
 - AIM DATA, with auditable delivery counts, throughput, elapsed delivery time,
   and evidence-linked accepted history
@@ -213,19 +213,19 @@ run without losing completed work.
 - each Epic's current role, gate, mode, cost profile, status, and evidence
 - bounded helper agents grouped beneath the Epic that recorded them
 - safe partial warnings when one declared workspace cannot be read
-- the latest three accepted Increments in Done
+- the latest ten accepted Increments in the independent Recent Deliveries ledger
 
 Filtering never changes runtime state. It only changes which already-read Epics
-the browser presents. A completed Epic remains filterable on Delivery flow
-while it owns a visible latest-three Done card. Switching from another view
-resets a selection that is not valid on the bounded active board. All completed
-outcomes remain available through Closed Increments and the broader Portfolio
-view.
+the browser presents. Delivery flow filters contain planned and open Epics;
+Recent Deliveries remains a completion-ordered ledger rather than another
+priority row. Switching from another view resets a selection that is not valid
+on the bounded active board. All completed outcomes remain available through
+Recent Deliveries, Closed Increments, AIM DATA, and the broader Portfolio view.
 
 During a Portfolio handoff, `activation_pending` means the next candidate has
 been selected but remains Planned until its contained workspace, canonical
 state, and Backlog `runtimeIncrementId` have all been created and validated.
-The previously accepted Done card remains visible throughout. A later
+The previously accepted delivery remains visible throughout. A later
 checkpoint without those runtime relations, or disagreement among candidate,
 workspace, increment, and checkpoint identities, is projected as contradictory
 and fails closed. The UI never repairs or fabricates runtime work.
@@ -275,19 +275,30 @@ preserves horizontal Kanban position and keyboard focus.
 | implementation, paused, or blocked | Work in progress |
 | review or TDO validation | In review |
 | awaiting PO acceptance | Ready for release |
-| accepted increment or completed Epic | Done |
+| accepted increment or completed Epic | Recent Deliveries, outside the row flow |
 
 Epics do not move between these columns. The left Epic spine stays aligned with
-its delivery row while canonical `DI-*` cards move across the five columns.
+its delivery row while canonical active `DI-*` cards move across the four flow
+columns.
 Gate A may therefore show an Epic with an empty row. Plan, WIP, review, and
 decision artifacts for one `DI-*` are aggregated into one card and evidence set.
 
-Done is intentionally a short recency window, not the history store. The read
-model sorts accepted runtime evidence by an explicit `Accepted at` timestamp
-when available, falls back to the decision artifact modification time, and uses
-the numeric Increment identity as a deterministic tie-breaker. Only the newest
-three cards remain on the delivery board. Closed Increments shows every
-accepted card and never deletes its runtime evidence.
+Recent Deliveries is intentionally a short recency ledger, not the history
+store and not a fifth priority stage. The read model sorts accepted runtime
+evidence by an explicit `Accepted at` timestamp when available, falls back to
+the decision artifact modification time, and uses the numeric Increment identity
+as a deterministic tie-breaker. Only the newest ten entries remain in this
+compact ledger. Closed Increments shows every accepted card and never deletes
+its runtime evidence.
+
+Each Recent Deliveries entry keeps its Increment title, identity, parent Epic,
+and acceptance time visible without hover. Activating it opens a keyboard-
+accessible read-only detail view with canonical lifecycle and runtime labels,
+available Increment/review/Gate E evidence, and workspace context. `View all`
+opens Closed Increments. `Create follow-up Epic` prepares a reviewable AIM chat
+proposal that references the source Epic and accepted Increment while requiring
+a new Epic identity. It is not an action envelope, does not reopen the source,
+and cannot mutate runtime state.
 
 For a completed workspace with no active Increment, AIM UI projects the most
 recent accepted Increment from the structured state contract:

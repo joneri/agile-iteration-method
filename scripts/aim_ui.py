@@ -27,7 +27,7 @@ from aim_actions import (
 from aim_portfolio import project_portfolio_control
 from aim_portfolio_run import project_portfolio_run
 
-READ_MODEL_VERSION = "6.0"
+READ_MODEL_VERSION = "7.0"
 PORTFOLIO_VERSION = "1.0"
 PORTFOLIO_FILE = "ui-portfolio.json"
 BACKLOG_VERSION = "1.0"
@@ -37,14 +37,13 @@ MAX_BACKLOG_ITEMS = 256
 MAX_BACKLOG_BYTES = 1_000_000
 MAX_ACCEPTANCE_DECISION_BYTES = 1_000_000
 MAX_GATE_B_DECISION_BYTES = 1_000_000
-VISIBLE_DONE_LIMIT = 3
+RECENT_DELIVERIES_LIMIT = 10
 DEFAULT_REFRESH_MS = 2_000
 KANBAN_COLUMNS = (
     ("backlog", "Backlog"),
     ("work_in_progress", "Work in progress"),
     ("in_review", "In review"),
     ("ready_for_release", "Ready for release"),
-    ("done", "Done"),
 )
 STATE_TO_COLUMN = {
     "epic_initialized": "backlog",
@@ -1090,8 +1089,9 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
         "epics": [],
         "history": {
-            "doneLimit": VISIBLE_DONE_LIMIT,
+            "recentLimit": RECENT_DELIVERIES_LIMIT,
             "acceptedCount": 0,
+            "recentDeliveries": [],
             "closedIncrements": [],
         },
         "deliveryData": None,
@@ -1243,13 +1243,13 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             if item["column"] == "done":
                 accepted.append({**item, "epicTitle": epic["title"]})
     accepted.sort(key=_increment_sort_key, reverse=True)
-    visible_done = {(item["epicId"], item["id"]) for item in accepted[:VISIBLE_DONE_LIMIT]}
     for epic in base["epics"]:
         for item in epic["increments"]:
-            item["visibleOnBoard"] = item["column"] != "done" or (item["epicId"], item["id"]) in visible_done
+            item["visibleOnBoard"] = item["column"] != "done"
     base["history"] = {
-        "doneLimit": VISIBLE_DONE_LIMIT,
+        "recentLimit": RECENT_DELIVERIES_LIMIT,
         "acceptedCount": len(accepted),
+        "recentDeliveries": accepted[:RECENT_DELIVERIES_LIMIT],
         "closedIncrements": accepted,
     }
     base["deliveryData"] = _delivery_data(base["epics"], accepted, generated_at)
