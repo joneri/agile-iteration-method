@@ -182,7 +182,8 @@ class PublicSkillTests(unittest.TestCase):
         self.assertIn("2. Calibrate the repository", skill)
         self.assertIn("3. Start with an outcome", skill)
         self.assertIn("default `Strict` experience", skill)
-        self.assertIn("Final Epic acceptance always remains yours", skill)
+        self.assertIn("Final Epic acceptance remains yours in", skill)
+        self.assertIn("a bounded Portfolio Auto mandate carries that authority", skill)
         for marker in ("å", "ä", "ö", "Använd när", "Vad gör"):
             with self.subTest(marker=marker):
                 self.assertNotIn(marker, skill)
@@ -351,6 +352,13 @@ class PublicSkillTests(unittest.TestCase):
                 "expectedLastGatePassed",
                 "`.aim/state.json` when another path is named",
                 "Epic closure remains a separate",
+            ),
+            "portfolio mandate closure precedence": (
+                "`portfolio_mandate` authority",
+                "complete the active candidate",
+                "activate the next snapshot candidate",
+                "without another user message",
+                "Gate E still accepts",
             ),
         }
         for scenario, markers in scenarios.items():

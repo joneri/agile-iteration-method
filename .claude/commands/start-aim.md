@@ -29,8 +29,11 @@ Expected input:
 Command behavior:
 - for `PORTFOLIO` plus Auto, preview the ordered Backlog, require one bounded
   user mandate, and then run included Epics sequentially through the complete
-  AIM loop; checkpoint via trusted `scripts/aim_portfolio_run.py` and pause on
-  scope, trust, validation, safety, concurrency, user-stop, or stale-state risk
+  AIM loop; after Gate E, separately record mandate-authorized Epic closure,
+  complete the active candidate, and activate the next snapshot candidate
+  without another user message; checkpoint via trusted
+  `scripts/aim_portfolio_run.py` and pause on scope, trust, validation, safety,
+  concurrency, user-stop, or stale-state risk. Gate E accepts the Increment only
 - if `.aim/state.json` describes an incomplete Epic, resume it instead of silently starting a parallel Epic
 - resume its persisted cost profile; when no incomplete Epic exists, select a
   fresh cost profile and never inherit one from `epic_complete`

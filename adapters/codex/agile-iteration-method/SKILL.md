@@ -211,6 +211,11 @@ portfolio mandate` with mandate provenance. `/aim continue` revalidates the
 snapshot, checkpoint, active workspace, and admission state. Scope expansion,
 unsafe effects, ambiguous evidence, failed validation, concurrency conflict,
 user change/stop intent, or malformed/stale state pauses or fails closed.
+After review, validation, and Gate E acceptance, revalidate again and record a
+distinct `Epic closure` with `portfolio_mandate` authority and mandate
+provenance. Then complete the active candidate and activate the next snapshot
+candidate without another user message. Gate E accepts the Increment only; the
+bounded mandate is the explicit PO authority for the subsequent closure.
 
 `/aim calibrate-repo` uses the package-local canonical flow in `references/repo-awareness-calibration.md`.
 `/aim configure-agents` uses the package-local
@@ -316,7 +321,8 @@ Hard gates:
 
 - Gate A: Epic ready. Approval is meaningful.
 - Gate B: Done Increment spec ready. Approval is meaningful.
-- Gate E: Increment acceptance and Epic continuation/closure. Approval is meaningful.
+- Gate E: Increment acceptance, followed by a separate Epic continuation or
+  closure decision. Approval is meaningful.
 
 Soft gates:
 
@@ -363,7 +369,7 @@ Every hard-gate checkpoint must make clear:
 - exact files planned or touched
 - how the user should evaluate the step
 
-Use `approve` and `change: ...` as transport shortcuts at hard gates. In Strict mode, stop at Gate A, Gate B, and Gate E and wait for explicit user approval or change direction before advancing state or doing further work. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion.
+Use `approve` and `change: ...` as transport shortcuts at hard gates. In Strict mode, stop at Gate A, Gate B, and Gate E and wait for explicit user approval or change direction before advancing state or doing further work. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion. For ordinary Auto, the final pause returns Epic acceptance to the user. For Portfolio Auto, perform the full review as a required execution checkpoint and use the revalidated mandate to record a separate eligible Epic closure, complete the active candidate, and activate the next snapshot candidate without another user message unless an escalation condition applies.
 
 ## State And Validation
 

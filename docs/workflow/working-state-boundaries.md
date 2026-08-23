@@ -404,8 +404,14 @@ stops without mutation. Compatibility v1.1 actions resolve `workspace` relative
 to `.aim`; legacy v1.0 actions may resolve only through one unique
 contained canonical workspace match, never an implicit root fallback. Unknown
 versions fail closed. Gate E approval accepts the Increment and preserves the
-separate PO decision to continue or close the Epic. This keeps the browser
-read-only and the main AIM thread as the sole state writer.
+separate PO decision to continue or close the Epic. In ordinary Strict and Auto
+runs, that decision requires the user. In an active Portfolio Auto run, the
+revalidated bounded mandate is the explicit PO authority for a later, separate
+Epic-closure transition with `portfolio_mandate` authority and mandate
+provenance; the main thread may then complete the active candidate and activate
+the next snapshot candidate without another user message. The Gate E UI action
+never performs that closure. This keeps the browser read-only and the main AIM
+thread as the sole state writer.
 
 ## Debugging
 

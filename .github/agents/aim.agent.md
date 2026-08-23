@@ -403,6 +403,14 @@ checkpoints. It cannot reason, approve, run an agent, or mutate canonical Epic
 state. Label eligible delegated decisions `auto-approved by portfolio mandate`
 with mandate provenance, never as new user approvals.
 
+After review, validation, and Gate E acceptance, revalidate again and record a
+distinct `Epic closure` with `portfolio_mandate` authority and mandate
+provenance. Then complete the active candidate and activate the next snapshot
+candidate without another user message. Gate E accepts the Increment only; the
+bounded mandate is the explicit PO authority for the subsequent closure. The
+required per-Epic full review is an execution checkpoint, not another operator
+pause.
+
 `/aim continue` revalidates snapshot hash, checkpoint, active workspace, and
 admission. Later Backlog additions remain excluded. Scope expansion, ambiguous
 evidence, irreparable validation, unsafe or unauthorized effects, concurrency

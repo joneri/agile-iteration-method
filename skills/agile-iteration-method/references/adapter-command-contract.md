@@ -137,6 +137,13 @@ never be fabricated.
 Each candidate retains an independently authoritative contained Epic
 workspace. Once its review, validation, Gate E, and Epic closure evidence pass,
 the chat checkpoints completion and advances to the next snapshot candidate.
+Gate E accepts the Increment only. Immediately before the distinct Epic-closure
+transition, the chat revalidates the run and workspace, then records
+`auto-approved by portfolio mandate <mandateId>` with decision authority
+`portfolio_mandate`. It then completes the active candidate and activates the
+next snapshot candidate without another user message. This Portfolio Auto
+specialization overrides the ordinary requirement for a new per-Epic operator
+interaction, not the requirement for a separate closure decision or evidence.
 `/aim continue` revalidates the immutable snapshot hash, run checkpoint, active
 workspace, and admission state before resuming. It never replays completed work
 or silently incorporates later Backlog changes.
@@ -220,7 +227,10 @@ an implicit fallback. Unknown action versions reject without mutation.
 
 Host handoff success never implies gate success. Approve at Gate E accepts the
 Increment; it does not close the Epic. Epic closure remains a separate explicit
-PO decision.
+PO decision. For ordinary Strict and Auto runs, that decision requires the user.
+For an active Portfolio Auto run, the already approved, revalidated bounded
+mandate is the explicit PO authority for a subsequent separate Epic-closure
+decision; no Gate E action envelope may itself claim or perform that closure.
 
 ## First-run onboarding contract
 

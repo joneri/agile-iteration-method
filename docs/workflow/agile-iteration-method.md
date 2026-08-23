@@ -388,7 +388,8 @@ It makes the runtime meaning of those gates durable:
 - Gate B may escalate or de-escalate cost depth when its visible rationale and
   persisted `costProfile` agree
 - Gate D review output supports transition into `tdo_validation_in_progress`
-- Gate E approval moves the runtime into `done_increment_accepted` or `epic_complete`
+- Gate E approval moves the runtime into `done_increment_accepted`; a subsequent
+  separate PO closure decision moves the Epic into `epic_complete`
 
 ### Resume rule
 
@@ -566,7 +567,8 @@ In Auto mode:
 - roles and gates still execute and are reported
 - current mode is shown in gate output (`Mode: Strict` or `Mode: Auto`)
 - manual pauses between Done Increments are skipped unless escalation is required
-- final full review is required before Epic completion
+- final full review is required before Epic completion; ordinary Auto then
+  returns final Epic acceptance to the user
 - all generated Done Increments must remain traceable
 
 Portfolio Auto is a bounded specialization selected with `/aim start
@@ -576,6 +578,13 @@ requires one explicit user mandate. Within that mandate, the main
 AIM thread may record Gate and Epic-closure decisions as `auto-approved by
 portfolio mandate` and continue sequentially through included Epics. Every Epic
 still runs the complete canonical role loop in its own authoritative workspace.
+This specialization makes the active, revalidated mandate the explicit PO
+authority for a separate Epic-closure decision; it does not turn Gate E into
+Epic closure. After Gate E accepts the Increment, the main thread records
+`Epic closure` with `portfolio_mandate` authority and mandate provenance,
+completes the active candidate, and activates the next snapshot candidate
+without another user message. The per-Epic review is a required execution
+checkpoint, not an additional operator pause.
 The mandate never authorizes scope expansion, later Backlog additions, unsafe
 effects, or completion without review and validation. Those conditions pause
 at a durable checkpoint for the user. `/aim continue` resumes only after the
@@ -983,7 +992,7 @@ Stop and ask for input if:
 
 Approval is only semantically meaningful at Gate A, Gate B and Gate E.
 
-At Gate E, the visible interaction should still distinguish two decisions:
+At Gate E, the workflow must still distinguish two decisions:
 - increment acceptance after TDO demo, test, and feedback framing
 - Epic continuation or closure after the increment is accepted
 
@@ -991,7 +1000,10 @@ When the Epic continues, TDO must create the next canonical Done Increment and
 return the workspace to Gate B. An incomplete Epic must not remain stranded in
 an accepted-Increment checkpoint, and a planning candidate must not be shown as
 if it were that runtime Increment. Epic closure remains a separate explicit PO
-decision.
+decision. In Portfolio Auto only, the active revalidated Portfolio mandate is
+that explicit bounded PO authority: after Gate E, the main thread records a
+separate mandate-provenanced Epic closure, completes the candidate, and
+activates the next snapshot candidate without a per-Epic user stop.
 
 ---
 

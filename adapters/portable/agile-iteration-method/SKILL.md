@@ -88,7 +88,10 @@ but AIM does not ask you to approve routine internal handoffs.
 This is the default `Strict` experience: AIM pauses at each hard gate for your
 decision. `Auto` still reports the same gates and preserves the same ownership,
 but it continues between increments while the approved direction remains clear.
-Risk, scope changes, and final Epic acceptance always return to you.
+Risk and scope changes always return to you. Final Epic acceptance also returns
+to you in ordinary Auto; Portfolio Auto instead uses its already approved,
+bounded mandate as the explicit PO authority for each eligible separate Epic
+closure.
 
 ## Start Here
 
@@ -145,8 +148,9 @@ the same checkpoints but may continue without pausing when no escalation applies
 4. **Evaluate evidence.** TDO explains what changed, what was verified, and how
    to test or demonstrate it.
 5. **Keep the decision.** PO asks you to accept the increment, request changes,
-   continue the Epic, or close it. Final Epic acceptance always remains yours.
-   AIM preserves the checkpoint for the next session.
+   continue the Epic, or close it. Final Epic acceptance remains yours in
+   ordinary runs; a bounded Portfolio Auto mandate carries that authority for
+   its eligible Epics. AIM preserves the checkpoint for the next session.
 
 At any point, `/aim help` recommends one useful next action based on the current
 state instead of showing a wall of internal options.
@@ -435,6 +439,11 @@ revalidates snapshot hash, checkpoint, active workspace, and admission before
 resuming. Scope expansion, unsafe effects, ambiguous evidence, irreparable
 validation, concurrency conflicts, user change/stop intents, and malformed or
 stale run state pause or fail closed. Later Backlog additions are excluded.
+After review, validation, and Gate E acceptance, revalidate again, record the
+distinct `Epic closure` decision with `portfolio_mandate` authority and mandate
+provenance, complete the active candidate, and activate the next snapshot
+candidate without another user message. Gate E still accepts the Increment
+only; the mandate authorizes the subsequent closure transition.
 A validated completed or stopped run may be moved unchanged into contained
 `.aim/archive/` only through the helper's explicit, timestamp-guarded `archive`
 command. Running, paused, stale, malformed, symlinked, or colliding state blocks
@@ -522,7 +531,10 @@ root state is not an implicit fallback. Reject unknown versions, stale,
 replayed, ambiguous, malformed, or no-longer-admissible envelopes without
 mutation. A prefilled composer is not evidence that the user sent or approved
 it. Gate E approval accepts the Increment only; Epic closure remains a separate
-explicit PO decision.
+explicit PO decision. Ordinary runs require the user for that decision. In
+Portfolio Auto, the active revalidated bounded mandate is the explicit PO
+authority for the subsequent separate closure; a Gate E action envelope never
+performs it.
 
 When AIM UI observes a workspace, keep card movement and action publication
 separate with the optional `uiDecision` runtime extension. Persist the hard-gate
@@ -599,7 +611,8 @@ Hard gates:
 
 - Gate A: Epic ready. Approval is meaningful.
 - Gate B: Done Increment spec ready. Approval is meaningful.
-- Gate E: Increment acceptance and Epic continuation/closure. Approval is meaningful.
+- Gate E: Increment acceptance, followed by a separate Epic continuation or
+  closure decision. Approval is meaningful.
 
 Soft gates:
 
@@ -646,7 +659,7 @@ Every hard-gate checkpoint must make clear:
 - exact files planned or touched
 - how the user should evaluate the step
 
-Use `approve` and `change: ...` as transport shortcuts at hard gates. In Strict mode, stop at Gate A, Gate B, and Gate E and wait for explicit user approval or change direction before advancing state or doing further work. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion.
+Use `approve` and `change: ...` as transport shortcuts at hard gates. In Strict mode, stop at Gate A, Gate B, and Gate E and wait for explicit user approval or change direction before advancing state or doing further work. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion. For ordinary Auto, the final pause returns Epic acceptance to the user. For Portfolio Auto, perform the full review as a required execution checkpoint and use the revalidated mandate to record a separate eligible Epic closure, complete the active candidate, and activate the next snapshot candidate without another user message unless an escalation condition applies.
 
 ## State And Validation
 

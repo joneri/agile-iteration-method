@@ -77,7 +77,11 @@ AIM uses the Epic to decide what the next useful increment should be.
 ## 3. Choose Execution Style
 
 - `Mode: Strict`: pause at Gate A, Gate B, and Gate E
-- `Mode: Auto`: continue between increments unless escalation is required; Epic closure still requires explicit approval
+- `Mode: Auto`: continue between increments unless escalation is required;
+  ordinary Epic closure still requires explicit user approval
+- `Portfolio Auto`: the one approved bounded mandate is the explicit PO
+  authority for each separate eligible Epic closure, so AIM advances across its
+  immutable snapshot without another user message unless escalation is required
 
 Strict is a good default for first use and trust-sensitive work.
 Auto is useful when the outcome and boundaries are already clear.

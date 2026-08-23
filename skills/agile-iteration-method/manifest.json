@@ -57,17 +57,17 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "85ef684221ba434c8bd40ee96eadbee7938a85e74384c4544de2922cf32ce00d",
+      "sha256": "78cdd8863aea0e6e806e91e2355f53cd8a7ee5980f706446c3c640c9228a86f7",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "9ede6573a25f38258131552bc9dc01cdc8414800b4aaafd4d538015e17b5ad01",
+      "sha256": "900174561461db5960af4285a340c1ff9e63f940cd7a01b8565e05a1a9f36f10",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "79e7547471e9e90e4a5deef3e300195692a3564361fbc5b1fb45b45ef0659cee",
+      "sha256": "956322955b89882f58cb7b1383dd487ea9ff0a3f98cfa8261f55c038ad8310ad",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {

@@ -63,6 +63,11 @@ included Epic at a time through the full AIM loop. Use trusted
 delegated decision `auto-approved by portfolio mandate`; never fabricate user
 approval. Resume only after revalidation and pause on scope, trust, validation,
 safety, concurrency, user-stop, or malformed/stale-state escalation.
+After review, validation, and Gate E acceptance, revalidate again and record a
+distinct `Epic closure` with `portfolio_mandate` authority and mandate
+provenance. Then complete the active candidate and activate the next snapshot
+candidate without another user message. Gate E accepts the Increment only; the
+bounded mandate is the explicit PO authority for the subsequent closure.
 
 Reflect commands follow `docs/workflow/reflection.md`. They write temporary
 candidate reports only, never durable knowledge or discovered repositories.

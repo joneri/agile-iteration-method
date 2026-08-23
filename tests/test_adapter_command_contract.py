@@ -144,6 +144,53 @@ class AdapterCommandContractTests(unittest.TestCase):
             with self.subTest(marker=marker):
                 self.assertIn(marker.lower(), combined.lower())
 
+    def test_portfolio_mandate_closes_and_advances_without_per_epic_user_stop(self) -> None:
+        runtime_surfaces = (
+            "docs/workflow/agile-iteration-method.md",
+            "docs/workflow/adapter-command-contract.md",
+            "docs/workflow/working-state-boundaries.md",
+            "adapters/portable/agile-iteration-method/SKILL.md",
+            "adapters/codex/agile-iteration-method/SKILL.md",
+            ".github/skills/aim/SKILL.md",
+            ".github/agents/aim.agent.md",
+            ".claude/skills/aim/SKILL.md",
+        )
+        for relative in runtime_surfaces:
+            content = " ".join(
+                (REPO_ROOT / relative).read_text(encoding="utf-8").split()
+            ).lower().replace("-", " ")
+            with self.subTest(surface=relative):
+                self.assertIn("gate e", content)
+                self.assertIn("epic closure", content)
+                self.assertIn("portfolio_mandate", content)
+                self.assertRegex(content, r"completes? the active candidate")
+                self.assertRegex(content, r"activates? the next snapshot candidate")
+                self.assertIn("without another user message", content)
+
+        contract = (REPO_ROOT / "docs/workflow/adapter-command-contract.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("Gate E accepts the Increment only", contract)
+        self.assertIn("requires the user", contract)
+        self.assertIn("no Gate E action envelope may itself", contract)
+        portable = (
+            REPO_ROOT / "adapters/portable/agile-iteration-method/SKILL.md"
+        ).read_text(encoding="utf-8")
+        self.assertNotIn("Final Epic acceptance always remains yours", portable)
+        self.assertIn("followed by a separate Epic continuation", portable)
+
+        for relative in (
+            ".github/prompts/start-aim.prompt.md",
+            ".claude/commands/start-aim.md",
+        ):
+            content = " ".join(
+                (REPO_ROOT / relative).read_text(encoding="utf-8").split()
+            ).lower().replace("-", " ")
+            with self.subTest(start_surface=relative):
+                self.assertIn("epic closure", content)
+                self.assertIn("activate the next snapshot candidate", content)
+                self.assertIn("without another user message", content)
+
     def test_start_surfaces_preserve_versioned_cost_selection(self) -> None:
         surfaces = (
             "adapters/portable/agile-iteration-method/SKILL.md",

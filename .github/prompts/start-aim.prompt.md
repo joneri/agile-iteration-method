@@ -42,6 +42,9 @@ Backlog snapshot and require one bounded user mandate. Then keep the main AIM
 thread as sole orchestrator, run one included Epic at a time through the full
 role/Gate loop, and checkpoint only through trusted
 `scripts/aim_portfolio_run.py`. Record delegated approvals with mandate
-provenance. Pause on scope expansion, unsafe effects, ambiguous evidence,
-failed validation, concurrency conflict, user stop/change, or malformed/stale
-state; `/aim continue` must revalidate before resuming.
+provenance. After review, validation, and Gate E, separately record mandate-
+authorized Epic closure, complete the active candidate, and activate the next
+snapshot candidate without another user message. Pause on scope expansion,
+unsafe effects, ambiguous evidence, failed validation, concurrency conflict,
+user stop/change, or malformed/stale state; `/aim continue` must revalidate
+before resuming. Gate E accepts the Increment only.
