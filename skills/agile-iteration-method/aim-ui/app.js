@@ -34,6 +34,14 @@ function formatTime(value) {
   }).format(date);
 }
 
+function formatHours(value) {
+  if (value === undefined || value === null) return "Unavailable";
+  if (value < 24) return `${value} h`;
+  const days = Math.floor(value / 24);
+  const hours = Math.round((value % 24) * 10) / 10;
+  return hours ? `${days} d ${hours} h` : `${days} d`;
+}
+
 function statusLabel(value) {
   return String(value || "unknown").replaceAll("_", " ");
 }
@@ -649,14 +657,122 @@ function renderClosed(board, epics) {
   }
 }
 
+function renderData(board) {
+  const data = board.deliveryData || {};
+  const epics = data.epics || {};
+  const throughput = data.throughput || {};
+  const elapsed = data.elapsed || {};
+  const ledger = $("data-ledger");
+  ledger.replaceChildren();
+  const entries = [
+    {
+      key: "Scope",
+      value: epics.total ?? "—",
+      label: "contained Epics",
+      note: `${epics.active ?? 0} active · ${epics.completed ?? 0} completed`,
+    },
+    {
+      key: "Done",
+      value: data.increments?.accepted ?? "—",
+      label: "accepted Increments",
+      note: "validated Gate E evidence",
+    },
+    {
+      key: "Pace",
+      value: `${throughput.last7Days ?? "—"} / ${throughput.last30Days ?? "—"}`,
+      label: "accepted in 7d / 30d",
+      note: `${throughput.timestampSample ?? 0} explicit timestamps`,
+    },
+    {
+      key: "Time",
+      value: formatHours(elapsed.medianHours),
+      label: "median Gate B → Gate E",
+      note: `${elapsed.sample ?? 0} measured · ${elapsed.excluded ?? 0} excluded`,
+    },
+  ];
+  entries.forEach((entry) => {
+    const item = el("article", "data-ledger-item");
+    item.append(
+      el("p", "data-ledger-key", entry.key),
+      el("p", "data-ledger-value", entry.value),
+      el("p", "data-ledger-label", entry.label),
+      el("p", "data-ledger-note", entry.note),
+    );
+    ledger.append(item);
+  });
+
+  $("data-as-of").textContent = `Evidence read ${formatTime(data.generatedAt || board.generatedAt)}`;
+  const history = $("data-history");
+  history.replaceChildren();
+  const items = data.history || [];
+  $("data-history-count").textContent = `${items.length} accepted`;
+  items.forEach((item) => {
+    const row = el("li", "data-history-row");
+    const time = el("time", "data-history-time", formatTime(item.acceptedAt));
+    if (item.acceptedAt) time.dateTime = item.acceptedAt;
+    const copy = el("div", "data-history-copy");
+    copy.append(
+      el("p", "data-history-id", `${item.id} · ${item.epicId}`),
+      el("h4", "", item.title),
+      el("p", "data-history-epic", item.epicTitle),
+    );
+    const facts = el("div", "data-history-facts");
+    const timestampLabels = {
+      recorded: "Recorded acceptance",
+      future_timestamp: "Future timestamp · excluded from metrics",
+      file_time_fallback: "File time fallback · excluded from metrics",
+    };
+    facts.append(
+      el(
+        "span",
+        item.timestampStatus === "recorded" ? "is-recorded" : "is-fallback",
+        timestampLabels[item.timestampStatus] || "Timestamp excluded from metrics",
+      ),
+      el("span", "", item.elapsedHours === null ? "Elapsed unavailable" : `${formatHours(item.elapsedHours)} elapsed`),
+    );
+    copy.append(facts);
+    if (item.evidencePath) {
+      const link = el("a", "data-evidence-link", "Open Gate E evidence");
+      link.href = `/api/evidence?path=${encodeURIComponent(item.evidencePath)}`;
+      link.target = "_blank";
+      link.rel = "noopener";
+      copy.append(link);
+    }
+    row.append(time, copy);
+    history.append(row);
+  });
+  if (items.length === 0) {
+    history.append(el("li", "data-history-empty", "No accepted Increment evidence is available yet."));
+  }
+
+  const definitions = $("data-definitions");
+  definitions.replaceChildren();
+  Object.entries(data.definitions || {}).forEach(([name, definition]) => {
+    const group = el("div");
+    group.append(el("dt", "", name), el("dd", "", definition));
+    definitions.append(group);
+  });
+  const quality = $("data-quality");
+  const exclusions = Math.max(throughput.excluded || 0, elapsed.excluded || 0);
+  const warningCount = board.warnings?.length || 0;
+  quality.dataset.status = warningCount || exclusions ? "partial" : "complete";
+  quality.textContent = warningCount
+    ? `${warningCount} runtime warning${warningCount === 1 ? "" : "s"} may limit this view. Valid evidence remains included.`
+    : exclusions
+      ? "Some time measures are unavailable because their Gate evidence has no explicit timestamp. Counts remain valid."
+      : "Every displayed time measure is backed by explicit Gate evidence.";
+}
+
 function renderView(board, epics) {
   const showingBoard = state.view === "board";
   const showingPortfolio = state.view === "portfolio";
+  const showingData = state.view === "data";
   const showingPeople = state.view === "people";
   const showingClosed = state.view === "closed";
   $("epic-rail").hidden = !showingPortfolio;
   $("portfolio-run-panel").hidden = !showingPortfolio || !board.portfolioRun?.configured;
   $("portfolio-control-panel").hidden = !showingPortfolio;
+  $("data-panel").hidden = !showingData;
   $("people-panel").hidden = !showingPeople;
   $("workflow-panel").hidden = !(showingBoard || showingClosed);
   $("workflow-title-group").hidden = showingClosed;
@@ -667,6 +783,7 @@ function renderView(board, epics) {
   });
   if (showingClosed) renderClosed(board, epics);
   if (showingBoard) renderKanban(board, epics);
+  if (showingData) renderData(board);
 }
 
 function renderNotices(board) {

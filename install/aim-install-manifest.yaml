@@ -1,5 +1,5 @@
 aimInstallManifest:
-  manifestVersion: "0.9"
+  manifestVersion: "1.0"
   status: one-adaptive-install
 
   canonicalCommand: "python3 scripts/aim_install.py"

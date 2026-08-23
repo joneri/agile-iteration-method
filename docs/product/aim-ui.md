@@ -201,6 +201,8 @@ run without losing completed work.
 - Delivery flow, selected by default, with stationary rows only for running and
   planned Epics; completed Epics leave this active board
 - Portfolio, with active Epic, workspace, increment, and attention totals; chat-owned capacity; and one summary panel per Epic
+- AIM DATA, with auditable delivery counts, throughput, elapsed delivery time,
+  and evidence-linked accepted history
 - People and agents, with each Epic's current canonical role and bounded helper-agent activity
 - Closed Increments, with complete accepted history grouped by Epic
 - proposed candidates summarized on stationary Epic cards without invented
@@ -217,6 +219,31 @@ the browser presents. Delivery-flow filters omit completed Epics; switching
 from another view resets a selection that is not valid on the active board.
 Completed outcomes and their accepted Increments remain available through
 Closed Increments and the broader Portfolio view.
+
+## How AIM DATA measures delivery
+
+AIM DATA is a read-only projection of the same contained workspaces already
+validated by the control room. It does not add telemetry or a second analytics
+store.
+
+- Epic totals include valid canonical workspaces and distinguish running from
+  completed Epics. Planned Backlog-only Epics are not counted as runtime work.
+- Accepted Increment totals require validated Gate E acceptance evidence.
+- Seven- and thirty-day throughput count only accepted Increments whose Gate E
+  evidence contains an explicit timezone-aware `Accepted at` timestamp. The
+  windows use the read model's UTC generation time.
+- Elapsed delivery time is the median duration from the earliest explicit Gate
+  B `Approved at` or `Timestamp` evidence to explicit Gate E acceptance.
+- Accepted history remains visible when legacy evidence needs a file-time
+  fallback, but that fallback is labeled and excluded from throughput and
+  elapsed calculations.
+- Every history row links to its contained Gate E evidence. Missing, malformed,
+  contradictory, duplicate, or escaped evidence is isolated through the
+  existing partial-health boundary rather than converted into a number.
+
+The dashboard reports sample and exclusion counts next to time measures. When
+no trustworthy sample exists, it says the measure is unavailable instead of
+showing zero.
 
 ## Why cards move in Auto mode
 
@@ -356,4 +383,5 @@ Every workspace has one canonical active Epic, while the UI can observe several
 workspaces and planning candidates at once. The planning backlog is not a
 scheduler and does not approve an Increment. Writable browser controls, shared
 multi-writer state, autonomous agent spawning, remote aggregation, accounts,
-and AIM DATA analytics remain outside this version.
+production telemetry, and cross-repository analytics remain outside this
+version.

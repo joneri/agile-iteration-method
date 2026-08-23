@@ -430,7 +430,8 @@ planning metadata on stationary Epics until a separate explicit Activate intent;
 they never masquerade as runtime Increment cards.
 
 `/aim start "PORTFOLIO" mode:auto` snapshots the valid ordered AIM UI Backlog,
-previews it, and requires one explicit user mandate. Resolve the trusted
+excluding candidates that already carry a `runtimeIncrementId`, previews it,
+and requires one explicit user mandate. Resolve the trusted
 package-owned `scripts/aim_portfolio_run.py` through the same payload precedence
 as AIM UI. It may atomically checkpoint only `.aim/portfolio-run.json`; it never
 performs reasoning, agent work, Gate approval, or canonical Epic mutation. The
@@ -441,6 +442,10 @@ revalidates snapshot hash, checkpoint, active workspace, and admission before
 resuming. Scope expansion, unsafe effects, ambiguous evidence, irreparable
 validation, concurrency conflicts, user change/stop intents, and malformed or
 stale run state pause or fail closed. Later Backlog additions are excluded.
+A validated completed or stopped run may be moved unchanged into contained
+`.aim/archive/` only through the helper's explicit, timestamp-guarded `archive`
+command. Running, paused, stale, malformed, symlinked, or colliding state blocks
+archival, and Portfolio start never archives implicitly.
 
 Portfolio activation, capacity, focus, and status intents follow
 `references/adapter-command-contract.md`. Only the main AIM thread may write

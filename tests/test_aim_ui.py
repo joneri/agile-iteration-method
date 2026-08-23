@@ -8,6 +8,7 @@ import tempfile
 import threading
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -486,10 +487,13 @@ class AimUiTests(unittest.TestCase):
 
         self.assertIn('data-view="board" aria-pressed="true">Delivery flow', markup)
         self.assertIn('data-view="portfolio" aria-pressed="false">Portfolio', markup)
+        self.assertIn('data-view="data" aria-pressed="false">AIM DATA', markup)
         self.assertIn('data-view="people" aria-pressed="false">People &amp; agents', markup)
         self.assertIn('id="epic-rail" hidden', markup)
+        self.assertIn('id="data-panel" aria-labelledby="data-title" hidden', markup)
         self.assertIn('id="people-panel" aria-labelledby="people-title" hidden', markup)
         self.assertIn('view: "board"', script)
+        self.assertIn("renderData(board)", script)
         self.assertNotIn("board-view-button", script)
         self.assertNotIn("closed-view-button", script)
         self.assertIn("[hidden] { display: none !important; }", styles)
@@ -631,6 +635,92 @@ class AimUiTests(unittest.TestCase):
             if item["column"] == "done" and item["visibleOnBoard"]
         ]
         self.assertEqual(set(visible_done), {"DI-003", "DI-004", "DI-005"})
+
+    def test_delivery_data_uses_explicit_evidence_and_labels_fallbacks(self) -> None:
+        runtime = state("gate_b_pending")
+        runtime.update({"activeIncrementId": "DI-003", "currentRole": "TDO"})
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/002-wip.md").write_text(
+                "# DI-002 — Accepted without a start\n\nEpic: EPIC-TEST-001\n",
+                encoding="utf-8",
+            )
+            (aim / "increments/003-wip.md").write_text(
+                "# DI-003 — Next work\n\nEpic: EPIC-TEST-001\n",
+                encoding="utf-8",
+            )
+            (aim / "decisions/001-gate-b.md").write_text(
+                "# Gate B\n\nApproved at: 2026-08-10T12:00:00Z\n",
+                encoding="utf-8",
+            )
+            (aim / "decisions/001-gate-e.md").write_text(
+                "# Gate E — Accepted\n\nAccepted at: 2026-08-11T12:00:00Z\n",
+                encoding="utf-8",
+            )
+            (aim / "decisions/002-gate-e.md").write_text(
+                "# Gate E — Accepted\n\nAccepted at: 2026-08-20T12:00:00Z\n",
+                encoding="utf-8",
+            )
+            with patch("aim_ui.utc_now", return_value="2026-08-23T12:00:00Z"):
+                board = build_board(repo)
+
+        data = board["deliveryData"]
+        self.assertEqual(data["epics"], {"total": 1, "active": 1, "completed": 0})
+        self.assertEqual(data["increments"]["accepted"], 2)
+        self.assertEqual(data["throughput"]["last7Days"], 1)
+        self.assertEqual(data["throughput"]["last30Days"], 2)
+        self.assertEqual(data["elapsed"]["medianHours"], 24.0)
+        self.assertEqual(data["elapsed"]["sample"], 1)
+        self.assertEqual(data["elapsed"]["excluded"], 1)
+        self.assertEqual([item["id"] for item in data["history"]], ["DI-002", "DI-001"])
+        self.assertTrue(data["history"][0]["evidencePath"].endswith("002-gate-e.md"))
+
+    def test_delivery_data_excludes_file_time_fallback_from_metrics(self) -> None:
+        runtime = state("gate_b_pending")
+        runtime.update({"activeIncrementId": "DI-002", "currentRole": "TDO"})
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/002-wip.md").write_text(
+                "# DI-002 — Next work\n\nEpic: EPIC-TEST-001\n", encoding="utf-8"
+            )
+            (aim / "decisions/001-gate-e.md").write_text(
+                "# DI-001 Gate E — Accepted\n", encoding="utf-8"
+            )
+            with patch("aim_ui.utc_now", return_value="2026-08-23T12:00:00Z"):
+                board = build_board(repo)
+
+        data = board["deliveryData"]
+        self.assertEqual(data["throughput"]["last30Days"], 0)
+        self.assertEqual(data["throughput"]["excluded"], 1)
+        self.assertEqual(data["history"][0]["timestampStatus"], "file_time_fallback")
+
+    def test_delivery_data_labels_and_excludes_future_acceptance(self) -> None:
+        runtime = state("gate_b_pending")
+        runtime.update({"activeIncrementId": "DI-002", "currentRole": "TDO"})
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/002-wip.md").write_text(
+                "# DI-002 — Next work\n\nEpic: EPIC-TEST-001\n", encoding="utf-8"
+            )
+            (aim / "decisions/001-gate-b.md").write_text(
+                "# Gate B\n\nApproved at: 2026-08-22T12:00:00Z\n", encoding="utf-8"
+            )
+            (aim / "decisions/001-gate-e.md").write_text(
+                "# Gate E — Accepted\n\nAccepted at: 2026-08-24T12:00:00Z\n",
+                encoding="utf-8",
+            )
+            with patch("aim_ui.utc_now", return_value="2026-08-23T12:00:00Z"):
+                board = build_board(repo)
+
+        data = board["deliveryData"]
+        self.assertEqual(data["throughput"]["last30Days"], 0)
+        self.assertEqual(data["throughput"]["timestampSample"], 0)
+        self.assertEqual(data["throughput"]["excluded"], 1)
+        self.assertEqual(data["elapsed"]["sample"], 0)
+        self.assertEqual(data["history"][0]["timestampStatus"], "future_timestamp")
 
     def test_completed_epic_projects_state_linked_previous_increment_into_done(self) -> None:
         runtime = state("epic_complete")
@@ -781,7 +871,7 @@ class AimUiTests(unittest.TestCase):
     def test_read_model_links_increment_to_epic_collection(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             board = build_board(self._repo(Path(temporary)))
-        self.assertEqual(board["readModelVersion"], "5.0")
+        self.assertEqual(board["readModelVersion"], "6.0")
         self.assertEqual(board["source"]["kind"], "single-workspace")
         self.assertTrue(board["source"]["readOnly"])
         self.assertEqual(len(board["epics"]), 1)

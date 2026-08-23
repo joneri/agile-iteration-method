@@ -1,6 +1,6 @@
 # AIM feature guide
 
-This is the short map of what AIM 2.6 does. Follow the links only when you need
+This is the short map of what AIM 2.7 does. Follow the links only when you need
 the operating detail.
 
 ## Delivery loop

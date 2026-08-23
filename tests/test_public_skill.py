@@ -265,7 +265,7 @@ class PublicSkillTests(unittest.TestCase):
             Path("references/install/aim-install-manifest.yaml")
         ].decode("utf-8")
         parsed = load_yaml(payload)["aimInstallManifest"]
-        self.assertEqual(parsed["manifestVersion"], "0.9")
+        self.assertEqual(parsed["manifestVersion"], "1.0")
         self.assertEqual(set(parsed["adapters"]), {"codex", "copilot", "claude"})
         self.assertEqual(
             parsed["canonicalCommand"],

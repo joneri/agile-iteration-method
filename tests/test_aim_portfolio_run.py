@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +17,7 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 from aim_portfolio_run import (  # noqa: E402
     PortfolioRunError,
     activate_next,
+    archive_run,
     checkpoint,
     complete_active,
     create_run,
@@ -62,6 +65,24 @@ class PortfolioRunTests(unittest.TestCase):
             encoding="utf-8",
         )
         return root
+
+    def _complete_run(self, repo: Path) -> dict[str, Any]:
+        run = create_run(repo, "MANDATE-COMPLETE", "t1", "t1")
+        for candidate_id, stamp in (("INC-FIRST", 2), ("INC-SECOND", 5)):
+            run = activate_next(repo, run["updatedAt"], f"t{stamp}")
+            run = checkpoint(
+                repo,
+                run["updatedAt"],
+                f"t{stamp + 1}",
+                candidate_id,
+                "epic_complete",
+                "Epic closure",
+                "portfolio_mandate",
+            )
+            run = complete_active(
+                repo, run["updatedAt"], f"t{stamp + 2}", candidate_id
+            )
+        return run
 
     def test_schema_is_supported(self) -> None:
         schema = json.loads(
@@ -141,6 +162,167 @@ class PortfolioRunTests(unittest.TestCase):
             self.assertEqual(run["status"], "running")
             self.assertEqual(run["checkpoint"], checkpoint_before)
             self.assertNotIn("pauseReason", run)
+
+    def test_snapshot_matches_visible_unactivated_backlog(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            path = repo / ".aim/portfolio-backlog.json"
+            backlog = json.loads(path.read_text(encoding="utf-8"))
+            for index in range(3, 13):
+                backlog["items"].append(
+                    {
+                        "id": f"INC-{index:02d}",
+                        "epicId": f"EPIC-{index:02d}",
+                        "epicTitle": f"Epic {index}",
+                        "title": f"Deliver {index}",
+                        "priority": index,
+                        "createdAt": f"2026-08-22T10:{index:02d}:00Z",
+                        **({"runtimeIncrementId": f"DI-{index:03d}"} if index <= 6 else {}),
+                    }
+                )
+            backlog["items"][0]["runtimeIncrementId"] = "DI-001"
+            backlog["items"][1]["runtimeIncrementId"] = "DI-002"
+            path.write_text(json.dumps(backlog), encoding="utf-8")
+
+            run = create_run(repo, "MANDATE-VISIBLE", "t1", "t1")
+
+            self.assertEqual(
+                [item["candidateId"] for item in run["snapshot"]],
+                ["INC-07", "INC-08", "INC-09", "INC-10", "INC-11", "INC-12"],
+            )
+
+    def test_invalid_or_fully_activated_backlog_creates_no_run(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            path = repo / ".aim/portfolio-backlog.json"
+            backlog = json.loads(path.read_text(encoding="utf-8"))
+            backlog["items"][0]["runtimeIncrementId"] = "not-a-di"
+            path.write_text(json.dumps(backlog), encoding="utf-8")
+            with self.assertRaisesRegex(PortfolioRunError, "runtimeIncrementId"):
+                create_run(repo, "MANDATE-INVALID", "t1", "t1")
+            self.assertFalse((repo / ".aim/portfolio-run.json").exists())
+
+            backlog["items"][0]["runtimeIncrementId"] = "DI-001"
+            backlog["items"][1]["runtimeIncrementId"] = "DI-002"
+            path.write_text(json.dumps(backlog), encoding="utf-8")
+            with self.assertRaisesRegex(PortfolioRunError, "no unactivated candidates"):
+                create_run(repo, "MANDATE-EMPTY", "t1", "t1")
+            self.assertFalse((repo / ".aim/portfolio-run.json").exists())
+
+    def test_completed_run_archives_exactly_and_allows_fresh_start(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            run = self._complete_run(repo)
+            run_path = repo / ".aim/portfolio-run.json"
+            original = run_path.read_bytes()
+
+            archived, archived_path = archive_run(repo, run["updatedAt"], "t9")
+
+            self.assertEqual(archived, run)
+            self.assertFalse(run_path.exists())
+            self.assertEqual((repo / archived_path).read_bytes(), original)
+
+            backlog_path = repo / ".aim/portfolio-backlog.json"
+            backlog = json.loads(backlog_path.read_text(encoding="utf-8"))
+            backlog["items"][0]["runtimeIncrementId"] = "DI-001"
+            backlog["items"][1]["runtimeIncrementId"] = "DI-002"
+            backlog["items"].append(
+                {
+                    "id": "INC-THIRD",
+                    "epicId": "EPIC-THIRD",
+                    "epicTitle": "Third Epic",
+                    "title": "Finish third",
+                    "priority": 3,
+                    "createdAt": "2026-08-22T10:09:00Z",
+                }
+            )
+            backlog_path.write_text(json.dumps(backlog), encoding="utf-8")
+            fresh = create_run(repo, "MANDATE-FRESH", "t10", "t10")
+            self.assertEqual(
+                [item["candidateId"] for item in fresh["snapshot"]], ["INC-THIRD"]
+            )
+
+    def test_archive_rejects_nonterminal_stale_symlink_and_collision(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            run = create_run(repo, "MANDATE-RUNNING", "t1", "t1")
+            with self.assertRaisesRegex(PortfolioRunError, "completed or stopped"):
+                archive_run(repo, run["updatedAt"], "t2")
+            self.assertTrue((repo / ".aim/portfolio-run.json").exists())
+
+            run = pause_run(repo, run["updatedAt"], "t2", "Operator paused")
+            with self.assertRaisesRegex(PortfolioRunError, "completed or stopped"):
+                archive_run(repo, run["updatedAt"], "t3")
+            self.assertTrue((repo / ".aim/portfolio-run.json").exists())
+
+            run = resume_run(repo, run["updatedAt"], "t3")
+            run = stop_run(repo, run["updatedAt"], "t4", "Operator stopped")
+            with self.assertRaisesRegex(PortfolioRunError, "changed since it was read"):
+                archive_run(repo, "stale", "t5")
+            self.assertTrue((repo / ".aim/portfolio-run.json").exists())
+
+            archive_root = repo / ".aim/archive"
+            outside = repo / "outside"
+            outside.mkdir()
+            archive_root.symlink_to(outside, target_is_directory=True)
+            with self.assertRaisesRegex(PortfolioRunError, "symbolic link"):
+                archive_run(repo, run["updatedAt"], "t5")
+            self.assertTrue((repo / ".aim/portfolio-run.json").exists())
+            archive_root.unlink()
+
+            _, archived_path = archive_run(repo, run["updatedAt"], "t5")
+            self.assertTrue(archived_path.startswith(".aim/archive/"))
+            (repo / ".aim/portfolio-run.json").write_bytes(
+                (repo / archived_path).read_bytes()
+            )
+            with self.assertRaisesRegex(PortfolioRunError, "already exists"):
+                archive_run(repo, run["updatedAt"], "t5")
+            self.assertTrue((repo / ".aim/portfolio-run.json").exists())
+
+    def test_archive_rejects_malformed_run_without_mutation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            create_run(repo, "MANDATE-MALFORMED", "t1", "t1")
+            path = repo / ".aim/portfolio-run.json"
+            value = json.loads(path.read_text(encoding="utf-8"))
+            value["status"] = {"unexpected": True}
+            path.write_text(json.dumps(value), encoding="utf-8")
+            before = path.read_bytes()
+
+            with self.assertRaisesRegex(PortfolioRunError, "Invalid Portfolio run"):
+                archive_run(repo, "t1", "t2")
+
+            self.assertEqual(path.read_bytes(), before)
+            self.assertFalse((repo / ".aim/archive").exists())
+
+    def test_archive_cli_reports_the_contained_evidence_path(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            run = self._complete_run(repo)
+
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(REPO_ROOT / "scripts/aim_portfolio_run.py"),
+                    "--repo",
+                    str(repo),
+                    "archive",
+                    "--expected-updated-at",
+                    run["updatedAt"],
+                    "--archived-at",
+                    "t9",
+                ],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+            self.assertEqual(completed.returncode, 0, completed.stdout)
+            payload = json.loads(completed.stdout)
+            self.assertTrue(payload["ok"])
+            self.assertTrue(payload["archivedPath"].startswith(".aim/archive/"))
+            self.assertTrue((repo / payload["archivedPath"]).is_file())
+            self.assertFalse((repo / ".aim/portfolio-run.json").exists())
 
     def test_stale_and_tampered_state_fail_closed_without_mutation(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

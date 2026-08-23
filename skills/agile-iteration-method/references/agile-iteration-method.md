@@ -578,7 +578,8 @@ In Auto mode:
 
 Portfolio Auto is a bounded specialization selected with `/aim start
 "PORTFOLIO" mode:auto`. It previews one immutable ordered AIM UI Backlog
-snapshot and requires one explicit user mandate. Within that mandate, the main
+snapshot containing only candidates without runtime Increment links and
+requires one explicit user mandate. Within that mandate, the main
 AIM thread may record Gate and Epic-closure decisions as `auto-approved by
 portfolio mandate` and continue sequentially through included Epics. Every Epic
 still runs the complete canonical role loop in its own authoritative workspace.
@@ -586,6 +587,13 @@ The mandate never authorizes scope expansion, later Backlog additions, unsafe
 effects, or completion without review and validation. Those conditions pause
 at a durable checkpoint for the user. `/aim continue` resumes only after the
 snapshot, checkpoint, workspace, and admission state are revalidated.
+
+A terminal `completed` or `stopped` Portfolio run may be archived only through
+an explicit helper transition that matches its observed timestamp. The exact
+validated run moves to a collision-safe contained `.aim/archive/` evidence
+path, after which a new user mandate may create a new canonical run. Active,
+paused, stale, malformed, symlinked, and colliding runs remain fail-closed;
+Portfolio start never archives automatically.
 
 ## Cost profiles
 

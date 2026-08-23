@@ -3,7 +3,7 @@
 # Data-only contract projection. The portable skill never executes this manifest.
 
 aimInstallManifest:
-  manifestVersion: "0.9"
+  manifestVersion: "1.0"
   status: one-adaptive-install
 
   canonicalCommand: "source-only adaptive installer; not executable from the portable package"

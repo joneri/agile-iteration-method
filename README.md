@@ -1,4 +1,4 @@
-# Agile Iteration Method (AIM) 2.6
+# Agile Iteration Method (AIM) 2.7
 
 ![AIM 2 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
@@ -130,35 +130,33 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.6.1
+## What is new in v2.7.0
 
-### Plan several Epics directly from chat
+### Put a bounded portfolio in motion
 
-Use `/aim to-backlog` to paste several Epic descriptions, or `/aim to-backlog from <source>` to name one repository-contained file or an available attachment. AIM preserves explicit Increments, derives one initial candidate when an Epic has none, and opens AIM UI with every imported card planned and inactive in Backlog.
+`/aim start "PORTFOLIO" mode:auto` locks the valid, unactivated candidates
+visible in AIM UI and runs them sequentially under one bounded mandate.
+Runtime-linked candidates cannot be replayed. Completed or stopped runs can be
+archived explicitly; unsafe or stale state remains fail-closed.
 
-The import is bounded, deterministic, and atomic. Source content remains untrusted evidence, and the command cannot activate work, pass Gates, change roles, or start agents.
+### See delivery outcomes, not just movement
 
-### AIM UI is a first-class chat surface
+AIM DATA summarizes Epic outcomes, accepted Increments, throughput, median
+delivery time, and evidence-linked history. Invalid or incomplete evidence is
+shown and excluded rather than turned into a fabricated metric.
 
-AIM UI makes the delivery process visible without weakening it. Start or reopen the current repository directly from the authoritative AIM chat with `/aim ui`. Use `/aim ui start /path/to/repo`, `/aim ui status`, and `/aim ui stop` when you need explicit lifecycle control—including for a repository that has not initialized AIM yet.
+### Work from an honest Epic-spine board
 
-The public Agent Skill now bundles the same executable launcher, server, and web UI as adaptive installations. The launcher keeps one verified loopback instance per repository, handles concurrent starts and stale metadata safely, and leaves AIM state ownership in chat. Multiple Epics and their Increments still share one calm Kanban with visible roles, Gates, evidence, and decisions.
+AIM UI groups work around stationary Epic swimlanes. Delivery shows open work,
+planned Epics start through chat-owned actions, completed outcomes remain in
+history, and polling preserves stable cards, focus, filters, and reduced motion.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
-See the [AIM UI Beta guide](docs/product/aim-ui.md) or launch it from AIM chat with `/aim ui`.
-
-### AIM Reflect: go beyond memory cleanup
-
-Agent-memory systems such as [Anthropic Dreams](https://platform.claude.com/docs/en/managed-agents/dreams) reorganize accumulated memories and session history. AIM Reflect brings the useful consolidation idea into evidence-controlled software delivery:
-
-- `/aim reflect` and `/aim reflect-all` find verified project, cross-project, personal, and AIM-product knowledge
-- every candidate carries provenance, confidence, contradictions, destination, disposition, and one recommended action or an explicit no-action result
-- reports stay temporary and read-only; multi-project discovery previews scope before analysis, and durable promotion remains user-owned
-
-Dreams consolidates memory. **AIM Reflect goes beyond memory cleanup for repository work** by asking every proposed lesson to show where it came from, whether it is still true, where it belongs, and who approved keeping it.
-
-The AIM runtime contract remains 2.0. Product release, runtime contract, installer manifest, and profile schema versions are tracked separately.
+See the [AIM UI Beta guide](docs/product/aim-ui.md), or launch it with `/aim ui`.
+AIM Reflect still **goes beyond memory cleanup for repository work** through
+verified provenance and user-owned promotion. The AIM runtime contract remains
+2.0; product, runtime, installer, and schema versions stay separate.
 
 ## Safety
 
@@ -175,6 +173,6 @@ The AIM runtime contract remains 2.0. Product release, runtime contract, install
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v2.6.1**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.7.0**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

@@ -1,5 +1,47 @@
 # Changelog
 
+## 2026-08-23 - AIM 2 minor release v2.7.0
+- Added Portfolio Auto as a bounded whole-Backlog route: one explicit mandate
+  locks an immutable ordered snapshot and coordinates each included Epic
+  sequentially through the complete PO/TDO/Dev/Reviewer/TDO/PO loop.
+- Aligned Portfolio Auto with the visible AIM UI Backlog by excluding candidates
+  that already carry `runtimeIncrementId`, preventing previously activated work
+  from being replayed by a later mandate.
+- Added an explicit timestamp-guarded `archive` command for validated completed
+  or stopped Portfolio runs. Archived evidence remains byte-for-byte contained
+  under `.aim/archive/`; active, paused, stale, malformed, symlinked, and
+  colliding requests fail without mutation.
+- Reshaped AIM UI around stationary Epic swimlanes, open-work-only Delivery,
+  safe `Start Epic` actions, stable polling and filters, and dedicated completed
+  history without moving Gate or runtime authority into the browser.
+- Added AIM DATA delivery outcomes: contained Epic and accepted-Increment
+  counts, trailing 7/30-day throughput, median Gate B-to-Gate E elapsed time,
+  and deterministic evidence-linked acceptance history.
+- Made delivery metrics fail closed around missing, malformed, contradictory,
+  fallback, future, duplicate, and escaped evidence while preserving valid
+  totals and accessible desktop/mobile presentation.
+- Published the Portfolio Auto demonstration through the release-facing Pages
+  artifact and synchronized canonical, adaptive, and public Agent Skill
+  distributions.
+
+Compatibility: AIM runtime contract remains `2.0` and runtime-state schema
+remains `1.0`. The installer manifest advances from `0.9` to `1.0` for the
+Portfolio-run helper and bounded chat-owned checkpoint writes. Public skill
+package format advances from `6` to `7` because the package gains the Portfolio
+run helper and schema. Existing canonical Epic workspaces require no migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`. Adaptive installations can
+rerun the reviewed preview/apply installer flow. Before starting a new
+Portfolio mandate where `.aim/portfolio-run.json` is already terminal, use the
+trusted helper's explicit `archive` command with the observed `updatedAt`.
+
+Known limitations: Portfolio Auto remains sequential and chat-owned; it does
+not authorize later Backlog additions, unsafe or external effects, browser
+writes, or silent scope expansion. AIM DATA reads local contained evidence and
+does not provide product telemetry, remote analytics, cross-repository
+aggregation, or pre-release-versus-production baseline comparison.
+
 ## 2026-08-22 - AIM 2 patch release v2.6.1
 - Added `/aim to-backlog` as a first-class cross-adapter planning command for
   turning pasted Epic descriptions or one explicitly named source into

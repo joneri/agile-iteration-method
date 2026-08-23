@@ -42,6 +42,7 @@ Source: aim-ui/index.html
       <nav class="section-tabs" aria-label="AIM control room views">
         <button class="section-tab" type="button" data-view="board" aria-pressed="true">Delivery flow</button>
         <button class="section-tab" type="button" data-view="portfolio" aria-pressed="false">Portfolio</button>
+        <button class="section-tab" type="button" data-view="data" aria-pressed="false">AIM DATA</button>
         <button class="section-tab" type="button" data-view="people" aria-pressed="false">People &amp; agents</button>
         <button class="section-tab" type="button" data-view="closed" aria-pressed="false">Closed Increments <span id="closed-count">0</span></button>
       </nav>
@@ -80,6 +81,36 @@ Source: aim-ui/index.html
         <div class="control-state">
           <span class="control-status" id="portfolio-control-status"></span>
           <p id="portfolio-control-guidance"></p>
+        </div>
+      </section>
+
+      <section class="data-panel" id="data-panel" aria-labelledby="data-title" hidden>
+        <header class="data-heading">
+          <div>
+            <p class="eyebrow">AIM DATA · evidence ledger</p>
+            <h2 id="data-title">Delivery outcomes, with receipts</h2>
+            <p>Counts use contained AIM workspaces. Time measures use explicit Gate evidence only.</p>
+          </div>
+          <p class="data-as-of" id="data-as-of"></p>
+        </header>
+        <div class="data-ledger" id="data-ledger" aria-label="Delivery outcome summary"></div>
+        <div class="data-body">
+          <section class="data-history-panel" aria-labelledby="data-history-title">
+            <div class="data-section-heading">
+              <div>
+                <p class="eyebrow">Acceptance timeline</p>
+                <h3 id="data-history-title">Evidence through time</h3>
+              </div>
+              <span class="data-sample" id="data-history-count"></span>
+            </div>
+            <ol class="data-history" id="data-history"></ol>
+          </section>
+          <aside class="data-method" aria-labelledby="data-method-title">
+            <p class="eyebrow">Measurement rules</p>
+            <h3 id="data-method-title">What each number means</h3>
+            <dl id="data-definitions"></dl>
+            <p class="data-quality" id="data-quality" role="status"></p>
+          </aside>
         </div>
       </section>
 

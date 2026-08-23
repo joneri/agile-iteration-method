@@ -376,6 +376,14 @@ A stale expected timestamp, changed snapshot, malformed field, symlink,
 duplicate identity, invalid transition, or contradictory active candidate fails
 closed without mutating existing Backlog or Epic state.
 
+The snapshot contains only valid Backlog candidates without
+`runtimeIncrementId`, matching AIM UI's visible planned work. A validated
+terminal run may move unchanged into `.aim/archive/` only through the helper's
+explicit timestamp-guarded archive transition. This frees the single canonical
+run location for a new mandate without deleting trace evidence or replaying
+already activated candidates. Active or paused state, stale observations,
+malformed files, symlink paths, and destination collisions block archival.
+
 ## UI action handoff boundary
 
 A card action is an operator proposal, not a state transition. AIM UI may derive

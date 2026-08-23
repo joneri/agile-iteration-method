@@ -116,8 +116,11 @@ no moving Increment card. TDO creates canonical `DI-*` authority at Gate B.
 ## Portfolio Auto start and resume
 
 `/aim start "PORTFOLIO" mode:auto` is the first-class whole-Backlog route. AIM
-sorts the current valid `INC-*` candidates by priority, creation time, and id,
-previews that immutable snapshot, and asks for one explicit Portfolio mandate.
+selects the current valid `INC-*` candidates without a `runtimeIncrementId`,
+sorts them by priority, creation time, and id, previews that immutable snapshot,
+and asks for one explicit Portfolio mandate. This is the same planned-candidate
+set AIM UI shows; a retained Backlog item with runtime authority is history, not
+new work that a later mandate may replay.
 The mandate names its snapshot and safety boundary. It is not blanket approval
 for later cards, materially changed outcomes, destructive or external effects,
 or work outside repository policy.
@@ -144,6 +147,14 @@ restore, unsafe or unauthorized effects, repository/capacity/concurrency
 conflicts, or Pause/Stop/Change/Replan intent. Malformed, symlinked, stale, or
 hash-mismatched run state fails closed. AIM UI projects progress and approval
 provenance read-only; it never drives the loop.
+
+One canonical `.aim/portfolio-run.json` may exist at a time. Before a new
+Portfolio mandate is created, an operator may explicitly run the trusted helper
+`archive --expected-updated-at <observed> --archived-at <now>` for a validated
+`completed` or `stopped` run. The helper moves the exact run into a
+collision-safe contained `.aim/archive/` path. Running, paused, malformed,
+symlinked, stale, or colliding state is not archived. Start never archives
+implicitly, and archived evidence never grants authority to a later run.
 
 ## Portfolio-control chat intents
 

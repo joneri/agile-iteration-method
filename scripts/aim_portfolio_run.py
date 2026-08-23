@@ -19,6 +19,7 @@ from typing import Any
 
 RUN_FILE = "portfolio-run.json"
 BACKLOG_FILE = "portfolio-backlog.json"
+ARCHIVE_DIR = "archive"
 RUN_VERSION = "1.0"
 MAX_RUN_BYTES = 1_000_000
 RUN_STATUSES = {"running", "paused", "completed", "stopped"}
@@ -90,7 +91,18 @@ def _snapshot(backlog: dict[str, Any]) -> list[dict[str, Any]]:
         priority = raw["priority"]
         if not isinstance(priority, int) or isinstance(priority, bool) or priority < 1:
             raise PortfolioRunError(f"Backlog item {index + 1} has invalid priority.")
+        runtime_increment_id = raw.get("runtimeIncrementId")
+        if runtime_increment_id is not None and (
+            not isinstance(runtime_increment_id, str)
+            or len(runtime_increment_id) > 32
+            or re.fullmatch(r"DI-[0-9]+", runtime_increment_id) is None
+        ):
+            raise PortfolioRunError(
+                f"Backlog item {index + 1} has an invalid runtimeIncrementId."
+            )
         seen.add(candidate_id)
+        if runtime_increment_id is not None:
+            continue
         result.append({
             "candidateId": candidate_id,
             "epicId": values["epicId"].strip(),
@@ -100,7 +112,9 @@ def _snapshot(backlog: dict[str, Any]) -> list[dict[str, Any]]:
             "createdAt": values["createdAt"].strip(),
         })
     if not result:
-        raise PortfolioRunError("The Backlog contains no candidates to snapshot.")
+        raise PortfolioRunError(
+            "The Backlog contains no unactivated candidates to snapshot."
+        )
     return sorted(result, key=lambda item: (item["priority"], item["createdAt"], item["candidateId"]))
 
 
@@ -280,6 +294,53 @@ def load_run(repo_root: Path) -> dict[str, Any]:
     return value
 
 
+def _archive_destination(
+    aim_root: Path, value: dict[str, Any], archived_at: str
+) -> Path:
+    digest = hashlib.sha256(
+        f"{value['runId']}\0{value['updatedAt']}\0{archived_at}".encode("utf-8")
+    ).hexdigest()[:12]
+    return aim_root / ARCHIVE_DIR / f"portfolio-run-{value['runId']}-{digest}.json"
+
+
+def archive_run(
+    repo_root: Path, expected_updated_at: str, archived_at: str
+) -> tuple[dict[str, Any], str]:
+    """Move one validated terminal run into contained immutable trace history."""
+
+    aim_root = _inside_aim(repo_root)
+    path = aim_root / RUN_FILE
+    value = _read_object(path)
+    issues = validate_run(value)
+    if issues:
+        raise PortfolioRunError("Invalid Portfolio run: " + "; ".join(issues))
+    if value["updatedAt"] != expected_updated_at:
+        raise PortfolioRunError(
+            "Portfolio run changed since it was read; reload before archiving."
+        )
+    if value["status"] not in {"completed", "stopped"}:
+        raise PortfolioRunError(
+            "Only a completed or stopped Portfolio run can be archived."
+        )
+    if not isinstance(archived_at, str) or not 1 <= len(archived_at.strip()) <= 64:
+        raise PortfolioRunError("archived-at must be a non-empty bounded timestamp.")
+
+    archive_root = aim_root / ARCHIVE_DIR
+    if archive_root.is_symlink():
+        raise PortfolioRunError(f"{ARCHIVE_DIR} must not be a symbolic link.")
+    if archive_root.exists() and not archive_root.is_dir():
+        raise PortfolioRunError(f"{ARCHIVE_DIR} must be a directory.")
+    archive_root.mkdir(mode=0o700, exist_ok=True)
+    destination = _archive_destination(aim_root, value, archived_at.strip())
+    if destination.exists() or destination.is_symlink():
+        raise PortfolioRunError(
+            f"Archive destination {destination.name} already exists; nothing was changed."
+        )
+
+    os.rename(path, destination)
+    return value, destination.relative_to(repo_root.resolve()).as_posix()
+
+
 def _mutate(repo_root: Path, expected_updated_at: str, updated_at: str, change: Any) -> dict[str, Any]:
     aim_root = _inside_aim(repo_root)
     path = aim_root / RUN_FILE
@@ -437,6 +498,9 @@ def _parser() -> argparse.ArgumentParser:
     start.add_argument("--mandate-id", required=True)
     start.add_argument("--approved-at", required=True)
     start.add_argument("--updated-at", required=True)
+    archive = commands.add_parser("archive")
+    archive.add_argument("--expected-updated-at", required=True)
+    archive.add_argument("--archived-at", required=True)
     for name in ("activate-next", "complete", "skip", "pause", "resume", "stop"):
         command = commands.add_parser(name)
         command.add_argument("--expected-updated-at", required=True)
@@ -453,8 +517,10 @@ def _parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = _parser().parse_args()
+    archived_path: str | None = None
     try:
         if args.command == "start": value = create_run(args.repo, args.mandate_id, args.approved_at, args.updated_at)
+        elif args.command == "archive": value, archived_path = archive_run(args.repo, args.expected_updated_at, args.archived_at)
         elif args.command == "activate-next": value = activate_next(args.repo, args.expected_updated_at, args.updated_at)
         elif args.command == "checkpoint": value = checkpoint(args.repo, args.expected_updated_at, args.updated_at, args.candidate_id, args.epic_status, args.gate, args.authority)
         elif args.command == "complete": value = complete_active(args.repo, args.expected_updated_at, args.updated_at, args.candidate_id)
@@ -466,7 +532,10 @@ def main() -> int:
     except PortfolioRunError as exc:
         print(json.dumps({"ok": False, "error": str(exc)}))
         return 2
-    print(json.dumps({"ok": True, "run": value}, ensure_ascii=False, indent=2))
+    result = {"ok": True, "run": value}
+    if archived_path is not None:
+        result["archivedPath"] = archived_path
+    print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 
 

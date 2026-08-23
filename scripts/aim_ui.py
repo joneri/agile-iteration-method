@@ -27,7 +27,7 @@ from aim_actions import (
 from aim_portfolio import project_portfolio_control
 from aim_portfolio_run import project_portfolio_run
 
-READ_MODEL_VERSION = "5.0"
+READ_MODEL_VERSION = "6.0"
 PORTFOLIO_VERSION = "1.0"
 PORTFOLIO_FILE = "ui-portfolio.json"
 BACKLOG_VERSION = "1.0"
@@ -36,6 +36,7 @@ MAX_PORTFOLIO_WORKSPACES = 16
 MAX_BACKLOG_ITEMS = 256
 MAX_BACKLOG_BYTES = 1_000_000
 MAX_ACCEPTANCE_DECISION_BYTES = 1_000_000
+MAX_GATE_B_DECISION_BYTES = 1_000_000
 VISIBLE_DONE_LIMIT = 3
 DEFAULT_REFRESH_MS = 2_000
 KANBAN_COLUMNS = (
@@ -238,14 +239,64 @@ def _acceptance_decision(
 def _accepted_at(decision: Path) -> str:
     content = _read_markdown(decision)
     declared = _field(content, "Accepted at") or _field(content, "acceptedAt")
-    if declared:
-        return declared
+    parsed = _parse_timestamp(declared)
+    if parsed is not None:
+        return _timestamp_text(parsed)
     return datetime.fromtimestamp(
         decision.stat().st_mtime, timezone.utc
     ).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def _increment_sort_key(item: dict[str, Any]) -> tuple[float, int, str]:
+def _parse_timestamp(value: Any) -> datetime | None:
+    """Parse an explicit timezone-aware timestamp without inventing a zone."""
+
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return None
+    return parsed.astimezone(timezone.utc)
+
+
+def _timestamp_text(value: datetime) -> str:
+    return value.replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def _gate_b_started_at(aim_root: Path, increment_id: str) -> str | None:
+    """Return the earliest explicit Gate B timestamp from bounded local evidence."""
+
+    decisions = aim_root / "decisions"
+    if not decisions.is_dir():
+        return None
+    number = increment_id.removeprefix("DI-")
+    timestamps: list[datetime] = []
+    for path in sorted(decisions.glob(f"{number}*gate-b.md")):
+        if path.is_symlink() or not path.is_file():
+            continue
+        try:
+            if path.stat().st_size > MAX_GATE_B_DECISION_BYTES:
+                continue
+        except OSError:
+            continue
+        content = _read_markdown(path)
+        declared = _field(content, "Approved at") or _field(content, "Timestamp")
+        if declared is None:
+            match = re.search(
+                r"^\s*-\s*(?:Approved at|Timestamp):\s*(.+?)\s*$",
+                content,
+                re.MULTILINE | re.IGNORECASE,
+            )
+            declared = match.group(1).strip() if match else None
+        parsed = _parse_timestamp(declared)
+        if parsed is not None:
+            timestamps.append(parsed)
+    return _timestamp_text(min(timestamps)) if timestamps else None
+
+
+def _increment_sort_key(item: dict[str, Any]) -> tuple[float, int, str, str]:
     raw_timestamp = item.get("acceptedAt") or item.get("updatedAt")
     timestamp = 0.0
     if isinstance(raw_timestamp, str):
@@ -258,7 +309,98 @@ def _increment_sort_key(item: dict[str, Any]) -> tuple[float, int, str]:
             timestamp = 0.0
     match = re.search(r"(\d+)$", str(item.get("id", "")))
     number = int(match.group(1)) if match else -1
-    return (timestamp, number, str(item.get("id", "")))
+    return (
+        timestamp,
+        number,
+        str(item.get("epicId", "")),
+        str(item.get("id", "")),
+    )
+
+
+def _delivery_data(
+    epics: list[dict[str, Any]], accepted: list[dict[str, Any]], generated_at: str
+) -> dict[str, Any]:
+    """Derive auditable delivery outcomes from already-validated workspaces."""
+
+    runtime_epics = [epic for epic in epics if epic["lifecycle"] in {"running", "closed"}]
+    anchor = _parse_timestamp(generated_at) or datetime.now(timezone.utc)
+    seven_days = anchor.timestamp() - 7 * 24 * 60 * 60
+    thirty_days = anchor.timestamp() - 30 * 24 * 60 * 60
+    throughput_7 = 0
+    throughput_30 = 0
+    elapsed_hours: list[float] = []
+    history: list[dict[str, Any]] = []
+    eligible_acceptances = 0
+
+    for item in accepted:
+        accepted_raw = item.get("deliveryAcceptedAt")
+        accepted_at = _parse_timestamp(accepted_raw)
+        started_at = _parse_timestamp(item.get("deliveryStartedAt"))
+        elapsed = None
+        timestamp_status = "file_time_fallback"
+        if accepted_at is not None and accepted_at <= anchor:
+            eligible_acceptances += 1
+            timestamp_status = "recorded"
+            accepted_epoch = accepted_at.timestamp()
+            if seven_days <= accepted_epoch <= anchor.timestamp():
+                throughput_7 += 1
+            if thirty_days <= accepted_epoch <= anchor.timestamp():
+                throughput_30 += 1
+            if started_at is not None and started_at <= accepted_at:
+                elapsed = round((accepted_at - started_at).total_seconds() / 3600, 1)
+                elapsed_hours.append(elapsed)
+        elif accepted_at is not None:
+            timestamp_status = "future_timestamp"
+        history.append(
+            {
+                "id": item["id"],
+                "epicId": item["epicId"],
+                "epicTitle": item["epicTitle"],
+                "title": item["title"],
+                "acceptedAt": accepted_raw or item.get("acceptedAt"),
+                "timestampStatus": timestamp_status,
+                "startedAt": item.get("deliveryStartedAt"),
+                "elapsedHours": elapsed,
+                "evidencePath": item.get("acceptanceEvidence"),
+            }
+        )
+
+    ordered = sorted(elapsed_hours)
+    median = None
+    if ordered:
+        middle = len(ordered) // 2
+        median = (
+            ordered[middle]
+            if len(ordered) % 2
+            else round((ordered[middle - 1] + ordered[middle]) / 2, 1)
+        )
+    return {
+        "generatedAt": generated_at,
+        "epics": {
+            "total": len(runtime_epics),
+            "active": sum(epic["lifecycle"] == "running" for epic in runtime_epics),
+            "completed": sum(epic["lifecycle"] == "closed" for epic in runtime_epics),
+        },
+        "increments": {"accepted": len(accepted)},
+        "throughput": {
+            "last7Days": throughput_7,
+            "last30Days": throughput_30,
+            "timestampSample": eligible_acceptances,
+            "excluded": len(accepted) - eligible_acceptances,
+        },
+        "elapsed": {
+            "status": "available" if ordered else "unavailable",
+            "medianHours": median,
+            "sample": len(ordered),
+            "excluded": len(accepted) - len(ordered),
+        },
+        "history": history,
+        "definitions": {
+            "throughput": "Accepted Increments with an explicit Gate E timestamp in the trailing UTC window.",
+            "elapsed": "Median time from an explicit Gate B approval timestamp to explicit Gate E acceptance.",
+            "history": "Validated accepted Increments, newest first; fallback file times are labeled and excluded from metrics.",
+        },
+    }
 
 
 def _action_descriptor(
@@ -724,6 +866,16 @@ def _project_epic(
                 repo_root, aim_root, state, increment_id, warnings
             )
             accepted = acceptance_decision is not None
+            declared_acceptance = (
+                _field(_read_markdown(acceptance_decision), "Accepted at")
+                if acceptance_decision is not None
+                else None
+            )
+            delivery_accepted_at = (
+                _timestamp_text(parsed_acceptance)
+                if (parsed_acceptance := _parse_timestamp(declared_acceptance)) is not None
+                else None
+            )
             runtime_status = state["epicStatus"] if is_active else (
                 "done_increment_accepted" if accepted else "gate_b_pending"
             )
@@ -747,6 +899,13 @@ def _project_epic(
                     "costProfile": state["costProfile"],
                     "updatedAt": state["updatedAt"] if is_active else None,
                     "acceptedAt": _accepted_at(acceptance_decision) if acceptance_decision else None,
+                    "deliveryStartedAt": _gate_b_started_at(aim_root, increment_id),
+                    "deliveryAcceptedAt": delivery_accepted_at,
+                    "acceptanceEvidence": (
+                        acceptance_decision.relative_to(repo_root).as_posix()
+                        if acceptance_decision is not None
+                        else None
+                    ),
                     "active": is_active,
                     "planned": False,
                     "priority": None,
@@ -794,9 +953,10 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     aim_root = (repo_root / ".aim").resolve()
     warnings: list[str] = []
     source_kind, workspaces = _workspace_roots(aim_root, warnings)
+    generated_at = utc_now()
     base = {
         "readModelVersion": READ_MODEL_VERSION,
-        "generatedAt": utc_now(),
+        "generatedAt": generated_at,
         "source": {
             "kind": source_kind,
             "readOnly": True,
@@ -810,6 +970,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             "acceptedCount": 0,
             "closedIncrements": [],
         },
+        "deliveryData": None,
         "control": None,
         "portfolioRun": None,
         "warnings": warnings,
@@ -962,6 +1123,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         "acceptedCount": len(accepted),
         "closedIncrements": accepted,
     }
+    base["deliveryData"] = _delivery_data(base["epics"], accepted, generated_at)
     base["health"] = (
         "degraded" if not base["epics"] else "partial" if warnings else "healthy"
     )
