@@ -68,7 +68,7 @@
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "89a940c417e98df1a617cb3f8133c896a85190621f8115359d4564c46886ca02",
+      "sha256": "ed9a48d133ef11d05bd793483918896555e0d2e741039ddca6f4f5f7f846fed5",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -198,7 +198,7 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "d7623a985dd3757112fcf727c1ab956dbf5944a2d1ace72c859d957725c41e51",
+      "sha256": "7463fbe5e0fe828e950e9216a18f5a3e9591d7c50df69abcc04f0886d0d94d98",
       "source": "scripts/aim_ui.py"
     },
     {

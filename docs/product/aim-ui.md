@@ -196,6 +196,14 @@ runtime Increment. Activation starts the Epic; a Portfolio-aware direct start
 may reserve its first `DI-*` at Gate A, while TDO still defines and approves its
 scope at Gate B. `runtimeIncrementId` may retain traceability to that work.
 
+A Backlog record with `runtimeIncrementId` is retained runtime history, not a
+new planning candidate. When the active Portfolio catalog contains the matching
+Epic and Increment, AIM UI projects that canonical runtime. When it does not,
+the UI excludes the record from Planned work and Start Epic actions, then shows
+a read-only diagnostic naming the candidate, Epic, and runtime Increment. AIM
+chat may review archived history or catalog repair; the browser never guesses,
+re-registers, or reactivates the relation.
+
 This file is planning input only. It may contain identity, description,
 priority, and timestamps. It must not contain gate status, role transitions,
 acceptance, scheduling locks, or agent instructions. Only the main AIM thread

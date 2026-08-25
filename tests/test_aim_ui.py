@@ -750,6 +750,80 @@ class AimUiTests(unittest.TestCase):
         self.assertEqual(board["health"], "healthy")
         self.assertEqual(board["warnings"], [])
 
+    def test_unresolved_runtime_history_never_becomes_planned_or_activatable(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            self._backlog(
+                repo,
+                [
+                    {
+                        "id": "INC-ARCHIVED-001",
+                        "epicId": "EPIC-ARCHIVED",
+                        "epicTitle": "Preserved completed work",
+                        "title": "Must remain history",
+                        "priority": 1,
+                        "createdAt": "2026-08-21T13:00:00Z",
+                        "runtimeIncrementId": "DI-088",
+                    },
+                    {
+                        "id": "INC-MISMATCHED-001",
+                        "epicId": "EPIC-TEST-001",
+                        "epicTitle": "Make delivery visible",
+                        "title": "Must not attach to the wrong runtime",
+                        "priority": 2,
+                        "createdAt": "2026-08-21T13:01:00Z",
+                        "runtimeIncrementId": "DI-089",
+                    },
+                    {
+                        "id": "INC-PLANNED-001",
+                        "epicId": "EPIC-PLANNED",
+                        "epicTitle": "Genuinely planned work",
+                        "title": "May be activated",
+                        "priority": 3,
+                        "createdAt": "2026-08-21T13:02:00Z",
+                    },
+                ],
+            )
+            board = build_board(repo)
+
+        epic_ids = {epic["id"] for epic in board["epics"]}
+        self.assertNotIn("EPIC-ARCHIVED", epic_ids)
+        self.assertNotIn(
+            "INC-MISMATCHED-001",
+            [
+                candidate["id"]
+                for epic in board["epics"]
+                for candidate in epic["planning"]["candidates"]
+            ],
+        )
+        planned = next(epic for epic in board["epics"] if epic["id"] == "EPIC-PLANNED")
+        self.assertEqual(planned["lifecycle"], "planned")
+        self.assertEqual(planned["actions"][0]["kind"], "activate")
+        self.assertTrue(planned["actions"][0]["enabled"])
+        self.assertEqual(board["roadmap"]["candidateCount"], 3)
+        self.assertEqual(board["roadmap"]["eligibleCount"], 1)
+        relations = board["history"]["unresolvedRuntimeRelations"]
+        self.assertEqual(
+            [item["candidateId"] for item in relations],
+            ["INC-ARCHIVED-001", "INC-MISMATCHED-001"],
+        )
+        self.assertEqual(
+            [(item["epicId"], item["runtimeIncrementId"]) for item in relations],
+            [("EPIC-ARCHIVED", "DI-088"), ("EPIC-TEST-001", "DI-089")],
+        )
+        self.assertTrue(all(item["readOnly"] for item in relations))
+        self.assertTrue(all(not item["activatable"] for item in relations))
+        self.assertTrue(
+            all(
+                item["candidateId"] in item["reason"]
+                and item["epicId"] in item["reason"]
+                and item["runtimeIncrementId"] in item["reason"]
+                for item in relations
+            )
+        )
+        self.assertEqual(board["health"], "partial")
+        self.assertEqual(len(board["warnings"]), 2)
+
     def test_gate_a_workspace_has_epic_without_runtime_increment_card(self) -> None:
         runtime = state("gate_a_pending")
         runtime.update(

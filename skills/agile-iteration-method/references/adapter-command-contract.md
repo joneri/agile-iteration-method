@@ -137,6 +137,11 @@ creates `DI-*` authority, passes a Gate, changes canonical roles, or starts an
 agent. Only a later explicit Activate intent may create runtime evidence.
 Before activation, AIM UI groups candidates on their stationary Epic and shows
 no moving Increment card. TDO creates canonical `DI-*` authority at Gate B.
+A candidate that already contains `runtimeIncrementId` is never eligible for
+this planned-Epic synthesis. If its exact Epic and Increment relation is absent
+from the active catalog, the read model must exclude it from activation and
+publish a read-only diagnostic containing the candidate, Epic, and runtime
+identities; it must not reinterpret missing catalog authority as new work.
 
 ### Roadmap recovery and execution handoff
 

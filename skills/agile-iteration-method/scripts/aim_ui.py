@@ -1546,6 +1546,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         for item in backlog_items
         if item["runtimeIncrementId"]
     }
+    unresolved_runtime_relations: list[dict[str, Any]] = []
     backlog_updated_at = "unknown"
     if (aim_root / BACKLOG_FILE).is_file():
         try:
@@ -1564,6 +1565,26 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             candidate["runtimeIncrementId"] or candidate["id"],
         )
         if key in runtime_keys:
+            continue
+        runtime_increment_id = candidate["runtimeIncrementId"]
+        if runtime_increment_id:
+            reason = (
+                f"Preserved history needs review: Backlog candidate {candidate['id']} "
+                f"for {candidate['epicId']} references {runtime_increment_id}, but no "
+                "active Portfolio workspace contains that Epic and Increment relation. "
+                "AIM UI kept it out of Planned work and disabled activation."
+            )
+            unresolved_runtime_relations.append(
+                {
+                    "candidateId": candidate["id"],
+                    "epicId": candidate["epicId"],
+                    "runtimeIncrementId": runtime_increment_id,
+                    "reason": reason,
+                    "readOnly": True,
+                    "activatable": False,
+                }
+            )
+            warnings.append(reason)
             continue
         epic = next((item for item in base["epics"] if item["id"] == candidate["epicId"]), None)
         if epic is None:
@@ -1671,6 +1692,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         "acceptedCount": len(accepted),
         "recentDeliveries": accepted[:RECENT_DELIVERIES_LIMIT],
         "closedIncrements": accepted,
+        "unresolvedRuntimeRelations": unresolved_runtime_relations,
     }
     base["deliveryData"] = _delivery_data(base["epics"], accepted, generated_at)
     base["health"] = (
