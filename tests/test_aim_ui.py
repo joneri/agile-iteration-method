@@ -28,6 +28,7 @@ from aim_portfolio_run import (  # noqa: E402
     checkpoint,
     complete_active,
     create_run,
+    snapshot_hash,
 )
 from aim_validator.schema_subset import unsupported_keywords, validate  # noqa: E402
 
@@ -490,6 +491,22 @@ class AimUiTests(unittest.TestCase):
             all(epic["actions"][0]["envelope"]["action"] == "activate" for epic in planned)
         )
         self.assertTrue(all(epic["actions"][0]["enabled"] for epic in planned))
+        self.assertTrue(board["roadmap"]["configured"])
+        self.assertEqual(board["roadmap"]["eligibleCount"], 2)
+        self.assertEqual(
+            [item["candidateId"] for item in board["roadmap"]["snapshot"]],
+            ["INC-UI-001", "INC-DATA-001"],
+        )
+        self.assertEqual(
+            board["roadmap"]["auto"]["command"],
+            '/aim start "PORTFOLIO" mode:auto',
+        )
+        self.assertEqual(
+            board["roadmap"]["snapshotSha256"],
+            snapshot_hash(board["roadmap"]["snapshot"]),
+        )
+        self.assertFalse(board["roadmap"]["strict"]["supported"])
+        self.assertIn("Later Roadmap additions are excluded", board["roadmap"]["snapshotBoundary"])
 
     def test_full_capacity_disables_planned_activation_with_reason(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -633,8 +650,12 @@ class AimUiTests(unittest.TestCase):
         self.assertIn(".recent-delivery-card:focus-visible", styles)
         self.assertIn('id="recent-deliveries" aria-labelledby="recent-deliveries-title"', markup)
         self.assertIn('id="delivery-dialog" aria-labelledby="delivery-dialog-title"', markup)
-        self.assertIn('id="workspace-integrity" role="alert"', markup)
+        self.assertIn('id="workspace-integrity" aria-labelledby=', markup)
         self.assertIn(".workspace-integrity[hidden] { display: none; }", styles)
+        self.assertIn('id="copy-recovery-action"', markup)
+        self.assertIn('id="roadmap-panel"', markup)
+        self.assertIn("function renderRoadmap", script)
+        self.assertIn("review the intent in aim chat", script.lower())
         self.assertIn('id="follow-up-intent" tabindex="0"', markup)
         follow_up = script[script.index("function followUpPrompt"):script.index("function showCompleteHistory")]
         self.assertIn("do not reopen or reuse its identity", follow_up)
@@ -779,6 +800,8 @@ class AimUiTests(unittest.TestCase):
             ["INC-UI-001"],
         )
         self.assertEqual(planned["increments"], [])
+        self.assertFalse(board["roadmap"]["valid"])
+        self.assertFalse(board["roadmap"]["auto"]["supported"])
         self.assertEqual(board["health"], "partial")
         self.assertTrue(any("duplicate id INC-UI-001" in warning for warning in board["warnings"]))
 
@@ -1205,6 +1228,43 @@ class AimUiTests(unittest.TestCase):
         self.assertIn("epicStatus 'complete'", joined)
         self.assertIn("lastGatePassed 'E'", joined)
         self.assertIn("activeIncrementId 'INC-LEGACY-037'", joined)
+        self.assertTrue(diagnostic["checkpoint"]["completed"])
+        self.assertEqual(diagnostic["checkpoint"]["contract"], "legacy")
+        self.assertEqual(len(diagnostic["checkpoint"]["stateSha256"]), 64)
+        self.assertIn("statePath: .aim/state.json", diagnostic["chatIntent"])
+        self.assertIn("epicId: EPIC-TEST-001", diagnostic["chatIntent"])
+        self.assertIn("expectedUpdatedAt: 2026-08-21T12:00:00Z", diagnostic["chatIntent"])
+        self.assertIn("failedContractChecks:", diagnostic["chatIntent"])
+        self.assertEqual(board["recovery"]["kind"], "preserved_history")
+        self.assertEqual(
+            board["recovery"]["recommendedAction"]["label"],
+            "Keep as history and create a new Roadmap",
+        )
+
+    def test_legacy_active_checkpoint_recommends_reviewed_migration(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            state_path = repo / ".aim/state.json"
+            runtime = json.loads(state_path.read_text(encoding="utf-8"))
+            runtime["mode"] = "auto"
+            state_path.write_text(json.dumps(runtime, indent=2) + "\n", encoding="utf-8")
+            self._portfolio(repo, ".")
+            before = state_path.read_bytes()
+            board = build_board(repo)
+            after = state_path.read_bytes()
+
+        self.assertEqual(after, before)
+        self.assertEqual(board["epics"], [])
+        diagnostic = board["workspaceDiagnostics"][0]
+        self.assertFalse(diagnostic["checkpoint"]["completed"])
+        self.assertEqual(
+            diagnostic["recommendedOperation"], "review_and_migrate_checkpoint"
+        )
+        self.assertEqual(board["recovery"]["kind"], "checkpoint_attention")
+        self.assertEqual(
+            board["recovery"]["recommendedAction"]["label"],
+            "Review and migrate checkpoint in AIM chat",
+        )
 
     def test_one_workspace_moves_without_changing_the_other(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

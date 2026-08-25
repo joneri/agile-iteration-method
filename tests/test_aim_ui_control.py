@@ -48,6 +48,15 @@ class AimUiControlTests(unittest.TestCase):
         self.assertEqual(board["source"]["kind"], "uninitialized")
         self.assertEqual(board["epics"], [])
         self.assertEqual(board["onboarding"]["nextAction"], "/aim calibrate-repo")
+        self.assertEqual(board["recovery"]["kind"], "empty_repository")
+        self.assertEqual(
+            board["recovery"]["recommendedAction"]["intent"],
+            "/aim calibrate-repo",
+        )
+        self.assertEqual(
+            board["recovery"]["alternatives"][0]["intent"], "/aim to-backlog"
+        )
+        self.assertFalse(board["roadmap"]["configured"])
         self.assertFalse((self.repo / ".aim").exists())
 
     def test_start_reuses_statuses_and_stops_one_repo_bound_instance(self) -> None:

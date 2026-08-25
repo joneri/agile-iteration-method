@@ -32,13 +32,22 @@ Source: aim-ui/index.html
   </header>
 
   <main id="board" tabindex="-1">
-    <section class="workspace-integrity" id="workspace-integrity" role="alert" aria-labelledby="workspace-integrity-title" hidden>
+    <section class="workspace-integrity" id="workspace-integrity" aria-labelledby="workspace-integrity-title" hidden>
       <div>
-        <p class="eyebrow">Read-only integrity warning</p>
-        <h3 id="workspace-integrity-title">Runtime work exists outside the visible contract</h3>
+        <p class="eyebrow" id="workspace-integrity-eyebrow">Safe AIM recovery</p>
+        <h3 id="workspace-integrity-title">AIM found earlier work</h3>
         <p id="workspace-integrity-summary"></p>
+        <dl class="recovery-facts" id="workspace-integrity-facts"></dl>
+        <div class="recovery-actions">
+          <button class="recovery-action recovery-primary" id="copy-recovery-action" type="button">Copy recommended action</button>
+          <div id="recovery-alternatives"></div>
+          <p id="recovery-feedback" role="status" aria-live="polite"></p>
+        </div>
       </div>
-      <ul id="workspace-integrity-list"></ul>
+      <details class="technical-details">
+        <summary>Technical details</summary>
+        <ul id="workspace-integrity-list"></ul>
+      </details>
       <p class="workspace-integrity-boundary">AIM UI will not register, migrate, rewrite, merge, or accept these checkpoints. Resolve them explicitly in AIM chat.</p>
     </section>
     <section class="empty-state" id="empty-state" hidden>
@@ -77,6 +86,23 @@ Source: aim-ui/index.html
         <div class="control-state">
           <span class="control-status" id="portfolio-run-status"></span>
           <p id="portfolio-run-guidance"></p>
+        </div>
+      </section>
+
+      <section class="roadmap-panel" id="roadmap-panel" aria-labelledby="roadmap-title" hidden>
+        <div class="control-copy">
+          <p class="eyebrow">Roadmap review</p>
+          <h2 id="roadmap-title">Execute this Roadmap</h2>
+          <p id="roadmap-summary"></p>
+        </div>
+        <dl class="control-facts" id="roadmap-facts"></dl>
+        <ol class="roadmap-snapshot" id="roadmap-snapshot"></ol>
+        <div class="control-state roadmap-controls">
+          <p id="roadmap-boundary"></p>
+          <code id="roadmap-command"></code>
+          <button class="recovery-action recovery-primary" id="copy-roadmap-command" type="button">Copy Portfolio Auto command</button>
+          <p id="roadmap-feedback" role="status" aria-live="polite"></p>
+          <p class="roadmap-strict" id="roadmap-strict"></p>
         </div>
       </section>
 

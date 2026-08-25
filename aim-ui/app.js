@@ -48,6 +48,21 @@ function addFact(list, label, value) {
   list.append(group);
 }
 
+async function copyText(text, feedback) {
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+    feedback.textContent = "Copied. Review the intent in AIM chat before sending it.";
+  } catch (_error) {
+    const fallback = el("textarea", "copy-fallback");
+    fallback.value = text;
+    fallback.setAttribute("aria-label", "AIM chat intent ready to copy");
+    document.body.append(fallback);
+    fallback.select();
+    feedback.textContent = "Clipboard access is unavailable. The full intent is selected for copying.";
+  }
+}
+
 function accentFor(index) {
   return epicAccents[index % epicAccents.length];
 }
@@ -894,6 +909,7 @@ function renderView(board, epics) {
   const showingClosed = state.view === "closed";
   $("epic-rail").hidden = !showingPortfolio;
   $("portfolio-run-panel").hidden = !showingPortfolio || !board.portfolioRun?.configured;
+  $("roadmap-panel").hidden = !showingPortfolio || !board.roadmap?.configured;
   $("portfolio-control-panel").hidden = !showingPortfolio;
   $("data-panel").hidden = !showingData;
   $("people-panel").hidden = !showingPeople;
@@ -928,11 +944,32 @@ function renderNotices(board) {
 
 function renderWorkspaceIntegrity(board) {
   const panel = $("workspace-integrity");
+  const recovery = board.recovery;
   const diagnostics = board.workspaceDiagnostics || [];
-  panel.hidden = diagnostics.length === 0;
-  if (diagnostics.length === 0) return;
-  $("workspace-integrity-summary").textContent =
-    `${diagnostics.length} workspace relation${diagnostics.length === 1 ? "" : "s"} cannot be presented as normal Portfolio runtime.`;
+  panel.hidden = !recovery;
+  if (!recovery) return;
+  $("workspace-integrity-eyebrow").textContent = recovery.kind === "empty_repository"
+    ? "Roadmap onboarding"
+    : "Safe AIM recovery";
+  $("workspace-integrity-title").textContent = recovery.title;
+  $("workspace-integrity-summary").textContent = recovery.message;
+  const facts = $("workspace-integrity-facts");
+  facts.replaceChildren();
+  Object.entries(recovery.found || {}).forEach(([label, value]) => {
+    addFact(facts, statusLabel(label), value);
+  });
+  const recommended = $("copy-recovery-action");
+  recommended.textContent = recovery.recommendedAction.label;
+  recommended.onclick = () => copyText(recovery.recommendedAction.intent, $("recovery-feedback"));
+  const alternatives = $("recovery-alternatives");
+  alternatives.replaceChildren();
+  (recovery.alternatives || []).forEach((action) => {
+    const button = el("button", "recovery-action recovery-secondary", action.label);
+    button.type = "button";
+    button.addEventListener("click", () => copyText(action.intent, $("recovery-feedback")));
+    alternatives.append(button);
+  });
+  $("recovery-feedback").textContent = "";
   const list = $("workspace-integrity-list");
   list.replaceChildren();
   diagnostics.forEach((diagnostic) => {
@@ -943,9 +980,44 @@ function renderWorkspaceIntegrity(board) {
     (diagnostic.contractDrift || []).forEach((drift) => {
       item.append(el("p", "workspace-integrity-drift", drift));
     });
+    item.append(
+      el("p", "workspace-integrity-drift", `Checkpoint updated: ${diagnostic.checkpoint?.updatedAt || "unknown"}`),
+      el("p", "workspace-integrity-drift", `State SHA-256: ${diagnostic.checkpoint?.stateSha256 || "unavailable"}`),
+    );
     item.append(el("p", "workspace-integrity-action", diagnostic.nextAction));
     list.append(item);
   });
+  const details = list.closest("details");
+  details.hidden = diagnostics.length === 0;
+}
+
+function renderRoadmap(board) {
+  const roadmap = board.roadmap || {};
+  if (!roadmap.configured) return;
+  $("roadmap-summary").textContent = !roadmap.valid
+    ? "This Roadmap contains invalid or contradictory planning data. Repair it in AIM chat before execution."
+    : roadmap.eligibleCount
+    ? `${roadmap.eligibleCount} planned candidate${roadmap.eligibleCount === 1 ? " is" : "s are"} eligible for the next bounded run.`
+    : "This Roadmap has no unactivated candidates.";
+  const facts = $("roadmap-facts");
+  facts.replaceChildren();
+  addFact(facts, "Eligible", roadmap.eligibleCount);
+  addFact(facts, "Roadmap updated", formatTime(roadmap.updatedAt));
+  addFact(facts, "Snapshot", roadmap.snapshotSha256);
+  const snapshot = $("roadmap-snapshot");
+  snapshot.replaceChildren();
+  (roadmap.snapshot || []).forEach((candidate) => {
+    snapshot.append(el("li", "", `${candidate.priority}. ${candidate.epicId} · ${candidate.title} (${candidate.candidateId})`));
+  });
+  if (!roadmap.snapshot?.length) {
+    snapshot.append(el("li", "", "No candidates are included."));
+  }
+  $("roadmap-boundary").textContent = `${roadmap.snapshotBoundary} ${roadmap.pauseBoundary}`;
+  $("roadmap-command").textContent = roadmap.auto.command;
+  $("copy-roadmap-command").disabled = !roadmap.auto.supported;
+  $("copy-roadmap-command").onclick = () => copyText(roadmap.auto.chatIntent, $("roadmap-feedback"));
+  $("roadmap-feedback").textContent = "";
+  $("roadmap-strict").textContent = roadmap.strict.explanation;
 }
 
 function updateHeartbeat(board) {
@@ -1004,6 +1076,7 @@ function render(board) {
   addFact(facts, "Accepted history", board.history?.acceptedCount || 0);
   renderPortfolioControl(board);
   renderPortfolioRun(board);
+  renderRoadmap(board);
   renderEpicRoster(board);
   renderFilters(board, viewEpics);
   const epics = visibleEpics(viewEpics);

@@ -58,7 +58,7 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "7e95d13ffc2cc6c921c87bbaa2d284147d459a813dda69503f727ebfac6883bf",
+      "sha256": "7d3067cdb2e827253a3bbe9d5a70c13fd70875479ec5ff6cb94b0f43302a7c01",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
@@ -68,7 +68,7 @@
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "75ce5b3d8fd1d9354381b7f9263f38db4741e66a4d76acee8cc910622ff76bcc",
+      "sha256": "89a940c417e98df1a617cb3f8133c896a85190621f8115359d4564c46886ca02",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -198,7 +198,7 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "e8a4ece973c6346b7b3778e9c41d1358d2cc8608b6602091da66850c320df628",
+      "sha256": "d7623a985dd3757112fcf727c1ab956dbf5944a2d1ace72c859d957725c41e51",
       "source": "scripts/aim_ui.py"
     },
     {
@@ -208,17 +208,17 @@
     },
     {
       "output": "aim-ui/index.html",
-      "sha256": "503d56584b9a117c80912a98ebb36aadbe676b44ffb9d35d90ac0de85a9bbb0a",
+      "sha256": "9f19c1ce30e376770f833ff25006d49fd59f2331354d992f4eabb0bdeb252531",
       "source": "aim-ui/index.html"
     },
     {
       "output": "aim-ui/styles.css",
-      "sha256": "9da13408cda88b4f07c7d07bf2e845cdf96d7c571362d9c1b4cc7336a61ac982",
+      "sha256": "9e1fc89f48b57aed9702fc70d5eb7ce064fbe1c37f7a245070b8d746739322b6",
       "source": "aim-ui/styles.css"
     },
     {
       "output": "aim-ui/app.js",
-      "sha256": "cf2dbb9fb87be4ade015664ebb2b2b58bf397093b86ca75381199a35908aa826",
+      "sha256": "b4d7c4bf51c4b25d668c2a0dc93048e4c9aebb16bf110a56955dc54668e47214",
       "source": "aim-ui/app.js"
     }
   ]

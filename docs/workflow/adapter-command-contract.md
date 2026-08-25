@@ -131,6 +131,28 @@ agent. Only a later explicit Activate intent may create runtime evidence.
 Before activation, AIM UI groups candidates on their stationary Epic and shows
 no moving Increment card. TDO creates canonical `DI-*` authority at Gate B.
 
+### Roadmap recovery and execution handoff
+
+AIM UI calls valid `portfolio-backlog.json` planning metadata a **Roadmap** in
+newcomer-facing copy. This does not introduce a second state contract: planned
+`INC-*` candidates remain stationary planning metadata and cannot masquerade as
+active or accepted `DI-*` runtime.
+
+For empty or legacy repositories the read model may publish a read-only recovery
+projection. It must identify what AIM found, recommend one safe chat action, and
+keep exact contract diagnostics behind technical details. A checkpoint handoff
+includes the repository-relative `state.json` path, detected Epic, exact failed
+checks, expected checkpoint timestamp, SHA-256 fingerprint, and requested
+operation. UI controls only copy this intent; they never migrate, archive,
+register, accept, or repair runtime.
+
+For a Roadmap, the read model may preview the ordered eligible candidates and a
+deterministic snapshot hash. The only supported multi-Epic execution handoff is
+the exact `/aim start "PORTFOLIO" mode:auto` command. It must explain that later
+additions are excluded, escalation pauses execution, and one explicit bounded
+mandate remains required. Do not advertise Portfolio Strict until a canonical
+multi-Epic Strict contract exists; ordinary single-Epic Strict is unaffected.
+
 ## Portfolio Auto start and resume
 
 `/aim start "PORTFOLIO" mode:auto` is the first-class whole-Backlog route. AIM

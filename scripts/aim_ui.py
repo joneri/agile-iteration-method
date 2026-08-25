@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import mimetypes
 import os
@@ -25,7 +26,7 @@ from aim_actions import (
     codex_deep_link,
 )
 from aim_portfolio import project_portfolio_control
-from aim_portfolio_run import project_portfolio_run
+from aim_portfolio_run import project_portfolio_run, snapshot_hash
 
 READ_MODEL_VERSION = "8.0"
 PORTFOLIO_VERSION = "1.0"
@@ -748,19 +749,238 @@ def _workspace_diagnostic(
     drift: list[str] | None = None,
 ) -> dict[str, Any]:
     state_path = workspace / "state.json"
+    state: dict[str, Any] = {}
+    fingerprint = None
+    try:
+        state_bytes = state_path.read_bytes()
+        fingerprint = hashlib.sha256(state_bytes).hexdigest()
+        parsed_state = json.loads(state_bytes)
+        if isinstance(parsed_state, dict):
+            state = parsed_state
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        pass
+    status = state.get("epicStatus") or state.get("status")
+    role = state.get("currentRole") or state.get("role")
+    updated_at = state.get("updatedAt")
+    status_text = str(status or "unknown")
+    completed = status_text.lower() in {
+        "complete",
+        "completed",
+        "epic_complete",
+        "done",
+        "accepted",
+    }
+    operation = (
+        "review_and_repair_portfolio_catalog"
+        if kind == "invalid_portfolio_catalog"
+        else "keep_completed_checkpoint_as_history_and_create_roadmap"
+        if completed
+        else "review_and_migrate_checkpoint"
+    )
+    relative_state = state_path.relative_to(repo_root).as_posix()
+    exact_drift = drift or []
+    epic_identity = epic_id or "Unknown Epic"
+    handoff = "\n".join(
+        (
+            "AIM_RECOVERY_REQUEST",
+            f"requestedOperation: {operation}",
+            f"statePath: {relative_state}",
+            f"epicId: {epic_identity}",
+            f"detectedStatus: {status_text}",
+            f"detectedRole: {role or 'unknown'}",
+            f"expectedUpdatedAt: {updated_at or 'unknown'}",
+            f"expectedStateSha256: {fingerprint or 'unavailable'}",
+            "failedContractChecks: " + json.dumps(exact_drift, ensure_ascii=False),
+            "Preserve the checkpoint and present a reviewed, explicit plan before any migration or catalog write.",
+        )
+    )
     return {
         "kind": kind,
         "severity": "error",
         "epicId": epic_id or "Unknown Epic",
-        "statePath": state_path.relative_to(repo_root).as_posix(),
+        "statePath": relative_state,
         "reason": reason,
-        "contractDrift": drift or [],
+        "contractDrift": exact_drift,
+        "checkpoint": {
+            "status": status_text,
+            "role": role,
+            "updatedAt": updated_at,
+            "stateSha256": fingerprint,
+            "completed": completed,
+            "contract": "legacy" if exact_drift else "current",
+        },
         "readOnly": True,
+        "recommendedOperation": operation,
+        "chatIntent": handoff,
         "nextAction": (
             "Review the checkpoint in AIM chat and choose an explicit migration or "
             "catalog repair; AIM UI will not modify it."
         ),
     }
+
+
+def _roadmap_projection(
+    aim_root: Path,
+    backlog_items: list[dict[str, Any]],
+    backlog_updated_at: str,
+    valid: bool,
+) -> dict[str, Any]:
+    eligible = [item for item in backlog_items if not item.get("runtimeIncrementId")]
+    snapshot_payload = [
+        {
+            "candidateId": item["id"],
+            "epicId": item["epicId"],
+            "epicTitle": item["epicTitle"],
+            "title": item["title"],
+            "priority": item["priority"],
+            "createdAt": item["createdAt"],
+        }
+        for item in eligible
+    ]
+    snapshot_digest = snapshot_hash(snapshot_payload)
+    configured = (aim_root / BACKLOG_FILE).is_file()
+    command = '/aim start "PORTFOLIO" mode:auto'
+    return {
+        "configured": configured,
+        "valid": valid,
+        "status": "invalid" if not valid else "ready" if eligible else "empty",
+        "candidateCount": len(backlog_items),
+        "eligibleCount": len(eligible),
+        "updatedAt": backlog_updated_at if configured else None,
+        "snapshotSha256": snapshot_digest,
+        "snapshot": snapshot_payload,
+        "auto": {
+            "supported": valid and bool(eligible),
+            "command": command,
+            "chatIntent": "\n".join(
+                (
+                    command,
+                    f"Expected Roadmap snapshot: {snapshot_digest}",
+                    f"Included candidates: {', '.join(item['id'] for item in eligible) or 'none'}",
+                    "Preview this immutable snapshot and request one explicit bounded mandate before execution.",
+                )
+            ),
+        },
+        "strict": {
+            "supported": False,
+            "explanation": (
+                "Portfolio Strict is not a defined multi-Epic start contract. "
+                "Strict remains available for ordinary single-Epic execution."
+            ),
+        },
+        "snapshotBoundary": (
+            "The mandate includes only this previewed order. Later Roadmap additions are excluded."
+        ),
+        "pauseBoundary": (
+            "AIM pauses on scope, trust, safety, validation, concurrency, or contradictory-state escalation."
+        ),
+    }
+
+
+def _recovery_projection(
+    source_kind: str,
+    diagnostics: list[dict[str, Any]],
+    roadmap: dict[str, Any],
+) -> dict[str, Any] | None:
+    if diagnostics:
+        catalog_only = all(
+            item["kind"] == "invalid_portfolio_catalog" for item in diagnostics
+        )
+        completed = all(item["checkpoint"]["completed"] for item in diagnostics)
+        combined_handoff = "\n\n".join(item["chatIntent"] for item in diagnostics)
+        recommended = (
+            {
+                "label": "Review and repair the Portfolio catalog in AIM chat",
+                "intent": combined_handoff,
+            }
+            if catalog_only
+            else
+            {
+                "label": "Keep as history and create a new Roadmap",
+                "intent": combined_handoff,
+            }
+            if completed
+            else {
+                "label": "Review and migrate checkpoint in AIM chat",
+                "intent": combined_handoff,
+            }
+        )
+        alternatives = [
+            {
+                "label": "Create or merge a Roadmap in AIM chat",
+                "intent": "/aim to-backlog",
+            },
+            {
+                "label": "Copy diagnostic report",
+                "intent": combined_handoff,
+            },
+        ]
+        if roadmap["configured"]:
+            alternatives.insert(
+                0, {"label": "Open existing Roadmap", "intent": "/aim ui"}
+            )
+        return {
+            "kind": (
+                "catalog_attention"
+                if catalog_only
+                else "preserved_history"
+                if completed
+                else "checkpoint_attention"
+            ),
+            "title": (
+                "AIM found a board setup that needs review"
+                if catalog_only
+                else "AIM found earlier work, but it isn’t connected to a current board"
+            ),
+            "message": (
+                "AIM preserved the checkpoint and will not guess, rewrite, or register it. "
+                "Choose a reviewed action in AIM chat."
+            ),
+            "recommendedAction": recommended,
+            "alternatives": alternatives,
+            "found": {
+                "checkpointCount": len(diagnostics),
+                "history": (
+                    "unknown"
+                    if catalog_only
+                    else "completed"
+                    if completed
+                    else "active or incomplete"
+                ),
+                "contract": "legacy or outside the current catalog",
+                "checkpointUpdated": diagnostics[0]["checkpoint"]["updatedAt"] or "unknown",
+                "roadmap": "available" if roadmap["configured"] else "not created",
+                "portfolioCatalog": "present" if source_kind == "portfolio" else "not configured",
+            },
+            "technicalDetails": diagnostics,
+            "readOnly": True,
+        }
+    if source_kind == "uninitialized":
+        return {
+            "kind": "empty_repository",
+            "title": "AIM is ready for a Roadmap",
+            "message": (
+                "This repository has no AIM runtime. Calibrate it first, then add Epics "
+                "by pasting them or naming one repository source in AIM chat."
+            ),
+            "recommendedAction": {
+                "label": "Calibrate this repository",
+                "intent": "/aim calibrate-repo",
+            },
+            "alternatives": [
+                {"label": "Create a Roadmap", "intent": "/aim to-backlog"}
+            ],
+            "found": {
+                "checkpointCount": 0,
+                "history": "none",
+                "contract": "not initialized",
+                "roadmap": "not created",
+                "portfolioCatalog": "not configured",
+            },
+            "technicalDetails": [],
+            "readOnly": True,
+        }
+    return None
 
 
 def _workspace_roots(
@@ -1252,6 +1472,8 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
         "epics": [],
         "workspaceDiagnostics": workspace_diagnostics,
+        "recovery": None,
+        "roadmap": None,
         "history": {
             "recentLimit": RECENT_DELIVERIES_LIMIT,
             "acceptedCount": 0,
@@ -1314,7 +1536,9 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         for epic in base["epics"]
         for item in epic["increments"]
     }
+    backlog_warning_start = len(warnings)
     backlog_items = _load_backlog(aim_root, warnings)
+    backlog_valid = len(warnings) == backlog_warning_start
     backlog_runtime_candidates = {
         (item["epicId"], item["runtimeIncrementId"]): item["id"]
         for item in backlog_items
@@ -1326,6 +1550,12 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             backlog_updated_at = str(_read_json(aim_root / BACKLOG_FILE).get("updatedAt") or "unknown")
         except AimUiError:
             pass
+    base["roadmap"] = _roadmap_projection(
+        aim_root, backlog_items, backlog_updated_at, backlog_valid
+    )
+    base["recovery"] = _recovery_projection(
+        source_kind, workspace_diagnostics, base["roadmap"]
+    )
     for candidate in backlog_items:
         key = (
             candidate["epicId"],

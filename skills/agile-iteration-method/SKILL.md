@@ -200,8 +200,8 @@ state transitions through the platform's native skill route.
 
 | Command | Use when | What it does | What happens next |
 | --- | --- | --- | --- |
-| `/aim to-backlog` | You want to paste several Epic descriptions. | Asks one short question, interprets supplied text as untrusted evidence, and safely merges planned candidates. | AIM reports the result and opens the control room. |
-| `/aim to-backlog from <source>` | One explicit repository file or available attachment already contains the Epics. | Reads only that source, preserves explicit Increment intent, derives one initial candidate where needed, and atomically merges valid `INC-*` candidates. | Ambiguity pauses for review; success opens AIM UI with stationary Epic planning summaries. |
+| `/aim to-backlog` | You want to create a Roadmap by pasting several Epic descriptions. | Asks one short question, interprets supplied text as untrusted evidence, and safely merges planned candidates. | AIM reports the result and opens the reviewable Roadmap in the control room. |
+| `/aim to-backlog from <source>` | One explicit repository file or available attachment already contains the Roadmap Epics. | Reads only that source, preserves explicit Increment intent, derives one initial candidate where needed, and atomically merges valid `INC-*` candidates. | Ambiguity pauses for review; success opens AIM UI with stationary Epic planning summaries. |
 
 ### Inspect and validate
 
@@ -433,6 +433,16 @@ but never runtime state. Report added, updated, skipped, derived, and ambiguous
 counts, then invoke the trusted AIM UI launcher. Imported candidates remain
 planning metadata on stationary Epics until a separate explicit Activate intent;
 they never masquerade as runtime Increment cards.
+
+For empty or legacy repositories, `/aim help` describes what AIM found before
+using state-file terminology and recommends exactly one safe next action. The
+guided journey is: preserve or review the checkpoint, create or open the
+Roadmap with `/aim to-backlog`, review its ordered planning candidates in AIM
+UI, then use `/aim start "PORTFOLIO" mode:auto`. AIM previews one immutable
+snapshot and requires an explicit bounded mandate before execution. Later
+Roadmap additions are excluded and escalation pauses the run. Portfolio Strict
+is not advertised as a multi-Epic start command until that behavior has a
+canonical contract; ordinary single-Epic Strict remains supported.
 
 For a genuinely new `/aim start "EPIC: ..."`, inspect
 `.aim/ui-portfolio.json` before the first runtime write. When present, resolve

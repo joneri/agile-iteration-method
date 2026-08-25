@@ -132,7 +132,22 @@ the main AIM thread writes it. The UI displays capacity, running count,
 available slots, focused Epic, and admission status through the existing
 read-only API.
 
-## Plan Increments across Epics
+## Recover earlier work before creating a Roadmap
+
+When AIM finds a legacy or unregistered checkpoint, the control room leads with
+plain-language recovery instead of schema terminology. It says whether the
+checkpoint appears completed or active, whether a Roadmap and Portfolio catalog
+exist, and recommends one safe next action. Exact drift, checkpoint timestamp,
+repository-relative state path, Epic identity, and SHA-256 fingerprint remain
+available under **Technical details**.
+
+Recovery buttons copy a complete reviewed chat intent. They do not migrate,
+archive, register, accept, or rewrite anything. A completed checkpoint recommends
+keeping it as history and creating a new Roadmap; an active or incomplete
+checkpoint recommends reviewed migration first. Empty repositories begin with
+`/aim calibrate-repo` and then `/aim to-backlog`.
+
+## Create and review a Roadmap across Epics
 
 The simplest chat-first route is:
 
@@ -189,7 +204,11 @@ a file larger than 1 MB, limits the array to 256 candidates, and enforces
 field-level string ceilings so malformed planning input cannot grow without a
 bound.
 
-## Run the Backlog as one Portfolio
+The Portfolio tab presents these stationary planning candidates as a Roadmap.
+It previews the exact eligible order and a deterministic content hash before
+execution.
+
+## Execute the Roadmap as one Portfolio
 
 After populating the Backlog, start the whole ordered board from AIM chat:
 
@@ -210,6 +229,17 @@ Backlog additions stay outside the immutable running snapshot. `/aim continue`
 resumes only after AIM revalidates the snapshot and active workspace. Scope,
 trust, validation, safety, concurrency, or user stop/change conditions pause the
 run without losing completed work.
+
+The **Execute this Roadmap** panel copies both the exact command and the current
+snapshot identity into AIM chat. The copied intent still requires the normal
+preview and one explicit bounded mandate; the browser never starts execution.
+The panel explains that later Roadmap additions are excluded and that scope,
+trust, safety, validation, concurrency, or contradictory-state escalation pauses
+the run.
+
+Portfolio Strict is not a defined multi-Epic start contract and AIM UI does not
+display a non-working Strict command. Strict remains supported for ordinary
+single-Epic execution.
 
 ## What the control-room tabs show
 
