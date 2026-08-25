@@ -1,5 +1,33 @@
 # Changelog
 
+## 2026-08-25 - AIM 2 patch release v2.8.1
+- Prevented Backlog records that already carry `runtimeIncrementId` from being
+  synthesized as new Planned Epics when their exact runtime workspace is absent
+  from the active Portfolio catalog.
+- Removed Start Epic actions from unresolved runtime-linked history while
+  preserving ordinary candidates without runtime authority as activatable work.
+- Added identity-rich, read-only diagnostics containing candidate, Epic, and
+  runtime Increment IDs so archived or catalog-drifted relations fail closed
+  without rewriting history.
+- Added regression coverage for archived runtime, mismatched runtime, valid
+  catalogued runtime, genuine planning candidates, and the GET/HEAD-only UI
+  boundary.
+- Synchronized the canonical read model, public documentation, adapter contract,
+  and generated public Agent Skill payload.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`8`. Existing Backlog and workspace files require no migration and are never
+rewritten by AIM UI.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI. Adaptive
+installations can rerun their reviewed preview/apply installer flow.
+
+Known limitations: unresolved runtime-linked records are intentionally excluded
+from activation and surfaced for reviewed history or catalog repair. AIM UI does
+not search archives, infer acceptance, or re-register workspaces automatically.
+
 ## 2026-08-23 - AIM 2 minor release v2.8.0
 - Separated active Epic prioritization from accepted delivery history in AIM
   UI. Recent Deliveries now retains the ten latest validated Increments in

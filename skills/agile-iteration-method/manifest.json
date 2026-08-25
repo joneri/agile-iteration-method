@@ -46,7 +46,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.8.0",
+  "productVersion": "2.8.1",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -158,7 +158,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "dceb827995520dae388b7283c5bc7847ef58a16e8013318c3bb436feeb5dc51e",
+      "sha256": "c94b6101b82efbf24da807958404613ad9bd7ecfd875f596f8286fa9638e4aa5",
       "source": "VERSION"
     },
     {
