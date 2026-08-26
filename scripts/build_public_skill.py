@@ -537,6 +537,10 @@ def validate_committed_package(root: Path) -> None:
         path.relative_to(package_root)
         for path in package_root.rglob("*")
         if path.is_file()
+        and not (
+            "__pycache__" in path.relative_to(package_root).parts
+            and path.suffix in {".pyc", ".pyo"}
+        )
     }
     expected_paths = set(expected)
     if actual_paths != expected_paths:

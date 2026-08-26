@@ -169,7 +169,7 @@
     },
     {
       "output": "manifest.json",
-      "sha256": "d2397b758d3fc25053b0521f9ffc9a5a20d1cb458265fdd8dcdccc66ab3c48a7",
+      "sha256": "cd1674b3ec4edd0040d4d8011d6cbd157b413b7f026248016cb6cd6096cd141b",
       "source": "scripts/build_public_skill.py"
     },
     {

@@ -42,6 +42,18 @@ class PublicSkillTests(unittest.TestCase):
     def test_committed_package_matches_canonical_sources(self) -> None:
         validate_committed_package(REPO_ROOT)
 
+    def test_runtime_bytecode_cache_is_not_package_inventory_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            cache = copied / PACKAGE_RELATIVE_PATH / "scripts/__pycache__"
+            cache.mkdir()
+            (cache / "aim_backlog.cpython-311.pyc").write_bytes(b"runtime cache")
+            validate_committed_package(copied)
+
+            (cache / "unexpected.md").write_text("not runtime bytecode\n", encoding="utf-8")
+            with self.assertRaisesRegex(PublicSkillError, "inventory drift"):
+                validate_committed_package(copied)
+
     def test_public_package_contains_an_executable_ui_lifecycle(self) -> None:
         package = REPO_ROOT / PACKAGE_RELATIVE_PATH
         for relative in (
