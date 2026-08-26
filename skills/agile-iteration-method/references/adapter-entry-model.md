@@ -71,6 +71,7 @@ The canonical AIM command family is defined in
 - `/aim config`
 - `/aim ui`
 - `/aim to-backlog`
+- `/aim repair-catalog`
 - `/aim configure-agents`
 - `/aim calibrate-repo`
 - `/aim remember-repo`

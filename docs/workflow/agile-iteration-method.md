@@ -578,6 +578,16 @@ identity, is evidence to diagnose—not authority to normalize. `/aim validate`
 and AIM UI name the Epic, state path, failed relation, and explicit repair or
 migration route. They never mutate it.
 
+When the operator explicitly approves retirement of one completed catalog
+relation, the main thread uses the trusted packaged
+`scripts/aim_catalog_repair.py`. It previews the exact candidate, Epic,
+Increment, contained workspace, acceptance evidence, archive destination, and
+source digests before apply. A digest-matched apply moves the workspace
+unchanged, removes the catalog entry, retires the runtime-linked Backlog record,
+and writes audit evidence as one rollback-safe transaction. Observation alone
+never authorizes repair; root, active, ambiguous, stale, escaped, symlinked, or
+unaccepted relations remain fail-closed and AIM UI remains read-only.
+
 Front-door rule:
 - show the user the next action before the full method
 - first route to start, continue, or validate

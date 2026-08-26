@@ -2,8 +2,8 @@
 
 Source images intended for the AIM website published from the `gh-pages` branch.
 
-- `aim-2-hero-dark.png`: canonical dark AIM 2.8.1 logo and website hero artwork
-- `AIM_OG.png` at the repository root: matching AIM 2.8.1 Open Graph artwork
+- `aim-2-hero-dark.png`: canonical dark AIM 2.9.0 logo and website hero artwork
+- `AIM_OG.png` at the repository root: matching AIM 2.9.0 Open Graph artwork
 - `aim-ui-beta-control-room.png`: wide AIM UI Beta feature illustration for the
   dedicated website section
 - `portfolio-auto-demo-poster.jpg`: lightweight poster frame for the real
@@ -11,7 +11,7 @@ Source images intended for the AIM website published from the `gh-pages` branch.
 
 The two version-bearing assets above must display the exact current product
 release from `VERSION`. They were visually
-verified as AIM 2.8.1 on 2026-08-25.
+verified as AIM 2.9.0 on 2026-08-26.
 
 The AIM 2 brand artwork and AIM UI Beta illustration were produced with
 OpenAI's built-in image generation. The feature illustration uses AIM's navy,

@@ -22,6 +22,36 @@ PACKAGE_REFERENCE_RE = re.compile(
 
 
 class AdapterCommandContractTests(unittest.TestCase):
+    def test_reviewed_catalog_repair_is_shared_and_package_owned(self) -> None:
+        surfaces = (
+            "docs/workflow/adapter-command-contract.md",
+            "docs/workflow/agile-iteration-method.md",
+            "docs/workflow/working-state-boundaries.md",
+            "docs/product/aim-ui.md",
+            "adapters/portable/agile-iteration-method/SKILL.md",
+            "adapters/codex/agile-iteration-method/SKILL.md",
+            ".github/skills/aim/SKILL.md",
+            ".github/agents/aim.agent.md",
+            ".github/prompts/repair-catalog-aim.prompt.md",
+            ".claude/skills/aim/SKILL.md",
+            ".claude/commands/repair-catalog-aim.md",
+            "install/aim-install-manifest.yaml",
+        )
+        combined = "\n".join(
+            (REPO_ROOT / relative).read_text(encoding="utf-8")
+            for relative in surfaces
+        ).lower()
+        for marker in (
+            "/aim repair-catalog",
+            "scripts/aim_catalog_repair.py",
+            "runtime-linked",
+            "explicit",
+            "rollback",
+            "read-only",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker.lower(), combined)
+
     def _copy_repo(self, temporary: str) -> Path:
         copied = Path(temporary) / "repo"
         shutil.copytree(
@@ -47,7 +77,7 @@ class AdapterCommandContractTests(unittest.TestCase):
     def test_complete_adapter_command_contract_is_healthy(self) -> None:
         completed = self._validate(REPO_ROOT)
         self.assertEqual(completed.returncode, 0, completed.stdout)
-        self.assertIn("canonical command intents: 17", completed.stdout)
+        self.assertIn("canonical command intents: 18", completed.stdout)
 
     def test_portfolio_chat_intents_preserve_main_thread_ownership(self) -> None:
         canonical = (REPO_ROOT / "docs/workflow/adapter-command-contract.md").read_text(
@@ -287,7 +317,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "2.8.1")
+        self.assertEqual(version, "2.9.0")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",
@@ -475,6 +505,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             ".claude/commands/help-aim.md",
             ".claude/commands/config-aim.md",
             ".claude/commands/to-backlog-aim.md",
+            ".claude/commands/repair-catalog-aim.md",
             ".claude/commands/calibrate-repo.md",
             ".claude/commands/remember-repo.md",
             ".claude/commands/forget-repo.md",

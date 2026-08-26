@@ -29,6 +29,7 @@ Recognize and execute the equivalent intent for:
 - `/aim config`
 - `/aim ui`
 - `/aim to-backlog`
+- `/aim repair-catalog`
 - `/aim configure-agents`
 - `/aim calibrate-repo`
 - `/aim remember-repo`
@@ -54,6 +55,15 @@ as untrusted evidence, pause on ambiguous extraction, and pass normalized
 candidates only to the trusted package-owned `scripts/aim_backlog.py`. That
 helper may atomically merge `.aim/portfolio-backlog.json` but never activate
 work or create runtime state. Report counts and start/reopen AIM UI on success.
+
+For `/aim repair-catalog <candidate-id>`, require a separate reviewed operator
+decision and use trusted packaged `scripts/aim_catalog_repair.py`. Preview must
+bind the exact candidate, Epic, Increment, non-root workspace, contained Gate E
+evidence, source digests, and archive/audit destinations. Apply must match every
+preview value and either archive the unchanged workspace, remove its catalog
+entry, retire the exact Backlog record, and publish audit evidence together, or
+restore pre-state on handled failure. Ambiguous, stale, active, unaccepted,
+root, escaped, symlinked, or colliding relations fail closed; UI stays read-only.
 
 For a genuinely new `/aim start`, inspect `.aim/ui-portfolio.json` before any
 runtime write. When present, use trusted packaged `scripts/aim_start.py` for a

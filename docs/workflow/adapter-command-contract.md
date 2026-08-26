@@ -27,6 +27,7 @@ ownership, or acceptance.
 | `/aim config` | show effective mode, cost, profile, ownership, validation, and adapter fallback configuration | read-only |
 | `/aim ui [start\|open\|status\|stop] [repo]` | start or control the local read-only AIM UI for the current or explicitly named repository | may manage a user-scope local UI process and instance metadata; never writes repository or AIM runtime state |
 | `/aim to-backlog [inline input \| from <source>]` | turn user-supplied Epic descriptions or one explicit accessible source into planned AIM UI Backlog candidates | atomically merges only `.aim/portfolio-backlog.json`; never activates work or creates canonical runtime state |
+| `/aim repair-catalog <candidate-id>` | preview one exact completed runtime-linked Backlog relation and request explicit repair approval | after approval, may atomically archive the contained workspace, remove its catalog entry, retire the matching Backlog record, and publish bounded audit evidence |
 | `/aim configure-agents` | inspect or update project role expertise and regenerate selected supplier-native specialists through a reviewed plan | may update `aim.roles.yaml` and AIM-owned adapter files; never `.aim/` runtime state |
 | `/aim calibrate-repo` | verify and persist reusable repository knowledge using the canonical calibration flow | writes only approved profile or user-hint facts; never active state |
 | `/aim remember-repo <category> "<rule>"` | add one structured shared or personal repository rule | writes the owning profile or user-hint file; never `.aim/` |
@@ -135,6 +136,35 @@ this planned-Epic synthesis. If its exact Epic and Increment relation is absent
 from the active catalog, the read model must exclude it from activation and
 publish a read-only diagnostic containing the candidate, Epic, and runtime
 identities; it must not reinterpret missing catalog authority as new work.
+
+## Reviewed Portfolio catalog repair
+
+`/aim repair-catalog <candidate-id>` is the explicit chat-owned recovery route
+for one completed workspace relation that should leave the active Portfolio.
+The command never runs from observation alone. AIM chat first resolves the exact
+candidate, Epic, runtime Increment, non-root catalog workspace, state timestamp,
+and contained Gate E acceptance evidence. It then invokes the trusted
+package-owned `scripts/aim_catalog_repair.py` for a no-write preview.
+
+The preview binds catalog, Backlog, state, acceptance, and workspace-tree
+SHA-256 values plus a deterministic contained archive and audit destination.
+Apply requires those exact values and a separate explicit operator approval.
+Success moves the workspace tree unchanged into `.aim/archive/`, removes its
+active catalog entry, removes only the reviewed runtime-linked Backlog record,
+and writes the complete retired candidate plus evidence hashes to a sibling
+audit file. Unrelated planning candidates and catalog workspaces retain their
+order and content.
+
+The helper rejects root-workspace archival, incomplete or non-Gate-E state,
+wrong identities, multiple runtime-linked records for the Epic, missing or
+mismatched acceptance content, traversal, symlinks, stale source bytes, and
+destination collisions before mutation. Every handled publication-checkpoint
+failure restores the prior catalog bytes, Backlog bytes, and workspace path;
+rollback failure is reported as operator attention rather than atomic success.
+The helper owns data safety only: it cannot decide that repair is appropriate,
+approve its own preview, rewrite accepted evidence, or grant runtime authority.
+AIM UI remains GET/HEAD-only and retains its diagnostic for unrepaired or
+manually contradictory history.
 
 ### Roadmap recovery and execution handoff
 

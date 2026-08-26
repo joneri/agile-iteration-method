@@ -284,10 +284,10 @@ OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
-        "# Agile Iteration Method (AIM) 2.8",
+        "# Agile Iteration Method (AIM) 2.9",
         "## Install",
         "## How AIM works",
-        "## What is new in v2.8.1",
+        "## What is new in v2.9.0",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",
@@ -369,6 +369,7 @@ CANONICAL_AIM_COMMANDS = [
     "/aim help",
     "/aim config",
     "/aim to-backlog",
+    "/aim repair-catalog",
     "/aim configure-agents",
     "/aim calibrate-repo",
     "/aim remember-repo",
@@ -389,6 +390,7 @@ CLAUDE_COMMAND_SURFACES = {
     "/aim help": ".claude/commands/help-aim.md",
     "/aim config": ".claude/commands/config-aim.md",
     "/aim to-backlog": ".claude/commands/to-backlog-aim.md",
+    "/aim repair-catalog": ".claude/commands/repair-catalog-aim.md",
     "/aim configure-agents": ".claude/commands/configure-agents-aim.md",
     "/aim calibrate-repo": ".claude/commands/calibrate-repo.md",
     "/aim remember-repo": ".claude/commands/remember-repo.md",
@@ -424,6 +426,7 @@ REQUIRED_ADAPTER_ENTRY_MODEL_MARKERS = [
     "/aim status",
     "/aim config",
     "/aim to-backlog",
+    "/aim repair-catalog",
     "/aim upgrade",
     "/aim mode",
     "/aim cost",

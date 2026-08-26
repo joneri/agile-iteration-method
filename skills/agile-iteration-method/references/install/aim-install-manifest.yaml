@@ -124,6 +124,7 @@ aimInstallManifest:
     aimUi:
       files:
         - scripts/aim_start.py
+        - scripts/aim_catalog_repair.py
         - scripts/aim_backlog.py
         - scripts/aim_portfolio.py
         - scripts/aim_portfolio_run.py
@@ -138,7 +139,7 @@ aimInstallManifest:
       includedWith: all-footprints
       targetOwned: true
       readOnlyRuntime: true
-      boundedWrites: portfolio-backlog-and-chat-owned-run-checkpoints
+      boundedWrites: reviewed-catalog-repair-portfolio-backlog-and-chat-owned-run-checkpoints
     schemas:
       source: schemas/
       destination: schemas/

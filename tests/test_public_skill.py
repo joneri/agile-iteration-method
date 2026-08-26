@@ -46,6 +46,7 @@ class PublicSkillTests(unittest.TestCase):
         package = REPO_ROOT / PACKAGE_RELATIVE_PATH
         for relative in (
             "scripts/aim_backlog.py",
+            "scripts/aim_catalog_repair.py",
             "scripts/aim_ui_control.py",
             "scripts/aim_ui.py",
             "scripts/aim_actions.py",
@@ -73,6 +74,14 @@ class PublicSkillTests(unittest.TestCase):
         )
         self.assertEqual(backlog_help.returncode, 0, backlog_help.stderr)
         self.assertIn("Backlog", backlog_help.stdout)
+        repair_help = subprocess.run(
+            [sys.executable, str(package / "scripts/aim_catalog_repair.py"), "--help"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        self.assertEqual(repair_help.returncode, 0, repair_help.stderr)
+        self.assertIn("catalog repair", repair_help.stdout)
 
     def test_generation_is_byte_identical_in_clean_directories(self) -> None:
         rendered = render_package(REPO_ROOT)

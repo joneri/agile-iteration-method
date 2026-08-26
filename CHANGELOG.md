@@ -1,5 +1,39 @@
 # Changelog
 
+## 2026-08-26 - AIM 2 minor release v2.9.0
+- Added `/aim repair-catalog <candidate-id>` as a first-class reviewed recovery
+  command across canonical, portable, Codex, GitHub Copilot, and Claude
+  surfaces.
+- Added a trusted package-owned preview/apply helper that binds the exact
+  candidate, Epic, runtime Increment, non-root workspace, checkpoint, Gate E
+  evidence, and source hashes before mutation.
+- Made approved repair archive the workspace unchanged, remove its active
+  catalog entry, retire only the matching runtime-linked Backlog record, and
+  publish bounded audit evidence as one rollback-safe operation.
+- Added fail-closed handling for stale or ambiguous authority, root and escaped
+  workspaces, traversal, symbolic links, oversized workspace trees, destination
+  collisions, mismatched acceptance, and concurrent workspace replacement.
+- Added exact rollback coverage for every handled publication checkpoint plus
+  installer, adapter, command-contract, and generated public-skill regression
+  coverage.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, and installer manifest remains `1.0`. Public skill package format
+advances from `8` to `9` because the package gains the trusted
+`aim_catalog_repair.py` runtime helper. Existing workspaces and Backlog files
+are never repaired or rewritten without an explicit reviewed preview and apply
+approval.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`. Adaptive installations can
+rerun their reviewed preview/apply installer flow to receive the catalog-repair
+helper and synchronized native adapter surfaces.
+
+Known limitations: rollback is exact for handled failures. Abrupt process or
+operating-system termination between filesystem operations has no durable
+crash journal. The helper repairs one reviewed relation at a time, does not
+infer repair intent, and never gives AIM UI write authority.
+
 ## 2026-08-25 - AIM 2 patch release v2.8.1
 - Prevented Backlog records that already carry `runtimeIncrementId` from being
   synthesized as new Planned Epics when their exact runtime workspace is absent

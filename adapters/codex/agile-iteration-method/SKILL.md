@@ -162,6 +162,7 @@ Treat these as AIM intents when the current adapter supports them or when the us
 - `/aim config`
 - `/aim ui [start|open|status|stop] [repo]`
 - `/aim to-backlog [inline input | from <source>]`
+- `/aim repair-catalog <candidate-id>`
 - `/aim configure-agents`
 - `/aim calibrate-repo`
 - `/aim remember-repo <category> "<rule>"`
@@ -200,6 +201,16 @@ pause on ambiguity. Send normalized candidates to the trusted package-owned
 script. The helper atomically merges only `.aim/portfolio-backlog.json`; it
 cannot activate work or create runtime authority. Report counts and open the
 repo through the trusted AIM UI launcher after success.
+
+`/aim repair-catalog <candidate-id>` requires a separately reviewed operator
+decision. Resolve the exact runtime-linked candidate, Epic, Increment, non-root
+catalog workspace, state timestamp, and contained Gate E acceptance evidence,
+then use trusted package-owned `scripts/aim_catalog_repair.py` for a no-write
+preview. Show all source digests and archive/audit destinations; `--apply` must
+match every previewed expected value. Success archives the workspace unchanged,
+removes its catalog entry, retires the exact Backlog record, and writes audit
+evidence together. Ambiguous, stale, active, unaccepted, root, escaped,
+symlinked, or colliding relations fail closed. AIM UI never invokes repair.
 
 For a genuinely new `/aim start "EPIC: ..."`, inspect
 `.aim/ui-portfolio.json` before the first runtime write. When present, use the

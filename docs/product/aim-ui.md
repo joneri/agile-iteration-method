@@ -204,6 +204,14 @@ a read-only diagnostic naming the candidate, Epic, and runtime Increment. AIM
 chat may review archived history or catalog repair; the browser never guesses,
 re-registers, or reactivates the relation.
 
+After AIM chat verifies that the relation is completed history, the operator
+may use `/aim repair-catalog <candidate-id>`. AIM presents an immutable preview
+binding the workspace, state, acceptance evidence, and source hashes before
+requesting explicit approval. The approved transaction archives the contained
+workspace unchanged, removes its catalog entry, retires the exact Backlog
+record, and writes reversible audit evidence together. AIM UI only reflects the
+result on its next poll; it never performs or approves the repair itself.
+
 This file is planning input only. It may contain identity, description,
 priority, and timestamps. It must not contain gate status, role transitions,
 acceptance, scheduling locks, or agent instructions. Only the main AIM thread

@@ -27,6 +27,7 @@
     "references/version-and-installation.md",
     "scripts/aim_actions.py",
     "scripts/aim_backlog.py",
+    "scripts/aim_catalog_repair.py",
     "scripts/aim_portfolio.py",
     "scripts/aim_portfolio_run.py",
     "scripts/aim_start.py",
@@ -46,39 +47,39 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.8.1",
+  "productVersion": "2.9.0",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
     "repoProfile": "0.2"
   },
-  "publicSkillPackageVersion": 8,
+  "publicSkillPackageVersion": 9,
   "runtimeContractVersion": "2.0",
   "runtimeStateSchemaVersion": "1.0",
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "7d3067cdb2e827253a3bbe9d5a70c13fd70875479ec5ff6cb94b0f43302a7c01",
+      "sha256": "c4da7469baf9bc03cbd43a2c583294ef1218de2b76a1f5b3632df565cfd3de1d",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "b58801e7e44610fad40d6d112a099116fc5c6947453235f480c7bac0bcf5b743",
+      "sha256": "4b113a3290986c0c6a5c6655686d706d6cc7d57d408b985228d06c0ab1669a27",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "ed9a48d133ef11d05bd793483918896555e0d2e741039ddca6f4f5f7f846fed5",
+      "sha256": "609627583162d7d6c3f13171f1d8b325330446ffe36d883cd49734d90c90e5eb",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
       "output": "references/adapter-entry-model.md",
-      "sha256": "18fe03f9e2e381e6a75d9da65af720e037b9faa64306da5d289f23127280a068",
+      "sha256": "649df5d57ba8ef10b7478fdf242431a81039efcd4b8f4aa69d1124ef30599b37",
       "source": "docs/workflow/adapter-entry-model.md"
     },
     {
       "output": "references/adapter-skill-bootstrap.md",
-      "sha256": "acc80aa97eaaf48a191308beb1c600935d27fc6002468d2b594124fcc83253b1",
+      "sha256": "fb2996a483c11c8cb4873985123e1f5daa4a0ad3d04cab1bca86a7b9c214340d",
       "source": "docs/workflow/adapter-skill-bootstrap.md"
     },
     {
@@ -148,7 +149,7 @@
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
-      "sha256": "9cf4adb6c8759fc26ef27f6065414ac8bf472d596b1cf6e69134d8e3b032d31f",
+      "sha256": "ad39a925e64431e2f884be0f290f3d15bc5bfdba980a2048cce1a2b134a730f0",
       "source": "install/aim-install-manifest.yaml"
     },
     {
@@ -158,7 +159,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "c94b6101b82efbf24da807958404613ad9bd7ecfd875f596f8286fa9638e4aa5",
+      "sha256": "8113ce620372292c25fda221ad5e8adf77dbe71c92c2042f8ca1ec3dfe9c50a1",
       "source": "VERSION"
     },
     {
@@ -168,13 +169,18 @@
     },
     {
       "output": "manifest.json",
-      "sha256": "7c01909456b4b280a8e7e5351011f0ff66df9ce385e21a884c7dccabccc00fe8",
+      "sha256": "d2397b758d3fc25053b0521f9ffc9a5a20d1cb458265fdd8dcdccc66ab3c48a7",
       "source": "scripts/build_public_skill.py"
     },
     {
       "output": "scripts/aim_start.py",
       "sha256": "b7ddcb6577bc44191f0bcf3660985932dbf6896beac0c42d560c221f18ea5c90",
       "source": "scripts/aim_start.py"
+    },
+    {
+      "output": "scripts/aim_catalog_repair.py",
+      "sha256": "d4967a4008b2f4cd88e06b1f1a9629bf528d9600a901b549dd94e2efcc0370b9",
+      "source": "scripts/aim_catalog_repair.py"
     },
     {
       "output": "scripts/aim_backlog.py",

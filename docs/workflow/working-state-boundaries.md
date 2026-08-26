@@ -352,6 +352,19 @@ creates runtime state. Stable candidate IDs, bounded validation, conflict
 classification, and atomic replacement make retries idempotent and leave the
 prior backlog unchanged on failure.
 
+An explicitly approved catalog repair is the only operation that may combine
+workspace archival with retirement of a runtime-linked Backlog record. The
+main AIM thread resolves one exact candidate/Epic/Increment/workspace relation
+and contained Gate E evidence, then uses the trusted
+`scripts/aim_catalog_repair.py` preview and digest-matched apply. The helper
+stages the changed catalog, Backlog, and audit payloads before moving the
+non-root workspace unchanged to a contained `.aim/archive/` destination. A
+handled failure restores the exact catalog and Backlog bytes and original
+workspace path. Multiple runtime-linked records, ambiguity, stale bytes,
+symlinks, incomplete state, and rollback errors fail closed for operator review.
+The browser never invokes this transaction and no repair is inferred merely
+because a catalog relation is missing.
+
 ## Portfolio control boundary
 
 `.aim/portfolio-control.json` is optional main-thread policy for portfolio

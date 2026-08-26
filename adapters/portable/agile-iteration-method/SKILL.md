@@ -195,6 +195,7 @@ state transitions through the platform's native skill route.
 | --- | --- | --- | --- |
 | `/aim to-backlog` | You want to create a Roadmap by pasting several Epic descriptions. | Asks one short question, interprets supplied text as untrusted evidence, and safely merges planned candidates. | AIM reports the result and opens the reviewable Roadmap in the control room. |
 | `/aim to-backlog from <source>` | One explicit repository file or available attachment already contains the Roadmap Epics. | Reads only that source, preserves explicit Increment intent, derives one initial candidate where needed, and atomically merges valid `INC-*` candidates. | Ambiguity pauses for review; success opens AIM UI with stationary Epic planning summaries. |
+| `/aim repair-catalog <candidate-id>` | Completed runtime-linked history should leave the active Portfolio without becoming Planned work. | Previews one exact workspace, acceptance, catalog, and Backlog transaction and requests explicit approval. | Approved apply archives the workspace unchanged, retires the Backlog record, removes the catalog entry, and writes audit evidence together. |
 
 ### Inspect and validate
 
@@ -426,6 +427,21 @@ but never runtime state. Report added, updated, skipped, derived, and ambiguous
 counts, then invoke the trusted AIM UI launcher. Imported candidates remain
 planning metadata on stationary Epics until a separate explicit Activate intent;
 they never masquerade as runtime Increment cards.
+
+`/aim repair-catalog <candidate-id>` is an explicit reviewed recovery intent,
+never an automatic reaction to a UI diagnostic. Resolve the exact candidate,
+Epic, runtime Increment, non-root catalog workspace, state timestamp, and
+contained Gate E acceptance evidence. Pass only those reviewed values to the
+trusted package-owned `scripts/aim_catalog_repair.py`, first without `--apply`.
+Show the immutable preview, including catalog, Backlog, state, acceptance, and
+workspace-tree digests plus archive and audit destinations, and require a
+separate explicit operator approval. Apply must use every previewed expected
+value. Success archives the workspace unchanged, removes its active catalog
+entry, retires only the exact runtime-linked Backlog record, and writes the full
+retired payload and evidence hashes. Stale, incomplete, ambiguous, root,
+traversing, symlinked, colliding, or unaccepted relations fail closed. The
+helper owns rollback-safe data mutation only; it cannot decide, approve, or
+rewrite history, and AIM UI remains read-only.
 
 For empty or legacy repositories, `/aim help` describes what AIM found before
 using state-file terminology and recommends exactly one safe next action. The

@@ -34,7 +34,7 @@ class DocumentationAuditTests(unittest.TestCase):
             readme = copied / "README.md"
             readme.write_text(readme.read_text() + "\n[missing](docs/nope.md)\n", encoding="utf-8")
             index = copied / "index.html"
-            index.write_text(index.read_text().replace('"softwareVersion": "2.8.1"', '"softwareVersion": "2.1.0"'), encoding="utf-8")
+            index.write_text(index.read_text().replace('"softwareVersion": "2.9.0"', '"softwareVersion": "2.1.0"'), encoding="utf-8")
             errors = audit(copied)
         self.assertTrue(any("broken link" in error for error in errors))
         self.assertTrue(any("softwareVersion" in error for error in errors))
