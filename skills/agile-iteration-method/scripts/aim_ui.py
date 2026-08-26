@@ -27,6 +27,7 @@ from aim_actions import (
     action_prompt,
     codex_deep_link,
 )
+from aim_activation import candidate_preflights
 from aim_portfolio import project_portfolio_control
 from aim_portfolio_run import project_portfolio_run, snapshot_hash
 
@@ -77,6 +78,14 @@ STATE_TO_OWNER = {
 AGENT_STATUSES = {"working", "waiting", "completed", "failed"}
 CANONICAL_ROLES = ("PO", "TDO", "Dev", "Reviewer")
 CANONICAL_GATES = {None, "Gate A", "Gate B", "Gate C", "Gate D", "Gate E"}
+UI_PROTOCOL_VERSION = "1.1"
+PAYLOAD_FILES = (
+    "scripts/aim_ui_control.py",
+    "scripts/aim_ui.py",
+    "aim-ui/index.html",
+    "aim-ui/app.js",
+    "aim-ui/styles.css",
+)
 
 
 class AimUiError(ValueError):
@@ -87,6 +96,22 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace(
         "+00:00", "Z"
     )
+
+
+def payload_fingerprint() -> str:
+    """Fingerprint the startup-loaded backend and the served frontend payload."""
+
+    package_root = Path(__file__).resolve().parents[1]
+    digest = hashlib.sha256()
+    for relative in PAYLOAD_FILES:
+        path = package_root / relative
+        if path.is_symlink() or not path.is_file():
+            raise AimUiError(f"AIM UI payload file is missing or symlinked: {path}")
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -519,6 +544,10 @@ def _attach_actions(
                     backlog_updated_at=backlog_updated_at,
                 )
                 portfolio_state = candidate.get("portfolioState")
+                preflight = candidate.get("activationPreflight") or {
+                    "allowed": False,
+                    "message": "Activation preflight did not produce an admissible result.",
+                }
                 run_blocks_activation = (
                     portfolio_run.get("configured")
                     and portfolio_run.get("status") in {"running", "paused"}
@@ -530,6 +559,7 @@ def _attach_actions(
                     epic["lifecycle"] == "planned"
                     and not run_blocks_activation
                     and control["admission"] in {"open", "unbounded"}
+                    and preflight["allowed"]
                 )
                 reason = (
                     "Portfolio Auto has selected this candidate; resume activation in AIM chat."
@@ -538,10 +568,13 @@ def _attach_actions(
                     if portfolio_state == "contradictory"
                     else "Portfolio Auto owns the approved snapshot order."
                     if run_blocks_activation
-                    else
-                    "Portfolio capacity is full." if control["admission"] == "full"
+                    else preflight["message"]
+                    if not preflight["allowed"]
+                    and preflight.get("code") not in {"capacity_full", "control_invalid"}
+                    else "Portfolio capacity is full." if control["admission"] == "full"
                     else "The portfolio is over capacity." if control["admission"] == "over_capacity"
                     else "Portfolio admission is blocked." if control["admission"] == "blocked"
+                    else preflight["message"] if not preflight["allowed"]
                     else None
                 )
                 epic["actions"].append(
@@ -826,8 +859,26 @@ def _roadmap_projection(
     backlog_items: list[dict[str, Any]],
     backlog_updated_at: str,
     valid: bool,
+    preflights: dict[str, dict[str, Any]],
 ) -> dict[str, Any]:
-    eligible = [item for item in backlog_items if not item.get("runtimeIncrementId")]
+    eligible = [
+        item
+        for item in backlog_items
+        if not item.get("runtimeIncrementId")
+        and preflights.get(item["id"], {}).get("allowed", False)
+    ]
+    blocked = [
+        {
+            "candidateId": item["id"],
+            "epicId": item["epicId"],
+            "reason": preflights.get(item["id"], {}).get(
+                "message", "Activation preflight did not produce an admissible result."
+            ),
+        }
+        for item in backlog_items
+        if not item.get("runtimeIncrementId")
+        and not preflights.get(item["id"], {}).get("allowed", False)
+    ]
     snapshot_payload = [
         {
             "candidateId": item["id"],
@@ -851,6 +902,7 @@ def _roadmap_projection(
         "updatedAt": backlog_updated_at if configured else None,
         "snapshotSha256": snapshot_digest,
         "snapshot": snapshot_payload,
+        "blocked": blocked,
         "auto": {
             "supported": valid and bool(eligible),
             "command": command,
@@ -1553,13 +1605,21 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             backlog_updated_at = str(_read_json(aim_root / BACKLOG_FILE).get("updatedAt") or "unknown")
         except AimUiError:
             pass
+    activation_results = candidate_preflights(
+        repo_root, backlog_items, backlog_updated_at=backlog_updated_at
+    )
     base["roadmap"] = _roadmap_projection(
-        aim_root, backlog_items, backlog_updated_at, backlog_valid
+        aim_root,
+        backlog_items,
+        backlog_updated_at,
+        backlog_valid,
+        activation_results,
     )
     base["recovery"] = _recovery_projection(
         source_kind, workspace_diagnostics, base["roadmap"]
     )
     for candidate in backlog_items:
+        candidate["activationPreflight"] = activation_results.get(candidate["id"])
         key = (
             candidate["epicId"],
             candidate["runtimeIncrementId"] or candidate["id"],
@@ -1732,11 +1792,13 @@ class AimUiServer(ThreadingHTTPServer):
         repo_root: Path,
         ui_root: Path,
         instance_id: str | None = None,
+        payload_hash: str | None = None,
         quiet: bool = False,
     ):
         self.repo_root = repo_root.resolve()
         self.ui_root = ui_root.resolve()
         self.instance_id = instance_id
+        self.payload_fingerprint = payload_hash or payload_fingerprint()
         self.quiet = quiet
         super().__init__(address, AimUiHandler)
 
@@ -1780,6 +1842,8 @@ class AimUiHandler(BaseHTTPRequestHandler):
                     "pid": os.getpid(),
                     "instanceId": self.server.instance_id,
                     "readOnly": True,
+                    "protocolVersion": UI_PROTOCOL_VERSION,
+                    "payloadFingerprint": self.server.payload_fingerprint,
                 },
             )
             return
@@ -1834,6 +1898,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--no-browser", action="store_true", help="Do not open a browser tab")
     parser.add_argument("--quiet", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--instance-id", help=argparse.SUPPRESS)
+    parser.add_argument("--expected-payload-fingerprint", help=argparse.SUPPRESS)
     return parser.parse_args()
 
 
@@ -1845,8 +1910,19 @@ def main() -> int:
         raise SystemExit(f"Repository directory was not found at {repo_root}")
     if not ui_root.is_dir():
         raise SystemExit(f"AIM UI assets are missing at {ui_root}")
+    fingerprint = payload_fingerprint()
+    if (
+        args.expected_payload_fingerprint is not None
+        and args.expected_payload_fingerprint != fingerprint
+    ):
+        raise SystemExit("AIM UI payload changed between launcher verification and server startup")
     server = AimUiServer(
-        (args.host, args.port), repo_root, ui_root, args.instance_id, args.quiet
+        (args.host, args.port),
+        repo_root,
+        ui_root,
+        args.instance_id,
+        fingerprint,
+        args.quiet,
     )
     host, port = server.server_address[:2]
     url = f"http://{host}:{port}/"

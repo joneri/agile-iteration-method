@@ -215,6 +215,75 @@ class PortfolioRunTests(unittest.TestCase):
                 create_run(repo, "MANDATE-EMPTY", "t1", "t1")
             self.assertFalse((repo / ".aim/portfolio-run.json").exists())
 
+    def test_run_snapshot_excludes_allocated_epic_and_rechecks_before_write(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            aim = repo / ".aim"
+            (aim / "increments").mkdir()
+            (aim / "decisions").mkdir()
+            (aim / "reviews").mkdir()
+            state = {
+                "stateSchemaVersion": "1.0",
+                "aimVersion": "2.0",
+                "mode": "Auto",
+                "costProfile": "Deep",
+                "epicId": "EPIC-FIRST",
+                "epicStatus": "epic_complete",
+                "activeIncrementId": None,
+                "previousIncrementId": "DI-001",
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "platform": "test",
+                "parallelSupport": {
+                    "available": False,
+                    "enabled": False,
+                    "policy": "sequential_fallback",
+                },
+                "commitMode": "optional",
+                "updatedAt": "2026-08-22T09:00:00Z",
+            }
+            (aim / "state.json").write_text(json.dumps(state) + "\n")
+            (aim / "epic.md").write_text("# EPIC-FIRST — Existing outcome\n")
+            (aim / "increments/001-plan.md").write_text(
+                "# DI-001 — Existing\n\nEpic: EPIC-FIRST\n"
+            )
+            (aim / "ui-portfolio.json").write_text(
+                json.dumps({"portfolioVersion": "1.0", "workspaces": [{"path": "."}]})
+                + "\n"
+            )
+
+            run = create_run(
+                repo,
+                "MANDATE-PREFLIGHT",
+                "t1",
+                "t1",
+                expected_backlog_updated_at="2026-08-22T10:00:00Z",
+            )
+            self.assertEqual(
+                [item["candidateId"] for item in run["snapshot"]], ["INC-SECOND"]
+            )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            path = repo / ".aim/portfolio-backlog.json"
+
+            def make_stale() -> None:
+                backlog = json.loads(path.read_text())
+                backlog["updatedAt"] = "2026-08-22T10:09:00Z"
+                path.write_text(json.dumps(backlog) + "\n")
+
+            with self.assertRaisesRegex(
+                PortfolioRunError, "changed immediately before run creation"
+            ):
+                create_run(
+                    repo,
+                    "MANDATE-STALE-PREFLIGHT",
+                    "t1",
+                    "t1",
+                    before_write_hook=make_stale,
+                )
+            self.assertFalse((repo / ".aim/portfolio-run.json").exists())
+
     def test_completed_run_archives_exactly_and_allows_fresh_start(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))

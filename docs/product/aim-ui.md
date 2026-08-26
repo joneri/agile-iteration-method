@@ -60,6 +60,16 @@ server, and UI assets used by `/aim ui`. It does not write those files into the
 target repository. Adaptive installations continue to place the payload in the
 selected repo or external AIM home according to their reviewed footprint.
 
+The launcher fingerprints its launcher, Python server, and served HTML,
+JavaScript, and CSS as one protocol-compatible payload. Instance metadata and
+`/api/health` must report that same fingerprint before `/aim ui` may reuse a
+running process. After an in-place upgrade, `status` reports a verified but
+incompatible instance as stale; the next start signals only that exact
+repository/instance/PID relation, waits for it to leave, and starts the aligned
+payload. Missing identity evidence removes metadata without signalling the
+named PID. Repository runtime files and accepted evidence remain read-only
+throughout replacement.
+
 ## Declare several Epic workspaces
 
 Without configuration, AIM UI reads the existing root `.aim` workspace exactly
@@ -222,7 +232,13 @@ bound.
 
 The Portfolio tab presents these stationary planning candidates as a Roadmap.
 It previews the exact eligible order and a deterministic content hash before
-execution.
+execution. Eligibility is not inferred from a missing `runtimeIncrementId`
+alone. The read model applies the same repository-bound activation preflight as
+Start Epic, including canonical Epic allocation, contained catalog/workspace
+relations, path collisions, configured capacity, Backlog freshness, and
+contradictory runtime authority. A rejected candidate stays visible with one
+actionable reason, but it does not contribute to `eligibleCount`, the immutable
+snapshot, or the proposed mandate. Projection remains byte-for-byte read-only.
 
 ## Execute the Roadmap as one Portfolio
 
@@ -352,6 +368,11 @@ the decision artifact modification time, and uses the numeric Increment identity
 as a deterministic tie-breaker. Only the newest ten entries remain in this
 compact ledger. Closed Increments shows every accepted card and never deletes
 its runtime evidence.
+
+`history.recentDeliveries` is a required launcher/backend/frontend compatibility
+contract for this ledger. Binding lifecycle reuse to the payload fingerprint
+prevents a newer frontend from silently interpreting an older backend response
+as zero recent delivery activity.
 
 Each Recent Deliveries entry keeps its Increment title, identity, parent Epic,
 and acceptance time visible without hover. Activating it opens a keyboard-

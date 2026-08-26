@@ -17,7 +17,7 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 9
+PUBLIC_SKILL_PACKAGE_VERSION = 10
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
@@ -48,6 +48,7 @@ SCHEMA_SOURCES: tuple[Path, ...] = (
 INSTALL_MANIFEST_SOURCE = Path("install/aim-install-manifest.yaml")
 DOCUMENTATION_LICENSE_SOURCE = Path("docs/LICENSE-DOCS")
 UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
+    Path("scripts/aim_activation.py"),
     Path("scripts/aim_start.py"),
     Path("scripts/aim_catalog_repair.py"),
     Path("scripts/aim_backlog.py"),

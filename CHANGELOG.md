@@ -1,5 +1,40 @@
 # Changelog
 
+## 2026-08-26 - AIM 2 patch release v2.9.1
+- Bound AIM UI process reuse to a protocol version and deterministic payload
+  fingerprint covering the launcher, backend, and served frontend assets.
+- Made AIM UI report verified incompatible processes as stale and safely replace
+  only the exact repository-bound instance, preserving runtime and acceptance
+  evidence throughout the lifecycle transition.
+- Added one shared repository-bound activation preflight for Start Epic, AIM UI
+  Roadmap eligibility, Portfolio snapshot construction, and run creation.
+- Excluded candidates with allocated Epic identities, workspace collisions,
+  stale Backlog authority, capacity conflicts, or contradictory runtime links
+  from Portfolio mandates while keeping them visible with actionable reasons.
+- Revalidated the exact activation snapshot and Backlog bytes immediately before
+  Portfolio run creation so changed admission fails closed without a partial
+  run checkpoint.
+- Added lifecycle, payload-compatibility, activation, traversal, symbolic-link,
+  collision, freshness, replay, capacity, and concurrent-change regression
+  coverage for GitHub issues #5 and #7.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, and installer manifest remains `1.0`. Public skill package format
+advances from `9` to `10` because the package gains the shared trusted
+`aim_activation.py` runtime helper. Existing workspaces, Backlog files, and
+accepted evidence require no migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI. Adaptive
+installations can rerun their reviewed preview/apply installer flow to receive
+the synchronized activation helper and payload-compatible lifecycle control.
+
+Known limitations: stale-process replacement requires exact live repository,
+instance, and PID identity. When that identity cannot be verified, AIM removes
+only stale metadata and never signals the named process. Rejected Roadmap
+candidates remain visible planning evidence and require operator correction or
+retirement before they can enter a Portfolio mandate.
+
 ## 2026-08-26 - AIM 2 minor release v2.9.0
 - Added `/aim repair-catalog <candidate-id>` as a first-class reviewed recovery
   command across canonical, portable, Codex, GitHub Copilot, and Claude

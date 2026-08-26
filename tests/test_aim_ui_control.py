@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -186,6 +187,87 @@ class AimUiControlTests(unittest.TestCase):
         )
         self.assertEqual(stopped.returncode, 0, stopped.stderr)
         self.assertTrue(json.loads(stopped.stdout)["stopped"])
+
+    def test_payload_change_reports_stale_and_replaces_verified_pid(self) -> None:
+        payload = self.root / "payload"
+        shutil.copytree(REPO_ROOT / "scripts", payload / "scripts")
+        shutil.copytree(REPO_ROOT / "aim-ui", payload / "aim-ui")
+        launcher = payload / "scripts/aim_ui_control.py"
+        environment = {
+            **os.environ,
+            control.STATE_ENV: str(self.root / "upgrade-instances"),
+        }
+        command = [
+            sys.executable,
+            str(launcher),
+            "--json",
+            "start",
+            str(self.repo),
+            "--no-browser",
+        ]
+        first = subprocess.run(
+            command, capture_output=True, text=True, timeout=10, env=environment
+        )
+        self.assertEqual(first.returncode, 0, first.stderr)
+        original = json.loads(first.stdout)
+        self.assertTrue(original["compatible"])
+        self.assertEqual(len(original["payloadFingerprint"]), 64)
+        try:
+            app = payload / "aim-ui/app.js"
+            app.write_text(
+                app.read_text(encoding="utf-8") + "\n// upgraded payload fixture\n",
+                encoding="utf-8",
+            )
+            status = subprocess.run(
+                [
+                    sys.executable,
+                    str(launcher),
+                    "--json",
+                    "status",
+                    str(self.repo),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=10,
+                env=environment,
+            )
+            self.assertEqual(status.returncode, 0, status.stderr)
+            stale = json.loads(status.stdout)
+            self.assertEqual(stale["status"], "stale")
+            self.assertFalse(stale["compatible"])
+            self.assertEqual(
+                stale["observedPayloadFingerprint"], original["payloadFingerprint"]
+            )
+            self.assertNotEqual(
+                stale["expectedPayloadFingerprint"], original["payloadFingerprint"]
+            )
+
+            second = subprocess.run(
+                command, capture_output=True, text=True, timeout=10, env=environment
+            )
+            self.assertEqual(second.returncode, 0, second.stderr)
+            replacement = json.loads(second.stdout)
+            self.assertFalse(replacement["reused"])
+            self.assertTrue(replacement["replacedIncompatible"])
+            self.assertTrue(replacement["compatible"])
+            self.assertNotEqual(replacement["pid"], original["pid"])
+            self.assertNotEqual(
+                replacement["payloadFingerprint"], original["payloadFingerprint"]
+            )
+        finally:
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(launcher),
+                    "--json",
+                    "stop",
+                    str(self.repo),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=10,
+                env=environment,
+            )
 
 
 if __name__ == "__main__":

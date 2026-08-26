@@ -295,6 +295,22 @@ Only the main AIM thread may change:
 
 Subagents and helper adapters may suggest updates, but they do not own state transitions.
 
+## AIM UI lifecycle compatibility boundary
+
+Before AIM UI reads any workspace, its user-scope lifecycle metadata is bound to
+one startup payload fingerprint covering the launcher, Python server, and served
+HTML, JavaScript, and CSS. The running server records that startup fingerprint
+in memory and returns it with the protocol version from `/api/health`; changing
+files on disk cannot make an already-imported backend claim compatibility.
+
+Reuse requires exact repository, instance, PID, read-only, protocol, metadata
+fingerprint, and server fingerprint agreement. A verified mismatch is stale and
+may be replaced under the repository instance lock. An unverified process is
+never signalled: only its stale metadata may be removed. Lifecycle replacement
+changes user-scope process metadata, not `.aim` runtime, Portfolio planning,
+Gate evidence, or acceptance history. This keeps the
+`history.recentDeliveries` frontend/backend contract aligned after upgrades.
+
 ## Multi-Epic UI portfolio boundary
 
 AIM UI may combine several independently authoritative working-state directories
@@ -403,6 +419,14 @@ A stale expected timestamp, changed snapshot, malformed field, symlink,
 duplicate identity, invalid transition, or contradictory active candidate fails
 closed without mutating existing Backlog or Epic state.
 
+`scripts/aim_activation.py` owns the shared read-only activation preflight used
+by Start Epic, AIM UI Roadmap projection, immutable snapshot construction, and
+run creation. It validates candidate and Epic identity, catalog containment and
+allocation, workspace collisions, configured capacity, Backlog timestamps, and
+runtime contradictions. Run creation repeats the preflight immediately before
+its atomic write and compares the exact snapshot and Backlog bytes; changed
+admission leaves `.aim/portfolio-run.json` absent.
+
 The cross-Epic handoff is ordered and restart-safe. Completion first preserves
 the closed workspace, its accepted Gate E evidence, its Backlog
 `runtimeIncrementId`, and its UI catalog entry. Selecting the next snapshot
@@ -415,8 +439,9 @@ missing or mismatched workspace, candidate identity, runtime link, increment,
 or status is contradictory and fails closed rather than being projected as a
 normal empty board.
 
-The snapshot contains only valid Backlog candidates without
-`runtimeIncrementId`, matching AIM UI's visible planned work. A validated
+The snapshot contains only Backlog candidates without `runtimeIncrementId` that
+also pass the shared activation preflight, matching AIM UI's visible eligible
+work. Rejected candidates remain visible planning evidence with a reason. A validated
 terminal run may move unchanged into `.aim/archive/` only through the helper's
 explicit timestamp-guarded archive transition. This frees the single canonical
 run location for a new mandate without deleting trace evidence or replaying

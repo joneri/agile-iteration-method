@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 2.9
 
-![AIM 2.9.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 2.9.1 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -130,17 +130,18 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.9.0
+## What is new in v2.9.1
 
-AIM now provides `/aim repair-catalog <candidate-id>` for an explicitly reviewed
-completed-history relation. A no-write preview binds the exact candidate, Epic,
-runtime Increment, workspace, checkpoint, acceptance evidence, and source
-hashes before an approved apply can proceed.
+AIM UI now binds a running control room to the exact launcher, backend, and
+frontend payload. After an upgrade, a verified incompatible process is reported
+as stale and safely replaced instead of combining a new page with an old server
+that can hide accepted Portfolio deliveries.
 
-The repair archives the workspace unchanged, removes its active catalog entry,
-retires only the matching runtime-linked Backlog record, and publishes audit
-evidence. Unsafe, stale, or ambiguous relations fail closed, and every handled
-publication failure restores the exact prior state. AIM UI remains read-only.
+Portfolio Auto and individual Start Epic actions now share one repository-bound
+activation preflight. Candidates with allocated Epic identities, workspace
+collisions, stale authority, capacity conflicts, or contradictory runtime links
+remain visible with an actionable reason but cannot enter a mandate. Admission
+is checked again immediately before run creation. AIM UI remains read-only.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
@@ -164,6 +165,6 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v2.9.0**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.9.1**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

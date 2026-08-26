@@ -419,6 +419,7 @@ class ModeFootprintContractTests(unittest.TestCase):
             self.assertIn(f".claude/agents/aim-{role}.md", destinations)
             self.assertIn(f".github/agents/aim-{role}.agent.md", destinations)
         for path in (
+            "scripts/aim_activation.py",
             "scripts/aim_backlog.py",
             "scripts/aim_catalog_repair.py",
             "scripts/aim_portfolio.py",
@@ -449,6 +450,7 @@ class ModeFootprintContractTests(unittest.TestCase):
             )
         )
         for path in (
+            "scripts/aim_activation.py",
             "scripts/aim_backlog.py",
             "scripts/aim_catalog_repair.py",
             "scripts/aim_portfolio.py",
@@ -571,7 +573,7 @@ class ModeFootprintContractTests(unittest.TestCase):
         rendered = render.render_text(plan)
         self.assertIn("keeping or committing it is the solo user's choice", rendered)
         self.assertEqual(plan["scopeSummary"]["repoActionCount"], 0)
-        self.assertEqual(plan["scopeSummary"]["localActionCount"], 11)
+        self.assertEqual(plan["scopeSummary"]["localActionCount"], 12)
 
     def test_ui_payload_apply_is_idempotent_and_collision_reviewed(self) -> None:
         manifest = load_manifest(REPO_ROOT)
@@ -599,6 +601,10 @@ class ModeFootprintContractTests(unittest.TestCase):
                 target_root=target_root,
                 manifest=manifest,
                 force=False,
+            )
+            self.assertEqual(
+                (target_root / "scripts/aim_activation.py").read_bytes(),
+                (REPO_ROOT / "scripts/aim_activation.py").read_bytes(),
             )
             self.assertEqual(
                 (target_root / "scripts/aim_backlog.py").read_bytes(),

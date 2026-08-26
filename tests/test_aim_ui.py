@@ -327,7 +327,6 @@ class AimUiTests(unittest.TestCase):
                 "Accepted at: 2026-08-23T14:00:00Z\n",
                 encoding="utf-8",
             )
-            self._portfolio(repo, ".")
             self._backlog(
                 repo,
                 [
@@ -350,6 +349,7 @@ class AimUiTests(unittest.TestCase):
                 ],
             )
             run = create_run(repo, "MANDATE-HANDOFF", "t1", "t1")
+            self._portfolio(repo, ".")
             run = activate_next(repo, run["updatedAt"], "t2")
             backlog_path = repo / ".aim/portfolio-backlog.json"
             backlog = json.loads(backlog_path.read_text(encoding="utf-8"))
@@ -823,6 +823,63 @@ class AimUiTests(unittest.TestCase):
         )
         self.assertEqual(board["health"], "partial")
         self.assertEqual(len(board["warnings"]), 2)
+
+    def test_allocated_epic_is_blocked_consistently_across_action_and_roadmap(self) -> None:
+        runtime = state("epic_complete")
+        runtime.update(
+            {
+                "epicId": "EPIC-ALLOCATED",
+                "activeIncrementId": None,
+                "previousIncrementId": "DI-001",
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            self._portfolio(repo, ".")
+            self._backlog(
+                repo,
+                [
+                    {
+                        "id": "INC-ALLOCATED",
+                        "epicId": "EPIC-ALLOCATED",
+                        "epicTitle": "Make delivery visible",
+                        "title": "Must remain blocked",
+                        "priority": 1,
+                        "createdAt": "2026-08-21T13:00:00Z",
+                    },
+                    {
+                        "id": "INC-FRESH",
+                        "epicId": "EPIC-FRESH",
+                        "epicTitle": "Fresh delivery",
+                        "title": "May enter the mandate",
+                        "priority": 2,
+                        "createdAt": "2026-08-21T13:01:00Z",
+                    },
+                ],
+            )
+            catalog_before = (repo / ".aim/ui-portfolio.json").read_bytes()
+            backlog_before = (repo / ".aim/portfolio-backlog.json").read_bytes()
+            board = build_board(repo)
+
+            self.assertEqual((repo / ".aim/ui-portfolio.json").read_bytes(), catalog_before)
+            self.assertEqual((repo / ".aim/portfolio-backlog.json").read_bytes(), backlog_before)
+
+        allocated = next(epic for epic in board["epics"] if epic["id"] == "EPIC-ALLOCATED")
+        fresh = next(epic for epic in board["epics"] if epic["id"] == "EPIC-FRESH")
+        self.assertFalse(allocated["actions"][0]["enabled"])
+        self.assertIn("already allocated", allocated["actions"][0]["reason"])
+        self.assertTrue(fresh["actions"][0]["enabled"])
+        self.assertEqual(board["roadmap"]["eligibleCount"], 1)
+        self.assertEqual(
+            [item["candidateId"] for item in board["roadmap"]["snapshot"]],
+            ["INC-FRESH"],
+        )
+        self.assertEqual(
+            board["roadmap"]["blocked"][0]["reason"],
+            allocated["actions"][0]["reason"],
+        )
 
     def test_gate_a_workspace_has_epic_without_runtime_increment_card(self) -> None:
         runtime = state("gate_a_pending")
@@ -1528,6 +1585,10 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/board", timeout=3) as response:
                     payload = json.load(response)
                     self.assertTrue(payload["source"]["readOnly"])
+                with urlopen(f"{url}/api/health", timeout=3) as response:
+                    health = json.load(response)
+                    self.assertEqual(health["protocolVersion"], "1.1")
+                    self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST")
                 with self.assertRaises(HTTPError) as error:
                     urlopen(request, timeout=3)

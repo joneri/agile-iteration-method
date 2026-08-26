@@ -14,7 +14,9 @@ import os
 import re
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
+
+from aim_activation import candidate_preflights
 
 
 RUN_FILE = "portfolio-run.json"
@@ -259,15 +261,73 @@ def _write_atomic(path: Path, value: dict[str, Any]) -> None:
         raise
 
 
-def create_run(repo_root: Path, mandate_id: str, approved_at: str, updated_at: str) -> dict[str, Any]:
+def _activation_snapshot(
+    repo_root: Path,
+) -> tuple[list[dict[str, Any]], str, str, list[dict[str, str]]]:
+    aim_root = _inside_aim(repo_root)
+    backlog_path = aim_root / BACKLOG_FILE
+    backlog = _read_object(backlog_path)
+    candidates = _snapshot(backlog)
+    backlog_updated_at = str(backlog.get("updatedAt") or "")
+    preflights = candidate_preflights(
+        repo_root, candidates, backlog_updated_at=backlog_updated_at
+    )
+    eligible = [
+        item
+        for item in candidates
+        if preflights.get(item["candidateId"], {}).get("allowed", False)
+    ]
+    blocked = [
+        {
+            "candidateId": item["candidateId"],
+            "epicId": item["epicId"],
+            "reason": str(
+                preflights.get(item["candidateId"], {}).get(
+                    "message", "Activation preflight did not produce an admissible result."
+                )
+            ),
+        }
+        for item in candidates
+        if not preflights.get(item["candidateId"], {}).get("allowed", False)
+    ]
+    if not eligible:
+        detail = f" {blocked[0]['reason']}" if blocked else ""
+        raise PortfolioRunError(
+            "The Backlog contains no candidate that passes activation preflight." + detail
+        )
+    backlog_sha = hashlib.sha256(backlog_path.read_bytes()).hexdigest()
+    return eligible, backlog_updated_at, backlog_sha, blocked
+
+
+def create_run(
+    repo_root: Path,
+    mandate_id: str,
+    approved_at: str,
+    updated_at: str,
+    *,
+    expected_snapshot_sha256: str | None = None,
+    expected_backlog_updated_at: str | None = None,
+    before_write_hook: Callable[[], None] | None = None,
+) -> dict[str, Any]:
     aim_root = _inside_aim(repo_root)
     run_path = aim_root / RUN_FILE
     if run_path.exists() or run_path.is_symlink():
         raise PortfolioRunError(f"{RUN_FILE} already exists; resume, stop, or archive it explicitly.")
     if re.fullmatch(r"MANDATE-[A-Z0-9-]+", mandate_id) is None:
         raise PortfolioRunError("mandate id must be a canonical MANDATE-* id.")
-    snapshot = _snapshot(_read_object(aim_root / BACKLOG_FILE))
+    snapshot, backlog_updated_at, backlog_sha, _blocked = _activation_snapshot(repo_root)
     digest = snapshot_hash(snapshot)
+    if expected_snapshot_sha256 is not None and digest != expected_snapshot_sha256:
+        raise PortfolioRunError(
+            "The activatable Roadmap snapshot changed since mandate preview; reload before creating the run."
+        )
+    if (
+        expected_backlog_updated_at is not None
+        and backlog_updated_at != expected_backlog_updated_at
+    ):
+        raise PortfolioRunError(
+            "The Portfolio Backlog timestamp changed since mandate preview."
+        )
     value = {
         "runVersion": RUN_VERSION,
         "runId": f"PORTFOLIO-{digest[:12].upper()}",
@@ -282,6 +342,23 @@ def create_run(repo_root: Path, mandate_id: str, approved_at: str, updated_at: s
     issues = validate_run(value)
     if issues:
         raise PortfolioRunError("Invalid Portfolio run: " + "; ".join(issues))
+    if before_write_hook is not None:
+        before_write_hook()
+    if run_path.exists() or run_path.is_symlink():
+        raise PortfolioRunError(
+            f"{RUN_FILE} appeared during activation preflight; nothing was written."
+        )
+    current_snapshot, current_updated_at, current_backlog_sha, _current_blocked = (
+        _activation_snapshot(repo_root)
+    )
+    if (
+        current_snapshot != snapshot
+        or current_updated_at != backlog_updated_at
+        or current_backlog_sha != backlog_sha
+    ):
+        raise PortfolioRunError(
+            "Portfolio activation admission changed immediately before run creation; nothing was written."
+        )
     _write_atomic(run_path, value)
     return value
 
@@ -515,6 +592,8 @@ def _parser() -> argparse.ArgumentParser:
     start.add_argument("--mandate-id", required=True)
     start.add_argument("--approved-at", required=True)
     start.add_argument("--updated-at", required=True)
+    start.add_argument("--expected-snapshot-sha256")
+    start.add_argument("--expected-backlog-updated-at")
     archive = commands.add_parser("archive")
     archive.add_argument("--expected-updated-at", required=True)
     archive.add_argument("--archived-at", required=True)
@@ -536,7 +615,14 @@ def main() -> int:
     args = _parser().parse_args()
     archived_path: str | None = None
     try:
-        if args.command == "start": value = create_run(args.repo, args.mandate_id, args.approved_at, args.updated_at)
+        if args.command == "start": value = create_run(
+            args.repo,
+            args.mandate_id,
+            args.approved_at,
+            args.updated_at,
+            expected_snapshot_sha256=args.expected_snapshot_sha256,
+            expected_backlog_updated_at=args.expected_backlog_updated_at,
+        )
         elif args.command == "archive": value, archived_path = archive_run(args.repo, args.expected_updated_at, args.archived_at)
         elif args.command == "activate-next": value = activate_next(args.repo, args.expected_updated_at, args.updated_at)
         elif args.command == "checkpoint": value = checkpoint(args.repo, args.expected_updated_at, args.updated_at, args.candidate_id, args.epic_status, args.gate, args.authority)

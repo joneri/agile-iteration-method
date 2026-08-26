@@ -32,8 +32,19 @@ STATE_ENV = "AIM_UI_STATE_DIR"
 DEFAULT_STATE_ROOT = Path.home() / ".aim" / "ui" / "instances"
 MAX_METADATA_BYTES = 16_384
 MAX_LOG_BYTES = 1_048_576
+MAX_HEALTH_BYTES = 16_384
 START_TIMEOUT_SECONDS = 6.0
 _STARTED_PROCESSES: dict[int, subprocess.Popen[bytes]] = {}
+INSTANCE_VERSION = "1.1"
+LEGACY_INSTANCE_VERSION = "1.0"
+UI_PROTOCOL_VERSION = "1.1"
+PAYLOAD_FILES = (
+    "scripts/aim_ui_control.py",
+    "scripts/aim_ui.py",
+    "aim-ui/index.html",
+    "aim-ui/app.js",
+    "aim-ui/styles.css",
+)
 
 
 class AimUiControlError(RuntimeError):
@@ -66,6 +77,30 @@ def metadata_path(repo: Path) -> Path:
 
 def log_path(repo: Path) -> Path:
     return state_root() / f"{instance_key(repo)}.log"
+
+
+def payload_fingerprint() -> str:
+    """Fingerprint the launcher, server, and static assets as one UI payload."""
+
+    package_root = Path(__file__).resolve().parents[1]
+    digest = hashlib.sha256()
+    for relative in PAYLOAD_FILES:
+        path = package_root / relative
+        if path.is_symlink() or not path.is_file():
+            raise AimUiControlError(f"AIM UI payload file is missing or symlinked: {path}")
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def _valid_fingerprint(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
 
 
 @contextmanager
@@ -106,7 +141,7 @@ def _read_metadata(repo: Path) -> dict[str, Any] | None:
     }
     if (
         not isinstance(value, dict)
-        or value.get("instanceVersion") != "1.0"
+        or value.get("instanceVersion") not in {LEGACY_INSTANCE_VERSION, INSTANCE_VERSION}
         or not required.issubset(value)
         or value.get("repo") != str(repo)
         or not isinstance(value.get("pid"), int)
@@ -117,6 +152,14 @@ def _read_metadata(repo: Path) -> dict[str, Any] | None:
         or value.get("url") != f"http://127.0.0.1:{value.get('port')}/"
         or not isinstance(value.get("instanceId"), str)
         or not 16 <= len(value["instanceId"]) <= 128
+        or (
+            value.get("instanceVersion") == INSTANCE_VERSION
+            and not _valid_fingerprint(value.get("payloadFingerprint"))
+        )
+        or (
+            value.get("payloadFingerprint") is not None
+            and not _valid_fingerprint(value["payloadFingerprint"])
+        )
     ):
         path.unlink(missing_ok=True)
         return None
@@ -144,30 +187,104 @@ def _pid_exists(pid: int) -> bool:
     return True
 
 
-def _health(metadata: dict[str, Any], timeout: float = 0.4) -> bool:
+def _health_probe(metadata: dict[str, Any], timeout: float = 0.4) -> dict[str, Any]:
+    expected = payload_fingerprint()
     if not _pid_exists(metadata["pid"]):
-        return False
+        return {
+            "identityVerified": False,
+            "compatible": False,
+            "reason": "process_missing",
+            "expectedPayloadFingerprint": expected,
+            "observedPayloadFingerprint": None,
+        }
     try:
         with urlopen(f"{metadata['url']}api/health", timeout=timeout) as response:
-            value = json.loads(response.read().decode("utf-8"))
-    except (OSError, URLError, json.JSONDecodeError):
-        return False
-    return (
+            payload = response.read(MAX_HEALTH_BYTES + 1)
+            if len(payload) > MAX_HEALTH_BYTES:
+                raise ValueError("health response is too large")
+            value = json.loads(payload.decode("utf-8"))
+    except (OSError, URLError, UnicodeDecodeError, ValueError):
+        return {
+            "identityVerified": False,
+            "compatible": False,
+            "reason": "health_invalid",
+            "expectedPayloadFingerprint": expected,
+            "observedPayloadFingerprint": None,
+        }
+    if not isinstance(value, dict):
+        return {
+            "identityVerified": False,
+            "compatible": False,
+            "reason": "health_invalid",
+            "expectedPayloadFingerprint": expected,
+            "observedPayloadFingerprint": None,
+        }
+    identity_verified = (
         value.get("instanceId") == metadata["instanceId"]
         and value.get("repo") == metadata["repo"]
         and value.get("pid") == metadata["pid"]
         and value.get("readOnly") is True
     )
+    observed = value.get("payloadFingerprint")
+    metadata_fingerprint = metadata.get("payloadFingerprint")
+    compatible = (
+        identity_verified
+        and value.get("protocolVersion") == UI_PROTOCOL_VERSION
+        and observed == expected
+        and metadata_fingerprint == expected
+    )
+    return {
+        "identityVerified": identity_verified,
+        "compatible": compatible,
+        "reason": (
+            "compatible"
+            if compatible
+            else "payload_mismatch"
+            if identity_verified
+            else "identity_mismatch"
+        ),
+        "expectedPayloadFingerprint": expected,
+        "observedPayloadFingerprint": observed,
+        "protocolVersion": value.get("protocolVersion"),
+    }
 
 
-def _healthy_metadata(repo: Path) -> dict[str, Any] | None:
-    metadata = _read_metadata(repo)
-    if metadata is None:
-        return None
-    if _health(metadata):
-        return metadata
-    metadata_path(repo).unlink(missing_ok=True)
-    return None
+def _health(metadata: dict[str, Any], timeout: float = 0.4) -> bool:
+    return bool(_health_probe(metadata, timeout=timeout)["compatible"])
+
+
+def _stop_verified_instance(repo: Path, metadata: dict[str, Any]) -> None:
+    probe = _health_probe(metadata)
+    if not probe["identityVerified"]:
+        raise AimUiControlError(
+            "Refused to signal an AIM UI process whose repository and instance identity could not be verified."
+        )
+    try:
+        os.kill(metadata["pid"], signal.SIGTERM)
+    except ProcessLookupError:
+        return
+    child = _STARTED_PROCESSES.get(metadata["pid"])
+    if child is not None:
+        try:
+            child.wait(timeout=3.0)
+        except subprocess.TimeoutExpired:
+            pass
+        _STARTED_PROCESSES.pop(metadata["pid"], None)
+    else:
+        deadline = time.monotonic() + 3.0
+        while time.monotonic() < deadline:
+            if not _pid_exists(metadata["pid"]):
+                break
+            current = _health_probe(metadata, timeout=0.15)
+            if not current["identityVerified"]:
+                break
+            time.sleep(0.05)
+    if _pid_exists(metadata["pid"]):
+        current = _health_probe(metadata, timeout=0.15)
+        if current["identityVerified"]:
+            raise AimUiControlError(
+                "AIM UI received the stop request but the verified instance is still running."
+            )
 
 
 def _free_port(requested: int | None) -> int:
@@ -183,14 +300,28 @@ def _free_port(requested: int | None) -> int:
 
 
 def _start(repo: Path, *, port: int | None, open_browser: bool) -> dict[str, Any]:
-    existing = _healthy_metadata(repo)
+    existing = _read_metadata(repo)
+    replaced = False
     if existing is not None:
-        if open_browser:
-            webbrowser.open(existing["url"])
-        return {**existing, "status": "running", "reused": True}
+        probe = _health_probe(existing)
+        if probe["compatible"]:
+            if open_browser:
+                webbrowser.open(existing["url"])
+            return {
+                **existing,
+                "status": "running",
+                "reused": True,
+                "compatible": True,
+                "protocolVersion": UI_PROTOCOL_VERSION,
+            }
+        if probe["identityVerified"]:
+            _stop_verified_instance(repo, existing)
+            replaced = True
+        metadata_path(repo).unlink(missing_ok=True)
 
     selected_port = _free_port(port)
     token = uuid.uuid4().hex
+    fingerprint = payload_fingerprint()
     ui_server = Path(__file__).resolve().with_name("aim_ui.py")
     if not ui_server.is_file():
         raise AimUiControlError(
@@ -217,6 +348,8 @@ def _start(repo: Path, *, port: int | None, open_browser: bool) -> dict[str, Any
         "--quiet",
         "--instance-id",
         token,
+        "--expected-payload-fingerprint",
+        fingerprint,
     ]
     try:
         process = subprocess.Popen(
@@ -232,13 +365,14 @@ def _start(repo: Path, *, port: int | None, open_browser: bool) -> dict[str, Any
 
     now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     metadata = {
-        "instanceVersion": "1.0",
+        "instanceVersion": INSTANCE_VERSION,
         "instanceId": token,
         "repo": str(repo),
         "pid": process.pid,
         "port": selected_port,
         "url": f"http://127.0.0.1:{selected_port}/",
         "startedAt": now,
+        "payloadFingerprint": fingerprint,
     }
     deadline = time.monotonic() + START_TIMEOUT_SECONDS
     while time.monotonic() < deadline:
@@ -249,7 +383,14 @@ def _start(repo: Path, *, port: int | None, open_browser: bool) -> dict[str, Any
             _STARTED_PROCESSES[process.pid] = process
             if open_browser:
                 webbrowser.open(metadata["url"])
-            return {**metadata, "status": "running", "reused": False}
+            return {
+                **metadata,
+                "status": "running",
+                "reused": False,
+                "replacedIncompatible": replaced,
+                "compatible": True,
+                "protocolVersion": UI_PROTOCOL_VERSION,
+            }
         time.sleep(0.08)
 
     if process.poll() is None:
@@ -272,25 +413,56 @@ def start(
 
 
 def status(repo: Path) -> dict[str, Any]:
-    metadata = _healthy_metadata(repo)
+    metadata = _read_metadata(repo)
     if metadata is None:
         return {"status": "stopped", "repo": str(repo), "url": None}
-    return {**metadata, "status": "running", "reused": True}
+    probe = _health_probe(metadata)
+    if probe["compatible"]:
+        return {
+            **metadata,
+            "status": "running",
+            "reused": True,
+            "compatible": True,
+            "protocolVersion": UI_PROTOCOL_VERSION,
+        }
+    if probe["identityVerified"]:
+        return {
+            **metadata,
+            "status": "stale",
+            "reused": False,
+            "compatible": False,
+            "payloadStatus": probe["reason"],
+            "expectedPayloadFingerprint": probe["expectedPayloadFingerprint"],
+            "observedPayloadFingerprint": probe["observedPayloadFingerprint"],
+            "protocolVersion": probe.get("protocolVersion"),
+        }
+    metadata_path(repo).unlink(missing_ok=True)
+    return {
+        "status": "stopped",
+        "repo": str(repo),
+        "url": None,
+        "staleMetadataRemoved": True,
+    }
 
 
 def open_instance(repo: Path) -> dict[str, Any]:
-    metadata = _healthy_metadata(repo)
-    if metadata is None:
+    current = status(repo)
+    if current["status"] == "stale":
+        raise AimUiControlError(
+            "The AIM UI server payload is stale. Run `/aim ui` to replace the verified instance."
+        )
+    if current["status"] != "running":
         raise AimUiControlError("No healthy AIM UI instance is running for this repository.")
-    webbrowser.open(metadata["url"])
-    return {**metadata, "status": "running", "reused": True}
+    webbrowser.open(current["url"])
+    return current
 
 
 def _stop(repo: Path) -> dict[str, Any]:
     metadata = _read_metadata(repo)
     if metadata is None:
         return {"status": "stopped", "repo": str(repo), "stopped": False}
-    if not _health(metadata):
+    probe = _health_probe(metadata)
+    if not probe["identityVerified"]:
         metadata_path(repo).unlink(missing_ok=True)
         return {
             "status": "stopped",
@@ -298,26 +470,7 @@ def _stop(repo: Path) -> dict[str, Any]:
             "stopped": False,
             "staleMetadataRemoved": True,
         }
-    try:
-        os.kill(metadata["pid"], signal.SIGTERM)
-    except ProcessLookupError:
-        metadata_path(repo).unlink(missing_ok=True)
-        return {"status": "stopped", "repo": str(repo), "stopped": False}
-    child = _STARTED_PROCESSES.get(metadata["pid"])
-    if child is not None:
-        try:
-            child.wait(timeout=3.0)
-        except subprocess.TimeoutExpired:
-            pass
-        _STARTED_PROCESSES.pop(metadata["pid"], None)
-    else:
-        deadline = time.monotonic() + 3.0
-        while time.monotonic() < deadline and _pid_exists(metadata["pid"]):
-            time.sleep(0.05)
-    if _pid_exists(metadata["pid"]) and _health(metadata):
-        raise AimUiControlError(
-            "AIM UI received the stop request but the verified instance is still running."
-        )
+    _stop_verified_instance(repo, metadata)
     metadata_path(repo).unlink(missing_ok=True)
     return {"status": "stopped", "repo": str(repo), "stopped": True}
 
@@ -354,6 +507,9 @@ def _print_result(result: dict[str, Any], *, as_json: bool) -> None:
         )
         print(f"{label} for {result['repo']}")
         print(f"Open {result['url']}")
+    elif result["status"] == "stale":
+        print(f"AIM UI payload is stale for {result['repo']}")
+        print("Run `/aim ui` to replace the verified instance.")
     elif result.get("stopped"):
         print(f"AIM UI stopped for {result['repo']}")
     else:

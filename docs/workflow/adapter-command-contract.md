@@ -91,12 +91,17 @@ If no trusted payload is available, it recommends `/aim upgrade` instead of
 downloading or improvising executable code.
 
 The launcher binds only to loopback, selects a free port unless one is
-explicitly requested, reuses a healthy instance for the same resolved repo,
-and records bounded process metadata under the user's AIM home. Status, open,
-and stop verify the live server's repo and instance identity. Stale metadata is
-removed without signalling an unverified PID. A repository without `.aim` may
-open an onboarding view; launch never creates `.aim` or changes runtime state.
-The adapter reports one clickable URL on success or one actionable failure.
+explicitly requested, and records bounded process metadata under the user's AIM
+home. Reuse additionally requires the metadata and `/api/health` response to
+match the current launcher/server/static-asset payload fingerprint and protocol
+version. `status` reports a verified identity with a mismatched payload as
+stale. A subsequent start may signal and replace only that exact verified
+repository, instance, and PID relation under the per-repository lifecycle lock;
+missing or mismatched identity removes metadata without signalling the named
+PID. Open rejects a stale payload with the replacement action. A repository
+without `.aim` may open an onboarding view; launch and replacement never create
+or change runtime state or accepted evidence. The adapter reports one clickable
+URL on success or one actionable failure.
 
 ## AIM UI Backlog import
 
@@ -136,6 +141,11 @@ this planned-Epic synthesis. If its exact Epic and Increment relation is absent
 from the active catalog, the read model must exclude it from activation and
 publish a read-only diagnostic containing the candidate, Epic, and runtime
 identities; it must not reinterpret missing catalog authority as new work.
+An unlinked candidate is eligible only when the shared repository-bound
+activation preflight also accepts its canonical Epic identity, contained
+catalog/workspace allocation, collision safety, configured capacity, Backlog
+freshness, and runtime relations. Rejection remains visible with one actionable
+reason and contributes neither to `eligibleCount` nor to a mandate snapshot.
 
 ## Reviewed Portfolio catalog repair
 
@@ -204,6 +214,10 @@ After approval, the main AIM chat uses the trusted package-owned
 `scripts/aim_portfolio_run.py` helper to atomically checkpoint only
 `.aim/portfolio-run.json`. The helper validates data and transitions; it cannot
 reason, approve a Gate, activate an agent, or mutate an Epic workspace. The
+helper rebuilds the activatable snapshot through the same preflight and repeats
+that preflight immediately before writing. A changed catalog, capacity,
+Backlog timestamp or bytes, candidate identity, or runtime relation fails closed
+without creating the run file. The
 main chat activates at most one new candidate, runs its complete canonical
 PO/TDO/Dev/Reviewer/TDO/PO loop, and records eligible decisions as
 `auto-approved by portfolio mandate` with the mandate id. User approval must

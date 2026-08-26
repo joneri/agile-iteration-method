@@ -320,6 +320,11 @@ def plan_start(
     _validate_request(
         epic_id, increment_id, title, mode, cost_profile, updated_at, platform
     )
+    from aim_activation import activation_preflight
+
+    admission = activation_preflight(repo_root, epic_id=epic_id)
+    if not admission["allowed"]:
+        raise AimStartError(admission["message"])
     root, aim_root = _inside_aim(repo_root)
     catalog, payload, declared = _catalog(aim_root)
     if len(catalog["workspaces"]) >= MAX_WORKSPACES:
