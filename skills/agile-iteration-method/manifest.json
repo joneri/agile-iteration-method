@@ -49,7 +49,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.9.3",
+  "productVersion": "2.9.4",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -151,7 +151,7 @@
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
-      "sha256": "03b8db2f7f8120ba33281bc55248e77b944db901bf28e2cf91156bf6708eaa31",
+      "sha256": "f94bbca53c10663b7717d1c0b781bd6cc647e1ec825836c86e79c0e1fb6e3ca2",
       "source": "install/aim-install-manifest.yaml"
     },
     {
@@ -161,12 +161,12 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "9a01d9f6f8cc52966858dd108f387e869880f8280bf8a5a45d161deeb3f4782c",
+      "sha256": "01a5e9fea8b161cb6a13b869c4b927459b3639c401bdef3a69036206683bbe24",
       "source": "VERSION"
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "2940a1f17fba4523ca67ba49a1205c2b6dfc601a13313cabf1e1cef66061b2ae",
+      "sha256": "9945792184be05a8a403c4a9008d9c9e9fe495a54578371a6a178d521ceccc49",
       "source": "scripts/aim_publication.py"
     },
     {

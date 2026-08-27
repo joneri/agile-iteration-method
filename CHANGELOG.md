@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-08-27 - AIM 2 patch release v2.9.4
+- Corrected the installer manifest so commands containing colon-space syntax
+  are quoted and valid in standard YAML parsers.
+- Made the package-local YAML reader reject ambiguous unquoted colon-space and
+  terminal-colon scalars instead of accepting content the installer cannot
+  safely interpret across YAML implementations.
+- Added regression coverage for the canonical installer manifest, generated
+  public skill payload, and invalid ambiguous scalar forms.
+- Replaced version-bearing release artwork with one selected existing,
+  versionless AIM image while keeping the exact release version in accessible
+  text, HTML metadata, manifests, and release documentation.
+- Added publication checks that require the brand artwork inventory to remain
+  explicitly versionless.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`11`. Existing installations and workspaces require no migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`. Adaptive installations can
+rerun their reviewed preview/apply installer flow.
+
+Known limitations: AIM UI remains read-only. The release version is deliberately
+not embedded in brand-image pixels and must be read from the surrounding page,
+accessible description, metadata, or manifest.
+
 ## 2026-08-27 - AIM 2 patch release v2.9.3
 - Added one shared executable terminal-acceptance contract for Portfolio Auto
   completion and AIM UI evidence projection.

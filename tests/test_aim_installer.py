@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = REPO_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-from aim_installer import apply, guided, planner, render  # noqa: E402
+from aim_installer import apply, guided, planner, render, yaml_lite  # noqa: E402
 from aim_installer.manifest import load_manifest  # noqa: E402
 import aim_install  # noqa: E402
 
@@ -25,6 +25,34 @@ import aim_install  # noqa: E402
 class _UnusedManifest:
     gitignore_fragments: list[str] = []
     runtime_exclusions: list[str] = []
+
+
+class ManifestYamlContractTests(unittest.TestCase):
+    def test_plain_scalar_with_mapping_separator_is_rejected(self) -> None:
+        with self.assertRaisesRegex(
+            yaml_lite.YamlLiteError,
+            "plain scalar contains",
+        ):
+            yaml_lite.loads('command: /aim start "EPIC: <desired outcome>"\n')
+
+    def test_quoted_command_preserves_embedded_colon(self) -> None:
+        parsed = yaml_lite.loads(
+            "command: '/aim start \"EPIC: <desired outcome>\"'\n"
+        )
+        self.assertEqual(
+            parsed["command"],
+            '/aim start "EPIC: <desired outcome>"',
+        )
+
+    def test_canonical_manifest_commands_are_yaml_safe_and_unchanged(self) -> None:
+        manifest = load_manifest(REPO_ROOT)
+        expected = '/aim start "EPIC: <desired outcome>"'
+        for adapter in ("codex", "claude", "copilot"):
+            with self.subTest(adapter=adapter):
+                self.assertEqual(
+                    manifest.adapter_skills[adapter]["firstCommand"],
+                    expected,
+                )
 
 
 def _collision_plan() -> dict:
@@ -741,6 +769,39 @@ class ModeFootprintContractTests(unittest.TestCase):
             self.assertIn("Release readiness: FAIL", completed.stdout)
             self.assertIn("mode footprint defaults drifted", completed.stdout)
             self.assertIn("generated public skill validation failed", completed.stdout)
+
+    def test_validator_rejects_invalid_plain_scalar_in_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = Path(temporary) / "repo"
+            shutil.copytree(
+                REPO_ROOT,
+                copied,
+                ignore=shutil.ignore_patterns(".git", ".aim", "__pycache__", "*.pyc"),
+            )
+            manifest_path = copied / "install/aim-install-manifest.yaml"
+            content = manifest_path.read_text(encoding="utf-8")
+            content = content.replace(
+                "firstCommand: '/aim start \"EPIC: <desired outcome>\"'",
+                'firstCommand: /aim start "EPIC: <desired outcome>"',
+                1,
+            )
+            manifest_path.write_text(content, encoding="utf-8")
+
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    str(copied / "scripts/validate_aim_runtime.py"),
+                    str(copied),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=20,
+            )
+
+            self.assertEqual(completed.returncode, 3)
+            self.assertIn("Result: contradictory", completed.stdout)
+            self.assertIn("Release readiness: FAIL", completed.stdout)
+            self.assertIn("plain scalar contains", completed.stdout)
 
 
 class CliTests(unittest.TestCase):

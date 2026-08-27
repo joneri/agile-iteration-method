@@ -42,6 +42,10 @@ def _scalar(raw: str) -> Any:
         return None
     if (text[0] == '"' and text[-1] == '"') or (text[0] == "'" and text[-1] == "'"):
         return text[1:-1]
+    if ": " in text or text.endswith(":"):
+        raise YamlLiteError(
+            "plain scalar contains ': ' or ends with ':'; quote the complete value"
+        )
     lowered = text.lower()
     if lowered in ("null", "~"):
         return None

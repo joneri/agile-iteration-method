@@ -294,6 +294,13 @@ class PublicSkillTests(unittest.TestCase):
             parsed["canonicalCommand"],
             "source-only adaptive installer; not executable from the portable package",
         )
+        expected_command = '/aim start "EPIC: <desired outcome>"'
+        for adapter in ("codex", "claude", "copilot"):
+            with self.subTest(adapter=adapter):
+                self.assertEqual(
+                    parsed["adapterSkills"][adapter]["firstCommand"],
+                    expected_command,
+                )
         self.assertNotIn("python3 scripts/aim_install.py", payload)
 
     def test_generation_never_mutates_active_runtime_state(self) -> None:

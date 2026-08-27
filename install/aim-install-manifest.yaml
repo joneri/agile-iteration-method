@@ -219,20 +219,20 @@ aimInstallManifest:
       legacyDestination: ~/.codex/skills/agile-iteration-method/SKILL.md
       scope: user
       reload: fresh-session
-      firstCommand: /aim start "EPIC: <desired outcome>"
+      firstCommand: '/aim start "EPIC: <desired outcome>"'
       explicitFallback: $agile-iteration-method <intent>
     claude:
       source: .claude/skills/aim/SKILL.md
       destination: .claude/skills/aim/SKILL.md
       scope: project
       reload: live-reload-or-fresh-session
-      firstCommand: /aim start "EPIC: <desired outcome>"
+      firstCommand: '/aim start "EPIC: <desired outcome>"'
     copilot:
       source: .github/skills/aim/SKILL.md
       destination: .github/skills/aim/SKILL.md
       scope: project
       reload: reload-skills-or-fresh-session
-      firstCommand: /aim start "EPIC: <desired outcome>"
+      firstCommand: '/aim start "EPIC: <desired outcome>"'
 
   runtimeExclusions:
     - .aim/

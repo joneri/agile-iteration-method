@@ -64,7 +64,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "2.9.3")
+            self.assertEqual(manifest["aimVersion"], "2.9.4")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
@@ -138,8 +138,8 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("Private conversations, rejected drafts", index)
         self.assertIn('id="ui"', index)
         self.assertIn("docs/product/aim-ui.md", index)
-        self.assertIn('alt="AIM 2.9.3 Agile Iteration Method logo"', index)
-        self.assertIn('<span class="brand-version">2.9.3</span>', index)
+        self.assertIn('alt="AIM 2.9.4 Agile Iteration Method logo"', index)
+        self.assertIn('<span class="brand-version">2.9.4</span>', index)
         self.assertIn("Put the backlog in motion.", index)
         self.assertIn("Keep control.", index)
         self.assertIn("github-pages/assets/images/aim-ui-beta-control-room.png", index)
@@ -158,13 +158,43 @@ class PublicationContractTests(unittest.TestCase):
             self.assertIn(command, index)
             self.assertIn(command, getting_started)
 
-    def test_brand_artwork_has_release_dimensions_and_version_inventory(self) -> None:
+    def test_brand_artwork_has_release_dimensions_and_versionless_inventory(self) -> None:
         validate_source(REPO_ROOT)
         inventory = (
             REPO_ROOT / "github-pages/assets/images/README.md"
         ).read_text(encoding="utf-8")
-        self.assertGreaterEqual(inventory.count("AIM 2.9.3"), 3)
+        self.assertIn("Brand artwork version policy: versionless", inventory)
+        self.assertIn("contain no product version", inventory)
         self.assertIn("AIM UI Beta", inventory)
+
+    def test_missing_versionless_artwork_policy_blocks_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            inventory = copied / "github-pages/assets/images/README.md"
+            inventory.write_text(
+                inventory.read_text(encoding="utf-8").replace(
+                    "Brand artwork version policy: versionless",
+                    "Brand artwork version policy: unspecified",
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(PublicationError, "declare the artwork versionless"):
+                validate_source(copied)
+
+    def test_changed_brand_artwork_blocks_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            artwork = copied / "AIM_OG.png"
+            payload = bytearray(artwork.read_bytes())
+            payload[-1] ^= 1
+            artwork.write_bytes(payload)
+
+            with self.assertRaisesRegex(
+                PublicationError,
+                "differs from the approved versionless source",
+            ):
+                validate_source(copied)
 
     def test_stale_brand_artwork_version_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -172,7 +202,7 @@ class PublicationContractTests(unittest.TestCase):
             index = copied / "index.html"
             index.write_text(
                 index.read_text(encoding="utf-8").replace(
-                    '<span class="brand-version">2.9.3</span>',
+                    '<span class="brand-version">2.9.4</span>',
                     '<span class="brand-version">2.7</span>',
                 ),
                 encoding="utf-8",

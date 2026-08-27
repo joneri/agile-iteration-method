@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import struct
@@ -33,6 +34,10 @@ PUBLIC_BRAND_IMAGE_PATHS = (
     "github-pages/assets/images/aim-2-hero-dark.png",
 )
 PUBLIC_BRAND_IMAGE_SIZE = (1730, 909)
+PUBLIC_BRAND_IMAGE_SHA256 = (
+    "75b1a6a632f311a377e4d6d3f70c75e1445d3183637c9eaa43524566fc5991c5"
+)
+VERSIONLESS_BRAND_ARTWORK_MARKER = "Brand artwork version policy: versionless"
 PUBLIC_FEATURE_IMAGE_PATH = "github-pages/assets/images/aim-ui-beta-control-room.png"
 PUBLIC_FEATURE_IMAGE_SIZE = (1729, 910)
 PUBLIC_DEMO_VIDEO_PATH = "github-pages/assets/video/portfolio-auto-demo.mp4"
@@ -112,11 +117,18 @@ def validate_source(repo_root: Path) -> None:
     for relative_path in SCHEMA_RELATIVE_PATHS:
         _schema_contract(repo_root, relative_path)
     for relative_path in PUBLIC_BRAND_IMAGE_PATHS:
-        dimensions = _png_dimensions(repo_root / relative_path)
+        image_path = repo_root / relative_path
+        dimensions = _png_dimensions(image_path)
         if dimensions != PUBLIC_BRAND_IMAGE_SIZE:
             raise PublicationError(
                 f"{relative_path}: expected {PUBLIC_BRAND_IMAGE_SIZE[0]}x"
                 f"{PUBLIC_BRAND_IMAGE_SIZE[1]}, got {dimensions[0]}x{dimensions[1]}"
+            )
+        digest = hashlib.sha256(image_path.read_bytes()).hexdigest()
+        if digest != PUBLIC_BRAND_IMAGE_SHA256:
+            raise PublicationError(
+                f"{relative_path}: brand artwork differs from the approved "
+                "versionless source"
             )
     index = _read_text(repo_root / "index.html")
     expected_badge = f'<span class="brand-version">{product_version}</span>'
@@ -130,10 +142,13 @@ def validate_source(repo_root: Path) -> None:
             f"index.html: brand artwork alt text must match VERSION ({product_version})"
         )
     inventory = _read_text(repo_root / "github-pages/assets/images/README.md")
-    if inventory.count(f"AIM {product_version}") < 3:
+    if VERSIONLESS_BRAND_ARTWORK_MARKER not in inventory:
         raise PublicationError(
-            "brand image inventory must identify all version-bearing artwork "
-            f"as AIM {product_version}"
+            "brand image inventory must declare the artwork versionless"
+        )
+    if "contain no product version" not in inventory:
+        raise PublicationError(
+            "brand image inventory must keep product versions outside artwork"
         )
     readme = _read_text(repo_root / "README.md")
     if f"![AIM {product_version} - Agile Iteration Method]" not in readme:
@@ -153,10 +168,6 @@ def validate_source(repo_root: Path) -> None:
             raise PublicationError(
                 f"required Portfolio Auto demo asset is missing: {relative_path}"
             )
-    if image_readme.count("AIM 2") < 2:
-        raise PublicationError(
-            "github-pages image inventory must identify both website assets as AIM 2"
-        )
     if "AIM UI Beta" not in image_readme:
         raise PublicationError(
             "github-pages image inventory must identify the AIM UI Beta feature asset"
@@ -411,11 +422,18 @@ def validate_artifact(output_root: Path) -> None:
                 f"publication artifact is missing directory: {relative_path}"
             )
     for relative_path in PUBLIC_BRAND_IMAGE_PATHS:
-        dimensions = _png_dimensions(output_root / relative_path)
+        image_path = output_root / relative_path
+        dimensions = _png_dimensions(image_path)
         if dimensions != PUBLIC_BRAND_IMAGE_SIZE:
             raise PublicationError(
                 f"{relative_path}: expected {PUBLIC_BRAND_IMAGE_SIZE[0]}x"
                 f"{PUBLIC_BRAND_IMAGE_SIZE[1]}, got {dimensions[0]}x{dimensions[1]}"
+            )
+        digest = hashlib.sha256(image_path.read_bytes()).hexdigest()
+        if digest != PUBLIC_BRAND_IMAGE_SHA256:
+            raise PublicationError(
+                f"{relative_path}: brand artwork differs from the approved "
+                "versionless source"
             )
     feature_dimensions = _png_dimensions(output_root / PUBLIC_FEATURE_IMAGE_PATH)
     if feature_dimensions != PUBLIC_FEATURE_IMAGE_SIZE:
