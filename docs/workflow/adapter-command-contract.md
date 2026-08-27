@@ -171,6 +171,10 @@ mismatched acceptance content, traversal, symlinks, stale source bytes, and
 destination collisions before mutation. Every handled publication-checkpoint
 failure restores the prior catalog bytes, Backlog bytes, and workspace path;
 rollback failure is reported as operator attention rather than atomic success.
+It also rejects a candidate referenced by the current non-archived Portfolio
+run, including a completed run that has not passed its explicit archive
+transition. This prevents repair from removing evidence still required by the
+run's immutable snapshot.
 The helper owns data safety only: it cannot decide that repair is appropriate,
 approve its own preview, rewrite accepted evidence, or grant runtime authority.
 AIM UI remains GET/HEAD-only and retains its diagnostic for unrepaired or
@@ -226,6 +230,13 @@ never be fabricated.
 Each candidate retains an independently authoritative contained Epic
 workspace. Once its review, validation, Gate E, and Epic closure evidence pass,
 the chat checkpoints completion and advances to the next snapshot candidate.
+The transition helper accepts only canonical runtime statuses. Immediately
+before adding a candidate to `completedCandidateIds`, it re-reads and validates
+the exact catalogued workspace, snapshot and candidate identities, Backlog
+`runtimeIncrementId`, `epic_complete` state and closure checkpoint,
+`previousIncrementStatus: accepted`, Gate E, and the contained
+`gateEAcceptance` decision. Any failed predicate preserves the active run
+unchanged and names the failed terminal relation.
 Gate E accepts the Increment only. Immediately before the distinct Epic-closure
 transition, the chat revalidates the run and workspace, then records
 `auto-approved by portfolio mandate <mandateId>` with decision authority

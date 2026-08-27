@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 2.9
 
-![AIM 2.9.2 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 2.9.3 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -130,17 +130,18 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.9.2
+## What is new in v2.9.3
 
-AIM Portfolio history now scales independently from active delivery capacity.
-Closed workspaces remain visible and traceable without consuming
-`maxActiveEpics` slots or eventually blocking new Epic activation.
+AIM Portfolio completion and AIM UI now use one canonical evidence-backed
+terminal contract. A candidate cannot complete unless its catalogued workspace,
+Backlog runtime link, identity, terminal state, Gate E checkpoint, and accepted
+decision agree.
 
-Startup, shared activation preflight, catalog repair, schema validation, AIM UI,
-and the portable package use the same admission semantics. Catalog payload,
-path, containment, symbolic-link, identity, state, freshness, and transactional
-safeguards remain fail-closed. AIM UI reports active capacity separately from
-retained workspace history.
+AIM UI excludes unevidenced Done-looking work from accepted history and reports
+the exact failed relation instead of one broad reconciliation warning. Catalog
+repair also preserves every candidate owned by a current non-archived Portfolio
+run. Stale Gate D, missing evidence, identity mismatch, and symlink substitution
+regressions are covered end to end.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
@@ -164,6 +165,6 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v2.9.2**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.9.3**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

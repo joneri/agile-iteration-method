@@ -375,6 +375,14 @@ as a deterministic tie-breaker. Only the newest ten entries remain in this
 compact ledger. Closed Increments shows every accepted card and never deletes
 its runtime evidence.
 
+Membership in Recent Deliveries, Closed Increments, and `acceptedCount`
+requires validated Gate E acceptance evidence. A terminal state or a card in a
+Done presentation column is insufficient by itself. Portfolio reconciliation
+reports each failed terminal predicate separately—Backlog candidate, runtime
+link, catalogued workspace, candidate identity, closed lifecycle, matching
+Increment, Done state, and acceptance evidence—so one defect is not hidden
+inside a compound warning.
+
 `history.recentDeliveries` is a required launcher/backend/frontend compatibility
 contract for this ledger. Binding lifecycle reuse to the payload fingerprint
 prevents a newer frontend from silently interpreting an older backend response

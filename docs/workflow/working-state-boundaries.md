@@ -444,6 +444,15 @@ missing or mismatched workspace, candidate identity, runtime link, increment,
 or status is contradictory and fails closed rather than being projected as a
 normal empty board.
 
+Candidate completion is an executable terminal transaction, not an assertion
+made by the orchestration checkpoint. The helper accepts only canonical runtime
+statuses and, immediately before completion, revalidates the snapshot and
+candidate identities, catalogued workspace, Backlog runtime link,
+`epic_complete` state, closure checkpoint, accepted previous Increment, Gate E,
+and contained acceptance decision. Failure leaves the run unchanged. A current
+non-archived run also retains ownership of every snapshot candidate, so catalog
+repair cannot remove one of those relations until the run itself is archived.
+
 The snapshot contains only Backlog candidates without `runtimeIncrementId` that
 also pass the shared activation preflight, matching AIM UI's visible eligible
 work. Rejected candidates remain visible planning evidence with a reason. A validated

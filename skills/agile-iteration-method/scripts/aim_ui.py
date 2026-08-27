@@ -30,8 +30,9 @@ from aim_actions import (
 from aim_activation import candidate_preflights
 from aim_portfolio import project_portfolio_control
 from aim_portfolio_run import project_portfolio_run, snapshot_hash
+from aim_runtime_contract import decision_accepts_increment
 
-READ_MODEL_VERSION = "8.0"
+READ_MODEL_VERSION = "9.0"
 PORTFOLIO_VERSION = "1.0"
 PORTFOLIO_FILE = "ui-portfolio.json"
 BACKLOG_VERSION = "1.0"
@@ -82,6 +83,7 @@ UI_PROTOCOL_VERSION = "1.1"
 PAYLOAD_FILES = (
     "scripts/aim_ui_control.py",
     "scripts/aim_ui.py",
+    "scripts/aim_runtime_contract.py",
     "aim-ui/index.html",
     "aim-ui/app.js",
     "aim-ui/styles.css",
@@ -157,42 +159,13 @@ def _increment_id(path: Path, markdown: str) -> str:
     return f"DI-{number.group(1)}" if number else path.stem.upper()
 
 
-def _decision_accepts_increment(path: Path, increment_id: str) -> bool:
-    if path.is_symlink() or not path.is_file():
-        return False
-    try:
-        if path.stat().st_size > MAX_ACCEPTANCE_DECISION_BYTES:
-            return False
-    except OSError:
-        return False
-    content = _read_markdown(path)
-    decision = _field(content, "Decision") or ""
-    status = _field(content, "Status") or ""
-    authority_fields = f"{decision}\n{status}"
-    if re.search(r"\b(?:change requested|pending|rejected|not accepted)\b", authority_fields, re.I):
-        return False
-    heading = content.splitlines()[0] if content.splitlines() else ""
-    accepted = any(
-        (
-            re.search(r"\b(?:accept(?:ed)?|approv(?:e|ed))\b", authority_fields, re.I),
-            _field(content, "Accepted at"),
-            re.search(r"\bGate E\b.*\bAccepted\b|\bAccepted\b.*\bGate E\b", heading, re.I),
-            re.search(r"^Accepted\s+(?:by|on|under|as part of)\b", content, re.I | re.M),
-        )
-    )
-    if not accepted:
-        return False
-    mentioned = {item.upper() for item in re.findall(r"\bDI-\d+\b", content, re.I)}
-    return not mentioned or increment_id in mentioned
-
-
 def _legacy_acceptance_decision(aim_root: Path, increment_id: str) -> Path | None:
     number = increment_id.removeprefix("DI-")
     decisions = aim_root / "decisions"
     if not decisions.is_dir():
         return None
     for path in decisions.glob(f"{number}-gate-e.md"):
-        if _decision_accepts_increment(path, increment_id):
+        if decision_accepts_increment(path, increment_id):
             return path
     return None
 
@@ -242,7 +215,7 @@ def _state_acceptance_decision(
         return None, True, "gateEAcceptance leaves the authoritative Epic workspace"
     if decision.parent != (aim_root / "decisions").resolve():
         return None, True, "gateEAcceptance must name a file in the workspace decisions directory"
-    if not _decision_accepts_increment(decision, increment_id):
+    if not decision_accepts_increment(decision, increment_id):
         return None, True, "gateEAcceptance is missing, oversized, mismatched, or not accepted"
     return decision, True, None
 
@@ -1438,19 +1411,22 @@ def _reconcile_portfolio_run(
                 (item for item in (epic or {}).get("increments", []) if item["id"] == runtime_id),
                 None,
             )
-            if not (
-                backlog
-                and runtime_id
-                and epic
-                and epic.get("portfolioCandidateId") == candidate_id
-                and epic.get("lifecycle") == "closed"
-                and increment
-                and increment.get("column") == "done"
-                and increment.get("acceptanceEvidence")
-            ):
+            checks = {
+                "Backlog candidate is missing": bool(backlog),
+                "runtimeIncrementId is missing": bool(runtime_id),
+                "catalogued Epic workspace is missing": bool(epic),
+                "workspace portfolioCandidateId does not match": bool(epic) and epic.get("portfolioCandidateId") == candidate_id,
+                "workspace is not closed": bool(epic) and epic.get("lifecycle") == "closed",
+                "matching runtime Increment is missing": bool(increment),
+                "runtime Increment is not Done": bool(increment) and increment.get("column") == "done",
+                "validated Gate E acceptance evidence is missing": bool(increment) and bool(increment.get("acceptanceEvidence")),
+            }
+            failed = [label for label, passed in checks.items() if not passed]
+            if failed:
                 issues.append(
-                    f"Completed Portfolio candidate {candidate_id} does not resolve to a "
-                    "closed catalogued workspace, matching runtimeIncrementId, and accepted Gate E evidence."
+                    f"Completed Portfolio candidate {candidate_id} failed terminal checks: "
+                    + "; ".join(failed)
+                    + "."
                 )
 
     active_id = portfolio_run.get("activeCandidateId")
@@ -1753,7 +1729,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             )
         )
         for item in epic["increments"]:
-            if item["column"] == "done":
+            if item["column"] == "done" and item.get("acceptanceEvidence"):
                 accepted.append({**item, "epicTitle": epic["title"]})
     accepted.sort(key=_increment_sort_key, reverse=True)
     for epic in base["epics"]:

@@ -55,7 +55,22 @@
       "required": ["candidateId", "epicStatus", "gate", "decisionAuthority", "updatedAt"],
       "properties": {
         "candidateId": {"type": "string", "pattern": "^INC-[A-Z0-9-]+$", "maxLength": 80},
-        "epicStatus": {"type": "string", "minLength": 1, "maxLength": 80},
+        "epicStatus": {
+          "enum": [
+            "activation_pending",
+            "epic_initialized",
+            "gate_a_pending",
+            "gate_b_pending",
+            "increment_in_progress",
+            "epic_paused",
+            "blocked",
+            "review_in_progress",
+            "tdo_validation_in_progress",
+            "po_approval_pending",
+            "done_increment_accepted",
+            "epic_complete"
+          ]
+        },
         "gate": {"enum": ["Gate A", "Gate B", "Gate C", "Gate D", "Gate E", "Epic closure"]},
         "decisionAuthority": {"enum": ["portfolio_mandate", "user", "none"]},
         "updatedAt": {"type": "string", "minLength": 1, "maxLength": 64}

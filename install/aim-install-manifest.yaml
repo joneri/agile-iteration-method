@@ -125,6 +125,7 @@ aimInstallManifest:
         - scripts/aim_backlog.py
         - scripts/aim_portfolio.py
         - scripts/aim_portfolio_run.py
+        - scripts/aim_runtime_contract.py
         - scripts/aim_actions.py
         - scripts/aim_ui_control.py
         - scripts/aim_ui.py

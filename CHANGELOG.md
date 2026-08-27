@@ -1,5 +1,38 @@
 # Changelog
 
+## 2026-08-27 - AIM 2 patch release v2.9.3
+- Added one shared executable terminal-acceptance contract for Portfolio Auto
+  completion and AIM UI evidence projection.
+- Made Portfolio completion revalidate the catalogued workspace, candidate
+  identity, Backlog runtime link, canonical terminal state, PO ownership, Gate
+  E checkpoint, and linked accepted decision before mutating the run ledger.
+- Restricted Portfolio checkpoints to canonical runtime states plus the explicit
+  `activation_pending` transition.
+- Prevented terminal-looking work without validated Gate E evidence from
+  entering Recent Deliveries, Closed Increments, or accepted totals.
+- Replaced broad completed-candidate reconciliation warnings with the exact
+  failed relation predicates.
+- Prevented catalog repair from retiring candidates referenced by a current,
+  non-archived Portfolio run.
+- Added regressions for stale Gate D state, missing runtime and acceptance
+  evidence, mismatched candidate identity, catalog symlink substitution, and a
+  healthy multi-candidate Portfolio.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, and installer manifest remains `1.0`. Public skill package format
+advances from `10` to `11` because the package gains the shared trusted
+`aim_runtime_contract.py` helper. Existing valid workspaces and accepted
+evidence require no migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI. Adaptive
+installations can rerun their reviewed preview/apply installer flow to receive
+the synchronized terminal contract and UI payload.
+
+Known limitations: existing incomplete or contradictory historical evidence is
+reported but never rewritten automatically. Catalog repair remains an explicit
+reviewed operation, and AIM UI remains read-only.
+
 ## 2026-08-27 - AIM 2 patch release v2.9.2
 - Removed the lifetime 16-workspace ceiling from Portfolio startup, shared
   activation preflight, catalog repair, JSON Schema validation, and AIM UI.

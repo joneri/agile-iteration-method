@@ -23,6 +23,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Callable
 
 from aim_backlog import validate_backlog
+from aim_portfolio_run import validate_run
 
 
 PORTFOLIO_FILE = "ui-portfolio.json"
@@ -304,6 +305,23 @@ def plan_repair(
         candidate_id, epic_id, increment_id, workspace, acceptance_evidence, archived_at
     )
     root, aim_root = _inside_aim(repo_root)
+    run_path = aim_root / "portfolio-run.json"
+    if run_path.exists() or run_path.is_symlink():
+        run_payload = _read_regular(run_path, "portfolio-run.json")
+        run = _json_object(run_payload, "portfolio-run.json")
+        run_issues = validate_run(run)
+        if run_issues:
+            raise CatalogRepairError(
+                "Current Portfolio run is invalid; repair cannot prove ownership safety."
+            )
+        if any(
+            item.get("candidateId") == candidate_id
+            for item in run.get("snapshot", [])
+            if isinstance(item, dict)
+        ):
+            raise CatalogRepairError(
+                "Candidate belongs to the current non-archived Portfolio run; archive the run before catalog repair."
+            )
     catalog, catalog_payload, catalog_workspaces = _load_catalog(aim_root)
     if workspace == ".":
         raise CatalogRepairError("The root .aim workspace cannot be archived by catalog repair.")

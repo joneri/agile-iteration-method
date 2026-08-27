@@ -64,6 +64,7 @@ class PublicSkillTests(unittest.TestCase):
             "scripts/aim_actions.py",
             "scripts/aim_portfolio.py",
             "scripts/aim_portfolio_run.py",
+            "scripts/aim_runtime_contract.py",
             "aim-ui/index.html",
             "aim-ui/styles.css",
             "aim-ui/app.js",

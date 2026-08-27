@@ -403,6 +403,23 @@ class AimUiTests(unittest.TestCase):
                 ["increments"][0]["visibleOnBoard"]
             )
 
+            state_path = repo / ".aim/state.json"
+            terminal_state = json.loads(state_path.read_text(encoding="utf-8"))
+            terminal_state["portfolioCandidateId"] = "INC-WRONG"
+            state_path.write_text(
+                json.dumps(terminal_state, indent=2) + "\n", encoding="utf-8"
+            )
+            contradictory = build_board(repo)
+            self.assertFalse(contradictory["portfolioRun"]["valid"])
+            self.assertIn(
+                "workspace portfolioCandidateId does not match",
+                contradictory["portfolioRun"]["issue"],
+            )
+            terminal_state["portfolioCandidateId"] = "INC-FIRST"
+            state_path.write_text(
+                json.dumps(terminal_state, indent=2) + "\n", encoding="utf-8"
+            )
+
             run = activate_next(repo, run["updatedAt"], "t5")
             with patch("aim_ui.utc_now", return_value="2026-08-23T15:01:00Z"):
                 pending = build_board(repo)
@@ -472,7 +489,7 @@ class AimUiTests(unittest.TestCase):
             run = activate_next(repo, run["updatedAt"], "t2")
             checkpoint(
                 repo, run["updatedAt"], "t3", "INC-MISSING",
-                "epic_definition_in_progress", "Gate A", "portfolio_mandate",
+                "gate_a_pending", "Gate A", "portfolio_mandate",
             )
             board = build_board(repo)
 
@@ -1201,6 +1218,8 @@ class AimUiTests(unittest.TestCase):
         self.assertEqual(increment["column"], "backlog")
         self.assertEqual(increment["runtimeStatus"], "gate_b_pending")
         self.assertEqual(board["warnings"], [])
+        self.assertEqual(board["history"]["acceptedCount"], 0)
+        self.assertEqual(board["history"]["recentDeliveries"], [])
 
     def test_state_linked_acceptance_rejects_symlink_and_mismatched_decision(self) -> None:
         for label in ("symlink", "mismatch"):
@@ -1242,7 +1261,7 @@ class AimUiTests(unittest.TestCase):
     def test_read_model_links_increment_to_epic_collection(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             board = build_board(self._repo(Path(temporary)))
-        self.assertEqual(board["readModelVersion"], "8.0")
+        self.assertEqual(board["readModelVersion"], "9.0")
         self.assertEqual(board["source"]["kind"], "single-workspace")
         self.assertTrue(board["source"]["readOnly"])
         self.assertEqual(len(board["epics"]), 1)

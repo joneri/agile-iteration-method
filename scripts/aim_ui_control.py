@@ -39,6 +39,7 @@ UI_PROTOCOL_VERSION = "1.1"
 PAYLOAD_FILES = (
     "scripts/aim_ui_control.py",
     "scripts/aim_ui.py",
+    "scripts/aim_runtime_contract.py",
     "aim-ui/index.html",
     "aim-ui/app.js",
     "aim-ui/styles.css",

@@ -64,7 +64,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "2.9.2")
+            self.assertEqual(manifest["aimVersion"], "2.9.3")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
@@ -138,8 +138,8 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("Private conversations, rejected drafts", index)
         self.assertIn('id="ui"', index)
         self.assertIn("docs/product/aim-ui.md", index)
-        self.assertIn('alt="AIM 2.9.2 Agile Iteration Method logo"', index)
-        self.assertIn('<span class="brand-version">2.9.2</span>', index)
+        self.assertIn('alt="AIM 2.9.3 Agile Iteration Method logo"', index)
+        self.assertIn('<span class="brand-version">2.9.3</span>', index)
         self.assertIn("Put the backlog in motion.", index)
         self.assertIn("Keep control.", index)
         self.assertIn("github-pages/assets/images/aim-ui-beta-control-room.png", index)
@@ -163,7 +163,7 @@ class PublicationContractTests(unittest.TestCase):
         inventory = (
             REPO_ROOT / "github-pages/assets/images/README.md"
         ).read_text(encoding="utf-8")
-        self.assertGreaterEqual(inventory.count("AIM 2.9.2"), 3)
+        self.assertGreaterEqual(inventory.count("AIM 2.9.3"), 3)
         self.assertIn("AIM UI Beta", inventory)
 
     def test_stale_brand_artwork_version_blocks_publication(self) -> None:
@@ -172,7 +172,7 @@ class PublicationContractTests(unittest.TestCase):
             index = copied / "index.html"
             index.write_text(
                 index.read_text(encoding="utf-8").replace(
-                    '<span class="brand-version">2.9.2</span>',
+                    '<span class="brand-version">2.9.3</span>',
                     '<span class="brand-version">2.7</span>',
                 ),
                 encoding="utf-8",

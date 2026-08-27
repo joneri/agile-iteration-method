@@ -196,6 +196,49 @@ class AimCatalogRepairTests(unittest.TestCase):
             self.assertEqual(plan["stateUpdatedAt"], "2026-08-25T10:00:00Z")
             self.assertTrue(plan["acceptanceEvidence"].endswith("user-accepted.md"))
 
+    def test_current_portfolio_run_ownership_blocks_repair(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), canonical=True)
+            snapshot = [
+                {
+                    "candidateId": "INC-UI-CONTROL-001",
+                    "epicId": "EPIC-BACKLOG-AIM-UI",
+                    "epicTitle": "AIM UI — Portfolio control",
+                    "title": "Control concurrent Epics from AIM chat",
+                    "priority": 1,
+                    "createdAt": "2026-08-21T17:45:00Z",
+                }
+            ]
+            import hashlib
+
+            canonical = json.dumps(
+                snapshot, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            )
+            run = {
+                "runVersion": "1.0",
+                "runId": "PORTFOLIO-REPAIR-GUARD",
+                "mode": "Auto",
+                "status": "completed",
+                "mandate": {
+                    "id": "MANDATE-REPAIR-GUARD",
+                    "approvedAt": "2026-08-25T09:00:00Z",
+                    "approvedBy": "user",
+                    "snapshotHash": hashlib.sha256(canonical.encode("utf-8")).hexdigest(),
+                },
+                "snapshot": snapshot,
+                "completedCandidateIds": ["INC-UI-CONTROL-001"],
+                "skippedCandidateIds": [],
+                "updatedAt": "2026-08-25T10:00:00Z",
+            }
+            (repo / ".aim/portfolio-run.json").write_text(
+                json.dumps(run, indent=2) + "\n", encoding="utf-8"
+            )
+
+            with self.assertRaisesRegex(
+                CatalogRepairError, "archive the run before catalog repair"
+            ):
+                plan_repair(repo, **self._request())
+
     def test_large_catalog_can_be_repaired_without_freeing_an_activation_slot(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary), canonical=True)

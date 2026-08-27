@@ -68,8 +68,12 @@ class PortfolioRunTests(unittest.TestCase):
 
     def _complete_run(self, repo: Path) -> dict[str, Any]:
         run = create_run(repo, "MANDATE-COMPLETE", "t1", "t1")
-        for candidate_id, stamp in (("INC-FIRST", 2), ("INC-SECOND", 5)):
+        for candidate_id, increment_id, stamp in (
+            ("INC-FIRST", "DI-001", 2),
+            ("INC-SECOND", "DI-002", 5),
+        ):
             run = activate_next(repo, run["updatedAt"], f"t{stamp}")
+            self._publish_terminal_relation(repo, candidate_id, increment_id)
             run = checkpoint(
                 repo,
                 run["updatedAt"],
@@ -83,6 +87,65 @@ class PortfolioRunTests(unittest.TestCase):
                 repo, run["updatedAt"], f"t{stamp + 2}", candidate_id
             )
         return run
+
+    def _publish_terminal_relation(
+        self, repo: Path, candidate_id: str, increment_id: str
+    ) -> None:
+        aim = repo / ".aim"
+        backlog_path = aim / "portfolio-backlog.json"
+        backlog = json.loads(backlog_path.read_text(encoding="utf-8"))
+        candidate = next(item for item in backlog["items"] if item["id"] == candidate_id)
+        candidate["runtimeIncrementId"] = increment_id
+        backlog_path.write_text(json.dumps(backlog, indent=2) + "\n", encoding="utf-8")
+
+        workspace_name = candidate["epicId"]
+        workspace = aim / "portfolio" / workspace_name
+        (workspace / "decisions").mkdir(parents=True)
+        decision = workspace / "decisions" / f"{increment_id.lower()}-gate-e.md"
+        decision.write_text(
+            f"# Gate E — {increment_id}\n\nDecision: Accepted\n\nIncrement: {increment_id}\n",
+            encoding="utf-8",
+        )
+        (workspace / "state.json").write_text(
+            json.dumps(
+                {
+                    "stateSchemaVersion": "1.0",
+                    "aimVersion": "2.0",
+                    "mode": "Auto",
+                    "costProfile": "Deep",
+                    "epicId": candidate["epicId"],
+                    "epicStatus": "epic_complete",
+                    "activeIncrementId": None,
+                    "previousIncrementId": increment_id,
+                    "previousIncrementStatus": "accepted",
+                    "gateEAcceptance": decision.relative_to(repo).as_posix(),
+                    "portfolioCandidateId": candidate_id,
+                    "currentRole": "PO",
+                    "lastGatePassed": "Gate E",
+                    "platform": "test",
+                    "parallelSupport": {
+                        "available": False,
+                        "enabled": False,
+                        "policy": "sequential_fallback",
+                    },
+                    "commitMode": "optional",
+                    "updatedAt": "2026-08-22T10:04:00Z",
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        catalog_path = aim / "ui-portfolio.json"
+        catalog = (
+            json.loads(catalog_path.read_text(encoding="utf-8"))
+            if catalog_path.is_file()
+            else {"portfolioVersion": "1.0", "workspaces": []}
+        )
+        relative = workspace.relative_to(aim).as_posix()
+        if {"path": relative} not in catalog["workspaces"]:
+            catalog["workspaces"].append({"path": relative})
+        catalog_path.write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8")
 
     def test_schema_is_supported(self) -> None:
         schema = json.loads(
@@ -127,6 +190,7 @@ class PortfolioRunTests(unittest.TestCase):
                 "Epic closure",
                 "portfolio_mandate",
             )
+            self._publish_terminal_relation(repo, "INC-FIRST", "DI-001")
             run = complete_active(
                 repo, run["updatedAt"], "2026-08-22T10:05:00Z", "INC-FIRST"
             )
@@ -142,6 +206,7 @@ class PortfolioRunTests(unittest.TestCase):
                 "Epic closure",
                 "portfolio_mandate",
             )
+            self._publish_terminal_relation(repo, "INC-SECOND", "DI-002")
             run = complete_active(
                 repo, run["updatedAt"], "2026-08-22T10:08:00Z", "INC-SECOND"
             )
@@ -168,6 +233,89 @@ class PortfolioRunTests(unittest.TestCase):
             self.assertEqual(run["status"], "running")
             self.assertEqual(run["checkpoint"], checkpoint_before)
             self.assertNotIn("pauseReason", run)
+
+    def test_checkpoint_rejects_noncanonical_runtime_status_without_mutation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            run = create_run(repo, "MANDATE-CANONICAL", "t1", "t1")
+            run = activate_next(repo, "t1", "t2")
+            before = (repo / ".aim/portfolio-run.json").read_bytes()
+
+            with self.assertRaisesRegex(PortfolioRunError, "not canonical"):
+                checkpoint(
+                    repo,
+                    "t2",
+                    "t3",
+                    "INC-FIRST",
+                    "validation_in_progress",
+                    "Gate D",
+                    "portfolio_mandate",
+                )
+
+            self.assertEqual((repo / ".aim/portfolio-run.json").read_bytes(), before)
+
+    def test_completion_requires_the_canonical_terminal_relation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            run = create_run(repo, "MANDATE-TERMINAL", "t1", "t1")
+            run = activate_next(repo, "t1", "t2")
+            run = checkpoint(
+                repo,
+                "t2",
+                "t3",
+                "INC-FIRST",
+                "epic_complete",
+                "Epic closure",
+                "portfolio_mandate",
+            )
+            before = (repo / ".aim/portfolio-run.json").read_bytes()
+
+            with self.assertRaisesRegex(
+                PortfolioRunError, "runtimeIncrementId is missing"
+            ):
+                complete_active(repo, "t3", "t4", "INC-FIRST")
+
+            self.assertEqual((repo / ".aim/portfolio-run.json").read_bytes(), before)
+            self._publish_terminal_relation(repo, "INC-FIRST", "DI-001")
+            state_path = repo / ".aim/portfolio/EPIC-FIRST/state.json"
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            state.pop("gateEAcceptance")
+            state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(PortfolioRunError, "gateEAcceptance is missing"):
+                complete_active(repo, "t3", "t4", "INC-FIRST")
+
+            state["gateEAcceptance"] = ".aim/portfolio/EPIC-FIRST/decisions/di-001-gate-e.md"
+            state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+
+            state["lastGatePassed"] = "Gate D"
+            state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(PortfolioRunError, "lastGatePassed is not Gate E"):
+                complete_active(repo, "t3", "t4", "INC-FIRST")
+
+            state["lastGatePassed"] = "Gate E"
+            state["portfolioCandidateId"] = "INC-WRONG"
+            state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(
+                PortfolioRunError, "portfolioCandidateId does not match"
+            ):
+                complete_active(repo, "t3", "t4", "INC-FIRST")
+
+            state["portfolioCandidateId"] = "INC-FIRST"
+            state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+            workspace = repo / ".aim/portfolio/EPIC-FIRST"
+            saved_workspace = repo / ".aim/portfolio/EPIC-FIRST-saved"
+            workspace.rename(saved_workspace)
+            workspace.symlink_to(saved_workspace, target_is_directory=True)
+            with self.assertRaisesRegex(
+                PortfolioRunError,
+                "catalog does not resolve exactly one authoritative Epic workspace",
+            ):
+                complete_active(repo, "t3", "t4", "INC-FIRST")
+            workspace.unlink()
+            saved_workspace.rename(workspace)
+
+            completed = complete_active(repo, "t3", "t4", "INC-FIRST")
+            self.assertEqual(completed["completedCandidateIds"], ["INC-FIRST"])
 
     def test_snapshot_matches_visible_unactivated_backlog(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -454,9 +602,7 @@ class PortfolioRunTests(unittest.TestCase):
             run = activate_next(repo, "t1", "t2")
             with self.assertRaisesRegex(PortfolioRunError, "explicit user authority"):
                 skip_active(repo, "t2", "t3", "INC-FIRST")
-            run = checkpoint(
-                repo, "t2", "t3", "INC-FIRST", "skip_requested", "Gate E", "user"
-            )
+            run = checkpoint(repo, "t2", "t3", "INC-FIRST", "blocked", "Gate E", "user")
             run = skip_active(repo, "t3", "t4", "INC-FIRST")
             self.assertEqual(run["skippedCandidateIds"], ["INC-FIRST"])
             run = stop_run(repo, "t4", "t5", "User stopped the Portfolio")

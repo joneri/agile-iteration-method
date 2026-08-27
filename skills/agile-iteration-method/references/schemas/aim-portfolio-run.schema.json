@@ -26,9 +26,20 @@
           ]
         },
         "epicStatus": {
-          "maxLength": 80,
-          "minLength": 1,
-          "type": "string"
+          "enum": [
+            "activation_pending",
+            "epic_initialized",
+            "gate_a_pending",
+            "gate_b_pending",
+            "increment_in_progress",
+            "epic_paused",
+            "blocked",
+            "review_in_progress",
+            "tdo_validation_in_progress",
+            "po_approval_pending",
+            "done_increment_accepted",
+            "epic_complete"
+          ]
         },
         "gate": {
           "enum": [

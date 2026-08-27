@@ -15,10 +15,11 @@ import json
 import os
 import re
 import tempfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, Callable
 
 from aim_activation import candidate_preflights
+from aim_runtime_contract import PORTFOLIO_CHECKPOINT_STATUSES, terminal_acceptance
 
 
 RUN_FILE = "portfolio-run.json"
@@ -219,8 +220,8 @@ def validate_run(value: Any) -> list[str]:
         else:
             epic_status = checkpoint.get("epicStatus")
             checkpoint_updated_at = checkpoint.get("updatedAt")
-            if not isinstance(epic_status, str) or not 1 <= len(epic_status.strip()) <= 80:
-                issues.append("checkpoint epicStatus is invalid")
+            if epic_status not in PORTFOLIO_CHECKPOINT_STATUSES:
+                issues.append("checkpoint epicStatus is not canonical")
             if not isinstance(checkpoint_updated_at, str) or not 1 <= len(checkpoint_updated_at.strip()) <= 64:
                 issues.append("checkpoint updatedAt is invalid")
             if not isinstance(checkpoint.get("gate"), str) or checkpoint.get("gate") not in GATES:
@@ -463,6 +464,8 @@ def checkpoint(repo_root: Path, expected_updated_at: str, updated_at: str, candi
             raise PortfolioRunError("Checkpoint must target the active candidate of a running Portfolio.")
         if gate not in GATES or authority not in AUTHORITIES:
             raise PortfolioRunError("Checkpoint gate or decision authority is unsupported.")
+        if epic_status not in PORTFOLIO_CHECKPOINT_STATUSES:
+            raise PortfolioRunError("Checkpoint epicStatus is not canonical.")
         value["checkpoint"] = {"candidateId": candidate_id, "epicStatus": epic_status, "gate": gate, "decisionAuthority": authority, "updatedAt": updated_at}
         return value
     return _mutate(repo_root, expected_updated_at, updated_at, change)
@@ -474,6 +477,11 @@ def complete_active(repo_root: Path, expected_updated_at: str, updated_at: str, 
             raise PortfolioRunError("Only the active candidate of a running Portfolio can complete.")
         if value.get("checkpoint", {}).get("gate") != "Epic closure":
             raise PortfolioRunError("Record an Epic closure checkpoint before completion.")
+        issues = _terminal_relation_issues(repo_root, value, candidate_id)
+        if issues:
+            raise PortfolioRunError(
+                "Active candidate terminal relation is invalid: " + "; ".join(issues)
+            )
         value["completedCandidateIds"] = [*value["completedCandidateIds"], candidate_id]
         value.pop("activeCandidateId", None)
         value.pop("checkpoint", None)
@@ -482,6 +490,104 @@ def complete_active(repo_root: Path, expected_updated_at: str, updated_at: str, 
             value["status"] = "completed"
         return value
     return _mutate(repo_root, expected_updated_at, updated_at, change)
+
+
+def _terminal_relation_issues(
+    repo_root: Path, run: dict[str, Any], candidate_id: str
+) -> list[str]:
+    """Validate the complete canonical relation immediately before completion."""
+
+    aim_root = _inside_aim(repo_root)
+    issues: list[str] = []
+    snapshot_item = next(
+        (item for item in run["snapshot"] if item["candidateId"] == candidate_id),
+        None,
+    )
+    if snapshot_item is None:
+        return ["candidate is outside the approved snapshot"]
+
+    try:
+        backlog = _read_object(aim_root / BACKLOG_FILE)
+    except PortfolioRunError as exc:
+        return [str(exc)]
+    backlog_items = backlog.get("items")
+    matches = (
+        [item for item in backlog_items if isinstance(item, dict) and item.get("id") == candidate_id]
+        if isinstance(backlog_items, list)
+        else []
+    )
+    if len(matches) != 1:
+        return ["Backlog does not contain exactly one active candidate relation"]
+    backlog_item = matches[0]
+    runtime_id = backlog_item.get("runtimeIncrementId")
+    if backlog_item.get("epicId") != snapshot_item["epicId"]:
+        issues.append("Backlog Epic identity does not match the approved snapshot")
+    if not isinstance(runtime_id, str) or re.fullmatch(r"DI-[0-9]+", runtime_id) is None:
+        issues.append("Backlog runtimeIncrementId is missing or invalid")
+
+    try:
+        catalog = _read_object(aim_root / "ui-portfolio.json")
+    except PortfolioRunError as exc:
+        return [*issues, str(exc)]
+    raw_workspaces = catalog.get("workspaces")
+    if catalog.get("portfolioVersion") != "1.0" or not isinstance(raw_workspaces, list):
+        return [*issues, "Portfolio catalog is not the supported 1.0 contract"]
+
+    workspace_matches: list[tuple[Path, dict[str, Any]]] = []
+    for entry in raw_workspaces:
+        raw = entry.get("path") if isinstance(entry, dict) else None
+        if not isinstance(raw, str) or not raw or "\\" in raw:
+            continue
+        relative = PurePosixPath(raw)
+        if (
+            relative.is_absolute()
+            or (raw != "." and any(part in {"", ".", ".."} for part in relative.parts))
+        ):
+            continue
+        current = aim_root
+        traverses_symlink = False
+        for part in relative.parts:
+            current = current / part
+            if current.is_symlink():
+                traverses_symlink = True
+                break
+        if traverses_symlink:
+            continue
+        workspace = current.resolve()
+        try:
+            workspace.relative_to(aim_root)
+        except ValueError:
+            continue
+        state_path = workspace / "state.json"
+        if workspace.is_symlink() or state_path.is_symlink() or not state_path.is_file():
+            continue
+        try:
+            state = _read_object(state_path)
+        except PortfolioRunError:
+            continue
+        if state.get("epicId") == snapshot_item["epicId"]:
+            workspace_matches.append((workspace, state))
+    if len(workspace_matches) != 1:
+        return [*issues, "catalog does not resolve exactly one authoritative Epic workspace"]
+
+    workspace, state = workspace_matches[0]
+    if state.get("stateSchemaVersion") != "1.0":
+        issues.append("workspace stateSchemaVersion is not 1.0")
+    if state.get("portfolioCandidateId") != candidate_id:
+        issues.append("workspace portfolioCandidateId does not match the candidate")
+    if state.get("epicStatus") != "epic_complete":
+        issues.append("workspace epicStatus is not epic_complete")
+    if state.get("currentRole") != "PO":
+        issues.append("workspace currentRole is not PO")
+    checkpoint = run.get("checkpoint") or {}
+    if checkpoint.get("epicStatus") != "epic_complete":
+        issues.append("Portfolio closure checkpoint is not epic_complete")
+    if isinstance(runtime_id, str):
+        _, acceptance_issues = terminal_acceptance(
+            repo_root.resolve(), workspace, state, runtime_id
+        )
+        issues.extend(acceptance_issues)
+    return issues
 
 
 def skip_active(repo_root: Path, expected_updated_at: str, updated_at: str, candidate_id: str) -> dict[str, Any]:
