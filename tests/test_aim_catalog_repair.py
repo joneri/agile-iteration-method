@@ -196,6 +196,27 @@ class AimCatalogRepairTests(unittest.TestCase):
             self.assertEqual(plan["stateUpdatedAt"], "2026-08-25T10:00:00Z")
             self.assertTrue(plan["acceptanceEvidence"].endswith("user-accepted.md"))
 
+    def test_large_catalog_can_be_repaired_without_freeing_an_activation_slot(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), canonical=True)
+            aim = repo / ".aim"
+            catalog_path = aim / "ui-portfolio.json"
+            catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+            for index in range(1, 100):
+                workspace = aim / "workspaces" / f"retained-{index:03d}"
+                workspace.mkdir(parents=True)
+                catalog["workspaces"].append(
+                    {"path": f"workspaces/retained-{index:03d}"}
+                )
+            catalog_path.write_text(
+                json.dumps(catalog, indent=2) + "\n", encoding="utf-8"
+            )
+
+            plan = plan_repair(repo, **self._request())
+
+        self.assertEqual(plan["result"], "planned")
+        self.assertEqual(plan["workspace"], "workspaces/legacy")
+
     def test_every_publication_failure_restores_exact_pre_state(self) -> None:
         for fault in (
             "after_staging",

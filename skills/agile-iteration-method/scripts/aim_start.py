@@ -24,7 +24,6 @@ from typing import Any, Callable
 PORTFOLIO_FILE = "ui-portfolio.json"
 PORTFOLIO_VERSION = "1.0"
 MAX_PORTFOLIO_BYTES = 1_000_000
-MAX_WORKSPACES = 16
 MAX_STATE_BYTES = 1_000_000
 EPIC_ID_PATTERN = re.compile(r"EPIC-[A-Z0-9-]+")
 INCREMENT_ID_PATTERN = re.compile(r"DI-[0-9]+")
@@ -144,10 +143,8 @@ def _catalog(aim_root: Path) -> tuple[dict[str, Any], bytes, list[tuple[str, Pat
             f"{PORTFOLIO_FILE} must declare portfolioVersion {PORTFOLIO_VERSION}."
         )
     items = value.get("workspaces")
-    if not isinstance(items, list) or not 1 <= len(items) <= MAX_WORKSPACES:
-        raise AimStartError(
-            f"{PORTFOLIO_FILE} must contain 1 to {MAX_WORKSPACES} workspaces."
-        )
+    if not isinstance(items, list) or not items:
+        raise AimStartError(f"{PORTFOLIO_FILE} must contain at least one workspace.")
     resolved: list[tuple[str, Path]] = []
     seen_raw: set[str] = set()
     seen_paths: set[Path] = set()
@@ -327,9 +324,6 @@ def plan_start(
         raise AimStartError(admission["message"])
     root, aim_root = _inside_aim(repo_root)
     catalog, payload, declared = _catalog(aim_root)
-    if len(catalog["workspaces"]) >= MAX_WORKSPACES:
-        raise AimStartError("Portfolio capacity is full; no workspace was created.")
-
     relative_workspace = f"portfolio/{epic_id}"
     final_workspace = aim_root / "portfolio" / epic_id
     if final_workspace.exists() or final_workspace.is_symlink():

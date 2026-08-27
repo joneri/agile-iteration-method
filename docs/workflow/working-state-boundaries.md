@@ -320,6 +320,9 @@ one-active-Epic contract inside any individual workspace.
 
 - each declared workspace owns one ordinary `state.json` and its related Epic,
   increment, review, decision, and optional helper evidence
+- retained closed workspaces do not consume active delivery capacity and the
+  catalog has no arbitrary item-count ceiling; its 1 MB payload limit, bounded
+  paths, and per-workspace validation bound inputs instead
 - catalog paths are relative to the repository `.aim` root and must resolve
   inside that boundary
 - the main AIM thread associated with a workspace remains its only state writer
@@ -388,6 +391,8 @@ focus and admission. It is separate from each workspace's canonical
 `state.json` and from planning candidates in `portfolio-backlog.json`.
 
 - `maxActiveEpics` is a bounded admission limit from 1 through 16
+- `maxActiveEpics` is the only workspace-concurrency capacity control; total
+  retained catalog history is reported separately and never consumes a slot
 - `focusedEpicId` is optional operator attention and default chat targeting
 - running count comes only from canonical workspace state, never from backlog
   or browser presentation

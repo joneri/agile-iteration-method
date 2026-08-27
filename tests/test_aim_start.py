@@ -65,6 +65,36 @@ class AimStartTests(unittest.TestCase):
             "platform": "test",
         }
 
+    def _append_closed_history(self, repo: Path, count: int) -> None:
+        aim = repo / ".aim"
+        catalog_path = aim / "ui-portfolio.json"
+        catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+        template = json.loads((aim / "state.json").read_text(encoding="utf-8"))
+        for index in range(1, count + 1):
+            workspace = aim / "workspaces" / f"history-{index:03d}"
+            (workspace / "increments").mkdir(parents=True)
+            (workspace / "decisions").mkdir()
+            (workspace / "reviews").mkdir()
+            increment_id = f"DI-{index + 1000}"
+            runtime = {
+                **template,
+                "epicId": f"EPIC-HISTORY-{index:03d}",
+                "previousIncrementId": increment_id,
+            }
+            (workspace / "state.json").write_text(
+                json.dumps(runtime, indent=2) + "\n", encoding="utf-8"
+            )
+            (workspace / "epic.md").write_text(
+                f"# EPIC-HISTORY-{index:03d} — Retained outcome\n", encoding="utf-8"
+            )
+            (workspace / f"increments/{index + 1000}-plan.md").write_text(
+                f"# {increment_id} — Retained delivery\n", encoding="utf-8"
+            )
+            catalog["workspaces"].append(
+                {"path": f"workspaces/history-{index:03d}"}
+            )
+        catalog_path.write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8")
+
     def test_preview_is_no_write_and_apply_is_visible_with_current_contract(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))
@@ -214,7 +244,7 @@ class AimStartTests(unittest.TestCase):
             self.assertFalse((Path(outside) / "EPIC-NEW-001").exists())
             self.assertEqual(list((repo / ".aim").glob(".EPIC-NEW-001.start-*")), [])
 
-    def test_invalid_traversal_capacity_and_symlink_catalogs_fail_closed(self) -> None:
+    def test_invalid_traversal_and_symlink_catalogs_fail_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))
             catalog = repo / ".aim/ui-portfolio.json"
@@ -237,22 +267,31 @@ class AimStartTests(unittest.TestCase):
             with self.assertRaisesRegex(AimStartError, "symbolic link"):
                 plan_start(repo, **self._request())
 
-        with tempfile.TemporaryDirectory() as temporary:
-            repo = self._repo(Path(temporary))
-            workspaces = [{"path": "."}]
-            for index in range(1, 16):
-                workspace = repo / ".aim/workspaces" / str(index)
-                workspace.mkdir(parents=True)
-                (workspace / "state.json").write_text(
-                    json.dumps({"epicId": f"EPIC-{index}"}) + "\n", encoding="utf-8"
+
+    def test_seventeenth_and_large_history_starts_are_transactionally_admitted(self) -> None:
+        for retained_count in (16, 100):
+            with self.subTest(retained_count=retained_count), tempfile.TemporaryDirectory() as temporary:
+                repo = self._repo(Path(temporary))
+                self._append_closed_history(repo, retained_count - 1)
+                plan = plan_start(repo, **self._request())
+
+                result = apply_start(
+                    repo,
+                    **self._request(),
+                    expected_catalog_sha256=plan["catalogSha256"],
                 )
-                workspaces.append({"path": f"workspaces/{index}"})
-            (repo / ".aim/ui-portfolio.json").write_text(
-                json.dumps({"portfolioVersion": "1.0", "workspaces": workspaces}) + "\n",
-                encoding="utf-8",
-            )
-            with self.assertRaisesRegex(AimStartError, "capacity is full"):
-                plan_start(repo, **self._request())
+
+                catalog = json.loads(
+                    (repo / ".aim/ui-portfolio.json").read_text(encoding="utf-8")
+                )
+                board = build_board(repo)
+                self.assertEqual(len(catalog["workspaces"]), retained_count + 1)
+                self.assertEqual(board["source"]["retainedWorkspaceCount"], retained_count + 1)
+                self.assertTrue(
+                    any(item["id"] == "EPIC-HISTORY-001" for item in board["epics"])
+                )
+                self.assertTrue(result["visibleOnBoard"])
+                self.assertTrue(result["gateAReady"])
 
     def test_validator_names_orphan_and_every_legacy_contract_value(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

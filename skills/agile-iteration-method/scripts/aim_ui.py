@@ -36,7 +36,7 @@ PORTFOLIO_VERSION = "1.0"
 PORTFOLIO_FILE = "ui-portfolio.json"
 BACKLOG_VERSION = "1.0"
 BACKLOG_FILE = "portfolio-backlog.json"
-MAX_PORTFOLIO_WORKSPACES = 16
+MAX_PORTFOLIO_BYTES = 1_000_000
 MAX_BACKLOG_ITEMS = 256
 MAX_BACKLOG_BYTES = 1_000_000
 MAX_ACCEPTANCE_DECISION_BYTES = 1_000_000
@@ -1048,8 +1048,32 @@ def _workspace_roots(
     diagnostics: list[dict[str, Any]] = []
 
     portfolio_path = aim_root / PORTFOLIO_FILE
+    if portfolio_path.is_symlink():
+        warning = f"{PORTFOLIO_FILE} must not be a symbolic link."
+        warnings.append(warning)
+        diagnostics.append(
+            _workspace_diagnostic(
+                repo_root,
+                aim_root,
+                kind="invalid_portfolio_catalog",
+                reason=warning,
+            )
+        )
+        return "portfolio", [], diagnostics
     if not portfolio_path.is_file():
         return "single-workspace", [aim_root], diagnostics
+    if portfolio_path.stat().st_size > MAX_PORTFOLIO_BYTES:
+        warning = f"{PORTFOLIO_FILE} is larger than {MAX_PORTFOLIO_BYTES} bytes."
+        warnings.append(warning)
+        diagnostics.append(
+            _workspace_diagnostic(
+                repo_root,
+                aim_root,
+                kind="invalid_portfolio_catalog",
+                reason=warning,
+            )
+        )
+        return "portfolio", [], diagnostics
     try:
         portfolio = _read_json(portfolio_path)
     except AimUiError as exc:
@@ -1088,20 +1112,6 @@ def _workspace_roots(
             )
         )
         return "portfolio", [], diagnostics
-    if len(declared) > MAX_PORTFOLIO_WORKSPACES:
-        warnings.append(
-            f"{PORTFOLIO_FILE} declares more than {MAX_PORTFOLIO_WORKSPACES} workspaces."
-        )
-        diagnostics.append(
-            _workspace_diagnostic(
-                repo_root,
-                aim_root,
-                kind="invalid_portfolio_catalog",
-                reason=warnings[-1],
-            )
-        )
-        return "portfolio", [], diagnostics
-
     roots: list[Path] = []
     seen: set[Path] = set()
     for index, item in enumerate(declared):
@@ -1522,6 +1532,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             "readOnly": True,
             "refreshMs": DEFAULT_REFRESH_MS,
             "workspaceCount": len(workspaces),
+            "retainedWorkspaceCount": len(workspaces),
         },
         "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
         "epics": [],
@@ -1690,6 +1701,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     control, control_warnings = project_portfolio_control(aim_root, base["epics"])
     warnings.extend(control_warnings)
     base["control"] = control
+    base["source"]["activeWorkspaceCount"] = control["runningEpics"]
     portfolio_run, run_warnings = project_portfolio_run(aim_root)
     warnings.extend(run_warnings)
     base["portfolioRun"] = portfolio_run

@@ -19,7 +19,6 @@ BACKLOG_FILE = "portfolio-backlog.json"
 MAX_BACKLOG_BYTES = 1_000_000
 MAX_CATALOG_BYTES = 1_000_000
 MAX_STATE_BYTES = 1_000_000
-MAX_WORKSPACES = 16
 CANDIDATE_PATTERN = re.compile(r"INC-[A-Z0-9-]+")
 EPIC_PATTERN = re.compile(r"EPIC-[A-Z0-9-]+")
 INCREMENT_PATTERN = re.compile(r"DI-[0-9]+")
@@ -136,7 +135,7 @@ def _catalog(aim_root: Path) -> tuple[dict[str, Any], bytes, list[tuple[str, Pat
         or set(value) != {"portfolioVersion", "workspaces"}
         or value.get("portfolioVersion") != "1.0"
         or not isinstance(value.get("workspaces"), list)
-        or not 1 <= len(value["workspaces"]) <= MAX_WORKSPACES
+        or not value["workspaces"]
     ):
         raise ActivationPreflightError("ui-portfolio.json is not a supported catalog.")
     declared: list[tuple[str, Path]] = []
@@ -354,11 +353,6 @@ def activation_preflight(
                 "catalog_stale",
                 "Portfolio catalog changed since activation preflight; reload before writing.",
             )
-        if len(catalog["workspaces"]) >= MAX_WORKSPACES:
-            return _blocked(
-                "catalog_full", "Portfolio capacity is full; no workspace was created."
-            )
-
         allocated: dict[str, str] = {}
         running: list[str] = []
         for raw, workspace in declared:

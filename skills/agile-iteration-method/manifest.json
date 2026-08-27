@@ -48,7 +48,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.9.1",
+  "productVersion": "2.9.2",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -60,12 +60,12 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "c4da7469baf9bc03cbd43a2c583294ef1218de2b76a1f5b3632df565cfd3de1d",
+      "sha256": "49329e4a041fdb950f9e3d0649ad45bda8d4af34c2692f9082493ff782a93f83",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "4b113a3290986c0c6a5c6655686d706d6cc7d57d408b985228d06c0ab1669a27",
+      "sha256": "69a1a72b42d69d08f8eda150a5e618b14be3936b2d04d782d4397b396d397dd7",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
@@ -160,7 +160,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "5ba2db80e8ed2521570b58d5f1acba3a6b83978e500931fc9768dd85355489a8",
+      "sha256": "39d6e6e5077b3674cd6052b7bd41f3b13ce443fe248af29c55957eb960f60bad",
       "source": "VERSION"
     },
     {
@@ -175,17 +175,17 @@
     },
     {
       "output": "scripts/aim_activation.py",
-      "sha256": "181c090161f87c8c57f358522ff83e883f75809fc5d9ffa8dd4ccbf1d3348245",
+      "sha256": "d718eaaf87bb64c830420a462bb90b8bc148c5607ca4decca7147974608474ae",
       "source": "scripts/aim_activation.py"
     },
     {
       "output": "scripts/aim_start.py",
-      "sha256": "c54db0a0f8f46f900ac5ce255ae45baada3aa34af1b139b00245a109fe54301b",
+      "sha256": "d1176269680c5e226315568bf0766221fe75e6558dd752907f83a4c325ee624f",
       "source": "scripts/aim_start.py"
     },
     {
       "output": "scripts/aim_catalog_repair.py",
-      "sha256": "d4967a4008b2f4cd88e06b1f1a9629bf528d9600a901b549dd94e2efcc0370b9",
+      "sha256": "a578a1fae6febdbdf5a379c5b38d5f052b76ae3566c4f13e8a54bffd73662b00",
       "source": "scripts/aim_catalog_repair.py"
     },
     {
@@ -210,7 +210,7 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "50e6b3f6fd5964750b5fff447ea5a4868d841e34d3d6d74d98580dca89e84c5f",
+      "sha256": "d447b80707f7f27c171921aa7ab96a3509337695665c585d903a3fe7229bccc1",
       "source": "scripts/aim_ui.py"
     },
     {
@@ -230,7 +230,7 @@
     },
     {
       "output": "aim-ui/app.js",
-      "sha256": "b4d7c4bf51c4b25d668c2a0dc93048e4c9aebb16bf110a56955dc54668e47214",
+      "sha256": "7b18894ad1aa7f30f32b8c7c953852ae7e2a991470b11aaf7af34f94bd2458f5",
       "source": "aim-ui/app.js"
     }
   ]

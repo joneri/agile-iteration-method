@@ -193,13 +193,44 @@ class AimUiTests(unittest.TestCase):
             ),
             [],
         )
-        too_many = {
+        large_history = {
             "portfolioVersion": "1.0",
-            "workspaces": [{"path": f"workspaces/{index}"} for index in range(17)],
+            "workspaces": [{"path": f"workspaces/{index}"} for index in range(101)],
         }
-        self.assertTrue(
-            any("at most 16" in issue.message for issue in validate(too_many, schema))
-        )
+        self.assertEqual(validate(large_history, schema), [])
+
+    def test_portfolio_catalog_payload_and_symlink_remain_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            catalog = repo / ".aim/ui-portfolio.json"
+            catalog.write_text(" " * 1_000_001, encoding="utf-8")
+
+            oversized = build_board(repo)
+
+            self.assertEqual(oversized["epics"], [])
+            self.assertTrue(
+                any("larger than 1000000 bytes" in item for item in oversized["warnings"])
+            )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            catalog = repo / ".aim/ui-portfolio.json"
+            target = repo / "catalog.json"
+            target.write_text(
+                json.dumps(
+                    {"portfolioVersion": "1.0", "workspaces": [{"path": "."}]}
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            catalog.symlink_to(target)
+
+            linked = build_board(repo)
+
+            self.assertEqual(linked["epics"], [])
+            self.assertTrue(
+                any("must not be a symbolic link" in item for item in linked["warnings"])
+            )
 
     def test_backlog_schema_is_supported_and_accepts_planning_only_shape(self) -> None:
         schema = json.loads(
@@ -1294,6 +1325,8 @@ class AimUiTests(unittest.TestCase):
         self.assertEqual(board["health"], "healthy")
         self.assertEqual(board["source"]["kind"], "portfolio")
         self.assertEqual(board["source"]["workspaceCount"], 2)
+        self.assertEqual(board["source"]["retainedWorkspaceCount"], 2)
+        self.assertEqual(board["source"]["activeWorkspaceCount"], 2)
         self.assertEqual(len(board["epics"]), 2)
         self.assertTrue(all(epic["active"] for epic in board["epics"]))
         by_id = {epic["id"]: epic for epic in board["epics"]}
@@ -1308,6 +1341,41 @@ class AimUiTests(unittest.TestCase):
             by_id["EPIC-TEST-002"]["helperActivity"]["items"][0]["id"],
             "other-helper",
         )
+
+    def test_large_closed_history_remains_visible_without_consuming_capacity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            paths = ["."]
+            for index in range(1, 101):
+                epic_id = f"EPIC-HISTORY-{index:03d}"
+                increment_id = f"DI-{index + 1000}"
+                workspace = self._additional_workspace(
+                    repo,
+                    name=f"history-{index:03d}",
+                    epic_id=epic_id,
+                    increment_id=increment_id,
+                    status="epic_complete",
+                )
+                runtime_path = workspace / "state.json"
+                runtime = json.loads(runtime_path.read_text(encoding="utf-8"))
+                runtime.update(
+                    {
+                        "currentRole": "PO",
+                        "lastGatePassed": "Gate E",
+                    }
+                )
+                runtime_path.write_text(json.dumps(runtime, indent=2) + "\n", encoding="utf-8")
+                paths.append(f"workspaces/history-{index:03d}")
+            self._portfolio(repo, *paths)
+            self._control(repo, maximum=2)
+
+            board = build_board(repo)
+
+        self.assertEqual(board["source"]["retainedWorkspaceCount"], 101)
+        self.assertEqual(board["source"]["activeWorkspaceCount"], 1)
+        self.assertEqual(board["control"]["runningEpics"], 1)
+        self.assertEqual(board["control"]["availableSlots"], 1)
+        self.assertEqual(len(board["epics"]), 101)
 
     def test_orphaned_root_checkpoint_is_named_without_mutation(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

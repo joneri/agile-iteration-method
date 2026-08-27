@@ -97,12 +97,18 @@ acceptance, scheduling, or agent instructions. A workspace's `state.json`
 remains authoritative for its Epic, and the main AIM thread for that workspace
 remains the only state writer.
 
+Closed workspaces may remain in this catalog without consuming delivery
+capacity. The catalog has no item-count ceiling: bounded file size, bounded
+paths, containment and symlink checks, unique identities, and validated
+workspace state protect discovery. AIM UI reports retained workspace history
+separately from active use of `maxActiveEpics`.
+
 When this catalog exists, a normal `/aim start "EPIC: ..."` creates new work in
 a dedicated `.aim/portfolio/<EPIC-ID>/` workspace through AIM's trusted start
 transaction. The transaction reserves a canonical `DI-*`, registers the
 workspace, and verifies the same read model served by `/api/board` before Gate A
-is shown as ready. Invalid, stale, full, colliding, escaped, or symlinked input
-leaves no root checkpoint or retained partial workspace.
+is shown as ready. Invalid, stale, active-capacity-full, colliding, escaped, or
+symlinked input leaves no root checkpoint or retained partial workspace.
 
 If a root or contained checkpoint has `state.json` but is not declared, the
 control room shows a prominent **Read-only integrity warning** with its Epic,

@@ -578,7 +578,7 @@ allocation, publishes workspace and registration with bounded rollback, and
 verifies the Epic and reserved Increment through AIM UI's read model before
 success is reported.
 
-Invalid, stale, colliding, full, traversing, escaped, or symlinked catalogs stop
+Invalid, stale, colliding, active-capacity-full, traversing, escaped, or symlinked catalogs stop
 without a root checkpoint or retained partial workspace. A checkpoint outside
 the active catalog, or one carrying legacy status, Gate, or `INC-*` runtime
 identity, is evidence to diagnose—not authority to normalize. `/aim validate`

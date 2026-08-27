@@ -30,7 +30,6 @@ MAX_FILE_BYTES = 1_048_576
 MAX_WORKSPACE_FILE_BYTES = 16_777_216
 MAX_WORKSPACE_BYTES = 67_108_864
 MAX_WORKSPACE_ENTRIES = 4096
-MAX_WORKSPACES = 16
 EPIC_ID_PATTERN = re.compile(r"EPIC-[A-Z0-9-]+")
 CANDIDATE_ID_PATTERN = re.compile(r"INC-[A-Z0-9-]+")
 INCREMENT_ID_PATTERN = re.compile(r"DI-[0-9]+")
@@ -126,8 +125,8 @@ def _load_catalog(aim_root: Path) -> tuple[dict[str, Any], bytes, dict[str, Path
     if set(value) != {"portfolioVersion", "workspaces"} or value.get("portfolioVersion") != "1.0":
         raise CatalogRepairError(f"{PORTFOLIO_FILE} is not a supported Portfolio catalog.")
     items = value.get("workspaces")
-    if not isinstance(items, list) or not 1 <= len(items) <= MAX_WORKSPACES:
-        raise CatalogRepairError(f"{PORTFOLIO_FILE} must contain 1 to {MAX_WORKSPACES} workspaces.")
+    if not isinstance(items, list) or not items:
+        raise CatalogRepairError(f"{PORTFOLIO_FILE} must contain at least one workspace.")
     resolved: dict[str, Path] = {}
     seen_paths: set[Path] = set()
     for index, item in enumerate(items, 1):

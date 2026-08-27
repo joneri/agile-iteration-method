@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-08-27 - AIM 2 patch release v2.9.2
+- Removed the lifetime 16-workspace ceiling from Portfolio startup, shared
+  activation preflight, catalog repair, JSON Schema validation, and AIM UI.
+- Made `maxActiveEpics` the sole concurrency/admission capacity control so
+  retained closed workspaces remain visible and traceable without blocking new
+  Epic activation.
+- Preserved fail-closed catalog safety through bounded payload and path sizes,
+  containment, symbolic-link rejection, identity uniqueness, state validation,
+  stale-digest checks, and rollback-safe publication.
+- Made AIM UI report active capacity separately from total retained workspace
+  history and retain its 1 MB pre-parse catalog bound.
+- Added transactional 17th-workspace and 100+ retained-history coverage plus
+  large-catalog UI, repair, schema, package, and active-capacity regressions for
+  GitHub issue #8.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`10`. Existing Portfolio catalogs and retained workspaces require no migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI. Adaptive
+installations can rerun their reviewed preview/apply installer flow to receive
+the synchronized activation, startup, repair, and UI payloads.
+
+Known limitations: catalog payloads remain bounded to 1 MB and each workspace
+must still pass current state and containment validation. The read model is
+validated with more than 100 retained workspaces; exceptionally large histories
+may benefit from future pagination or indexed projection.
+
 ## 2026-08-26 - AIM 2 patch release v2.9.1
 - Bound AIM UI process reuse to a protocol version and deterministic payload
   fingerprint covering the launcher, backend, and served frontend assets.

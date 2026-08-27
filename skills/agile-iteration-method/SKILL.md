@@ -466,7 +466,7 @@ the trusted package-owned `scripts/aim_start.py`, show its no-write preview, and
 apply only that reviewed catalog digest. A successful start creates and
 registers `.aim/portfolio/<EPIC-ID>/`, reserves a canonical `DI-*`, and verifies
 the Epic and reserved Increment through the AIM UI read model before Gate A is
-reported ready. Invalid, stale, full, colliding, traversing, escaped, symlinked,
+reported ready. Invalid, stale, active-capacity-full, colliding, traversing, escaped, symlinked,
 or invisible relations fail closed without root state or a partial workspace.
 Existing orphaned or legacy checkpoints are reported by validation and UI with
 an explicit migration/repair next action; neither surface modifies them.

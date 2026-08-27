@@ -217,7 +217,7 @@ For a genuinely new `/aim start "EPIC: ..."`, inspect
 trusted package-owned `scripts/aim_start.py` preview and apply the exact
 reviewed catalog digest. Success requires a contained registered
 `.aim/portfolio/<EPIC-ID>/`, a canonical reserved `DI-*`, and matching AIM UI
-read-model projection before Gate A is reported ready. Invalid, stale, full,
+read-model projection before Gate A is reported ready. Invalid, stale, active-capacity-full,
 colliding, traversing, escaped, symlinked, or invisible relations fail closed
 without root state or retained partial workspace. Validation and UI diagnose
 existing orphaned or legacy checkpoints read-only; they never migrate them.

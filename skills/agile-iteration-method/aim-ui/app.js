@@ -1057,7 +1057,8 @@ function render(board) {
   if (state.filter !== "all" && !viewEpics.some((epic) => epic.id === state.filter)) {
     state.filter = "all";
   }
-  const activeCount = board.epics.filter((epic) => epic.active).length;
+  const activeCount = board.source.activeWorkspaceCount
+    ?? board.epics.filter((epic) => epic.active).length;
   const deliveryEpics = board.epics.filter(epicVisibleOnDeliveryBoard);
   const incrementCount = deliveryEpics.reduce(
     (total, epic) => total + epic.increments.filter((item) => item.visibleOnBoard !== false).length,
@@ -1076,8 +1077,14 @@ function render(board) {
   $("portfolio-summary").textContent = `${activeCount} running · ${plannedCount} planned · ${incrementCount} cards on the delivery board`;
   const facts = $("runtime-facts");
   facts.replaceChildren();
-  addFact(facts, "Active Epics", activeCount);
-  addFact(facts, "Workspaces", board.source.workspaceCount || board.epics.length);
+  const retainedCount = board.source.retainedWorkspaceCount
+    ?? board.source.workspaceCount
+    ?? board.epics.length;
+  const activeCapacity = board.control?.maxActiveEpics == null
+    ? `${activeCount} / unbounded`
+    : `${activeCount} / ${board.control.maxActiveEpics}`;
+  addFact(facts, "Active capacity", activeCapacity);
+  addFact(facts, "Retained workspaces", retainedCount);
   addFact(facts, "Attention", attentionCount);
   addFact(facts, "Accepted history", board.history?.acceptedCount || 0);
   renderPortfolioControl(board);

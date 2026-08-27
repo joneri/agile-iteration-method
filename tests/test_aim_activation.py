@@ -81,6 +81,27 @@ class ActivationPreflightTests(unittest.TestCase):
         )
         return root
 
+    def _append_closed_history(self, repo: Path, count: int) -> None:
+        aim = repo / ".aim"
+        catalog_path = aim / "ui-portfolio.json"
+        catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+        template = json.loads((aim / "state.json").read_text(encoding="utf-8"))
+        for index in range(1, count + 1):
+            workspace = aim / "workspaces" / f"history-{index:03d}"
+            workspace.mkdir(parents=True)
+            runtime = {
+                **template,
+                "epicId": f"EPIC-HISTORY-{index:03d}",
+                "previousIncrementId": f"DI-{index + 1000}",
+            }
+            (workspace / "state.json").write_text(
+                json.dumps(runtime, indent=2) + "\n", encoding="utf-8"
+            )
+            catalog["workspaces"].append(
+                {"path": f"workspaces/history-{index:03d}"}
+            )
+        catalog_path.write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8")
+
     def test_allocated_identity_is_blocked_and_fresh_identity_is_allowed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))
@@ -184,3 +205,24 @@ class ActivationPreflightTests(unittest.TestCase):
             escaped = activation_preflight(repo, epic_id="EPIC-FRESH")
             self.assertEqual(escaped["code"], "repository_invalid")
             self.assertIn("symbolic link", escaped["message"])
+
+    def test_large_closed_history_does_not_consume_activation_capacity(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            self._append_closed_history(repo, 99)
+            (repo / ".aim/portfolio-control.json").write_text(
+                json.dumps(
+                    {
+                        "controlVersion": "1.0",
+                        "maxActiveEpics": 1,
+                        "updatedAt": "2026-08-26T02:02:00Z",
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            allowed = activation_preflight(repo, epic_id="EPIC-FRESH")
+
+        self.assertTrue(allowed["allowed"])
+        self.assertEqual(allowed["runningEpicIds"], [])
