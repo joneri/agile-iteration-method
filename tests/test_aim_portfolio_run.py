@@ -100,6 +100,13 @@ class PortfolioRunTests(unittest.TestCase):
 
         workspace_name = candidate["epicId"]
         workspace = aim / "portfolio" / workspace_name
+        (workspace / "increments").mkdir(parents=True)
+        number = increment_id.removeprefix("DI-")
+        (workspace / "increments" / f"{number}-plan.md").write_text(
+            f"# {increment_id} — Complete the bounded outcome\n\n"
+            f"Epic: {candidate['epicId']}\n",
+            encoding="utf-8",
+        )
         (workspace / "decisions").mkdir(parents=True)
         decision = workspace / "decisions" / f"{increment_id.lower()}-gate-e.md"
         decision.write_text(
@@ -286,6 +293,17 @@ class PortfolioRunTests(unittest.TestCase):
 
             state["gateEAcceptance"] = ".aim/portfolio/EPIC-FIRST/decisions/di-001-gate-e.md"
             state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+
+            plan_path = repo / ".aim/portfolio/EPIC-FIRST/increments/001-plan.md"
+            valid_plan = plan_path.read_text(encoding="utf-8")
+            plan_path.write_text("# DI-001 — Missing explicit relation\n", encoding="utf-8")
+            with self.assertRaisesRegex(
+                PortfolioRunError,
+                "matching runtime Increment plan must declare Epic: EPIC-FIRST",
+            ):
+                complete_active(repo, "t3", "t4", "INC-FIRST")
+            self.assertEqual((repo / ".aim/portfolio-run.json").read_bytes(), before)
+            plan_path.write_text(valid_plan, encoding="utf-8")
 
             state["lastGatePassed"] = "Gate D"
             state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")

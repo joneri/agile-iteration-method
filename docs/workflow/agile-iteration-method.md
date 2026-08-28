@@ -1076,6 +1076,7 @@ If any item fails, the increment is too small and must be bundled or reworked.
 
 ### Value and scope
 
+- [ ] Does the canonical plan declare `Epic: <EPIC-ID>` for an explicit runtime relation?
 - [ ] Does this increment embody a meaningful part of the Epic end to end?
 - [ ] Would a user notice and understand the change without explanation?
 - [ ] Can this be demoed as a complete behavior, not just a detail?

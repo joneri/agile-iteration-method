@@ -1126,7 +1126,7 @@ class AimUiTests(unittest.TestCase):
             repo = self._repo(Path(temporary), runtime)
             aim = repo / ".aim"
             (aim / "increments/042-wip.md").write_text(
-                "# DI-042 — Finish the Portfolio\n\nEpic: EPIC-TEST-001\n",
+                "# DI-042 — Finish the legacy Portfolio\n",
                 encoding="utf-8",
             )
             decision = aim / "decisions/2026-08-22-gate-e-user-accepted.md"
@@ -1150,6 +1150,105 @@ class AimUiTests(unittest.TestCase):
         self.assertEqual(increments["DI-001"]["column"], "backlog")
         self.assertEqual(increments["DI-001"]["runtimeStatus"], "gate_b_pending")
         self.assertEqual(board["warnings"], [])
+
+    def test_completed_portfolio_reconciles_state_linked_legacy_plan_without_epic_field(self) -> None:
+        runtime = state("epic_complete")
+        runtime.update(
+            {
+                "activeIncrementId": None,
+                "previousIncrementId": "DI-001",
+                "previousIncrementStatus": "accepted",
+                "portfolioCandidateId": "INC-TEST-001",
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "gateEAcceptance": ".aim/decisions/001-gate-e.md",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/001-wip.md").write_text(
+                "# DI-001 — Accepted legacy plan\n", encoding="utf-8"
+            )
+            (aim / "decisions/001-gate-e.md").write_text(
+                "# Gate E — DI-001\n\nDecision: accepted\n",
+                encoding="utf-8",
+            )
+            self._portfolio(repo, ".")
+            self._backlog(
+                repo,
+                [
+                    {
+                        "id": "INC-TEST-001",
+                        "epicId": "EPIC-TEST-001",
+                        "epicTitle": "Make delivery visible",
+                        "title": "Preserve accepted history",
+                        "priority": 1,
+                        "createdAt": "2026-08-21T13:00:00Z",
+                        "runtimeIncrementId": "DI-001",
+                    }
+                ],
+            )
+            run = {
+                "runVersion": "1.0",
+                "runId": "PORTFOLIO-LEGACY",
+                "mode": "Auto",
+                "status": "completed",
+                "mandate": {
+                    "id": "MANDATE-LEGACY",
+                    "approvedAt": "t1",
+                    "approvedBy": "user",
+                    "snapshotHash": snapshot_hash(
+                        [
+                            {
+                                "candidateId": "INC-TEST-001",
+                                "epicId": "EPIC-TEST-001",
+                                "epicTitle": "Make delivery visible",
+                                "title": "Preserve accepted history",
+                                "priority": 1,
+                                "createdAt": "2026-08-21T13:00:00Z",
+                            }
+                        ]
+                    ),
+                },
+                "snapshot": [
+                    {
+                        "candidateId": "INC-TEST-001",
+                        "epicId": "EPIC-TEST-001",
+                        "epicTitle": "Make delivery visible",
+                        "title": "Preserve accepted history",
+                        "priority": 1,
+                        "createdAt": "2026-08-21T13:00:00Z",
+                    }
+                ],
+                "completedCandidateIds": ["INC-TEST-001"],
+                "skippedCandidateIds": [],
+                "updatedAt": "t2",
+            }
+            (aim / "portfolio-run.json").write_text(
+                json.dumps(run, indent=2) + "\n", encoding="utf-8"
+            )
+            board = build_board(repo)
+            (aim / "increments/001-wip.md").write_text(
+                "# DI-001 — Explicitly mismatched plan\n\nEpic: EPIC-WRONG\n",
+                encoding="utf-8",
+            )
+            mismatched = build_board(repo)
+
+        self.assertTrue(board["portfolioRun"]["valid"])
+        self.assertEqual(board["portfolioRun"]["relationStatus"], "consistent")
+        self.assertEqual(board["warnings"], [])
+        self.assertEqual(board["epics"][0]["increments"][0]["column"], "done")
+        self.assertFalse(mismatched["portfolioRun"]["valid"])
+        self.assertEqual(
+            mismatched["portfolioRun"]["relationStatus"], "contradictory"
+        )
+        self.assertTrue(
+            any(
+                "matching runtime Increment is missing" in warning
+                for warning in mismatched["warnings"]
+            )
+        )
 
     def test_invalid_state_linked_acceptance_fails_closed_without_legacy_fallback(self) -> None:
         cases = {

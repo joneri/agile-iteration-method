@@ -47,6 +47,13 @@ fail closed and report the problem instead of inferring acceptance from a
 conveniently named file. The historical `<increment-number>-gate-e.md` lookup
 remains a compatibility fallback only when structured history does not apply.
 
+Every new Increment plan declares `Epic: <EPIC-ID>`. Portfolio completion
+requires exactly one plan whose Increment and Epic identities match the
+Backlog, workspace, and accepted state. For already completed legacy history,
+read-only UI projection may recover a missing plan `Epic:` field only for the
+exact state-linked `previousIncrementId`; the normal terminal Gate E evidence
+checks still apply. A different or explicitly mismatched Epic is never inferred.
+
 It includes:
 
 - active Epic id and status

@@ -28,7 +28,11 @@ from aim_actions import (
 from aim_activation import candidate_preflights
 from aim_portfolio import project_portfolio_control
 from aim_portfolio_run import project_portfolio_run, snapshot_hash
-from aim_runtime_contract import decision_accepts_increment
+from aim_runtime_contract import (
+    decision_accepts_increment,
+    increment_artifact_identity,
+    terminal_acceptance,
+)
 
 READ_MODEL_VERSION = "9.0"
 PORTFOLIO_VERSION = "1.0"
@@ -149,14 +153,6 @@ def _field(markdown: str, label: str) -> str | None:
     return (match.group(1) or match.group(2)).strip()
 
 
-def _increment_id(path: Path, markdown: str) -> str:
-    match = re.search(r"\bDI-\d+\b", markdown[:240], re.IGNORECASE)
-    if match:
-        return match.group(0).upper()
-    number = re.match(r"(\d+)", path.name)
-    return f"DI-{number.group(1)}" if number else path.stem.upper()
-
-
 def _legacy_acceptance_decision(aim_root: Path, increment_id: str) -> Path | None:
     number = increment_id.removeprefix("DI-")
     decisions = aim_root / "decisions"
@@ -181,41 +177,10 @@ def _state_acceptance_decision(
         return None, False, None
     if state.get("previousIncrementStatus") != "accepted":
         return None, True, None
-    if state.get("epicStatus") not in {"done_increment_accepted", "epic_complete"}:
-        return None, True, "accepted previous Increment requires a terminal-compatible Epic status"
-    if state.get("lastGatePassed") != "Gate E":
-        return None, True, "accepted previous Increment requires lastGatePassed Gate E"
-
-    raw_path = state.get("gateEAcceptance")
-    if not isinstance(raw_path, str) or not raw_path.strip():
-        return None, True, "accepted previous Increment requires gateEAcceptance"
-    if "\\" in raw_path:
-        return None, True, "gateEAcceptance must use repository-relative POSIX separators"
-    relative = Path(raw_path)
-    if (
-        relative.is_absolute()
-        or not relative.parts
-        or relative.parts[0] != ".aim"
-        or any(part in {"", ".", ".."} for part in relative.parts)
-    ):
-        return None, True, "gateEAcceptance must be a contained repository-relative .aim path"
-
-    lexical = repo_root / relative
-    current = repo_root
-    for part in relative.parts:
-        current = current / part
-        if current.is_symlink():
-            return None, True, "gateEAcceptance must not traverse a symbolic link"
-    try:
-        decision = lexical.resolve()
-        decision.relative_to(aim_root.resolve())
-    except (OSError, ValueError):
-        return None, True, "gateEAcceptance leaves the authoritative Epic workspace"
-    if decision.parent != (aim_root / "decisions").resolve():
-        return None, True, "gateEAcceptance must name a file in the workspace decisions directory"
-    if not decision_accepts_increment(decision, increment_id):
-        return None, True, "gateEAcceptance is missing, oversized, mismatched, or not accepted"
-    return decision, True, None
+    decision, issues = terminal_acceptance(
+        repo_root.resolve(), aim_root.resolve(), state, increment_id
+    )
+    return decision, True, "; ".join(issues) if issues else None
 
 
 def _acceptance_decision(
@@ -1263,16 +1228,20 @@ def _project_epic(
     epic_id = str(state["epicId"])
     active_id = state.get("activeIncrementId")
     planned_id = state.get("plannedIncrementId")
+    previous_id = state.get("previousIncrementId")
     increment_items: list[dict[str, Any]] = []
     increments_root = aim_root / "increments"
     if increments_root.is_dir():
         grouped_paths: dict[str, list[tuple[Path, str]]] = {}
         for path in sorted(increments_root.glob("*.md")):
             markdown = _read_markdown(path)
-            increment_id = _increment_id(path, markdown)
-            declared_epic = _field(markdown, "Epic")
+            increment_id, declared_epic = increment_artifact_identity(path, markdown)
             is_active = increment_id == active_id
-            if declared_epic != epic_id and not (is_active and declared_epic is None):
+            state_linked_legacy = (
+                declared_epic is None
+                and increment_id in {active_id, planned_id, previous_id}
+            )
+            if declared_epic != epic_id and not state_linked_legacy:
                 continue
             grouped_paths.setdefault(increment_id, []).append((path, markdown))
 
@@ -1616,7 +1585,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             reason = (
                 f"Preserved history needs review: Backlog candidate {candidate['id']} "
                 f"for {candidate['epicId']} references {runtime_increment_id}, but no "
-                "active Portfolio workspace contains that Epic and Increment relation. "
+                "catalogued Portfolio workspace contains that Epic and Increment relation. "
                 "AIM UI kept it out of Planned work and disabled activation."
             )
             unresolved_runtime_relations.append(

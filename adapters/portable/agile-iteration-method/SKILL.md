@@ -676,6 +676,7 @@ At Gate B, propose exactly one Done Increment that is a simplified version of th
 
 Before development, confirm the increment:
 
+- declares `Epic: <EPIC-ID>` in its canonical plan artifact
 - embodies meaningful Epic value end to end
 - includes data correctness, presentation, user-facing behavior, and safety/failure behavior where relevant
 - can be demoed as the product behavior

@@ -17,7 +17,11 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Callable
 
 from aim_activation import candidate_preflights
-from aim_runtime_contract import PORTFOLIO_CHECKPOINT_STATUSES, terminal_acceptance
+from aim_runtime_contract import (
+    PORTFOLIO_CHECKPOINT_STATUSES,
+    terminal_acceptance,
+    terminal_increment_artifact,
+)
 
 
 RUN_FILE = "portfolio-run.json"
@@ -581,6 +585,10 @@ def _terminal_relation_issues(
     if checkpoint.get("epicStatus") != "epic_complete":
         issues.append("Portfolio closure checkpoint is not epic_complete")
     if isinstance(runtime_id, str):
+        _, artifact_issues = terminal_increment_artifact(
+            workspace, snapshot_item["epicId"], runtime_id
+        )
+        issues.extend(artifact_issues)
         _, acceptance_issues = terminal_acceptance(
             repo_root.resolve(), workspace, state, runtime_id
         )

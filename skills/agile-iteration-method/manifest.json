@@ -61,17 +61,17 @@
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "49329e4a041fdb950f9e3d0649ad45bda8d4af34c2692f9082493ff782a93f83",
+      "sha256": "a578558c6dba8c2100d02b3ef00edc923d0635647ddbe33f139f00e92368309b",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "69a1a72b42d69d08f8eda150a5e618b14be3936b2d04d782d4397b396d397dd7",
+      "sha256": "1fccd1eab71bea7965a4911b79520dde9835668bf5936a760a83bffd097607f1",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "2e726ed1ed2c4086a81f262144f8611a0dd4d1fe92c8db5c27f85c681ff61ed6",
+      "sha256": "332fb6112243a5b2fcdd003debd2118cfb85ce3d96a7e35f7a0e8aac942507e4",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -176,7 +176,7 @@
     },
     {
       "output": "scripts/aim_runtime_contract.py",
-      "sha256": "09008adbfad843229ea4fed853182351e0cc191854089b3a74674009bcfb8372",
+      "sha256": "3a16ed7f32fa165e9156c5792b9aa54c08401c49091ef50ece451602d6d2c510",
       "source": "scripts/aim_runtime_contract.py"
     },
     {
@@ -211,12 +211,12 @@
     },
     {
       "output": "scripts/aim_portfolio_run.py",
-      "sha256": "facdbd30209e063336c50428f74e650196559a3279653414c08a01e77ced2fb6",
+      "sha256": "993bf7c012442bc833984142274d74d9493275e4d7d78b789dbb0cdefe71b898",
       "source": "scripts/aim_portfolio_run.py"
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "087516ced4b430be0b928053906e83bf3984e68c94a8a52b1b2c4ebd9a590106",
+      "sha256": "bc09bb6d3eb44880be5ba6178b18b349ce7c120a4b7fd16e49ffd9a5bc3cf045",
       "source": "scripts/aim_ui.py"
     },
     {

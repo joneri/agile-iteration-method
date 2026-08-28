@@ -26,6 +26,7 @@ CANONICAL_RUNTIME_STATUSES = {
 PORTFOLIO_CHECKPOINT_STATUSES = CANONICAL_RUNTIME_STATUSES | {"activation_pending"}
 TERMINAL_RUNTIME_STATUSES = {"done_increment_accepted", "epic_complete"}
 MAX_ACCEPTANCE_DECISION_BYTES = 1_000_000
+MAX_INCREMENT_ARTIFACT_BYTES = 1_000_000
 
 
 def markdown_field(markdown: str, label: str) -> str | None:
@@ -37,6 +38,60 @@ def markdown_field(markdown: str, label: str) -> str | None:
     if not match:
         return None
     return (match.group(1) or match.group(2)).strip()
+
+
+def increment_artifact_identity(path: Path, markdown: str) -> tuple[str, str | None]:
+    """Resolve one bounded plan artifact's Increment and declared Epic identity."""
+
+    match = re.search(r"\bDI-\d+\b", markdown[:240], re.IGNORECASE)
+    if match:
+        increment_id = match.group(0).upper()
+    else:
+        number = re.match(r"(\d+)", path.name)
+        increment_id = f"DI-{number.group(1)}" if number else path.stem.upper()
+    return increment_id, markdown_field(markdown, "Epic")
+
+
+def terminal_increment_artifact(
+    workspace: Path, epic_id: str, increment_id: str
+) -> tuple[Path | None, list[str]]:
+    """Require one explicit plan relation before new Portfolio completion."""
+
+    increments = workspace / "increments"
+    if increments.is_symlink() or not increments.is_dir():
+        return None, ["workspace increments directory is missing or unsafe"]
+
+    matches: list[Path] = []
+    unbound = False
+    mismatched = False
+    for path in sorted(increments.glob("*.md")):
+        if path.is_symlink() or not path.is_file():
+            continue
+        try:
+            if path.stat().st_size > MAX_INCREMENT_ARTIFACT_BYTES:
+                continue
+            markdown = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        artifact_increment_id, declared_epic = increment_artifact_identity(path, markdown)
+        if artifact_increment_id != increment_id:
+            continue
+        if declared_epic == epic_id:
+            matches.append(path)
+        elif declared_epic is None:
+            unbound = True
+        else:
+            mismatched = True
+
+    if len(matches) == 1:
+        return matches[0], []
+    if len(matches) > 1:
+        return None, ["matching runtime Increment plan relation is ambiguous"]
+    if unbound:
+        return None, [f"matching runtime Increment plan must declare Epic: {epic_id}"]
+    if mismatched:
+        return None, ["matching runtime Increment plan declares a different Epic"]
+    return None, ["matching runtime Increment plan is missing"]
 
 
 def decision_accepts_increment(path: Path, increment_id: str) -> bool:

@@ -242,8 +242,15 @@ before adding a candidate to `completedCandidateIds`, it re-reads and validates
 the exact catalogued workspace, snapshot and candidate identities, Backlog
 `runtimeIncrementId`, `epic_complete` state and closure checkpoint,
 `previousIncrementStatus: accepted`, Gate E, and the contained
-`gateEAcceptance` decision. Any failed predicate preserves the active run
-unchanged and names the failed terminal relation.
+`gateEAcceptance` decision. The matching Increment plan must also declare its
+exact `Epic:` identity; completion refuses an unbound, mismatched, missing, or
+ambiguous plan before changing Portfolio state. Any failed predicate preserves
+the active run unchanged and names the failed terminal relation.
+
+AIM UI preserves already accepted legacy history when a plan predates that
+explicit field: only the exact state-linked `previousIncrementId` may inherit
+its containing workspace Epic, and only validated terminal Gate E evidence can
+make it Done. This read-only compatibility rule does not weaken new completion.
 Gate E accepts the Increment only. Immediately before the distinct Epic-closure
 transition, the chat revalidates the run and workspace, then records
 `auto-approved by portfolio mandate <mandateId>` with decision authority
