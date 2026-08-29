@@ -1287,6 +1287,74 @@ class AimUiTests(unittest.TestCase):
             self.assertEqual(increment["runtimeStatus"], "gate_b_pending")
             self.assertTrue(any("acceptance is hidden" in item for item in board["warnings"]))
 
+    def test_state_linked_acceptance_supports_legacy_bulleted_metadata(self) -> None:
+        runtime = state("epic_complete")
+        runtime.update(
+            {
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "previousIncrementId": "DI-3",
+                "previousIncrementStatus": "accepted",
+                "gateEAcceptance": ".aim/decisions/descriptive.md",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/003-wip.md").write_text(
+                "# DI-3 — Legacy accepted Increment\n\nEpic: EPIC-TEST-001\n",
+                encoding="utf-8",
+            )
+            (aim / "decisions/descriptive.md").write_text(
+                "# Gate E decision — DI-3\n\n"
+                "- Decision: accepted\n"
+                "- Authority: User\n"
+                "- Accepted at: 2026-08-26T15:57:33Z\n",
+                encoding="utf-8",
+            )
+            board = build_board(repo)
+
+        increment = next(
+            item for item in board["epics"][0]["increments"] if item["id"] == "DI-3"
+        )
+        self.assertEqual(increment["column"], "done")
+        self.assertEqual(increment["runtimeStatus"], "done_increment_accepted")
+        self.assertEqual(board["warnings"], [])
+
+    def test_bulleted_negative_acceptance_still_fails_closed(self) -> None:
+        runtime = state("epic_complete")
+        runtime.update(
+            {
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "previousIncrementId": "DI-3",
+                "previousIncrementStatus": "accepted",
+                "gateEAcceptance": ".aim/decisions/descriptive.md",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/003-wip.md").write_text(
+                "# DI-3 — Legacy rejected Increment\n\nEpic: EPIC-TEST-001\n",
+                encoding="utf-8",
+            )
+            (aim / "decisions/descriptive.md").write_text(
+                "# Gate E decision — DI-3\n\n"
+                "- Decision: not accepted\n"
+                "- Accepted at: 2026-08-26T15:57:33Z\n",
+                encoding="utf-8",
+            )
+            board = build_board(repo)
+
+        increment = next(
+            item for item in board["epics"][0]["increments"] if item["id"] == "DI-3"
+        )
+        self.assertEqual(increment["column"], "backlog")
+        self.assertTrue(any("acceptance is hidden" in item for item in board["warnings"]))
+
     def test_structured_unaccepted_history_is_not_promoted_by_epic_completion(self) -> None:
         runtime = state("epic_complete")
         runtime.update(

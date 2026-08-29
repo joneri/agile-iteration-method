@@ -31,7 +31,7 @@ MAX_INCREMENT_ARTIFACT_BYTES = 1_000_000
 
 def markdown_field(markdown: str, label: str) -> str | None:
     match = re.search(
-        rf"^{re.escape(label)}:\s*(?:`([^`]+)`|(.+?))\s*$",
+        rf"^[ \t]*(?:[-*+]\s+)?{re.escape(label)}:\s*(?:`([^`]+)`|(.+?))\s*$",
         markdown,
         re.MULTILINE | re.IGNORECASE,
     )

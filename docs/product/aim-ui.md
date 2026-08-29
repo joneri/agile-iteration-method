@@ -406,6 +406,9 @@ and validated decision content carry the meaning. An invalid structured
 reference fails closed with a board warning and is not rescued by a legacy
 numeric filename. Numeric `<increment-number>-gate-e.md` discovery remains only
 as compatibility behavior for workspaces without applicable structured history.
+Legacy Gate E metadata written as unordered Markdown list items is normalized
+the same way as bare metadata fields; negative decisions and wrong Increment
+identities continue to fail closed.
 
 ## Helper-agent visibility
 

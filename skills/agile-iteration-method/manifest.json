@@ -176,7 +176,7 @@
     },
     {
       "output": "scripts/aim_runtime_contract.py",
-      "sha256": "3a16ed7f32fa165e9156c5792b9aa54c08401c49091ef50ece451602d6d2c510",
+      "sha256": "4b5f9e67fe093578a32fdcc57bf6a916d88dc36eea1f82cd88e812b9eadb25e3",
       "source": "scripts/aim_runtime_contract.py"
     },
     {

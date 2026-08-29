@@ -38,7 +38,10 @@ with `lastGatePassed: "Gate E"` and a terminal-compatible `epicStatus`. The
 acceptance reference is a repository-relative POSIX path to a regular,
 non-symlink decision file inside the authoritative workspace's `decisions/`
 directory. The referenced decision must record acceptance and, when it names an
-Increment, it must name `previousIncrementId`.
+Increment, it must name `previousIncrementId`. Decision metadata fields may use
+plain Markdown lines such as `Decision: accepted` or one unordered-list marker
+such as `- Decision: accepted`; readers normalize both forms before applying the
+same negative-status and Increment-identity checks.
 
 Structured state and its linked evidence are semantic authority; a decision
 filename is not. If the structured contract applies but is incomplete,
