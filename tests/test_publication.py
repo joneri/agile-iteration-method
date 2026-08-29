@@ -64,7 +64,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "2.9.4")
+            self.assertEqual(manifest["aimVersion"], "2.9.5")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
@@ -138,8 +138,8 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("Private conversations, rejected drafts", index)
         self.assertIn('id="ui"', index)
         self.assertIn("docs/product/aim-ui.md", index)
-        self.assertIn('alt="AIM 2.9.4 Agile Iteration Method logo"', index)
-        self.assertIn('<span class="brand-version">2.9.4</span>', index)
+        self.assertIn('alt="AIM 2.9.5 Agile Iteration Method logo"', index)
+        self.assertIn('<span class="brand-version">2.9.5</span>', index)
         self.assertIn("Put the backlog in motion.", index)
         self.assertIn("Keep control.", index)
         self.assertIn("github-pages/assets/images/aim-ui-beta-control-room.png", index)
@@ -202,7 +202,7 @@ class PublicationContractTests(unittest.TestCase):
             index = copied / "index.html"
             index.write_text(
                 index.read_text(encoding="utf-8").replace(
-                    '<span class="brand-version">2.9.4</span>',
+                    '<span class="brand-version">2.9.5</span>',
                     '<span class="brand-version">2.7</span>',
                 ),
                 encoding="utf-8",

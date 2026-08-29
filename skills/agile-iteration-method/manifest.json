@@ -49,7 +49,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "2.9.4",
+  "productVersion": "2.9.5",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -161,7 +161,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "01a5e9fea8b161cb6a13b869c4b927459b3639c401bdef3a69036206683bbe24",
+      "sha256": "a67412800e1a782d934d86a21239931978965064ce2fb805a28d09f720b807ae",
       "source": "VERSION"
     },
     {

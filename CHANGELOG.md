@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-08-29 - AIM 2 patch release v2.9.5
+- Preserved accepted terminal Portfolio history in AIM UI even after its run is
+  completed and no longer active.
+- Reused the shared terminal-acceptance contract for UI reconciliation so
+  state, Gate E, and accepted-decision evidence are interpreted consistently.
+- Accepted legacy Markdown evidence whose canonical fields are written as
+  bullets without weakening path, identity, size, or terminal-state checks.
+- Required new Portfolio completion to resolve exactly one runtime Increment
+  plan that explicitly declares the matching Epic.
+- Kept state-linked legacy Increment plans without an Epic field visible while
+  preventing them from authorizing new Portfolio completion.
+- Added regressions for completed-run history, legacy plan and decision formats,
+  missing and mismatched plan relations, and catalogued workspace diagnostics.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`11`. Existing accepted legacy history remains readable and requires no
+migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI. Adaptive
+installations can rerun their reviewed preview/apply installer flow.
+
+Known limitations: legacy plans without an explicit `Epic:` field are retained
+for historical visibility but do not satisfy the stricter evidence required for
+new Portfolio completion. AIM UI remains read-only.
+
 ## 2026-08-27 - AIM 2 patch release v2.9.4
 - Corrected the installer manifest so commands containing colon-space syntax
   are quoted and valid in standard YAML parsers.
