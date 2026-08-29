@@ -82,37 +82,6 @@ For automation, pass installer flags directly, such as `--target
 /path/to/repo`, `--non-interactive`, or `--format json`.
 For preview only, use `--dry-run`.
 
-From the target repository's AIM chat, launch the control room with `/aim ui`.
-Use `/aim ui start /path/to/repository` to target another repo, and `/aim ui
-status`, `/aim ui open`, or `/aim ui stop` for lifecycle control. Foreground
-`python3 scripts/aim_ui.py` remains available for diagnostics. See [AIM UI
-Beta](aim-ui.md).
-
-To populate a new control room with several not-yet-activated Epic candidates, use:
-
-```text
-/aim to-backlog
-```
-
-Paste the Epics when asked, put them in the same message, or use
-`/aim to-backlog from docs/product-plan.md` for one explicit source. AIM creates
-planned `INC-*` cards, opens the UI, and leaves every card in Backlog until a
-separate Activate intent is sent.
-
-To approve that visible Backlog once and let AIM work through it sequentially,
-run:
-
-```text
-/aim start "PORTFOLIO" mode:auto
-```
-
-Review the ordered snapshot and approve its Portfolio mandate. AIM then keeps
-the complete PO/TDO/Dev/Reviewer/TDO/PO loop for every included Epic while
-skipping repeated approval pauses that remain inside the mandate. AIM UI shows
-progress and labels delegated decisions as Portfolio-mandate decisions. AIM
-pauses for scope, trust, validation, safety, or concurrency escalation, and
-`/aim continue` resumes the preserved checkpoint after resolution.
-
 ## 2. Calibrate the Repository
 
 Run:
@@ -138,6 +107,54 @@ agent files. You can also edit `aim.roles.yaml` or the supplier-native files
 manually.
 
 If your platform does not expose slash commands, ask AIM to verify and refine repo awareness for the repository.
+
+## Shape and run a Portfolio
+
+After calibration, AIM can reuse verified repository knowledge across sessions
+and load the runtime, decisions, accepted delivery evidence, code, and docs that
+matter to the current question. It does not keep every repository byte in one
+prompt or treat old history as automatic truth.
+
+Start the control room from the authoritative Codex task for this repository:
+
+```text
+/aim ui
+```
+
+That launch connects eligible Start and Approve actions to the same Codex task
+when Codex uses ChatGPT-managed usage. AIM UI shows **Codex connected** when the
+route is available and **View only** with setup instructions when it is not.
+The read-only board and reviewed handoff remain usable in either state.
+
+Use AIM Discuss to shape the product direction before creating work:
+
+```text
+/aim discuss "What outcomes belong in our next Roadmap?"
+```
+
+Discuss is analysis only. When the direction is ready, promote it explicitly:
+
+```text
+/aim to-backlog
+```
+
+Paste the reviewed Epics, include them in the same message, or use
+`/aim to-backlog from docs/product-plan.md` for one explicit source. AIM creates
+planned `INC-*` candidates. Review their order and scope in the Portfolio tab,
+then run:
+
+```text
+/aim start "PORTFOLIO" mode:auto
+```
+
+AIM freezes the eligible ordered snapshot and asks for one bounded Portfolio
+mandate. After approval, AIM runs every included Epic through the complete
+PO/TDO/Dev/Reviewer/TDO/PO loop without repeating decisions already covered by
+that mandate. Follow the movement in AIM UI—or step away.
+
+AIM returns control when scope changes, effects become unsafe, evidence is
+contradictory, concurrency conflicts, or an operator decision is required.
+`/aim continue` resumes the preserved checkpoint after the issue is resolved.
 
 ## 3. Remember Important Project Context
 

@@ -4,6 +4,9 @@ Source images intended for the AIM website published from the `gh-pages` branch.
 
 - `aim-2-hero-dark.png`: canonical dark, versionless AIM logo and website hero
   artwork
+- `aim-3-autonomy-logo.png`: AIM 3 campaign variant for the GitHub Pages
+  Connected Codex story; its flowing 3 represents creative iteration, momentum,
+  and bounded autonomy
 - `AIM_OG.png` at the repository root: byte-identical versionless Open Graph
   artwork
 - `aim-ui-beta-control-room.png`: wide AIM UI Beta feature illustration for the
@@ -20,6 +23,9 @@ The approved source SHA-256 is
 
 The versionless AIM brand artwork is the selected existing source image and is
 copied without generation, retouching, recompression, or other transformation.
+The separate AIM 3 campaign variant was generated with the built-in image
+generation workflow from the versionless artwork as a visual reference. It does
+not replace the canonical logo or its versionless publication policy.
 The AIM UI Beta feature illustration uses AIM's navy, cyan, lime, and paper
 palette to depict five delivery stations, moving work tickets, and four
 specialist roles without embedding UI labels or logos.

@@ -50,7 +50,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "3.0.1",
+  "productVersion": "3.0.2",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -162,12 +162,12 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "06e3fe4a7a1884d20d81cc7065ca8cfd4c394ec602c4d180ddc39bbd4f7da521",
+      "sha256": "3fc0bf8d7ddbfe77eb4074c0b03d6567d7874a25ea4144aadea6686fcd5f6feb",
       "source": "VERSION"
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "9945792184be05a8a403c4a9008d9c9e9fe495a54578371a6a178d521ceccc49",
+      "sha256": "1dce7d4cbb4bd5b36ac129352fc51c4d4007456155314a7c62cde7b5a11b6458",
       "source": "scripts/aim_publication.py"
     },
     {
@@ -217,12 +217,12 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "f99c20fd94bd3e01b2df6090a5d2ff253affe1b42fceaeeb9150a7b4aa51139a",
+      "sha256": "85edbdf248f2e3901a3a9845b971f331b41cbaeba7de5d5482e294a31c2b327e",
       "source": "scripts/aim_ui.py"
     },
     {
       "output": "scripts/aim_ui_control.py",
-      "sha256": "09cef31c5b1f67767ee6c6e030c0783f7aa046e38d553eff35a85110e265ac5a",
+      "sha256": "14f9ac481d752e6b02eff8392bd6517ca01a1b181e36829d7e970b8dfb03d7f4",
       "source": "scripts/aim_ui_control.py"
     },
     {
@@ -232,17 +232,17 @@
     },
     {
       "output": "aim-ui/index.html",
-      "sha256": "5a33bf7047fef3525d5f6399e78c9903afbc7aabb52dbf1f5dc94b8bc6ac30f3",
+      "sha256": "1542a745fd6a1d0c7aa64519cf7803cd0943bd486eae35ffb20f68d573e47071",
       "source": "aim-ui/index.html"
     },
     {
       "output": "aim-ui/styles.css",
-      "sha256": "4972dd31ec1aee8628c4d0f7da633708a79af41097862e315883205c8a63b0fd",
+      "sha256": "664e97a6637982cf684e56df76d6b2561f6ec820142491c5f417ef6a110f2347",
       "source": "aim-ui/styles.css"
     },
     {
       "output": "aim-ui/app.js",
-      "sha256": "dbc50e44289d8ea322c4888fc1ff683e85aa471ee7b1fd36ecbc9ff41219881c",
+      "sha256": "2dd1ef2e8a445a3c5840039a752b75898f3c0c66cbb98a5e2b19eb17eed0bcdd",
       "source": "aim-ui/app.js"
     }
   ]

@@ -38,6 +38,11 @@ PUBLIC_BRAND_IMAGE_SHA256 = (
     "75b1a6a632f311a377e4d6d3f70c75e1445d3183637c9eaa43524566fc5991c5"
 )
 VERSIONLESS_BRAND_ARTWORK_MARKER = "Brand artwork version policy: versionless"
+PUBLIC_CAMPAIGN_IMAGE_PATH = "github-pages/assets/images/aim-3-autonomy-logo.png"
+PUBLIC_CAMPAIGN_IMAGE_SIZE = (1730, 909)
+PUBLIC_CAMPAIGN_IMAGE_SHA256 = (
+    "c736fa884cd92a75f528f435143a65289849cae0789395181c6d69079ee35505"
+)
 PUBLIC_FEATURE_IMAGE_PATH = "github-pages/assets/images/aim-ui-beta-control-room.png"
 PUBLIC_FEATURE_IMAGE_SIZE = (1729, 910)
 PUBLIC_DEMO_VIDEO_PATH = "github-pages/assets/video/portfolio-auto-demo.mp4"
@@ -136,11 +141,28 @@ def validate_source(repo_root: Path) -> None:
         raise PublicationError(
             f"index.html: brand-version must match VERSION ({product_version})"
         )
-    expected_alt = f'alt="AIM {product_version} Agile Iteration Method logo"'
-    if expected_alt not in index:
+    expected_campaign = (
+        f'src="{PUBLIC_CAMPAIGN_IMAGE_PATH}" alt="AIM 3 creative autonomy logo"'
+    )
+    if expected_campaign not in index:
         raise PublicationError(
-            f"index.html: brand artwork alt text must match VERSION ({product_version})"
+            "index.html: AIM 3 campaign artwork and accessible label are required"
         )
+    hero_start = index.find('<header class="hero-intro"')
+    hero_end = index.find("</header>", hero_start)
+    campaign_position = index.find(expected_campaign, hero_start)
+    if not hero_start <= campaign_position < hero_end:
+        raise PublicationError(
+            "index.html: AIM 3 campaign artwork must be visible in the hero"
+        )
+    campaign_image = repo_root / PUBLIC_CAMPAIGN_IMAGE_PATH
+    if _png_dimensions(campaign_image) != PUBLIC_CAMPAIGN_IMAGE_SIZE:
+        raise PublicationError(f"{PUBLIC_CAMPAIGN_IMAGE_PATH}: unexpected dimensions")
+    if (
+        hashlib.sha256(campaign_image.read_bytes()).hexdigest()
+        != PUBLIC_CAMPAIGN_IMAGE_SHA256
+    ):
+        raise PublicationError(f"{PUBLIC_CAMPAIGN_IMAGE_PATH}: campaign artwork changed")
     inventory = _read_text(repo_root / "github-pages/assets/images/README.md")
     if VERSIONLESS_BRAND_ARTWORK_MARKER not in inventory:
         raise PublicationError(
@@ -254,9 +276,9 @@ def validate_source(repo_root: Path) -> None:
             index,
             "Writes for the reader, not its own chat",
         ),
-        "index.html AIM release logo alt text": (
+        "index.html AIM 3 campaign logo alt text": (
             index,
-            f'alt="AIM {product_version} Agile Iteration Method logo"',
+            'alt="AIM 3 creative autonomy logo"',
         ),
         "install.sh fail-closed notice": (
             install_script,
@@ -435,6 +457,14 @@ def validate_artifact(output_root: Path) -> None:
                 f"{relative_path}: brand artwork differs from the approved "
                 "versionless source"
             )
+    campaign_image = output_root / PUBLIC_CAMPAIGN_IMAGE_PATH
+    if _png_dimensions(campaign_image) != PUBLIC_CAMPAIGN_IMAGE_SIZE:
+        raise PublicationError(f"{PUBLIC_CAMPAIGN_IMAGE_PATH}: unexpected dimensions")
+    if (
+        hashlib.sha256(campaign_image.read_bytes()).hexdigest()
+        != PUBLIC_CAMPAIGN_IMAGE_SHA256
+    ):
+        raise PublicationError(f"{PUBLIC_CAMPAIGN_IMAGE_PATH}: campaign artwork changed")
     feature_dimensions = _png_dimensions(output_root / PUBLIC_FEATURE_IMAGE_PATH)
     if feature_dimensions != PUBLIC_FEATURE_IMAGE_SIZE:
         raise PublicationError(

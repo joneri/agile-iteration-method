@@ -1,5 +1,38 @@
 # Changelog
 
+## 2026-08-29 - AIM 3 patch release v3.0.2
+- Made AIM UI identify the exact AIM product release captured when its server
+  starts, with consistent lifecycle, health, board, and visible Control room
+  provenance.
+- Fronted Connected Codex control and its first-time setup while keeping direct
+  actions freshness-checked, bounded to the authoritative task, and truthful
+  about reviewed handoffs and failure states.
+- Turned the large Connected Codex guide into dismissible one-off onboarding
+  with a durable browser preference and a compact way to reopen it.
+- Taught the complete Portfolio journey from calibration and Discuss through
+  explicit Backlog promotion, Roadmap review, immutable mandate approval, and
+  bounded sequential delivery.
+- Repositioned the public site around current AIM 3 capabilities and promoted
+  the approved AIM 3 creativity-and-autonomy campaign mark into the GitHub
+  Pages hero without replacing the Portfolio Auto demonstration.
+- Added responsive, accessibility, version-provenance, connection-state,
+  onboarding, publication-integrity, and generated-package regression coverage.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`11`. Existing AIM 3 workspaces require no migration. Restart AIM UI after
+updating so the new server instance captures release `3.0.2`.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then launch `/aim ui` from the
+authoritative Codex task. Adaptive installations can rerun their reviewed
+preview/apply flow.
+
+Known limitations: direct Connected Codex execution remains limited to eligible
+exact Start and Approve actions. Change requests and free-form work use a
+reviewed handoff, and attention, permissions, contradictory evidence, or scope
+change pause bounded background progress.
+
 ## 2026-08-29 - AIM 3 patch release v3.0.1
 - Made `/aim discuss [question]` a first-class, read-only command intent across
   Codex, Claude Code, and GitHub Copilot.

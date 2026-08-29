@@ -9,6 +9,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import signal
 import socket
 import subprocess
@@ -37,9 +38,10 @@ MAX_LOG_BYTES = 1_048_576
 MAX_HEALTH_BYTES = 16_384
 START_TIMEOUT_SECONDS = 6.0
 _STARTED_PROCESSES: dict[int, subprocess.Popen[bytes]] = {}
-INSTANCE_VERSION = "1.2"
-LEGACY_INSTANCE_VERSIONS = {"1.0", "1.1"}
-UI_PROTOCOL_VERSION = "1.2"
+INSTANCE_VERSION = "1.3"
+LEGACY_INSTANCE_VERSIONS = {"1.0", "1.1", "1.2"}
+UI_PROTOCOL_VERSION = "1.3"
+PRODUCT_VERSION_PATTERN = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$")
 PAYLOAD_FILES = (
     "scripts/aim_ui_control.py",
     "scripts/aim_ui.py",
@@ -96,7 +98,34 @@ def payload_fingerprint() -> str:
         digest.update(b"\0")
         digest.update(path.read_bytes())
         digest.update(b"\0")
+    digest.update(b"product-version\0")
+    digest.update(resolve_product_version().encode("utf-8"))
+    digest.update(b"\0")
     return digest.hexdigest()
+
+
+def resolve_product_version() -> str:
+    """Resolve the trusted AIM product release shipped beside the UI payload."""
+
+    package_root = Path(__file__).resolve().parents[1]
+    version_path = package_root / "VERSION"
+    manifest_path = package_root / "manifest.json"
+    value: object | None = None
+    source = version_path
+    if version_path.is_file() and not version_path.is_symlink():
+        value = version_path.read_text(encoding="utf-8").strip()
+    elif manifest_path.is_file() and not manifest_path.is_symlink():
+        source = manifest_path
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise AimUiControlError("AIM product manifest is unreadable.") from exc
+        value = manifest.get("productVersion") if isinstance(manifest, dict) else None
+    if not isinstance(value, str) or not PRODUCT_VERSION_PATTERN.fullmatch(value):
+        raise AimUiControlError(
+            f"AIM product version is missing or invalid beside the UI payload: {source}"
+        )
+    return value
 
 
 def _valid_fingerprint(value: object) -> bool:
@@ -164,6 +193,13 @@ def _read_metadata(repo: Path) -> dict[str, Any] | None:
             value.get("instanceVersion") == INSTANCE_VERSION
             and value.get("bindingFingerprint") is not None
             and not _valid_fingerprint(value.get("bindingFingerprint"))
+        )
+        or (
+            value.get("instanceVersion") == INSTANCE_VERSION
+            and (
+                not isinstance(value.get("productVersion"), str)
+                or not PRODUCT_VERSION_PATTERN.fullmatch(value["productVersion"])
+            )
         )
         or (
             value.get("payloadFingerprint") is not None
@@ -234,6 +270,7 @@ def _health_probe(metadata: dict[str, Any], timeout: float = 0.4) -> dict[str, A
         and value.get("pid") == metadata["pid"]
         and value.get("readOnly") is True
         and value.get("bindingFingerprint") == metadata.get("bindingFingerprint")
+        and value.get("productVersion") == metadata.get("productVersion")
     )
     observed = value.get("payloadFingerprint")
     metadata_fingerprint = metadata.get("payloadFingerprint")
@@ -313,6 +350,7 @@ def _start(repo: Path, *, port: int | None, open_browser: bool) -> dict[str, Any
     existing = _read_metadata(repo)
     replaced = False
     requested_binding = binding_fingerprint(os.environ.get("CODEX_THREAD_ID"))
+    product_version = resolve_product_version()
     if existing is not None:
         probe = _health_probe(existing)
         binding_matches = (
@@ -365,6 +403,8 @@ def _start(repo: Path, *, port: int | None, open_browser: bool) -> dict[str, Any
         token,
         "--expected-payload-fingerprint",
         fingerprint,
+        "--product-version",
+        product_version,
     ]
     try:
         process = subprocess.Popen(
@@ -388,6 +428,7 @@ def _start(repo: Path, *, port: int | None, open_browser: bool) -> dict[str, Any
         "url": f"http://127.0.0.1:{selected_port}/",
         "startedAt": now,
         "payloadFingerprint": fingerprint,
+        "productVersion": product_version,
         "bindingFingerprint": requested_binding,
     }
     deadline = time.monotonic() + START_TIMEOUT_SECONDS

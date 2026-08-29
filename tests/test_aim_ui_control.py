@@ -60,14 +60,48 @@ class AimUiControlTests(unittest.TestCase):
         self.assertFalse(board["roadmap"]["configured"])
         self.assertFalse((self.repo / ".aim").exists())
 
+    def test_calibrated_repository_routes_to_discuss_before_roadmap_promotion(self) -> None:
+        (self.repo / "aim.profile.yaml").write_text(
+            "aimRepoProfile:\n  calibration:\n    status: ready\n",
+            encoding="utf-8",
+        )
+        board = build_board(self.repo)
+        self.assertTrue(board["source"]["calibrated"])
+        self.assertTrue(board["onboarding"]["nextAction"].startswith("/aim discuss"))
+        self.assertTrue(
+            board["recovery"]["recommendedAction"]["intent"].startswith(
+                "/aim discuss"
+            )
+        )
+        self.assertEqual(
+            board["recovery"]["alternatives"][0]["intent"], "/aim to-backlog"
+        )
+
+    def test_unrelated_ready_status_does_not_claim_repository_is_calibrated(self) -> None:
+        (self.repo / "aim.profile.yaml").write_text(
+            "status: ready\naimRepoProfile:\n  calibration:\n"
+            "    evidence:\n      status: ready\n    status: pending\n",
+            encoding="utf-8",
+        )
+
+        board = build_board(self.repo)
+
+        self.assertFalse(board["source"]["calibrated"])
+        self.assertEqual(board["onboarding"]["nextAction"], "/aim calibrate-repo")
+
     def test_start_reuses_statuses_and_stops_one_repo_bound_instance(self) -> None:
         repo = self.repo.resolve()
         first = control.start(repo, open_browser=False)
         self.assertEqual(first["status"], "running")
         self.assertFalse(first["reused"])
+        self.assertEqual(first["productVersion"], "3.0.2")
         with urlopen(f"{first['url']}api/board", timeout=2) as response:
             board = json.loads(response.read().decode("utf-8"))
         self.assertEqual(board["source"]["kind"], "uninitialized")
+        self.assertEqual(board["product"]["version"], "3.0.2")
+        self.assertIn(
+            board["backgroundControl"]["status"], {"connected", "view_only"}
+        )
 
         second = control.start(repo, open_browser=False)
         self.assertTrue(second["reused"])
@@ -192,6 +226,7 @@ class AimUiControlTests(unittest.TestCase):
         payload = self.root / "payload"
         shutil.copytree(REPO_ROOT / "scripts", payload / "scripts")
         shutil.copytree(REPO_ROOT / "aim-ui", payload / "aim-ui")
+        shutil.copy2(REPO_ROOT / "VERSION", payload / "VERSION")
         launcher = payload / "scripts/aim_ui_control.py"
         environment = {
             **os.environ,

@@ -31,7 +31,7 @@
     "url": "https://joneri.github.io/agile-iteration-method/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
-    "softwareVersion": "3.0.1",
+    "softwareVersion": "3.0.2",
     "author": { "@type": "Person", "name": "Jonas Eriksson" },
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "codeRepository": "https://github.com/joneri/agile-iteration-method"
@@ -168,6 +168,40 @@
       align-items: center;
     }
     .hero-copy { grid-area: 1 / 1; }
+    .hero-brand {
+      position: relative;
+      width: min(100%, 380px);
+      margin: 0 0 28px;
+      isolation: isolate;
+    }
+    .hero-brand::before,
+    .hero-brand::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .hero-brand::before {
+      inset: 12% -10% -12% 22%;
+      background: radial-gradient(circle, rgba(32, 185, 236, 0.26), transparent 68%);
+      filter: blur(18px);
+    }
+    .hero-brand::after {
+      right: -10px;
+      bottom: -10px;
+      width: 46%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--cyan), var(--green), var(--orange));
+    }
+    .hero-brand img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1.9 / 1;
+      object-fit: cover;
+      border: 1px solid rgba(113, 191, 255, 0.42);
+      background: #030b18;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
     .hero-command { grid-area: 2 / 1; }
     .hero-feature {
       grid-area: 1 / 2 / 3 / 3;
@@ -481,7 +515,7 @@
     .ui-beta-caption strong { color: var(--cyan); }
     .ui-beta-points {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       margin-top: 28px;
       border-top: 1px solid #29476d;
       border-left: 1px solid #29476d;
@@ -535,6 +569,23 @@
       font-size: 0.9rem;
       font-weight: 700;
     }
+    .control-bridge {
+      margin: 0;
+      padding: clamp(24px, 4vw, 44px);
+      color: #eef6ff;
+      background: var(--navy);
+      border-bottom: 7px solid var(--green);
+      box-shadow: 14px 14px 0 var(--cyan);
+    }
+    .control-bridge-label { color: var(--cyan); font-size: 0.72rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+    .control-bridge-logo { display: block; width: min(100%, 300px); height: auto; aspect-ratio: 1.9 / 1; margin: -8px 0 22px; object-fit: cover; object-position: center; border: 1px solid #355273; }
+    .control-bridge-route { display: grid; grid-template-columns: minmax(0, 0.8fr) 48px minmax(0, 1.2fr); gap: 14px; align-items: center; margin-top: 24px; }
+    .control-bridge-node { min-height: 104px; padding: 18px; background: #102a49; border: 1px solid #355273; }
+    .control-bridge-node strong { display: block; color: #fff; font-size: 1.05rem; }
+    .control-bridge-node span { display: block; margin-top: 8px; color: #b8cae2; font-size: 0.77rem; }
+    .control-bridge-link { position: relative; height: 2px; background: var(--green); }
+    .control-bridge-link::after { content: ""; position: absolute; right: 0; top: -5px; width: 10px; height: 10px; border-top: 2px solid var(--green); border-right: 2px solid var(--green); transform: rotate(45deg); }
+    .control-bridge-fallback { margin: 16px 0 0; padding-top: 16px; color: #bdd0e5; border-top: 1px solid #355273; font: 0.72rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 
     .mode-grid, .platform-grid {
       display: grid;
@@ -845,6 +896,7 @@
       .nav-inner { min-height: 58px; }
       .github-link { padding: 7px 10px; }
       .hero-intro { padding: 38px 0 48px; }
+      .hero-brand { width: min(88vw, 360px); margin-bottom: 24px; }
       .hero-intro h1 { font-size: clamp(2.2rem, 12vw, 3.3rem); }
       .hero-feature { order: 2; }
       .hero-command { order: 3; }
@@ -876,6 +928,10 @@
       .ui-beta-caption { flex-direction: column; gap: 6px; }
       .ui-beta-actions { flex-direction: column; }
       .ui-beta-actions .button { width: 100%; }
+      .control-bridge { box-shadow: 7px 7px 0 var(--cyan); }
+      .control-bridge-route { grid-template-columns: 1fr; }
+      .control-bridge-link { width: 2px; height: 34px; margin-left: 24px; }
+      .control-bridge-link::after { right: -5px; top: auto; bottom: 0; transform: rotate(135deg); }
       .portfolio-rail, .portfolio-payoff { grid-template-columns: 1fr; }
       .portfolio-step { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
       .portfolio-step:last-child { border-bottom: 0; }
@@ -889,8 +945,8 @@
 
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="container nav-inner">
-      <a class="brand" href="#top" aria-label="AIM 2 home">
-        <span>AIM</span><span class="brand-version">3.0.1</span>
+      <a class="brand" href="#top" aria-label="AIM 3 home">
+        <span>AIM</span><span class="brand-version">3.0.2</span>
       </a>
       <div class="nav-links">
         <a href="#why">Why AIM</a>
@@ -908,6 +964,9 @@
   <header class="hero-intro" id="top" aria-labelledby="hero-title">
     <div class="container hero-content">
       <div class="hero-copy">
+        <div class="hero-brand">
+          <img src="github-pages/assets/images/aim-3-autonomy-logo.png" alt="AIM 3 creative autonomy logo">
+        </div>
         <p class="eyebrow">AIM UI · Portfolio Auto · real 57-second run</p>
         <h1 id="hero-title">Put the backlog in motion.<br>Keep control.</h1>
         <p class="hero-lead">Approve one bounded portfolio, then watch AIM carry each Epic through planning, implementation, review, validation, and acceptance — one at a time, with every checkpoint visible.</p>
@@ -1108,9 +1167,9 @@
             <span class="beta-badge">Beta</span>
             <p class="eyebrow">AIM UI · the delivery loop made visible</p>
             <h2 class="section-title">This is where AI work stops feeling invisible.</h2>
-            <p class="section-lead">AIM UI brings multiple Epics and their Increments onto one live Kanban. Follow the canonical role, Gate, evidence, decisions, and spawned helper agents on every card — then watch real runtime changes become calm, meaningful movement.</p>
+            <p class="section-lead">AIM UI brings the whole product journey into one control room: shape direction with Discuss, review the Roadmap, start a bounded Portfolio, follow every role and Gate, inspect delivery evidence, and continue eligible decisions in the connected Codex task.</p>
           </div>
-          <div class="ui-beta-summary">A production control room for your entire AIM portfolio. Read-only at the boundary. Alive everywhere that matters.</div>
+          <div class="ui-beta-summary">Calibrate. Discuss. Shape the Roadmap. Approve one mandate. Then monitor the work—or go take a walk.</div>
         </div>
 
         <figure class="ui-beta-stage">
@@ -1133,14 +1192,24 @@
             <p>Quiet polling leaves cards still. A genuine state transition moves only the affected ticket between workflow stations.</p>
           </article>
           <article class="ui-beta-point">
-            <span>Safe decisions</span>
-            <h3>Approve from the card, safely</h3>
-            <p>Decision controls appear only when AIM finishes its handoff, then open a bounded, freshness-checked intent in Codex.</p>
+            <span>Connected Codex control</span>
+            <h3>Continue the same task from the card</h3>
+            <p>Launch AIM UI from the authoritative Codex task and eligible Start and Approve actions run there directly after server-side freshness checks.</p>
           </article>
           <article class="ui-beta-point">
             <span>Read-only core</span>
             <h3>The UI observes. AIM decides.</h3>
             <p>The browser cannot pass Gates or write runtime state. Human ownership and AIM's canonical role loop stay intact.</p>
+          </article>
+          <article class="ui-beta-point">
+            <span>Discuss</span>
+            <h3>Think before you promote work</h3>
+            <p>Explore product direction with relevant repository knowledge, decisions, and accepted delivery evidence—without changing the Backlog or starting delivery.</p>
+          </article>
+          <article class="ui-beta-point">
+            <span>AIM DATA + history</span>
+            <h3>See outcomes with receipts</h3>
+            <p>Inspect accepted Increments, elapsed delivery evidence, complete history, and the people or helper agents behind each Epic.</p>
           </article>
         </div>
 
@@ -1154,7 +1223,7 @@
     <section class="band band-mist" id="reflect">
       <div class="container feature-layout">
         <div>
-          <p class="eyebrow">Introduced in AIM 2.3</p>
+          <p class="eyebrow">Repository learning with current evidence</p>
           <h2 class="section-title">Dreams consolidate memory. Reflect makes repository knowledge prove itself.</h2>
           <p class="section-lead">AIM Reflect goes beyond memory cleanup for repository work. It finds lessons in completed delivery, verifies them against current evidence, preserves provenance and contradictions, and asks you before anything becomes durable knowledge.</p>
           <p>This comparison uses Anthropic's public description of <a href="https://platform.claude.com/docs/en/managed-agents/dreams">Dreams</a>; Reflect is AIM's repository-delivery answer, not a claim to replace every memory system.</p>
@@ -1186,22 +1255,35 @@
       </div>
     </section>
 
-    <section class="band band-mist" id="rebuilt">
+    <section class="band band-mist" id="connected-control">
       <div class="container rebuild">
-        <figure class="brand-visual">
-          <img src="github-pages/assets/images/aim-2-hero-dark.png" alt="AIM 3.0.1 Agile Iteration Method logo">
+        <figure class="control-bridge" aria-labelledby="control-bridge-title">
+          <img class="control-bridge-logo" src="github-pages/assets/images/aim-3-autonomy-logo.png" alt="AIM 3 creative autonomy logo">
+          <figcaption class="control-bridge-label" id="control-bridge-title">Connected Codex control</figcaption>
+          <div class="control-bridge-route">
+            <div class="control-bridge-node">
+              <strong>AIM UI</strong>
+              <span>Start Epic · Approve Gate</span>
+            </div>
+            <span class="control-bridge-link" aria-hidden="true"></span>
+            <div class="control-bridge-node">
+              <strong>Your authoritative Codex task</strong>
+              <span>Same thread · same model settings · same repository</span>
+            </div>
+          </div>
+          <p class="control-bridge-fallback">Change requests and free-form discussions still open a reviewed handoff. If the task is busy or needs attention, AIM stops and tells you—nothing silently continues.</p>
         </figure>
         <div>
-          <p class="eyebrow">Rebuilt for AIM 2</p>
-          <h2 class="section-title">Cleaner architecture. Easier adoption.</h2>
-          <p class="section-lead">AIM 2 was rebuilt while preserving the proven delivery loop. Workflow, repo awareness, runtime state, installation, and platform adapters now have clearer boundaries.</p>
+          <p class="eyebrow">AIM 3 · from idea to moving portfolio</p>
+          <h2 class="section-title">The UI does more than show the board. It teaches the route.</h2>
+          <p class="section-lead">After calibration, open AIM UI from Codex. Use Discuss to shape direction with relevant durable repository knowledge, explicitly promote the result into a Roadmap, review the cards, and start Portfolio Auto.</p>
           <div class="rebuild-list">
-            <div class="rebuild-item">Guided installation</div>
-            <div class="rebuild-item">Preview before changes</div>
-            <div class="rebuild-item">Reversible setup</div>
-            <div class="rebuild-item">Update as the project changes</div>
-            <div class="rebuild-item">Remembers repository facts</div>
-            <div class="rebuild-item">Loads detail only when needed</div>
+            <div class="rebuild-item"><code>/aim calibrate-repo</code><br>Preview before changes with a verified repository baseline</div>
+            <div class="rebuild-item"><code>/aim ui</code><br>Open and connect the control room</div>
+            <div class="rebuild-item"><code>/aim discuss</code><br>Shape direction without starting work</div>
+            <div class="rebuild-item"><code>/aim to-backlog</code><br>Explicitly populate the Roadmap</div>
+            <div class="rebuild-item"><code>/aim start "PORTFOLIO" mode:auto</code><br>Freeze one ordered snapshot</div>
+            <div class="rebuild-item">Approve the mandate<br>Monitor progress—or take a walk</div>
           </div>
         </div>
       </div>
@@ -1442,9 +1524,9 @@
             <span>Adoption</span>
             <strong>Modes and platforms</strong>
           </a>
-          <a class="doc-link" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/quick-start-aim-2.0.md">
+          <a class="doc-link" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/agile-iteration-method.md">
             <span>Workflow</span>
-            <strong>AIM 2.0 quick start</strong>
+            <strong>Canonical AIM method</strong>
           </a>
           <a class="doc-link" href="https://github.com/joneri/agile-iteration-method">
             <span>Source</span>
@@ -1457,7 +1539,7 @@
 
   <footer>
     <div class="container footer-inner">
-      <span>Agile Iteration Method 2</span>
+      <span>Agile Iteration Method 3</span>
       <span>Created by Jonas Eriksson. Documentation licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</span>
     </div>
   </footer>

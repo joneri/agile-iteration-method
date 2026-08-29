@@ -16,7 +16,9 @@ const state = {
   selectedDelivery: null,
   operationTimer: null,
   currentOperation: null,
+  codexGuideOpen: null,
 };
+const CODEX_GUIDE_COOKIE = "aim_ui_connected_codex_guide_3";
 const epicAccents = ["#20b9ec", "#f6ad22", "#9c7cf4", "#83ca31", "#f17891", "#57c9aa"];
 const $ = (id) => document.getElementById(id);
 
@@ -156,6 +158,121 @@ function setConnection(kind, label) {
   connection.classList.toggle("is-live", kind === "live");
   connection.classList.toggle("is-error", kind === "error");
   $("connection-label").textContent = label;
+}
+
+function codexGuideDismissed() {
+  return document.cookie.split(";").some(
+    (item) => item.trim() === `${CODEX_GUIDE_COOKIE}=hidden`,
+  );
+}
+
+function setCodexGuideDismissed() {
+  document.cookie = `${CODEX_GUIDE_COOKIE}=hidden; Max-Age=315360000; Path=/; SameSite=Strict`;
+}
+
+function syncCodexGuideVisibility() {
+  if (state.codexGuideOpen === null) {
+    state.codexGuideOpen = !codexGuideDismissed();
+  }
+  $("codex-connection").hidden = !state.codexGuideOpen;
+  $("show-codex-onboarding").hidden = state.codexGuideOpen;
+}
+
+function renderProduct(board) {
+  const version = board.product?.version;
+  $("product-version").textContent = version ? `AIM ${version}` : "AIM version unavailable";
+}
+
+function renderCodexConnection(board) {
+  const control = board.backgroundControl || {};
+  const connected = control.available === true;
+  const panel = $("codex-connection");
+  panel.dataset.status = connected ? "connected" : "view_only";
+  $("codex-control-status").textContent = control.label || (connected ? "Codex connected" : "View only");
+  $("codex-connection-title").textContent = connected
+    ? "This control room can continue the same Codex task."
+    : "Connect the authoritative Codex task for one-click control.";
+  $("codex-connection-summary").textContent = connected
+    ? "Eligible Start and Approve actions run in the task that launched AIM UI. Change requests and free-form discussions still open a reviewed handoff."
+    : control.reason || "The board remains fully readable. Connect it from Codex to run eligible reviewed actions directly.";
+  $("codex-control-route").textContent = connected
+    ? "Direct: Start + Approve · Reviewed handoff: Change + Discuss"
+    : "Read-only board + reviewed Codex handoffs remain available";
+  const setup = $("codex-setup");
+  setup.hidden = connected;
+  const steps = $("codex-setup-steps");
+  steps.replaceChildren();
+  (control.setupSteps || []).forEach((step) => steps.append(el("li", "", step)));
+  $("copy-connect-command").onclick = () => copyText(
+    control.setupCommand || "/aim ui",
+    $("codex-setup-feedback"),
+  );
+  syncCodexGuideVisibility();
+}
+
+function portfolioJourneyState(board) {
+  const roadmap = board.roadmap || {};
+  const run = board.portfolioRun || {};
+  if (board.onboarding?.state === "not_initialized") {
+    return {
+      active: "calibrate",
+      completed: [],
+      command: "/aim calibrate-repo",
+      label: "Calibrate this repository",
+      explanation: "Verify technologies, commands, risks, and useful documentation before shaping the Roadmap.",
+    };
+  }
+  if (!roadmap.configured) {
+    return {
+      active: "discuss",
+      completed: ["calibrate", "ui"],
+      command: '/aim discuss "What should our next Roadmap achieve?"',
+      label: "Shape the Roadmap with AIM Discuss",
+      explanation: "Discuss uses relevant durable repository knowledge and delivery evidence. When the direction is ready, promote it explicitly with /aim to-backlog.",
+    };
+  }
+  if ((roadmap.eligibleCount || 0) > 0) {
+    return {
+      active: "start",
+      completed: ["calibrate", "ui", "discuss", "backlog", "review"],
+      command: roadmap.auto?.command || '/aim start "PORTFOLIO" mode:auto',
+      label: "Start this reviewed Roadmap as Portfolio Auto",
+      explanation: "AIM will freeze the eligible ordered snapshot and ask you to approve one bounded mandate before work begins.",
+    };
+  }
+  if (["running", "paused"].includes(run.status)) {
+    return {
+      active: "move",
+      completed: ["calibrate", "ui", "discuss", "backlog", "review", "start", "mandate"],
+      command: run.status === "paused" ? "/aim continue" : null,
+      label: run.status === "paused" ? "Resolve the pause, then continue" : "Portfolio Auto is moving",
+      explanation: run.guidance || "Follow progress here or step away. AIM returns control when the approved mandate no longer covers the next decision.",
+    };
+  }
+  return {
+    active: "discuss",
+    completed: ["calibrate", "ui"],
+    command: '/aim discuss "What should our next Roadmap achieve?"',
+    label: "Shape the next Roadmap",
+    explanation: "The previous run is preserved. Discuss the next direction, then explicitly populate a new Roadmap with /aim to-backlog.",
+  };
+}
+
+function renderPortfolioJourney(board) {
+  const journey = portfolioJourneyState(board);
+  document.querySelectorAll("[data-journey-step]").forEach((step) => {
+    const id = step.dataset.journeyStep;
+    step.classList.toggle("is-complete", journey.completed.includes(id));
+    step.classList.toggle("is-active", id === journey.active);
+  });
+  $("portfolio-journey-guidance").textContent = "AIM preserves each ownership boundary while turning separate commands into one visible route.";
+  $("portfolio-next-label").textContent = journey.label;
+  $("portfolio-next-explanation").textContent = journey.explanation;
+  const button = $("copy-portfolio-next");
+  button.hidden = !journey.command;
+  button.onclick = journey.command
+    ? () => copyText(journey.command, $("portfolio-next-feedback"))
+    : null;
 }
 
 function renderEpicRoster(board) {
@@ -507,7 +624,10 @@ function renderCard(increment, epic, index, existingCard = null) {
   const reasonId = `action-reason-${key.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
   unavailable.id = reasonId;
   (increment.actions || []).forEach((action, actionIndex) => {
-    const button = el("button", `card-action action-${action.kind}`, action.label);
+    const background = state.board?.backgroundControl?.available === true
+      && action.kind !== "change";
+    const visibleLabel = background ? `${action.label} in Codex` : action.label;
+    const button = el("button", `card-action action-${action.kind}`, visibleLabel);
     button.type = "button";
     button.dataset.actionKind = action.kind;
     button.dataset.actionIndex = String(actionIndex);
@@ -515,8 +635,6 @@ function renderCard(increment, epic, index, existingCard = null) {
     if (action.reason) button.title = action.reason;
     if (!action.enabled && action.reason) button.setAttribute("aria-describedby", reasonId);
     if (action.enabled) {
-      const background = state.board?.backgroundControl?.available === true
-        && action.kind !== "change";
       if (background) button.title = "Run this reviewed action in the bound Codex task";
       button.addEventListener("click", () => activateAction(action, button));
     }
@@ -692,15 +810,16 @@ function renderEpicLaneCard(epic, index, existingCard = null) {
   unavailable.textContent = "";
   const reason = (epic.actions || []).find((action) => !action.enabled && action.reason)?.reason;
   (epic.actions || []).forEach((action, actionIndex) => {
-    const button = el("button", `card-action action-${action.kind}`, action.label);
+    const background = state.board?.backgroundControl?.available === true
+      && action.kind !== "change";
+    const visibleLabel = background ? `${action.label} in Codex` : action.label;
+    const button = el("button", `card-action action-${action.kind}`, visibleLabel);
     button.type = "button";
     button.dataset.actionKind = action.kind;
     button.dataset.actionIndex = String(actionIndex);
     button.disabled = !action.enabled;
     if (action.reason) button.title = action.reason;
     if (action.enabled) {
-      const background = state.board?.backgroundControl?.available === true
-        && action.kind !== "change";
       if (background) button.title = "Run this reviewed action in the bound Codex task";
       button.addEventListener("click", () => activateAction(action, button));
     }
@@ -1082,6 +1201,7 @@ function renderView(board, epics) {
   const showingClosed = state.view === "closed";
   $("epic-rail").hidden = !showingPortfolio;
   $("portfolio-run-panel").hidden = !showingPortfolio || !board.portfolioRun?.configured;
+  $("portfolio-journey").hidden = !showingPortfolio;
   $("roadmap-panel").hidden = !showingPortfolio || !board.roadmap?.configured;
   $("portfolio-control-panel").hidden = !showingPortfolio;
   $("discuss-panel").hidden = !showingDiscuss;
@@ -1207,6 +1327,8 @@ function updateHeartbeat(board) {
 function render(board) {
   const focusToken = captureFocus();
   state.board = board;
+  renderProduct(board);
+  renderCodexConnection(board);
   renderWorkspaceIntegrity(board);
   if (!board.epics || board.epics.length === 0) {
     $("control-room").hidden = true;
@@ -1258,6 +1380,7 @@ function render(board) {
   addFact(facts, "Accepted history", board.history?.acceptedCount || 0);
   renderPortfolioControl(board);
   renderPortfolioRun(board);
+  renderPortfolioJourney(board);
   renderRoadmap(board);
   renderEpicRoster(board);
   renderFilters(board, viewEpics);
@@ -1275,6 +1398,18 @@ document.querySelectorAll(".section-tab").forEach((button) => {
     state.view = button.dataset.view;
     if (state.board) render(state.board);
   });
+});
+
+$("dismiss-codex-onboarding").addEventListener("click", () => {
+  setCodexGuideDismissed();
+  state.codexGuideOpen = false;
+  syncCodexGuideVisibility();
+  $("show-codex-onboarding").focus();
+});
+$("show-codex-onboarding").addEventListener("click", () => {
+  state.codexGuideOpen = true;
+  syncCodexGuideVisibility();
+  $("dismiss-codex-onboarding").focus();
 });
 
 $("change-request").addEventListener("input", updateActionPreview);

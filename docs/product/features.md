@@ -47,6 +47,14 @@ See [cost profiles](../workflow/cost-control-mode.md).
   their Increments into one live five-column Kanban.
 - Delivery flow is the primary surface; portfolio summaries, People and agents,
   and complete Closed Increment history live in dedicated tabs.
+- The header identifies the exact AIM product release captured when the local
+  server started, separately from repository runtime-contract versions.
+- Connected Codex control shows whether eligible Start and Approve actions can
+  continue in the authoritative task; View-only mode explains setup and keeps a
+  reviewed handoff available.
+- The Portfolio view teaches the ordered calibration, Discuss, explicit
+  Roadmap promotion, review, Portfolio Auto, and mandate journey with a
+  state-aware next command.
 - The main AIM chat owns portfolio capacity, focus, backlog planning, activation,
   Gates, and runtime state.
 - Every card retains its Epic identity and separates canonical role ownership
@@ -54,8 +62,10 @@ See [cost profiles](../workflow/cost-control-mode.md).
 - Auto mode appears as automatic card movement because the UI polls canonical
   runtime evidence; the UI itself cannot advance a gate or write `.aim` state.
 - Polling stays visually quiet and only genuine workflow movement is animated.
-- Activate, Approve, and Change open bounded, freshness-checked Codex intents;
-  decision buttons appear only after AIM publishes a ready handoff.
+- When connected, eligible Activate and Approve actions dispatch exact,
+  freshness-checked intents to the same Codex task. Change and free-form paths
+  remain reviewed handoffs; decision buttons appear only after AIM publishes a
+  ready handoff.
 - Existing single-Epic state remains compatible without migration.
 
 See [AIM UI Beta](aim-ui.md).

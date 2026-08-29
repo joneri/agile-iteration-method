@@ -40,6 +40,7 @@ from aim_runtime_contract import (
     increment_artifact_identity,
     terminal_acceptance,
 )
+from aim_ui_control import AimUiControlError, resolve_product_version
 
 READ_MODEL_VERSION = "9.0"
 PORTFOLIO_VERSION = "1.0"
@@ -89,7 +90,7 @@ STATE_TO_OWNER = {
 AGENT_STATUSES = {"working", "waiting", "completed", "failed"}
 CANONICAL_ROLES = ("PO", "TDO", "Dev", "Reviewer")
 CANONICAL_GATES = {None, "Gate A", "Gate B", "Gate C", "Gate D", "Gate E"}
-UI_PROTOCOL_VERSION = "1.2"
+UI_PROTOCOL_VERSION = "1.3"
 PAYLOAD_FILES = (
     "scripts/aim_ui_control.py",
     "scripts/aim_ui.py",
@@ -124,6 +125,9 @@ def payload_fingerprint() -> str:
         digest.update(b"\0")
         digest.update(path.read_bytes())
         digest.update(b"\0")
+    digest.update(b"product-version\0")
+    digest.update(resolve_product_version().encode("utf-8"))
+    digest.update(b"\0")
     return digest.hexdigest()
 
 
@@ -1047,7 +1051,49 @@ def _discussion_projection(
     }
 
 
+def _repo_calibrated(repo_root: Path) -> bool:
+    """Return a presentation-only calibration signal from the shared profile."""
+
+    profile = repo_root / "aim.profile.yaml"
+    if profile.is_symlink() or not profile.is_file() or profile.stat().st_size > 1_000_000:
+        return False
+    lines = profile.read_text(encoding="utf-8", errors="replace").splitlines()
+
+    def indentation(line: str) -> int:
+        return len(line) - len(line.lstrip(" "))
+
+    profile_indent: int | None = None
+    calibration_indent: int | None = None
+    calibration_child_indent: int | None = None
+    for line in lines:
+        stripped = line.strip()
+        leading = line[: len(line) - len(line.lstrip())]
+        if not stripped or stripped.startswith("#") or "\t" in leading:
+            continue
+        current_indent = indentation(line)
+        if profile_indent is None:
+            if re.fullmatch(r"aimRepoProfile:\s*(?:#.*)?", stripped):
+                profile_indent = current_indent
+            continue
+        if current_indent <= profile_indent:
+            break
+        if calibration_indent is None:
+            if re.fullmatch(r"calibration:\s*(?:#.*)?", stripped):
+                calibration_indent = current_indent
+            continue
+        if current_indent <= calibration_indent:
+            break
+        if calibration_child_indent is None:
+            calibration_child_indent = current_indent
+        if current_indent == calibration_child_indent and re.fullmatch(
+            r"status:\s*(?:ready|[\"']ready[\"'])\s*(?:#.*)?", stripped
+        ):
+            return True
+    return False
+
+
 def _recovery_projection(
+    repo_root: Path,
     source_kind: str,
     diagnostics: list[dict[str, Any]],
     roadmap: dict[str, Any],
@@ -1126,24 +1172,34 @@ def _recovery_projection(
             "readOnly": True,
         }
     if source_kind == "uninitialized":
+        calibrated = _repo_calibrated(repo_root)
         return {
             "kind": "empty_repository",
             "title": "AIM is ready for a Roadmap",
             "message": (
-                "This repository has no AIM runtime. Calibrate it first, then add Epics "
-                "by pasting them or naming one repository source in AIM chat."
+                "This calibrated repository has no AIM runtime. Discuss the next product "
+                "direction, then explicitly promote the result into a Roadmap."
+                if calibrated
+                else "This repository has no AIM runtime. Calibrate it first, then discuss "
+                "the product direction before creating a Roadmap."
             ),
             "recommendedAction": {
-                "label": "Calibrate this repository",
-                "intent": "/aim calibrate-repo",
+                "label": (
+                    "Discuss the next Roadmap" if calibrated else "Calibrate this repository"
+                ),
+                "intent": (
+                    '/aim discuss "What outcomes belong in our next Roadmap?"'
+                    if calibrated
+                    else "/aim calibrate-repo"
+                ),
             },
             "alternatives": [
-                {"label": "Create a Roadmap", "intent": "/aim to-backlog"}
+                {"label": "Promote into a Roadmap", "intent": "/aim to-backlog"}
             ],
             "found": {
                 "checkpointCount": 0,
                 "history": "none",
-                "contract": "not initialized",
+                "contract": "calibrated; runtime not initialized" if calibrated else "not initialized",
                 "roadmap": "not created",
                 "portfolioCatalog": "not configured",
             },
@@ -1665,6 +1721,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     source_kind, workspaces, workspace_diagnostics = _workspace_roots(
         repo_root, aim_root, warnings
     )
+    calibrated = _repo_calibrated(repo_root)
     generated_at = utc_now()
     base = {
         "readModelVersion": READ_MODEL_VERSION,
@@ -1675,6 +1732,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             "refreshMs": DEFAULT_REFRESH_MS,
             "workspaceCount": len(workspaces),
             "retainedWorkspaceCount": len(workspaces),
+            "calibrated": calibrated,
         },
         "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
         "epics": [],
@@ -1696,8 +1754,16 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         "onboarding": (
             {
                 "state": "not_initialized",
-                "message": "AIM UI is ready. This repository has no AIM runtime yet.",
-                "nextAction": "/aim calibrate-repo",
+                "message": (
+                    "AIM UI is ready. This calibrated repository has no AIM runtime yet."
+                    if calibrated
+                    else "AIM UI is ready. This repository has no AIM runtime yet."
+                ),
+                "nextAction": (
+                    '/aim discuss "What outcomes belong in our next Roadmap?"'
+                    if calibrated
+                    else "/aim calibrate-repo"
+                ),
             }
             if source_kind == "uninitialized"
             else None
@@ -1771,7 +1837,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         activation_results,
     )
     base["recovery"] = _recovery_projection(
-        source_kind, workspace_diagnostics, base["roadmap"]
+        repo_root, source_kind, workspace_diagnostics, base["roadmap"]
     )
     for candidate in backlog_items:
         candidate["activationPreflight"] = activation_results.get(candidate["id"])
@@ -1959,12 +2025,14 @@ class AimUiServer(ThreadingHTTPServer):
         ui_root: Path,
         instance_id: str | None = None,
         payload_hash: str | None = None,
+        product_version: str | None = None,
         quiet: bool = False,
     ):
         self.repo_root = repo_root.resolve()
         self.ui_root = ui_root.resolve()
         self.instance_id = instance_id
         self.payload_fingerprint = payload_hash or payload_fingerprint()
+        self.product_version = product_version or resolve_product_version()
         self.quiet = quiet
         self.codex_thread_id = os.environ.get("CODEX_THREAD_ID")
         self.binding_fingerprint = binding_fingerprint(self.codex_thread_id)
@@ -2059,6 +2127,7 @@ class AimUiHandler(BaseHTTPRequestHandler):
                     "readOnly": True,
                     "repositoryReadOnly": True,
                     "protocolVersion": UI_PROTOCOL_VERSION,
+                    "productVersion": self.server.product_version,
                     "payloadFingerprint": self.server.payload_fingerprint,
                     "bindingFingerprint": self.server.binding_fingerprint,
                     "backgroundControl": {
@@ -2070,15 +2139,36 @@ class AimUiHandler(BaseHTTPRequestHandler):
             return
         if parsed.path == "/api/board":
             board = build_board(self.server.repo_root)
+            board["product"] = {
+                "name": "AIM",
+                "version": self.server.product_version,
+                "capturedAtLaunch": True,
+            }
             board["backgroundControl"] = {
                 "available": self.server.dispatch_manager.is_bound,
                 "method": "bound_codex_thread",
+                "status": (
+                    "connected" if self.server.dispatch_manager.is_bound else "view_only"
+                ),
+                "label": (
+                    "Codex connected"
+                    if self.server.dispatch_manager.is_bound
+                    else "View only"
+                ),
                 "preservesThreadSettings": True,
                 "repositoryReadOnly": True,
+                "directActions": ["activate", "approve"],
+                "reviewedHandoffActions": ["change", "discuss", "follow_up"],
+                "setupCommand": "/aim ui",
+                "setupSteps": [
+                    "Use Codex with ChatGPT-managed usage.",
+                    "Open the authoritative Codex task for this repository.",
+                    "Run /aim ui from that task.",
+                ],
                 "reason": (
                     None
                     if self.server.dispatch_manager.is_bound
-                    else "Restart AIM UI from the authoritative AIM task to enable background actions."
+                    else "Open the authoritative Codex task for this repository and run /aim ui there to connect direct Start and Approve actions."
                 ),
             }
             self._json(HTTPStatus.OK, board)
@@ -2159,6 +2249,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--quiet", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--instance-id", help=argparse.SUPPRESS)
     parser.add_argument("--expected-payload-fingerprint", help=argparse.SUPPRESS)
+    parser.add_argument("--product-version", help=argparse.SUPPRESS)
     return parser.parse_args()
 
 
@@ -2170,6 +2261,12 @@ def main() -> int:
         raise SystemExit(f"Repository directory was not found at {repo_root}")
     if not ui_root.is_dir():
         raise SystemExit(f"AIM UI assets are missing at {ui_root}")
+    try:
+        product_version = resolve_product_version()
+    except AimUiControlError as exc:
+        raise SystemExit(str(exc)) from exc
+    if args.product_version is not None and args.product_version != product_version:
+        raise SystemExit("AIM product version changed between launcher verification and server startup")
     fingerprint = payload_fingerprint()
     if (
         args.expected_payload_fingerprint is not None
@@ -2182,6 +2279,7 @@ def main() -> int:
         ui_root,
         args.instance_id,
         fingerprint,
+        product_version,
         args.quiet,
     )
     host, port = server.server_address[:2]

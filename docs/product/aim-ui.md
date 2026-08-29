@@ -61,6 +61,24 @@ bundled launcher, selects a free loopback port, and returns a clickable URL.
 A repository does not need an existing `.aim` directory: the UI opens with a
 truthful onboarding state and does not initialize or mutate runtime data.
 
+The Control room header displays the exact AIM product release captured from
+the trusted package when that server instance started. This is separate from
+the runtime contract version stored as `aimVersion` in repository state. The
+launcher, instance metadata, health endpoint, board payload, and visible badge
+must agree; a changed or invalid release identity prevents stale-process reuse.
+
+For direct **Connected Codex control**, use Codex with ChatGPT-managed usage,
+open the authoritative Codex task for the repository, and run `/aim ui` from
+that task. The UI shows **Codex connected** when eligible Start and Approve
+actions can continue in the same task. If the UI was launched elsewhere, it
+shows **View only**, keeps the full read-only board available, and explains how
+to reconnect. No internal task identifier is exposed.
+
+The large Connected Codex explanation is a one-off browser onboarding surface.
+Choose **Hide guide** to keep it hidden across later AIM UI ports and repository
+sessions in that browser. A compact **Connection guide** control in the header
+can reopen it temporarily; clearing browser site data resets the preference.
+
 The terminal commands below remain supported as foreground diagnostics and
 compatibility entry points.
 
@@ -198,6 +216,25 @@ checkpoint recommends reviewed migration first. Empty repositories begin with
 `/aim calibrate-repo` and then `/aim to-backlog`.
 
 ## Create and review a Roadmap across Epics
+
+The Portfolio tab teaches the complete route rather than presenting isolated
+commands:
+
+```text
+/aim calibrate-repo
+  -> /aim ui
+  -> /aim discuss [question]
+  -> /aim to-backlog
+  -> review the Roadmap
+  -> /aim start "PORTFOLIO" mode:auto
+  -> approve one bounded mandate
+  -> monitor progress or step away
+```
+
+Discuss loads relevant verified repository knowledge and delivery evidence but
+remains read only. `/aim to-backlog` is the separate explicit promotion into
+planned work. The browser may copy the recommended next command; it never
+executes that command or writes Backlog/runtime state.
 
 The simplest chat-first route is:
 

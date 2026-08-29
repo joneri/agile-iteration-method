@@ -64,7 +64,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "3.0.1")
+            self.assertEqual(manifest["aimVersion"], "3.0.2")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
@@ -138,10 +138,18 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("Private conversations, rejected drafts", index)
         self.assertIn('id="ui"', index)
         self.assertIn("docs/product/aim-ui.md", index)
-        self.assertIn('alt="AIM 3.0.1 Agile Iteration Method logo"', index)
-        self.assertIn('<span class="brand-version">3.0.1</span>', index)
+        self.assertIn('src="github-pages/assets/images/aim-3-autonomy-logo.png"', index)
+        self.assertIn('alt="AIM 3 creative autonomy logo"', index)
+        hero = index[index.index('<header class="hero-intro"') : index.index("</header>")]
+        self.assertIn('class="hero-brand"', hero)
+        self.assertIn('src="github-pages/assets/images/aim-3-autonomy-logo.png"', hero)
+        self.assertIn('<span class="brand-version">3.0.2</span>', index)
         self.assertIn("Put the backlog in motion.", index)
         self.assertIn("Keep control.", index)
+        self.assertNotIn("Rebuilt for AIM 2", index)
+        self.assertIn("Connected Codex control", index)
+        self.assertIn("Monitor progress—or take a walk", index)
+        self.assertIn('/aim start "PORTFOLIO" mode:auto', index)
         self.assertIn("github-pages/assets/images/aim-ui-beta-control-room.png", index)
         self.assertIn(PUBLIC_DEMO_VIDEO_PATH, index)
         self.assertIn(PUBLIC_DEMO_POSTER_PATH, index)
@@ -165,7 +173,19 @@ class PublicationContractTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("Brand artwork version policy: versionless", inventory)
         self.assertIn("contain no product version", inventory)
+        self.assertIn("aim-3-autonomy-logo.png", inventory)
         self.assertIn("AIM UI Beta", inventory)
+
+    def test_changed_aim_3_campaign_artwork_blocks_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            artwork = copied / "github-pages/assets/images/aim-3-autonomy-logo.png"
+            payload = bytearray(artwork.read_bytes())
+            payload[-1] ^= 1
+            artwork.write_bytes(payload)
+
+            with self.assertRaisesRegex(PublicationError, "campaign artwork changed"):
+                validate_source(copied)
 
     def test_missing_versionless_artwork_policy_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -202,7 +222,7 @@ class PublicationContractTests(unittest.TestCase):
             index = copied / "index.html"
             index.write_text(
                 index.read_text(encoding="utf-8").replace(
-                    '<span class="brand-version">3.0.1</span>',
+                    '<span class="brand-version">3.0.2</span>',
                     '<span class="brand-version">2.7</span>',
                 ),
                 encoding="utf-8",

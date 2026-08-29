@@ -15,17 +15,41 @@
     <div class="brand-lockup" aria-label="Agile Iteration Method control room">
       <span class="aim-mark" aria-hidden="true">AIM</span>
       <div>
-        <p class="product-name">Control room</p>
-        <p class="product-note">Read-only runtime view</p>
+        <p class="product-name">Control room <span class="product-version" id="product-version">AIM …</span></p>
+        <p class="product-note">Connected portfolio control</p>
       </div>
     </div>
-    <div class="connection" role="status" aria-live="polite">
-      <span class="connection-light" id="connection-light" aria-hidden="true"></span>
-      <span id="connection-label">Connecting to AIM…</span>
+    <div class="connection-tools">
+      <div class="connection" role="status" aria-live="polite">
+        <span class="connection-light" id="connection-light" aria-hidden="true"></span>
+        <span id="connection-label">Connecting to AIM…</span>
+      </div>
+      <button class="connection-guide" id="show-codex-onboarding" type="button" hidden>Connection guide</button>
     </div>
   </header>
 
   <main id="board" tabindex="-1">
+    <section class="codex-connection" id="codex-connection" aria-labelledby="codex-connection-title">
+      <div class="codex-connection-signal" aria-hidden="true"><span></span></div>
+      <div class="codex-connection-copy">
+        <p class="eyebrow">Connected Codex control</p>
+        <h2 id="codex-connection-title">Checking the Codex connection…</h2>
+        <p id="codex-connection-summary">AIM UI remains a safe read-only control room while the connection is checked.</p>
+      </div>
+      <div class="codex-connection-state">
+        <span class="connection-status" id="codex-control-status">Checking</span>
+        <p id="codex-control-route"></p>
+        <button class="onboarding-dismiss" id="dismiss-codex-onboarding" type="button" aria-label="Hide the Connected Codex onboarding permanently">
+          <span aria-hidden="true">×</span> Hide guide
+        </button>
+      </div>
+      <div class="codex-setup" id="codex-setup" hidden>
+        <ol id="codex-setup-steps"></ol>
+        <button class="secondary-action" id="copy-connect-command" type="button">Copy /aim ui</button>
+        <p class="action-feedback" id="codex-setup-feedback" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
     <section class="workspace-integrity" id="workspace-integrity" aria-labelledby="workspace-integrity-title" hidden>
       <div>
         <p class="eyebrow" id="workspace-integrity-eyebrow">Safe AIM recovery</p>
@@ -66,6 +90,36 @@
           <p class="eyebrow">Bound Codex task</p>
           <p id="background-operation-message"></p>
         </div>
+      </section>
+
+      <section class="portfolio-journey" id="portfolio-journey" aria-labelledby="portfolio-journey-title" hidden>
+        <header class="portfolio-journey-heading">
+          <div>
+            <p class="eyebrow">From direction to delivery</p>
+            <h2 id="portfolio-journey-title">Set the Roadmap. Approve one mandate. Let AIM move.</h2>
+          </div>
+          <p id="portfolio-journey-guidance"></p>
+        </header>
+        <ol class="portfolio-journey-steps" aria-label="AIM Portfolio setup journey">
+          <li data-journey-step="calibrate"><span>01</span><strong>Calibrate</strong><code>/aim calibrate-repo</code></li>
+          <li data-journey-step="ui"><span>02</span><strong>Open AIM UI</strong><code>/aim ui</code></li>
+          <li data-journey-step="discuss"><span>03</span><strong>Shape direction</strong><code>/aim discuss [question]</code></li>
+          <li data-journey-step="backlog"><span>04</span><strong>Promote Roadmap</strong><code>/aim to-backlog</code></li>
+          <li data-journey-step="review"><span>05</span><strong>Review the cards</strong><small>Human review in AIM UI</small></li>
+          <li data-journey-step="start"><span>06</span><strong>Start Portfolio Auto</strong><code>/aim start "PORTFOLIO" mode:auto</code></li>
+          <li data-journey-step="mandate"><span>07</span><strong>Approve the mandate</strong><small>One bounded snapshot</small></li>
+          <li data-journey-step="move"><span>08</span><strong>Monitor—or take a walk</strong><small>AIM pauses at the edges</small></li>
+        </ol>
+        <div class="portfolio-journey-next">
+          <div>
+            <p class="eyebrow">Recommended next action</p>
+            <strong id="portfolio-next-label"></strong>
+            <p id="portfolio-next-explanation"></p>
+          </div>
+          <button class="primary-action" id="copy-portfolio-next" type="button">Copy next command</button>
+          <p class="action-feedback" id="portfolio-next-feedback" role="status" aria-live="polite"></p>
+        </div>
+        <p class="portfolio-journey-boundary">Discuss stays read only. <code>/aim to-backlog</code> is the explicit promotion into planned work. Portfolio Auto stops when scope, safety, evidence, or operator input leaves the approved mandate.</p>
       </section>
 
       <div class="epic-rail" id="epic-rail" hidden>

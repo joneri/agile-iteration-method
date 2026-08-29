@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 3.0
 
-![AIM 3.0.1 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 3.0.2 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -86,7 +86,18 @@ Then start with an outcome, not a task list:
 /aim start "EPIC: Make checkout recovery clear and reliable when payment confirmation is delayed"
 ```
 
-Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning. Populate several planned Epic cards with `/aim to-backlog`, then open the current repo's read-only [AIM UI control room](docs/product/aim-ui.md) with `/aim ui`; use `/aim ui start /path/to/repo` for another repository.
+Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning.
+
+## From product direction to a moving Portfolio
+
+After calibration, launch `/aim ui` from the authoritative Codex task. The Control room displays its exact AIM launch release and shows whether Connected Codex control or View-only mode is active. Then follow one visible route:
+```text
+/aim calibrate-repo -> /aim ui -> /aim discuss [question]
+-> /aim to-backlog -> review Roadmap -> /aim start "PORTFOLIO" mode:auto
+-> approve one bounded mandate -> monitor the run—or step away
+```
+
+Discuss uses relevant durable repository knowledge and delivery evidence but does not create work. `/aim to-backlog` is the explicit promotion into planned Roadmap candidates. After mandate approval, AIM runs every included Epic through its complete role loop and returns control when the approved boundary no longer covers the next decision.
 
 ## How AIM works
 
@@ -130,17 +141,19 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v3.0.1
+## What is new in v3.0.2
 
-AIM Discuss is now a first-class read-only capability across Codex, Claude Code,
-and GitHub Copilot. Use `/aim discuss [question]`, an explicit AIM skill intent,
-or an equivalent plain-language request to explore product direction with
-relevant method, repository, runtime, decision, and delivery context.
+AIM UI now teaches the complete route from calibrated repository context and
+read-only Discuss to explicit Backlog promotion, Roadmap review, one immutable
+Portfolio mandate, and bounded sequential delivery. When launched from the
+authoritative Codex task, eligible Start and Approve actions can continue there
+directly after freshness checks; other paths remain reviewed handoffs.
 
-Discuss cannot start delivery or change source, `.aim`, Backlog, profiles,
-durable knowledge, Epics, Increments, or Gates. AIM UI remains available as a
-visual entry point to the same command contract, not a separate discussion
-system.
+The Control room shows the exact AIM release that started it and makes Connected
+or View-only setup understandable to a new user. Its large connection guide is
+one-off onboarding that can be hidden persistently and reopened when needed.
+The public site now fronts current AIM 3 and the new creativity-and-autonomy
+campaign mark alongside the real Portfolio Auto run.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
@@ -164,6 +177,4 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v3.0.1**. See [CHANGELOG.md](CHANGELOG.md).
-
-Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product release: **v3.0.2**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
