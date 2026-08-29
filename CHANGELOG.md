@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-08-29 - AIM 3 patch release v3.0.3
+- Kept historically accepted Increments in AIM UI Done when their Gate E
+  evidence uses the supported date-prefixed filename convention.
+- Made canonical `DI-*` identity—not calendar date or card title—the explicit
+  correlation key for historical acceptance.
+- Bounded compatibility discovery to the workspace decisions directory and the
+  legacy numeric or exact date-prefixed DI filename forms.
+- Required exactly one content-validated candidate; duplicate, mismatched,
+  symlinked, oversized, unreadable, or negative evidence remains fail-closed
+  with compact diagnostics.
+- Preserved the latest terminal Increment's structured state plus
+  `gateEAcceptance` relation as authoritative, without fallback or mutation.
+- Added same-day, same-title multi-Increment coverage, ambiguity and mismatch
+  regressions, read-only byte checks, product guidance, and generated-package
+  parity.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`11`. Existing valid workspaces require no migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI. Adaptive
+installations can rerun their reviewed preview/apply flow.
+
+Known limitations: unsupported descriptive historical filenames remain
+undiscovered unless linked by the authoritative latest-state contract.
+Ambiguous duplicate evidence is reported but never renamed or repaired by the
+read-only UI.
+
 ## 2026-08-29 - AIM 3 patch release v3.0.2
 - Made AIM UI identify the exact AIM product release captured when its server
   starts, with consistent lifecycle, health, board, and visible Control room

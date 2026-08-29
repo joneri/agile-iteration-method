@@ -47,8 +47,16 @@ Structured state and its linked evidence are semantic authority; a decision
 filename is not. If the structured contract applies but is incomplete,
 contradictory, missing, outside the workspace, or otherwise invalid, readers
 fail closed and report the problem instead of inferring acceptance from a
-conveniently named file. The historical `<increment-number>-gate-e.md` lookup
-remains a compatibility fallback only when structured history does not apply.
+conveniently named file. Historical compatibility recognizes only
+`<increment-number>-gate-e.md` and
+`YYYY-MM-DD-gate-e-di-<increment-number>.md` when structured history does not
+apply. The `DI-*` value is the identity; the date prefix contributes neither
+authority nor uniqueness. Same-day Increments with the same title remain
+distinct through their different DI identities. More than one supported file
+for one DI is ambiguous and fails closed instead of selecting by date. Writers
+must keep the DI in the filename, collision-check the exact destination, and
+never use date or title as identity. The latest terminal Increment uses the
+explicit state-linked evidence contract.
 
 Every new Increment plan declares `Epic: <EPIC-ID>`. Portfolio completion
 requires exactly one plan whose Increment and Epic identities match the

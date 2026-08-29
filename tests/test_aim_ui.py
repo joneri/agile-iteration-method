@@ -1379,6 +1379,124 @@ class AimUiTests(unittest.TestCase):
             self.assertEqual(increment["runtimeStatus"], "gate_b_pending")
             self.assertTrue(any("acceptance is hidden" in item for item in board["warnings"]))
 
+    def test_supported_historical_gate_e_names_keep_closed_increment_history_done(self) -> None:
+        runtime = state("epic_complete")
+        runtime.update(
+            {
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "previousIncrementId": "DI-45",
+                "previousIncrementStatus": "accepted",
+                "gateEAcceptance": ".aim/decisions/2026-08-29-gate-e-di-45.md",
+                "acceptedIncrementIds": ["DI-42", "DI-43", "DI-44", "DI-45"],
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/001-wip.md").unlink()
+            for number in range(42, 46):
+                (aim / f"increments/{number}-plan.md").write_text(
+                    f"# DI-{number} — Same-title accepted behavior\n\n"
+                    "Epic: EPIC-TEST-001\n",
+                    encoding="utf-8",
+                )
+            decision_names = {
+                42: "42-gate-e.md",
+                43: "2026-08-29-gate-e-di-43.md",
+                44: "2026-08-29-gate-e-di-44.md",
+                45: "2026-08-29-gate-e-di-45.md",
+            }
+            for number, name in decision_names.items():
+                (aim / "decisions" / name).write_text(
+                    f"# Gate E — DI-{number} Accepted\n\n"
+                    f"Increment: DI-{number}\n\n"
+                    "Decision: accepted\n\n"
+                    f"Accepted at: 2026-08-29T15:{number}:00Z\n",
+                    encoding="utf-8",
+                )
+            before = {
+                path.relative_to(aim).as_posix(): path.read_bytes()
+                for path in aim.rglob("*")
+                if path.is_file() and not path.is_symlink()
+            }
+            board = build_board(repo)
+            after = {
+                path.relative_to(aim).as_posix(): path.read_bytes()
+                for path in aim.rglob("*")
+                if path.is_file() and not path.is_symlink()
+            }
+
+        epic = board["epics"][0]
+        self.assertEqual(epic["lifecycle"], "closed")
+        self.assertEqual(
+            {item["id"]: item["column"] for item in epic["increments"]},
+            {"DI-42": "done", "DI-43": "done", "DI-44": "done", "DI-45": "done"},
+        )
+        self.assertEqual(
+            {item["title"] for item in epic["increments"]},
+            {"Same-title accepted behavior"},
+        )
+        self.assertFalse(
+            any(item["column"] == "backlog" for item in epic["increments"])
+        )
+        self.assertEqual(board["roadmap"]["eligibleCount"], 0)
+        self.assertEqual(board["warnings"], [])
+        self.assertEqual(after, before)
+
+    def test_ambiguous_or_mismatched_historical_gate_e_decisions_fail_closed(self) -> None:
+        for case in ("ambiguous", "mismatched"):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as temporary:
+                runtime = state("epic_complete")
+                runtime.update(
+                    {
+                        "activeIncrementId": None,
+                        "currentRole": "PO",
+                        "lastGatePassed": "Gate E",
+                        "previousIncrementId": "DI-45",
+                        "previousIncrementStatus": "accepted",
+                        "gateEAcceptance": ".aim/decisions/45-gate-e.md",
+                    }
+                )
+                repo = self._repo(Path(temporary), runtime)
+                aim = repo / ".aim"
+                (aim / "increments/001-wip.md").unlink()
+                for number in (43, 45):
+                    (aim / f"increments/{number}-plan.md").write_text(
+                        f"# DI-{number} — Historical behavior\n\nEpic: EPIC-TEST-001\n",
+                        encoding="utf-8",
+                    )
+                (aim / "decisions/45-gate-e.md").write_text(
+                    "# Gate E — DI-45 Accepted\n\nIncrement: DI-45\n\nDecision: accepted\n",
+                    encoding="utf-8",
+                )
+                (aim / "decisions/2026-08-28-gate-e-di-43.md").write_text(
+                    "# Gate E accepted\n\n"
+                    f"Increment: {'DI-43' if case == 'ambiguous' else 'DI-999'}\n\n"
+                    "Decision: accepted\n",
+                    encoding="utf-8",
+                )
+                if case == "ambiguous":
+                    (aim / "decisions/2026-08-29-gate-e-di-43.md").write_text(
+                        "# Gate E — DI-43 Accepted\n\n"
+                        "Increment: DI-43\n\nDecision: accepted\n",
+                        encoding="utf-8",
+                    )
+                board = build_board(repo)
+
+            increment = next(
+                item for item in board["epics"][0]["increments"] if item["id"] == "DI-43"
+            )
+            self.assertEqual(increment["column"], "backlog")
+            self.assertEqual(increment["runtimeStatus"], "gate_b_pending")
+            expected = (
+                "multiple supported Gate E decisions"
+                if case == "ambiguous"
+                else "not a valid acceptance for DI-43"
+            )
+            self.assertTrue(any(expected in warning for warning in board["warnings"]))
+
     def test_state_linked_acceptance_supports_legacy_bulleted_metadata(self) -> None:
         runtime = state("epic_complete")
         runtime.update(
@@ -1989,7 +2107,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/board", timeout=3) as response:
                     payload = json.load(response)
                     self.assertTrue(payload["source"]["readOnly"])
-                    self.assertEqual(payload["product"]["version"], "3.0.2")
+                    self.assertEqual(payload["product"]["version"], "3.0.3")
                     self.assertTrue(payload["product"]["capturedAtLaunch"])
                     self.assertIn(
                         payload["backgroundControl"]["status"],
@@ -1999,7 +2117,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/health", timeout=3) as response:
                     health = json.load(response)
                     self.assertEqual(health["protocolVersion"], "1.3")
-                    self.assertEqual(health["productVersion"], "3.0.2")
+                    self.assertEqual(health["productVersion"], "3.0.3")
                     self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST")
                 with self.assertRaises(HTTPError) as error:

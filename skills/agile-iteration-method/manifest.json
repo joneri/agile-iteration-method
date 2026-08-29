@@ -50,7 +50,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "3.0.2",
+  "productVersion": "3.0.3",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -162,7 +162,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "3fc0bf8d7ddbfe77eb4074c0b03d6567d7874a25ea4144aadea6686fcd5f6feb",
+      "sha256": "db65b7b653f7c33a2c1f9fd381f5fbe089a389f063567831785baf4b2e1497e9",
       "source": "VERSION"
     },
     {
@@ -217,7 +217,7 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "85edbdf248f2e3901a3a9845b971f331b41cbaeba7de5d5482e294a31c2b327e",
+      "sha256": "909f8ed5022781a114028a8f982fcbc3039462ba2e7cebe4b13f2bc4486ed4d6",
       "source": "scripts/aim_ui.py"
     },
     {

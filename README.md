@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 3.0
 
-![AIM 3.0.2 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 3.0.3 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -141,19 +141,17 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v3.0.2
+## What is new in v3.0.3
 
-AIM UI now teaches the complete route from calibrated repository context and
-read-only Discuss to explicit Backlog promotion, Roadmap review, one immutable
-Portfolio mandate, and bounded sequential delivery. When launched from the
-authoritative Codex task, eligible Start and Approve actions can continue there
-directly after freshness checks; other paths remain reviewed handoffs.
+AIM UI now keeps accepted historical Increments in Done when their Gate E
+evidence uses either the legacy numeric or supported date-prefixed filename.
+Canonical `DI-*` identity—not date or card title—correlates each acceptance, so
+same-day cards with the same title remain distinct.
 
-The Control room shows the exact AIM release that started it and makes Connected
-or View-only setup understandable to a new user. Its large connection guide is
-one-off onboarding that can be hidden persistently and reopened when needed.
-The public site now fronts current AIM 3 and the new creativity-and-autonomy
-campaign mark alongside the real Portfolio Auto run.
+Historical discovery is contained and fail-closed: exactly one candidate must
+validate for the requested DI. Duplicate, mismatched, symlinked, oversized, or
+negative evidence is diagnosed rather than guessed into acceptance. The latest
+terminal Increment continues to use its explicit state-linked Gate E evidence.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
@@ -177,4 +175,4 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v3.0.2**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product release: **v3.0.3**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).

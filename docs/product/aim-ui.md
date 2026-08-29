@@ -474,9 +474,13 @@ recent accepted Increment from the structured state contract:
 terminal-compatible Epic status, and the contained `gateEAcceptance` evidence
 reference. Descriptive decision filenames are supported because the reference
 and validated decision content carry the meaning. An invalid structured
-reference fails closed with a board warning and is not rescued by a legacy
-numeric filename. Numeric `<increment-number>-gate-e.md` discovery remains only
-as compatibility behavior for workspaces without applicable structured history.
+reference fails closed with a board warning and is not rescued by a historical
+filename. Compatibility discovery recognizes only
+`<increment-number>-gate-e.md` and
+`YYYY-MM-DD-gate-e-di-<increment-number>.md` for workspaces without applicable
+structured history. The DI identity—not the calendar date or card title—keeps
+same-day Increments distinct. Multiple supported files for one DI are
+ambiguous and remain unaccepted with a compact diagnostic.
 Legacy Gate E metadata written as unordered Markdown list items is normalized
 the same way as bare metadata fields; negative decisions and wrong Increment
 identities continue to fail closed.

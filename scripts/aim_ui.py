@@ -166,15 +166,48 @@ def _field(markdown: str, label: str) -> str | None:
     return (match.group(1) or match.group(2)).strip()
 
 
-def _legacy_acceptance_decision(aim_root: Path, increment_id: str) -> Path | None:
+def _historical_acceptance_decision(
+    aim_root: Path, increment_id: str
+) -> tuple[Path | None, str | None]:
+    """Resolve one explicitly supported historical Gate E decision."""
+
     number = increment_id.removeprefix("DI-")
     decisions = aim_root / "decisions"
+    if decisions.is_symlink():
+        return None, "the decisions directory is symlinked"
     if not decisions.is_dir():
-        return None
-    for path in decisions.glob(f"{number}-gate-e.md"):
-        if decision_accepts_increment(path, increment_id):
-            return path
-    return None
+        return None, None
+
+    candidates: list[Path] = []
+    legacy = decisions / f"{number}-gate-e.md"
+    if legacy.exists() or legacy.is_symlink():
+        candidates.append(legacy)
+
+    # The date is compatibility syntax only. The requested DI identity selects
+    # the candidate and prevents same-day, same-title Increments from colliding.
+    dated_compatibility_name = re.compile(
+        rf"[0-9]{{4}}-[0-9]{{2}}-[0-9]{{2}}-gate-e-{re.escape(increment_id.lower())}\.md"
+    )
+    for path in decisions.glob(f"????-??-??-gate-e-{increment_id.lower()}.md"):
+        if not dated_compatibility_name.fullmatch(path.name):
+            continue
+        try:
+            datetime.strptime(path.name[:10], "%Y-%m-%d")
+        except ValueError:
+            continue
+        candidates.append(path)
+
+    candidates = sorted(set(candidates), key=lambda path: path.name)
+    if not candidates:
+        return None, None
+    if len(candidates) != 1:
+        names = ", ".join(path.name for path in candidates)
+        return None, f"multiple supported Gate E decisions match ({names})"
+
+    candidate = candidates[0]
+    if not decision_accepts_increment(candidate, increment_id):
+        return None, f"{candidate.name} is not a valid acceptance for {increment_id}"
+    return candidate, None
 
 
 def _state_acceptance_decision(
@@ -210,7 +243,14 @@ def _acceptance_decision(
         warnings.append(f"{state['epicId']} {increment_id}: {issue}; acceptance is hidden.")
     if authoritative:
         return decision
-    return _legacy_acceptance_decision(aim_root, increment_id)
+    decision, historical_issue = _historical_acceptance_decision(
+        aim_root, increment_id
+    )
+    if historical_issue:
+        warnings.append(
+            f"{state['epicId']} {increment_id}: {historical_issue}; acceptance is hidden."
+        )
+    return decision
 
 
 def _accepted_at(decision: Path) -> str:
