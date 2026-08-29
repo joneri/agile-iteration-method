@@ -22,6 +22,8 @@ from typing import Any
 from urllib.error import URLError
 from urllib.request import urlopen
 
+from aim_codex_bridge import binding_fingerprint
+
 try:
     import fcntl
 except ImportError:  # pragma: no cover - Windows fallback keeps lifecycle functional.
@@ -35,12 +37,13 @@ MAX_LOG_BYTES = 1_048_576
 MAX_HEALTH_BYTES = 16_384
 START_TIMEOUT_SECONDS = 6.0
 _STARTED_PROCESSES: dict[int, subprocess.Popen[bytes]] = {}
-INSTANCE_VERSION = "1.1"
-LEGACY_INSTANCE_VERSION = "1.0"
-UI_PROTOCOL_VERSION = "1.1"
+INSTANCE_VERSION = "1.2"
+LEGACY_INSTANCE_VERSIONS = {"1.0", "1.1"}
+UI_PROTOCOL_VERSION = "1.2"
 PAYLOAD_FILES = (
     "scripts/aim_ui_control.py",
     "scripts/aim_ui.py",
+    "scripts/aim_codex_bridge.py",
     "scripts/aim_runtime_contract.py",
     "aim-ui/index.html",
     "aim-ui/app.js",
@@ -142,7 +145,7 @@ def _read_metadata(repo: Path) -> dict[str, Any] | None:
     }
     if (
         not isinstance(value, dict)
-        or value.get("instanceVersion") not in {LEGACY_INSTANCE_VERSION, INSTANCE_VERSION}
+        or value.get("instanceVersion") not in {*LEGACY_INSTANCE_VERSIONS, INSTANCE_VERSION}
         or not required.issubset(value)
         or value.get("repo") != str(repo)
         or not isinstance(value.get("pid"), int)
@@ -156,6 +159,11 @@ def _read_metadata(repo: Path) -> dict[str, Any] | None:
         or (
             value.get("instanceVersion") == INSTANCE_VERSION
             and not _valid_fingerprint(value.get("payloadFingerprint"))
+        )
+        or (
+            value.get("instanceVersion") == INSTANCE_VERSION
+            and value.get("bindingFingerprint") is not None
+            and not _valid_fingerprint(value.get("bindingFingerprint"))
         )
         or (
             value.get("payloadFingerprint") is not None
@@ -225,6 +233,7 @@ def _health_probe(metadata: dict[str, Any], timeout: float = 0.4) -> dict[str, A
         and value.get("repo") == metadata["repo"]
         and value.get("pid") == metadata["pid"]
         and value.get("readOnly") is True
+        and value.get("bindingFingerprint") == metadata.get("bindingFingerprint")
     )
     observed = value.get("payloadFingerprint")
     metadata_fingerprint = metadata.get("payloadFingerprint")
@@ -303,9 +312,14 @@ def _free_port(requested: int | None) -> int:
 def _start(repo: Path, *, port: int | None, open_browser: bool) -> dict[str, Any]:
     existing = _read_metadata(repo)
     replaced = False
+    requested_binding = binding_fingerprint(os.environ.get("CODEX_THREAD_ID"))
     if existing is not None:
         probe = _health_probe(existing)
-        if probe["compatible"]:
+        binding_matches = (
+            requested_binding is None
+            or existing.get("bindingFingerprint") == requested_binding
+        )
+        if probe["compatible"] and binding_matches:
             if open_browser:
                 webbrowser.open(existing["url"])
             return {
@@ -374,6 +388,7 @@ def _start(repo: Path, *, port: int | None, open_browser: bool) -> dict[str, Any
         "url": f"http://127.0.0.1:{selected_port}/",
         "startedAt": now,
         "payloadFingerprint": fingerprint,
+        "bindingFingerprint": requested_binding,
     }
     deadline = time.monotonic() + START_TIMEOUT_SECONDS
     while time.monotonic() < deadline:

@@ -58,6 +58,7 @@ UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_portfolio_run.py"),
     Path("scripts/aim_ui.py"),
     Path("scripts/aim_ui_control.py"),
+    Path("scripts/aim_codex_bridge.py"),
     Path("aim-ui/index.html"),
     Path("aim-ui/styles.css"),
     Path("aim-ui/app.js"),

@@ -456,6 +456,7 @@ class ModeFootprintContractTests(unittest.TestCase):
             "scripts/aim_actions.py",
             "scripts/aim_ui_control.py",
             "scripts/aim_ui.py",
+            "scripts/aim_codex_bridge.py",
             "aim-ui/index.html",
             "aim-ui/styles.css",
             "aim-ui/app.js",
@@ -488,6 +489,7 @@ class ModeFootprintContractTests(unittest.TestCase):
             "scripts/aim_actions.py",
             "scripts/aim_ui_control.py",
             "scripts/aim_ui.py",
+            "scripts/aim_codex_bridge.py",
             "aim-ui/index.html",
             "aim-ui/styles.css",
             "aim-ui/app.js",
@@ -603,7 +605,7 @@ class ModeFootprintContractTests(unittest.TestCase):
         rendered = render.render_text(plan)
         self.assertIn("keeping or committing it is the solo user's choice", rendered)
         self.assertEqual(plan["scopeSummary"]["repoActionCount"], 0)
-        self.assertEqual(plan["scopeSummary"]["localActionCount"], 13)
+        self.assertEqual(plan["scopeSummary"]["localActionCount"], 14)
 
     def test_ui_payload_apply_is_idempotent_and_collision_reviewed(self) -> None:
         manifest = load_manifest(REPO_ROOT)
@@ -655,6 +657,10 @@ class ModeFootprintContractTests(unittest.TestCase):
             self.assertEqual(
                 (target_root / "scripts/aim_ui_control.py").read_bytes(),
                 (REPO_ROOT / "scripts/aim_ui_control.py").read_bytes(),
+            )
+            self.assertEqual(
+                (target_root / "scripts/aim_codex_bridge.py").read_bytes(),
+                (REPO_ROOT / "scripts/aim_codex_bridge.py").read_bytes(),
             )
             installed_ui = subprocess.run(
                 [sys.executable, str(target_root / "scripts/aim_ui.py"), "--help"],

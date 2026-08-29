@@ -53,11 +53,20 @@
     <section id="control-room" hidden>
       <nav class="section-tabs" aria-label="AIM control room views">
         <button class="section-tab" type="button" data-view="board" aria-pressed="true">Delivery flow</button>
+        <button class="section-tab" type="button" data-view="discuss" aria-pressed="false">Discuss</button>
         <button class="section-tab" type="button" data-view="portfolio" aria-pressed="false">Portfolio</button>
         <button class="section-tab" type="button" data-view="data" aria-pressed="false">AIM DATA</button>
         <button class="section-tab" type="button" data-view="people" aria-pressed="false">People &amp; agents</button>
         <button class="section-tab" type="button" data-view="closed" aria-pressed="false">Closed Increments <span id="closed-count">0</span></button>
       </nav>
+
+      <section class="background-operation" id="background-operation" role="status" aria-live="polite" hidden>
+        <span class="background-operation-light" aria-hidden="true"></span>
+        <div>
+          <p class="eyebrow">Bound Codex task</p>
+          <p id="background-operation-message"></p>
+        </div>
+      </section>
 
       <div class="epic-rail" id="epic-rail" hidden>
         <div class="epic-signal" aria-hidden="true"><span></span></div>
@@ -111,6 +120,41 @@
           <span class="control-status" id="portfolio-control-status"></span>
           <p id="portfolio-control-guidance"></p>
         </div>
+      </section>
+
+      <section class="discuss-panel" id="discuss-panel" aria-labelledby="discuss-title" hidden>
+        <header class="discuss-heading">
+          <div>
+            <p class="eyebrow">AIM Discuss · read only</p>
+            <h2 id="discuss-title">Think with the product context in view</h2>
+            <p id="discuss-summary"></p>
+          </div>
+          <span class="discuss-mode" id="discuss-mode">Analysis only</span>
+        </header>
+        <dl class="discuss-facts" id="discuss-facts"></dl>
+        <div class="discuss-workspace">
+          <section class="discuss-question" aria-labelledby="discuss-question-title">
+            <p class="eyebrow">Your question</p>
+            <h3 id="discuss-question-title">What should AIM help you think through?</h3>
+            <label for="discuss-input">Product idea, tradeoff, concern, or reflection</label>
+            <textarea id="discuss-input" maxlength="4000" rows="8" placeholder="For example: How should AIM 3.0 help an operator explore an idea without accidentally starting delivery?"></textarea>
+            <div class="discuss-actions">
+              <button class="secondary-action" id="copy-discussion" type="button" disabled>Copy discussion prompt</button>
+              <button class="primary-action" id="open-discussion" type="button" disabled>Open in Codex</button>
+            </div>
+            <p class="action-feedback" id="discussion-feedback" role="status" aria-live="polite"></p>
+          </section>
+          <aside class="discuss-context" aria-labelledby="discuss-context-title">
+            <p class="eyebrow">Context manifest</p>
+            <h3 id="discuss-context-title">What the discussion can consult</h3>
+            <ul id="discuss-sources"></ul>
+            <details>
+              <summary>Preview generated prompt</summary>
+              <pre id="discussion-preview" tabindex="0"></pre>
+            </details>
+          </aside>
+        </div>
+        <p class="discuss-boundary" id="discuss-boundary"></p>
       </section>
 
       <section class="data-panel" id="data-panel" aria-labelledby="data-title" hidden>

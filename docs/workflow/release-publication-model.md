@@ -1,7 +1,7 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 2.0 Release And Publication Model
+# AIM Release And Publication Model
 
 ## Purpose
 
@@ -133,12 +133,12 @@ npx skills add joneri/agile-iteration-method --skill agile-iteration-method
 git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source
 ```
 
-## AIM 2.x release artifact
+## AIM release artifact
 
-An official AIM 2.x release requires:
+An official AIM release requires:
 
 - a reviewed source commit
-- a `v2`-family source tag pointing to that commit
+- a `v`-family source tag pointing to that commit and matching `VERSION`
 - a successful release-readiness workflow for the tagged source
 - a successful release workflow that creates or updates the GitHub Release for
   the tag

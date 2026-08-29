@@ -1,6 +1,6 @@
-# Agile Iteration Method (AIM) 2.9
+# Agile Iteration Method (AIM) 3.0
 
-![AIM 2.9.6 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 3.0.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -130,15 +130,18 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.9.6
+## What is new in v3.0.0
 
-AIM now moves from an accepted Increment to the next Gate B checkpoint through
-one schema-validated atomic state replacement. The new Increment, Gate A
-checkpoint, and canonical `gate_b_pending` status therefore appear together.
+AIM UI now includes a read-only Discuss workspace for exploring product
+direction with bounded method, repository, runtime, decision, and delivery
+context. The generated prompt remains reviewable and cannot start delivery or
+change repository state.
 
-If a bounded status-only deviation still slips through, AIM UI shows a calm
-`Status updating` work-in-progress card without granting Gate authority. Invalid
-or compound runtime state continues to fail closed.
+When the UI is launched from the authoritative Codex task, exact Start and
+Approve actions can run in that bound task through a local, fail-closed bridge.
+The server recomputes the current board before dispatch, rejects stale or
+free-form input, preserves one runtime owner, and returns unattended approval
+or input requests to the operator.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
@@ -162,6 +165,6 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v2.9.6**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v3.0.0**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

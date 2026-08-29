@@ -1,5 +1,40 @@
 # Changelog
 
+## 2026-08-29 - AIM 3 release v3.0.0
+- Added a read-only Discuss workspace that prepares reviewable Codex prompts
+  from bounded AIM method, repository, runtime, decision, and delivery context
+  without starting delivery or changing repository state.
+- Added direct background dispatch for exact, currently projected Start and
+  Approve actions when AIM UI is bound to the authoritative Codex task.
+- Introduced a fail-closed local Codex app-server bridge with ChatGPT-managed
+  authentication checks, exact thread binding, busy detection, durable
+  idempotency, truthful operation status, and no model or permission overrides.
+- Kept change requests in the reviewed composer and made approvals,
+  permissions, user input, and MCP elicitation return attention to the operator
+  instead of being answered unattended.
+- Restricted the browser write surface to one same-origin, size-bounded action
+  endpoint that recomputes the board and accepts only a byte-equivalent enabled
+  action envelope.
+- Synchronized canonical UI, documentation, adaptive installation, generated
+  public Agent Skill, and regression coverage for the AIM 3 control boundary.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`11`. Existing valid workspaces require no runtime migration. Direct background
+control additionally requires a local Codex installation exposing app-server
+and an AIM UI instance launched from the authoritative Codex task.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI from the
+authoritative AIM task. Adaptive installations can rerun their reviewed
+preview/apply installer flow.
+
+Known limitations: Discuss prepares a prompt but still requires the operator to
+review and send it in Codex. Background control supports exact Start and Approve
+actions only; request-change text remains a reviewed manual action. The bridge
+does not answer approvals, permissions, user-input requests, or MCP elicitation
+and does not make AIM UI a second runtime authority.
+
 ## 2026-08-29 - AIM 2 patch release v2.9.6
 - Made post-Gate-E continuation publish the next Increment, Gate A checkpoint,
   and canonical `gate_b_pending` runtime status as one validated atomic state

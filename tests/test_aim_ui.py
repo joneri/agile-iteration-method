@@ -714,6 +714,76 @@ class AimUiTests(unittest.TestCase):
         self.assertNotIn("ticket-in", styles)
         self.assertNotIn("margin: 14px -15px -15px", styles)
 
+    def test_discuss_projects_bounded_read_only_context(self) -> None:
+        runtime = state("epic_complete")
+        runtime.update(
+            {
+                "activeIncrementId": None,
+                "previousIncrementId": "DI-001",
+                "previousIncrementStatus": "accepted",
+                "gateEAcceptance": ".aim/decisions/001-gate-e.md",
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            (repo / "docs/workflow").mkdir(parents=True)
+            (repo / "docs/workflow/agile-iteration-method.md").write_text(
+                "# Agile iteration method\n", encoding="utf-8"
+            )
+            (repo / "aim.profile.yaml").write_text(
+                "aimRepoProfile:\n  profileVersion: '0.2'\n", encoding="utf-8"
+            )
+            (repo / ".aim/decisions/001-gate-b.md").write_text(
+                "# DI-001 Gate B\n", encoding="utf-8"
+            )
+            (repo / ".aim/decisions/001-gate-e.md").write_text(
+                "# Gate E\n\nIncrement: DI-001\n\nStatus: Accepted\n\n"
+                "Accepted at: 2026-08-21T13:00:00Z\n",
+                encoding="utf-8",
+            )
+            board = build_board(repo)
+
+        discussion = board["discussion"]
+        self.assertEqual(discussion["mode"], "read_only")
+        self.assertEqual(discussion["counts"]["runtimeWorkspaces"], 1)
+        self.assertGreaterEqual(discussion["counts"]["decisionSources"], 2)
+        self.assertEqual(discussion["counts"]["recentDeliveries"], 1)
+        self.assertEqual(
+            {source["kind"] for source in discussion["sources"]},
+            {"method", "profile", "runtime", "decision"},
+        )
+        self.assertTrue(
+            any(
+                source["path"] == "$agile-iteration-method"
+                for source in discussion["sources"]
+            )
+        )
+        self.assertEqual(
+            discussion["recentDeliveries"][0]["evidencePath"],
+            ".aim/decisions/001-gate-e.md",
+        )
+        self.assertIn("without creating or editing files", discussion["promptPreamble"])
+        self.assertIn("separate explicit AIM action", discussion["boundary"])
+
+    def test_discuss_frontend_keeps_handoff_reviewable_and_local(self) -> None:
+        script = (REPO_ROOT / "aim-ui/app.js").read_text(encoding="utf-8")
+        styles = (REPO_ROOT / "aim-ui/styles.css").read_text(encoding="utf-8")
+        markup = (REPO_ROOT / "aim-ui/index.html").read_text(encoding="utf-8")
+
+        self.assertIn('data-view="discuss"', markup)
+        self.assertIn('id="discuss-input" maxlength="4000"', markup)
+        self.assertIn('id="discussion-preview" tabindex="0"', markup)
+        self.assertIn("function discussionPrompt", script)
+        self.assertIn("AIM_DISCUSSION_REQUEST", script)
+        self.assertIn("recommend one separate explicit AIM promotion action", script)
+        self.assertIn("codex://new?", script)
+        self.assertNotIn("fetch(\"/api/discuss", script)
+        self.assertIn(".discuss-panel::after", styles)
+        self.assertIn(".discuss-question textarea:focus", styles)
+        self.assertIn('.discuss-context details:not([open]) > :not(summary)', styles)
+
     def test_contradictory_gate_checkpoint_hides_actions_and_warns(self) -> None:
         runtime = state("po_approval_pending")
         runtime.update({"currentRole": "PO", "lastGatePassed": "Gate B"})
@@ -1899,7 +1969,7 @@ class AimUiTests(unittest.TestCase):
                     self.assertTrue(payload["source"]["readOnly"])
                 with urlopen(f"{url}/api/health", timeout=3) as response:
                     health = json.load(response)
-                    self.assertEqual(health["protocolVersion"], "1.1")
+                    self.assertEqual(health["protocolVersion"], "1.2")
                     self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST")
                 with self.assertRaises(HTTPError) as error:
@@ -1914,6 +1984,75 @@ class AimUiTests(unittest.TestCase):
                 for path in (repo / ".aim").rglob("*")
                 if path.is_file()
             }
+        self.assertEqual(before, after)
+
+    def test_background_endpoint_accepts_only_exact_projected_action(self) -> None:
+        runtime = state("gate_b_pending")
+        runtime.update({"currentRole": "TDO", "lastGatePassed": "Gate A"})
+
+        class FakeDispatchManager:
+            is_bound = True
+
+            def __init__(self) -> None:
+                self.dispatched: list[tuple[dict, str]] = []
+
+            def dispatch(self, envelope: dict, prompt: str) -> dict:
+                self.dispatched.append((envelope, prompt))
+                return {
+                    "id": "a" * 64,
+                    "status": "queued",
+                    "createdAt": "2026-08-29T13:00:00Z",
+                    "updatedAt": "2026-08-29T13:00:00Z",
+                    "message": "Queued.",
+                }
+
+            def status(self, _operation_id: str) -> dict:
+                return self.dispatch({}, "")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            before = (repo / ".aim/state.json").read_bytes()
+            server = AimUiServer(("127.0.0.1", 0), repo, REPO_ROOT / "aim-ui")
+            fake = FakeDispatchManager()
+            server.dispatch_manager = fake
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                host = f"127.0.0.1:{server.server_address[1]}"
+                url = f"http://{host}"
+                board = build_board(repo)
+                approve = board["epics"][0]["increments"][0]["actions"][0]
+                body = json.dumps({"envelope": approve["envelope"]}).encode()
+                request = Request(
+                    f"{url}/api/actions/dispatch",
+                    data=body,
+                    method="POST",
+                    headers={
+                        "Content-Type": "application/json",
+                        "Origin": url,
+                    },
+                )
+                with urlopen(request, timeout=3) as response:
+                    result = json.load(response)
+                self.assertEqual(result["operation"]["status"], "queued")
+                self.assertEqual(fake.dispatched[0][0], approve["envelope"])
+                self.assertIn("AIM_ACTION_ENVELOPE", fake.dispatched[0][1])
+
+                stale = {**approve["envelope"], "expectedUpdatedAt": "stale"}
+                stale_request = Request(
+                    f"{url}/api/actions/dispatch",
+                    data=json.dumps({"envelope": stale}).encode(),
+                    method="POST",
+                    headers={"Content-Type": "application/json", "Origin": url},
+                )
+                with self.assertRaises(HTTPError) as error:
+                    urlopen(stale_request, timeout=3)
+                self.assertEqual(error.exception.code, 409)
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join(timeout=3)
+            after = (repo / ".aim/state.json").read_bytes()
         self.assertEqual(before, after)
 
 

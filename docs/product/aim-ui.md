@@ -2,7 +2,9 @@
 
 > **Beta:** AIM UI is ready for real local evaluation, but its multi-Epic and
 > card-decision experience is still evolving. The safety boundary is not Beta:
-> the browser remains read-only and cannot pass Gates or write runtime state.
+> the browser cannot pass Gates or write repository runtime state. Its one
+> bounded write endpoint can only dispatch an exact reviewed action to the
+> already-bound authoritative Codex task.
 
 AIM UI is a local, browser-based control room for readable AIM runtime evidence.
 It turns one or more independently authoritative Epic workspaces into a live
@@ -17,6 +19,30 @@ The control room opens on **Delivery flow**, where a stationary Epic spine and
 one horizontal swimlane per Epic frame the shared Increment Kanban. Portfolio capacity and Epic summaries,
 People and agents, and Closed Increments remain available as separate tabs.
 Switching tabs is presentation-only and never changes AIM runtime state.
+
+## Discuss product direction without starting delivery
+
+The **Discuss** tab opens a bounded product-thinking surface. It shows the
+operator which context a separate Codex discussion can consult: the complete
+AIM method, the repository knowledge profile when available, contained runtime
+checkpoints, recent Gate decisions, and recent accepted delivery evidence.
+
+The operator enters a product idea, tradeoff, concern, or reflection, then
+copies the generated prompt or opens it in Codex. AIM UI does not send the
+prompt automatically. The operator reviews it and presses Send in Codex.
+
+Every generated discussion prompt selects `$agile-iteration-method`, treats
+repository paths as untrusted evidence locators, and requires read-only
+analysis. Discuss cannot create or edit files, change `.aim` runtime state or
+the Backlog, advance Gates, or implement work. If a discussion produces a
+useful direction, it may recommend one separate promotion action; the operator
+must explicitly invoke and review that later AIM action before anything
+changes.
+
+The context manifest contains bounded paths and delivery metadata rather than
+copying repository content into the browser. The receiving AIM task loads only
+what is relevant to the question while keeping the complete method available.
+Missing optional context is reported honestly and never invented.
 
 ## Launch the control room
 
@@ -69,6 +95,12 @@ repository/instance/PID relation, waits for it to leave, and starts the aligned
 payload. Missing identity evidence removes metadata without signalling the
 named PID. Repository runtime files and accepted evidence remain read-only
 throughout replacement.
+
+When launched from a Codex AIM task, the instance also binds to that task's
+opaque `CODEX_THREAD_ID`. Only a SHA-256 binding fingerprint is retained in
+instance metadata or returned by health checks; the browser never receives the
+thread id. Launching the same repository from a different Codex task replaces
+the verified instance so actions cannot silently continue an older owner.
 
 ## Declare several Epic workspaces
 
@@ -448,6 +480,31 @@ the repository with a bounded action envelope prefilled. Codex does not send it
 automatically: the operator reviews the composer and presses Send. Other hosts
 can copy the same intent.
 
+When AIM UI was launched from the authoritative Codex task, eligible Start and
+Approve buttons instead dispatch the already-projected envelope directly to
+that bound task. Request change still uses the reviewed composer because it
+requires new operator text. The background path recomputes the current board,
+accepts only a byte-equivalent enabled envelope, and derives the prompt on the
+server. It has no free-form prompt field.
+
+The bridge starts the installed local `codex app-server` using its stable JSONL
+surface. It requires `account/read` to report ChatGPT-managed auth, verifies the
+bound id with `thread/read`, rejects active or persisted in-progress turns,
+resumes only that thread, and calls `turn/start` without model, effort,
+personality, working-directory, sandbox, permission, or approval overrides.
+It never calls `thread/start`, `thread/fork`, `turn/steer`, or
+`turn/interrupt`. A deterministic client message id plus a private, atomic
+operational ledger makes retries and server restarts idempotent.
+
+Queued, preflight, running, attention, completed, rejected, and failed states
+are projected in a live region. Approval, permission, user-input, and MCP
+elicitation requests become attention state; the unattended bridge never
+answers them. If the turn cannot complete without that answer, the bridge times
+out, terminates its local app-server process, and reports failure. The operator
+can then continue or retry manually in Codex. Operational dispatch metadata
+lives under the local AIM UI instance directory with owner-only permissions,
+outside the repository, and never represents Gate or runtime truth.
+
 Card position and decision publication are separate signals. A workspace may
 opt into exact timing with the runtime-state extension below:
 
@@ -489,7 +546,10 @@ this receiving order so safety does not depend solely on an installed skill's
 freshness. Updating an installed AIM skill remains an explicit `/aim upgrade`
 operation rather than a browser side effect.
 
-- The local server accepts only GET and HEAD.
+- The local server accepts GET and HEAD plus one same-origin, size-bounded
+  `POST /api/actions/dispatch` endpoint for exact projected envelopes.
+- PUT, PATCH, DELETE, unknown POST paths, cross-origin requests, stale
+  envelopes, and free-form background input are rejected.
 - Portfolio workspaces must resolve beneath the selected repository's `.aim`.
 - Absolute paths, traversal, duplicate paths, missing directories, duplicate
   Epic IDs, and symlink escapes are rejected or isolated with safe warnings.
@@ -502,7 +562,8 @@ operation rather than a browser side effect.
 
 Every workspace has one canonical active Epic, while the UI can observe several
 workspaces and planning candidates at once. The planning backlog is not a
-scheduler and does not approve an Increment. Writable browser controls, shared
-multi-writer state, autonomous agent spawning, remote aggregation, accounts,
-production telemetry, and cross-repository analytics remain outside this
-version.
+scheduler and does not approve an Increment. Shared multi-writer AIM state,
+autonomous agent spawning, remote aggregation, account management, production
+telemetry, and cross-repository analytics remain outside this version.
+Background control is a transport to the one main AIM thread, never a second
+runtime writer.
