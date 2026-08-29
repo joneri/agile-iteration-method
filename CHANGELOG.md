@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-08-29 - AIM 3 patch release v3.0.4
+- Resolved an explicit legacy Gate E acceptance index and its single
+  authoritative date-prefixed target as one historical AIM UI acceptance.
+- Bound index resolution to the requested canonical `DI-*`, one named supported
+  target in the same decisions directory, accepted content in both regular
+  files, and the same valid timezone-aware acceptance instant.
+- Preserved fail-closed behavior for ordinary duplicate decisions even when
+  their DI, accepted status, and timestamp are identical.
+- Kept missing or malformed targets, mismatched identities or timestamps,
+  symlinks, unreadable or oversized evidence, and additional candidates hidden
+  with compact diagnostics.
+- Verified the original `agenticpipeline` DI-42 history read-only: the Increment
+  projects as Done, its duplicate warning disappears, and workspace bytes remain
+  unchanged.
+- Added exact historical-shape, no-mutation, ordinary-duplicate, and seven
+  index-failure regressions plus canonical documentation and generated-package
+  parity.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`11`. Existing valid workspaces require no migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI. Historical
+files are read without rewriting or renaming them. Adaptive installations can
+rerun their reviewed preview/apply flow.
+
+Known limitations: index compatibility requires the explicit
+`Gate E acceptance index — DI-*` heading and exactly one supported local target.
+Arbitrary prose links and genuinely independent duplicate decisions remain
+ambiguous by design.
+
 ## 2026-08-29 - AIM 3 patch release v3.0.3
 - Kept historically accepted Increments in AIM UI Done when their Gate E
   evidence uses the supported date-prefixed filename convention.

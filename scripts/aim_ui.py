@@ -166,6 +166,18 @@ def _field(markdown: str, label: str) -> str | None:
     return (match.group(1) or match.group(2)).strip()
 
 
+def _accepted_timestamp(markdown: str) -> datetime | None:
+    """Parse bounded historical Accepted-at metadata with optional prose punctuation."""
+
+    match = re.search(
+        r"^[ \t]*(?:[-*+]\s+)?Accepted at:\s*"
+        r"(?:`([^`\n]+)`|(\S+?))(?:\.)?\s*$",
+        markdown,
+        re.MULTILINE | re.IGNORECASE,
+    )
+    return _parse_timestamp((match.group(1) or match.group(2)) if match else None)
+
+
 def _historical_acceptance_decision(
     aim_root: Path, increment_id: str
 ) -> tuple[Path | None, str | None]:
@@ -178,16 +190,13 @@ def _historical_acceptance_decision(
     if not decisions.is_dir():
         return None, None
 
-    candidates: list[Path] = []
     legacy = decisions / f"{number}-gate-e.md"
-    if legacy.exists() or legacy.is_symlink():
-        candidates.append(legacy)
-
     # The date is compatibility syntax only. The requested DI identity selects
     # the candidate and prevents same-day, same-title Increments from colliding.
     dated_compatibility_name = re.compile(
         rf"[0-9]{{4}}-[0-9]{{2}}-[0-9]{{2}}-gate-e-{re.escape(increment_id.lower())}\.md"
     )
+    dated_candidates: list[Path] = []
     for path in decisions.glob(f"????-??-??-gate-e-{increment_id.lower()}.md"):
         if not dated_compatibility_name.fullmatch(path.name):
             continue
@@ -195,7 +204,81 @@ def _historical_acceptance_decision(
             datetime.strptime(path.name[:10], "%Y-%m-%d")
         except ValueError:
             continue
-        candidates.append(path)
+        dated_candidates.append(path)
+
+    dated_candidates = sorted(set(dated_candidates), key=lambda path: path.name)
+    if legacy.exists() and not legacy.is_symlink() and legacy.is_file():
+        try:
+            if legacy.stat().st_size <= MAX_ACCEPTANCE_DECISION_BYTES:
+                legacy_content = legacy.read_text(encoding="utf-8")
+            else:
+                legacy_content = ""
+        except (OSError, UnicodeDecodeError):
+            legacy_content = ""
+
+        heading = legacy_content.splitlines()[0] if legacy_content.splitlines() else ""
+        index_heading = re.fullmatch(
+            rf"#\s+Gate E acceptance index\s+(?:—|-)\s+{re.escape(increment_id)}\s*",
+            heading,
+            re.IGNORECASE,
+        )
+        if index_heading:
+            mentioned = {
+                item.upper() for item in re.findall(r"\bDI-\d+\b", legacy_content, re.I)
+            }
+            if mentioned != {increment_id}:
+                return None, f"{legacy.name} does not identify only {increment_id}"
+
+            declared_target = _field(legacy_content, "Target") or _field(
+                legacy_content, "Authoritative decision"
+            )
+            if declared_target is not None:
+                target_names = [declared_target]
+            else:
+                target_names = [
+                    value
+                    for value in re.findall(r"`([^`\n]+)`", legacy_content)
+                    if dated_compatibility_name.fullmatch(value)
+                ]
+            target_names = sorted(set(target_names))
+            if len(target_names) != 1:
+                return None, f"{legacy.name} does not name exactly one supported target"
+
+            target_name = target_names[0]
+            matching_targets = [
+                path for path in dated_candidates if path.name == target_name
+            ]
+            if len(matching_targets) != 1:
+                return None, f"{legacy.name} target {target_name} is missing"
+            if len(dated_candidates) != 1:
+                names = ", ".join(path.name for path in dated_candidates)
+                return None, f"additional supported Gate E decisions match ({names})"
+
+            target = matching_targets[0]
+            if not decision_accepts_increment(legacy, increment_id):
+                return None, f"{legacy.name} is not a valid index acceptance for {increment_id}"
+            if not decision_accepts_increment(target, increment_id):
+                return None, f"{target.name} is not a valid acceptance for {increment_id}"
+            try:
+                target_content = target.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                return None, f"{target.name} could not be read"
+            target_mentions = {
+                item.upper() for item in re.findall(r"\bDI-\d+\b", target_content, re.I)
+            }
+            if target_mentions != {increment_id}:
+                return None, f"{target.name} does not identify only {increment_id}"
+            index_accepted_at = _accepted_timestamp(legacy_content)
+            target_accepted_at = _accepted_timestamp(target_content)
+            if index_accepted_at is None or target_accepted_at is None:
+                return None, "Gate E index and target require explicit accepted timestamps"
+            if index_accepted_at != target_accepted_at:
+                return None, "Gate E index and target accepted timestamps differ"
+            return target, None
+
+    candidates: list[Path] = list(dated_candidates)
+    if legacy.exists() or legacy.is_symlink():
+        candidates.append(legacy)
 
     candidates = sorted(set(candidates), key=lambda path: path.name)
     if not candidates:

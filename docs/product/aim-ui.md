@@ -480,7 +480,14 @@ filename. Compatibility discovery recognizes only
 `YYYY-MM-DD-gate-e-di-<increment-number>.md` for workspaces without applicable
 structured history. The DI identity—not the calendar date or card title—keeps
 same-day Increments distinct. Multiple supported files for one DI are
-ambiguous and remain unaccepted with a compact diagnostic.
+ambiguous and remain unaccepted with a compact diagnostic, except for one
+verified legacy index chain. An explicit `Gate E acceptance index — DI-*` may
+name one supported date-prefixed target in the same decisions directory; AIM UI
+treats the pair as one acceptance only when both files accept only that DI,
+their valid `Accepted at` instants match, and no additional supported decision
+exists. A missing or malformed target, ordinary duplicate, mismatch, symlink,
+or extra decision remains hidden with a diagnostic. New history should use
+structured state-linked evidence rather than creating compatibility indexes.
 Legacy Gate E metadata written as unordered Markdown list items is normalized
 the same way as bare metadata fields; negative decisions and wrong Increment
 identities continue to fail closed.

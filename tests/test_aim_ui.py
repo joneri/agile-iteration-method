@@ -1403,7 +1403,7 @@ class AimUiTests(unittest.TestCase):
                     encoding="utf-8",
                 )
             decision_names = {
-                42: "42-gate-e.md",
+                42: "2026-08-29-gate-e-di-42.md",
                 43: "2026-08-29-gate-e-di-43.md",
                 44: "2026-08-29-gate-e-di-44.md",
                 45: "2026-08-29-gate-e-di-45.md",
@@ -1416,6 +1416,27 @@ class AimUiTests(unittest.TestCase):
                     f"Accepted at: 2026-08-29T15:{number}:00Z\n",
                     encoding="utf-8",
                 )
+            (aim / "decisions/2026-08-29-gate-e-di-42.md").write_text(
+                "# Gate E — DI-42\n\n"
+                "Decision: accepted\n\n"
+                "Authority: explicit Product Owner decision from the user.\n\n"
+                "This decision accepts DI-42 only.\n\n"
+                "Accepted at: `2026-08-29T15:42:00Z`.\n",
+                encoding="utf-8",
+            )
+            (aim / "decisions/42-gate-e.md").write_text(
+                "# Gate E acceptance index — DI-42\n\n"
+                "Decision: accepted\n\n"
+                "Accepted at: `2026-08-29T15:42:00Z`\n\n"
+                "This stable increment-indexed record points to the authoritative "
+                "Product Owner\n"
+                "decision in `2026-08-29-gate-e-di-42.md`. It exists so accepted "
+                "DI-42 history\n"
+                "remains visible while the same Epic proceeds through a later active "
+                "Increment.\n"
+                "It grants no additional authority or effect.\n",
+                encoding="utf-8",
+            )
             before = {
                 path.relative_to(aim).as_posix(): path.read_bytes()
                 for path in aim.rglob("*")
@@ -1444,6 +1465,140 @@ class AimUiTests(unittest.TestCase):
         self.assertEqual(board["roadmap"]["eligibleCount"], 0)
         self.assertEqual(board["warnings"], [])
         self.assertEqual(after, before)
+
+    def test_legacy_gate_e_index_variants_fail_closed(self) -> None:
+        for case in (
+            "missing_target",
+            "timestamp_mismatch",
+            "missing_timestamp",
+            "wrong_target_di",
+            "index_mismatch",
+            "symlink_target",
+            "extra_decision",
+        ):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as temporary:
+                runtime = state("epic_complete")
+                runtime.update(
+                    {
+                        "activeIncrementId": None,
+                        "currentRole": "PO",
+                        "lastGatePassed": "Gate E",
+                        "previousIncrementId": "DI-45",
+                        "previousIncrementStatus": "accepted",
+                        "gateEAcceptance": ".aim/decisions/45-gate-e.md",
+                        "acceptedIncrementIds": ["DI-42", "DI-45"],
+                    }
+                )
+                repo = self._repo(Path(temporary), runtime)
+                aim = repo / ".aim"
+                (aim / "increments/001-wip.md").unlink()
+                for number in (42, 45):
+                    (aim / f"increments/{number}-plan.md").write_text(
+                        f"# DI-{number} — Historical behavior\n\nEpic: EPIC-TEST-001\n",
+                        encoding="utf-8",
+                    )
+                (aim / "decisions/45-gate-e.md").write_text(
+                    "# Gate E — DI-45 Accepted\n\nIncrement: DI-45\n\n"
+                    "Decision: accepted\n",
+                    encoding="utf-8",
+                )
+                target_name = "2026-08-29-gate-e-di-42.md"
+                (aim / "decisions/42-gate-e.md").write_text(
+                    "# Gate E acceptance index — DI-42\n\n"
+                    "Decision: accepted\n\n"
+                    "Accepted at: 2026-08-29T09:07:29Z\n\n"
+                    f"Authoritative decision: `{target_name}`\n"
+                    + ("\nRelated Increment: DI-999\n" if case == "index_mismatch" else ""),
+                    encoding="utf-8",
+                )
+                if case != "missing_target":
+                    accepted_at = (
+                        "2026-08-29T09:08:29Z"
+                        if case == "timestamp_mismatch"
+                        else "2026-08-29T09:07:29Z"
+                    )
+                    target = aim / "decisions" / target_name
+                    target_content = (
+                        "# Gate E — DI-42 Accepted\n\n"
+                        f"Increment: {'DI-999' if case == 'wrong_target_di' else 'DI-42'}\n\n"
+                        "Decision: accepted\n\n"
+                        + (
+                            ""
+                            if case == "missing_timestamp"
+                            else f"Accepted at: {accepted_at}\n"
+                        )
+                    )
+                    if case == "symlink_target":
+                        outside = repo / "outside-gate-e.md"
+                        outside.write_text(target_content, encoding="utf-8")
+                        target.symlink_to(outside)
+                    else:
+                        target.write_text(target_content, encoding="utf-8")
+                if case == "extra_decision":
+                    (aim / "decisions/2026-08-28-gate-e-di-42.md").write_text(
+                        "# Gate E — DI-42 Accepted\n\nIncrement: DI-42\n\n"
+                        "Decision: accepted\n\n"
+                        "Accepted at: 2026-08-28T09:07:29Z\n",
+                        encoding="utf-8",
+                    )
+                board = build_board(repo)
+
+            increment = next(
+                item for item in board["epics"][0]["increments"] if item["id"] == "DI-42"
+            )
+            self.assertEqual(increment["column"], "backlog")
+            self.assertTrue(
+                any("acceptance is hidden" in warning for warning in board["warnings"])
+            )
+
+    def test_matching_legacy_and_dated_decisions_without_index_stay_ambiguous(
+        self,
+    ) -> None:
+        runtime = state("epic_complete")
+        runtime.update(
+            {
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "previousIncrementId": "DI-45",
+                "previousIncrementStatus": "accepted",
+                "gateEAcceptance": ".aim/decisions/45-gate-e.md",
+                "acceptedIncrementIds": ["DI-42", "DI-45"],
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "increments/001-wip.md").unlink()
+            for number in (42, 45):
+                (aim / f"increments/{number}-plan.md").write_text(
+                    f"# DI-{number} — Historical behavior\n\nEpic: EPIC-TEST-001\n",
+                    encoding="utf-8",
+                )
+            (aim / "decisions/45-gate-e.md").write_text(
+                "# Gate E — DI-45 Accepted\n\nIncrement: DI-45\n\n"
+                "Decision: accepted\n",
+                encoding="utf-8",
+            )
+            for name in ("42-gate-e.md", "2026-08-29-gate-e-di-42.md"):
+                (aim / "decisions" / name).write_text(
+                    "# Gate E — DI-42 Accepted\n\nIncrement: DI-42\n\n"
+                    "Decision: accepted\n\n"
+                    "Accepted at: 2026-08-29T09:07:29Z\n",
+                    encoding="utf-8",
+                )
+            board = build_board(repo)
+
+        increment = next(
+            item for item in board["epics"][0]["increments"] if item["id"] == "DI-42"
+        )
+        self.assertEqual(increment["column"], "backlog")
+        self.assertTrue(
+            any(
+                "multiple supported Gate E decisions" in warning
+                for warning in board["warnings"]
+            )
+        )
 
     def test_ambiguous_or_mismatched_historical_gate_e_decisions_fail_closed(self) -> None:
         for case in ("ambiguous", "mismatched"):
@@ -2107,7 +2262,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/board", timeout=3) as response:
                     payload = json.load(response)
                     self.assertTrue(payload["source"]["readOnly"])
-                    self.assertEqual(payload["product"]["version"], "3.0.3")
+                    self.assertEqual(payload["product"]["version"], "3.0.4")
                     self.assertTrue(payload["product"]["capturedAtLaunch"])
                     self.assertIn(
                         payload["backgroundControl"]["status"],
@@ -2117,7 +2272,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/health", timeout=3) as response:
                     health = json.load(response)
                     self.assertEqual(health["protocolVersion"], "1.3")
-                    self.assertEqual(health["productVersion"], "3.0.3")
+                    self.assertEqual(health["productVersion"], "3.0.4")
                     self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST")
                 with self.assertRaises(HTTPError) as error:

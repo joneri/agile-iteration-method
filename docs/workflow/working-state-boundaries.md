@@ -53,10 +53,18 @@ conveniently named file. Historical compatibility recognizes only
 apply. The `DI-*` value is the identity; the date prefix contributes neither
 authority nor uniqueness. Same-day Increments with the same title remain
 distinct through their different DI identities. More than one supported file
-for one DI is ambiguous and fails closed instead of selecting by date. Writers
-must keep the DI in the filename, collision-check the exact destination, and
-never use date or title as identity. The latest terminal Increment uses the
-explicit state-linked evidence contract.
+for one DI is ambiguous and fails closed instead of selecting by date. One
+bounded compatibility exception treats an explicit `Gate E acceptance index —
+DI-*` legacy file and its one named date-prefixed target as one decision. The
+index and target must be regular files in the same decisions directory, accept
+only the requested DI, declare the same valid timezone-aware `Accepted at`
+instant, and leave no additional supported candidate. Missing, malformed,
+mismatched, symlinked, or additional evidence remains fail-closed. Matching DI,
+status, or timestamp without the explicit index relation never collapses two
+decisions. Writers must keep the DI in the filename, collision-check the exact
+destination, and never use date or title as identity. New state uses the
+explicit state-linked evidence contract instead of creating compatibility
+indexes. The latest terminal Increment uses that state-linked contract.
 
 Every new Increment plan declares `Epic: <EPIC-ID>`. Portfolio completion
 requires exactly one plan whose Increment and Epic identities match the
