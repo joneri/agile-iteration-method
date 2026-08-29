@@ -441,6 +441,7 @@ def validate_rendered_package(rendered: dict[Path, bytes]) -> None:
         "Auto",
         "main AIM thread",
         "sequential fallback",
+        "/aim discuss",
         "/aim configure-agents",
         "/aim calibrate-repo",
         "untrusted evidence",

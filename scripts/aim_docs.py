@@ -64,7 +64,7 @@ def audit(repo_root: Path) -> list[str]:
 
     required_features = (
         "Delivery loop", "Audience-context integrity", "Control and cost", "Repository knowledge",
-        "AIM UI", "Reflect",
+        "AIM UI", "Discuss", "Reflect",
         "Project specialists", "Adapters and commands",
         "Installation and upgrades", "Validation and release safety",
     )

@@ -77,7 +77,37 @@ class AdapterCommandContractTests(unittest.TestCase):
     def test_complete_adapter_command_contract_is_healthy(self) -> None:
         completed = self._validate(REPO_ROOT)
         self.assertEqual(completed.returncode, 0, completed.stdout)
-        self.assertIn("canonical command intents: 18", completed.stdout)
+        self.assertIn("canonical command intents: 19", completed.stdout)
+
+    def test_discuss_is_a_first_class_read_only_cross_adapter_command(self) -> None:
+        surfaces = (
+            "docs/workflow/adapter-command-contract.md",
+            "docs/workflow/agile-iteration-method.md",
+            "docs/product/aim-ui.md",
+            "adapters/portable/agile-iteration-method/SKILL.md",
+            "adapters/codex/agile-iteration-method/SKILL.md",
+            ".github/skills/aim/SKILL.md",
+            ".github/agents/aim.agent.md",
+            ".github/prompts/discuss-aim.prompt.md",
+            ".claude/skills/aim/SKILL.md",
+            ".claude/commands/discuss-aim.md",
+        )
+        combined = "\n".join(
+            (REPO_ROOT / relative).read_text(encoding="utf-8")
+            for relative in surfaces
+        )
+        for relative in surfaces:
+            content = (REPO_ROOT / relative).read_text(encoding="utf-8")
+            with self.subTest(surface=relative):
+                self.assertIn("/aim discuss", content)
+        for marker in (
+            "$agile-iteration-method discuss",
+            "untrusted evidence",
+            "read-only",
+            "separate explicit",
+            "do not execute",
+        ):
+            self.assertIn(marker, combined)
 
     def test_portfolio_chat_intents_preserve_main_thread_ownership(self) -> None:
         canonical = (REPO_ROOT / "docs/workflow/adapter-command-contract.md").read_text(
@@ -339,7 +369,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "3.0.0")
+        self.assertEqual(version, "3.0.1")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",

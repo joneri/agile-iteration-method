@@ -42,6 +42,7 @@ Every AIM skill must resolve:
 - `/aim validate`
 - `/aim help`
 - `/aim config`
+- `/aim discuss`
 - `/aim ui`
 - `/aim to-backlog`
 - `/aim repair-catalog`

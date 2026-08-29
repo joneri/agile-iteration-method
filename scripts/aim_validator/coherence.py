@@ -35,6 +35,7 @@ CANONICAL_COMMANDS = (
     "/aim validate",
     "/aim help",
     "/aim config",
+    "/aim discuss",
     "/aim configure-agents",
     "/aim calibrate-repo",
     "/aim remember-repo",

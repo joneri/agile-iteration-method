@@ -757,6 +757,15 @@ before the gate is presented. The UI may use this marker only to time control
 visibility; it cannot infer approval or advance state from it. Missing markers
 retain legacy behavior for existing workspaces.
 
+`/aim discuss [question]` is an analysis-only AIM capability, not a delivery
+phase or Gate. It may use the complete AIM method plus progressively selected
+repository profile, current runtime, decision, and accepted-delivery evidence
+to explore product direction. It never creates or edits runtime state, source,
+Backlog, profiles, durable knowledge, Epics, Increments, or Gate decisions. A
+discussion may recommend one separate explicit promotion action but cannot
+execute it. AIM UI may provide a visual entry point, while the shared command
+contract remains the semantic owner across adapters.
+
 ### Role-specific response patterns
 
 - `PO` at Gate A:

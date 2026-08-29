@@ -234,6 +234,7 @@ class PublicSkillTests(unittest.TestCase):
             "/aim validate",
             "/aim help",
             "/aim config",
+            "/aim discuss [question]",
             "/aim configure-agents",
             "/aim calibrate-repo",
             '/aim remember-repo <category> "<rule>"',
@@ -388,6 +389,12 @@ class PublicSkillTests(unittest.TestCase):
             "scope change": ("scope expansion beyond Gate B", "escalation"),
             "sequential fallback": ("sequential fallback", "without changing the runtime contract"),
             "configure agents": ("/aim configure-agents", "aim.roles.yaml", "selected"),
+            "discuss without delivery": (
+                "/aim discuss",
+                "read-only",
+                "untrusted evidence",
+                "separate explicit AIM promotion action",
+            ),
             "main thread owns active state": ("main AIM thread", ".aim/state.json", "sole owner"),
             "portfolio admission": ("portfolio capacity", "fails closed", "read-only"),
             "card action handoff": (

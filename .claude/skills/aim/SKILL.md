@@ -1,6 +1,6 @@
 ---
 name: aim
-description: Run the complete AIM 2.0 command family and orchestrate project-specific PO, TDO, Dev, and Reviewer subagents. Use for /aim intents, AIM UI lifecycle, Epics, Done Increments, gates, repo calibration, reflection, agent configuration, upgrades, and AIM validation.
+description: Run the complete AIM 2.0 command family and orchestrate project-specific PO, TDO, Dev, and Reviewer subagents. Use for /aim intents, repository-aware product discussion, AIM UI lifecycle, Epics, Done Increments, gates, repo calibration, reflection, agent configuration, upgrades, and AIM validation.
 ---
 
 # AIM 2.0 for Claude Code
@@ -27,6 +27,7 @@ Recognize and execute the equivalent intent for:
 - `/aim validate`
 - `/aim help`
 - `/aim config`
+- `/aim discuss`
 - `/aim ui`
 - `/aim to-backlog`
 - `/aim repair-catalog`
@@ -43,6 +44,13 @@ Recognize and execute the equivalent intent for:
 
 If literal routing is unavailable, report that limitation and preserve the same
 intent in plain language. Syntax may fall back; semantics may not.
+
+For `/aim discuss [question]`, load only relevant AIM and repository evidence
+under the repository trust boundary. Keep the complete method available when
+needed, but do not create or edit source, `.aim`, Backlog, profiles, durable
+knowledge, Epics, Increments, or Gate decisions. A useful conclusion may
+recommend one separate explicit promotion action; do not execute it. AIM UI is
+an optional visual entry point to this same command contract.
 
 For `/aim ui`, follow the trusted launcher resolution and loopback-only
 lifecycle contract in `docs/workflow/adapter-command-contract.md`. Bare `/aim

@@ -135,6 +135,7 @@ If instructions conflict, escalate.
 - `/aim help` - show the thin front door: start, continue, validate, and the next command
 - `/aim validate` - run or explain AIM runtime integrity checks
 - `/aim config` - show effective runtime configuration and key repo-aware policy
+- `/aim discuss [question]` - explore product direction with relevant AIM and repository context without writing or starting delivery
 - `/aim ui [start|open|status|stop] [repo]` - control the trusted repo-bound, loopback-only AIM UI
 - `/aim to-backlog [inline input | from <source>]` - safely populate planned AIM UI Backlog cards and open the control room
 - `/aim repair-catalog <candidate-id>` - preview and explicitly approve one rollback-safe completed-history repair

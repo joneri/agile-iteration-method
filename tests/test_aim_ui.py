@@ -765,6 +765,8 @@ class AimUiTests(unittest.TestCase):
             ".aim/decisions/001-gate-e.md",
         )
         self.assertIn("without creating or editing files", discussion["promptPreamble"])
+        self.assertIn("$agile-iteration-method discuss", discussion["promptPreamble"])
+        self.assertIn("/aim discuss", discussion["promptPreamble"])
         self.assertIn("separate explicit AIM action", discussion["boundary"])
 
     def test_discuss_frontend_keeps_handoff_reviewable_and_local(self) -> None:

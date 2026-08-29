@@ -1,6 +1,6 @@
 # AIM feature guide
 
-This is the short map of what AIM 2.8 does. Follow the links only when you need
+This is the short map of what AIM 3.0 does. Follow the links only when you need
 the operating detail.
 
 ## Delivery loop
@@ -60,6 +60,22 @@ See [cost profiles](../workflow/cost-control-mode.md).
 
 See [AIM UI Beta](aim-ui.md).
 
+## Discuss
+
+- `/aim discuss [question]` explores product direction, architecture,
+  tradeoffs, and recent delivery without starting work.
+- Explicit skill invocation and plain-language discussion requests preserve the
+  same read-only behavior across Codex, Claude Code, and GitHub Copilot.
+- AIM selects only relevant repository profile, runtime, decision, delivery,
+  code, documentation, and method context under the repository trust boundary.
+- Discuss never changes source, `.aim`, Backlog, profiles, durable knowledge,
+  Epics, Increments, or Gates.
+- AIM UI is an optional visual entry point to the same command contract.
+- A conclusion may recommend one separate promotion action but cannot execute
+  it.
+
+See the [adapter command contract](../workflow/adapter-command-contract.md#aim-discuss).
+
 ## Repository knowledge
 
 - `/aim calibrate-repo` verifies commands, technologies, important areas, and risk.
@@ -102,7 +118,7 @@ See [project-agent configuration](../workflow/project-agent-configuration.md).
 Codex, Claude Code, and GitHub Copilot each receive a native AIM skill. All map
 the same command family:
 
-`start`, `continue`, `status`, `validate`, `help`, `config`,
+`start`, `continue`, `status`, `validate`, `help`, `config`, `discuss`,
 `configure-agents`, `calibrate-repo`, `remember-repo`, `forget-repo`,
 `reflect`, `reflect-all`, `upgrade`, `mode`, `cost`, and `replan`.
 

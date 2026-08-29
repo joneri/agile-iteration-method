@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-08-29 - AIM 3 patch release v3.0.1
+- Made `/aim discuss [question]` a first-class, read-only command intent across
+  Codex, Claude Code, and GitHub Copilot.
+- Defined explicit skill selection and plain-language discussion as equivalent
+  routes to the same progressively loaded AIM and repository context.
+- Kept Discuss outside the delivery loop: it cannot edit source, runtime state,
+  Backlog, profiles, durable knowledge, Epics, Increments, or Gate decisions.
+- Limited discussion outcomes to recommending one separate explicit promotion
+  action that the operator must invoke and review later.
+- Reframed AIM UI Discuss as an optional visual entry point to the shared
+  command contract instead of the owner of separate behavior.
+- Added native Claude and Copilot entry helpers, adapter-parity validation,
+  public package coverage, and regression tests.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`11`. Existing AIM 3 workspaces and UI instances require no migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then start a fresh agent
+session. Adaptive installations can rerun their reviewed preview/apply flow.
+
+Known limitations: Discuss is an agent command contract rather than a separate
+chat service. Available context depends on the active adapter and repository;
+missing optional evidence is reported rather than fetched or invented. AIM UI
+still opens a reviewable Codex handoff and does not send it automatically.
+
 ## 2026-08-29 - AIM 3 release v3.0.0
 - Added a read-only Discuss workspace that prepares reviewable Codex prompts
   from bounded AIM method, repository, runtime, decision, and delivery context

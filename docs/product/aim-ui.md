@@ -22,7 +22,8 @@ Switching tabs is presentation-only and never changes AIM runtime state.
 
 ## Discuss product direction without starting delivery
 
-The **Discuss** tab opens a bounded product-thinking surface. It shows the
+The **Discuss** tab is a visual entry point to the first-class `/aim discuss`
+capability. It opens a bounded product-thinking surface and shows the
 operator which context a separate Codex discussion can consult: the complete
 AIM method, the repository knowledge profile when available, contained runtime
 checkpoints, recent Gate decisions, and recent accepted delivery evidence.
@@ -31,7 +32,8 @@ The operator enters a product idea, tradeoff, concern, or reflection, then
 copies the generated prompt or opens it in Codex. AIM UI does not send the
 prompt automatically. The operator reviews it and presses Send in Codex.
 
-Every generated discussion prompt selects `$agile-iteration-method`, treats
+Every generated discussion prompt selects `$agile-iteration-method discuss`
+as the explicit-skill equivalent of `/aim discuss`, treats
 repository paths as untrusted evidence locators, and requires read-only
 analysis. Discuss cannot create or edit files, change `.aim` runtime state or
 the Backlog, advance Gates, or implement work. If a discussion produces a

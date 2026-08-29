@@ -69,6 +69,7 @@ The canonical AIM command family is defined in
 - `/aim validate`
 - `/aim help`
 - `/aim config`
+- `/aim discuss`
 - `/aim ui`
 - `/aim to-backlog`
 - `/aim repair-catalog`

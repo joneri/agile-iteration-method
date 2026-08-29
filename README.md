@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 3.0
 
-![AIM 3.0.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 3.0.1 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -130,18 +130,17 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v3.0.0
+## What is new in v3.0.1
 
-AIM UI now includes a read-only Discuss workspace for exploring product
-direction with bounded method, repository, runtime, decision, and delivery
-context. The generated prompt remains reviewable and cannot start delivery or
-change repository state.
+AIM Discuss is now a first-class read-only capability across Codex, Claude Code,
+and GitHub Copilot. Use `/aim discuss [question]`, an explicit AIM skill intent,
+or an equivalent plain-language request to explore product direction with
+relevant method, repository, runtime, decision, and delivery context.
 
-When the UI is launched from the authoritative Codex task, exact Start and
-Approve actions can run in that bound task through a local, fail-closed bridge.
-The server recomputes the current board before dispatch, rejects stale or
-free-form input, preserves one runtime owner, and returns unattended approval
-or input requests to the operator.
+Discuss cannot start delivery or change source, `.aim`, Backlog, profiles,
+durable knowledge, Epics, Increments, or Gates. AIM UI remains available as a
+visual entry point to the same command contract, not a separate discussion
+system.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
@@ -165,6 +164,6 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v3.0.0**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v3.0.1**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).
