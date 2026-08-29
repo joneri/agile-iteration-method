@@ -302,6 +302,23 @@ the same PO assessment and recommendation before mutation. In Portfolio Auto,
 the same recommendation is recorded before a separately revalidated mandate
 may authorize eligible Epic closure and candidate completion.
 
+After an ordinary user decision `continue`, the adapter creates the next
+canonical `DI-*` plan, then resolves the trusted package-owned
+`scripts/aim_runtime_contract.py continue` command. Preview binds the exact
+contained authority path, source-state SHA-256, new Increment, and canonical
+candidate. Apply requires the previewed digest, rechecks freshness, validates
+the candidate against the shipped runtime-state schema and coherence rules, and
+atomically replaces `state.json`. The only published next checkpoint is
+`gate_b_pending` with `currentRole: TDO` and `lastGatePassed: Gate A`; internal
+planning labels such as `increment_planning` are never runtime states.
+
+Read-only AIM UI may tolerate only status-only drift for presentation. A
+syntactically valid, safely contained workspace with a canonical active `DI-*`
+and otherwise canonical required fields remains visible as a neutral
+in-progress card labelled “Status updating” with its raw status in compact
+diagnostics. The adapter must hide all Gate actions for that projection. Any additional drift remains
+fail-closed, and the UI never normalizes or writes the observed state.
+
 ## Portfolio-control chat intents
 
 Portfolio control is expressed as explicit chat intent rather than a second

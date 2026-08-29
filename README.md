@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 2.9
 
-![AIM 2.9.5 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 2.9.6 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -130,16 +130,15 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v2.9.5
+## What is new in v2.9.6
 
-AIM UI now preserves accepted terminal Portfolio history when a completed run
-is no longer active. Reconciliation uses the catalogued workspace and shared
-terminal evidence contract, including legacy Gate E fields written as Markdown
-bullets.
+AIM now moves from an accepted Increment to the next Gate B checkpoint through
+one schema-validated atomic state replacement. The new Increment, Gate A
+checkpoint, and canonical `gate_b_pending` status therefore appear together.
 
-New Portfolio completion also verifies that the runtime Increment has exactly
-one explicit plan relation to its Epic. Legacy state-linked plans without that
-field remain visible, but cannot silently authorize new completion.
+If a bounded status-only deviation still slips through, AIM UI shows a calm
+`Status updating` work-in-progress card without granting Gate authority. Invalid
+or compound runtime state continues to fail closed.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
@@ -163,6 +162,6 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v2.9.5**. See [CHANGELOG.md](CHANGELOG.md).
+Current product release: **v2.9.6**. See [CHANGELOG.md](CHANGELOG.md).
 
 Documentation is licensed under [CC BY 4.0](LICENSE).

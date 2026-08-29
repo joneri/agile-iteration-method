@@ -1626,6 +1626,64 @@ class AimUiTests(unittest.TestCase):
             "Keep as history and create a new Roadmap",
         )
 
+    def test_unknown_status_keeps_one_calm_non_authoritative_card(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), state("increment_planning"))
+            self._portfolio(repo, ".")
+
+            board = build_board(repo)
+
+        self.assertEqual(len(board["epics"]), 1)
+        epic = board["epics"][0]
+        increment = epic["increments"][0]
+        self.assertEqual(epic["runtimeStatus"], "increment_planning")
+        self.assertEqual(epic["displayStatus"], "Status updating")
+        self.assertEqual(increment["column"], "work_in_progress")
+        self.assertEqual(increment["runtimeStatus"], "increment_planning")
+        self.assertEqual(increment["displayStatus"], "Status updating")
+        self.assertEqual(increment["actions"], [])
+        self.assertEqual(epic["actions"], [])
+        self.assertEqual(board["workspaceDiagnostics"], [])
+        self.assertIsNone(board["recovery"])
+        self.assertEqual(board["health"], "healthy")
+        self.assertEqual(
+            board["runtimeStatusDiagnostics"][0]["observedStatus"],
+            "increment_planning",
+        )
+
+    def test_unknown_status_with_other_contract_drift_remains_fail_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            runtime = state("increment_planning")
+            runtime["currentRole"] = "Planner"
+            repo = self._repo(Path(temporary), runtime)
+            self._portfolio(repo, ".")
+
+            board = build_board(repo)
+
+        self.assertEqual(board["epics"], [])
+        self.assertEqual(board["runtimeStatusDiagnostics"], [])
+        self.assertEqual(len(board["workspaceDiagnostics"]), 1)
+        self.assertEqual(board["health"], "degraded")
+        self.assertIsNotNone(board["recovery"])
+
+    def test_unknown_status_requires_complete_bounded_runtime_surface(self) -> None:
+        for mutation in ("missing_parallel", "oversized_status"):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                runtime = state("increment_planning")
+                if mutation == "missing_parallel":
+                    runtime.pop("parallelSupport")
+                else:
+                    runtime["epicStatus"] = "x" * 65
+                repo = self._repo(Path(temporary), runtime)
+                self._portfolio(repo, ".")
+
+                board = build_board(repo)
+
+            self.assertEqual(board["epics"], [])
+            self.assertEqual(board["runtimeStatusDiagnostics"], [])
+            self.assertEqual(len(board["workspaceDiagnostics"]), 1)
+            self.assertIsNotNone(board["recovery"])
+
     def test_legacy_active_checkpoint_recommends_reviewed_migration(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))

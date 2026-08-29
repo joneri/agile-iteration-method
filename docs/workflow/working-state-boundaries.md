@@ -225,10 +225,31 @@ mutation. It does not infer a prior recommendation from chat history and does
 not skip directly to TDO or Epic closure.
 
 If the PO continues an Epic after accepting its active Increment, TDO creates
-the next canonical `DI-*` and returns the workspace to Gate B. Until that
-identity exists, the Epic may be visible without an Increment card. Planning
-`INC-*` candidates remain intent and activation traceability; they never
-masquerade as runtime Increments or move through runtime columns.
+the next canonical `DI-*` plan before changing runtime authority. The main
+thread then previews and applies the trusted packaged
+`scripts/aim_runtime_contract.py continue` transition, bound to the exact
+authority path and observed source digest. The helper validates the complete
+candidate against the shipped runtime-state schema and coherence rules before
+atomically replacing `state.json`.
+
+The one published transition is `gate_b_pending` with the new
+`activeIncrementId`, `currentRole: TDO`, `lastGatePassed: Gate A`, and preserved
+accepted history. `increment_planning` and other internal planning labels must
+never be persisted. Validation, containment, or freshness failure keeps the
+previous state byte-for-byte unchanged.
+
+Until the next `DI-*` identity exists, the Epic may be visible without an
+Increment card. Planning `INC-*` candidates remain intent and activation
+traceability; they never masquerade as runtime Increments or move through
+runtime columns.
+
+Read-only observers keep authority strict while degrading presentation calmly.
+When an unknown `epicStatus` is the only drift in an otherwise canonical,
+safely contained workspace with an active `DI-*`, AIM UI may project that one
+card as “Status updating” in Work in progress. It retains the raw status in a
+compact diagnostic and publishes no Gate actions. Any additional state,
+identity, Gate, role, syntax, containment, or symlink problem remains
+fail-closed.
 
 ### Branch switch
 

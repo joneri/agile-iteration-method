@@ -689,6 +689,66 @@ def _validate_state(state: dict[str, Any]) -> None:
             raise AimUiError(f"state.json has a non-canonical {field} value.")
 
 
+def _status_only_fallback(state: dict[str, Any]) -> dict[str, str] | None:
+    """Return calm presentation metadata when only epicStatus is unknown."""
+
+    observed = state.get("epicStatus")
+    if (
+        not isinstance(observed, str)
+        or not observed.strip()
+        or re.fullmatch(r"[A-Za-z0-9_-]{1,64}", observed) is None
+        or observed in STATE_TO_COLUMN
+        or not isinstance(state.get("activeIncrementId"), str)
+    ):
+        return None
+    required = {
+        "stateSchemaVersion",
+        "aimVersion",
+        "mode",
+        "costProfile",
+        "epicId",
+        "epicStatus",
+        "activeIncrementId",
+        "currentRole",
+        "lastGatePassed",
+        "platform",
+        "parallelSupport",
+        "commitMode",
+        "updatedAt",
+    }
+    if not required.issubset(state):
+        return None
+    if any(
+        not isinstance(state.get(field), str) or not state[field]
+        for field in ("aimVersion", "platform", "commitMode")
+    ):
+        return None
+    parallel = state.get("parallelSupport")
+    if (
+        not isinstance(parallel, dict)
+        or not isinstance(parallel.get("available"), bool)
+        or not isinstance(parallel.get("enabled"), bool)
+        or not isinstance(parallel.get("policy"), str)
+        or not parallel["policy"]
+    ):
+        return None
+    projected = dict(state)
+    projected["epicStatus"] = "increment_in_progress"
+    try:
+        _validate_state(projected)
+    except AimUiError:
+        return None
+    return {
+        "observedStatus": observed,
+        "displayStatus": "Status updating",
+        "projectionStatus": "increment_in_progress",
+        "message": (
+            "AIM UI is showing this safely contained card as in progress without "
+            "inferring a Gate or enabling runtime actions."
+        ),
+    }
+
+
 def _contract_drift(state: dict[str, Any]) -> list[str]:
     """Name legacy values without normalizing or authorizing them."""
 
@@ -1117,7 +1177,7 @@ def _workspace_roots(
                 f"{diagnostic['epicId']}: orphaned/invisible workspace at "
                 f"{diagnostic['statePath']}. {reason}"
             )
-        elif drift:
+        elif drift and _status_only_fallback(state) is None:
             diagnostic = _workspace_diagnostic(
                 repo_root,
                 candidate,
@@ -1224,7 +1284,9 @@ def _project_epic(
     repo_root: Path, aim_root: Path, warnings: list[str]
 ) -> dict[str, Any]:
     state = _read_json(aim_root / "state.json")
-    _validate_state(state)
+    status_fallback = _status_only_fallback(state)
+    if status_fallback is None:
+        _validate_state(state)
     epic_markdown = _read_markdown(aim_root / "epic.md")
 
     epic_id = str(state["epicId"])
@@ -1281,8 +1343,13 @@ def _project_epic(
                 if is_active or is_reserved
                 else "done_increment_accepted" if accepted else "gate_b_pending"
             )
-            column = STATE_TO_COLUMN[runtime_status]
-            owner = state["currentRole"] if is_active else STATE_TO_OWNER[runtime_status]
+            projection_status = (
+                status_fallback["projectionStatus"]
+                if is_active and status_fallback is not None
+                else runtime_status
+            )
+            column = STATE_TO_COLUMN[projection_status]
+            owner = state["currentRole"] if is_active else STATE_TO_OWNER[projection_status]
             attention = None
             if is_active and runtime_status == "blocked":
                 attention = "AIM is blocked and needs operator input."
@@ -1295,6 +1362,14 @@ def _project_epic(
                     "title": _heading(primary_markdown, increment_id),
                     "column": column,
                     "runtimeStatus": runtime_status,
+                    "displayStatus": (
+                        status_fallback["displayStatus"]
+                        if is_active and status_fallback is not None
+                        else None
+                    ),
+                    "runtimeStatusDiagnostic": (
+                        status_fallback if is_active and status_fallback is not None else None
+                    ),
                     "canonicalOwner": owner,
                     "gate": state.get("lastGatePassed") if is_active else "Gate E",
                     "mode": state["mode"],
@@ -1331,6 +1406,10 @@ def _project_epic(
         "active": state["epicStatus"] != "epic_complete",
         "lifecycle": "closed" if state["epicStatus"] == "epic_complete" else "running",
         "runtimeStatus": state["epicStatus"],
+        "displayStatus": (
+            status_fallback["displayStatus"] if status_fallback is not None else None
+        ),
+        "runtimeStatusDiagnostic": status_fallback,
         "activeIncrementId": active_id,
         "plannedIncrementId": planned_id,
         "portfolioCandidateId": state.get("portfolioCandidateId"),
@@ -1482,6 +1561,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
         "epics": [],
         "workspaceDiagnostics": workspace_diagnostics,
+        "runtimeStatusDiagnostics": [],
         "recovery": None,
         "roadmap": None,
         "history": {
@@ -1675,6 +1755,15 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             )
     for epic in base["epics"]:
         epic["focused"] = epic["id"] == control["focusedEpicId"]
+    base["runtimeStatusDiagnostics"] = [
+        {
+            "epicId": epic["id"],
+            "workspace": epic["workspace"],
+            **epic["runtimeStatusDiagnostic"],
+        }
+        for epic in base["epics"]
+        if epic.get("runtimeStatusDiagnostic") is not None
+    ]
     _attach_actions(
         repo_root, base["epics"], control, portfolio_run, backlog_updated_at, warnings
     )

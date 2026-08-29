@@ -346,8 +346,15 @@ The normal path for one increment is:
 8. `done_increment_accepted`
 
 From there:
-- if the Epic continues, prepare the next increment and return to `gate_b_pending`
+- if the Epic continues, prepare the next increment and publish one direct
+  transition to `gate_b_pending`
 - if the Epic is complete, transition to `epic_complete`
+
+Runtime writers must serialize the complete candidate state, validate it
+against the shipped runtime-state schema and transition coherence rules, bind
+the write to the observed source bytes, and atomically replace `state.json`.
+Validation or freshness failure leaves the prior file unchanged. Internal
+planning labels such as `increment_planning` are not observable runtime states.
 
 ### Exceptional states
 
@@ -1072,6 +1079,20 @@ that explicit bounded PO authority: after the same evidence-based PO
 recommendation, the main thread records a separate mandate-provenanced Epic
 closure, completes the candidate, and
 activates the next snapshot candidate without a per-Epic user stop.
+
+For ordinary continuation, the main thread uses the trusted packaged
+`scripts/aim_runtime_contract.py continue` transition. It previews the exact
+authority path, source digest, next `DI-*`, and canonical candidate before a
+digest-matched apply. The published checkpoint is `gate_b_pending` with the new
+active Increment, `currentRole: TDO`, and Gate A as the latest passed Gate.
+
+AIM UI remains strict about runtime authority but tolerant in presentation. If
+a safely contained, syntactically valid workspace has an unknown `epicStatus`
+and every other required field is canonical, the UI may keep the affected card
+visible as a neutral in-progress projection labelled “Status updating”. It must
+preserve the raw value in technical diagnostics, hide all Gate actions, and
+avoid board-wide alarm UI.
+Any additional contract drift retains the existing fail-closed behavior.
 
 ---
 

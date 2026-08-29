@@ -79,6 +79,20 @@ class PublicSkillTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 0, completed.stderr)
         self.assertIn("start", completed.stdout)
         self.assertIn("stop", completed.stdout)
+        continuation_help = subprocess.run(
+            [
+                sys.executable,
+                str(package / "scripts/aim_runtime_contract.py"),
+                "continue",
+                "--help",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        self.assertEqual(continuation_help.returncode, 0, continuation_help.stderr)
+        self.assertIn("authority-state-path", continuation_help.stdout)
+        self.assertIn("expected-state-sha256", continuation_help.stdout)
         backlog_help = subprocess.run(
             [sys.executable, str(package / "scripts/aim_backlog.py"), "--help"],
             capture_output=True,
@@ -402,6 +416,15 @@ class PublicSkillTests(unittest.TestCase):
                 "rationale",
                 "separate disposition decision",
                 "Resume at this checkpoint",
+            ),
+            "canonical continuation with calm UI fallback": (
+                "scripts/aim_runtime_contract.py",
+                "gate_b_pending",
+                "increment_planning",
+                "runtime-state schema",
+                "byte-for-byte unchanged",
+                "Status updating",
+                "hide every Gate action",
             ),
         }
         for scenario, markers in scenarios.items():

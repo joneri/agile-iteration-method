@@ -595,6 +595,22 @@ the user's separate disposition decision. Resume at this checkpoint repeats the
 assessment before mutation. Portfolio Auto records the same recommendation
 before its separately revalidated mandate may authorize eligible closure.
 
+After an ordinary user decision `continue`, create the next canonical `DI-*`
+plan, then use the trusted package-owned `scripts/aim_runtime_contract.py
+continue` preview and digest-matched apply. It must validate the complete
+candidate against the shipped runtime-state schema and coherence rules before
+atomically replacing the exact contained `state.json`. Publish only
+`gate_b_pending` with the new active Increment, `currentRole: TDO`, and
+`lastGatePassed: Gate A`; never persist `increment_planning` or another internal
+planning label. Failure leaves the prior state byte-for-byte unchanged.
+
+AIM UI may present an unknown `epicStatus` as a calm “Status updating”
+in-progress card only when the workspace is safely contained, the active
+`DI-*` and all other required fields are canonical, and no other drift exists.
+Preserve the raw value in compact diagnostics and hide every Gate action. Any
+additional drift remains fail-closed; presentation fallback never normalizes or
+writes runtime state.
+
 ## Thin Front Door
 
 When the user asks how to begin, help, or what AIM should do next, detect

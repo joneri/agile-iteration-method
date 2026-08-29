@@ -52,6 +52,15 @@ function addFact(list, label, value) {
   const displayValue = value === undefined || value === null || value === "" ? "—" : value;
   group.append(el("dt", "", label), el("dd", "", displayValue));
   list.append(group);
+  return group;
+}
+
+function renderRuntimeStatus(node, item) {
+  node.textContent = item.displayStatus || statusLabel(item.runtimeStatus);
+  const diagnostic = item.runtimeStatusDiagnostic;
+  node.title = diagnostic
+    ? `Observed runtime value: ${diagnostic.observedStatus}. ${diagnostic.message}`
+    : "";
 }
 
 async function copyText(text, feedback) {
@@ -158,7 +167,7 @@ function renderEpicRoster(board) {
     card.classList.toggle("is-planned", epic.lifecycle === "planned");
     card.classList.toggle("is-focused", epic.focused === true);
     card.querySelector(".epic-index").textContent = String(index + 1).padStart(2, "0");
-    card.querySelector(".epic-state").textContent = statusLabel(epic.runtimeStatus);
+    renderRuntimeStatus(card.querySelector(".epic-state"), epic);
     card.querySelector(".epic-title").textContent = epic.title;
     card.querySelector(".epic-id").textContent = epic.id;
     const facts = card.querySelector(".epic-facts");
@@ -388,7 +397,14 @@ function renderCard(increment, epic, index, existingCard = null) {
     addFact(facts, "Gate", increment.gate);
     addFact(facts, "Mode", increment.mode);
     addFact(facts, "Cost", increment.costProfile);
-    addFact(facts, "State", statusLabel(increment.runtimeStatus));
+    const stateFact = addFact(
+      facts,
+      "State",
+      increment.displayStatus || statusLabel(increment.runtimeStatus),
+    );
+    if (increment.runtimeStatusDiagnostic) {
+      stateFact.title = `Observed runtime value: ${increment.runtimeStatusDiagnostic.observedStatus}. ${increment.runtimeStatusDiagnostic.message}`;
+    }
   }
   if (increment.portfolioState) {
     addFact(facts, "Portfolio", statusLabel(increment.portfolioState));
@@ -584,7 +600,7 @@ function renderEpicLaneCard(epic, index, existingCard = null) {
   card.classList.toggle("is-planned", epic.lifecycle === "planned");
   card.classList.toggle("is-focused", epic.focused === true);
   card.querySelector(".epic-index").textContent = String(index + 1).padStart(2, "0");
-  card.querySelector(".epic-state").textContent = statusLabel(epic.runtimeStatus);
+  renderRuntimeStatus(card.querySelector(".epic-state"), epic);
   card.querySelector(".epic-title").textContent = epic.title;
   card.querySelector(".epic-id").textContent = epic.id;
   const planning = card.querySelector(".epic-planning");

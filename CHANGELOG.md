@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-08-29 - AIM 2 patch release v2.9.6
+- Made post-Gate-E continuation publish the next Increment, Gate A checkpoint,
+  and canonical `gate_b_pending` runtime status as one validated atomic state
+  replacement.
+- Added a trusted preview/apply continuation command with exact workspace,
+  accepted Gate E, plan relation, state freshness, schema, and transition
+  coherence checks.
+- Prevented the orchestration-only `increment_planning` phase from leaking into
+  the canonical runtime contract.
+- Made AIM UI present bounded status-only drift as a calm `Status updating`
+  work-in-progress card while retaining the observed value for diagnostics.
+- Kept the fallback non-authoritative: unknown statuses never enable Gate
+  actions, and malformed or compound runtime drift still fails closed.
+- Synchronized canonical docs, Codex and portable adapters, the generated public
+  Agent Skill, and regression coverage for safe continuation and UI projection.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`11`. Existing valid workspaces require no migration.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI. Adaptive
+installations can rerun their reviewed preview/apply installer flow.
+
+Known limitations: the calm UI fallback applies only to a bounded status-only
+deviation on an otherwise complete and canonical runtime document. AIM UI
+remains read-only, and unsafe or compound drift continues to require explicit
+recovery.
+
 ## 2026-08-29 - AIM 2 patch release v2.9.5
 - Preserved accepted terminal Portfolio history in AIM UI even after its run is
   completed and no longer active.

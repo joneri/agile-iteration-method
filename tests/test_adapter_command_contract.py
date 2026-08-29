@@ -299,6 +299,28 @@ class AdapterCommandContractTests(unittest.TestCase):
                 self.assertRegex(content, r"(?:must not|never) merely")
                 self.assertIn("ordinary user", content)
 
+    def test_post_gate_e_continue_is_atomic_and_ui_fallback_is_non_authoritative(self) -> None:
+        surfaces = (
+            "docs/workflow/agile-iteration-method.md",
+            "docs/workflow/working-state-boundaries.md",
+            "docs/workflow/adapter-command-contract.md",
+            "adapters/portable/agile-iteration-method/SKILL.md",
+            "adapters/codex/agile-iteration-method/SKILL.md",
+        )
+        for relative in surfaces:
+            content = (REPO_ROOT / relative).read_text(encoding="utf-8")
+            with self.subTest(surface=relative):
+                self.assertIn("aim_runtime_contract.py", content)
+                self.assertIn("gate_b_pending", content)
+                self.assertIn("increment_planning", content)
+                self.assertIn("runtime-state schema", content)
+                self.assertIn("atomic", content)
+                self.assertIn("Status updating", content)
+                self.assertRegex(
+                    content,
+                    r"hide .*Gate action|hide every Gate action|publishes no Gate actions",
+                )
+
     def test_start_surfaces_preserve_versioned_cost_selection(self) -> None:
         surfaces = (
             "adapters/portable/agile-iteration-method/SKILL.md",
@@ -317,7 +339,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "2.9.5")
+        self.assertEqual(version, "2.9.6")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",
