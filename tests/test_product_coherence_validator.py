@@ -20,7 +20,7 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
         shutil.copytree(
             REPO_ROOT,
             copied,
-            ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc"),
+            ignore=shutil.ignore_patterns(".git", ".aim", "__pycache__", "*.pyc"),
         )
         return copied
 
@@ -74,19 +74,43 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
     def test_tampered_modern_portfolio_closure_fails_release(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)
-            state_path = (
-                copied
-                / ".aim/portfolio/EPIC-AIM-3-DISCUSS/state.json"
-            )
-            state = json.loads(state_path.read_text(encoding="utf-8"))
-            state.update(
-                {
-                    "epicClosureEvidence": (
-                        ".aim/portfolio/EPIC-AIM-3-DISCUSS/decisions/missing.json"
-                    ),
-                    "epicClosureEvidenceSha256": "a" * 64,
-                    "epicClosureEvidenceSetSha256": "b" * 64,
-                }
+            workspace = copied / ".aim/portfolio/EPIC-TEST-CLOSURE"
+            workspace.mkdir(parents=True)
+            state_path = workspace / "state.json"
+            state = {
+                "stateSchemaVersion": "1.0",
+                "aimVersion": "2.0",
+                "mode": "Strict",
+                "costProfile": "Standard",
+                "epicId": "EPIC-TEST-CLOSURE",
+                "epicStatus": "epic_complete",
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "platform": "test",
+                "parallelSupport": {
+                    "available": False,
+                    "enabled": False,
+                    "policy": "sequential_fallback",
+                },
+                "commitMode": "optional",
+                "updatedAt": "2026-08-30T00:00:00Z",
+                "epicClosureEvidence": (
+                    ".aim/portfolio/EPIC-TEST-CLOSURE/decisions/missing.json"
+                ),
+                "epicClosureEvidenceSha256": "a" * 64,
+                "epicClosureEvidenceSetSha256": "b" * 64,
+            }
+            (copied / ".aim/ui-portfolio.json").write_text(
+                json.dumps(
+                    {
+                        "portfolioVersion": "1.0",
+                        "workspaces": [{"path": "portfolio/EPIC-TEST-CLOSURE"}],
+                    },
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
             )
             state_path.write_text(
                 json.dumps(state, indent=2) + "\n", encoding="utf-8"
