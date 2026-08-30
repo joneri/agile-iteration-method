@@ -45,6 +45,20 @@ Compares claims with evidence:
 A direct disagreement between authoritative claims and generated behavior is a
 `Contradiction`, not a warning.
 
+For completed Epics, product coherence also checks claim strength against the
+declared outcome class and closure evidence. A POC, fixture, mock, internal
+contract test, or implementation-assisted walkthrough cannot support a Product
+or Pilot completion claim. `epic_complete` without a contained closure truth
+audit is unverified legacy state or a contradiction for a new canonical
+transition; a truth audit with partial criteria, unresolved counterevidence,
+remaining gaps, contradictions, or a failed/non-representative black-box run is
+`contradictory` and release-blocking.
+Modern closure also requires a separate matching authority record and a digest
+over every non-empty referenced evidence file. Changed referenced bytes,
+partial state bindings, prose-only black-box assertions, or Portfolio terminal
+claims without verified closure are contradictions. Historical unbound closure
+is preserved and visibly classified as unverified rather than silently upgraded.
+
 ### Release readiness
 
 Summarizes whether public claims are sufficiently supported:
@@ -124,6 +138,10 @@ Release readiness also verifies:
 - schema `$id` values match assembled public paths
 - the Pages artifact contains schemas and license metadata
 - adapter closure and installer package tests participate in the release gate
+- the packaged runtime closure helper rejects synthetic Product evidence,
+  assisted black-box runs, partial acceptance mappings, unresolved
+  counterevidence, remaining gaps, contradictions, stale state, and uncontained
+  or changed referenced evidence
 
 ## Reporting contract
 

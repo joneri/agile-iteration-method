@@ -619,6 +619,30 @@ the user's separate disposition decision. Resume at this checkpoint repeats the
 assessment before mutation. Portfolio Auto records the same recommendation
 before its separately revalidated mandate may authorize eligible closure.
 
+An accepted Increment proves only that Increment. Before recommending `close`,
+PO performs a closure truth audit against the complete Epic and its declared
+`Outcome class: Product|Pilot|POC`. Every acceptance criterion must be `proven`
+with concrete evidence; counterevidence must be actively searched; unresolved
+findings, contradictions, and remaining gaps must be empty. Product and Pilot
+require an unassisted representative black-box pass. Synthetic, fixture,
+mocked, or implementation-assisted evidence may close only an explicitly
+bounded POC and must never be presented as Product evidence.
+
+Missing or contradictory evidence forces `continue` and another coherent Done
+Increment; AIM must create another coherent Done Increment rather than close
+prematurely. `split` cannot discard unmet
+Epic criteria. User acceptance and Portfolio authority authorize a decision but
+cannot turn missing evidence into proof. Canonical closure must use the trusted
+package-owned `scripts/aim_runtime_contract.py close` preview/apply flow and
+bind its contained JSON truth audit through `epicClosureEvidence`.
+direct `epic_complete` writes are non-canonical. Closure state must also bind
+`epicClosureEvidenceSha256` and `epicClosureEvidenceSetSha256`. Every cited
+evidence object must bind a contained non-empty file by path, kind, and digest;
+require structured black-box and negative-test records plus a separate matching
+closure-authority decision.
+Use `references/epic-closure-truth-audit.md` for the artifact shape and negative
+test checklist.
+
 After an ordinary user decision `continue`, create the next canonical `DI-*`
 plan, then use the trusted package-owned `scripts/aim_runtime_contract.py
 continue` preview and digest-matched apply. It must validate the complete
@@ -723,6 +747,12 @@ Before development, confirm the increment:
 - would make sense to a user without future increments
 - is small by behavioral scope, not by minimizing file count
 - lists exact planned files and responsibility boundaries
+
+At Gate A, the Epic must declare `Outcome class: Product`, `Pilot`, or `POC`.
+The class defines the evidence required for closure and cannot be silently
+upgraded after a synthetic proof succeeds. Every Epic acceptance criterion must
+have a stable numbered or explicit `AC-*` identity so the closure truth audit
+can require an exact complete mapping.
 
 If any answer is no, bundle or redefine the increment before proceeding.
 

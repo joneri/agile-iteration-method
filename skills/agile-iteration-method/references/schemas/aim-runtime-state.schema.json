@@ -33,6 +33,22 @@
       ],
       "type": "string"
     },
+    "epicClosureEvidence": {
+      "description": "Repository-relative POSIX path to contained truth-audit JSON required by the canonical Epic closure transition.",
+      "maxLength": 1000,
+      "pattern": "^\\.aim/",
+      "type": "string"
+    },
+    "epicClosureEvidenceSetSha256": {
+      "description": "Deterministic SHA-256 binding to every distinct referenced evidence path, kind, size, and current file digest used by the canonical closure transition.",
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "epicClosureEvidenceSha256": {
+      "description": "SHA-256 binding to the exact epicClosureEvidence artifact accepted by the canonical closure transition.",
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
     "epicId": {
       "minLength": 1,
       "type": "string"

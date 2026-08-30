@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 import tempfile
@@ -72,6 +73,128 @@ class AimUiTests(unittest.TestCase):
             encoding="utf-8",
         )
         return root
+
+    def _publish_closure_truth(
+        self,
+        repo: Path,
+        workspace: Path,
+        epic_id: str,
+        *,
+        authority: str = "portfolio_mandate",
+    ) -> dict[str, str]:
+        evidence_dir = workspace / "evidence"
+        evidence_dir.mkdir(exist_ok=True)
+        black_box = evidence_dir / "black-box.json"
+        black_box.write_text(
+            json.dumps(
+                {
+                    "schemaVersion": "1.0",
+                    "kind": "black_box_result",
+                    "status": "passed",
+                    "representative": True,
+                    "operatorAssistance": False,
+                    "entryPoint": "AIM UI",
+                    "scenario": "Complete the representative user journey",
+                    "expectedOutcome": "The user-visible outcome is delivered",
+                    "actualOutcome": "The user-visible outcome was delivered",
+                    "performedBy": "reviewer",
+                    "startedAt": "2026-08-23T13:58:00Z",
+                    "completedAt": "2026-08-23T13:59:00Z",
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        negative = evidence_dir / "negative-test.md"
+        negative.write_text(
+            "# Negative test\n\nUnsupported closure was rejected.\n",
+            encoding="utf-8",
+        )
+        authority_path = workspace / "decisions/epic-closure-authority.md"
+        mandate = "\nMandate: MANDATE-HANDOFF\n" if authority == "portfolio_mandate" else ""
+        authority_path.write_text(
+            f"# Epic closure — {epic_id}\n\nDecision: Approved\n\n"
+            f"Authority: {authority}\n{mandate}",
+            encoding="utf-8",
+        )
+
+        def reference(path: Path, kind: str) -> dict[str, object]:
+            payload = path.read_bytes()
+            return {
+                "path": path.relative_to(workspace).as_posix(),
+                "sha256": hashlib.sha256(payload).hexdigest(),
+                "kind": kind,
+                "size": len(payload),
+            }
+
+        black_box_ref = reference(black_box, "black_box_result")
+        negative_ref = reference(negative, "negative_test")
+        authority_ref = reference(authority_path, "authority_decision")
+        def public_ref(item: dict[str, object]) -> dict[str, object]:
+            return {key: item[key] for key in ("path", "sha256", "kind")}
+        closure = workspace / "decisions/epic-closure-truth.json"
+        closure.write_text(
+            json.dumps(
+                {
+                    "schemaVersion": "1.0",
+                    "epicId": epic_id,
+                    "outcomeClass": "product",
+                    "recommendation": "close",
+                    "acceptanceCriteria": [
+                        {
+                            "id": "AC-1",
+                            "status": "proven",
+                            "evidenceClass": "representative",
+                            "evidence": [public_ref(black_box_ref)],
+                        }
+                    ],
+                    "counterevidence": {
+                        "searched": True,
+                        "unresolvedFindings": [],
+                        "evidence": [public_ref(negative_ref)],
+                    },
+                    "blackBoxValidation": {
+                        "status": "passed",
+                        "representative": True,
+                        "operatorAssistance": False,
+                        "entryPoint": "AIM UI",
+                        "scenario": "Complete the representative user journey",
+                        "expectedOutcome": "The user-visible outcome is delivered",
+                        "actualOutcome": "The user-visible outcome was delivered",
+                        "performedBy": "reviewer",
+                        "startedAt": "2026-08-23T13:58:00Z",
+                        "completedAt": "2026-08-23T13:59:00Z",
+                        "evidence": [public_ref(black_box_ref)],
+                    },
+                    "remainingGaps": [],
+                    "contradictions": [],
+                    "decisionAuthority": authority,
+                    "authorityEvidence": [public_ref(authority_ref)],
+                    "decidedAt": "2026-08-23T14:00:00Z",
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        by_path = {
+            item["path"]: item
+            for item in (black_box_ref, negative_ref, authority_ref)
+        }
+        aggregate = hashlib.sha256(
+            json.dumps(
+                [by_path[path] for path in sorted(by_path)],
+                ensure_ascii=False,
+                separators=(",", ":"),
+                sort_keys=True,
+            ).encode("utf-8")
+        ).hexdigest()
+        return {
+            "epicClosureEvidence": closure.relative_to(repo).as_posix(),
+            "epicClosureEvidenceSha256": hashlib.sha256(closure.read_bytes()).hexdigest(),
+            "epicClosureEvidenceSetSha256": aggregate,
+        }
 
     def _additional_workspace(
         self,
@@ -342,12 +465,16 @@ class AimUiTests(unittest.TestCase):
                 "previousIncrementId": "DI-001",
                 "previousIncrementStatus": "accepted",
                 "gateEAcceptance": ".aim/decisions/001-gate-e.md",
+                "epicClosureEvidence": ".aim/decisions/epic-closure-truth.json",
             }
         )
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary), closed)
             (repo / ".aim/epic.md").write_text(
-                "# EPIC-FIRST — Preserve the first outcome\n", encoding="utf-8"
+                "# EPIC-FIRST — Preserve the first outcome\n\n"
+                "Outcome class: Product\n\n"
+                "## Acceptance criteria\n\n1. The representative journey works.\n",
+                encoding="utf-8",
             )
             (repo / ".aim/increments/001-wip.md").write_text(
                 "# DI-001 — Accepted first outcome\n\nEpic: EPIC-FIRST\n",
@@ -357,6 +484,14 @@ class AimUiTests(unittest.TestCase):
                 "# Gate E\n\nIncrement: DI-001\n\nStatus: Accepted\n\n"
                 "Accepted at: 2026-08-23T14:00:00Z\n",
                 encoding="utf-8",
+            )
+            state_path = repo / ".aim/state.json"
+            persisted = json.loads(state_path.read_text(encoding="utf-8"))
+            persisted.update(
+                self._publish_closure_truth(repo, repo / ".aim", "EPIC-FIRST")
+            )
+            state_path.write_text(
+                json.dumps(persisted, indent=2) + "\n", encoding="utf-8"
             )
             self._backlog(
                 repo,
@@ -888,6 +1023,7 @@ class AimUiTests(unittest.TestCase):
         items = board["epics"][0]["increments"]
         self.assertEqual([item["id"] for item in items], ["DI-001"])
         self.assertEqual(board["health"], "healthy")
+        self.assertIsNone(board["epics"][0]["closureVerification"])
         self.assertEqual(board["warnings"], [])
 
     def test_unresolved_runtime_history_never_becomes_planned_or_activatable(self) -> None:
@@ -1241,9 +1377,69 @@ class AimUiTests(unittest.TestCase):
         )
         self.assertEqual(increments["DI-001"]["column"], "backlog")
         self.assertEqual(increments["DI-001"]["runtimeStatus"], "gate_b_pending")
-        self.assertEqual(board["warnings"], [])
+        self.assertEqual(
+            board["epics"][0]["closureVerification"]["classification"],
+            "legacy_unverified",
+        )
+        self.assertTrue(
+            any("legacy unverified closure" in item for item in board["warnings"])
+        )
 
-    def test_completed_portfolio_reconciles_state_linked_legacy_plan_without_epic_field(self) -> None:
+    def test_ui_distinguishes_verified_closure_from_tampered_evidence(self) -> None:
+        runtime = state("epic_complete")
+        runtime.update(
+            {
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "previousIncrementId": "DI-001",
+                "previousIncrementStatus": "accepted",
+                "gateEAcceptance": ".aim/decisions/001-gate-e.md",
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            aim = repo / ".aim"
+            (aim / "epic.md").write_text(
+                "# EPIC-TEST-001 — Verify closure\n\nOutcome class: Product\n\n"
+                "## Acceptance criteria\n\n1. The representative journey works.\n",
+                encoding="utf-8",
+            )
+            (aim / "decisions/001-gate-e.md").write_text(
+                "# Gate E\n\nIncrement: DI-001\n\nDecision: Accepted\n",
+                encoding="utf-8",
+            )
+            state_path = aim / "state.json"
+            persisted = json.loads(state_path.read_text(encoding="utf-8"))
+            persisted.update(
+                self._publish_closure_truth(
+                    repo, aim, "EPIC-TEST-001", authority="user"
+                )
+            )
+            state_path.write_text(
+                json.dumps(persisted, indent=2) + "\n", encoding="utf-8"
+            )
+            verified = build_board(repo)
+            (aim / "evidence/negative-test.md").write_text(
+                "# Negative test\n\nTampered after closure.\n",
+                encoding="utf-8",
+            )
+            tampered = build_board(repo)
+
+        self.assertEqual(verified["epics"][0]["lifecycle"], "closed")
+        self.assertTrue(verified["epics"][0]["closureVerification"]["verified"])
+        self.assertEqual(
+            tampered["epics"][0]["lifecycle"], "closure_unverified"
+        )
+        self.assertEqual(
+            tampered["epics"][0]["closureVerification"]["classification"],
+            "contradictory",
+        )
+        self.assertTrue(
+            any("sha256 does not match" in item for item in tampered["warnings"])
+        )
+
+    def test_completed_portfolio_rejects_unverified_legacy_epic_closure(self) -> None:
         runtime = state("epic_complete")
         runtime.update(
             {
@@ -1327,9 +1523,11 @@ class AimUiTests(unittest.TestCase):
             )
             mismatched = build_board(repo)
 
-        self.assertTrue(board["portfolioRun"]["valid"])
-        self.assertEqual(board["portfolioRun"]["relationStatus"], "consistent")
-        self.assertEqual(board["warnings"], [])
+        self.assertFalse(board["portfolioRun"]["valid"])
+        self.assertEqual(board["portfolioRun"]["relationStatus"], "contradictory")
+        self.assertTrue(
+            any("workspace is not closed" in warning for warning in board["warnings"])
+        )
         self.assertEqual(board["epics"][0]["increments"][0]["column"], "done")
         self.assertFalse(mismatched["portfolioRun"]["valid"])
         self.assertEqual(
@@ -1450,7 +1648,8 @@ class AimUiTests(unittest.TestCase):
             }
 
         epic = board["epics"][0]
-        self.assertEqual(epic["lifecycle"], "closed")
+        self.assertEqual(epic["lifecycle"], "closure_unverified")
+        self.assertFalse(epic["closureVerification"]["verified"])
         self.assertEqual(
             {item["id"]: item["column"] for item in epic["increments"]},
             {"DI-42": "done", "DI-43": "done", "DI-44": "done", "DI-45": "done"},
@@ -1463,7 +1662,7 @@ class AimUiTests(unittest.TestCase):
             any(item["column"] == "backlog" for item in epic["increments"])
         )
         self.assertEqual(board["roadmap"]["eligibleCount"], 0)
-        self.assertEqual(board["warnings"], [])
+        self.assertTrue(any("legacy unverified closure" in item for item in board["warnings"]))
         self.assertEqual(after, before)
 
     def test_legacy_gate_e_index_variants_fail_closed(self) -> None:
@@ -1685,7 +1884,7 @@ class AimUiTests(unittest.TestCase):
         )
         self.assertEqual(increment["column"], "done")
         self.assertEqual(increment["runtimeStatus"], "done_increment_accepted")
-        self.assertEqual(board["warnings"], [])
+        self.assertTrue(any("legacy unverified closure" in item for item in board["warnings"]))
 
     def test_bulleted_negative_acceptance_still_fails_closed(self) -> None:
         runtime = state("epic_complete")
@@ -1749,7 +1948,7 @@ class AimUiTests(unittest.TestCase):
         )
         self.assertEqual(increment["column"], "backlog")
         self.assertEqual(increment["runtimeStatus"], "gate_b_pending")
-        self.assertEqual(board["warnings"], [])
+        self.assertTrue(any("legacy unverified closure" in item for item in board["warnings"]))
         self.assertEqual(board["history"]["acceptedCount"], 0)
         self.assertEqual(board["history"]["recentDeliveries"], [])
 
@@ -2262,7 +2461,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/board", timeout=3) as response:
                     payload = json.load(response)
                     self.assertTrue(payload["source"]["readOnly"])
-                    self.assertEqual(payload["product"]["version"], "3.0.4")
+                    self.assertEqual(payload["product"]["version"], "3.0.5")
                     self.assertTrue(payload["product"]["capturedAtLaunch"])
                     self.assertIn(
                         payload["backgroundControl"]["status"],
@@ -2272,7 +2471,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/health", timeout=3) as response:
                     health = json.load(response)
                     self.assertEqual(health["protocolVersion"], "1.3")
-                    self.assertEqual(health["productVersion"], "3.0.4")
+                    self.assertEqual(health["productVersion"], "3.0.5")
                     self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST")
                 with self.assertRaises(HTTPError) as error:

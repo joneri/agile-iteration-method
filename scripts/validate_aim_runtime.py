@@ -40,6 +40,7 @@ from aim_validator.runtime_state import (
 )
 from aim_validator.schema_subset import unsupported_keywords, validate as validate_schema
 from aim_portfolio_run import validate_run as validate_portfolio_run
+from aim_runtime_contract import epic_closure_evidence
 
 
 EXIT_CODES = {
@@ -287,7 +288,7 @@ PUBLIC_PRODUCT_DOC_PATHS = {
         "# Agile Iteration Method (AIM) 3.0",
         "## Install",
         "## How AIM works",
-        "## What is new in v3.0.4",
+        "## What is new in v3.0.5",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",
@@ -1059,6 +1060,29 @@ def audit_portfolio_workspace_integrity(
                 f"{epic_id} epicStatus {status!r} is not canonical; legacy 'complete' is not 'epic_complete'",
                 "Select a reviewed migration path; validation will not normalize the checkpoint in place.",
             )
+        closure_fields = {
+            "epicClosureEvidence",
+            "epicClosureEvidenceSha256",
+            "epicClosureEvidenceSetSha256",
+        }
+        if (
+            workspace != aim_root
+            and status == "epic_complete"
+            and closure_fields.intersection(state)
+        ):
+            checked.append(f"Portfolio Epic closure integrity: {relative_state}")
+            _, closure_issues = epic_closure_evidence(
+                repo_root, workspace, state
+            )
+            for closure_issue in closure_issues:
+                add_issue(
+                    issues,
+                    "contradictory",
+                    relative_state,
+                    f"{epic_id} closure is not verified: {closure_issue}",
+                    "Preserve the history but do not treat the Epic as verified; "
+                    "continue it or apply a reviewed canonical closure.",
+                )
         gate = state.get("lastGatePassed")
         if gate not in ALLOWED_LAST_GATES:
             add_issue(
@@ -3434,6 +3458,30 @@ def main() -> int:
                     "epicId in state.json does not appear in epic.md",
                     "Align epic.md with the active epicId or repair state.json.",
                 )
+
+        if epic_status == "epic_complete":
+            checked.append(".aim/state.json epicClosureEvidence")
+            if not state.get("epicClosureEvidence"):
+                if not release_mode:
+                    add_issue(
+                        issues,
+                        "recoverable",
+                        ".aim/state.json",
+                        "completed Epic has legacy unverified closure without epicClosureEvidence",
+                        "Run a closure truth audit before treating this historical Done claim as current product truth.",
+                    )
+            else:
+                _, closure_issues = epic_closure_evidence(
+                    repo_root, repo_root / ".aim", state
+                )
+                for closure_issue in closure_issues:
+                    add_issue(
+                        issues,
+                        "contradictory",
+                        str(state.get("epicClosureEvidence")),
+                        closure_issue,
+                        "Continue the Epic until every criterion and representative black-box claim is proven, then regenerate the closure truth audit.",
+                    )
 
         updated_at = state.get("updatedAt")
         if not isinstance(updated_at, str) or not updated_at:

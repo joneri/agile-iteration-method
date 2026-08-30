@@ -39,6 +39,7 @@ from aim_portfolio import project_portfolio_control
 from aim_portfolio_run import project_portfolio_run, snapshot_hash
 from aim_runtime_contract import (
     decision_accepts_increment,
+    epic_closure_evidence,
     increment_artifact_identity,
     terminal_acceptance,
 )
@@ -1589,6 +1590,51 @@ def _project_epic(
     epic_markdown = _read_markdown(aim_root / "epic.md")
 
     epic_id = str(state["epicId"])
+    closure_verification: dict[str, Any] | None = None
+    epic_attention: str | None = None
+    lifecycle = "running"
+    if state["epicStatus"] == "epic_complete":
+        closure_path, closure_issues = epic_closure_evidence(
+            repo_root, aim_root, state
+        )
+        if closure_issues:
+            closure_fields = {
+                "epicClosureEvidence",
+                "epicClosureEvidenceSha256",
+                "epicClosureEvidenceSetSha256",
+            }
+            classification = (
+                "legacy_unverified"
+                if not closure_fields.intersection(state)
+                else "contradictory"
+            )
+            lifecycle = "closure_unverified"
+            epic_attention = (
+                "Epic completion is preserved as history but is not verified by "
+                "the current closure truth-audit contract."
+            )
+            closure_verification = {
+                "verified": False,
+                "classification": classification,
+                "issues": closure_issues,
+                "evidence": state.get("epicClosureEvidence"),
+            }
+            warnings.append(
+                f"{epic_id} has {classification.replace('_', ' ')} closure: "
+                + "; ".join(closure_issues)
+            )
+        else:
+            lifecycle = "closed"
+            closure_verification = {
+                "verified": True,
+                "classification": "verified",
+                "issues": [],
+                "evidence": (
+                    closure_path.relative_to(repo_root).as_posix()
+                    if closure_path is not None
+                    else None
+                ),
+            }
     active_id = state.get("activeIncrementId")
     planned_id = state.get("plannedIncrementId")
     previous_id = state.get("previousIncrementId")
@@ -1703,7 +1749,7 @@ def _project_epic(
         "title": _heading(epic_markdown, epic_id),
         "workspace": aim_root.relative_to((repo_root / ".aim").resolve()).as_posix(),
         "active": state["epicStatus"] != "epic_complete",
-        "lifecycle": "closed" if state["epicStatus"] == "epic_complete" else "running",
+        "lifecycle": lifecycle,
         "runtimeStatus": state["epicStatus"],
         "displayStatus": (
             status_fallback["displayStatus"] if status_fallback is not None else None
@@ -1717,7 +1763,8 @@ def _project_epic(
         "currentRole": state["currentRole"],
         "lastGatePassed": state.get("lastGatePassed"),
         "updatedAt": state["updatedAt"],
-        "attention": None,
+        "attention": epic_attention,
+        "closureVerification": closure_verification,
         "actions": [],
         "planning": {"candidateCount": 0, "candidates": [], "nextCandidateId": None},
         "uiDecision": state.get("uiDecision"),

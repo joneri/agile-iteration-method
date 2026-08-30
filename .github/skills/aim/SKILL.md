@@ -108,6 +108,20 @@ not authority. Ordinary Strict and Auto require the user's separate decision,
 resume repeats the assessment before mutation, and Portfolio Auto records it
 before mandate-authorized closure.
 
+An accepted Increment proves only that Increment. Gate A must classify the Epic
+as Product, Pilot, or POC and give every acceptance criterion a stable numbered
+or explicit `AC-*` identity. Before `close`, PO maps the exact complete criterion
+set to concrete `proven` evidence and searches counterevidence. Product and Pilot need
+an unassisted representative black-box pass; synthetic, fixture, mocked, or
+assisted evidence can close only an explicit POC. Any partial criterion,
+unresolved finding, contradiction, or remaining Epic gap forces `continue` and
+another coherent Done Increment. User acceptance or Portfolio authority cannot
+substitute for evidence. Use trusted `scripts/aim_runtime_contract.py close`
+preview/apply and bind `epicClosureEvidence`; direct `epic_complete` writes are
+non-canonical. Require the state SHA-256 binding and existing contained evidence
+files, including the aggregate evidence-set SHA-256, structured black-box and
+negative-test records, and a separate matching closure-authority decision.
+
 Reflect commands follow `docs/workflow/reflection.md`. They write temporary
 candidate reports only, never durable knowledge or discovered repositories.
 Reflect-all previews reviewed local discovery roots and the project inventory

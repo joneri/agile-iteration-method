@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -32,6 +33,27 @@ from aim_validator.schema_subset import unsupported_keywords, validate  # noqa: 
 
 
 class PortfolioRunTests(unittest.TestCase):
+    @staticmethod
+    def _reference(path: Path, workspace: Path, kind: str) -> dict[str, Any]:
+        payload = path.read_bytes()
+        return {
+            "path": path.relative_to(workspace).as_posix(),
+            "sha256": hashlib.sha256(payload).hexdigest(),
+            "kind": kind,
+            "size": len(payload),
+        }
+
+    @staticmethod
+    def _evidence_set_digest(references: list[dict[str, Any]]) -> str:
+        by_path = {reference["path"]: reference for reference in references}
+        payload = json.dumps(
+            [by_path[path] for path in sorted(by_path)],
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+        return hashlib.sha256(payload).hexdigest()
+
     def _repo(self, root: Path) -> Path:
         aim = root / ".aim"
         aim.mkdir()
@@ -101,6 +123,12 @@ class PortfolioRunTests(unittest.TestCase):
         workspace_name = candidate["epicId"]
         workspace = aim / "portfolio" / workspace_name
         (workspace / "increments").mkdir(parents=True)
+        (workspace / "epic.md").write_text(
+            f"# {candidate['epicId']} — {candidate['epicTitle']}\n\n"
+            "Outcome class: Product\n\n"
+            "## Acceptance criteria\n\n1. The representative journey works.\n",
+            encoding="utf-8",
+        )
         number = increment_id.removeprefix("DI-")
         (workspace / "increments" / f"{number}-plan.md").write_text(
             f"# {increment_id} — Complete the bounded outcome\n\n"
@@ -111,6 +139,109 @@ class PortfolioRunTests(unittest.TestCase):
         decision = workspace / "decisions" / f"{increment_id.lower()}-gate-e.md"
         decision.write_text(
             f"# Gate E — {increment_id}\n\nDecision: Accepted\n\nIncrement: {increment_id}\n",
+            encoding="utf-8",
+        )
+        (workspace / "evidence").mkdir()
+        black_box = workspace / "evidence/black-box.json"
+        black_box.write_text(
+            json.dumps(
+                {
+                    "schemaVersion": "1.0",
+                    "kind": "black_box_result",
+                    "status": "passed",
+                    "representative": True,
+                    "operatorAssistance": False,
+                    "entryPoint": "Portfolio UI",
+                    "scenario": "Complete the representative user journey",
+                    "expectedOutcome": "The candidate outcome is delivered",
+                    "actualOutcome": "The candidate outcome was delivered",
+                    "performedBy": "reviewer",
+                    "startedAt": "2026-08-22T10:02:00Z",
+                    "completedAt": "2026-08-22T10:03:00Z",
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        negative = workspace / "evidence/negative-test.md"
+        negative.write_text(
+            "# Negative test\n\nUnsupported closure was rejected.\n",
+            encoding="utf-8",
+        )
+        authority = workspace / "decisions/epic-closure-authority.md"
+        authority.write_text(
+            f"# Epic closure — {candidate['epicId']}\n\nDecision: Approved\n\n"
+            "Authority: portfolio_mandate\n\nMandate: MANDATE-COMPLETE\n",
+            encoding="utf-8",
+        )
+        black_box_ref = self._reference(black_box, workspace, "black_box_result")
+        negative_ref = self._reference(negative, workspace, "negative_test")
+        authority_ref = self._reference(authority, workspace, "authority_decision")
+        references = [black_box_ref, negative_ref, authority_ref]
+        closure = workspace / "decisions" / "epic-closure-truth.json"
+        closure.write_text(
+            json.dumps(
+                {
+                    "schemaVersion": "1.0",
+                    "epicId": candidate["epicId"],
+                    "outcomeClass": "product",
+                    "recommendation": "close",
+                    "acceptanceCriteria": [
+                        {
+                            "id": "AC-1",
+                            "status": "proven",
+                            "evidenceClass": "representative",
+                            "evidence": [
+                                {
+                                    key: black_box_ref[key]
+                                    for key in ("path", "sha256", "kind")
+                                }
+                            ],
+                        }
+                    ],
+                    "counterevidence": {
+                        "searched": True,
+                        "unresolvedFindings": [],
+                        "evidence": [
+                            {
+                                key: negative_ref[key]
+                                for key in ("path", "sha256", "kind")
+                            }
+                        ],
+                    },
+                    "blackBoxValidation": {
+                        "status": "passed",
+                        "representative": True,
+                        "operatorAssistance": False,
+                        "entryPoint": "Portfolio UI",
+                        "scenario": "Complete the representative user journey",
+                        "expectedOutcome": "The candidate outcome is delivered",
+                        "actualOutcome": "The candidate outcome was delivered",
+                        "performedBy": "reviewer",
+                        "startedAt": "2026-08-22T10:02:00Z",
+                        "completedAt": "2026-08-22T10:03:00Z",
+                        "evidence": [
+                            {
+                                key: black_box_ref[key]
+                                for key in ("path", "sha256", "kind")
+                            }
+                        ],
+                    },
+                    "remainingGaps": [],
+                    "contradictions": [],
+                    "decisionAuthority": "portfolio_mandate",
+                    "authorityEvidence": [
+                        {
+                            key: authority_ref[key]
+                            for key in ("path", "sha256", "kind")
+                        }
+                    ],
+                    "decidedAt": "2026-08-22T10:04:00Z",
+                },
+                indent=2,
+            )
+            + "\n",
             encoding="utf-8",
         )
         (workspace / "state.json").write_text(
@@ -126,6 +257,11 @@ class PortfolioRunTests(unittest.TestCase):
                     "previousIncrementId": increment_id,
                     "previousIncrementStatus": "accepted",
                     "gateEAcceptance": decision.relative_to(repo).as_posix(),
+                    "epicClosureEvidence": closure.relative_to(repo).as_posix(),
+                    "epicClosureEvidenceSha256": hashlib.sha256(
+                        closure.read_bytes()
+                    ).hexdigest(),
+                    "epicClosureEvidenceSetSha256": self._evidence_set_digest(references),
                     "portfolioCandidateId": candidate_id,
                     "currentRole": "PO",
                     "lastGatePassed": "Gate E",
@@ -292,6 +428,13 @@ class PortfolioRunTests(unittest.TestCase):
                 complete_active(repo, "t3", "t4", "INC-FIRST")
 
             state["gateEAcceptance"] = ".aim/portfolio/EPIC-FIRST/decisions/di-001-gate-e.md"
+            closure_path = state.pop("epicClosureEvidence")
+            state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(
+                PortfolioRunError, "epicClosureEvidence is missing"
+            ):
+                complete_active(repo, "t3", "t4", "INC-FIRST")
+            state["epicClosureEvidence"] = closure_path
             state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
 
             plan_path = repo / ".aim/portfolio/EPIC-FIRST/increments/001-plan.md"

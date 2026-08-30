@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 3.0
 
-![AIM 3.0.4 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 3.0.5 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -141,17 +141,18 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v3.0.4
+## What is new in v3.0.5
 
-AIM UI now recognizes a verified legacy Gate E acceptance index and its single
-authoritative date-prefixed target as one historical acceptance. Existing
-history stays untouched while the accepted Increment remains correctly in Done.
+AIM now prevents an accepted Increment, POC, fixture, or persuasive evidence
+file from silently closing a larger Product or Pilot Epic. Canonical closure
+requires exact criterion coverage, representative unassisted black-box evidence,
+an explicit counterevidence search, and a separate user or Portfolio authority
+decision.
 
-The exception is deliberately narrow: both files must accept only the requested
-`DI-*`, name the same valid acceptance instant, remain regular and contained,
-and leave no additional candidate. Independent duplicates remain ambiguous even
-when DI, status, and timestamp match. The latest terminal Increment continues
-to use its explicit state-linked Gate E evidence.
+Preview and apply bind the source state, closure audit, and every referenced
+evidence byte. AIM UI labels unbound legacy completion as preserved but
+unverified history, Portfolio refuses terminal completion without verified
+closure, and incomplete Epics continue into another coherent Increment.
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
@@ -175,4 +176,4 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v3.0.4**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product release: **v3.0.5**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).

@@ -11,6 +11,7 @@
     "references/adapter-entry-model.md",
     "references/adapter-skill-bootstrap.md",
     "references/agile-iteration-method.md",
+    "references/epic-closure-truth-audit.md",
     "references/install/aim-install-manifest.yaml",
     "references/operating-modes.md",
     "references/product-coherence-validation.md",
@@ -50,29 +51,29 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "3.0.4",
+  "productVersion": "3.0.5",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
     "repoProfile": "0.2"
   },
-  "publicSkillPackageVersion": 11,
+  "publicSkillPackageVersion": 12,
   "runtimeContractVersion": "2.0",
   "runtimeStateSchemaVersion": "1.0",
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "f639dc59c9051acccfb31cbf2ce10911225d6e278333a0c41d3ca6cf73b9d5b2",
+      "sha256": "19a62f88cf510a57c526fb2aabdc453fb504eb0f3ed40887f4cf05260643136b",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "da0c976cbaa5a44abd809884ed741431b1bc1479da940bd4ee9e2752dbdb3609",
+      "sha256": "94b3efd500e339ee4965d24bc2bfd311b196960efa871ac9bc7364c61ebfbde0",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "43a93eb8f8ee0311f78e2239b4fe7d270f6405e9b8b821b84a3a53145db1caac",
+      "sha256": "454be57984306b74bc17b7df50f1579972b55eaf12496691f8b1e78ed1885394",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -102,8 +103,13 @@
     },
     {
       "output": "references/product-coherence-validation.md",
-      "sha256": "4f9d1ef9420127532f9b14fc0d3b78792eb4016ad35f89cc9e5ca08203b639c1",
+      "sha256": "5593e55fddadf807d09417411efa377eab69a4c63bb36434936b5e8ca17aa1cf",
       "source": "docs/workflow/product-coherence-validation.md"
+    },
+    {
+      "output": "references/epic-closure-truth-audit.md",
+      "sha256": "805d3dd1ea76455f8d4144549dfb65b26e4c7909f5fde475d307770338c4b65e",
+      "source": "docs/workflow/epic-closure-truth-audit.md"
     },
     {
       "output": "references/repo-awareness-calibration.md",
@@ -142,7 +148,7 @@
     },
     {
       "output": "references/schemas/aim-runtime-state.schema.json",
-      "sha256": "bcc70cc7d4e17adefb966505b6eb67662a4a6ab398914bd4742fb58749e94244",
+      "sha256": "c2fe5abb0b0d3df439ef0a8518b324ad0e9c2eb9f8756a08f84ade228738bae8",
       "source": "schemas/aim-runtime-state.schema.json"
     },
     {
@@ -162,7 +168,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "224dbe2e4ea610ff39a61ccdc0af85c31a309ff1e19336b0448ccef9766a2c94",
+      "sha256": "3da4414b24923430a97c932c0597fd5ebc9d126ae188181054b348d2a8559870",
       "source": "VERSION"
     },
     {
@@ -172,12 +178,12 @@
     },
     {
       "output": "manifest.json",
-      "sha256": "ba8d08d2f42ad9cff9e21026d59cb4dcf83409d5775257a7419aa5947efa30fe",
+      "sha256": "ff33452cd3f4cadba3702811582426a1415004c7a9b568cf0e2339169aeb6853",
       "source": "scripts/build_public_skill.py"
     },
     {
       "output": "scripts/aim_runtime_contract.py",
-      "sha256": "c6240fda59e2bbdd83f67b92cb7ba71d73ad3dedafba7cb3c32a90ba8925ebab",
+      "sha256": "65862e46a3b9aaffa7d85986d14e442769c1f2dd13b1387acf8f33f38db75f77",
       "source": "scripts/aim_runtime_contract.py"
     },
     {
@@ -212,12 +218,12 @@
     },
     {
       "output": "scripts/aim_portfolio_run.py",
-      "sha256": "993bf7c012442bc833984142274d74d9493275e4d7d78b789dbb0cdefe71b898",
+      "sha256": "2ce6c59c07b795f7a38dad9a626a83952d2ec5e3d1e2202f093648ad9b1b1a55",
       "source": "scripts/aim_portfolio_run.py"
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "4ceb9fed21ff42680bc38bacbb746d0d5d06f74d03e42d0ad27d0951ecf9a389",
+      "sha256": "7c26df0b83d122d06917cee132d7aa2f4d845bcfe19bd857dcb112338af2a1ba",
       "source": "scripts/aim_ui.py"
     },
     {

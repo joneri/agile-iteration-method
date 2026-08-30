@@ -19,6 +19,7 @@ from typing import Any, Callable
 from aim_activation import candidate_preflights
 from aim_runtime_contract import (
     PORTFOLIO_CHECKPOINT_STATUSES,
+    epic_closure_evidence,
     terminal_acceptance,
     terminal_increment_artifact,
 )
@@ -593,6 +594,10 @@ def _terminal_relation_issues(
             repo_root.resolve(), workspace, state, runtime_id
         )
         issues.extend(acceptance_issues)
+        _, closure_issues = epic_closure_evidence(
+            repo_root.resolve(), workspace, state
+        )
+        issues.extend(closure_issues)
     return issues
 
 

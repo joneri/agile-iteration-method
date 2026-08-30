@@ -328,6 +328,36 @@ the same PO assessment and recommendation before mutation. In Portfolio Auto,
 the same recommendation is recorded before a separately revalidated mandate
 may authorize eligible Epic closure and candidate completion.
 
+Before `close`, the adapter must classify the Epic as `Product`, `Pilot`, or
+`POC` from the approved Epic contract and create one contained closure truth
+audit. Every acceptance criterion must be mapped to concrete evidence and have
+status `proven`; counterevidence must have been actively searched; unresolved
+findings, contradictions, and remaining Epic gaps must be empty. `Product` and
+`Pilot` additionally require an unassisted representative black-box pass.
+Synthetic, fixture, mocked, or implementation-assisted evidence can close only
+an Epic explicitly framed as `POC`; it cannot be relabelled as Product evidence.
+
+If any predicate fails, the adapter must recommend `continue`, create another
+coherent Done Increment after authority is given, and preserve the unfinished
+Epic. `split` applies only to genuinely new scope and cannot remove an unmet
+acceptance criterion. A user's `accept`, a Gate E decision, or a Portfolio
+mandate supplies decision authority but never substitutes for evidence.
+
+All adapters must execute Epic closure through the trusted package-owned
+`scripts/aim_runtime_contract.py close` no-write preview and digest-matched
+apply. The transition binds the reviewed JSON through
+`epicClosureEvidence` plus `epicClosureEvidenceSha256` and
+`epicClosureEvidenceSetSha256`. Every referenced evidence object binds a
+contained non-empty file by path, kind, and SHA-256; black-box, negative-test,
+and separate closure-authority records are required as applicable. Direct
+`epic_complete` writes are non-canonical. Before
+Portfolio completion, `scripts/aim_portfolio_run.py` revalidates that exact
+closure evidence in addition to the Gate E relation.
+Closure apply requires previewed state, closure-evidence, and evidence-set
+SHA-256 values; staleness in any relation fails without a state transition.
+The canonical artifact shape is defined in
+`epic-closure-truth-audit.md`.
+
 After an ordinary user decision `continue`, the adapter creates the next
 canonical `DI-*` plan, then resolves the trusted package-owned
 `scripts/aim_runtime_contract.py continue` command. Preview binds the exact

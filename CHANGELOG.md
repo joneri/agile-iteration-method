@@ -1,5 +1,45 @@
 # Changelog
 
+## 2026-08-30 - AIM 3 patch release v3.0.5
+- Separated Gate E Increment acceptance from Epic closure so a POC, fixture,
+  mock, synthetic run, or implementation-assisted demonstration cannot silently
+  close a Product or Pilot Epic.
+- Added an executable closure truth audit with exact acceptance-criterion
+  coverage, outcome-class enforcement, explicit counterevidence, structured
+  representative black-box results, and a distinct user or Portfolio authority
+  decision.
+- Bound closure preview/apply to the exact source state, closure JSON, and every
+  referenced evidence path, kind, size, and SHA-256; changed, missing, empty,
+  traversing, symlinked, oversized, or replayed evidence now fails without a
+  runtime-state write.
+- Made incomplete closure lead safely to another canonical Done Increment while
+  preserving accepted history and removing stale nonterminal closure bindings.
+- Required Portfolio terminal completion to revalidate the same closure
+  contract, and made release validation inspect modern closure claims in
+  catalogued Portfolio workspaces.
+- Made AIM UI distinguish verified closure from preserved
+  `legacy_unverified` history and contradictory partial or tampered modern
+  closure.
+- Added adversarial regression coverage for authority-as-proof, mixed-case
+  criterion aliases, prose-only `PASS` evidence, implementation-side
+  self-attestation, referenced-byte mutation, direct state bypass, and honest
+  continuation; the complete suite passes 320 tests.
+
+Compatibility: AIM runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`11`. Existing completed Epics remain readable; AIM UI labels closure without
+the new bindings as preserved but unverified rather than rewriting history.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI. New Epic
+closures must use the packaged `aim_runtime_contract.py close` preview/apply
+flow. Historical workspaces need no automatic migration.
+
+Known limitations: the contract verifies containment, structure, byte identity,
+declared performer separation, and consistency. It cannot independently prove
+that a human or external system reported truthfully, so Reviewer inspection and
+credible falsification remain mandatory.
+
 ## 2026-08-29 - AIM 3 patch release v3.0.4
 - Resolved an explicit legacy Gate E acceptance index and its single
   authoritative date-prefixed target as one historical AIM UI acceptance.

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import shutil
 import subprocess
 import sys
@@ -69,6 +70,32 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
             completed = self._validate(copied)
         self.assertEqual(completed.returncode, 3)
         self.assertIn("runtime-state contract", completed.stdout)
+
+    def test_tampered_modern_portfolio_closure_fails_release(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            state_path = (
+                copied
+                / ".aim/portfolio/EPIC-AIM-3-DISCUSS/state.json"
+            )
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            state.update(
+                {
+                    "epicClosureEvidence": (
+                        ".aim/portfolio/EPIC-AIM-3-DISCUSS/decisions/missing.json"
+                    ),
+                    "epicClosureEvidenceSha256": "a" * 64,
+                    "epicClosureEvidenceSetSha256": "b" * 64,
+                }
+            )
+            state_path.write_text(
+                json.dumps(state, indent=2) + "\n", encoding="utf-8"
+            )
+            completed = self._validate(copied)
+
+        self.assertEqual(completed.returncode, 3)
+        self.assertIn("closure is not verified", completed.stdout)
+        self.assertIn("epicClosureEvidence is missing or unsafe", completed.stdout)
 
     def test_documented_enterprise_contradiction_fails_release(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -66,6 +66,22 @@
       "maxLength": 1000,
       "description": "Optional repository-relative POSIX path to contained Gate E acceptance evidence for previousIncrementId."
     },
+    "epicClosureEvidence": {
+      "type": "string",
+      "pattern": "^\\.aim/",
+      "maxLength": 1000,
+      "description": "Repository-relative POSIX path to contained truth-audit JSON required by the canonical Epic closure transition."
+    },
+    "epicClosureEvidenceSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 binding to the exact epicClosureEvidence artifact accepted by the canonical closure transition."
+    },
+    "epicClosureEvidenceSetSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Deterministic SHA-256 binding to every distinct referenced evidence path, kind, size, and current file digest used by the canonical closure transition."
+    },
     "currentRole": {"type": "string", "enum": ["PO", "TDO", "Dev", "Reviewer"]},
     "lastGatePassed": {"enum": [null, "Gate A", "Gate B", "Gate C", "Gate D", "Gate E"]},
     "platform": {"type": "string", "minLength": 1},

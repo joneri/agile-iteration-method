@@ -150,6 +150,7 @@ def load_runtime_state(repo_root: Path) -> RuntimeStateResult:
         )
 
     _check_gate_decision_alignment(repo_root, normalized, findings)
+    _check_closure_field_alignment(normalized, findings)
     if any(item.result == "contradictory" for item in findings):
         classification = "contradictory"
     return RuntimeStateResult(
@@ -183,3 +184,43 @@ def _check_gate_decision_alignment(
                     "Align the persisted state with the visible Gate B decision through the main AIM thread.",
                 )
             )
+
+
+def _check_closure_field_alignment(
+    state: dict[str, Any], findings: list[RuntimeStateFinding]
+) -> None:
+    """Distinguish legacy Done history from malformed current closure claims."""
+
+    fields = (
+        "epicClosureEvidence",
+        "epicClosureEvidenceSha256",
+        "epicClosureEvidenceSetSha256",
+    )
+    present = [field for field in fields if field in state]
+    if state.get("epicStatus") != "epic_complete":
+        if present:
+            findings.append(
+                RuntimeStateFinding(
+                    "contradictory",
+                    "closure evidence bindings are present before epic_complete",
+                    "Remove premature closure authority or restore the canonical "
+                    "completed state through the main AIM thread.",
+                )
+            )
+        return
+    if not present:
+        # Historical completed states remain structurally readable. Projection and
+        # full-repository validation identify them as unverified legacy closure;
+        # this low-level loader only rejects malformed modern bindings.
+        return
+    missing = [field for field in fields if field not in state]
+    if missing:
+        findings.append(
+            RuntimeStateFinding(
+                "contradictory",
+                "epic_complete has partial closure truth-audit bindings: missing "
+                + ", ".join(missing),
+                "Do not treat the Epic as verified; restore all bindings only "
+                "through canonical closure preview/apply.",
+            )
+        )

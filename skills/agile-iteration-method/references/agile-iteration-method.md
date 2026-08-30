@@ -77,6 +77,11 @@ Kickoff contract:
 10. Feedback is carried into the next Done Increment when the Epic continues.
 11. The loop repeats until the Epic is complete.
 
+An accepted Increment proves only that Increment. It is never evidence by
+itself that the Epic or product outcome is complete. AIM prefers another
+coherent Done Increment over closing an Epic on partial, synthetic, assisted,
+or contradictory evidence.
+
 In short, the PO owns the Epic and the TDO owns the Done Increment.
 
 The AI never changes direction on its own.
@@ -942,14 +947,21 @@ An EPIC describes a **complete piece of user value**.
 
 An EPIC must include:
 - goal
+- outcome class: `Product`, `Pilot`, or `POC`
 - non-goals
-- acceptance criteria
+- acceptance criteria with stable numbered or explicit `AC-*` identities
 - rollback notes (if relevant)
 
 An EPIC is a contract between PO and TDO.
 It is not a technical design document.
 
 An EPIC is complete only when the PO explicitly accepts it.
+
+The outcome class is a truth boundary, not a maturity label that may be changed
+at closure. `POC` permits synthetic or fixture-backed evidence only for the
+explicitly bounded proof. `Pilot` and `Product` require representative evidence
+from the declared operating context. A successful POC must not be described as
+a delivered Pilot or Product.
 
 ---
 
@@ -1078,6 +1090,39 @@ its rationale and remaining-scope consequence; it must not merely ask the user
 to choose among options. A recommendation is not authority. Ordinary Strict and
 Auto require the user's separate disposition decision. Resume from
 `done_increment_accepted` repeats this PO assessment before any transition.
+
+Before recommending `close`, PO must perform a closure truth audit that:
+
+- maps every Epic acceptance criterion to concrete evidence and marks every one
+  `proven`
+- actively searches for counterevidence, including fresh repeat/resume and
+  failure-path behavior rather than relying only on the successful build run
+- distinguishes synthetic fixtures, mocks, internal contract checks, and POC
+  runs from representative product evidence
+- requires an unassisted representative black-box pass for `Pilot` and
+  `Product` outcomes
+- binds non-empty referenced evidence by path, kind, byte digest, and aggregate
+  evidence-set digest, including a structured black-box result, a negative
+  test, and a separate closure-authority decision
+- records no unresolved findings, contradictions, or remaining Epic gaps
+
+User acceptance cannot convert missing or contradictory evidence into proof.
+When any Epic criterion is partial, unproven, synthetic-only outside a declared
+POC, contradicted, or dependent on implementation-team assistance, PO must
+recommend `continue` and TDO must propose the next coherent Done Increment.
+`split` is reserved for genuinely new scope outside the approved Epic; it must
+not be used to discard unfinished acceptance criteria.
+
+The canonical `epic_complete` transition must use the trusted
+`scripts/aim_runtime_contract.py close` preview/apply flow and bind one contained
+truth-audit JSON artifact through `epicClosureEvidence`. Directly writing
+`epic_complete`, a Gate E decision, a user `accept`, or a Portfolio mandate does
+not satisfy this closure contract.
+The preview/apply transaction binds source state, the audit JSON, and all
+referenced evidence bytes. UI and Portfolio treat legacy unbound completion as
+preserved but unverified history, never as verified current closure.
+The artifact contract and operator-facing template are defined in
+`epic-closure-truth-audit.md`.
 
 When the Epic continues, TDO must create the next canonical Done Increment and
 return the workspace to Gate B. An incomplete Epic must not remain stranded in
@@ -1332,6 +1377,14 @@ Responsibility always stays with the human.
 
 The loop ends when:
 - all EPIC acceptance criteria are fulfilled
+- the declared outcome class matches the evidence actually produced
+- representative black-box validation has passed without implementation-team
+  assistance for Product and Pilot outcomes
+- a counterevidence search has no unresolved findings, contradictions, or
+  remaining Epic gaps
+- the closure truth-audit artifact passes the canonical runtime closure check
+- closure authority is separately recorded and every referenced evidence byte
+  remains bound to the reviewed preview
 - the PO explicitly accepts the EPIC as delivered
 
 At that point, the EPIC is complete.

@@ -95,6 +95,38 @@ class RuntimeStateSchemaTests(unittest.TestCase):
         self.assertEqual(result.classification, "current")
         self.assertEqual(result.findings, ())
 
+    def test_modern_closure_bindings_must_be_complete_and_terminal(self) -> None:
+        completed = canonical_state()
+        completed.update(
+            {
+                "epicStatus": "epic_complete",
+                "activeIncrementId": None,
+                "currentRole": "PO",
+                "lastGatePassed": "Gate E",
+                "epicClosureEvidence": ".aim/decisions/closure.json",
+                "epicClosureEvidenceSha256": "a" * 64,
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            partial = load_runtime_state(self._repo(Path(temporary), completed))
+        self.assertEqual(partial.classification, "contradictory")
+        self.assertTrue(any("partial closure" in item.rule for item in partial.findings))
+
+        premature = canonical_state()
+        premature.update(
+            {
+                "epicClosureEvidence": ".aim/decisions/closure.json",
+                "epicClosureEvidenceSha256": "a" * 64,
+                "epicClosureEvidenceSetSha256": "b" * 64,
+            }
+        )
+        with tempfile.TemporaryDirectory() as temporary:
+            result = load_runtime_state(self._repo(Path(temporary), premature))
+        self.assertEqual(result.classification, "contradictory")
+        self.assertTrue(
+            any("before epic_complete" in item.rule for item in result.findings)
+        )
+
     def test_portfolio_start_may_reserve_canonical_increment_before_gate_b(self) -> None:
         state = canonical_state()
         state.update(

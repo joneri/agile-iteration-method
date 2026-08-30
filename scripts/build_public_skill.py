@@ -17,7 +17,7 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 11
+PUBLIC_SKILL_PACKAGE_VERSION = 12
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
@@ -31,6 +31,7 @@ REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
     (Path("docs/workflow/reflection.md"), Path("reflection.md")),
     (Path("docs/workflow/operating-modes.md"), Path("operating-modes.md")),
     (Path("docs/workflow/product-coherence-validation.md"), Path("product-coherence-validation.md")),
+    (Path("docs/workflow/epic-closure-truth-audit.md"), Path("epic-closure-truth-audit.md")),
     (Path("docs/workflow/repo-awareness-calibration.md"), Path("repo-awareness-calibration.md")),
     (Path("docs/workflow/repo-awareness-two-layer-model.md"), Path("repo-awareness-two-layer-model.md")),
     (Path("docs/workflow/repo-awareness.md"), Path("repo-awareness.md")),
