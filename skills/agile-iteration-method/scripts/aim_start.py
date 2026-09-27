@@ -126,16 +126,9 @@ def _contained_workspace(aim_root: Path, raw: str, index: int) -> Path:
 def _catalog(aim_root: Path) -> tuple[dict[str, Any], bytes, list[tuple[str, Path]]]:
     path = aim_root / PORTFOLIO_FILE
     if not path.exists() and not path.is_symlink():
-        # A missing catalog is normal only before runtime work exists. Never
-        # hide or silently register earlier work while bootstrapping a board.
-        evidence = any((aim_root / name).exists() or (aim_root / name).is_symlink()
-                       for name in ("state.json", "epic.md"))
-        for name in ("increments", "decisions", "reviews", "portfolio", "workspaces"):
-            directory = aim_root / name
-            evidence = evidence or directory.is_symlink() or (directory.is_dir() and any(directory.iterdir()))
-        if evidence:
-            raise AimStartError("Existing runtime work needs a reviewed catalog; it cannot be replaced by a new bootstrap.")
-        return {"portfolioVersion": PORTFOLIO_VERSION, "workspaces": []}, b"", []
+        from aim_recovery import discover_catalog
+        catalog, declared, _ = discover_catalog(aim_root)
+        return catalog, b"", declared
     payload = _read_bytes(
         path, maximum=MAX_PORTFOLIO_BYTES, label=PORTFOLIO_FILE
     )
@@ -379,6 +372,13 @@ def plan_start(
         "portfolio": f".aim/{PORTFOLIO_FILE}",
         "catalogSha256": _sha256(payload),
         "bootstrapCatalog": not payload,
+        "recoveredCatalog": catalog if not payload else None,
+        "workspaceBindings": {
+            raw: _sha256(_json_bytes({
+                "state": _read_state(workspace),
+                "increments": sorted(_allocated_increment_ids(workspace, _read_state(workspace))),
+            })) for raw, workspace in declared
+        },
         "candidateId": candidate_id,
         "links": links,
         "epicId": epic_id,
@@ -642,7 +642,7 @@ def apply_start(
         workspace_published = True
         checkpoint("after_workspace_publish")
 
-        catalog = json.loads(original_catalog) if original_catalog else {"portfolioVersion": PORTFOLIO_VERSION, "workspaces": []}
+        catalog = json.loads(original_catalog) if original_catalog else json.loads(_json_bytes(plan["recoveredCatalog"]))
         catalog["workspaces"].append({"path": plan["workspace"]})
         _atomic_write(catalog_path, _json_bytes(catalog), ".ui-portfolio.start.")
         catalog_published = True

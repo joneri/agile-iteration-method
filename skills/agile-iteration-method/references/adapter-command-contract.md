@@ -128,9 +128,24 @@ workspace publication, catalog publication, or board verification failure
 returns one actionable fail-closed error. Previously existing files remain
 byte-identical and no new root checkpoint or partial workspace remains. The
 helper cannot approve a Gate, migrate existing work, or reinterpret legacy
-state. `/aim validate` and AIM UI report orphaned or contract-drifted
-checkpoints read-only with their Epic identity, state path, failed relation, and
-explicit repair/migration next action.
+state. A missing index can be reconstructed from intact, unique root,
+`portfolio/*`, and `workspaces/*` checkpoints. Read-only admission includes
+those workspaces in collision and capacity checks. Start binds the discovered
+membership and checkpoint facts to its preview and publishes the index in its
+existing rollback-protected transaction. For resume, the packaged
+`aim_recovery.py --repo <repo>` reconstructs only the missing index using
+atomic no-clobber publication. This bounded technical operation needs no extra
+user decision under an authorized start/continue intent. It never overwrites
+an existing index or rewrites plans, checkpoints, decisions, or accepted work.
+Ambiguous identities or unreadable task evidence require a work-level decision;
+they are not grounds for speculative migration loops.
+
+AIM UI uses the same read-only discovery for an absent index and can display
+intact work before recovery runs. This does not authorize gates or start agents.
+Evaluate startup using observed time and agent tool calls from authorization to
+the first product source edit. Setup-only and synthetic test timings must be
+reported separately from an actual agent journey.
+
 
 ## AIM UI chat lifecycle
 

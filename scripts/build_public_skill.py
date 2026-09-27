@@ -52,6 +52,7 @@ UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_runtime_contract.py"),
     Path("scripts/aim_activation.py"),
     Path("scripts/aim_start.py"),
+    Path("scripts/aim_recovery.py"),
     Path("scripts/aim_catalog_repair.py"),
     Path("scripts/aim_backlog.py"),
     Path("scripts/aim_actions.py"),

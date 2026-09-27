@@ -1,5 +1,39 @@
 # Changelog
 
+## 2026-09-27 - AIM 3 patch release v3.0.8
+- Preserve readable Kanban work when a sibling workspace or portfolio catalog
+  is damaged. Keep uncertain work visible without offering unsafe actions.
+- Reconstruct a missing catalog during authorized startup when contained,
+  validated workspaces identify an unambiguous catalog; preserve source files
+  and reject ambiguous or malformed configured catalogs.
+- Persist action tracking across page reload and UI restart, verify Start and
+  gate results against actual runtime evidence, and prevent duplicate dispatch.
+- Separate selected-task configuration, agent activity and verified results.
+  Keep working through quiet model intervals instead of aborting after one minute.
+- Add source-repository journey measurement tooling and a reproduction guide
+  covering product-code latency, interruptions, questions and repair attempts.
+
+Compatibility: runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`12`. Existing gate and closure authority remain unchanged.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, reload the skill session and
+restart AIM UI. No checkpoint migration is required. Background execution needs
+a Codex CLI compatible with the selected model.
+
+Known limitations: UI process termination may interrupt the agent; saved work
+is retained, but explicit continuation can still be required. Ambiguous or
+invalid catalogs are not automatically rewritten. One interrupted live CLI
+journey reached first product code in 171.491 seconds and required a UI restart
+and explicit continuation. Its extra post-acceptance validation request exposed
+an evidence-handoff gap. These observations do not establish autonomous recovery
+or a general startup performance guarantee.
+
+Validation: 364 regression tests; actual Codex Start, interrupted execution,
+restart, same-task continuation and UI acceptance; independent product checks;
+public skill CLI, documentation and release publication gates.
+
 ## 2026-09-27 - AIM 3 patch release v3.0.7
 - Added a unified first-run setup for empty repositories and Roadmap-only
   projects, including the Epic workspace, catalog, candidate link, and Portfolio

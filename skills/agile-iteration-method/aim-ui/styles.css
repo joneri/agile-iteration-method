@@ -197,6 +197,9 @@ main { padding: clamp(22px, 4vw, 58px); }
 .background-operation[data-status="running"] .background-operation-light,
 .background-operation[data-status="preflight"] .background-operation-light,
 .background-operation[data-status="queued"] .background-operation-light { background: var(--amber); box-shadow: 0 0 0 5px rgba(246, 173, 34, 0.16); }
+.background-operation[data-status="unknown"],
+.background-operation[data-status="unverified"],
+.background-operation[data-status="checking"],
 .background-operation[data-status="attention"] { background: #fff1d2; border-left-color: var(--amber); }
 .background-operation[data-status="attention"] .background-operation-light { background: var(--amber); }
 .background-operation[data-status="completed"] { background: #e3f3cf; border-left-color: var(--lime); }

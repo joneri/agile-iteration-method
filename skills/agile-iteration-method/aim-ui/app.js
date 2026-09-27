@@ -188,12 +188,12 @@ function renderCodexConnection(board) {
   const connected = control.available === true;
   const panel = $("codex-connection");
   panel.dataset.status = connected ? "connected" : "view_only";
-  $("codex-control-status").textContent = control.label || (connected ? "Codex connected" : "View only");
+  $("codex-control-status").textContent = control.label || (connected ? "Codex task selected" : "View only");
   $("codex-connection-title").textContent = connected
-    ? "This control room can continue the same Codex task."
+    ? "Start and Approve use the selected Codex task."
     : "Connect the authoritative Codex task for one-click control.";
   $("codex-connection-summary").textContent = connected
-    ? "Eligible Start and Approve actions run in the task that launched AIM UI. Change requests and free-form discussions still open a reviewed handoff."
+    ? "AIM checks the task when you start an action, then verifies the requested work result. A selected task does not mean an agent is running."
     : control.reason || "The board remains fully readable. Connect it from Codex to run eligible reviewed actions directly.";
   $("codex-control-route").textContent = connected
     ? "Direct: Start + Approve · Reviewed handoff: Change + Discuss"
@@ -465,6 +465,7 @@ function renderBackgroundOperation(operation) {
 }
 
 async function pollBackgroundOperation(operationId) {
+  if (state.currentOperation?.id && state.currentOperation.id !== operationId) return;
   window.clearTimeout(state.operationTimer);
   try {
     const response = await fetch(`/api/actions/status?id=${encodeURIComponent(operationId)}`, {
@@ -473,6 +474,7 @@ async function pollBackgroundOperation(operationId) {
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
     const operation = payload.operation;
+    if (state.currentOperation?.id && state.currentOperation.id !== operationId) return;
     renderBackgroundOperation(operation);
     if (["completed", "failed", "rejected"].includes(operation.status)) {
       if (operation.status === "completed") refresh();
@@ -480,17 +482,19 @@ async function pollBackgroundOperation(operationId) {
     }
     state.operationTimer = window.setTimeout(() => pollBackgroundOperation(operationId), 1000);
   } catch (error) {
+    if (state.currentOperation?.id && state.currentOperation.id !== operationId) return;
     renderBackgroundOperation({
       id: operationId,
-      status: "failed",
-      message: `Background status could not be read: ${error.message}`,
+      status: "unknown",
+      message: "Contact interrupted. Your work remains on the board; checking again…",
     });
+    state.operationTimer = window.setTimeout(() => pollBackgroundOperation(operationId), 5000);
   }
 }
 
 async function dispatchBackgroundAction(action, button) {
   if (button) button.disabled = true;
-  renderBackgroundOperation({ status: "queued", message: "Validating the AIM action…" });
+  renderBackgroundOperation({ id: action.operationId, status: "queued", message: "Validating the AIM action…" });
   try {
     const response = await fetch("/api/actions/dispatch", {
       method: "POST",
@@ -498,12 +502,36 @@ async function dispatchBackgroundAction(action, button) {
       body: JSON.stringify({ envelope: action.envelope }),
     });
     const payload = await response.json();
-    if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+    if (!response.ok && response.status < 500) {
+      renderBackgroundOperation({ id: action.operationId, status: "rejected", message: payload.error || "The action was not started. The board will show the current next step." });
+      if (button) button.disabled = false;
+      refresh();
+      return;
+    }
+    if (!response.ok) throw new Error("Unconfirmed action");
     renderBackgroundOperation(payload.operation);
     pollBackgroundOperation(payload.operation.id);
   } catch (error) {
-    renderBackgroundOperation({ status: "rejected", message: error.message });
-    if (button) button.disabled = false;
+    renderBackgroundOperation({ id: action.operationId, status: "unknown", message: "The action could not be confirmed. Checking its saved status…" });
+    if (action.operationId) pollBackgroundOperation(action.operationId);
+  }
+}
+
+async function restoreBackgroundOperation() {
+  // Server-owned metadata survives refreshes and changed local ports. Never redispatch.
+  try {
+    const response = await fetch("/api/actions/latest", { cache: "no-store" });
+    if (!response.ok) throw new Error("Status unavailable");
+    const { operation } = await response.json();
+    if (state.currentOperation) return;
+    if (operation) {
+      renderBackgroundOperation(operation);
+      pollBackgroundOperation(operation.id);
+    } else if (state.currentOperation?.status === "unknown") {
+      renderBackgroundOperation({ status: "unknown", message: "No saved action was found. Your board remains available." });
+    }
+  } catch {
+    window.setTimeout(restoreBackgroundOperation, 5000);
   }
 }
 
@@ -1319,7 +1347,9 @@ function updateHeartbeat(board) {
   $("last-refresh").textContent = `Updated ${formatTime(board.generatedAt)}`;
   setConnection(
     board.health === "degraded" ? "error" : "live",
-    `Live · ${activeCount} active Epic${activeCount === 1 ? "" : "s"}`,
+    board.health === "healthy"
+      ? `Board updated · ${activeCount} open Epic${activeCount === 1 ? "" : "s"}`
+      : `Partial view · ${activeCount} visible open Epic${activeCount === 1 ? "" : "s"}`,
   );
 }
 
@@ -1446,4 +1476,5 @@ async function refresh() {
   }
 }
 
+restoreBackgroundOperation();
 refresh();

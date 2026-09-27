@@ -74,6 +74,16 @@ class AimUiTests(unittest.TestCase):
         )
         return root
 
+    def test_reserved_increment_does_not_claim_gate_e_before_start(self) -> None:
+        runtime = state("gate_a_pending")
+        runtime.update(activeIncrementId=None, plannedIncrementId="DI-001", currentRole="PO", lastGatePassed=None)
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary), runtime)
+            increment = build_board(repo)["epics"][0]["increments"][0]
+            self.assertTrue(increment["identityReserved"])
+            self.assertIsNone(increment["gate"])
+            self.assertIsNone(increment["acceptanceEvidence"])
+
     def _publish_closure_truth(
         self,
         repo: Path,
@@ -371,7 +381,8 @@ class AimUiTests(unittest.TestCase):
 
             oversized = build_board(repo)
 
-            self.assertEqual(oversized["epics"], [])
+            self.assertEqual(len(oversized["epics"]), 1)
+            self.assertTrue(oversized["epics"][0]["observationOnly"])
             self.assertTrue(
                 any("larger than 1000000 bytes" in item for item in oversized["warnings"])
             )
@@ -391,10 +402,84 @@ class AimUiTests(unittest.TestCase):
 
             linked = build_board(repo)
 
-            self.assertEqual(linked["epics"], [])
+            self.assertEqual(len(linked["epics"]), 1)
+            self.assertTrue(linked["epics"][0]["observationOnly"])
             self.assertTrue(
                 any("must not be a symbolic link" in item for item in linked["warnings"])
             )
+
+    def test_mixed_workspaces_survive_missing_or_broken_administration(self):
+        import shutil
+        for catalog in ("missing", "broken", "valid", "invalid_utf8"):
+            for defect in ("json", "missing_state", "invalid_utf8"):
+                with self.subTest(catalog=catalog, defect=defect), tempfile.TemporaryDirectory() as temporary:
+                    repo = self._repo(Path(temporary))
+                    good = self._additional_workspace(repo, "good")
+                    bad = self._additional_workspace(repo, "bad", epic_id="EPIC-BAD", increment_id="DI-003")
+                    # Modern projects have no root checkpoint.
+                    for name in ("state.json", "epic.md", "increments", "decisions", "reviews"):
+                        path = repo / ".aim" / name
+                        shutil.rmtree(path) if path.is_dir() else path.unlink()
+                    state_path = bad / "state.json"
+                    if defect == "missing_state":
+                        state_path.unlink()
+                    else:
+                        state_path.write_bytes(b"{" if defect == "json" else b"\xff")
+                    index = repo / ".aim/ui-portfolio.json"
+                    if catalog == "valid":
+                        self._portfolio(repo, "workspaces/good", "workspaces/bad")
+                    elif catalog != "missing":
+                        index.write_bytes(b"{" if catalog == "broken" else b"\xff")
+                    before = {p: p.read_bytes() for p in (repo / ".aim").rglob("*") if p.is_file()}
+                    board = build_board(repo)
+                    self.assertEqual([e["id"] for e in board["epics"]], ["EPIC-TEST-002"])
+                    self.assertEqual(board["health"], "partial")
+                    self.assertIsNone(board["onboarding"])
+                    self.assertTrue(board["workspaceDiagnostics"])
+                    self.assertNotEqual(board["recovery"]["kind"], "empty_repository")
+                    self.assertEqual({p: p.read_bytes() for p in before}, before)
+
+    def test_observed_gate_has_no_actions_and_recovers_after_index_repair(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            runtime = state("po_approval_pending")
+            runtime.update(currentRole="PO", lastGatePassed="Gate D")
+            repo = self._repo(Path(temporary), runtime)
+            self._portfolio(repo, ".")
+            before = build_board(repo)
+            self.assertTrue(before["epics"][0]["increments"][0]["actions"])
+            catalog = repo / ".aim/ui-portfolio.json"
+            original = catalog.read_bytes()
+            catalog.write_text("{")
+            broken = build_board(repo)
+            self.assertEqual(broken["epics"][0]["increments"][0]["column"], "ready_for_release")
+            self.assertEqual(broken["epics"][0]["increments"][0]["actions"], [])
+            self.assertTrue(broken["epics"][0]["observationOnly"])
+            from aim_ui import AimUiHandler
+            from types import SimpleNamespace
+            handler = object.__new__(AimUiHandler)
+            handler.server = SimpleNamespace(repo_root=repo)
+            envelope = before["epics"][0]["increments"][0]["actions"][0]["envelope"]
+            with self.assertRaisesRegex(AimUiError, "stale, unavailable"):
+                handler._eligible_action(envelope)
+            catalog.write_bytes(original)
+            after = build_board(repo)
+            self.assertEqual(after["health"], "healthy")
+            self.assertTrue(after["epics"][0]["increments"][0]["actions"])
+
+    def test_fallback_never_reads_linked_workspace(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            outside = repo / "outside"
+            outside.mkdir()
+            (outside / "state.json").write_text('{"secret":"DO-NOT-READ"}')
+            parent = repo / ".aim/workspaces"
+            parent.mkdir()
+            (parent / "linked").symlink_to(outside, target_is_directory=True)
+            (repo / ".aim/ui-portfolio.json").write_text("{")
+            board = build_board(repo)
+            self.assertEqual([e["id"] for e in board["epics"]], ["EPIC-TEST-001"])
+            self.assertNotIn("DO-NOT-READ", json.dumps(board))
+            self.assertEqual(board["health"], "partial")
 
     def test_backlog_schema_is_supported_and_accepts_planning_only_shape(self) -> None:
         schema = json.loads(
@@ -2186,7 +2271,9 @@ class AimUiTests(unittest.TestCase):
             after = state_path.read_bytes()
 
         self.assertEqual(before, after)
-        self.assertEqual([epic["id"] for epic in board["epics"]], ["EPIC-TEST-002"])
+        self.assertEqual([epic["id"] for epic in board["epics"]], ["EPIC-TEST-002", "EPIC-TEST-001"])
+        self.assertTrue(board["epics"][1]["observationOnly"])
+        self.assertEqual(board["epics"][1]["actions"], [])
         diagnostic = next(
             item
             for item in board["workspaceDiagnostics"]
@@ -2510,17 +2597,27 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/board", timeout=3) as response:
                     payload = json.load(response)
                     self.assertTrue(payload["source"]["readOnly"])
-                    self.assertEqual(payload["product"]["version"], "3.0.7")
+                    self.assertEqual(payload["product"]["version"], "3.0.8")
                     self.assertTrue(payload["product"]["capturedAtLaunch"])
                     self.assertIn(
                         payload["backgroundControl"]["status"],
-                        {"connected", "view_only"},
+                        {"configured", "view_only"},
                     )
                     self.assertEqual(payload["backgroundControl"]["setupCommand"], "/aim ui")
+                from aim_codex_bridge import DispatchManager
+                server.dispatch_manager = DispatchManager(repo, None, ledger_path=Path(temporary) / "isolated-ledger.json")
+                with urlopen(f"{url}/api/actions/latest", timeout=3) as response:
+                    self.assertIsNone(json.load(response)["operation"])
+                server.dispatch_manager.ledger_path.write_text("{")
+                with self.assertRaises(HTTPError) as broken_status:
+                    urlopen(f"{url}/api/actions/latest", timeout=3)
+                self.assertEqual(broken_status.exception.code, 503)
+                with urlopen(f"{url}/api/board", timeout=3) as response:
+                    self.assertEqual(json.load(response)["epics"][0]["id"], "EPIC-TEST-001")
                 with urlopen(f"{url}/api/health", timeout=3) as response:
                     health = json.load(response)
                     self.assertEqual(health["protocolVersion"], "1.3")
-                    self.assertEqual(health["productVersion"], "3.0.7")
+                    self.assertEqual(health["productVersion"], "3.0.8")
                     self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST")
                 with self.assertRaises(HTTPError) as error:

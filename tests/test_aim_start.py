@@ -117,7 +117,7 @@ class AimStartTests(unittest.TestCase):
 
     def _fresh_portfolio(self, repo: Path) -> dict[str, str]:
         from aim_portfolio_run import create_run, activate_next
-        (repo / ".aim").mkdir()
+        (repo / ".aim").mkdir(exist_ok=True)
         (repo / ".aim/portfolio-backlog.json").write_text(json.dumps({
             "backlogVersion": "1.0", "updatedAt": "2026-09-27T10:00:00Z", "items": [{
                 "id": "INC-01", "epicId": "EPIC-NEW-001", "epicTitle": "Fresh start",
@@ -181,15 +181,142 @@ class AimStartTests(unittest.TestCase):
                 apply_start(repo, **self._request())
             self.assertFalse((repo / ".aim").exists())
 
-    def test_bootstrap_will_not_adopt_or_hide_existing_root_work(self) -> None:
+    def test_bootstrap_recovers_index_without_rewriting_existing_root_work(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))
             (repo / ".aim/ui-portfolio.json").unlink()
             before = (repo / ".aim/state.json").read_bytes()
-            with self.assertRaisesRegex(AimStartError, "Existing runtime work"):
-                plan_start(repo, **self._request())
-            self.assertEqual((repo / ".aim/state.json").read_bytes(), before)
+            plan = plan_start(repo, **self._request())
             self.assertFalse((repo / ".aim/ui-portfolio.json").exists())
+            apply_start(repo, **self._request(), expected_start_sha256=plan["startSha256"])
+            self.assertEqual((repo / ".aim/state.json").read_bytes(), before)
+            catalog = json.loads((repo / ".aim/ui-portfolio.json").read_text())
+            self.assertEqual(catalog["workspaces"], [{"path": "."}, {"path": "portfolio/EPIC-NEW-001"}])
+
+    def test_recovery_preserves_history_and_is_idempotent(self):
+        from aim_recovery import ensure_catalog
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            self._append_closed_history(repo, 2)
+            catalog = repo / ".aim/ui-portfolio.json"
+            expected = json.loads(catalog.read_text())
+            catalog.unlink()
+            before = {p: p.read_bytes() for p in (repo / ".aim").rglob("*") if p.is_file()}
+            board = build_board(repo)
+            self.assertEqual(len(board["epics"]), 3)
+            self.assertFalse(catalog.exists(), "UI must remain read-only")
+            self.assertEqual(ensure_catalog(repo)["result"], "recovered")
+            self.assertEqual(json.loads(catalog.read_text()), expected)
+            self.assertEqual(ensure_catalog(repo)["result"], "unchanged")
+            self.assertEqual({p: p.read_bytes() for p in before}, before)
+
+    def test_recovery_blocks_ambiguous_or_unsafe_work_without_writes(self):
+        from aim_recovery import ensure_catalog
+        for case in ("duplicate", "missing", "symlink"):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as temporary:
+                repo = self._repo(Path(temporary))
+                self._append_closed_history(repo, 1)
+                catalog = repo / ".aim/ui-portfolio.json"
+                catalog.unlink()
+                child = repo / ".aim/workspaces/history-001/state.json"
+                if case == "duplicate":
+                    child.write_bytes((repo / ".aim/state.json").read_bytes())
+                elif case == "missing":
+                    child.unlink()
+                else:
+                    child.unlink()
+                    child.symlink_to(repo / ".aim/state.json")
+                with self.assertRaises((AimStartError, OSError)):
+                    ensure_catalog(repo)
+                self.assertFalse(catalog.exists())
+
+    def test_packaged_portfolio_start_recovers_history_without_repair_step(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            catalog = repo / ".aim/ui-portfolio.json"
+            catalog.unlink()
+            before = {p: p.read_bytes() for p in (repo / ".aim").rglob("*") if p.is_file()}
+            request = self._fresh_portfolio(repo)
+            command = [sys.executable, "-S",
+                       str(REPO_ROOT / "skills/agile-iteration-method/scripts/aim_start.py"),
+                       "--repo", str(repo)]
+            for key, value in request.items():
+                command.extend(["--" + key.replace("_", "-"), value])
+            preview = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(preview.returncode, 0, preview.stderr)
+            plan = json.loads(preview.stdout)
+            self.assertFalse(catalog.exists())
+            result = subprocess.run(command + ["--apply", "--expected-start-sha256", plan["startSha256"]],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue(json.loads(result.stdout)["visibleOnBoard"])
+            board = build_board(repo)
+            self.assertEqual(board["portfolioRun"]["relationStatus"], "consistent")
+            self.assertEqual({p: p.read_bytes() for p in before}, before)
+            self.assertEqual(len(json.loads(catalog.read_text())["workspaces"]), 2)
+
+    def test_recovery_cli_and_concurrent_catalog_preserve_existing_files(self):
+        from aim_recovery import ensure_catalog
+        import aim_recovery
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            catalog = repo / ".aim/ui-portfolio.json"
+            original = catalog.read_bytes()
+            catalog.unlink()
+            real_link = aim_recovery.os.link
+            def publish_race(source, target):
+                catalog.write_bytes(original)
+                real_link(source, target)
+            with patch.object(aim_recovery.os, "link", side_effect=publish_race):
+                with self.assertRaises(FileExistsError):
+                    ensure_catalog(repo)
+            self.assertEqual(catalog.read_bytes(), original)
+            self.assertFalse(list((repo / ".aim").glob(".catalog-recovery-*")))
+            catalog.unlink()
+            result = subprocess.run([sys.executable, "-S", str(REPO_ROOT / "scripts/aim_recovery.py"),
+                                     "--repo", str(repo)], capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(json.loads(result.stdout)["result"], "recovered")
+            catalog.write_text("{broken")
+            before = catalog.read_bytes()
+            with self.assertRaises(AimStartError):
+                ensure_catalog(repo)
+            self.assertEqual(catalog.read_bytes(), before)
+
+    def test_recovered_work_counts_for_capacity(self):
+        from aim_activation import activation_preflight
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            (repo / ".aim/ui-portfolio.json").unlink()
+            state_path = repo / ".aim/state.json"
+            state = json.loads(state_path.read_text())
+            state.update(epicStatus="increment_in_progress", currentRole="Dev",
+                         activeIncrementId="DI-001", lastGatePassed="Gate B")
+            state_path.write_text(json.dumps(state))
+            (repo / ".aim/portfolio-control.json").write_text(json.dumps({
+                "controlVersion": "1.0", "maxActiveEpics": 1,
+                "updatedAt": "2026-08-23T10:00:00Z"}))
+            result = activation_preflight(repo, epic_id="EPIC-NEW-001")
+            self.assertFalse(result["allowed"])
+            self.assertEqual(result["code"], "capacity_full")
+
+    def test_recovery_binds_changes_and_rolls_back_new_start(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            catalog = repo / ".aim/ui-portfolio.json"
+            catalog.unlink()
+            plan = plan_start(repo, **self._request())
+            state = repo / ".aim/state.json"
+            value = json.loads(state.read_text())
+            value["updatedAt"] = "2026-08-23T10:01:00Z"
+            state.write_text(json.dumps(value))
+            with self.assertRaisesRegex(AimStartError, "changed"):
+                apply_start(repo, **self._request(), expected_start_sha256=plan["startSha256"])
+            with self.assertRaises(AimStartError):
+                apply_start(repo, **self._request(), fault_at="after_catalog_publish")
+            self.assertFalse(catalog.exists())
+            self.assertEqual(json.loads(state.read_text()), value)
+            self.assertFalse((repo / ".aim/portfolio/EPIC-NEW-001").exists())
 
     def test_changed_mandate_or_new_catalog_during_bootstrap_preserves_inputs(self) -> None:
         for change in ("mandate", "catalog"):

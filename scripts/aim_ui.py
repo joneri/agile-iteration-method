@@ -95,6 +95,7 @@ UI_PROTOCOL_VERSION = "1.3"
 PAYLOAD_FILES = (
     "scripts/aim_ui_control.py",
     "scripts/aim_ui.py",
+    "scripts/aim_recovery.py",
     "scripts/aim_codex_bridge.py",
     "scripts/aim_runtime_contract.py",
     "aim-ui/index.html",
@@ -134,11 +135,15 @@ def payload_fingerprint() -> str:
 
 def _read_json(path: Path) -> dict[str, Any]:
     try:
+        if path.is_symlink() or path.stat().st_size > 1_000_000:
+            raise AimUiError(f"{path.name} is not a bounded regular JSON file.")
         value = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
         raise AimUiError(f"Missing {path.name}.") from exc
     except json.JSONDecodeError as exc:
         raise AimUiError(f"{path.name} contains invalid JSON at line {exc.lineno}.") from exc
+    except (OSError, UnicodeError) as exc:
+        raise AimUiError(f"Could not read {path.name}.") from exc
     if not isinstance(value, dict):
         raise AimUiError(f"{path.name} must contain a JSON object.")
     return value
@@ -146,6 +151,8 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 def _read_markdown(path: Path) -> str:
     try:
+        if path.is_symlink():
+            raise AimUiError(f"{path.name} must not be a symbolic link.")
         return path.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         raise AimUiError(f"Could not read {path.name}.") from exc
@@ -524,6 +531,7 @@ def _action_descriptor(
         "reason": reason,
         "requiresInput": requires_input,
         "envelope": envelope,
+        "operationId": canonical_digest(envelope),
     }
     if enabled and not requires_input:
         descriptor["prompt"] = action_prompt(envelope)
@@ -587,6 +595,14 @@ def _attach_actions(
         )
         planning = epic.get("planning") or {}
         candidates = planning.get("candidates") or []
+        if (epic.get("runtimeStatus") == "gate_a_pending"
+                and epic.get("plannedIncrementId") and epic.get("portfolioCandidateId")
+                and any(item.get("identityReserved")
+                        and item.get("portfolioCandidateId") == epic["portfolioCandidateId"]
+                        for item in epic["increments"])):
+            # A successful Start already linked the candidate to its reserved DI.
+            # It is no longer Planned, but still owns this Epic approval.
+            candidates = [{"id": epic["portfolioCandidateId"]}]
         if candidates:
             candidate = candidates[0]
             if epic["active"] and epic["runtimeStatus"] == "gate_a_pending":
@@ -924,12 +940,15 @@ def _workspace_diagnostic(
     state: dict[str, Any] = {}
     fingerprint = None
     try:
+        state_path.resolve().relative_to(repo_root.resolve())
+        if any(part.is_symlink() for part in (workspace, state_path, *workspace.parents)) or state_path.stat().st_size > 1_000_000:
+            raise OSError("Unsafe diagnostic path")
         state_bytes = state_path.read_bytes()
         fingerprint = hashlib.sha256(state_bytes).hexdigest()
         parsed_state = json.loads(state_bytes)
         if isinstance(parsed_state, dict):
             state = parsed_state
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+    except (OSError, ValueError, UnicodeDecodeError):
         pass
     status = state.get("epicStatus") or state.get("status")
     role = state.get("currentRole") or state.get("role")
@@ -1075,7 +1094,7 @@ def _discussion_projection(
     """Publish a bounded context manifest for a read-only AIM discussion."""
 
     repo_root = repo_root.resolve()
-    aim_root = (repo_root / ".aim").resolve()
+    aim_root = repo_root / ".aim"
     sources: list[dict[str, str]] = []
 
     def add_source(kind: str, label: str, relative: str) -> None:
@@ -1270,7 +1289,7 @@ def _recovery_projection(
                 if completed
                 else "checkpoint_attention"
             ),
-            "title": "Some work cannot be displayed yet",
+            "title": "Showing available work",
             "message": (
                 "Available work is shown on the board and refreshes automatically. "
                 "Saved work is preserved. Details are available below if needed."
@@ -1332,11 +1351,69 @@ def _recovery_projection(
     return None
 
 
+def _observed_workspace_roots(repo_root, aim_root, warnings, diagnostics):
+    """Isolate unreadable neighbors; discovery provides visibility, not authority."""
+    candidates = [aim_root]
+    def report(workspace, reason):
+        warnings.append(reason)
+        diagnostics.append(_workspace_diagnostic(
+            repo_root, workspace, kind="invalid_declared_workspace", reason=reason))
+    if aim_root.is_symlink():
+        report(aim_root, "The AIM directory cannot be read safely.")
+        return "observed-workspaces", [], diagnostics
+    for name in ("portfolio", "workspaces"):
+        parent = aim_root / name
+        if parent.is_symlink():
+            report(parent, f"Skipped linked workspace directory: {name}.")
+            continue
+        if not parent.exists():
+            continue
+        try:
+            if not parent.is_dir():
+                raise OSError("Not a directory")
+            from itertools import islice
+            children = list(islice(parent.iterdir(), 501))
+            if len(children) > 500:
+                report(parent, f"Workspace discovery limit reached in {name}.")
+            candidates.extend(sorted(children[:500]))
+        except OSError:
+            report(parent, f"Could not read workspace directory: {name}.")
+    roots = []
+    for candidate in candidates:
+        try:
+            if candidate.is_symlink():
+                report(candidate, "A linked workspace was skipped.")
+                continue
+            if not candidate.is_dir():
+                if candidate != aim_root:
+                    report(candidate, "A workspace location is not a directory.")
+                continue
+            evidence = any((candidate / name).exists() or (candidate / name).is_symlink()
+                           for name in ("state.json", "epic.md"))
+            for name in ("increments", "decisions", "reviews"):
+                directory = candidate / name
+                evidence = evidence or directory.is_symlink() or (
+                    directory.is_dir() and next(directory.iterdir(), None) is not None)
+            if not evidence:
+                continue
+            if any((candidate / name).is_symlink()
+                   for name in ("state.json", "epic.md", "increments", "decisions", "reviews")):
+                report(candidate, "A workspace with linked runtime artifacts was skipped.")
+                continue
+            candidate.resolve().relative_to(aim_root.resolve())
+            roots.append(candidate)
+        except (OSError, ValueError):
+            report(candidate, "A saved workspace could not be read safely.")
+    return ("observed-workspaces" if roots or diagnostics else "uninitialized"), roots, diagnostics
+
+
 def _workspace_roots(
     repo_root: Path, aim_root: Path, warnings: list[str]
 ) -> tuple[str, list[Path], list[dict[str, Any]]]:
     """Resolve declared Epic workspaces strictly inside the repository .aim root."""
 
+    if aim_root.is_symlink():
+        return _observed_workspace_roots(repo_root, aim_root, warnings, [])
     if not aim_root.is_dir():
         return "uninitialized", [], []
 
@@ -1354,22 +1431,21 @@ def _workspace_roots(
                 reason=warning,
             )
         )
-        return "portfolio", [], diagnostics
+        return _observed_workspace_roots(repo_root, aim_root, warnings, diagnostics)
+    if not portfolio_path.exists() and not portfolio_path.is_symlink():
+        # The index is derived administration. Intact work can be displayed
+        # immediately without making the read-only UI write a repair.
+        from aim_recovery import discover_catalog
+        from aim_start import AimStartError
+        try:
+            _, recovered, _ = discover_catalog(aim_root)
+        except (AimStartError, OSError, ValueError):
+            recovered = []
+        if recovered:
+            mode = "single-workspace" if len(recovered) == 1 and recovered[0][0] == "." else "portfolio"
+            return mode, [workspace for _, workspace in recovered], diagnostics
     if not portfolio_path.is_file():
-        # Planning and calibration may create .aim before any runtime exists.
-        # Only actual runtime evidence makes a missing checkpoint a problem.
-        runtime_present = any(
-            (aim_root / name).exists() or (aim_root / name).is_symlink()
-            for name in ("state.json", "epic.md")
-        ) or any(
-            directory.is_symlink() or (directory.is_dir() and any(directory.iterdir()))
-            for directory in (
-                aim_root / "increments", aim_root / "decisions", aim_root / "reviews"
-            )
-        )
-        if not runtime_present:
-            return "uninitialized", [], diagnostics
-        return "single-workspace", [aim_root], diagnostics
+        return _observed_workspace_roots(repo_root, aim_root, warnings, diagnostics)
     if portfolio_path.stat().st_size > MAX_PORTFOLIO_BYTES:
         warning = f"{PORTFOLIO_FILE} is larger than {MAX_PORTFOLIO_BYTES} bytes."
         warnings.append(warning)
@@ -1381,7 +1457,7 @@ def _workspace_roots(
                 reason=warning,
             )
         )
-        return "portfolio", [], diagnostics
+        return _observed_workspace_roots(repo_root, aim_root, warnings, diagnostics)
     try:
         portfolio = _read_json(portfolio_path)
     except AimUiError as exc:
@@ -1394,7 +1470,7 @@ def _workspace_roots(
                 reason=str(exc),
             )
         )
-        return "portfolio", [], diagnostics
+        return _observed_workspace_roots(repo_root, aim_root, warnings, diagnostics)
     if portfolio.get("portfolioVersion") != PORTFOLIO_VERSION:
         warnings.append(
             f"{PORTFOLIO_FILE} must declare portfolioVersion {PORTFOLIO_VERSION}."
@@ -1407,7 +1483,7 @@ def _workspace_roots(
                 reason=warnings[-1],
             )
         )
-        return "portfolio", [], diagnostics
+        return _observed_workspace_roots(repo_root, aim_root, warnings, diagnostics)
     declared = portfolio.get("workspaces")
     if not isinstance(declared, list) or not declared:
         warnings.append(f"{PORTFOLIO_FILE} must contain a non-empty workspaces array.")
@@ -1419,7 +1495,7 @@ def _workspace_roots(
                 reason=warnings[-1],
             )
         )
-        return "portfolio", [], diagnostics
+        return _observed_workspace_roots(repo_root, aim_root, warnings, diagnostics)
     roots: list[Path] = []
     seen: set[Path] = set()
     for index, item in enumerate(declared):
@@ -1431,7 +1507,11 @@ def _workspace_roots(
         if relative.is_absolute():
             warnings.append(f"Ignored workspace {index + 1}: path must be relative to .aim.")
             continue
-        candidate = (aim_root / relative).resolve()
+        unresolved = aim_root / relative
+        if any(component.is_symlink() for component in (unresolved, *unresolved.parents)):
+            warnings.append(f"Ignored workspace {index + 1}: symbolic link.")
+            continue
+        candidate = unresolved.resolve()
         try:
             candidate.relative_to(aim_root)
         except ValueError:
@@ -1472,7 +1552,7 @@ def _workspace_roots(
         if candidate not in declared_paths:
             reason = (
                 f"{(candidate / 'state.json').relative_to(repo_root).as_posix()} is not "
-                f"declared in .aim/{PORTFOLIO_FILE}; the active Portfolio board cannot project it."
+                f"declared in .aim/{PORTFOLIO_FILE}; it is shown for reference without gate actions."
             )
             diagnostic = _workspace_diagnostic(
                 repo_root,
@@ -1483,6 +1563,7 @@ def _workspace_roots(
                 drift=drift,
             )
             diagnostics.append(diagnostic)
+            roots.append(candidate)
             warnings.append(
                 f"{diagnostic['epicId']}: orphaned/invisible workspace at "
                 f"{diagnostic['statePath']}. {reason}"
@@ -1593,6 +1674,9 @@ def _load_backlog(aim_root: Path, warnings: list[str]) -> list[dict[str, Any]]:
 def _project_epic(
     repo_root: Path, aim_root: Path, warnings: list[str]
 ) -> dict[str, Any]:
+    if any((aim_root / name).is_symlink()
+           for name in ("state.json", "epic.md", "increments", "decisions", "reviews")):
+        raise AimUiError("A workspace contains linked runtime artifacts.")
     state = _read_json(aim_root / "state.json")
     status_fallback = _status_only_fallback(state)
     if status_fallback is None:
@@ -1726,7 +1810,7 @@ def _project_epic(
                         status_fallback if is_active and status_fallback is not None else None
                     ),
                     "canonicalOwner": owner,
-                    "gate": state.get("lastGatePassed") if is_active else "Gate E",
+                    "gate": state.get("lastGatePassed") if is_active or is_reserved else "Gate E" if accepted else None,
                     "mode": state["mode"],
                     "costProfile": state["costProfile"],
                     "updatedAt": state["updatedAt"] if is_active else None,
@@ -1975,10 +2059,11 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         ),
     }
     seen_epics: set[str] = set()
+    ambiguous_epics: set[str] = set()
     for index, workspace in enumerate(workspaces):
         try:
             epic = _project_epic(repo_root, workspace, warnings)
-        except AimUiError as exc:
+        except (AimUiError, OSError, UnicodeError) as exc:
             warnings.append(f"Workspace {index + 1}: {exc}")
             state = {}
             try:
@@ -2006,6 +2091,10 @@ def build_board(repo_root: Path) -> dict[str, Any]:
                 )
             continue
         if epic["id"] in seen_epics:
+            ambiguous_epics.add(epic["id"])
+            workspace_diagnostics.append(_workspace_diagnostic(
+                repo_root, workspace, kind="ambiguous_workspace",
+                reason="Two saved workspaces claim the same Epic.", epic_id=epic["id"]))
             warnings.append(f"Workspace {index + 1}: duplicate Epic id {epic['id']}.")
             continue
         seen_epics.add(epic["id"])
@@ -2158,6 +2247,16 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         repo_root, base["epics"], control, portfolio_run, backlog_updated_at, warnings
     )
     for epic in base["epics"]:
+        if (source_kind == "observed-workspaces" or epic["id"] in ambiguous_epics
+                or any(item["kind"] == "orphaned_invisible_workspace"
+                       and item["statePath"] == (
+                           ".aim/state.json" if epic["workspace"] == "."
+                           else f".aim/{epic['workspace']}/state.json")
+                       for item in workspace_diagnostics)):
+            epic["actions"] = []
+            epic["observationOnly"] = True
+            for increment in epic["increments"]:
+                increment["actions"] = []
         epic.pop("uiDecision", None)
     base["handoff"] = {
         "method": "codex_deep_link",
@@ -2353,10 +2452,10 @@ class AimUiHandler(BaseHTTPRequestHandler):
                 "available": self.server.dispatch_manager.is_bound,
                 "method": "bound_codex_thread",
                 "status": (
-                    "connected" if self.server.dispatch_manager.is_bound else "view_only"
+                    "configured" if self.server.dispatch_manager.is_bound else "view_only"
                 ),
                 "label": (
-                    "Codex connected"
+                    "Codex task selected"
                     if self.server.dispatch_manager.is_bound
                     else "View only"
                 ),
@@ -2377,6 +2476,14 @@ class AimUiHandler(BaseHTTPRequestHandler):
                 ),
             }
             self._json(HTTPStatus.OK, board)
+            return
+        if parsed.path == "/api/actions/latest":
+            try:
+                operation = self.server.dispatch_manager.latest()
+            except CodexBridgeError:
+                self._json(HTTPStatus.SERVICE_UNAVAILABLE, {"error": "Saved action status is temporarily unavailable."})
+                return
+            self._json(HTTPStatus.OK, {"operation": operation})
             return
         if parsed.path == "/api/actions/status":
             operation_id = parse_qs(parsed.query).get("id", [""])[0]

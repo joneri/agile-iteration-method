@@ -483,8 +483,19 @@ registers `.aim/portfolio/<EPIC-ID>/`, reserves a canonical `DI-*`, and verifies
 the Epic and reserved Increment through the AIM UI read model before Gate A is
 reported ready. Invalid, stale, active-capacity-full, colliding, traversing, escaped, symlinked,
 or invisible relations fail closed without root state or a partial workspace.
-Existing orphaned or legacy checkpoints are reported by validation and UI with
-an explicit migration/repair next action; neither surface modifies them.
+A missing catalog with intact, uniquely identified workspaces is recoverable
+administration. The start helper reconstructs it automatically while preserving
+every checkpoint and counting existing running work. AIM UI can project the
+same discovered workspaces read-only before the index is persisted.
+Before resuming existing work with a missing catalog, call the trusted packaged
+`scripts/aim_recovery.py --repo <repo>` once. This mechanical recovery is
+included in an authorized start/continue intent; do not ask for migration
+approval or have the agent hand-edit JSON. It rebuilds only the missing index
+from the root workspace and immediate children of `portfolio/` and
+`workspaces/`. Existing indexes, checkpoints, decisions, plans, and history
+are never replaced. Malformed state, duplicate identities, unsafe paths, or
+missing task evidence require a concrete explanation of the uncertain work.
+Do not loop through speculative repairs or claim implementation has started.
 
 `/aim start "PORTFOLIO" mode:auto` snapshots the valid ordered AIM UI Backlog,
 excluding candidates that already carry a `runtimeIncrementId`, previews it,
@@ -518,7 +529,7 @@ the selected Portfolio checkpoint at `gate_a_pending`. The helper validates
 with its packaged dependency-free schema before publication and verifies the
 complete board relation afterward; do not install or search for `jsonschema`
 or a repository Python environment for this setup. Existing unrelated runtime
-history is preserved rather than implicitly adopted.
+history and approvals are preserved byte-for-byte during index reconstruction.
 
 Routine startup and bounded technical correction belong to AIM. Keep them out
 of the user's decision queue. Report the product outcome and current work,
@@ -532,6 +543,14 @@ consumed. Validate the complete proposed state before a later phase write too.
 If a genuine scope, data, permission, or evidence issue remains, explain its
 user impact and one needed decision; do not hide it or claim that coding has
 started while only initialization has completed.
+
+Measure startup at the agent boundary when evaluating this journey: record the
+authorized start time, tool-call count before the first actual product source
+edit, and that edit's time/path. Exclude AIM metadata, plans, and test fixture
+edits from the product milestone. Report setup duration separately if no
+product edit has happened; never substitute a helper benchmark for observed
+agent time-to-code. Keep timing evidence in the run's supporting log, not in
+user decision prompts.
 
 Several planned `INC-*` candidates may belong to the same Epic. Preserve every
 candidate, its scope, and its order; never merge or split the Roadmap merely to

@@ -85,8 +85,9 @@ must agree; a changed or invalid release identity prevents stale-process reuse.
 
 For direct **Connected Codex control**, use Codex with ChatGPT-managed usage,
 open the authoritative Codex task for the repository, and run `/aim ui` from
-that task. The UI shows **Codex connected** when eligible Start and Approve
-actions can continue in the same task. If the UI was launched elsewhere, it
+that task. The UI shows **Codex task selected** when a task binding is configured.
+That label does not claim a live connection or agent activity: the bridge checks
+the task before dispatch. **Board updated** describes read-model freshness only. If the UI was launched elsewhere, it
 shows **View only**, keeps the full read-only board available, and explains how
 to reconnect. No internal task identifier is exposed.
 
@@ -178,12 +179,25 @@ workspace, and verifies the same read model served by `/api/board` before Gate A
 is shown as ready. Invalid, stale, active-capacity-full, colliding, escaped, or
 symlinked input leaves no root checkpoint or retained partial workspace.
 
-If a root or contained checkpoint has `state.json` but is not declared, the
-control room shows a prominent **Read-only integrity warning** with its Epic,
-path, and the failed catalog relation. The same panel names legacy status,
-Gate, or runtime Increment values that prevent truthful projection. It never
-registers, migrates, rewrites, merges, accepts, or closes the checkpoint; the
-operator returns to AIM chat for an explicit repair or migration decision.
+If the workspace index is missing, AIM UI displays intact work discovered in
+the root workspace and the supported `portfolio/` and `workspaces/` locations.
+The browser stays read-only. On an authorized start or resume, AIM reconstructs
+that index automatically without changing checkpoints, plans, approvals, or
+history. Existing running work still counts toward capacity.
+
+When a catalog is missing, malformed, oversized, or unreadable, the board
+discovers each contained workspace separately in the supported locations.
+Unreadable neighbors are isolated. A readable workspace omitted from an
+otherwise valid catalog remains visible too. These observed workspaces expose
+no Start or Approve actions; visibility does not establish runtime authority.
+Catalogued, unambiguous work retains its existing action rules.
+
+When saved task evidence is unreadable or contradictory, available work remains
+visible and technical details stay in the diagnostic view. The status identifies
+a partial view rather than a healthy empty project. Normal polling restores the
+full view when the underlying files become readable again. A decision should
+describe the uncertain task or scope; users do not choose JSON formats or
+perform routine index maintenance. Existing indexes are not silently replaced.
 
 ## Control focus and concurrent capacity from chat
 
@@ -562,14 +576,42 @@ It never calls `thread/start`, `thread/fork`, `turn/steer`, or
 `turn/interrupt`. A deterministic client message id plus a private, atomic
 operational ledger makes retries and server restarts idempotent.
 
-Queued, preflight, running, attention, completed, rejected, and failed states
-are projected in a live region. Approval, permission, user-input, and MCP
-elicitation requests become attention state; the unattended bridge never
-answers them. If the turn cannot complete without that answer, the bridge times
-out, terminates its local app-server process, and reports failure. The operator
-can then continue or retry manually in Codex. Operational dispatch metadata
-lives under the local AIM UI instance directory with owner-only permissions,
-outside the repository, and never represents Gate or runtime truth.
+Queued, starting, running, checking, attention, unverified, unknown, completed,
+and rejected states appear in a live region. `running` requires a returned turn
+id or a read-only observation of that saved turn in progress. A completed Codex
+reply triggers verification; it is not a completed AIM action.
+
+Verification binds the original enabled envelope to its workspace and Increment.
+Start requires a new candidate-to-runtime link and the corresponding visible,
+authoritative workspace. Gate A and B require the requested Increment's coherent
+runtime progression; Gate E requires matching structured acceptance evidence.
+Observation-only workspaces, wrong identities, unchanged checkpoints, and
+missing decisions cannot yield success. “Verified” means the requested AIM
+transition is observed, not that product implementation is correct or the Epic
+is complete. The private result records the checked time and observed state digest.
+
+The private atomic ledger retains the envelope, target and returned turn id.
+`/api/actions/latest` restores the current task's last action after a page or
+server restart, including when the local port changes. Recovery observes the
+saved result and, when available, reads the exact saved Codex turn. It never
+resumes or submits a turn. Missing results remain unverified and are checked
+again, at most once every five seconds while the UI is following the operation.
+A quiet active turn is kept alive even when no event arrives for more than a
+minute. A single buffered reader drains all events; an idle read interval never
+terminates Codex. Startup request deadlines still apply.
+A known failure keeps its explanation after refresh and restart; an outdated
+Codex CLI is described plainly without exposing the raw service error. Reserved
+Increments never display Gate E before acceptance.
+Once a turn is known to be finished, checks read local results without reopening
+Codex. A response lost after submission stays uncertain and cannot be retried as a
+new send. Old completion records without evidence are shown as unverified.
+
+Approval, permission, user-input, and MCP elicitation requests ask the operator
+to continue in Codex; the bridge never answers them. Interrupted status requests
+keep the board readable and resume polling, without declaring the action failed.
+Operational metadata lives outside the repository with owner-only permissions;
+verification and recovery never write AIM runtime artifacts. No status label
+substitutes for a Gate or Epic acceptance decision.
 
 Card position and decision publication are separate signals. A workspace may
 opt into exact timing with the runtime-state extension below:
@@ -633,3 +675,12 @@ autonomous agent spawning, remote aggregation, account management, production
 telemetry, and cross-repository analytics remain outside this version.
 Background control is a transport to the one main AIM thread, never a second
 runtime writer.
+
+### Measure the interrupted user journey
+
+The source-repository [journey measurement guide](aim-ui-journey-measurement.md)
+measures real-agent startup, product-file creation, interruptions, explicit
+continuations and transcript-reviewed questions or repairs. It keeps missing
+observations unknown and separates verified action results from agent activity.
+A verified Start after reconnecting does not establish that Codex is still
+working; the action status now says when current agent activity is unconfirmed.

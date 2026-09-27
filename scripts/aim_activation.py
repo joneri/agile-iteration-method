@@ -350,7 +350,7 @@ def activation_preflight(
             catalog_sha = None
             from aim_start import _catalog as bootstrap_catalog, AimStartError
             try:
-                bootstrap_catalog(aim_root)
+                catalog, _, declared = bootstrap_catalog(aim_root)
             except AimStartError as exc:
                 return _blocked("catalog_missing", str(exc))
         if expected_catalog_sha256 is not None and catalog_sha != expected_catalog_sha256:

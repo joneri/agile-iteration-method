@@ -45,6 +45,7 @@ PRODUCT_VERSION_PATTERN = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.
 PAYLOAD_FILES = (
     "scripts/aim_ui_control.py",
     "scripts/aim_ui.py",
+    "scripts/aim_recovery.py",
     "scripts/aim_codex_bridge.py",
     "scripts/aim_runtime_contract.py",
     "aim-ui/index.html",
