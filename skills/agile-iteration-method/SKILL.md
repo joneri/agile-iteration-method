@@ -477,10 +477,15 @@ Roadmap additions are excluded and escalation pauses the run. Portfolio Strict
 is not advertised as a multi-Epic start command until that behavior has a
 canonical contract; ordinary single-Epic Strict remains supported.
 
-For a genuinely new `/aim start "EPIC: ..."`, inspect
-`.aim/ui-portfolio.json` before the first runtime write. When present, resolve
-the trusted package-owned `scripts/aim_start.py`, show its no-write preview, and
-apply only that reviewed catalog digest. A successful start creates and
+For a genuinely new `/aim start "EPIC: ..."`, always resolve the trusted
+package-owned `scripts/aim_start.py` before the first runtime write. A missing
+`.aim` directory or Portfolio catalog is a normal first start: the helper
+creates both together with the first contained workspace. Never bootstrap by
+handwriting `.aim/state.json`, temporarily registering a root workspace, or
+creating an empty placeholder catalog. Preview without writes and apply the
+same `--expected-start-sha256` (or the catalog digest for a non-candidate start).
+Under an approved Portfolio mandate this mechanical preview/apply needs no
+additional user decision. A successful start creates and
 registers `.aim/portfolio/<EPIC-ID>/`, reserves a canonical `DI-*`, and verifies
 the Epic and reserved Increment through the AIM UI read model before Gate A is
 reported ready. Invalid, stale, active-capacity-full, colliding, traversing, escaped, symlinked,
@@ -501,8 +506,8 @@ revalidates snapshot hash, checkpoint, active workspace, and admission before
 resuming. Scope expansion, unsafe effects, ambiguous evidence, irreparable
 validation, concurrency conflicts, user change/stop intents, and malformed or
 stale run state pause or fail closed. Later Backlog additions are excluded.
-After review, validation, and Gate E acceptance, revalidate again, record the
-distinct `Epic closure` decision with `portfolio_mandate` authority and mandate
+For the final candidate in an Epic, after review, validation, and Gate E
+acceptance, revalidate again, record the distinct `Epic closure` decision with `portfolio_mandate` authority and mandate
 provenance, complete the active candidate, and activate the next snapshot
 candidate without another user message. Gate E still accepts the Increment
 only; the mandate authorizes the subsequent closure transition.
@@ -510,6 +515,53 @@ A validated completed or stopped run may be moved unchanged into contained
 `.aim/archive/` only through the helper's explicit, timestamp-guarded `archive`
 command. Running, paused, stale, malformed, symlinked, or colliding state blocks
 archival, and Portfolio start never archives implicitly.
+
+For the first selected Portfolio candidate, call `aim_start.py` with
+`--candidate-id <INC-ID>` alongside the reviewed Epic, DI, title, mode, cost,
+platform, and timestamp. Its preview returns `startSha256`; pass that as
+`--expected-start-sha256` on apply. One transaction publishes the workspace,
+creates or updates its catalog, binds `runtimeIncrementId`, and synchronizes
+the selected Portfolio checkpoint at `gate_a_pending`. The helper validates
+with its packaged dependency-free schema before publication and verifies the
+complete board relation afterward; do not install or search for `jsonschema`
+or a repository Python environment for this setup. Existing unrelated runtime
+history is preserved rather than implicitly adopted.
+
+Routine startup and bounded technical correction belong to AIM. Keep them out
+of the user's decision queue. Report the product outcome and current work,
+not an internal catalog/checkpoint/schema repair narrative. After a successful
+start, prepare the real Epic criteria and next Increment, record the mandate's
+eligible Gate A/B decisions, and proceed to Dev without repeating setup scans
+or requesting the same approval. Gates still require real scope and evidence.
+Never publish a guessed runtime status or null optional identifier:
+`plannedIncrementId` is either a canonical reserved DI or absent after it is
+consumed. Validate the complete proposed state before a later phase write too.
+If a genuine scope, data, permission, or evidence issue remains, explain its
+user impact and one needed decision; do not hide it or claim that coding has
+started while only initialization has completed.
+
+Several planned `INC-*` candidates may belong to the same Epic. Preserve every
+candidate, its scope, and its order; never merge or split the Roadmap merely to
+avoid an Epic identity collision. The preview groups candidates by Epic (first
+candidate priority orders Epics) and preserves their order within each Epic.
+Planning ahead does not authorize parallel work or detailed implementation of
+future Increments: refine and deliver one coherent Done Increment at a time.
+
+Start and register each Epic only once. After Gate E, if the approved snapshot
+has another candidate in that Epic, recommend `continue`, checkpoint
+`done_increment_accepted` / `Gate E`, and complete the accepted candidate.
+Select the next candidate as `activation_pending`, keeping the same workspace.
+Create its canonical `DI-*` plan and use packaged
+`scripts/aim_runtime_contract.py continue --candidate-id <INC-ID>` with the exact
+`--authority-state-path`. Preview first; apply binds `--expected-state-sha256`
+and `--expected-continuation-sha256` from that preview. This transition preserves
+accepted history, updates the candidate's Backlog runtime link and workspace
+candidate identity, and returns to Gate B. Then checkpoint the matching state.
+An admission result `continue_epic` means this transition, never a new `start`.
+Only the final candidate in the Epic requires the separate closure truth audit
+and `Epic closure` checkpoint before completion and moving to another Epic.
+A remaining plan is not proof that the Epic is complete. Normal scope/risk
+escalation, review, validation, and acceptance rules still apply at every step.
 
 Portfolio activation, capacity, focus, and status intents follow
 `references/adapter-command-contract.md`. Only the main AIM thread may write
@@ -779,7 +831,7 @@ Every hard-gate checkpoint must make clear:
 - exact files planned or touched
 - how the user should evaluate the step
 
-Use `approve` and `change: ...` as transport shortcuts at hard gates. In Strict mode, stop at Gate A, Gate B, and Gate E and wait for explicit user approval or change direction before advancing state or doing further work. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion. For ordinary Auto, the final pause returns Epic acceptance to the user. For Portfolio Auto, perform the full review as a required execution checkpoint and use the revalidated mandate to record a separate eligible Epic closure. Preserve the closed workspace, accepted evidence, Backlog runtime link, and UI catalog entry before completing the candidate. Select the next candidate only as `activation_pending`; keep it Planned while creating and validating its contained workspace, canonical state, and `runtimeIncrementId`, then advance the Portfolio checkpoint to the exact workspace status. Resume an interrupted `activation_pending` transition deterministically and fail closed on any later missing or mismatched runtime relation. This sequence needs no additional user message unless an escalation condition applies.
+Use `approve` and `change: ...` as transport shortcuts at hard gates. In Strict mode, stop at Gate A, Gate B, and Gate E and wait for explicit user approval or change direction before advancing state or doing further work. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion. For ordinary Auto, the final pause returns Epic acceptance to the user. For Portfolio Auto, perform the full review as a required execution checkpoint and use the revalidated mandate to record a separate eligible Epic closure. For the final candidate in an Epic, preserve the closed workspace, accepted evidence, Backlog runtime link, and UI catalog entry before completing it. Earlier candidates complete at Gate E and continue in the same Epic as described above. Select the next candidate only as `activation_pending`; keep it Planned while creating and validating its contained workspace, canonical state, and `runtimeIncrementId`, then advance the Portfolio checkpoint to the exact workspace status. Resume an interrupted `activation_pending` transition deterministically and fail closed on any later missing or mismatched runtime relation. This sequence needs no additional user message unless an escalation condition applies.
 
 ## State And Validation
 

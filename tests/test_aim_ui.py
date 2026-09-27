@@ -448,6 +448,7 @@ class AimUiTests(unittest.TestCase):
     def test_portfolio_auto_run_is_projected_with_mandate_provenance(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))
+            self._portfolio(repo, ".")
             self._backlog(
                 repo,
                 [
@@ -510,6 +511,30 @@ class AimUiTests(unittest.TestCase):
             }
         )
         with tempfile.TemporaryDirectory() as temporary:
+            repo = Path(temporary)
+            (repo / ".aim").mkdir()
+            self._backlog(
+                repo,
+                [
+                    {
+                        "id": "INC-FIRST",
+                        "epicId": "EPIC-FIRST",
+                        "epicTitle": "Preserve the first outcome",
+                        "title": "Accepted first outcome",
+                        "priority": 1,
+                        "createdAt": "2026-08-23T13:00:00Z",
+                    },
+                    {
+                        "id": "INC-SECOND",
+                        "epicId": "EPIC-SECOND",
+                        "epicTitle": "Activate the second outcome",
+                        "title": "Second runtime",
+                        "priority": 2,
+                        "createdAt": "2026-08-23T13:01:00Z",
+                    },
+                ],
+            )
+            run = create_run(repo, "MANDATE-HANDOFF", "t1", "t1")
             repo = self._repo(Path(temporary), closed)
             (repo / ".aim/epic.md").write_text(
                 "# EPIC-FIRST — Preserve the first outcome\n\n"
@@ -534,28 +559,6 @@ class AimUiTests(unittest.TestCase):
             state_path.write_text(
                 json.dumps(persisted, indent=2) + "\n", encoding="utf-8"
             )
-            self._backlog(
-                repo,
-                [
-                    {
-                        "id": "INC-FIRST",
-                        "epicId": "EPIC-FIRST",
-                        "epicTitle": "Preserve the first outcome",
-                        "title": "Accepted first outcome",
-                        "priority": 1,
-                        "createdAt": "2026-08-23T13:00:00Z",
-                    },
-                    {
-                        "id": "INC-SECOND",
-                        "epicId": "EPIC-SECOND",
-                        "epicTitle": "Activate the second outcome",
-                        "title": "Second runtime",
-                        "priority": 2,
-                        "createdAt": "2026-08-23T13:01:00Z",
-                    },
-                ],
-            )
-            run = create_run(repo, "MANDATE-HANDOFF", "t1", "t1")
             self._portfolio(repo, ".")
             run = activate_next(repo, run["updatedAt"], "t2")
             backlog_path = repo / ".aim/portfolio-backlog.json"
@@ -650,6 +653,7 @@ class AimUiTests(unittest.TestCase):
     def test_portfolio_checkpoint_without_required_runtime_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))
+            self._portfolio(repo, ".")
             self._backlog(
                 repo,
                 [{
@@ -679,6 +683,7 @@ class AimUiTests(unittest.TestCase):
     def test_planned_candidates_project_epics_without_increment_cards(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))
+            self._portfolio(repo, ".")
             self._backlog(
                 repo,
                 [
@@ -735,6 +740,7 @@ class AimUiTests(unittest.TestCase):
     def test_full_capacity_disables_planned_activation_with_reason(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))
+            self._portfolio(repo, ".")
             self._control(repo, maximum=1, focused_epic_id="EPIC-TEST-001")
             self._backlog(
                 repo,
@@ -1070,6 +1076,7 @@ class AimUiTests(unittest.TestCase):
     def test_unresolved_runtime_history_never_becomes_planned_or_activatable(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))
+            self._portfolio(repo, ".")
             self._backlog(
                 repo,
                 [
@@ -1186,7 +1193,7 @@ class AimUiTests(unittest.TestCase):
         allocated = next(epic for epic in board["epics"] if epic["id"] == "EPIC-ALLOCATED")
         fresh = next(epic for epic in board["epics"] if epic["id"] == "EPIC-FRESH")
         self.assertFalse(allocated["actions"][0]["enabled"])
-        self.assertIn("already allocated", allocated["actions"][0]["reason"])
+        self.assertIn("closed", allocated["actions"][0]["reason"])
         self.assertTrue(fresh["actions"][0]["enabled"])
         self.assertEqual(board["roadmap"]["eligibleCount"], 1)
         self.assertEqual(
@@ -2503,7 +2510,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/board", timeout=3) as response:
                     payload = json.load(response)
                     self.assertTrue(payload["source"]["readOnly"])
-                    self.assertEqual(payload["product"]["version"], "3.0.6")
+                    self.assertEqual(payload["product"]["version"], "3.0.7")
                     self.assertTrue(payload["product"]["capturedAtLaunch"])
                     self.assertIn(
                         payload["backgroundControl"]["status"],
@@ -2513,7 +2520,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/health", timeout=3) as response:
                     health = json.load(response)
                     self.assertEqual(health["protocolVersion"], "1.3")
-                    self.assertEqual(health["productVersion"], "3.0.6")
+                    self.assertEqual(health["productVersion"], "3.0.7")
                     self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST")
                 with self.assertRaises(HTTPError) as error:

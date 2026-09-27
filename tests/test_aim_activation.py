@@ -122,7 +122,7 @@ class ActivationPreflightTests(unittest.TestCase):
 
         self.assertFalse(blocked["allowed"])
         self.assertEqual(blocked["code"], "epic_allocated")
-        self.assertIn("already allocated", blocked["message"])
+        self.assertIn("closed", blocked["message"])
         self.assertTrue(allowed["allowed"])
 
     def test_freshness_replay_capacity_and_collision_fail_closed(self) -> None:

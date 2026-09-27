@@ -77,8 +77,8 @@ def _inside_aim(repo_root: Path) -> tuple[Path, Path]:
     aim_root = root / ".aim"
     if aim_root.is_symlink():
         raise AimStartError(".aim must not be a symbolic link.")
-    if not aim_root.is_dir():
-        raise AimStartError("Portfolio-aware start requires an existing .aim directory.")
+    if aim_root.exists() and not aim_root.is_dir():
+        raise AimStartError(".aim is not a directory.")
     resolved = aim_root.resolve()
     try:
         resolved.relative_to(root)
@@ -125,6 +125,17 @@ def _contained_workspace(aim_root: Path, raw: str, index: int) -> Path:
 
 def _catalog(aim_root: Path) -> tuple[dict[str, Any], bytes, list[tuple[str, Path]]]:
     path = aim_root / PORTFOLIO_FILE
+    if not path.exists() and not path.is_symlink():
+        # A missing catalog is normal only before runtime work exists. Never
+        # hide or silently register earlier work while bootstrapping a board.
+        evidence = any((aim_root / name).exists() or (aim_root / name).is_symlink()
+                       for name in ("state.json", "epic.md"))
+        for name in ("increments", "decisions", "reviews", "portfolio", "workspaces"):
+            directory = aim_root / name
+            evidence = evidence or directory.is_symlink() or (directory.is_dir() and any(directory.iterdir()))
+        if evidence:
+            raise AimStartError("Existing runtime work needs a reviewed catalog; it cannot be replaced by a new bootstrap.")
+        return {"portfolioVersion": PORTFOLIO_VERSION, "workspaces": []}, b"", []
     payload = _read_bytes(
         path, maximum=MAX_PORTFOLIO_BYTES, label=PORTFOLIO_FILE
     )
@@ -311,15 +322,16 @@ def plan_start(
     cost_profile: str,
     updated_at: str,
     platform: str = "codex",
+    candidate_id: str | None = None,
 ) -> dict[str, Any]:
-    """Build a no-write Portfolio start plan."""
+    """Build a no-write Portfolio start plan, including first-run bootstrap."""
 
     _validate_request(
         epic_id, increment_id, title, mode, cost_profile, updated_at, platform
     )
     from aim_activation import activation_preflight
 
-    admission = activation_preflight(repo_root, epic_id=epic_id)
+    admission = activation_preflight(repo_root, epic_id=epic_id, candidate_id=candidate_id)
     if not admission["allowed"]:
         raise AimStartError(admission["message"])
     root, aim_root = _inside_aim(repo_root)
@@ -360,11 +372,15 @@ def plan_start(
                 f"Increment identity {increment_id} is already allocated in {raw}."
             )
 
-    return {
+    links = _start_links(root, candidate_id, epic_id, increment_id, updated_at)
+    plan = {
         "result": "planned",
         "repo": str(root),
         "portfolio": f".aim/{PORTFOLIO_FILE}",
         "catalogSha256": _sha256(payload),
+        "bootstrapCatalog": not payload,
+        "candidateId": candidate_id,
+        "links": links,
         "epicId": epic_id,
         "plannedIncrementId": increment_id,
         "workspace": relative_workspace,
@@ -378,6 +394,51 @@ def plan_start(
             f".aim/{PORTFOLIO_FILE}",
         ],
     }
+    if links is not None:
+        plan["writes"].append(".aim/portfolio-backlog.json")
+        if links["run"] is not None:
+            plan["writes"].append(".aim/portfolio-run.json")
+    plan["startSha256"] = _sha256(_json_bytes({**plan, "title": title, "platform": platform}))
+    # Validate the generated state with the packaged, dependency-free schema
+    # implementation before any repository file or directory is written.
+    from aim_runtime_contract import _runtime_state_schema, _schema_issues
+    state = json.loads(_workspace_payloads(plan, title, platform)["state.json"])
+    issues = _schema_issues(state, _runtime_state_schema(root))
+    if issues:
+        raise AimStartError("Generated start state is invalid: " + "; ".join(issues))
+    return plan
+
+
+def _start_links(root: Path, candidate_id: str | None, epic_id: str, increment_id: str, updated_at: str) -> dict[str, Any] | None:
+    if candidate_id is None:
+        return None
+    from aim_activation import _read_backlog, _candidate
+    from aim_portfolio_run import load_run, PortfolioRunError
+
+    backlog, payload = _read_backlog(root / ".aim")
+    candidate = _candidate(backlog, candidate_id, epic_id)
+    if any(item.get("runtimeIncrementId") == increment_id for item in backlog["items"]):
+        raise AimStartError("The reserved Increment is already linked to a Roadmap candidate.")
+    run_path = root / ".aim/portfolio-run.json"
+    run = None
+    run_digest = None
+    if run_path.exists() or run_path.is_symlink():
+        try:
+            run = load_run(root)
+        except PortfolioRunError as exc:
+            raise AimStartError(str(exc)) from exc
+        if run["status"] != "running" or run.get("activeCandidateId") != candidate_id or run.get("checkpoint", {}).get("epicStatus") != "activation_pending":
+            raise AimStartError("Portfolio start must target its selected activation_pending candidate.")
+        snapshot = next(item for item in run["snapshot"] if item["candidateId"] == candidate_id)
+        if any(candidate.get(key) != snapshot[key] for key in ("epicId", "epicTitle", "title", "priority", "createdAt")):
+            raise AimStartError("The selected Roadmap candidate changed since mandate approval.")
+        run_digest = _sha256(run_path.read_bytes())
+        run["checkpoint"] = {"candidateId": candidate_id, "epicStatus": "gate_a_pending",
+                             "gate": "Gate A", "decisionAuthority": "none", "updatedAt": updated_at}
+        run["updatedAt"] = updated_at
+    candidate["runtimeIncrementId"] = increment_id
+    backlog["updatedAt"] = updated_at
+    return {"backlog": backlog, "backlogSha256": _sha256(payload), "run": run, "runSha256": run_digest}
 
 
 def _atomic_write(path: Path, payload: bytes, prefix: str) -> None:
@@ -429,6 +490,8 @@ def _workspace_payloads(plan: dict[str, Any], title: str, platform: str) -> dict
             "targetId": plan["epicId"],
         },
     }
+    if plan.get("candidateId"):
+        state["portfolioCandidateId"] = plan["candidateId"]
     epic = (
         f"# {plan['epicId']} — {title.strip()}\n\n"
         "Role: PO\n\n"
@@ -469,6 +532,11 @@ def _verify_board(repo_root: Path, plan: dict[str, Any], *, ready: bool) -> None
     ]
     if len(increments) != 1 or increments[0].get("runtimeStatus") != "gate_a_pending":
         raise AimStartError("AIM UI did not project the reserved DI identity at Gate A.")
+    if plan.get("candidateId"):
+        if epic.get("portfolioCandidateId") != plan["candidateId"] or increments[0].get("portfolioCandidateId") != plan["candidateId"]:
+            raise AimStartError("The new workspace and Roadmap candidate are not linked on the board.")
+        if plan["links"]["run"] is not None and board["portfolioRun"].get("relationStatus") != "consistent":
+            raise AimStartError("The new workspace and Portfolio checkpoint do not agree.")
     if ready:
         state_path = repo_root / ".aim" / plan["workspace"] / "state.json"
         state = json.loads(state_path.read_text(encoding="utf-8"))
@@ -487,6 +555,8 @@ def apply_start(
     updated_at: str,
     platform: str = "codex",
     expected_catalog_sha256: str | None = None,
+    candidate_id: str | None = None,
+    expected_start_sha256: str | None = None,
     fault_at: str | None = None,
     fault_hook: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
@@ -501,23 +571,31 @@ def apply_start(
         cost_profile=cost_profile,
         updated_at=updated_at,
         platform=platform,
+        candidate_id=candidate_id,
     )
+    if candidate_id is not None and expected_start_sha256 != plan["startSha256"]:
+        raise AimStartError("Start inputs changed or preview is missing; preview again before applying.")
+    if expected_start_sha256 is not None and expected_start_sha256 != plan["startSha256"]:
+        raise AimStartError("Start inputs changed since preview; nothing was written.")
     if expected_catalog_sha256 is not None and plan["catalogSha256"] != expected_catalog_sha256:
         raise AimStartError("Portfolio catalog changed since preview; reload before applying.")
     root, aim_root = _inside_aim(repo_root)
     catalog_path = aim_root / PORTFOLIO_FILE
-    original_catalog = _read_bytes(
-        catalog_path, maximum=MAX_PORTFOLIO_BYTES, label=PORTFOLIO_FILE
-    )
+    _, original_catalog, _ = _catalog(aim_root)
     if _sha256(original_catalog) != plan["catalogSha256"]:
         raise AimStartError("Portfolio catalog changed before staging; no files were written.")
 
+    created_aim_root = not aim_root.exists()
+    if created_aim_root:
+        aim_root.mkdir()
     staging = Path(tempfile.mkdtemp(prefix=f".{epic_id}.start-", dir=aim_root))
     final = aim_root / plan["workspace"]
     portfolio_root = _portfolio_parent(aim_root)
     created_portfolio_root = False
     workspace_published = False
     catalog_published = False
+    original_links: dict[Path, bytes] = {}
+    written_links: list[Path] = []
 
     def checkpoint(name: str) -> None:
         if fault_hook is not None:
@@ -535,9 +613,19 @@ def apply_start(
         (staging / "reviews").mkdir()
         checkpoint("after_staging")
 
-        current_catalog = _read_bytes(
-            catalog_path, maximum=MAX_PORTFOLIO_BYTES, label=PORTFOLIO_FILE
-        )
+        if plan["bootstrapCatalog"]:
+            if catalog_path.exists() or catalog_path.is_symlink():
+                raise AimStartError("Portfolio catalog appeared during staging; no files were published.")
+            current_catalog = b""
+        else:
+            current_catalog = _read_bytes(catalog_path, maximum=MAX_PORTFOLIO_BYTES, label=PORTFOLIO_FILE)
+        # Recheck admission, capacity, and any Roadmap/mandate bindings at the
+        # publication boundary. Ignore only this transaction's staging folder.
+        current_plan = plan_start(root, epic_id=epic_id, increment_id=increment_id,
+                                  title=title, mode=mode, cost_profile=cost_profile,
+                                  updated_at=updated_at, platform=platform, candidate_id=candidate_id)
+        if current_plan["startSha256"] != plan["startSha256"]:
+            raise AimStartError("Start inputs changed during staging; no files were published.")
         if current_catalog != original_catalog:
             raise AimStartError("Portfolio catalog changed during staging; no files were published.")
         if final.exists() or final.is_symlink():
@@ -554,12 +642,24 @@ def apply_start(
         workspace_published = True
         checkpoint("after_workspace_publish")
 
-        catalog = json.loads(original_catalog)
+        catalog = json.loads(original_catalog) if original_catalog else {"portfolioVersion": PORTFOLIO_VERSION, "workspaces": []}
         catalog["workspaces"].append({"path": plan["workspace"]})
         _atomic_write(catalog_path, _json_bytes(catalog), ".ui-portfolio.start.")
         catalog_published = True
         checkpoint("after_catalog_publish")
 
+        if plan["links"] is not None:
+            for name, key in (("portfolio-backlog.json", "backlog"), ("portfolio-run.json", "run")):
+                value = plan["links"][key]
+                if value is None:
+                    continue
+                path = aim_root / name
+                original_links[path] = _read_bytes(path, maximum=1_000_000, label=name)
+                if _sha256(original_links[path]) != plan["links"][f"{key}Sha256"]:
+                    raise AimStartError(f"{name} changed before publication.")
+                _atomic_write(path, _json_bytes(value), ".start-link.")
+                written_links.append(path)
+                checkpoint(f"after_{key}_publish")
         _verify_board(root, plan, ready=False)
         state_path = final / "state.json"
         state = json.loads(state_path.read_text(encoding="utf-8"))
@@ -569,9 +669,17 @@ def apply_start(
         _verify_board(root, plan, ready=True)
     except Exception as start_error:
         rollback_errors: list[str] = []
+        for path in reversed(written_links):
+            try:
+                _atomic_write(path, original_links[path], ".start-link.rollback.")
+            except Exception as exc:
+                rollback_errors.append(f"{path.name} restore failed: {exc}")
         if catalog_published:
             try:
-                _atomic_write(catalog_path, original_catalog, ".ui-portfolio.rollback.")
+                if original_catalog:
+                    _atomic_write(catalog_path, original_catalog, ".ui-portfolio.rollback.")
+                else:
+                    catalog_path.unlink()
             except Exception as exc:
                 rollback_errors.append(f"catalog restore failed: {exc}")
         if workspace_published and final.is_dir() and not final.is_symlink():
@@ -587,6 +695,11 @@ def apply_start(
         if created_portfolio_root:
             try:
                 portfolio_root.rmdir()
+            except OSError:
+                pass
+        if created_aim_root:
+            try:
+                aim_root.rmdir()
             except OSError:
                 pass
         if rollback_errors:
@@ -618,6 +731,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--updated-at", required=True)
     parser.add_argument("--platform", default="codex")
     parser.add_argument("--expected-catalog-sha256")
+    parser.add_argument("--candidate-id")
+    parser.add_argument("--expected-start-sha256")
     parser.add_argument("--apply", action="store_true")
     return parser
 
@@ -633,12 +748,14 @@ def main() -> int:
             "cost_profile": args.cost_profile,
             "updated_at": args.updated_at,
             "platform": args.platform,
+            "candidate_id": args.candidate_id,
         }
         result = (
             apply_start(
                 Path(args.repo),
                 **common,
                 expected_catalog_sha256=args.expected_catalog_sha256,
+                expected_start_sha256=args.expected_start_sha256,
             )
             if args.apply
             else plan_start(Path(args.repo), **common)

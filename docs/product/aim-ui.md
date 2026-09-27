@@ -46,6 +46,22 @@ copying repository content into the browser. The receiving AIM task loads only
 what is relevant to the question while keeping the complete method available.
 Missing optional context is reported honestly and never invented.
 
+## Starting in a new repository
+
+AIM creates the first Epic workspace, its board registration, and its Roadmap
+and Portfolio links together. You do not need to create a catalog or repair a
+checkpoint before following the work. Once the Portfolio mandate is approved,
+this setup runs automatically and AIM proceeds to the first Increment's scope
+and implementation. The board reflects real progress as work begins.
+
+## Plan several Increments in one Epic
+
+Keep each planned Increment in the Roadmap under its Epic. Portfolio Auto
+previews the full sequence, then works through one Increment at a time in the
+same Epic workspace. Accepted Increments remain in history as the next begins.
+The Epic closes only after the final planned Increment and the Epic-level
+acceptance review. You do not need to merge planned Increments to start a run.
+
 ## Launch the control room
 
 From AIM chat, use the first-class command:

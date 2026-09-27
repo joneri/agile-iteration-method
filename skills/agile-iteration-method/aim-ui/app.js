@@ -1291,7 +1291,7 @@ function renderRoadmap(board) {
   $("roadmap-summary").textContent = !roadmap.valid
     ? "This Roadmap contains invalid or contradictory planning data. Repair it in AIM chat before execution."
     : roadmap.eligibleCount
-    ? `${roadmap.eligibleCount} planned candidate${roadmap.eligibleCount === 1 ? " is" : "s are"} eligible for the next bounded run.`
+    ? `${roadmap.eligibleCount} planned Increment${roadmap.eligibleCount === 1 ? "" : "s"} in ${roadmap.epicCount} Epic${roadmap.epicCount === 1 ? "" : "s"}. AIM works through one Increment at a time.`
     : "This Roadmap has no unactivated candidates.";
   const facts = $("roadmap-facts");
   facts.replaceChildren();

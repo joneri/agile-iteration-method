@@ -837,6 +837,7 @@ def plan_post_gate_e_continue(
     authority_state_path: str,
     increment_id: str,
     updated_at: str,
+    candidate_id: str | None = None,
 ) -> dict[str, Any]:
     """Preview one direct, canonical transition back to Gate B."""
 
@@ -888,7 +889,38 @@ def plan_post_gate_e_continue(
     if plan_issues:
         raise RuntimeTransitionError("Next Increment plan is invalid: " + "; ".join(plan_issues))
 
+    continuation = None
+    if candidate_id is not None:
+        from aim_activation import activation_preflight, _read_backlog
+        admission = activation_preflight(root, epic_id=source["epicId"], candidate_id=candidate_id,
+                                         continuation_increment_id=increment_id)
+        if not admission["allowed"] or admission.get("operation") != "continue_epic":
+            raise RuntimeTransitionError(admission["message"])
+        if admission["authorityStatePath"] != authority_state_path:
+            raise RuntimeTransitionError("Continuation must use the existing catalogued Epic workspace.")
+        backlog, backlog_payload = _read_backlog(root / ".aim")
+        if hashlib.sha256(backlog_payload).hexdigest() != admission["backlogSha256"]:
+            raise RuntimeTransitionError("Roadmap changed during continuation preview.")
+        if any(item.get("runtimeIncrementId") == increment_id and item.get("id") != candidate_id for item in backlog["items"]):
+            raise RuntimeTransitionError("The next Increment already has a Roadmap relation.")
+        for item in backlog["items"]:
+            if item["id"] == candidate_id:
+                item["runtimeIncrementId"] = increment_id
+        backlog["updatedAt"] = updated_at
+        run_path = root / ".aim/portfolio-run.json"
+        binding = {
+            "admission": admission,
+            "runSha256": hashlib.sha256(run_path.read_bytes()).hexdigest() if run_path.is_file() else None,
+            "planSha256": hashlib.sha256(plan_path.read_bytes()).hexdigest(),
+        }
+        continuation = {
+            "sha256": hashlib.sha256(_json_bytes(binding)).hexdigest(),
+            "sourceBacklogSha256": admission["backlogSha256"],
+            "backlog": backlog,
+        }
     candidate = dict(source)
+    if candidate_id is not None:
+        candidate["portfolioCandidateId"] = candidate_id
     candidate.pop("plannedIncrementId", None)
     for closure_field in (
         "epicClosureEvidence",
@@ -933,6 +965,7 @@ def plan_post_gate_e_continue(
         "candidateStateSha256": hashlib.sha256(candidate_payload).hexdigest(),
         "candidate": candidate,
         "incrementPlan": plan_path.relative_to(root).as_posix() if plan_path else None,
+        "continuation": continuation,
     }
 
 
@@ -943,6 +976,8 @@ def apply_post_gate_e_continue(
     increment_id: str,
     updated_at: str,
     expected_state_sha256: str,
+    candidate_id: str | None = None,
+    expected_continuation_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Validate freshness again, then atomically publish the previewed transition."""
 
@@ -951,6 +986,7 @@ def apply_post_gate_e_continue(
         authority_state_path=authority_state_path,
         increment_id=increment_id,
         updated_at=updated_at,
+        candidate_id=candidate_id,
     )
     if plan["sourceStateSha256"] != expected_state_sha256:
         raise RuntimeTransitionError(
@@ -963,7 +999,25 @@ def apply_post_gate_e_continue(
             "state.json changed immediately before replacement; nothing was written."
         )
     candidate_payload = _json_bytes(plan["candidate"])
-    _atomic_replace(state_path, candidate_payload)
+    continuation = plan["continuation"]
+    if continuation is not None:
+        if continuation["sha256"] != expected_continuation_sha256:
+            raise RuntimeTransitionError("Continuation plan changed; preview the Roadmap and mandate again.")
+        backlog_path = repo_root.resolve() / ".aim/portfolio-backlog.json"
+        original_backlog = backlog_path.read_bytes()
+        if hashlib.sha256(original_backlog).hexdigest() != continuation["sourceBacklogSha256"]:
+            raise RuntimeTransitionError("Roadmap changed before continuation; nothing was written.")
+        # Both relations are revalidated before writing, with rollback on a
+        # failed publication. Portfolio stays activation_pending until verified.
+        try:
+            _atomic_replace(backlog_path, _json_bytes(continuation["backlog"]))
+            _atomic_replace(state_path, candidate_payload)
+        except BaseException:
+            _atomic_replace(backlog_path, original_backlog)
+            _atomic_replace(state_path, current_payload)
+            raise
+    else:
+        _atomic_replace(state_path, candidate_payload)
     written_payload, written = _read_runtime_state(state_path)
     if (
         hashlib.sha256(written_payload).hexdigest() != plan["candidateStateSha256"]
@@ -985,6 +1039,17 @@ def plan_epic_closure(
     root = repo_root.resolve()
     state_path = _authority_state_path(root, authority_state_path)
     source_payload, source = _read_runtime_state(state_path)
+    run_path = root / ".aim/portfolio-run.json"
+    if run_path.exists() or run_path.is_symlink():
+        from aim_portfolio_run import load_run, remaining_epic_candidates, PortfolioRunError
+        try:
+            run = load_run(root)
+        except PortfolioRunError as exc:
+            raise RuntimeTransitionError(str(exc)) from exc
+        active = run.get("activeCandidateId")
+        if run["status"] in {"running", "paused"} and isinstance(active, str) and active == source.get("portfolioCandidateId"):
+            if remaining_epic_candidates(run, active):
+                raise RuntimeTransitionError("This Epic has more mandated Increments; continue before Epic closure.")
     expected = {
         "stateSchemaVersion": "1.0",
         "epicStatus": "done_increment_accepted",
@@ -1160,6 +1225,8 @@ def _parse_args() -> argparse.Namespace:
     continuation.add_argument("--increment-id", required=True)
     continuation.add_argument("--updated-at", required=True)
     continuation.add_argument("--expected-state-sha256")
+    continuation.add_argument("--candidate-id")
+    continuation.add_argument("--expected-continuation-sha256")
     continuation.add_argument("--apply", action="store_true")
     closure = subparsers.add_parser(
         "close", help="Preview or apply one truth-audited Epic closure."
@@ -1209,6 +1276,8 @@ def main() -> int:
                     increment_id=args.increment_id,
                     updated_at=args.updated_at,
                     expected_state_sha256=args.expected_state_sha256,
+                    candidate_id=args.candidate_id,
+                    expected_continuation_sha256=args.expected_continuation_sha256,
                 )
         else:
             if args.command == "close":
@@ -1224,6 +1293,7 @@ def main() -> int:
                     authority_state_path=args.authority_state_path,
                     increment_id=args.increment_id,
                     updated_at=args.updated_at,
+                    candidate_id=args.candidate_id,
                 )
     except (OSError, RuntimeTransitionError, json.JSONDecodeError) as exc:
         raise SystemExit(f"AIM runtime transition failed: {exc}") from exc

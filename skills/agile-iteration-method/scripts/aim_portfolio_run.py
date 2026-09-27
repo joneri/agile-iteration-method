@@ -18,7 +18,7 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any, Callable
 
-from aim_activation import candidate_preflights
+from aim_activation import candidate_preflights, sequence_candidate_ids
 from aim_runtime_contract import (
     PORTFOLIO_CHECKPOINT_STATUSES,
     epic_closure_evidence,
@@ -125,7 +125,9 @@ def _snapshot(backlog: dict[str, Any]) -> list[dict[str, Any]]:
         raise PortfolioRunError(
             "The Backlog contains no unactivated candidates to snapshot."
         )
-    return sorted(result, key=lambda item: (item["priority"], item["createdAt"], item["candidateId"]))
+    ordered = sorted(result, key=lambda item: (item["priority"], item["createdAt"], item["candidateId"]))
+    epic_order = list(dict.fromkeys(item["epicId"] for item in ordered))
+    return [item for epic_id in epic_order for item in ordered if item["epicId"] == epic_id]
 
 
 def snapshot_hash(snapshot: list[dict[str, Any]]) -> str:
@@ -280,11 +282,8 @@ def _activation_snapshot(
     preflights = candidate_preflights(
         repo_root, candidates, backlog_updated_at=backlog_updated_at
     )
-    eligible = [
-        item
-        for item in candidates
-        if preflights.get(item["candidateId"], {}).get("allowed", False)
-    ]
+    included_ids = sequence_candidate_ids(candidates, preflights)
+    eligible = [item for item in candidates if item["candidateId"] in included_ids]
     blocked = [
         {
             "candidateId": item["candidateId"],
@@ -296,7 +295,7 @@ def _activation_snapshot(
             ),
         }
         for item in candidates
-        if not preflights.get(item["candidateId"], {}).get("allowed", False)
+        if item["candidateId"] not in included_ids
     ]
     if not eligible:
         detail = f" {blocked[0]['reason']}" if blocked else ""
@@ -452,6 +451,11 @@ def activate_next(repo_root: Path, expected_updated_at: str, updated_at: str) ->
             raise PortfolioRunError("Finish the active candidate before activating another.")
         accounted = set(value["completedCandidateIds"]) | set(value["skippedCandidateIds"])
         next_item = next((item for item in value["snapshot"] if item["candidateId"] not in accounted), None)
+        if value["completedCandidateIds"]:
+            previous_id = value["completedCandidateIds"][-1]
+            previous_epic = next(item["epicId"] for item in value["snapshot"] if item["candidateId"] == previous_id)
+            next_item = next((item for item in value["snapshot"]
+                              if item["epicId"] == previous_epic and item["candidateId"] not in accounted), next_item)
         if next_item is None:
             raise PortfolioRunError("No unaccounted candidate remains.")
         value["activeCandidateId"] = next_item["candidateId"]
@@ -480,8 +484,10 @@ def complete_active(repo_root: Path, expected_updated_at: str, updated_at: str, 
     def change(value: dict[str, Any]) -> dict[str, Any]:
         if value["status"] != "running" or value.get("activeCandidateId") != candidate_id:
             raise PortfolioRunError("Only the active candidate of a running Portfolio can complete.")
-        if value.get("checkpoint", {}).get("gate") != "Epic closure":
-            raise PortfolioRunError("Record an Epic closure checkpoint before completion.")
+        more_in_epic = bool(remaining_epic_candidates(value, candidate_id))
+        expected_gate = "Gate E" if more_in_epic else "Epic closure"
+        if value.get("checkpoint", {}).get("gate") != expected_gate:
+            raise PortfolioRunError(f"Record an {expected_gate} checkpoint before completion.")
         issues = _terminal_relation_issues(repo_root, value, candidate_id)
         if issues:
             raise PortfolioRunError(
@@ -495,6 +501,12 @@ def complete_active(repo_root: Path, expected_updated_at: str, updated_at: str, 
             value["status"] = "completed"
         return value
     return _mutate(repo_root, expected_updated_at, updated_at, change)
+
+
+def remaining_epic_candidates(run: dict[str, Any], candidate_id: str) -> list[dict[str, Any]]:
+    epic_id = next(item["epicId"] for item in run["snapshot"] if item["candidateId"] == candidate_id)
+    accounted = set(run["completedCandidateIds"]) | set(run["skippedCandidateIds"]) | {candidate_id}
+    return [item for item in run["snapshot"] if item["epicId"] == epic_id and item["candidateId"] not in accounted]
 
 
 def _terminal_relation_issues(
@@ -529,6 +541,8 @@ def _terminal_relation_issues(
         issues.append("Backlog Epic identity does not match the approved snapshot")
     if not isinstance(runtime_id, str) or re.fullmatch(r"DI-[0-9]+", runtime_id) is None:
         issues.append("Backlog runtimeIncrementId is missing or invalid")
+    elif sum(isinstance(item, dict) and item.get("runtimeIncrementId") == runtime_id for item in backlog_items) != 1:
+        issues.append("Backlog runtime Increment is linked to multiple candidates")
 
     try:
         catalog = _read_object(aim_root / "ui-portfolio.json")
@@ -580,13 +594,16 @@ def _terminal_relation_issues(
         issues.append("workspace stateSchemaVersion is not 1.0")
     if state.get("portfolioCandidateId") != candidate_id:
         issues.append("workspace portfolioCandidateId does not match the candidate")
-    if state.get("epicStatus") != "epic_complete":
-        issues.append("workspace epicStatus is not epic_complete")
+    expected_status = "done_increment_accepted" if remaining_epic_candidates(run, candidate_id) else "epic_complete"
+    if state.get("epicStatus") != expected_status:
+        issues.append(f"workspace epicStatus is not {expected_status}")
     if state.get("currentRole") != "PO":
         issues.append("workspace currentRole is not PO")
+    if state.get("activeIncrementId") is not None:
+        issues.append("workspace still has an active Increment")
     checkpoint = run.get("checkpoint") or {}
-    if checkpoint.get("epicStatus") != "epic_complete":
-        issues.append("Portfolio closure checkpoint is not epic_complete")
+    if checkpoint.get("epicStatus") != expected_status:
+        issues.append(f"Portfolio checkpoint is not {expected_status}")
     if isinstance(runtime_id, str):
         _, artifact_issues = terminal_increment_artifact(
             workspace, snapshot_item["epicId"], runtime_id
@@ -596,10 +613,11 @@ def _terminal_relation_issues(
             repo_root.resolve(), workspace, state, runtime_id
         )
         issues.extend(acceptance_issues)
-        _, closure_issues = epic_closure_evidence(
-            repo_root.resolve(), workspace, state
-        )
-        issues.extend(closure_issues)
+        if expected_status == "epic_complete":
+            _, closure_issues = epic_closure_evidence(
+                repo_root.resolve(), workspace, state
+            )
+            issues.extend(closure_issues)
     return issues
 
 

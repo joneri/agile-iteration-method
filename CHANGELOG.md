@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-09-27 - AIM 3 patch release v3.0.7
+- Added a unified first-run setup for empty repositories and Roadmap-only
+  projects, including the Epic workspace, catalog, candidate link, and Portfolio
+  checkpoint.
+- Validate generated runtime state before writing using the packaged,
+  dependency-free schema validator; roll back published setup files on failure.
+- Preserve multiple planned Increments per Epic and execute them sequentially
+  under the approved Portfolio snapshot without merging away their scope.
+- Keep accepted Increments visible as Done while the next Increment runs, and
+  require the last included Increment before Epic closure.
+- Guide agents through routine setup without extra user decisions or manual
+  checkpoint construction.
+
+Compatibility: runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`12`. Existing approval and closure-evidence requirements remain in effect.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, reload the skill session, and
+restart AIM UI. No workspace migration is required.
+
+Known limitations: existing uncatalogued runtime work requires reviewed repair.
+Startup validation and rollback do not guarantee recovery from process
+termination during a multi-file write. The faster setup does not measure or
+guarantee the agent's total planning time.
+
+Validation: 332 regression tests, isolated packaged CLI startup without Python
+site packages, generated-package checks, and the release publication gate.
+
 ## 2026-09-27 - AIM 3 patch release v3.0.6
 - Fixed false checkpoint recovery warnings for empty AIM directories and
   Roadmap-only projects whose runtime work has not started.

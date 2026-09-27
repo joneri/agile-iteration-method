@@ -34,7 +34,7 @@ from aim_codex_bridge import (
     canonical_digest,
     default_ledger_path,
 )
-from aim_activation import candidate_preflights
+from aim_activation import candidate_preflights, sequence_candidate_ids
 from aim_portfolio import project_portfolio_control
 from aim_portfolio_run import project_portfolio_run, snapshot_hash
 from aim_runtime_contract import (
@@ -306,6 +306,10 @@ def _state_acceptance_decision(
 
     previous_id = state.get("previousIncrementId")
     if previous_id != increment_id:
+        return None, False, None
+    if state.get("activeIncrementId") not in {None, increment_id}:
+        # A new Increment has its own gate. Resolve the earlier Increment from
+        # its preserved decision rather than demanding a terminal current state.
         return None, False, None
     if state.get("previousIncrementStatus") != "accepted":
         return None, True, None
@@ -996,12 +1000,8 @@ def _roadmap_projection(
     valid: bool,
     preflights: dict[str, dict[str, Any]],
 ) -> dict[str, Any]:
-    eligible = [
-        item
-        for item in backlog_items
-        if not item.get("runtimeIncrementId")
-        and preflights.get(item["id"], {}).get("allowed", False)
-    ]
+    included_ids = sequence_candidate_ids(backlog_items, preflights)
+    eligible = [item for item in backlog_items if item["id"] in included_ids]
     blocked = [
         {
             "candidateId": item["id"],
@@ -1012,7 +1012,7 @@ def _roadmap_projection(
         }
         for item in backlog_items
         if not item.get("runtimeIncrementId")
-        and not preflights.get(item["id"], {}).get("allowed", False)
+        and item["id"] not in included_ids
     ]
     snapshot_payload = [
         {
@@ -1025,6 +1025,8 @@ def _roadmap_projection(
         }
         for item in eligible
     ]
+    epic_order = list(dict.fromkeys(item["epicId"] for item in snapshot_payload))
+    snapshot_payload = [item for epic_id in epic_order for item in snapshot_payload if item["epicId"] == epic_id]
     snapshot_digest = snapshot_hash(snapshot_payload)
     configured = (aim_root / BACKLOG_FILE).is_file()
     command = '/aim start "PORTFOLIO" mode:auto'
@@ -1034,6 +1036,7 @@ def _roadmap_projection(
         "status": "invalid" if not valid else "ready" if eligible else "empty",
         "candidateCount": len(backlog_items),
         "eligibleCount": len(eligible),
+        "epicCount": len(epic_order),
         "updatedAt": backlog_updated_at if configured else None,
         "snapshotSha256": snapshot_digest,
         "snapshot": snapshot_payload,
@@ -1058,7 +1061,7 @@ def _roadmap_projection(
             ),
         },
         "snapshotBoundary": (
-            "The mandate includes only this previewed order. Later Roadmap additions are excluded."
+            "The mandate includes this previewed order, grouped by Epic. Increments run one at a time in the same Epic workspace. Later Roadmap additions are excluded."
         ),
         "pauseBoundary": (
             "AIM pauses on scope, trust, safety, validation, concurrency, or contradictory-state escalation."
@@ -1765,6 +1768,7 @@ def _project_epic(
         ),
         "runtimeStatusDiagnostic": status_fallback,
         "activeIncrementId": active_id,
+        "previousIncrementId": previous_id,
         "plannedIncrementId": planned_id,
         "portfolioCandidateId": state.get("portfolioCandidateId"),
         "mode": state["mode"],
@@ -1814,12 +1818,18 @@ def _reconcile_portfolio_run(
                 (item for item in (epic or {}).get("increments", []) if item["id"] == runtime_id),
                 None,
             )
+            siblings = [identifier for identifier, epic_id in candidate_epics.items()
+                        if epic_id == expected_epic_id]
+            # Earlier accepted Increments remain complete as the same Epic
+            # advances. Only its final candidate requires verified Epic closure.
+            later = siblings[siblings.index(candidate_id) + 1:]
+            has_later = any(candidate_states.get(identifier) != "skipped" for identifier in later)
             checks = {
                 "Backlog candidate is missing": bool(backlog),
                 "runtimeIncrementId is missing": bool(runtime_id),
                 "catalogued Epic workspace is missing": bool(epic),
-                "workspace portfolioCandidateId does not match": bool(epic) and epic.get("portfolioCandidateId") == candidate_id,
-                "workspace is not closed": bool(epic) and epic.get("lifecycle") == "closed",
+                "workspace portfolioCandidateId does not match": bool(epic) and epic.get("portfolioCandidateId") in siblings,
+                "workspace is not closed": has_later or bool(epic) and epic.get("lifecycle") == "closed",
                 "matching runtime Increment is missing": bool(increment),
                 "runtime Increment is not Done": bool(increment) and increment.get("column") == "done",
                 "validated Gate E acceptance evidence is missing": bool(increment) and bool(increment.get("acceptanceEvidence")),
@@ -1840,7 +1850,22 @@ def _reconcile_portfolio_run(
         epic = epic_by_id.get(expected_epic_id)
         checkpoint_status = portfolio_run.get("checkpointStatus")
 
-        if not epic and not runtime_id and checkpoint_status == "activation_pending":
+        previous_candidate_id = (epic or {}).get("portfolioCandidateId")
+        previous_candidate = backlog_by_id.get(previous_candidate_id) or {}
+        continuing_epic = bool(epic) and epic.get("runtimeStatus") == "done_increment_accepted" and (
+            candidate_states.get(previous_candidate_id) == "completed"
+            and candidate_epics.get(previous_candidate_id) == expected_epic_id
+            or previous_candidate_id not in candidate_epics
+            and previous_candidate.get("epicId") == expected_epic_id
+            and previous_candidate.get("runtimeIncrementId") == epic.get("previousIncrementId")
+        )
+        continuation_link_pending = continuing_epic and (
+            not runtime_id or runtime_id != epic.get("previousIncrementId")
+            and any(item["id"] == runtime_id for item in epic["increments"])
+        )
+        if checkpoint_status == "activation_pending" and (
+            not epic and not runtime_id or continuation_link_pending
+        ):
             portfolio_run["relationStatus"] = "recoverable"
             portfolio_run["transitionState"] = "activation_pending"
             portfolio_run["guidance"] = (
@@ -1859,8 +1884,9 @@ def _reconcile_portfolio_run(
             relation_ok = (
                 epic.get("portfolioCandidateId") == active_id
                 and runtime_id in increment_ids
-                and epic.get("activeIncrementId") == runtime_id
-                and epic.get("lifecycle") == "running"
+                and runtime_id in {epic.get("activeIncrementId"), epic.get("plannedIncrementId"),
+                                   epic.get("previousIncrementId") if epic.get("runtimeStatus") in {"done_increment_accepted", "epic_complete"} else None}
+                and epic.get("lifecycle") in {"running", "closed"}
                 and checkpoint_status == epic.get("runtimeStatus")
             )
             if relation_ok:

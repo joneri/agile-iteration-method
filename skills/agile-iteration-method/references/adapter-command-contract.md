@@ -25,7 +25,7 @@ ownership, or acceptance.
 
 | Command | Intent | State effect |
 | --- | --- | --- |
-| `/aim start "EPIC: ..."` | start a new Epic or resume an incomplete checkpoint instead of creating a parallel run | initializes root Gate A only without Portfolio; with `.aim/ui-portfolio.json`, must use a trusted transaction to publish a dedicated registered workspace |
+| `/aim start "EPIC: ..."` | start a new Epic or resume an incomplete checkpoint instead of creating a parallel run | uses a trusted transaction to publish a dedicated registered workspace, bootstrapping the catalog when no runtime exists |
 | `/aim start "PORTFOLIO" mode:auto` | preview the ordered AIM UI Backlog and request one bounded Portfolio mandate | after explicit mandate approval, may create `.aim/portfolio-run.json` and sequentially coordinate included canonical Epic workspaces |
 | `/aim continue` | resume from the persisted role, gate, increment, mode, and cost profile | advances state only when the current AIM transition allows it |
 | `/aim status` | report the AIM product release from `VERSION` separately from the runtime contract in `.aim/state.json` `aimVersion`, then Epic, increment, role, mode, cost profile, gate, adapter, and next action | read-only |
@@ -86,19 +86,42 @@ Discuss intent rather than defining separate semantics.
 
 ## Portfolio-aware normal Epic start
 
-Before any new-Epic write, every adapter checks for a contained, non-symlink
-`.aim/ui-portfolio.json`. If absent, the ordinary single-workspace Gate A path
-applies. If present, the adapter resolves the trusted package-owned
+Before any new-Epic write, every adapter resolves the trusted package-owned
 `scripts/aim_start.py` through the same package precedence used by AIM UI; it
 must never execute a same-named target-repository helper merely because it
-exists.
+exists. Missing `.aim` or `ui-portfolio.json` is normal startup. The helper
+creates a catalog containing the first dedicated workspace in its publication
+transaction. It does not create a root checkpoint or a placeholder workspace.
+Existing uncatalogued runtime evidence requires explicit review and is never
+silently adopted, overwritten, or hidden by bootstrapping.
 
 The adapter supplies one reviewed `EPIC-*`, one reserved canonical `DI-*`, the
 title, mode, cost profile, platform, and timestamp. Preview is no-write. Apply
-must match the previewed catalog digest. Success means a new contained
+must match the previewed start digest (`--expected-start-sha256`); existing
+non-candidate callers may retain the catalog digest. The digest also binds
+catalog absence, so a catalog appearing after preview prevents publication.
+Success means a new contained
 `.aim/portfolio/<EPIC-ID>/` workspace, a catalog entry, current Gate A state,
 and exactly one matching Epic and reserved Increment in the `/api/board` read
 model. Only then may the adapter present Gate A as ready.
+
+A selected Roadmap candidate passes `--candidate-id`. Its preview additionally
+binds the Backlog and any active Portfolio mandate, including candidate content
+and the `activation_pending` checkpoint. Apply publishes the candidate runtime
+link and matching `gate_a_pending` Portfolio checkpoint with the workspace and
+catalog. Publication failures restore prior files and remove only newly created
+workspace/catalog paths. Concurrent input changes are preserved and rejected.
+The helper validates the generated state against its package-owned schema
+before writing and verifies the combined UI relation afterward. No third-party
+Python schema library or target-repository environment is needed.
+
+Under an already approved Portfolio mandate, this mechanical preview/apply is
+automatic. Routine setup or bounded repair does not ask the user to resolve AIM
+internals and does not require a second mandate. The main chat reports useful
+progress toward the requested product, keeps technical setup details in
+supporting evidence, and proceeds through the eligible Gate A/B decisions to
+Dev. A successful bootstrap proves runtime readiness only; real Epic criteria,
+Increment scope, gate ownership, and later validation still apply.
 
 Catalog parsing, containment, symlink, capacity, identity collision, stale-byte,
 workspace publication, catalog publication, or board verification failure
@@ -243,6 +266,44 @@ additions are excluded, escalation pauses execution, and one explicit bounded
 mandate remains required. Do not advertise Portfolio Strict until a canonical
 multi-Epic Strict contract exists; ordinary single-Epic Strict is unaffected.
 
+### Several planned Increments in one Epic
+
+A Roadmap may contain multiple distinct `INC-*` candidates with the same
+`epicId`. Preserve their identities, scope, and ordering. A repeated Epic ID is
+not a duplicate candidate and does not require merging the Roadmap or splitting
+the Epic. Only one Increment is refined and implemented at a time.
+
+The mandate preview groups candidates by Epic, ordering Epics by their first
+candidate and keeping the priority/created-at/id order inside each group. The
+UI and run helper hash that same grouped snapshot. Existing approved snapshots
+are never rewritten; the scheduler continues remaining candidates in the current
+Epic before opening another Epic. Later additions stay outside the mandate.
+
+The first candidate creates the Epic workspace. After an earlier candidate's
+Gate E acceptance, record `done_increment_accepted` / `Gate E`, complete that
+candidate, and select the next as `activation_pending`. Do not close or recreate
+the Epic. A `continue_epic` preflight resolves the existing authoritative
+workspace and validates accepted history and the next candidate's order.
+
+Prepare the next canonical `DI-*` plan, then preview the package-owned runtime
+helper's `continue --candidate-id <INC-ID> --authority-state-path <path>`.
+Apply requires the preview's state digest and `--expected-continuation-sha256`,
+which binds the Roadmap, catalog, mandate, and Increment plan. It updates the
+Backlog link and the same workspace's `portfolioCandidateId` and Gate B state,
+with rollback on publication failure. If a process stops between the Backlog
+write and the state write, re-preview the exact candidate and DI to resume the
+matching link; ordinary activation still rejects replay. Checkpoint the new
+runtime state only once both relations have been verified. Replayed, reordered, changed, unaccepted,
+closed, ambiguous, or out-of-mandate candidates cannot continue automatically.
+
+Only the last candidate in an Epic requires the separate verified closure
+before Portfolio completion. Earlier accepted candidates remain Done while
+the Epic continues. Every Increment still goes through the full role loop;
+planning several Increments never grants simultaneous execution or bypasses
+Gate E. An unmet Epic criterion requires continuation or escalation, not a
+premature closure. A user's explicitly authorized skip remains distinct from
+acceptance and does not supply closure evidence.
+
 ## Portfolio Auto start and resume
 
 `/aim start "PORTFOLIO" mode:auto` is the first-class whole-Backlog route. AIM
@@ -268,15 +329,17 @@ PO/TDO/Dev/Reviewer/TDO/PO loop, and records eligible decisions as
 `auto-approved by portfolio mandate` with the mandate id. User approval must
 never be fabricated.
 
-Each candidate retains an independently authoritative contained Epic
-workspace. Once its review, validation, Gate E, and Epic closure evidence pass,
-the chat checkpoints completion and advances to the next snapshot candidate.
+Each Epic retains one independently authoritative contained workspace shared
+by its planned candidates. After review, validation, and Gate E, an earlier
+candidate completes and continues within that Epic. The final candidate also
+requires Epic closure evidence before moving to another Epic.
 The transition helper accepts only canonical runtime statuses. Immediately
 before adding a candidate to `completedCandidateIds`, it re-reads and validates
 the exact catalogued workspace, snapshot and candidate identities, Backlog
-`runtimeIncrementId`, `epic_complete` state and closure checkpoint,
-`previousIncrementStatus: accepted`, Gate E, and the contained
-`gateEAcceptance` decision. The matching Increment plan must also declare its
+`runtimeIncrementId`, `previousIncrementStatus: accepted`, Gate E, and the contained
+`gateEAcceptance` decision. Earlier candidates require `done_increment_accepted`
+state and a Gate E checkpoint; the final candidate requires `epic_complete`
+state and closure checkpoint. The matching Increment plan must also declare its
 exact `Epic:` identity; completion refuses an unbound, mismatched, missing, or
 ambiguous plan before changing Portfolio state. Any failed predicate preserves
 the active run unchanged and names the failed terminal relation.
@@ -292,7 +355,7 @@ transition, the chat revalidates the run and workspace, then records
 workspace, Backlog runtime link, Gate E evidence, and UI catalog entry. Only
 after that durable completion may it select the next candidate with the
 `activation_pending` checkpoint. The candidate stays Planned until the chat
-creates and validates its workspace and state, records its canonical
+creates or continues its Epic workspace and validates its state, records its canonical
 `runtimeIncrementId` in Backlog, and only then advances the run checkpoint to
 the matching runtime status. This sequence may proceed without another user
 message. This Portfolio Auto

@@ -62,7 +62,7 @@ class ActivationPreflightError(ValueError):
 def _inside_aim(repo_root: Path) -> tuple[Path, Path]:
     root = repo_root.resolve()
     aim_root = root / ".aim"
-    if aim_root.is_symlink() or not aim_root.is_dir():
+    if not root.is_dir() or aim_root.is_symlink() or (aim_root.exists() and not aim_root.is_dir()):
         raise ActivationPreflightError("Activation requires a contained .aim directory.")
     resolved = aim_root.resolve()
     try:
@@ -297,7 +297,8 @@ def _read_backlog(aim_root: Path) -> tuple[dict[str, Any], bytes]:
 
 
 def _candidate(
-    backlog: dict[str, Any], candidate_id: str, epic_id: str
+    backlog: dict[str, Any], candidate_id: str, epic_id: str,
+    continuation_increment_id: str | None = None,
 ) -> dict[str, Any]:
     if CANDIDATE_PATTERN.fullmatch(candidate_id) is None or len(candidate_id) > 80:
         raise ActivationPreflightError("Candidate identity is not a bounded canonical INC-* id.")
@@ -315,7 +316,7 @@ def _candidate(
         raise ActivationPreflightError(
             f"Backlog candidate {candidate_id} no longer targets Epic {epic_id}."
         )
-    if candidate.get("runtimeIncrementId") is not None:
+    if candidate.get("runtimeIncrementId") is not None and candidate.get("runtimeIncrementId") != continuation_increment_id:
         raise ActivationPreflightError(
             f"Backlog candidate {candidate_id} already has runtime authority and cannot be replayed."
         )
@@ -331,6 +332,7 @@ def activation_preflight(
     expected_candidate_updated_at: str | None = None,
     expected_catalog_sha256: str | None = None,
     expected_backlog_sha256: str | None = None,
+    continuation_increment_id: str | None = None,
 ) -> dict[str, Any]:
     """Return one stable, read-only admission result for a new Epic runtime."""
 
@@ -346,12 +348,18 @@ def activation_preflight(
             catalog = {"portfolioVersion": "1.0", "workspaces": []}
             declared = []
             catalog_sha = None
+            from aim_start import _catalog as bootstrap_catalog, AimStartError
+            try:
+                bootstrap_catalog(aim_root)
+            except AimStartError as exc:
+                return _blocked("catalog_missing", str(exc))
         if expected_catalog_sha256 is not None and catalog_sha != expected_catalog_sha256:
             return _blocked(
                 "catalog_stale",
                 "Portfolio catalog changed since activation preflight; reload before writing.",
             )
         allocated: dict[str, str] = {}
+        states: dict[str, dict[str, Any]] = {}
         running: list[str] = []
         for raw, workspace in declared:
             state = _read_state(workspace)
@@ -368,10 +376,21 @@ def activation_preflight(
                     f"Epic identity {existing_epic} is duplicated in {allocated[existing_epic]} and {raw}.",
                 )
             allocated[existing_epic] = raw
+            states[existing_epic] = state
             if state["epicStatus"] != "epic_complete":
                 running.append(existing_epic)
 
         if epic_id in allocated:
+            if candidate_id is not None:
+                return continuation_preflight(
+                    root, epic_id=epic_id, candidate_id=candidate_id,
+                    workspace=allocated[epic_id], state=states[epic_id],
+                    catalog_sha256=catalog_sha,
+                    expected_backlog_updated_at=expected_backlog_updated_at,
+                    expected_candidate_updated_at=expected_candidate_updated_at,
+                    expected_backlog_sha256=expected_backlog_sha256,
+                    continuation_increment_id=continuation_increment_id,
+                )
             return _blocked(
                 "epic_allocated",
                 f"Epic identity {epic_id} is already allocated in {allocated[epic_id]}.",
@@ -436,6 +455,94 @@ def activation_preflight(
         return result
     except (ActivationPreflightError, OSError) as exc:
         return _blocked("repository_invalid", str(exc))
+
+
+def continuation_preflight(
+    root: Path, *, epic_id: str, candidate_id: str, workspace: str,
+    state: dict[str, Any], catalog_sha256: str | None,
+    expected_backlog_updated_at: str | None,
+    expected_candidate_updated_at: str | None,
+    expected_backlog_sha256: str | None,
+    continuation_increment_id: str | None = None,
+) -> dict[str, Any]:
+    """Admit the next planned Increment without allocating another Epic."""
+    from aim_runtime_contract import terminal_acceptance
+
+    aim_root = root / ".aim"
+    backlog, payload = _read_backlog(aim_root)
+    candidate = _candidate(backlog, candidate_id, epic_id, continuation_increment_id)
+    digest = hashlib.sha256(payload).hexdigest()
+    candidate_stamp = candidate.get("updatedAt", candidate.get("createdAt"))
+    if (
+        expected_backlog_sha256 is not None and expected_backlog_sha256 != digest
+        or expected_backlog_updated_at is not None and expected_backlog_updated_at != backlog["updatedAt"]
+        or expected_candidate_updated_at is not None and expected_candidate_updated_at != candidate_stamp
+    ):
+        return _blocked("backlog_stale", "The planned Increment changed; refresh before continuing.")
+    if state["epicStatus"] == "epic_complete":
+        return _blocked("epic_allocated", "This Epic is closed; new scope needs a new Epic.")
+    if state["epicStatus"] != "done_increment_accepted":
+        return _blocked("increment_queued", "Planned in this Epic; AIM will continue after the current Increment is accepted.")
+    current_id = state.get("portfolioCandidateId")
+    previous = [item for item in backlog["items"] if isinstance(item, dict)
+                and item.get("id") == current_id and item.get("epicId") == epic_id
+                and item.get("runtimeIncrementId") == state.get("previousIncrementId")]
+    if len(previous) != 1:
+        return _blocked("continuation_invalid", "The accepted Increment has no unique Roadmap relation.")
+    _, issues = terminal_acceptance(root, aim_root / workspace, state, state["previousIncrementId"])
+    if issues:
+        return _blocked("continuation_invalid", "; ".join(issues))
+    pending = [item for item in backlog["items"] if isinstance(item, dict)
+               and item.get("epicId") == epic_id and (not item.get("runtimeIncrementId")
+               or item.get("id") == candidate_id and item.get("runtimeIncrementId") == continuation_increment_id)]
+    # An existing mandate owns its frozen order and excludes later additions.
+    run_path = aim_root / "portfolio-run.json"
+    if run_path.exists() or run_path.is_symlink():
+        from aim_portfolio_run import load_run, PortfolioRunError
+        try:
+            run = load_run(root)
+        except PortfolioRunError as exc:
+            return _blocked("run_invalid", str(exc))
+        if run["status"] in {"running", "paused"}:
+            if run["status"] != "running" or run.get("activeCandidateId") != candidate_id:
+                return _blocked("increment_queued", "Portfolio Auto owns the planned Increment order.")
+            snapshot_ids = {item["candidateId"] for item in run["snapshot"]}
+            if current_id in snapshot_ids and current_id not in run["completedCandidateIds"]:
+                return _blocked("continuation_invalid", "Complete the accepted candidate before continuing.")
+            selected = next((item for item in run["snapshot"] if item["candidateId"] == candidate_id), None)
+            if selected is None or any(candidate.get(key) != selected[key] for key in ("epicId", "epicTitle", "title", "priority", "createdAt")):
+                return _blocked("candidate_stale", "The planned Increment differs from the approved mandate.")
+            accounted = set(run["completedCandidateIds"]) | set(run["skippedCandidateIds"])
+            ordered_ids = [item["candidateId"] for item in run["snapshot"]
+                           if item["epicId"] == epic_id and item["candidateId"] not in accounted]
+            pending = [item for identifier in ordered_ids for item in pending if item["id"] == identifier]
+        else:
+            pending.sort(key=lambda item: (item["priority"], item["createdAt"], item["id"]))
+    else:
+        pending.sort(key=lambda item: (item["priority"], item["createdAt"], item["id"]))
+    if not pending or pending[0]["id"] != candidate_id:
+        return _blocked("increment_queued", "An earlier planned Increment in this Epic comes first.")
+    return {
+        "allowed": True, "code": "continue_epic", "operation": "continue_epic",
+        "message": "Continue the next planned Increment in the existing Epic.",
+        "repo": str(root), "authorityStatePath": f".aim/{workspace}/state.json" if workspace != "." else ".aim/state.json",
+        "candidateId": candidate_id, "catalogSha256": catalog_sha256,
+        "backlogSha256": digest, "backlogUpdatedAt": backlog["updatedAt"],
+        "candidateUpdatedAt": candidate_stamp,
+    }
+
+
+def sequence_candidate_ids(candidates: Iterable[dict[str, Any]], preflights: dict[str, dict[str, Any]]) -> set[str]:
+    """Include queued siblings when their existing Epic can continue in a new run."""
+    candidates = list(candidates)
+    continuation_epics = {item["epicId"] for item in candidates
+                          if preflights.get(item.get("id", item.get("candidateId")), {}).get("operation") == "continue_epic"}
+    return {item.get("id", item.get("candidateId")) for item in candidates
+            if not item.get("runtimeIncrementId") and (
+                preflights.get(item.get("id", item.get("candidateId")), {}).get("allowed", False)
+                or item["epicId"] in continuation_epics
+                and preflights.get(item.get("id", item.get("candidateId")), {}).get("code") == "increment_queued"
+            )}
 
 
 def candidate_preflights(

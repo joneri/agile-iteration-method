@@ -8,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from typing import Any
 
@@ -122,7 +123,7 @@ class PortfolioRunTests(unittest.TestCase):
 
         workspace_name = candidate["epicId"]
         workspace = aim / "portfolio" / workspace_name
-        (workspace / "increments").mkdir(parents=True)
+        (workspace / "increments").mkdir(parents=True, exist_ok=True)
         (workspace / "epic.md").write_text(
             f"# {candidate['epicId']} — {candidate['epicTitle']}\n\n"
             "Outcome class: Product\n\n"
@@ -135,13 +136,13 @@ class PortfolioRunTests(unittest.TestCase):
             f"Epic: {candidate['epicId']}\n",
             encoding="utf-8",
         )
-        (workspace / "decisions").mkdir(parents=True)
-        decision = workspace / "decisions" / f"{increment_id.lower()}-gate-e.md"
+        (workspace / "decisions").mkdir(parents=True, exist_ok=True)
+        decision = workspace / "decisions" / f"{number}-gate-e.md"
         decision.write_text(
-            f"# Gate E — {increment_id}\n\nDecision: Accepted\n\nIncrement: {increment_id}\n",
+            f"# Gate E — {increment_id}\n\nDecision: Accepted\n\nIncrement: {increment_id}\n\nAccepted at: 2026-08-22T10:04:00Z\n",
             encoding="utf-8",
         )
-        (workspace / "evidence").mkdir()
+        (workspace / "evidence").mkdir(exist_ok=True)
         black_box = workspace / "evidence/black-box.json"
         black_box.write_text(
             json.dumps(
@@ -290,6 +291,173 @@ class PortfolioRunTests(unittest.TestCase):
             catalog["workspaces"].append({"path": relative})
         catalog_path.write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8")
 
+    def test_same_epic_candidates_continue_in_one_workspace_before_next_epic(self) -> None:
+        from aim_activation import activation_preflight
+        from aim_runtime_contract import (
+            RuntimeTransitionError, plan_post_gate_e_continue,
+            apply_post_gate_e_continue, plan_epic_closure,
+        )
+        from aim_ui import build_board
+
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            backlog_path = repo / ".aim/portfolio-backlog.json"
+            backlog = json.loads(backlog_path.read_text())
+            backlog["items"].append({
+                **backlog["items"][1], "id": "INC-FIRST-NEXT",
+                "title": "Second Increment in first Epic", "priority": 3,
+            })
+            backlog_path.write_text(json.dumps(backlog))
+            roadmap = build_board(repo)["roadmap"]
+            run = create_run(repo, "MANDATE-COMPLETE", "t1", "t1",
+                             expected_snapshot_sha256=roadmap["snapshotSha256"])
+            self.assertEqual([item["candidateId"] for item in run["snapshot"]],
+                             ["INC-FIRST", "INC-FIRST-NEXT", "INC-SECOND"])
+            run = activate_next(repo, "t1", "t2")
+            self._publish_terminal_relation(repo, "INC-FIRST", "DI-001")
+            state_path = repo / ".aim/portfolio/EPIC-FIRST/state.json"
+            source = json.loads(state_path.read_text())
+            source["epicStatus"] = "done_increment_accepted"
+            state_path.write_text(json.dumps(source))
+            with self.assertRaisesRegex(RuntimeTransitionError, "more mandated"):
+                plan_epic_closure(repo, authority_state_path=state_path.relative_to(repo).as_posix(),
+                                  closure_evidence_path=source["epicClosureEvidence"], updated_at="t3")
+            run = checkpoint(repo, "t2", "t3", "INC-FIRST", "done_increment_accepted", "Gate E", "portfolio_mandate")
+            run = complete_active(repo, "t3", "t4", "INC-FIRST")
+            self.assertEqual(run["status"], "running")
+            self.assertEqual(build_board(repo)["portfolioRun"]["relationStatus"], "recoverable")
+            run = activate_next(repo, "t4", "t5")
+            self.assertEqual(run["activeCandidateId"], "INC-FIRST-NEXT")
+            # A later addition is outside the approved mandate, even at higher priority.
+            backlog = json.loads(backlog_path.read_text())
+            backlog["items"].append({**backlog["items"][2], "id": "INC-LATER", "priority": 1})
+            backlog_path.write_text(json.dumps(backlog))
+            admission = activation_preflight(repo, epic_id="EPIC-FIRST", candidate_id="INC-FIRST-NEXT")
+            self.assertEqual(admission["code"], "continue_epic")
+            self.assertFalse(activation_preflight(repo, epic_id="EPIC-FIRST", candidate_id="INC-LATER")["allowed"])
+            (state_path.parent / "increments/003-plan.md").write_text(
+                "# DI-003 — Second outcome\n\nEpic: EPIC-FIRST\n")
+            catalog_before = (repo / ".aim/ui-portfolio.json").read_bytes()
+            accepted_before = (state_path.parent / "decisions/001-gate-e.md").read_bytes()
+            args = dict(authority_state_path=state_path.relative_to(repo).as_posix(),
+                        increment_id="DI-003", updated_at="2026-09-27T10:00:00Z", candidate_id="INC-FIRST-NEXT")
+            preview = plan_post_gate_e_continue(repo, **args)
+            before_state, before_backlog = state_path.read_bytes(), backlog_path.read_bytes()
+            with self.assertRaisesRegex(RuntimeTransitionError, "Continuation plan changed"):
+                apply_post_gate_e_continue(repo, **args, expected_state_sha256=preview["sourceStateSha256"],
+                                           expected_continuation_sha256="0" * 64)
+            self.assertEqual((state_path.read_bytes(), backlog_path.read_bytes()), (before_state, before_backlog))
+            plan_path = state_path.parent / "increments/003-plan.md"
+            plan_bytes = plan_path.read_bytes()
+            plan_path.write_bytes(plan_bytes + b"\nChanged scope\n")
+            with self.assertRaisesRegex(RuntimeTransitionError, "Continuation plan changed"):
+                apply_post_gate_e_continue(repo, **args, expected_state_sha256=preview["sourceStateSha256"],
+                                           expected_continuation_sha256=preview["continuation"]["sha256"])
+            plan_path.write_bytes(plan_bytes)
+            import aim_runtime_contract
+            replace = aim_runtime_contract._atomic_replace
+            failed = False
+            def fail_once(path, payload):
+                nonlocal failed
+                if path.resolve() == state_path.resolve() and not failed:
+                    failed = True
+                    raise OSError("simulated publication failure")
+                replace(path, payload)
+            with patch.object(aim_runtime_contract, "_atomic_replace", side_effect=fail_once):
+                with self.assertRaisesRegex(OSError, "simulated"):
+                    apply_post_gate_e_continue(repo, **args, expected_state_sha256=preview["sourceStateSha256"],
+                                               expected_continuation_sha256=preview["continuation"]["sha256"])
+            self.assertEqual((state_path.read_bytes(), backlog_path.read_bytes()), (before_state, before_backlog))
+            # Simulate a process stopping after the Backlog write. Exact
+            # re-preview resumes that link; ordinary activation still rejects replay.
+            backlog_path.write_text(json.dumps(preview["continuation"]["backlog"]))
+            self.assertFalse(activation_preflight(repo, epic_id="EPIC-FIRST", candidate_id="INC-FIRST-NEXT")["allowed"])
+            self.assertEqual(build_board(repo)["portfolioRun"]["relationStatus"], "recoverable")
+            preview = plan_post_gate_e_continue(repo, **args)
+            applied = subprocess.run([
+                sys.executable, str(REPO_ROOT / "scripts/aim_runtime_contract.py"), "continue",
+                "--repo", str(repo), "--authority-state-path", args["authority_state_path"],
+                "--increment-id", "DI-003", "--updated-at", args["updated_at"],
+                "--candidate-id", "INC-FIRST-NEXT", "--apply",
+                "--expected-state-sha256", preview["sourceStateSha256"],
+                "--expected-continuation-sha256", preview["continuation"]["sha256"],
+            ], capture_output=True, text=True)
+            self.assertEqual(applied.returncode, 0, applied.stderr)
+            self.assertEqual(json.loads(applied.stdout)["result"], "applied")
+            written = json.loads(state_path.read_text())
+            self.assertEqual(written["activeIncrementId"], "DI-003")
+            self.assertEqual(written["portfolioCandidateId"], "INC-FIRST-NEXT")
+            self.assertEqual(written["previousIncrementId"], "DI-001")
+            self.assertEqual((repo / ".aim/ui-portfolio.json").read_bytes(), catalog_before)
+            self.assertEqual((state_path.parent / "decisions/001-gate-e.md").read_bytes(), accepted_before)
+            run = checkpoint(repo, "t5", "t6", "INC-FIRST-NEXT", "gate_b_pending", "Gate B", "portfolio_mandate")
+            self.assertEqual(build_board(repo)["portfolioRun"]["relationStatus"], "consistent", build_board(repo)["warnings"])
+            visible = build_board(repo)
+            self.assertEqual(visible["warnings"], [])
+            first_epic = next(item for item in visible["epics"] if item["id"] == "EPIC-FIRST")
+            self.assertEqual(next(item["column"] for item in first_epic["increments"] if item["id"] == "DI-001"), "done")
+            self._publish_terminal_relation(repo, "INC-FIRST-NEXT", "DI-003")
+            run = checkpoint(repo, "t6", "t7", "INC-FIRST-NEXT", "epic_complete", "Epic closure", "portfolio_mandate")
+            run = complete_active(repo, "t7", "t8", "INC-FIRST-NEXT")
+            run = activate_next(repo, "t8", "t9")
+            self.assertEqual(run["activeCandidateId"], "INC-SECOND")
+            self._publish_terminal_relation(repo, "INC-SECOND", "DI-002")
+            run = checkpoint(repo, "t9", "t10", "INC-SECOND", "epic_complete", "Epic closure", "portfolio_mandate")
+            run = complete_active(repo, "t10", "t11", "INC-SECOND")
+            self.assertEqual(run["status"], "completed")
+            self.assertEqual(len(json.loads((repo / ".aim/ui-portfolio.json").read_text())["workspaces"]), 2)
+            self.assertEqual(build_board(repo)["portfolioRun"]["relationStatus"], "consistent", build_board(repo)["warnings"])
+
+    def test_seven_planned_candidates_in_four_epics_are_preserved(self) -> None:
+        from aim_ui import build_board
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            backlog_path = repo / ".aim/portfolio-backlog.json"
+            backlog = json.loads(backlog_path.read_text())
+            backlog["items"] = [
+                {"id": f"INC-{index:02}", "epicId": f"EPIC-{epic:02}",
+                 "epicTitle": f"Epic {epic}", "title": f"Increment {index}",
+                 "priority": index, "createdAt": "2026-09-27T10:00:00Z"}
+                for index, epic in enumerate((1, 1, 2, 3, 3, 4, 4), 1)
+            ]
+            backlog_path.write_text(json.dumps(backlog))
+            before = backlog_path.read_bytes()
+            roadmap = build_board(repo)["roadmap"]
+            self.assertEqual(roadmap["eligibleCount"], 7)
+            self.assertEqual(roadmap["epicCount"], 4)
+            run = create_run(repo, "MANDATE-SEVEN", "t1", "t1",
+                             expected_snapshot_sha256=roadmap["snapshotSha256"])
+            self.assertEqual(len(run["snapshot"]), 7)
+            self.assertEqual(backlog_path.read_bytes(), before)
+            self.assertFalse((repo / ".aim/ui-portfolio.json").exists())
+
+    def test_new_mandate_can_include_remaining_sequence_in_an_existing_epic(self) -> None:
+        from aim_activation import activation_preflight
+        from aim_ui import build_board
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            self._publish_terminal_relation(repo, "INC-FIRST", "DI-001")
+            state_path = repo / ".aim/portfolio/EPIC-FIRST/state.json"
+            source = json.loads(state_path.read_text())
+            source["epicStatus"] = "done_increment_accepted"
+            state_path.write_text(json.dumps(source))
+            backlog_path = repo / ".aim/portfolio-backlog.json"
+            backlog = json.loads(backlog_path.read_text())
+            first = next(item for item in backlog["items"] if item["id"] == "INC-FIRST")
+            backlog["items"] = [first, *[
+                {**first, "id": f"INC-NEXT-{i}", "priority": i, "runtimeIncrementId": None}
+                for i in (1, 2)
+            ]]
+            backlog_path.write_text(json.dumps(backlog))
+            roadmap = build_board(repo)["roadmap"]
+            self.assertEqual(roadmap["eligibleCount"], 2)
+            run = create_run(repo, "MANDATE-REMAINING", "t1", "t1",
+                             expected_snapshot_sha256=roadmap["snapshotSha256"])
+            run = activate_next(repo, "t1", "t2")
+            self.assertEqual(run["activeCandidateId"], "INC-NEXT-1")
+            self.assertTrue(activation_preflight(repo, epic_id="EPIC-FIRST", candidate_id="INC-NEXT-1")["allowed"])
+            self.assertEqual(build_board(repo)["portfolioRun"]["relationStatus"], "recoverable")
+
     def test_schema_is_supported(self) -> None:
         schema = json.loads(
             (REPO_ROOT / "schemas/aim-portfolio-run.schema.json").read_text(
@@ -427,7 +595,7 @@ class PortfolioRunTests(unittest.TestCase):
             with self.assertRaisesRegex(PortfolioRunError, "gateEAcceptance is missing"):
                 complete_active(repo, "t3", "t4", "INC-FIRST")
 
-            state["gateEAcceptance"] = ".aim/portfolio/EPIC-FIRST/decisions/di-001-gate-e.md"
+            state["gateEAcceptance"] = ".aim/portfolio/EPIC-FIRST/decisions/001-gate-e.md"
             closure_path = state.pop("epicClosureEvidence")
             state_path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
             with self.assertRaisesRegex(

@@ -6,6 +6,8 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
+import subprocess
 from pathlib import Path
 
 
@@ -94,6 +96,126 @@ class AimStartTests(unittest.TestCase):
                 {"path": f"workspaces/history-{index:03d}"}
             )
         catalog_path.write_text(json.dumps(catalog, indent=2) + "\n", encoding="utf-8")
+
+    def test_fresh_repo_bootstraps_without_root_checkpoint_or_dependencies(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = Path(temporary)
+            plan = plan_start(repo, **self._request())
+            self.assertTrue(plan["bootstrapCatalog"])
+            self.assertFalse((repo / ".aim").exists())
+            request = self._request()
+            command = [sys.executable, "-S", str(REPO_ROOT / "scripts/aim_start.py"), "--repo", str(repo)]
+            for key, value in request.items():
+                command.extend(["--" + key.replace("_", "-"), value])
+            result = subprocess.run(command + ["--apply", "--expected-start-sha256", plan["startSha256"]],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertTrue(json.loads(result.stdout)["visibleOnBoard"])
+            self.assertFalse((repo / ".aim/state.json").exists())
+            self.assertEqual(build_board(repo)["health"], "healthy")
+            self.assertEqual(len(build_board(repo)["epics"]), 1)
+
+    def _fresh_portfolio(self, repo: Path) -> dict[str, str]:
+        from aim_portfolio_run import create_run, activate_next
+        (repo / ".aim").mkdir()
+        (repo / ".aim/portfolio-backlog.json").write_text(json.dumps({
+            "backlogVersion": "1.0", "updatedAt": "2026-09-27T10:00:00Z", "items": [{
+                "id": "INC-01", "epicId": "EPIC-NEW-001", "epicTitle": "Fresh start",
+                "title": "First outcome", "priority": 1, "createdAt": "2026-09-27T10:00:00Z",
+            }],
+        }))
+        create_run(repo, "MANDATE-BOOTSTRAP", "t1", "t1")
+        activate_next(repo, "t1", "t2")
+        return {**self._request(), "candidate_id": "INC-01"}
+
+    def test_first_portfolio_start_publishes_all_relations_together(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = Path(temporary)
+            request = self._fresh_portfolio(repo)
+            plan = plan_start(repo, **request)
+            result = apply_start(repo, **request, expected_start_sha256=plan["startSha256"])
+            self.assertTrue(result["gateAReady"])
+            self.assertFalse((repo / ".aim/state.json").exists())
+            board = build_board(repo)
+            self.assertEqual(board["workspaceDiagnostics"], [])
+            self.assertEqual(board["warnings"], [])
+            self.assertEqual(board["portfolioRun"]["relationStatus"], "consistent")
+            self.assertEqual(board["portfolioRun"]["checkpointStatus"], "gate_a_pending")
+            state = json.loads((repo / ".aim/portfolio/EPIC-NEW-001/state.json").read_text())
+            self.assertEqual(state["plannedIncrementId"], "DI-002")
+            self.assertIsNone(state["activeIncrementId"])
+            self.assertEqual(state["portfolioCandidateId"], "INC-01")
+            self.assertEqual(board["portfolioRun"]["decisionAuthority"], "none")
+
+    def test_bootstrap_failure_restores_absence_and_existing_roadmap(self) -> None:
+        for fault in ("after_staging", "after_workspace_publish", "after_catalog_publish",
+                      "after_backlog_publish", "after_run_publish", "after_ready_publish"):
+            with self.subTest(fault=fault), tempfile.TemporaryDirectory() as temporary:
+                repo = Path(temporary)
+                request = self._fresh_portfolio(repo)
+                before = {p.relative_to(repo): p.read_bytes() for p in repo.rglob("*") if p.is_file()}
+                plan = plan_start(repo, **request)
+                with self.assertRaisesRegex(AimStartError, fault):
+                    apply_start(repo, **request, expected_start_sha256=plan["startSha256"], fault_at=fault)
+                after = {p.relative_to(repo): p.read_bytes() for p in repo.rglob("*") if p.is_file()}
+                self.assertEqual(after, before)
+                self.assertFalse((repo / ".aim/portfolio").exists())
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = Path(temporary)
+            with self.assertRaises(AimStartError):
+                apply_start(repo, **self._request(), fault_at="after_catalog_publish")
+            self.assertFalse((repo / ".aim").exists())
+
+    def test_schema_error_is_rejected_before_bootstrap_writes(self) -> None:
+        import aim_start
+        original = aim_start._workspace_payloads
+        def invalid(plan, title, platform):
+            payloads = original(plan, title, platform)
+            state = json.loads(payloads["state.json"])
+            state["plannedIncrementId"] = None
+            payloads["state.json"] = json.dumps(state).encode()
+            return payloads
+        with tempfile.TemporaryDirectory() as temporary, patch.object(aim_start, "_workspace_payloads", side_effect=invalid):
+            repo = Path(temporary)
+            with self.assertRaisesRegex(AimStartError, "Generated start state is invalid"):
+                apply_start(repo, **self._request())
+            self.assertFalse((repo / ".aim").exists())
+
+    def test_bootstrap_will_not_adopt_or_hide_existing_root_work(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            (repo / ".aim/ui-portfolio.json").unlink()
+            before = (repo / ".aim/state.json").read_bytes()
+            with self.assertRaisesRegex(AimStartError, "Existing runtime work"):
+                plan_start(repo, **self._request())
+            self.assertEqual((repo / ".aim/state.json").read_bytes(), before)
+            self.assertFalse((repo / ".aim/ui-portfolio.json").exists())
+
+    def test_changed_mandate_or_new_catalog_during_bootstrap_preserves_inputs(self) -> None:
+        for change in ("mandate", "catalog"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as temporary:
+                repo = Path(temporary)
+                request = self._fresh_portfolio(repo)
+                plan = plan_start(repo, **request)
+                def mutate(stage):
+                    if stage != "after_staging":
+                        return
+                    if change == "catalog":
+                        (repo / ".aim/ui-portfolio.json").write_text("{}")
+                    else:
+                        path = repo / ".aim/portfolio-run.json"
+                        run = json.loads(path.read_text())
+                        run["status"] = "paused"
+                        run["pauseReason"] = "User paused"
+                        path.write_text(json.dumps(run))
+                with self.assertRaises(AimStartError):
+                    apply_start(repo, **request, expected_start_sha256=plan["startSha256"], fault_hook=mutate)
+                self.assertFalse((repo / ".aim/portfolio").exists())
+                self.assertFalse((repo / ".aim/state.json").exists())
+                if change == "catalog":
+                    self.assertEqual((repo / ".aim/ui-portfolio.json").read_text(), "{}")
+                else:
+                    self.assertEqual(json.loads((repo / ".aim/portfolio-run.json").read_text())["status"], "paused")
 
     def test_preview_is_no_write_and_apply_is_visible_with_current_contract(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
