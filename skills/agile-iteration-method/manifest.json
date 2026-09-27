@@ -51,7 +51,7 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "3.0.5",
+  "productVersion": "3.0.6",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -73,7 +73,7 @@
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "454be57984306b74bc17b7df50f1579972b55eaf12496691f8b1e78ed1885394",
+      "sha256": "f83d0de695903aafd85c592efec6a511f795253fa541ee441e9d4fa987a182ee",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -168,7 +168,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "3da4414b24923430a97c932c0597fd5ebc9d126ae188181054b348d2a8559870",
+      "sha256": "21d493e8ecb5556975bc8214a308bb26c080daaed989b2564fd9d83d6782a3f6",
       "source": "VERSION"
     },
     {
@@ -223,7 +223,7 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "7c26df0b83d122d06917cee132d7aa2f4d845bcfe19bd857dcb112338af2a1ba",
+      "sha256": "576a1ea1a3b373cbcb798f2e68aab08d79fc842b82b01e83efb1df51a228f924",
       "source": "scripts/aim_ui.py"
     },
     {
@@ -238,17 +238,17 @@
     },
     {
       "output": "aim-ui/index.html",
-      "sha256": "1542a745fd6a1d0c7aa64519cf7803cd0943bd486eae35ffb20f68d573e47071",
+      "sha256": "de8a50b869b230aed18c046cdd820a651ce1c602d8ecf1f4ce7cf09673f581a6",
       "source": "aim-ui/index.html"
     },
     {
       "output": "aim-ui/styles.css",
-      "sha256": "664e97a6637982cf684e56df76d6b2561f6ec820142491c5f417ef6a110f2347",
+      "sha256": "c1d153a042dd26d7d2f5164b19a3b38e8b015146a20dc10a8157bccf1de6aea3",
       "source": "aim-ui/styles.css"
     },
     {
       "output": "aim-ui/app.js",
-      "sha256": "2dd1ef2e8a445a3c5840039a752b75898f3c0c66cbb98a5e2b19eb17eed0bcdd",
+      "sha256": "178f8afb2c73ae449ef072f213525cff707bd96ee80e88a9dc734717b9547652",
       "source": "aim-ui/app.js"
     }
   ]

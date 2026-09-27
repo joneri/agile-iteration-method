@@ -1269,14 +1269,10 @@ def _recovery_projection(
                 if completed
                 else "checkpoint_attention"
             ),
-            "title": (
-                "AIM found a board setup that needs review"
-                if catalog_only
-                else "AIM found earlier work, but it isn’t connected to a current board"
-            ),
+            "title": "Some work cannot be displayed yet",
             "message": (
-                "AIM preserved the checkpoint and will not guess, rewrite, or register it. "
-                "Choose a reviewed action in AIM chat."
+                "Available work is shown on the board and refreshes automatically. "
+                "Saved work is preserved. Details are available below if needed."
             ),
             "recommendedAction": recommended,
             "alternatives": alternatives,
@@ -1297,7 +1293,7 @@ def _recovery_projection(
             "technicalDetails": diagnostics,
             "readOnly": True,
         }
-    if source_kind == "uninitialized":
+    if source_kind == "uninitialized" and not roadmap["configured"]:
         calibrated = _repo_calibrated(repo_root)
         return {
             "kind": "empty_repository",
@@ -1359,6 +1355,19 @@ def _workspace_roots(
         )
         return "portfolio", [], diagnostics
     if not portfolio_path.is_file():
+        # Planning and calibration may create .aim before any runtime exists.
+        # Only actual runtime evidence makes a missing checkpoint a problem.
+        runtime_present = any(
+            (aim_root / name).exists() or (aim_root / name).is_symlink()
+            for name in ("state.json", "epic.md")
+        ) or any(
+            directory.is_symlink() or (directory.is_dir() and any(directory.iterdir()))
+            for directory in (
+                aim_root / "increments", aim_root / "decisions", aim_root / "reviews"
+            )
+        )
+        if not runtime_present:
+            return "uninitialized", [], diagnostics
         return "single-workspace", [aim_root], diagnostics
     if portfolio_path.stat().st_size > MAX_PORTFOLIO_BYTES:
         warning = f"{PORTFOLIO_FILE} is larger than {MAX_PORTFOLIO_BYTES} bytes."
@@ -2161,7 +2170,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     base["deliveryData"] = _delivery_data(base["epics"], accepted, generated_at)
     base["health"] = (
         "degraded"
-        if not base["epics"]
+        if not base["epics"] and (warnings or workspace_diagnostics)
         else "partial"
         if warnings or workspace_diagnostics
         else "healthy"

@@ -58,21 +58,20 @@ Source: aim-ui/index.html
 
     <section class="workspace-integrity" id="workspace-integrity" aria-labelledby="workspace-integrity-title" hidden>
       <div>
-        <p class="eyebrow" id="workspace-integrity-eyebrow">Safe AIM recovery</p>
-        <h3 id="workspace-integrity-title">AIM found earlier work</h3>
+        <p class="eyebrow" id="workspace-integrity-eyebrow">Board status</p>
+        <h3 id="workspace-integrity-title">Some work cannot be displayed yet</h3>
         <p id="workspace-integrity-summary"></p>
+      </div>
+      <details class="technical-details">
+        <summary>Details and support</summary>
         <dl class="recovery-facts" id="workspace-integrity-facts"></dl>
         <div class="recovery-actions">
           <button class="recovery-action recovery-primary" id="copy-recovery-action" type="button">Copy recommended action</button>
           <div id="recovery-alternatives"></div>
           <p id="recovery-feedback" role="status" aria-live="polite"></p>
         </div>
-      </div>
-      <details class="technical-details">
-        <summary>Technical details</summary>
         <ul id="workspace-integrity-list"></ul>
       </details>
-      <p class="workspace-integrity-boundary">AIM UI will not register, migrate, rewrite, merge, or accept these checkpoints. Resolve them explicitly in AIM chat.</p>
     </section>
     <section class="empty-state" id="empty-state" hidden>
       <p class="eyebrow" id="empty-eyebrow">Runtime unavailable</p>
@@ -266,7 +265,7 @@ Source: aim-ui/index.html
             <p class="last-refresh" id="last-refresh"></p>
           </div>
         </div>
-        <div class="runtime-notices" id="runtime-notices" role="status" hidden></div>
+        <details class="runtime-notices" id="runtime-notices" hidden></details>
         <div class="delivery-workspace" id="delivery-workspace">
           <div class="kanban-panel" id="kanban-panel">
             <div class="kanban" id="kanban" aria-label="AIM Epic and Increment Kanban"></div>

@@ -1234,6 +1234,7 @@ function renderNotices(board) {
   );
   notices.replaceChildren();
   notices.hidden = warnings.length === 0;
+  if (warnings.length) notices.append(el("summary", "", "Board details"));
   warnings.forEach((warning) => notices.append(el("p", "", warning)));
 }
 
@@ -1241,11 +1242,9 @@ function renderWorkspaceIntegrity(board) {
   const panel = $("workspace-integrity");
   const recovery = board.recovery;
   const diagnostics = board.workspaceDiagnostics || [];
-  panel.hidden = !recovery;
-  if (!recovery) return;
-  $("workspace-integrity-eyebrow").textContent = recovery.kind === "empty_repository"
-    ? "Roadmap onboarding"
-    : "Safe AIM recovery";
+  panel.hidden = !recovery || recovery.kind === "empty_repository";
+  if (panel.hidden) return;
+  $("workspace-integrity-eyebrow").textContent = "Board status";
   $("workspace-integrity-title").textContent = recovery.title;
   $("workspace-integrity-summary").textContent = recovery.message;
   const facts = $("workspace-integrity-facts");
@@ -1272,7 +1271,7 @@ function renderWorkspaceIntegrity(board) {
     const heading = el("p", "workspace-integrity-identity", `${diagnostic.epicId} · ${diagnostic.statePath}`);
     const reason = el("p", "workspace-integrity-reason", diagnostic.reason);
     item.append(heading, reason);
-    (diagnostic.contractDrift || []).forEach((drift) => {
+    (diagnostic.contractDrift || []).filter((drift) => drift !== diagnostic.reason).forEach((drift) => {
       item.append(el("p", "workspace-integrity-drift", drift));
     });
     item.append(
@@ -1330,20 +1329,6 @@ function render(board) {
   renderProduct(board);
   renderCodexConnection(board);
   renderWorkspaceIntegrity(board);
-  if (!board.epics || board.epics.length === 0) {
-    $("control-room").hidden = true;
-    $("empty-state").hidden = false;
-    const onboarding = board.onboarding;
-    $("empty-eyebrow").textContent = onboarding ? "Ready for AIM" : "Runtime unavailable";
-    $("empty-title").textContent = onboarding
-      ? "Start from the AIM chat"
-      : "No active AIM board can be read";
-    $("empty-message").textContent = onboarding
-      ? `${onboarding.message} Recommended next action in chat: ${onboarding.nextAction}`
-      : board.warnings?.[0] || "No active Epic is available.";
-    setConnection(onboarding ? "live" : "error", onboarding ? "UI ready" : "Runtime needs attention");
-    return;
-  }
   const viewEpics = epicsForView(board);
   if (state.filter !== "all" && !viewEpics.some((epic) => epic.id === state.filter)) {
     state.filter = "all";
@@ -1363,7 +1348,13 @@ function render(board) {
     (total, epic) => total + epic.increments.filter((item) => item.attention).length + (epic.attention ? 1 : 0),
     0,
   );
-  $("empty-state").hidden = true;
+  const empty = board.epics.length === 0;
+  $("empty-state").hidden = !empty;
+  $("empty-eyebrow").textContent = "Ready for AIM";
+  $("empty-title").textContent = "Your board is ready";
+  $("empty-message").textContent = board.workspaceDiagnostics?.length
+    ? "Work will appear here when AIM can read it. This board updates automatically."
+    : "Describe what you want to build in AIM chat. Work will appear here as AIM progresses.";
   $("control-room").hidden = false;
   $("portfolio-summary").textContent = `${activeCount} running · ${plannedCount} planned · ${incrementCount} cards on the delivery board`;
   const facts = $("runtime-facts");

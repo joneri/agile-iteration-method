@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-09-27 - AIM 3 patch release v3.0.6
+- Fixed false checkpoint recovery warnings for empty AIM directories and
+  Roadmap-only projects whose runtime work has not started.
+- Kept the Kanban board visible and refreshing even when it has no Epics.
+- Preserved readable work when another workspace cannot be read, with a brief
+  status summary and collapsed diagnostic facts and repair options.
+- Retained diagnostics for actual runtime evidence with missing or malformed
+  state, and added regression coverage for startup and no-write behavior.
+
+Compatibility: runtime contract remains `2.0`, runtime-state schema remains
+`1.0`, installer manifest remains `1.0`, and public skill package format remains
+`12`. Runtime history and gate authority are unchanged.
+
+Migration: update the public Agent Skill with
+`npx skills update agile-iteration-method --yes`, then restart AIM UI.
+No workspace migration is required for this fix.
+
+Known limitations: unreadable or inconsistent saved work remains preserved and
+requires a reviewed repair before that work can be displayed. This release does
+not automatically migrate checkpoints or start unapproved work.
+
 ## 2026-08-30 - AIM 3 patch release v3.0.5
 - Separated Gate E Increment acceptance from Epic closure so a POC, fixture,
   mock, synthetic run, or implementation-assisted demonstration cannot silently

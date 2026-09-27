@@ -272,6 +272,47 @@ class AimUiTests(unittest.TestCase):
             json.dumps(value, indent=2) + "\n", encoding="utf-8"
         )
 
+    def test_planning_only_project_has_no_phantom_checkpoint(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = Path(temporary)
+            (repo / ".aim").mkdir()
+            self._backlog(repo, [{
+                "id": "INC-NEW-001", "epicId": "EPIC-NEW",
+                "epicTitle": "New project", "title": "First outcome",
+                "summary": "Build the first outcome", "priority": 1,
+                "createdAt": "2026-08-21T13:00:00Z",
+            }])
+            before = (repo / ".aim/portfolio-backlog.json").read_bytes()
+            board = build_board(repo)
+            self.assertEqual(board["source"]["kind"], "uninitialized")
+            self.assertEqual(board["workspaceDiagnostics"], [])
+            self.assertEqual(board["warnings"], [])
+            self.assertIsNone(board["recovery"])
+            self.assertEqual(board["health"], "healthy")
+            self.assertEqual(board["epics"][0]["id"], "EPIC-NEW")
+            self.assertFalse((repo / ".aim/state.json").exists())
+            self.assertEqual(before, (repo / ".aim/portfolio-backlog.json").read_bytes())
+
+    def test_empty_runtime_directories_are_normal_startup(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = Path(temporary)
+            for name in ("increments", "decisions", "reviews"):
+                (repo / ".aim" / name).mkdir(parents=True)
+            board = build_board(repo)
+            self.assertEqual(board["workspaceDiagnostics"], [])
+            self.assertEqual(board["warnings"], [])
+            self.assertEqual(board["health"], "healthy")
+            self.assertEqual(board["epics"], [])
+
+    def test_actual_work_without_state_still_has_diagnostics(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            (repo / ".aim/state.json").unlink()
+            board = build_board(repo)
+            self.assertEqual(len(board["workspaceDiagnostics"]), 1)
+            self.assertEqual(board["health"], "degraded")
+            self.assertFalse((repo / ".aim/state.json").exists())
+
     def test_state_mapping_covers_every_canonical_runtime_state(self) -> None:
         self.assertEqual(
             set(STATE_TO_COLUMN),
@@ -2424,16 +2465,17 @@ class AimUiTests(unittest.TestCase):
         self.assertEqual([item["id"] for item in activity["items"]], ["review-helper"])
         self.assertEqual(activity["items"][0]["canonicalRole"], "Reviewer")
 
-    def test_missing_or_malformed_runtime_returns_safe_degraded_board(self) -> None:
+    def test_empty_runtime_is_healthy_but_malformed_state_is_degraded(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             (root / ".aim").mkdir()
             board = build_board(root)
-            self.assertEqual(board["health"], "degraded")
+            self.assertEqual(board["health"], "healthy")
             self.assertEqual(board["epics"], [])
             (root / ".aim/state.json").write_text("{not json", encoding="utf-8")
             board = build_board(root)
             self.assertIn("invalid JSON", board["warnings"][0])
+            self.assertEqual(board["health"], "degraded")
 
     def test_evidence_resolution_rejects_traversal(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -2461,7 +2503,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/board", timeout=3) as response:
                     payload = json.load(response)
                     self.assertTrue(payload["source"]["readOnly"])
-                    self.assertEqual(payload["product"]["version"], "3.0.5")
+                    self.assertEqual(payload["product"]["version"], "3.0.6")
                     self.assertTrue(payload["product"]["capturedAtLaunch"])
                     self.assertIn(
                         payload["backgroundControl"]["status"],
@@ -2471,7 +2513,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/health", timeout=3) as response:
                     health = json.load(response)
                     self.assertEqual(health["protocolVersion"], "1.3")
-                    self.assertEqual(health["productVersion"], "3.0.5")
+                    self.assertEqual(health["productVersion"], "3.0.6")
                     self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST")
                 with self.assertRaises(HTTPError) as error:

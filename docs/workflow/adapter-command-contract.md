@@ -213,9 +213,17 @@ newcomer-facing copy. This does not introduce a second state contract: planned
 `INC-*` candidates remain stationary planning metadata and cannot masquerade as
 active or accepted `DI-*` runtime.
 
-For empty or legacy repositories the read model may publish a read-only recovery
-projection. It must identify what AIM found, recommend one safe chat action, and
-keep exact contract diagnostics behind technical details. A checkpoint handoff
+A new repository, an empty `.aim` directory, and Roadmap-only planning are
+normal startup states. Directory existence alone is not evidence of an earlier
+checkpoint. Show the Kanban board even when empty and refresh it as AIM works;
+no recovery action is needed merely because runtime work has not started.
+Existing runtime evidence or an explicitly declared workspace with missing or
+invalid state still produces diagnostics.
+
+For legacy or unreadable work the read model may publish a read-only recovery
+projection. Keep readable work visible, show one brief status summary, and put
+checkpoint facts, repair actions, and exact diagnostics behind collapsed details.
+The technical handoff recommends one safe chat action. A checkpoint handoff
 includes the repository-relative `state.json` path, detected Epic, exact failed
 checks, expected checkpoint timestamp, SHA-256 fingerprint, and requested
 operation. UI controls only copy this intent; they never migrate, archive,
