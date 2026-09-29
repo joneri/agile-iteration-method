@@ -27,7 +27,7 @@ Current roles:
 
 | File | Role |
 | --- | --- |
-| `aim-3.1-evaluation.md` | bounded candidate comparison, feature claims and evidence limits |
+| `aim-3.1-evaluation.md` | user benefits, measured resource gains, release validation and comparison scope |
 | `engineering-reset-analysis.md` | independent Enigma comparison analysis, engineering changes and reproducible measurements |
 | `paired-evaluation-protocol.md` | fixed protocol for isolated same-model product evaluations |
 | `paired-pilot-results.md` | first paired pilot results, measured tradeoffs and remaining weaknesses |

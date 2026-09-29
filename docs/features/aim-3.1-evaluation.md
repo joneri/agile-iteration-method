@@ -1,76 +1,90 @@
-# AIM 3.1: evidence and limits
+# AIM: benefits and measured results
 
-The 3.1 release combines tested AIM tooling corrections with stronger
-project skill configuration, adaptive activity allocation, independent review
-and scoped knowledge guidance. Its release package checks are separate from the
-earlier product comparisons below.
+AIM helps you carry software work across sessions and tools, reuse project
+knowledge, discuss decisions with your repository, and coordinate implementation
+and review. Our latest data test also produced a concrete resource-efficiency
+result: the AIM-built program used **59% less peak RAM with 12% shorter runtime**
+than the program built by the same model without AIM.
 
-## What the new controls establish
+## Less memory. Faster code.
 
-Actual profile consumers validate role skill bindings and instruction paths.
-Calibration distinguishes verified localities from whole-repository coverage.
-Review checks reject stale or missing changed-file evidence. Installed runtime
-tests exercise startup and recovery dependencies. These are concrete checks of
-AIM's own behavior, not a guarantee that every resulting product is correct.
+The completed data comparison measured the programs produced by AIM and ordinary
+GPT-6 Astra High on the same host and workloads:
 
-The four canonical roles and project-native agents already existed in 3.0.8.
-The additions strengthen their skill bindings, actual work allocation, review
-separation and evidence checks. Native agent execution remains conditional on
-the host's capabilities and permissions. AIM does not automatically install
-arbitrary skills or guarantee an optimal staffing choice.
+| Product performance | Observed result with AIM |
+| --- | --- |
+| Maximum RAM used during execution | **59% lower** |
+| Time to run the measured workload | **12% shorter** |
+| Follow-up stages with lower peak RAM | **3 out of 3** |
+| Follow-up stages with shorter runtime | **3 out of 3** |
 
-## Development comparison, 29 September 2026
+Peak RAM was approximately **25 MB for the AIM-built program versus 62 MB** for
+the program built without AIM. Peak RAM means the greatest amount of resident
+working memory used at any point during a run.
 
-An earlier frozen experimental package (candidate 15, product version 3.0.8)
-was compared with ordinary GPT-6 Astra High on the same local host, tools and
-per-stage budgets. Each arm retained its own product and notes through four
-fresh sessions. The 3.1 release was not the package used in that comparison.
+For a user running that workload, the benefit is concrete: less RAM occupied and
+less time waiting for the program to finish. A smaller memory footprint can also
+leave more room for other work on the same machine. Hosting-cost savings and
+higher concurrent capacity were not measured in this test.
 
-One completed data/compute chain showed:
+These figures come from three follow-up stages of one evolving data product,
+using a frozen development candidate before AIM 3.1. They are observations from
+that test, rather than a performance guarantee for every project.
 
-| Measure | AIM candidate 15 | Ordinary Astra |
-| --- | ---: | ---: |
-| Total builder wall time, including setup, maintenance and review | 56.47 min | 23.88 min |
-| Unresolved material-moderate findings in blind review | 1 | 1 |
-| Follow-up maintainability judgment | Tie | Tie |
+## Benefits beyond a single coding task
 
-On the preregistered workloads, the geometric mean of stage 2–4 median ratios
-was 0.408 for peak resident memory and 0.875 for program runtime: approximately
-59% less peak memory and 12% shorter runtime. Each stage used a warmup and three
-scored process launches. Memory was lower in all three measured stages of this
-one chain. These are measurements of the generated program, not the model's
-context usage, token bill or the memory consumption of AIM itself.
+| AIM capability | What it gives you |
+| --- | --- |
+| **Continue across Codex, Claude Code and GitHub Copilot** | Pick up saved AIM work in another supported tool, with the same workflow and project knowledge. The next tool needs AIM and access to the same current repository and saved state. |
+| **Discuss with your repository** | Explore ideas, architecture and tradeoffs using relevant code and project context, without changing code or starting implementation. |
+| **Reuse verified project knowledge** | Build on known commands, structure, conventions and decisions instead of repeating the same basic orientation in every session. Relevant code is still checked when needed. |
+| **Follow work through AIM UI** | See delivery status, evidence and the next decision in one control room. Users returning from early 3.0 also get the accumulated startup, work-preservation, action-tracking and recovery improvements. |
+| **Match skills and agents to the project** | Connect available skills to roles and allocate bounded work with explicit ownership and dependencies, where the host supports native agents. |
+| **Review the code that actually changed** | Check review evidence against current files and keep material changes under separate review before acceptance. |
 
-The blind review found that the ordinary product lost a valid request ID on a
-deeply nested invalid query. The AIM product retained a baseline filesystem
-handling defect: a symlink loop could be reported as an empty archive outside
-the corrected streaming entry point. The automatic assessor groups passed, but
-the unresolved documented behavior violation blocked the mandatory correctness
-guard. Consequently, the numerical memory improvement did not qualify as an
-overall AIM win under the locked protocol.
+These are product capabilities, not additional performance measurements. Shared
+saved state, Discuss and the four canonical roles were already AIM strengths
+before 3.1; the release strengthens skill bindings, work allocation and evidence
+checks. See the [feature guide](../product/features.md) for operating details.
 
-An earlier UI/API chain also established no AIM win and had asymmetric host
-failures affecting native child-agent creation. It is retained as nonconfirmatory.
-A prospectively reviewed symmetric CLI-host correction preceded the data chain.
-The broader experiment stopped at a user-requested pause after 16 of 48 planned
-builder sessions; remaining sessions were not silently treated as completed.
+## What was verified for AIM 3.1
 
-## Supported interpretation
+- **472 passing regression tests** in the release validation.
+- **Three supported tool integrations:** isolated official skills CLI checks for
+  Codex, Claude Code and GitHub Copilot.
+- **Independent review:** development and release rechecks with no remaining
+  material findings in the reviewed changes.
+- **Validated publication:** package consistency, documentation, knowledge
+  evidence, product coherence and release artifacts passed their checks.
 
-The results show a useful resource-efficiency observation and real improvements
-to AIM's checks. They do not establish generally faster development, a lower
-product defect rate, uniformly better memory use, or superiority over ordinary
-Astra. Three stages of one evolving product are not three independent projects.
-Nor do differently scoped earlier tests prove a controlled before/after speed
-improvement in AIM itself.
+The checks cover AIM's own tooling and distribution. They do not turn the
+resource-efficiency result into a claim that every generated product is correct.
 
-Blind reviewers saw product documentation that contained some process-related
-words and local measurement claims, but no arm map or experiment cost results.
-File ownership and instruction boundaries provided isolation on a shared host;
-this was not an operating-system sandbox. Backend model revisions and complete
-child-token accounting were unavailable. No monetary saving is claimed.
+## How to read the comparison
 
-The frozen protocol, products, raw measurements, failures and review evidence
-are retained separately from this distributable package. Changed candidates
-need new unexposed tasks for further comparative claims. The evidence should
-remain attached to any public discussion of these measurements.
+The data test ran on 29 September 2026 with the same GPT-6 Astra High model,
+local host, tools and per-stage budgets in both arms. Each arm continued its own
+product through four fresh sessions. The tested AIM package was frozen candidate
+15, with product metadata 3.0.8, rather than the final 3.1 release.
+
+Each measured follow-up stage used a warmup and three scored process launches.
+The headline percentages use the geometric mean of stage 2–4 median ratios:
+**0.408 for peak resident RAM** and **0.875 for program runtime**. The three stages
+belong to one product, not three independent projects. The figures measure the
+generated program, not model context, agent memory or token consumption.
+
+There was a development tradeoff: AIM took **56.47 minutes** to build and review
+the chain, versus **23.88 minutes** without AIM. Automatic assessor groups passed
+for both, but blind review found one unresolved material-moderate behavior defect
+in each product and judged follow-up maintainability a tie. AIM retained a
+filesystem-handling defect; the other product lost a valid request ID on a deeply
+nested invalid query. The unresolved AIM defect failed the protocol's mandatory
+correctness guard, so the resource gains did not qualify as an overall protocol
+win. General development-speed or defect-rate superiority is not established.
+
+The earlier UI comparison was nonconfirmatory because of asymmetric host failures.
+The experiment is paused after 16 of 48 planned builder sessions. Raw measurements,
+the frozen protocol and review evidence are retained separately. Reviewers saw
+some process-related wording in product documentation, but no arm map or cost
+results. Backend model revisions and complete child-token accounting were
+unavailable. Further comparative claims need fresh, unexposed tasks.
