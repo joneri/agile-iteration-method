@@ -13,6 +13,7 @@ from typing import Any
 
 from .manifest import Manifest
 from . import closure, guidance, seed
+from .paths import checked_destination, UnsafeDestination as PlanError
 
 
 PLAN_SCHEMA_VERSION = "2"
@@ -25,15 +26,12 @@ CATEGORIES = ("file", "bootstrap", "ignore", "package")
 EXTERNAL_DISTRIBUTION_DEST = ".aim/installs/agile-iteration-method"
 
 
-class PlanError(ValueError):
-    """Raised when an unsafe or impossible plan is requested."""
-
-
 def _now_iso() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def _classify_copy(source_path: Path, dest_path: Path) -> str:
+def _classify_copy(source_path: Path, dest_path: Path, root: Path) -> str:
+    checked_destination(root, dest_path)
     if not dest_path.exists():
         return "create"
     try:
@@ -44,7 +42,8 @@ def _classify_copy(source_path: Path, dest_path: Path) -> str:
     return "collision"
 
 
-def _classify_content(dest_path: Path, desired: str) -> str:
+def _classify_content(dest_path: Path, desired: str, root: Path) -> str:
+    checked_destination(root, dest_path)
     if not dest_path.exists():
         return "create"
     if dest_path.read_text(encoding="utf-8") == desired:
@@ -53,7 +52,7 @@ def _classify_content(dest_path: Path, desired: str) -> str:
 
 
 def _classify_gitignore(target_root: Path, fragments: list[str]) -> str:
-    dest_path = target_root / ".gitignore"
+    dest_path = checked_destination(target_root, target_root / ".gitignore")
     if not dest_path.exists():
         return "create"
     existing = dest_path.read_text(encoding="utf-8").splitlines()
@@ -101,7 +100,7 @@ def _canonical_doc_actions(source_root: Path, target_root: Path) -> list[dict[st
             _action(
                 action_id=rel,
                 category="file",
-                classification=_classify_copy(doc, target_root / rel),
+                classification=_classify_copy(doc, target_root / rel, target_root),
                 source=rel,
                 destination=rel,
                 reason="Canonical AIM workflow documentation (target-owned)",
@@ -126,7 +125,7 @@ def _selected_canonical_doc_actions(
             _action(
                 action_id=rel,
                 category="file",
-                classification=_classify_copy(source_path, target_root / rel),
+                classification=_classify_copy(source_path, target_root / rel, target_root),
                 source=rel,
                 destination=rel,
                 reason="Required canonical contract for selected AIM adapter",
@@ -146,7 +145,7 @@ def _schema_actions(source_root: Path, target_root: Path) -> list[dict[str, Any]
             _action(
                 action_id=rel,
                 category="file",
-                classification=_classify_copy(schema, target_root / rel),
+                classification=_classify_copy(schema, target_root / rel, target_root),
                 source=rel,
                 destination=rel,
                 reason="AIM machine-readable structural contract",
@@ -174,7 +173,7 @@ def _license_actions(source_root: Path, target_root: Path) -> list[dict[str, Any
                 action_id=destination_rel,
                 category="file",
                 classification=_classify_copy(
-                    source_path, target_root / destination_rel
+                    source_path, target_root / destination_rel, target_root
                 ),
                 source=source_rel,
                 destination=destination_rel,
@@ -222,7 +221,7 @@ def _aim_ui_actions(
             _action(
                 action_id=("ui:" if repo_install else "external-ui:") + source_rel,
                 category="package",
-                classification=_classify_copy(source_path, compare_path),
+                classification=_classify_copy(source_path, compare_path, target_root if repo_install else home_root),
                 source=source_rel,
                 destination=destination,
                 reason=(
@@ -260,7 +259,7 @@ def _external_distribution_actions(source_root: Path, home_root: Path) -> list[d
                 _action(
                     action_id=f"external:{rel}",
                     category="package",
-                    classification=_classify_copy(item, dest_base / rel),
+                    classification=_classify_copy(item, dest_base / rel, home_root),
                     source=rel,
                     destination=str(dest_base / rel),
                     reason="External AIM distribution package (home-scope install)",
@@ -277,7 +276,7 @@ def _external_distribution_actions(source_root: Path, home_root: Path) -> list[d
             _action(
                 action_id=f"external:{rel}",
                 category="package",
-                classification=_classify_copy(item, dest_base / rel),
+                classification=_classify_copy(item, dest_base / rel, home_root),
                 source=rel,
                 destination=str(dest_base / rel),
                 reason="External AIM distribution package (home-scope install)",
@@ -299,7 +298,7 @@ def _copilot_actions(
             _action(
                 action_id=rel,
                 category="file",
-                classification=_classify_copy(agent, target_root / rel),
+                classification=_classify_copy(agent, target_root / rel, target_root),
                 source=rel,
                 destination=rel,
                 reason="Copilot AIM agent package",
@@ -317,7 +316,7 @@ def _copilot_actions(
             _action(
                 action_id=rel,
                 category="package",
-                classification=_classify_copy(item, target_root / rel),
+                classification=_classify_copy(item, target_root / rel, target_root),
                 source=rel,
                 destination=rel,
                 reason="Copilot AIM project skill (primary workflow surface)",
@@ -333,7 +332,7 @@ def _copilot_actions(
             _action(
                 action_id=rel,
                 category="file",
-                classification=_classify_copy(prompt, target_root / rel),
+                classification=_classify_copy(prompt, target_root / rel, target_root),
                 source=rel,
                 destination=rel,
                 reason="Copilot AIM prompt helpers (optional secondary surface)",
@@ -354,7 +353,7 @@ def _claude_actions(source_root: Path, target_root: Path) -> list[dict[str, Any]
                 _action(
                     action_id=rel,
                     category="package",
-                    classification=_classify_copy(item, target_root / rel),
+                    classification=_classify_copy(item, target_root / rel, target_root),
                     source=rel,
                     destination=rel,
                     reason="Claude AIM package (agents/commands)",
@@ -372,7 +371,7 @@ def _claude_actions(source_root: Path, target_root: Path) -> list[dict[str, Any]
             _action(
                 action_id=rel,
                 category="package",
-                classification=_classify_copy(item, target_root / rel),
+                classification=_classify_copy(item, target_root / rel, target_root),
                 source=rel,
                 destination=rel,
                 reason="Claude AIM project skill (primary workflow surface)",
@@ -396,7 +395,7 @@ def _codex_actions(source_root: Path, home_root: Path) -> list[dict[str, Any]]:
             _action(
                 action_id=f"codex:{rel}",
                 category="package",
-                classification=_classify_copy(item, dest),
+                classification=_classify_copy(item, dest, home_root),
                 source=item.relative_to(source_root).as_posix(),
                 destination=str(dest),
                 reason="Codex skill package (user-home install)",
@@ -417,7 +416,7 @@ def _codex_actions(source_root: Path, home_root: Path) -> list[dict[str, Any]]:
             _action(
                 action_id=f"codex:{package_reference}",
                 category="package",
-                classification=_classify_copy(source_path, dest),
+                classification=_classify_copy(source_path, dest, home_root),
                 source=source_doc,
                 destination=str(dest),
                 reason="Codex package-local canonical contract",
@@ -440,7 +439,7 @@ def _codex_project_agent_actions(
             _action(
                 action_id=rel,
                 category="package",
-                classification=_classify_copy(item, target_root / rel),
+                classification=_classify_copy(item, target_root / rel, target_root),
                 source=rel,
                 destination=rel,
                 reason="Codex native project-scoped AIM specialist",
@@ -456,7 +455,7 @@ def _project_role_profile_action(target_root: Path) -> dict[str, Any]:
     action = _action(
         action_id="aim.roles.yaml",
         category="bootstrap",
-        classification=_classify_content(target_root / "aim.roles.yaml", desired),
+        classification=_classify_content(target_root / "aim.roles.yaml", desired, target_root),
         source=None,
         destination="aim.roles.yaml",
         reason="Seed editable project role expertise for native AIM specialists",
@@ -481,7 +480,7 @@ def _bootstrap_actions(
             action_id=shared_profile,
             category="bootstrap",
             classification=_classify_content(
-                target_root / shared_profile, seed.shared_profile_seed(mode)
+                target_root / shared_profile, seed.shared_profile_seed(mode), target_root
             ),
             source=None,
             destination=shared_profile,
@@ -638,6 +637,37 @@ def compute_plan(
             repo_install=repo_adapters,
         )
     )
+    # Helpers must load their dependencies beside their own installed package,
+    # including the small home-only footprints. Full distributions may already
+    # select these files; keep each destination owned by exactly one action.
+    dependency_scope = "repo" if repo_adapters else "home"
+    dependency_base = target_root if repo_adapters else home_root / Path(
+        str(manifest.aim_ui_boundary.get("homeDestination", EXTERNAL_DISTRIBUTION_DEST))
+    )
+    selected_destinations = {(action.get("scope", "repo"), action["destination"])
+                             for action in actions}
+    helper_dependencies = {
+        "schemas/aim-repo-profile.schema.json",
+        "schemas/aim-project-roles.schema.json",
+        "schemas/aim-runtime-state.schema.json",
+        *(f"docs/workflow/role-skill-{role}.md"
+          for role in ("po", "tdo", "dev", "reviewer")),
+    }
+    for relative in sorted(helper_dependencies):
+        destination = relative if repo_adapters else str(dependency_base / relative)
+        if (dependency_scope, destination) in selected_destinations:
+            continue
+        actions.append(_action(
+            action_id=relative if repo_adapters else "external-runtime-dependency:" + relative,
+            category="file" if repo_adapters else "package",
+            classification=_classify_copy(
+                source_root / relative, dependency_base / relative,
+                target_root if repo_adapters else home_root,
+            ),
+            source=relative, destination=destination,
+            reason="Schema or role-skill dependency for installed runtime and engineering helpers",
+            adapter="core", optional=False, scope=dependency_scope,
+        ))
     actions.extend(_bootstrap_actions(target_root, manifest, shared_profile, mode))
     if repo_adapters:
         actions.append(_project_role_profile_action(target_root))
@@ -722,6 +752,7 @@ def compute_plan(
         "adapters": adapters,
         "source": str(source_root),
         "target": str(target_root),
+        "home": str(home_root),
         "validator": validator_result,
         "adapterClosure": {
             "rule": str(manifest.adapter_closure.get("rule", "")),

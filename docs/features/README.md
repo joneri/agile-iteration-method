@@ -27,6 +27,14 @@ Current roles:
 
 | File | Role |
 | --- | --- |
+| `aim-3.1-evaluation.md` | bounded candidate comparison, feature claims and evidence limits |
+| `engineering-reset-analysis.md` | independent Enigma comparison analysis, engineering changes and reproducible measurements |
+| `paired-evaluation-protocol.md` | fixed protocol for isolated same-model product evaluations |
+| `paired-pilot-results.md` | first paired pilot results, measured tradeoffs and remaining weaknesses |
+| `paired-pilot2-results.md` | second paired product results with frozen oracle and runtime workloads |
+| `paired-maintenance-results.md` | fresh-session maintenance results, startup friction and knowledge drift |
+| `learning-round-results.md` | longitudinal knowledge reuse, separate improvement time, broad feature tests and corrected failures |
+| `paired-api-results.md` | held-out API comparison: tenant isolation, concurrency, mutations and resources |
 | `aim-cost-comparison.md` | reference comparison; explains the behavioral cost case without defining AIM rules |
 | `aim-github-copilot-cost-reduction-playbook.md` | vendor-specific onboarding playbook |
 | `aim-vendor-cost-baseline-june-2026.md` | date-stamped vendor reference based on external facts |

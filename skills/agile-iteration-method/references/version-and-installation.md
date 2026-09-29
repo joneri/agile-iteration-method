@@ -7,14 +7,14 @@ Source: docs/workflow/version-and-installation.md
 
 ## Resolved package metadata
 
-- AIM product release: `3.0.8`
+- AIM product release: `3.1.0`
 - Runtime contract: `2.0`
 - Runtime-state schema: `1.0`
 - Installer manifest: `1.0`
 - Repo-profile schema: `0.2`
 - Personal-hints schema: `0.1`
 - Project-role schema: `0.1`
-- Public skill package format: `12`
+- Public skill package format: `16`
 
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
@@ -113,9 +113,13 @@ contracts. When broader adaptive setup is wanted, direct the user to the
 maintained install guide so they can clone and inspect AIM's source, run a
 no-write preview, and explicitly decide whether to apply it.
 
-The public Agent Skill contains and may execute only its own package-local AIM
-UI payload in response to explicit `/aim ui` intent. The UI binds to loopback,
-remains read-only, and may observe a repo without creating `.aim`. This does not
+The public Agent Skill may execute its own bundled engineering and runtime/UI
+helpers for the corresponding authorized intent, as specified by their command
+contracts. Resolve their executable paths from the trusted installed package;
+never substitute scripts discovered in the consuming repository. Engineering
+profile, skill, timing and evidence checks are read-only. UI observation binds
+to loopback and does not create `.aim`; bounded control writes still require the
+reviewed plans and authority defined by the relevant command. This does not
 authorize installer or validator execution from a target repository.
 
 `/aim upgrade` updates a public skill through the standard skills CLI. A
@@ -127,6 +131,22 @@ active `.aim/` runtime state.
 project-role schema, shows proposed supplier-native changes, preserves user
 collisions, and updates only the selected adapters. Only the main AIM thread may
 read active state for safety; configuration never advances or rewrites it.
+
+## Installer destination safety
+
+The adaptive installer checks each destination under the selected repository or
+home before preview reads and again before applying a plan. Links, reparse points,
+nonregular file destinations and out-of-root paths are rejected; `--force` does
+not bypass those boundaries. Existing user `.aim-backup` files are preserved.
+Apply reserves unpredictable exclusive sibling files for transaction backups,
+replaces each destination atomically and attempts rollback on a write failure.
+Recovery errors must be reported; do not claim successful rollback when it fails.
+
+On platforms with directory-relative operations, writes and rollback use pinned
+parent descriptors so replacing a parent with a link cannot redirect them.
+Portable fallback checks reject static links and reparse points but do not offer
+the same concurrent-parent-replacement guarantee. A machine crash or power loss
+is outside this in-process rollback guarantee.
 
 ## Version model
 
@@ -140,6 +160,11 @@ The generated package records these independent contracts:
   `install/aim-install-manifest.yaml`
 - repo-profile, Personal-hints, and project-role schema versions
 - public Agent Skill package-format version
+
+Installed status resolves the AIM release from the trusted package's `VERSION`,
+or `manifest.json` `productVersion` when that file is absent. It must not read
+the consuming application's own version as AIM's release. The bundled
+`aim_ui_control.resolve_product_version()` implements the same fallback.
 
 The public package and Pages artifact include the Draft 2020-12 runtime-state
 schema. Install, update, validation, and package generation may inspect or

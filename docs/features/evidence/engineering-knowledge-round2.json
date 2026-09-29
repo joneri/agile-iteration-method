@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "claims": [
+    {
+      "id": "role-skills",
+      "claim": "Every role binds its bundled engineering instructions.",
+      "document": {
+        "path": "aim.roles.yaml",
+        "sha256": "3987b88ca556fae32d8fc291d7b3c73796456927b0696f8fa29696411f499e11"
+      },
+      "sources": [
+        {
+          "path": "scripts/aim_quality/skills.py",
+          "sha256": "7d0ce5a5c3fa35166aed11d8f3d03a007e647cf65257fa7f9418fa97d2f8b011"
+        },
+        {
+          "path": "docs/workflow/role-skill-po.md",
+          "sha256": "c8b77ac0cc2b8041452129c296098750f7d2e7d1f13a2bb37c9351ba29b35967"
+        },
+        {
+          "path": "docs/workflow/role-skill-tdo.md",
+          "sha256": "3d9b29e73c6aba69d6ad4b622dbc009650d1cf137fec88e86b7fe9c56957c205"
+        },
+        {
+          "path": "docs/workflow/role-skill-dev.md",
+          "sha256": "f729f156104c44e57fa16cba600ddc8c3623ab51ac179a469a6e6be89beafea5"
+        },
+        {
+          "path": "docs/workflow/role-skill-reviewer.md",
+          "sha256": "af6365f5dfcf5b1f113ae462963b3ab3c6469d598bcee467e7c2c78c4ed61e16"
+        }
+      ]
+    },
+    {
+      "id": "http-verification",
+      "claim": "The repository profile names an executable HTTP boundary regression check.",
+      "document": {
+        "path": "aim.profile.yaml",
+        "sha256": "457a0e9ec7eb376521e8831585813ef5c8a526a05522fbf0083f3df08ab68e2d"
+      },
+      "sources": [
+        {
+          "path": "scripts/aim_http.py",
+          "sha256": "512ad497b3ec35eeb32f363b849f99df44299dca6f79e5b16039fba16075c781"
+        },
+        {
+          "path": "tests/test_aim_http.py",
+          "sha256": "539153c2eede3f81fce386ca497d03eb5b872aa6ceb562b0f0dd867ea2aad487"
+        }
+      ]
+    },
+    {
+      "id": "usable-profile-check",
+      "claim": "The packaged profiles command uses the ordinary AIM YAML parser, published schemas and bounded skill reads; it does not certify semantic truth.",
+      "document": {
+        "path": "docs/workflow/project-agent-configuration.md",
+        "sha256": "eaded01f9229e5c9f8db4c41917d53564c51090b85e36470bbb49217af08775e"
+      },
+      "sources": [
+        {
+          "path": "scripts/aim_engineering.py",
+          "sha256": "6f0000fe72f32cf977954f30025014d44a0bb94c1d46ff97641b8693343d0aee"
+        },
+        {
+          "path": "scripts/aim_quality/profiles.py",
+          "sha256": "7106676e75342aeaf23310915c13de1007a183b63b438413dbc3b7226c2d2fb8"
+        },
+        {
+          "path": "tests/test_aim_profiles.py",
+          "sha256": "cc7d25790038fa4da4f725ca80ec8d7f1bd3f897ccf8455bd3bc493104ae9e5c"
+        }
+      ]
+    }
+  ],
+  "reviewedAt": "2026-09-29",
+  "previousHistoricalEvidence": "docs/features/evidence/engineering-knowledge.json"
+}

@@ -1,0 +1,13 @@
+{
+  "scope": "Post-pilot instruction routing; not included in the two authorized builder runs",
+  "entryBytesBefore": 41355,
+  "entryBytesAfter": 23093,
+  "preservedCommandParagraphs": true,
+  "preservedCompletionParagraphs": true,
+  "comparison": "Exact paragraph text after removing added subsection headings and normalizing source/package markdown reference prefixes",
+  "beforeEntrySha256": "5566bdd9e876c13bf0e047e21b5a264360a3b56a854265857d30630a7a5c67c8",
+  "afterEntrySha256": "af4373b42749e32156b276ccd9ebdb65827275bd5e566b40f36cc2096820a3d8",
+  "agentTimeReductionMeasured": false,
+  "newOracleCoverageRuleEvaluatedByBuilders": false,
+  "additionalChanges": "Explicit authorized Auto startup routing and complete canonical fallback for remaining commands"
+}

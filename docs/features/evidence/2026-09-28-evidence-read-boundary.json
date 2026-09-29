@@ -1,0 +1,16 @@
+{
+  "setup": "Isolated temporary repo whose .aim directory is a symlink to another temporary directory",
+  "statusBefore": 200,
+  "outsideSentinelReturnedBefore": true,
+  "statusAfter": 404,
+  "outsideSentinelReturnedAfter": false,
+  "changeTiming": "After freezing the paired build experiment; not included in the AIM builder package",
+  "regressionCommand": "python3 -m unittest discover -s tests -p test_aim_http.py",
+  "otherChecks": [
+    "nested and root symlinks",
+    "parent replacement between preflight and read",
+    "oversized evidence",
+    "encoded traversal",
+    "ordinary evidence remains readable"
+  ]
+}

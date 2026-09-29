@@ -178,7 +178,7 @@ The runtime must keep ownership explicit:
 - `TDO` owns planning, synthesis and decision records
 - `Dev` owns implementation trace artifacts
 - `Reviewer` owns review findings and readiness signals
-- subagents may write only scoped outputs in allowed analysis locations
+- permitted subagents may implement assigned product files under disjoint ownership; within `.aim/`, only assigned `.aim/analysis/` output is writable, never state or gates
 
 The runtime must also keep `.aim` clean enough to inspect:
 - active artifacts stay in place while the increment is in progress
@@ -669,7 +669,8 @@ Defined cost profiles:
 - `Cost Control`:
   - lower-cost AIM for low-risk, reversible work
   - same roles, gates, acceptance, and escalation rules
-  - no subagents by default
+  - no implementation subagents by default; material final review follows
+    `adaptive-execution.md`, including explicit capability exceptions
   - narrow file reads and short visible checkpoints
   - short trace artifacts by default
   - expand to `Standard` or `Deep` if risk appears
@@ -865,6 +866,16 @@ Aliases may exist in tooling but are non-canonical:
 Method-level docs and gate reporting should use canonical names.
 
 ## Roles and responsibilities
+
+Each role applies its bundled engineering skill and any relevant project skill
+whose instructions are actually available. See
+`docs/workflow/engineering-delivery.md` for independent correctness evidence,
+runtime performance/resource measurement, security applicability, readable
+responsibility boundaries and source-bound knowledge freshness. These checks
+belong inside the existing role work and add no approval gate. Empty projects
+start from provisional capabilities inferred from requirements, then verify
+them against the selected stack. Do not copy temporary feature status into
+native agent instructions.
 
 ### Product owner (PO)
 
@@ -1092,8 +1103,13 @@ Before recommending `close`, PO must perform a closure truth audit that:
   failure-path behavior rather than relying only on the successful build run
 - distinguishes synthetic fixtures, mocks, internal contract checks, and POC
   runs from representative product evidence
-- requires an unassisted representative black-box pass for `Pilot` and
-  `Product` outcomes
+- requires representative user-journey verification through the normal entry
+  point for `Pilot` and `Product`; the implementing agent may perform it,
+  including automated end-to-end tests, recording the performer and assistance
+- uses a separate reviewer for material product changes under
+  `adaptive-execution.md`; trivial/unavailable exceptions remain explicit
+- requires unassisted operation when explicitly required by the user or project
+  acceptance criteria
 - binds non-empty referenced evidence by path, kind, byte digest, and aggregate
   evidence-set digest, including a structured black-box result, a negative
   test, and a separate closure-authority decision
@@ -1101,7 +1117,7 @@ Before recommending `close`, PO must perform a closure truth audit that:
 
 User acceptance cannot convert missing or contradictory evidence into proof.
 When any Epic criterion is partial, unproven, synthetic-only outside a declared
-POC, contradicted, or dependent on implementation-team assistance, PO must
+POC, or contradicted, PO must
 recommend `continue` and TDO must propose the next coherent Done Increment.
 `split` is reserved for genuinely new scope outside the approved Epic; it must
 not be used to discard unfinished acceptance criteria.
@@ -1262,7 +1278,7 @@ or explicit AIM intent. Legacy `.claude/commands/` remain compatibility entrypoi
 - adapter differences:
   - the interaction surface is the AIM skill plus `.claude/agents/`; optional
     `.claude/commands/` preserve migration compatibility
-  - `.claude/agents/` may provide bounded helper agents for analysis, discovery, verification, or option generation
+  - `.claude/agents/` may provide bounded helper agents for assigned implementation, analysis, discovery, verification, or option generation
   - helper agents must remain subordinate to the shared runtime contract and repo-aware policy
 - `.aim` behavior:
   - if `.aim` does not exist when AIM starts or resumes, AIM-in-Claude-Code must create it automatically before entering the role loop
@@ -1328,7 +1344,10 @@ At minimum, the matrix must classify:
 
 ## Controlled parallelism
 
-AIM allows controlled parallelism only when the runtime supports it and repo-aware policy permits it.
+AIM allocates bounded work under `adaptive-execution.md` when the runtime and
+applicable policy permit it. Independent implementation may run in parallel with
+explicit write ownership; final material review uses a separate agent by default.
+Only actual tool/session evidence supports a claim of independent review.
 
 Controlled parallelism remains one of the practical runtime capabilities in AIM.
 It allows AIM to speed up analysis, discovery and verification in the right situations without weakening central ownership of shared state, gates or acceptance decisions.
@@ -1371,8 +1390,8 @@ Responsibility always stays with the human.
 The loop ends when:
 - all EPIC acceptance criteria are fulfilled
 - the declared outcome class matches the evidence actually produced
-- representative black-box validation has passed without implementation-team
-  assistance for Product and Pilot outcomes
+- representative user-journey verification has passed for Product and Pilot
+  outcomes, with the actual performer and any assistance recorded
 - a counterevidence search has no unresolved findings, contradictions, or
   remaining Epic gaps
 - the closure truth-audit artifact passes the canonical runtime closure check

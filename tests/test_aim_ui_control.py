@@ -18,6 +18,7 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 import aim_ui_control as control  # noqa: E402
 from aim_ui import build_board  # noqa: E402
+from aim_installer.seed import shared_profile_seed  # noqa: E402
 
 
 class AimUiControlTests(unittest.TestCase):
@@ -62,7 +63,10 @@ class AimUiControlTests(unittest.TestCase):
 
     def test_calibrated_repository_routes_to_discuss_before_roadmap_promotion(self) -> None:
         (self.repo / "aim.profile.yaml").write_text(
-            "aimRepoProfile:\n  calibration:\n    status: ready\n",
+            shared_profile_seed().replace(
+                "    status: needs_calibration",
+                "    status: ready\n    scope:\n      kind: repository",
+            ).replace("    technologies: []", "    technologies:\n      - id: python"),
             encoding="utf-8",
         )
         board = build_board(self.repo)
@@ -94,11 +98,11 @@ class AimUiControlTests(unittest.TestCase):
         first = control.start(repo, open_browser=False)
         self.assertEqual(first["status"], "running")
         self.assertFalse(first["reused"])
-        self.assertEqual(first["productVersion"], "3.0.8")
+        self.assertEqual(first["productVersion"], "3.1.0")
         with urlopen(f"{first['url']}api/board", timeout=2) as response:
             board = json.loads(response.read().decode("utf-8"))
         self.assertEqual(board["source"]["kind"], "uninitialized")
-        self.assertEqual(board["product"]["version"], "3.0.8")
+        self.assertEqual(board["product"]["version"], "3.1.0")
         self.assertIn(
             board["backgroundControl"]["status"], {"configured", "view_only"}
         )

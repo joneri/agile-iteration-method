@@ -37,9 +37,9 @@ inventing a closure-only criterion fails closed.
 - `POC` proves only its explicitly bounded technical or product hypothesis.
   Synthetic issues, fixtures, mocks, and assisted walkthroughs may be valid.
 - `Pilot` proves the bounded pilot outcome in its representative operating
-  context and requires an unassisted representative black-box pass.
+  context and requires representative user-journey verification.
 - `Product` proves the declared user outcome in its representative operating
-  context and requires an unassisted representative black-box pass.
+  context and requires representative user-journey verification.
 
 Closure evidence must match the class approved at Gate A. A successful POC may
 lead to another Increment or a new Product Epic, but it may not silently upgrade
@@ -131,12 +131,23 @@ verifies the published state afterward.
 Every criterion needs a stable identifier, `proven` status, and at least one
 concrete evidence reference. Product and Pilot criteria require
 `evidenceClass: representative`. The black-box evidence must exercise the
-advertised user journey from the user's normal entry point without help from
-the implementation team. Its `black_box_result` file is machine-readable JSON
-that repeats the result metadata and identifies a non-implementation-side
-performer through one canonical value: `reviewer`, `user`, or
-`external_observer`. Counterevidence binds at least one concrete `negative_test`
-artifact.
+advertised user journey from the user's normal entry point. The implementing
+agent may run it, including automated end-to-end tests against the real
+product. These journey checks do not waive independent material-change review
+under `adaptive-execution.md`. Unassisted operation is required only when the
+user or project acceptance criteria require it. Knowledge of
+the implementation and implementation-team assistance do not disqualify an
+otherwise representative run; mocks or assertions that bypass the actual
+journey do not substitute for it.
+
+The existing `blackBoxValidation` and `black_box_result` names remain for
+compatibility. The result file is machine-readable JSON repeating the audit
+metadata. `performedBy` identifies the actual person, agent, or test runner
+with a non-empty description (for example `Dev`, `reviewer`, or `Playwright
+run by the implementing agent`). `operatorAssistance` records a boolean; both
+`true` and `false` are permitted and must match between audit and result.
+Do not describe self-verification as independent observation. Counterevidence
+binds at least one concrete `negative_test` artifact.
 
 Closure authority is a separate, contained `authority_decision` Markdown
 record. It identifies the Epic, explicitly approves Epic closure, and matches
@@ -165,8 +176,8 @@ path passed later.
 - `close`: all criteria are proven, the evidence class matches, required
   black-box validation passed, and no unresolved gaps or contradictions remain.
 - `continue`: any approved Epic criterion remains partial, synthetic-only,
-  assisted, contradicted, or unproven. TDO proposes the next coherent Done
-  Increment.
+  contradicted, or unproven, or relies on assistance when that criterion requires
+  unassisted operation. TDO proposes the next coherent Done Increment.
 - `split`: only genuinely new value outside the approved Epic moves elsewhere.
   Unmet existing criteria stay in the current Epic.
 
@@ -180,7 +191,9 @@ separation of authority, and whether a structured result claims the required
 properties. It cannot independently know that a human or external system told
 the truth. Reviewer work therefore remains essential: inspect the actual
 entry point and result, attempt credible falsification, compare the evidence to
-the Epic claim, and reject circular or implementation-authored proof. The JSON
+the Epic claim, and reject circular or unsupported claims and falsely labelled
+independence. An implementer-authored real-journey result still needs critical
+review; authorship alone does not invalidate it. The JSON
 record makes that review inspectable and tamper-evident; it does not replace it.
 
 Historical `epic_complete` states without these three closure bindings remain

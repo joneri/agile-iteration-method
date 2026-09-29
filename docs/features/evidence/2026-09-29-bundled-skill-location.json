@@ -1,0 +1,16 @@
+{
+  "date": "2026-09-29",
+  "case": "Validate installer-generated role bindings from an empty consumer project",
+  "before": "All four bundled skills incorrectly reported missing",
+  "after": "No errors; bundled instructions resolved from running AIM package, project instructions from consumer repository",
+  "negativeControls": [
+    "Consumer docs cannot mask missing bundle instructions",
+    "Deleting project skill produces exactly one issue naming that skill"
+  ],
+  "verification": "python3 -m unittest discover -s tests -p test_aim_engineering.py",
+  "testsPassed": 15,
+  "sourceHashes": {
+    "scripts/aim_quality/skills.py": "7d0ce5a5c3fa35166aed11d8f3d03a007e647cf65257fa7f9418fa97d2f8b011",
+    "tests/test_aim_engineering.py": "87a066f8c1d0b5002ea0326a2274d5d407c49ed85e1e2f2ae2aa60a05c8b7f5b"
+  }
+}

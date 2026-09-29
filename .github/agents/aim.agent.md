@@ -317,7 +317,7 @@ Execution-mode behavior:
 
 Cost-profile behavior:
 - `standard`: use normal AIM with state-first resume, progressive context loading, and compact gates unless risk requires detail
-- `control`: preserve roles, gates, and escalation while using narrow context, no subagents by default, concise checkpoints, and short trace artifacts
+- `control`: preserve roles, gates, and escalation while using narrow context, no implementation subagents by default, independent material review under `docs/workflow/adaptive-execution.md`, concise checkpoints, and short trace artifacts
 - `deep`: use broader context and stronger review evidence for high-risk work
 
 If Cost Control discovers trust, data correctness, user-facing meaning, migration, deployment, security, API, or unclear acceptance risk, move to Standard or Deep before continuing.

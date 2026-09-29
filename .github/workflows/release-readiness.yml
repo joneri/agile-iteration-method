@@ -51,6 +51,9 @@ jobs:
       - name: Audit documentation and website
         run: python3 scripts/audit_documentation.py .
 
+      - name: Check engineering knowledge evidence freshness
+        run: python3 scripts/aim_engineering.py check docs/features/evidence/engineering-knowledge.json
+
       - name: Validate AIM product coherence
         run: python3 scripts/validate_aim_runtime.py . --release
 

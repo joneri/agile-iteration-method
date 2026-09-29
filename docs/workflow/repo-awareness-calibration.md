@@ -6,6 +6,15 @@ Define how AIM cheaply bootstraps, verifies, refines, persists, remembers, forge
 
 `/aim calibrate-repo` and an AIM Epic whose outcome is to verify and refine repo-awareness use this same contract.
 
+For a new empty project, calibration can be completed provisionally during
+startup from the supplied requirements, goal, Epic or PRD. Do not block on an
+interview about nonexistent code. Seed every role's bundled engineering skill,
+label inferred capabilities and commands as unverified, and verify the affected
+facts after the first implementation. Existing authorization still applies.
+See [Engineering delivery](engineering-delivery.md) for skill inference and
+source-bound freshness checks. Native agent files load current profiles rather
+than copying their transient implementation status.
+
 ## Storage
 
 Shared repository knowledge for Team or explicit repo opt-in:
@@ -60,12 +69,51 @@ Only calibration may promote a profile to `ready`.
 6. Identify package/build metadata, likely technologies, test tooling, validation commands, and UI-test signals.
 7. Read only short authoritative docs named by the active memory/profile.
 8. Compare inferred facts with current files and commands.
-9. Ask for confirmation when confidence is low or the fact affects trust, deployment, migration, security, or user-visible meaning.
+9. Verify uncertain facts against the relevant source. Keep unresolved facts provisional. Ask only when missing user intent or authority actually blocks the work; existing authorization applies to trust-sensitive facts too.
 10. Persist verified shared facts to `aim.profile.yaml` for Team/repo opt-in or external memory for Enterprise external mode.
 11. Persist personal preferences only to the user-level hints file.
 12. Expand the scan only for conflicting evidence, unresolved risk, low confidence, or explicit user direction.
 
 Calibration must propose a compact change summary before persisting trust-sensitive shared facts.
+
+Reuse verified facts while their relevant sources and assumptions remain
+unchanged. Recalibrate the affected command, locality, risk or document pointer
+when evidence changes; a new Epic alone does not require a full rescan. Fix or
+retire contradicted active facts rather than appending a competing snapshot.
+Store the applicability and re-verification trigger with a reusable fact when
+its scope would otherwise be ambiguous. A profile marked `ready` is not an
+exemption from checking a source that has changed.
+
+## Consumer checks and targeted locality refresh
+
+After creating or updating a shared repo profile, run the shipped consumer:
+`python3 <aim-package>/scripts/aim_engineering.py --repo <project> profiles --only repo`.
+Use `--only roles` for standalone role configuration, or the default `profiles`
+when both profiles are in scope. Missing unrelated profiles must not force a
+second configuration workflow. Passing checks establish syntax, schema and
+available role-skill bindings; they do not establish the truth of claims.
+
+Use block YAML lists (one `- value` per line); the dependency-free reader does
+not support nonempty inline flow lists. Localities can carry literal repository-relative `paths`, `tests`, and
+`dependsOn` (other locality IDs). Record actual responsibility and relevant
+caller/consumer boundaries in their short summaries. A directory label alone
+is not a sufficient change plan. For the selected areas, run
+`python3 <aim-package>/scripts/aim_engineering.py --repo <project> localities --locality <id>`;
+repeat `--locality` for cross-boundary work. It inspects declared dependencies,
+reports missing paths and unsafe references, and exposes shared/nested paths
+as overlaps rather than declaring them ownership conflicts. Cycles are allowed.
+No file contents or commands are executed by this metadata check. Legacy
+prose references and globs need manual inspection or conversion to literal
+pointers; the helper does not silently treat them as verified.
+
+Inspect relevant imports/callers and behavior after the path check. Existing
+paths, matching hashes and valid dependency IDs do not establish semantic
+freshness. On moves/deletions, repair affected pointers and test links; on a
+changed invariant, update or retire the claim and its discovery pointer. Keep
+unrelated verified knowledge. The checker follows only selected dependency
+closures, and returns a diagnostic instead of an unbounded scan on oversized
+profiles. Reflection should update this stable discovery path, not create a
+second active snapshot in proposals or runtime history.
 
 ## Structured knowledge
 
@@ -202,3 +250,20 @@ The installer and chat calibration share:
 - `docs/workflow/repo-profile-and-footprint-model.md`
 - `install/aim-install-manifest.yaml`
 - `scripts/validate_aim_runtime.py`
+
+## Declare calibration coverage
+
+When writing or refreshing calibration, record what was inspected. Optional
+`calibration.scope` is `kind: repository` only for an actual repository-wide
+assessment; scoped work uses `kind: localities` with a block-list `localityIds`
+containing existing locality IDs. `ready` means ready within that declared scope.
+Do not declare repository coverage from a successful check of one subsystem.
+Legacy missing scope is unspecified, not implicitly repository-wide. Empty
+bootstrap knowledge is not a completed calibration. The UI must show the scope;
+a configured scoped profile can proceed with discussion/work without repeating
+an irrelevant onboarding interview.
+
+Use the packaged `profiles --only repo` consumer, which shares the product
+contract as well as schema validation. For facts requiring measured reuse, see
+`engineering-delivery.md` scoped knowledge consumption. Metadata validity, scope
+and existing paths never certify the meaning of a claim.

@@ -8,10 +8,14 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
+
+import aim_runtime_contract as runtime_contract
 
 from aim_runtime_contract import (  # noqa: E402
     MAX_REFERENCED_EVIDENCE_BYTES,
@@ -27,6 +31,25 @@ AUTHORITY_PATH = ".aim/portfolio/EPIC-TEST/state.json"
 
 
 class AimRuntimeContractTests(unittest.TestCase):
+    def test_reference_reuse_is_bounded_to_one_check_and_keeps_hash_validation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "proof.md"
+            path.write_text("verified output")
+            reference = self._reference(path, root, "test_log")
+            cache = {}
+            with patch.object(runtime_contract, "read_evidence", wraps=runtime_contract.read_evidence) as reader:
+                for label in ("criterion", "negative test"):
+                    issues, _ = runtime_contract._evidence_reference_issues(root, [reference], label, cache)
+                    self.assertEqual(issues, [])
+                self.assertEqual(reader.call_count, 1)
+                invalid = {**reference, "sha256": "0" * 64}
+                issues, _ = runtime_contract._evidence_reference_issues(root, [invalid], "other", cache)
+                self.assertTrue(any("sha256 does not match" in item for item in issues))
+            path.write_text("tampered output")
+            issues, _ = runtime_contract._evidence_reference_issues(root, [reference], "new check")
+            self.assertTrue(any("sha256 does not match" in item for item in issues))
+
     @staticmethod
     def _reference(path: Path, workspace: Path, kind: str) -> dict[str, str]:
         return {
@@ -88,7 +111,12 @@ class AimRuntimeContractTests(unittest.TestCase):
         return root, state_path
 
     def _closure_evidence(
-        self, repo: Path, *, outcome_class: str = "product"
+        self,
+        repo: Path,
+        *,
+        outcome_class: str = "product",
+        performer: str = "reviewer",
+        assistance: bool = False,
     ) -> str:
         workspace = repo / ".aim/portfolio/EPIC-TEST"
         evidence_dir = workspace / "evidence"
@@ -101,12 +129,12 @@ class AimRuntimeContractTests(unittest.TestCase):
                     "kind": "black_box_result",
                     "status": "passed",
                     "representative": True,
-                    "operatorAssistance": False,
+                    "operatorAssistance": assistance,
                     "entryPoint": "public CLI",
                     "scenario": "Run the representative user journey",
                     "expectedOutcome": "The requested outcome is delivered",
                     "actualOutcome": "The requested outcome was delivered",
-                    "performedBy": "reviewer",
+                    "performedBy": performer,
                     "startedAt": "2026-08-29T08:00:00Z",
                     "completedAt": "2026-08-29T08:01:00Z",
                 },
@@ -153,12 +181,12 @@ class AimRuntimeContractTests(unittest.TestCase):
                     "blackBoxValidation": {
                         "status": "passed",
                         "representative": True,
-                        "operatorAssistance": False,
+                        "operatorAssistance": assistance,
                         "entryPoint": "public CLI",
                         "scenario": "Run the representative user journey",
                         "expectedOutcome": "The requested outcome is delivered",
                         "actualOutcome": "The requested outcome was delivered",
-                        "performedBy": "reviewer",
+                        "performedBy": performer,
                         "startedAt": "2026-08-29T08:00:00Z",
                         "completedAt": "2026-08-29T08:01:00Z",
                         "evidence": [black_box_ref],
@@ -448,29 +476,60 @@ class AimRuntimeContractTests(unittest.TestCase):
                     updated_at="2026-08-29T08:03:00Z",
                 )
 
-    def test_implementation_side_cannot_self_attest_black_box_result(self) -> None:
-        with tempfile.TemporaryDirectory() as temporary:
-            repo, state_path = self._repo(Path(temporary))
-            evidence_path = repo / self._closure_evidence(repo)
-            black_box = repo / ".aim/portfolio/EPIC-TEST/evidence/black-box.json"
-            result = json.loads(black_box.read_text(encoding="utf-8"))
-            result["performedBy"] = "Dev"
-            black_box.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-            evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
-            digest = hashlib.sha256(black_box.read_bytes()).hexdigest()
-            evidence["acceptanceCriteria"][0]["evidence"][0]["sha256"] = digest
-            evidence["blackBoxValidation"]["evidence"][0]["sha256"] = digest
-            evidence_path.write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
-            before = state_path.read_bytes()
+    def test_implementing_agent_can_verify_product_and_pilot_journeys(self) -> None:
+        for outcome in ("product", "pilot"):
+            for assistance in (False, True):
+                with self.subTest(outcome=outcome, assistance=assistance), (
+                    tempfile.TemporaryDirectory()
+                ) as temporary:
+                    repo, state_path = self._repo(Path(temporary))
+                    epic = state_path.parent / "epic.md"
+                    epic.write_text(
+                        epic.read_text(encoding="utf-8").replace(
+                            "Outcome class: Product", f"Outcome class: {outcome.title()}"
+                        ),
+                        encoding="utf-8",
+                    )
+                    evidence_path = self._closure_evidence(
+                        repo,
+                        outcome_class=outcome,
+                        performer="Dev",
+                        assistance=assistance,
+                    )
+                    before = state_path.read_bytes()
+                    preview = plan_epic_closure(
+                        repo,
+                        authority_state_path=AUTHORITY_PATH,
+                        closure_evidence_path=evidence_path,
+                        updated_at="2026-08-29T08:03:00Z",
+                    )
+                    self.assertEqual(preview["candidate"]["epicStatus"], "epic_complete")
+                    self.assertEqual(before, state_path.read_bytes())
 
-            with self.assertRaisesRegex(RuntimeTransitionError, "implementation side"):
-                plan_epic_closure(
-                    repo,
-                    authority_state_path=AUTHORITY_PATH,
-                    closure_evidence_path=evidence_path.relative_to(repo).as_posix(),
-                    updated_at="2026-08-29T08:03:00Z",
-                )
-            self.assertEqual(before, state_path.read_bytes())
+    def test_verification_metadata_must_be_truthfully_bound(self) -> None:
+        for field, value in (
+            ("performedBy", "Dev"),
+            ("performedBy", ""),
+            ("operatorAssistance", True),
+            ("operatorAssistance", "false"),
+        ):
+            with self.subTest(field=field, value=value), (
+                tempfile.TemporaryDirectory()
+            ) as temporary:
+                repo, state_path = self._repo(Path(temporary))
+                evidence_path = repo / self._closure_evidence(repo)
+                evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+                evidence["blackBoxValidation"][field] = value
+                evidence_path.write_text(json.dumps(evidence) + "\n", encoding="utf-8")
+                before = state_path.read_bytes()
+                with self.assertRaisesRegex(RuntimeTransitionError, field):
+                    plan_epic_closure(
+                        repo,
+                        authority_state_path=AUTHORITY_PATH,
+                        closure_evidence_path=evidence_path.relative_to(repo).as_posix(),
+                        updated_at="2026-08-29T08:03:00Z",
+                    )
+                self.assertEqual(before, state_path.read_bytes())
 
     def test_closure_normalizes_criterion_ids_and_parses_bold_ids(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -537,14 +596,13 @@ class AimRuntimeContractTests(unittest.TestCase):
             self.assertEqual(applied["candidate"]["epicStatus"], "gate_b_pending")
             self.assertEqual(applied["candidate"]["previousIncrementId"], "DI-001")
 
-    def test_product_closure_rejects_poc_or_assisted_evidence(self) -> None:
+    def test_product_closure_rejects_synthetic_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo, state_path = self._repo(Path(temporary))
             evidence_path = repo / self._closure_evidence(repo)
             evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
             evidence["acceptanceCriteria"][0]["evidenceClass"] = "synthetic"
             evidence["blackBoxValidation"]["representative"] = False
-            evidence["blackBoxValidation"]["operatorAssistance"] = True
             evidence_path.write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
             before = state_path.read_bytes()
             with self.assertRaisesRegex(

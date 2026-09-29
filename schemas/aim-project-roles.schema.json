@@ -4,54 +4,132 @@
   "title": "AIM project role profile",
   "description": "Human-editable shared intent for supplier-native AIM role specialists.",
   "type": "object",
-  "required": ["aimProjectRoles"],
+  "required": [
+    "aimProjectRoles"
+  ],
   "properties": {
     "aimProjectRoles": {
       "type": "object",
-      "required": ["profileVersion", "status", "project", "orchestration", "roles", "customization"],
+      "required": [
+        "profileVersion",
+        "status",
+        "project",
+        "orchestration",
+        "roles",
+        "customization"
+      ],
       "properties": {
-        "profileVersion": {"const": "0.1"},
-        "status": {"type": "string", "enum": ["ready", "needs_calibration"]},
-        "source": {"type": "string", "minLength": 1},
+        "profileVersion": {
+          "const": "0.1"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ready",
+            "needs_calibration"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
         "project": {
           "type": "object",
-          "required": ["name", "technologies", "validation"],
+          "required": [
+            "name",
+            "technologies",
+            "validation"
+          ],
           "properties": {
-            "name": {"type": "string", "minLength": 1},
-            "technologies": {"type": "array", "items": {"type": "string", "minLength": 1}},
-            "validation": {"type": "array", "items": {"type": "string", "minLength": 1}}
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "technologies": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "validation": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           },
           "additionalProperties": true
         },
         "orchestration": {
           "type": "object",
-          "required": ["mainThreadOwnsRuntime", "parallelPolicy", "maxDelegationDepth", "modelPolicy"],
+          "required": [
+            "mainThreadOwnsRuntime",
+            "parallelPolicy",
+            "maxDelegationDepth",
+            "modelPolicy"
+          ],
           "properties": {
-            "mainThreadOwnsRuntime": {"const": true},
-            "parallelPolicy": {"type": "string", "minLength": 1},
-            "maxDelegationDepth": {"type": "integer"},
-            "modelPolicy": {"type": "string", "minLength": 1}
+            "mainThreadOwnsRuntime": {
+              "const": true
+            },
+            "parallelPolicy": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxDelegationDepth": {
+              "type": "integer"
+            },
+            "modelPolicy": {
+              "type": "string",
+              "minLength": 1
+            }
           },
           "additionalProperties": false
         },
         "roles": {
           "type": "object",
-          "required": ["po", "tdo", "dev", "reviewer"],
+          "required": [
+            "po",
+            "tdo",
+            "dev",
+            "reviewer"
+          ],
           "properties": {
-            "po": {"$ref": "#/$defs/role"},
-            "tdo": {"$ref": "#/$defs/role"},
-            "dev": {"$ref": "#/$defs/role"},
-            "reviewer": {"$ref": "#/$defs/role"}
+            "po": {
+              "$ref": "#/$defs/role"
+            },
+            "tdo": {
+              "$ref": "#/$defs/role"
+            },
+            "dev": {
+              "$ref": "#/$defs/role"
+            },
+            "reviewer": {
+              "$ref": "#/$defs/role"
+            }
           },
           "additionalProperties": false
         },
         "customization": {
           "type": "object",
-          "required": ["editable", "updateIntent", "refreshAfter"],
+          "required": [
+            "editable",
+            "updateIntent",
+            "refreshAfter"
+          ],
           "properties": {
-            "editable": {"const": true},
-            "updateIntent": {"const": "/aim configure-agents"},
-            "refreshAfter": {"type": "string", "minLength": 1}
+            "editable": {
+              "const": true
+            },
+            "updateIntent": {
+              "const": "/aim configure-agents"
+            },
+            "refreshAfter": {
+              "type": "string",
+              "minLength": 1
+            }
           },
           "additionalProperties": true
         }
@@ -63,14 +141,79 @@
   "$defs": {
     "role": {
       "type": "object",
-      "required": ["mission", "expertise", "writeScope"],
+      "required": [
+        "mission",
+        "expertise",
+        "writeScope"
+      ],
       "properties": {
-        "mission": {"type": "string", "minLength": 1},
-        "expertise": {"type": "array", "items": {"type": "string", "minLength": 1}},
-        "validation": {"type": "array", "items": {"type": "string", "minLength": 1}},
-        "writeScope": {"type": "string", "minLength": 1}
+        "mission": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expertise": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "validation": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "writeScope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "skills": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/skill"
+          }
+        }
       },
       "additionalProperties": true
+    },
+    "skill": {
+      "type": "object",
+      "required": [
+        "id",
+        "source",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "available",
+            "verified",
+            "inferred",
+            "unavailable"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fallback": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
     }
   }
 }

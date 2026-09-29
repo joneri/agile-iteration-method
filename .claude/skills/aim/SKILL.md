@@ -16,6 +16,15 @@ Follow:
 - `docs/workflow/adapter-skill-bootstrap.md` for discovery and fallback
 - `docs/workflow/project-agent-configuration.md` for role specialization
 
+## Adaptive product execution
+
+For product implementation or material review, read
+`docs/workflow/adaptive-execution.md` before allocating work. Delegate independent
+activities when useful and permitted; use a separate final reviewer for material
+changes. Keep coordinator-owned runtime and user acceptance intact. Record actual
+agent IDs and current-code evidence; a sequential role switch is self-review.
+Do not load this contract for a simple status/help command.
+
 ## Complete command family
 
 Recognize and execute the equivalent intent for:
@@ -111,8 +120,12 @@ An accepted Increment proves only that Increment. Gate A must classify the Epic
 as Product, Pilot, or POC and give every acceptance criterion a stable numbered
 or explicit `AC-*` identity. Before `close`, PO maps the exact complete criterion
 set to concrete `proven` evidence and searches counterevidence. Product and Pilot need
-an unassisted representative black-box pass; synthetic, fixture, mocked, or
-assisted evidence can close only an explicit POC. Any partial criterion,
+representative user-journey verification through the normal entry point. The
+implementing agent may perform it, including automated end-to-end tests; record
+the actual performer and any assistance. A separate reviewer or unassisted
+operation is required only when explicitly required by the user or project
+acceptance criteria. Synthetic or mocked evidence alone can close only an
+explicit POC. Any partial criterion,
 unresolved finding, contradiction, or remaining Epic gap forces `continue` and
 another coherent Done Increment. User acceptance or Portfolio authority cannot
 substitute for evidence. Use trusted `scripts/aim_runtime_contract.py close`
@@ -194,3 +207,20 @@ completed Epic's profile. Gate B may escalate or de-escalate when its visible
 decision matches persisted state. Model/reasoning effort is independent of AIM
 cost depth. Normalize supported legacy state read-only and stop on conflicts or
 unsupported versions.
+
+## Engineering and role skills
+
+Apply `docs/workflow/engineering-delivery.md` for product implementation, review,
+performance work and knowledge refresh. Load only the active role skill:
+
+- PO: `docs/workflow/role-skill-po.md`
+- TDO: `docs/workflow/role-skill-tdo.md`
+- Dev: `docs/workflow/role-skill-dev.md`
+- Reviewer: `docs/workflow/role-skill-reviewer.md`
+
+Resolve project-specific skills from `aim.roles.yaml`, read their actual
+instructions and report missing capabilities. For an empty project infer
+provisional candidates from the supplied goal, requirements, Epic or PRD;
+bootstrap verification is part of startup, not a prerequisite interview.
+Keep native agents as thin loaders of current facts. Do not duplicate temporary
+feature status in their instructions. The engineering checks add no new gate.

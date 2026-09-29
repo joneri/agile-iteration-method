@@ -1,0 +1,72 @@
+{
+  "scope": "Fresh successor maintenance of second-pair Enigma apps; same frozen package as second pair",
+  "model": "gpt-6-astra",
+  "reasoningEffort": "high",
+  "secondsPerBuilderCeiling": 900,
+  "independentPresetCases": 26,
+  "browserValid": 3,
+  "browserInvalidAtomic": 23,
+  "simulatorVectors": 123,
+  "priorDomainSource": "unchanged, no repeat performance/mutation campaign",
+  "variants": {
+    "A": {
+      "elapsedSeconds": 229,
+      "presetPassed": 26,
+      "vectorsPassed": 123,
+      "nativeTestsPassed": 26,
+      "buildPassed": true,
+      "atomicInvalidImportsPassed": 23,
+      "independentValidImportsPassed": 3,
+      "inertNamePassed": true,
+      "realDownloadPassed": true,
+      "candidateSnapshotExportPassed": true,
+      "cancelRestartPassed": true,
+      "mobileWidth": 390,
+      "pageErrors": [],
+      "sourceChangeCounts": {
+        "changed": 7,
+        "added": 23,
+        "removed": 0
+      }
+    },
+    "B": {
+      "elapsedSeconds": 416,
+      "presetPassed": 26,
+      "vectorsPassed": 123,
+      "nativeTestsPassed": 16,
+      "buildPassed": true,
+      "atomicInvalidImportsPassed": 23,
+      "independentValidImportsPassed": 3,
+      "inertNamePassed": true,
+      "realDownloadPassed": true,
+      "candidateSnapshotExportPassed": true,
+      "cancelRestartPassed": true,
+      "mobileWidth": 390,
+      "pageErrors": [],
+      "sourceChangeCounts": {
+        "changed": 11,
+        "added": 19,
+        "removed": 2
+      }
+    }
+  },
+  "findings": [
+    {
+      "variant": "B",
+      "kind": "startup-friction",
+      "evidence": "Historical fractional +00:00 timestamp rejected by AIM startup, manually normalized by builder; 145 s before first product edit (file creation proxy)",
+      "parentFix": "Shared checkpoint timestamp validation with exact history/digest preservation; not part of frozen pilot"
+    },
+    {
+      "variant": "B",
+      "kind": "knowledge-freshness",
+      "evidence": "Two historical EPIC-001 claims are stale against current product (README/UI/browser config changed). Tool detects this; EPIC-002 has manual review but no replacement machine-checkable claims. Old no-uploaded-data sentence is ambiguous after local file import. This is a documentation limitation, not evidence of network upload."
+    },
+    {
+      "variant": "B",
+      "kind": "review-value",
+      "evidence": "Builder review caught and fixed trailing-newline acceptance at strict three-letter input boundary before submission."
+    }
+  ],
+  "archive": "/Users/jonaseriksson/Documents/Codex/2026-09-29/aim-maintenance-pilot"
+}

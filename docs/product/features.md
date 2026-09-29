@@ -1,7 +1,15 @@
 # AIM feature guide
 
-This is the short map of what AIM 3.0 does. Follow the links only when you need
+This is the short map of what AIM 3.1 does. Follow the links only when you need
 the operating detail.
+
+Returning from early 3.0? AIM UI combines clearer workflows with preserved work,
+action tracking and verified recovery status. Across Codex, Claude Code and
+GitHub Copilot, AIM keeps the same command semantics and resumes saved work when
+the next tool has AIM and access to the same current repository and state.
+Discuss lets you explore ideas without changing code or starting delivery.
+Verified repository knowledge helps each session build on what is already known;
+it does not replace checking relevant code or guarantee whole-repository coverage.
 
 ## Delivery loop
 
@@ -114,14 +122,47 @@ See [repo awareness](../workflow/repo-awareness.md).
 
 See [AIM Reflect](../workflow/reflection.md).
 
-## Project specialists
+## Project specialists and skill matching
 
 - `aim.roles.yaml` defines project-specific expertise for PO, TDO, Dev, and Reviewer.
-- `/aim configure-agents` previews updates to supplier-native agent files.
-- Models, tools, permissions, and test strategies stay in the supplier's native format.
-- The main AIM thread always owns runtime state and acceptance.
+- Each role has bundled engineering instructions. Additional skills must resolve
+  to actual available instructions; a proposed skill is not an installed capability.
+- `/aim configure-agents` uses repository evidence to preview affected role and
+  supplier-native file updates, preserving user overrides and active work.
+- Empty projects can start with provisional skill suggestions from requirements,
+  then verify them against the chosen stack.
+- Reuse unchanged bindings and update only the roles affected by new evidence.
 
 See [project-agent configuration](../workflow/project-agent-configuration.md).
+
+## Adaptive agent allocation and independent review
+
+- Assign activities according to dependency boundaries, risk and available
+  capacity. Parallel implementation requires disjoint ownership and settled interfaces.
+- Material changes normally receive a separate permitted reviewer who did not
+  implement them. A role switch in the same session is identified as self-review.
+- Review evidence covers the actual changed files and their current versions.
+  A new edit invalidates affected old evidence.
+- Genuinely nonmaterial, understood changes may use an explicit self-review
+  exception with direct checks; uncertain or material impact retains separate review.
+- Native agent availability and permissions still govern execution. The main
+  session owns integration, runtime state and user acceptance; helpers never
+  create an independent AIM runtime or grant themselves permission.
+
+See [adaptive execution](../workflow/adaptive-execution.md).
+
+## Scoped knowledge and engineering evidence
+
+- Calibration names what was inspected; a ready locality is not a whole-repo guarantee.
+- Reused claims retain sources, scope, freshness and known contradictions.
+  Matching file hashes do not certify factual truth.
+- Reflection may recommend a focused update, regression check or no action.
+  Verified lessons are promoted only within the user's authorization.
+- Engineering guidance targets actual failure boundaries and equivalent resource
+  workloads. Mixed setup, repository maintenance and delivery time remain visible.
+
+See [engineering delivery](../workflow/engineering-delivery.md) and the
+[bounded evaluation results](../features/aim-3.1-evaluation.md).
 
 ## Adapters and commands
 

@@ -15,6 +15,8 @@ from aim_installer import seed as installer_seed
 from aim_installer.manifest import ManifestError, load_manifest
 from aim_installer.yaml_lite import YamlLiteError, loads as load_aim_yaml
 from aim_docs import audit as audit_documentation
+from aim_quality.skills import role_skill_issues
+from aim_quality.profiles import read_repo_profile
 from build_public_skill import PublicSkillError, validate_committed_package
 from aim_validator.coherence import evaluate_product_coherence
 from aim_validator.profile_contract import (
@@ -285,10 +287,10 @@ OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
-        "# Agile Iteration Method (AIM) 3.0",
+        "# Agile Iteration Method (AIM) 3.1",
         "## Install",
         "## How AIM works",
-        "## What is new in v3.0.8",
+        "## What is new in v3.1.0",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",
@@ -1505,7 +1507,7 @@ def build_profile_source_summary(repo_root: Path, repo_profile_readiness: dict[s
         expansion_reason = readiness_status
 
     return {
-        "source": f"{source} ({readiness_status})",
+        "source": f"{source} (reported {readiness_status}; coverage: {repo_profile_readiness['coverage_summary']})",
         "layering": layering,
         "reused_facts": ", ".join(facts) if facts else "profile presence only",
         "selected_locality": first_existing_value(locality_by_profile, "directly affected files or nearest metadata"),
@@ -1515,7 +1517,64 @@ def build_profile_source_summary(repo_root: Path, repo_profile_readiness: dict[s
     }
 
 
+def collect_calibration_coverage(repo_root: Path) -> dict[str, object]:
+    """Describe the canonical profile's declared coverage without certifying truth."""
+    coverage = {
+        "calibration_scope": {"kind": "unspecified"},
+        "repository_ready": False,
+        "has_knowledge": False,
+        "profile_contract_valid": False,
+        "declared_calibration_status": None,
+        "coverage_summary": "not established (canonical profile is missing or invalid)",
+        "coverage_diagnostics": [],
+        "semantic_truth_verified": False,
+        "calibration_next_action": "run /aim calibrate-repo",
+    }
+    try:
+        document, issues = read_repo_profile(repo_root)
+    except (OSError, ValueError, UnicodeError, IndexError, RecursionError) as exc:
+        coverage["coverage_diagnostics"] = [str(exc)]
+        return coverage
+    if issues:
+        coverage["coverage_diagnostics"] = [str(issue) for issue in issues]
+        return coverage
+    profile = document["aimRepoProfile"]
+    calibration = profile["calibration"]
+    scope = calibration.get("scope", {"kind": "unspecified"})
+    has_knowledge = any(profile["repoKnowledge"].values())
+    status = calibration["status"]
+    scope_label = (
+        "repository" if scope["kind"] == "repository"
+        else "localities: " + ", ".join(scope["localityIds"])
+        if scope["kind"] == "localities"
+        else "unspecified"
+    )
+    coverage.update({
+        "calibration_scope": scope,
+        "repository_ready": has_knowledge and status == "ready" and scope["kind"] == "repository",
+        "has_knowledge": has_knowledge,
+        "profile_contract_valid": True,
+        "declared_calibration_status": status,
+        "coverage_summary": (
+            f"{scope_label} (declared scope)"
+            if has_knowledge and scope["kind"] == "repository"
+            else f"{scope_label} (repository coverage is not established)"
+            if has_knowledge
+            else "not established (profile contains no repository knowledge)"
+        ),
+    })
+    if has_knowledge and status in {"ready", "partially_ready"}:
+        if scope["kind"] == "unspecified":
+            coverage["calibration_next_action"] = "clarify calibration scope before claiming repository-wide readiness"
+        elif scope["kind"] == "localities":
+            coverage["calibration_next_action"] = f"continue within {scope_label}; calibrate additional coverage when needed"
+        elif status == "ready":
+            coverage["calibration_next_action"] = "none for declared repository scope; recheck when evidence changes"
+    return coverage
+
+
 def collect_repo_profile_readiness(repo_root: Path) -> dict[str, object]:
+    coverage = collect_calibration_coverage(repo_root)
     profile_paths = []
     team_profile_paths = []
     personal_profile_paths = []
@@ -1547,6 +1606,7 @@ def collect_repo_profile_readiness(repo_root: Path) -> dict[str, object]:
 
     if not profile_paths:
         return {
+            **coverage,
             "status": "needs_calibration",
             "profile_paths": [],
             "team_profile_paths": [],
@@ -1559,6 +1619,7 @@ def collect_repo_profile_readiness(repo_root: Path) -> dict[str, object]:
 
     if state_marker_findings:
         return {
+            **coverage,
             "status": "needs_calibration",
             "profile_paths": profile_paths,
             "team_profile_paths": team_profile_paths,
@@ -1571,6 +1632,7 @@ def collect_repo_profile_readiness(repo_root: Path) -> dict[str, object]:
 
     if not intelligence_marker_findings:
         return {
+            **coverage,
             "status": "needs_calibration",
             "profile_paths": profile_paths,
             "team_profile_paths": team_profile_paths,
@@ -1584,12 +1646,15 @@ def collect_repo_profile_readiness(repo_root: Path) -> dict[str, object]:
     effective_status = (
         calibration_status if calibration_status in CALIBRATION_STATUSES else "partially_ready"
     )
+    if "aim.profile.yaml" in profile_paths:
+        effective_status = coverage["declared_calibration_status"] or "needs_calibration"
     return {
+        **coverage,
         "status": effective_status,
         "profile_paths": profile_paths,
         "team_profile_paths": team_profile_paths,
         "personal_profile_paths": personal_profile_paths,
-        "summary": f"Reusable AIM 2.0 repo-awareness profile found with calibration status {effective_status}.",
+        "summary": f"AIM 2.0 repo-awareness profile reports calibration status {effective_status}; coverage: {coverage['coverage_summary']}.",
         "state_marker_findings": {},
         "intelligence_marker_findings": intelligence_marker_findings,
         "calibration_confidence": calibration_confidence,
@@ -1948,7 +2013,8 @@ def main() -> int:
                 release_impact="fail",
             )
         else:
-            for schema_issue in validate_schema(project_roles, project_roles_schema):
+            role_schema_issues = validate_schema(project_roles, project_roles_schema)
+            for schema_issue in role_schema_issues:
                 add_issue(
                     issues,
                     "blocked",
@@ -1959,6 +2025,14 @@ def main() -> int:
                     category="Error",
                     release_impact="fail",
                 )
+
+            if not role_schema_issues:
+                for message in role_skill_issues(repo_root, project_roles):
+                    add_issue(
+                        issues, "blocked", PROJECT_ROLES_PATH, message,
+                        "Bind an available instruction file or record an unavailable skill with a fallback.",
+                        tier="Behavioral", category="Error", release_impact="fail",
+                    )
 
     native_specialists = {
         "Codex": [f".codex/agents/aim-{role}.toml" for role in ("po", "tdo", "dev", "reviewer")],
@@ -3595,6 +3669,9 @@ def main() -> int:
     print("AIM 2.0 repo profile readiness:")
     print(f"- status: {readiness_status}")
     print(f"- summary: {repo_profile_readiness['summary']}")
+    print(f"- calibration coverage: {repo_profile_readiness['coverage_summary']}")
+    print(f"- repository-ready declaration: {'yes' if repo_profile_readiness['repository_ready'] else 'not established'}")
+    print("- semantic truth verified: no")
     print(
         f"- calibration confidence: {repo_profile_readiness.get('calibration_confidence') or 'not declared'}"
     )
@@ -3627,7 +3704,7 @@ def main() -> int:
     print("- authority: schema=structure, validator=product rules, docs=meaning")
 
     print("AIM 2.0 calibration summary:")
-    print(f"- Repo-awareness: {readiness_status}")
+    print(f"- Repo-awareness: reported {readiness_status}; coverage: {repo_profile_readiness['coverage_summary']}")
     print(
         f"- Technologies: {', '.join(calibration_summary['technologies'][:4]) or 'none'}"
     )
@@ -3642,11 +3719,7 @@ def main() -> int:
     print(
         f"- Open uncertainties: {', '.join(calibration_summary['uncertainties']) or 'none'}"
     )
-    print(
-        "- Next calibration action: none"
-        if readiness_status == "ready"
-        else "- Next calibration action: run /aim calibrate-repo"
-    )
+    print(f"- Next calibration action: {repo_profile_readiness['calibration_next_action']}")
 
     print("AIM 2.0 profile-source summary:")
     print(f"- Profile source: {profile_source_summary['source']}")

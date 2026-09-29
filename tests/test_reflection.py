@@ -146,7 +146,7 @@ class ReflectionContractTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("/aim reflect", skill)
         self.assertIn("/aim reflect-all", skill)
-        self.assertIn("concludes whether action is recommended", skill)
+        self.assertIn("concludes whether action is recommended", " ".join(skill.split()))
         self.assertIn("AIM Reflect", reflection)
         self.assertIn("## Action conclusion", reflection)
 

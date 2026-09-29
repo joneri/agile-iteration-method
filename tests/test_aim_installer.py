@@ -605,7 +605,13 @@ class ModeFootprintContractTests(unittest.TestCase):
         rendered = render.render_text(plan)
         self.assertIn("keeping or committing it is the solo user's choice", rendered)
         self.assertEqual(plan["scopeSummary"]["repoActionCount"], 0)
-        self.assertEqual(plan["scopeSummary"]["localActionCount"], 14)
+        # Local installation keeps runtime dependencies beside the home payload.
+        destinations = plan["scopeSummary"]["localDestinations"]
+        self.assertTrue(any(path.endswith("schemas/aim-runtime-state.schema.json")
+                            for path in destinations))
+        self.assertTrue(any(path.endswith("docs/workflow/role-skill-dev.md")
+                            for path in destinations))
+        self.assertEqual(len(destinations), len(set(destinations)))
 
     def test_ui_payload_apply_is_idempotent_and_collision_reviewed(self) -> None:
         manifest = load_manifest(REPO_ROOT)

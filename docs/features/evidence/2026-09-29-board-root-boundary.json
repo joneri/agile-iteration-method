@@ -1,0 +1,22 @@
+{
+  "case": "board root symlink outside repository",
+  "before": {
+    "status": "exception",
+    "type": "ValueError"
+  },
+  "jsonReads": [],
+  "date": "2026-09-29",
+  "after": {
+    "linkedRootHttpStatus": 503,
+    "brokenLinkHttpStatus": 503,
+    "restoredDirectoryHttpStatus": 200,
+    "workspaceDiscoveryInvokedForRejectedRoot": false
+  },
+  "verification": "python3 -m unittest discover -s tests -p test_aim_http.py",
+  "result": "4 tests passed",
+  "scope": "Static linked or broken .aim roots; this board preflight is not a race-safe snapshot of every repository file. The separate evidence endpoint uses descriptor-based bounded reads.",
+  "sourceHashes": {
+    "scripts/aim_ui.py": "e65249b41187bc086689b01deeff06d250c382887e819b6a5ab9df1faeb0790f",
+    "tests/test_aim_http.py": "539153c2eede3f81fce386ca497d03eb5b872aa6ceb562b0f0dd867ea2aad487"
+  }
+}

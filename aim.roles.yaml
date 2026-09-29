@@ -19,24 +19,40 @@ aimProjectRoles:
     modelPolicy: inherit-supplier-default
   roles:
     po:
+      skills:
+        - id: aim-po-engineering
+          source: bundled
+          status: available
       mission: Own AIM user value, public product coherence, Epic acceptance, and continuation decisions.
       expertise:
         - AIM product positioning and newcomer comprehension
         - Cross-adapter user outcomes without supplier-specific leakage into AIM core
       writeScope: AIM Epic and acceptance decisions only
     tdo:
+      skills:
+        - id: aim-tdo-engineering
+          source: bundled
+          status: available
       mission: Turn each Epic into one coherent end-to-end Done Increment and validate delivery.
       expertise:
         - AIM core, runtime, repo-awareness, adapter, installer, and publication boundaries
         - Migration safety, manifest closure, and release-readiness evidence
       writeScope: AIM increment plans, synthesis, and decision records only
     dev:
+      skills:
+        - id: aim-dev-engineering
+          source: bundled
+          status: available
       mission: Implement exactly the approved Done Increment with repo-native practices.
       expertise:
         - Python standard-library tooling and unittest
         - Manifest-driven installation, rollback, and Markdown contract maintenance
       writeScope: Approved implementation files and Dev trace artifacts
     reviewer:
+      skills:
+        - id: aim-reviewer-engineering
+          source: bundled
+          status: available
       mission: Independently verify correctness, risk, regression coverage, and acceptance evidence.
       expertise:
         - Cross-adapter contract drift and clean-room package closure

@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-09-29 - AIM 3.1 feature release v3.1.0
+
+- Add validated project-specific role skill bindings and provisional requirements-based skill suggestions.
+- Add adaptive activity allocation with ownership/dependency checks and separate review for material changes.
+- Bind review evidence to the actual changed files and preserve explicit self-review/unavailable exceptions.
+- Make calibration scope, knowledge freshness and contradictions explicit; preserve prior evidence across updates.
+- Fix packaged installation/recovery dependencies and strengthen real profile/skill validation.
+- Accept mixed startup timing as a separate setup category without hiding it from total time.
+- Strengthen targeted mutation-recovery checks and proportionate review guidance.
+
+Compatibility: runtime contract `2.0`, runtime-state schema `1.0` and installer manifest `1.0` remain unchanged. The generated public skill package revision is `16`. Existing user acceptance and workspace ownership remain unchanged.
+
+For users returning from early 3.0, this release also includes the accumulated AIM UI improvements to startup, preserved work, action tracking and verified recovery status. Shared saved state across supported tools, read-only Discuss and reusable repository knowledge remain core AIM capabilities.
+
+Validation: 472 regression tests; isolated official skills CLI installations; generated package, documentation, engineering evidence, product coherence and publication checks; independent development review and release recheck.
+
+Migration: run `npx skills update agile-iteration-method --yes`, reload the skill session and restart AIM UI. For an adaptive installation, use `/aim upgrade`. No runtime-state migration is required. Moving between tools requires AIM and access to the same current repository and saved state in the next tool; host chat memory is not transferred.
+
+Known limitations: native agents depend on host support and permissions; AIM UI remains Beta and interrupted execution can still require explicit continuation. The earlier data comparison measured 59% less peak RAM and 12% shorter runtime in the generated program, but development took longer and both products retained a behavior defect. It used a pre-3.1 candidate and does not establish general superiority. See [evaluation notes](docs/features/aim-3.1-evaluation.md).
+
 ## 2026-09-27 - AIM 3 patch release v3.0.8
 - Preserve readable Kanban work when a sibling workspace or portfolio catalog
   is damaged. Keep uncertain work visible without offering unsafe actions.

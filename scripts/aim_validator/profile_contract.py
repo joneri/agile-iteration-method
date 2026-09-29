@@ -98,7 +98,44 @@ def validate_repo_profile(
                         "stable repo-awareness must not be stored under .aim/",
                     )
                 )
+    issues.extend(_calibration_scope_issues(profile))
     issues.extend(_durable_runtime_reference_issues(profile, "$.aimRepoProfile"))
+    return issues
+
+
+def _calibration_scope_issues(profile: dict[str, Any]) -> list[ContractIssue]:
+    calibration = profile.get("calibration")
+    scope = calibration.get("scope") if isinstance(calibration, dict) else None
+    if not isinstance(scope, dict):
+        return []  # Optional legacy scope and structural failures are handled above.
+    path = "$.aimRepoProfile.calibration.scope"
+    kind = scope.get("kind")
+    ids = scope.get("localityIds")
+    if kind == "repository" and "localityIds" in scope:
+        return [ContractIssue("product", path, "repository scope must not select localityIds")]
+    if kind != "localities":
+        return []
+    if not isinstance(ids, list) or not ids:
+        return [ContractIssue("product", path + ".localityIds", "localities scope requires at least one locality ID")]
+    knowledge = profile.get("repoKnowledge")
+    localities = knowledge.get("localities", []) if isinstance(knowledge, dict) else []
+    known_ids = {
+        item["id"] for item in localities
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    } if isinstance(localities, list) else set()
+    issues = []
+    seen = set()
+    for index, locality_id in enumerate(ids):
+        if not isinstance(locality_id, str):
+            continue  # The schema reports invalid item types.
+        message = None
+        if locality_id not in known_ids:
+            message = f"unknown locality ID {locality_id!r}; select an existing repoKnowledge.localities ID"
+        elif locality_id in seen:
+            message = f"duplicate locality ID {locality_id!r}"
+        if message:
+            issues.append(ContractIssue("product", f"{path}.localityIds[{index}]", message))
+        seen.add(locality_id)
     return issues
 
 

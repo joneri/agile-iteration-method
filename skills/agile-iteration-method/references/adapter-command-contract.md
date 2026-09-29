@@ -28,7 +28,7 @@ ownership, or acceptance.
 | `/aim start "EPIC: ..."` | start a new Epic or resume an incomplete checkpoint instead of creating a parallel run | uses a trusted transaction to publish a dedicated registered workspace, bootstrapping the catalog when no runtime exists |
 | `/aim start "PORTFOLIO" mode:auto` | preview the ordered AIM UI Backlog and request one bounded Portfolio mandate | after explicit mandate approval, may create `.aim/portfolio-run.json` and sequentially coordinate included canonical Epic workspaces |
 | `/aim continue` | resume from the persisted role, gate, increment, mode, and cost profile | advances state only when the current AIM transition allows it |
-| `/aim status` | report the AIM product release from `VERSION` separately from the runtime contract in `.aim/state.json` `aimVersion`, then Epic, increment, role, mode, cost profile, gate, adapter, and next action | read-only |
+| `/aim status` | report the AIM product release from the trusted package's `VERSION` or `manifest.json` `productVersion`, separately from the runtime contract in `.aim/state.json` `aimVersion`, then Epic, increment, role, mode, cost profile, gate, adapter, and next action | read-only |
 | `/aim validate` | run or explain Structural, Behavioral, Product coherence, and Release readiness checks | read-only |
 | `/aim help` | show the thin front door and the next useful command | read-only |
 | `/aim config` | show effective mode, cost, profile, ownership, validation, and adapter fallback configuration | read-only |
@@ -100,6 +100,11 @@ title, mode, cost profile, platform, and timestamp. Preview is no-write. Apply
 must match the previewed start digest (`--expected-start-sha256`); existing
 non-candidate callers may retain the catalog digest. The digest also binds
 catalog absence, so a catalog appearing after preview prevents publication.
+New starts use second-precision UTC `Z` timestamps. Existing checkpoints also
+accept explicit UTC `+00:00` and up to nine fractional digits after calendar
+validation. Their original bytes are preserved and still bind the digest;
+equivalent timestamp spellings do not permit a changed checkpoint to pass a
+stale preview. Naive, non-UTC and impossible timestamps remain invalid.
 Success means a new contained
 `.aim/portfolio/<EPIC-ID>/` workspace, a catalog entry, current Gate A state,
 and exactly one matching Epic and reserved Increment in the `/api/board` read
@@ -419,9 +424,14 @@ Before `close`, the adapter must classify the Epic as `Product`, `Pilot`, or
 audit. Every acceptance criterion must be mapped to concrete evidence and have
 status `proven`; counterevidence must have been actively searched; unresolved
 findings, contradictions, and remaining Epic gaps must be empty. `Product` and
-`Pilot` additionally require an unassisted representative black-box pass.
-Synthetic, fixture, mocked, or implementation-assisted evidence can close only
-an Epic explicitly framed as `POC`; it cannot be relabelled as Product evidence.
+`Pilot` additionally require representative user-journey verification through
+the normal entry point. The implementing agent may perform it, including
+automated end-to-end tests, with the actual performer and assistance recorded.
+Implementer-run journey checks do not waive independent material-change review
+under `adaptive-execution.md`. Unassisted operation is required only when the
+user or project acceptance criteria require it. Synthetic or mocked
+evidence alone can close only an Epic explicitly framed as `POC`; it cannot
+be relabelled as representative Product evidence.
 
 If any predicate fails, the adapter must recommend `continue`, create another
 coherent Done Increment after authority is given, and preserve the unfinished

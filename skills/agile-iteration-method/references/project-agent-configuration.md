@@ -45,12 +45,55 @@ Supplier files are native execution surfaces, not competing sources of truth:
 
 The structural contract is `schemas/aim-project-roles.schema.json`.
 
+Before reporting configuration as ready, run the trusted package helper:
+`python3 <aim-package>/scripts/aim_engineering.py --repo <project> profiles`.
+For standalone configuration when no repo profile is in scope, use `profiles --only roles`; this still checks every declared role-skill binding.
+It uses AIM's actual restricted YAML reader, published schemas and safe skill
+resolution. A hand-written subset check or successful JSON decoding is not an
+equivalent check. Write block-style AIM YAML; JSON object serialization into a
+`.yaml` file is not supported by this reader. The command is read-only and does
+not certify the factual truth of profile claims.
+
+Use `source: bundled` for each `aim-<role>-engineering` baseline; the package
+resolves its own instructions. Do not invent another source label or point a
+project binding outside the repository with `../`. A project skill uses a
+contained instruction path and its actual availability status. Missing or
+invalid profiles remain unready; report the diagnostic and repair the affected
+configuration within the existing mandate before claiming successful setup.
+
+
+Refresh only roles and bindings affected by changed evidence. Reuse unchanged
+configuration instead of regenerating it at every Epic. A verified reflection
+lesson may justify a small project skill or a revised binding; link its actual
+instructions and applicability, preserve the user's overrides, and verify that
+the next relevant role can locate it. Adding an expertise label or a skill name
+without usable instructions is not a learning outcome.
+
+Every role starts with its bundled `aim-<role>-engineering` skill. The binding
+uses `id`, `source` and `status`; optional `path` locates a project skill and
+`fallback` describes an unavailable capability. Existing profiles without
+bindings remain readable and use the bundled role skill until refreshed.
+Project-specific skills are selected from actual available instructions, not
+invented skill names. PRD-derived `skillCandidates` are low-confidence hypotheses,
+not installed dependencies or verified expertise. See
+[Engineering delivery](engineering-delivery.md) for skill selection, runtime
+measurement, security applicability and knowledge freshness.
+
 The installer may seed conservative facts from files such as `package.json`,
 `pyproject.toml`, `Package.swift`, `Cargo.toml`, and `go.mod`. Detected facts are
 marked `needs_calibration`; inference is never presented as verified mastery.
 `/aim calibrate-repo` verifies repository facts. `/aim configure-agents`
 inspects those facts, proposes role expertise, and regenerates only AIM-owned
-native files after showing collisions or user edits.
+native files after showing collisions or user edits. Native files remain thin
+loaders: never copy transient implementation status, technology lists or commands
+into them. This avoids conflicting snapshots when the profile changes.
+
+For an empty project, use the supplied goal/requirements/PRD to propose provisional
+capabilities during startup; do not demand a separate calibration interview for
+facts that cannot exist yet. Verify and refine after choosing the stack. The
+installer seeds bundled skills for all four roles and bounded root-PRD hints;
+the trusted `scripts/aim_engineering.py` helper also accepts explicit requirement
+paths. It never executes requirement text or installs packages.
 
 ## Native orchestration
 
@@ -69,9 +112,13 @@ Every adapter should use the strongest stable native mechanism available:
 - Copilot loads repository custom agents and may infer them or receive explicit
   delegation from the AIM orchestrator.
 
-Native capability does not require identical behavior. An adapter may run a
-specialist sequentially, in parallel, or not at all when capability, policy,
-cost, or task shape makes delegation inappropriate.
+Use `adaptive-execution.md` to allocate actual activities and independent review.
+An adapter may run independent work sequentially or in parallel according to
+ownership, benefit and host capacity. For material changes the default final
+Reviewer is a separate permitted agent, not a role switch in the implementer.
+A concrete trivial/unavailable exception remains visible; do not let a legacy
+serial profile silently override review separation. Respect higher-priority
+host/user restrictions and never manufacture another session's evidence.
 
 ## Ownership boundary
 
@@ -117,8 +164,9 @@ Do not add fashionable tools or broad prompts without repository evidence.
 6. update all selected suppliers from the same role intent
 7. validate native file presence and main-thread ownership language
 
-If native agents are unavailable, AIM reports the limitation and runs the same
-role loop sequentially in the main thread. Gates and quality do not weaken.
+If native agents are unavailable, AIM reports the limitation and retains required
+checks in the main thread. Label review as self-review and record the unavailable
+exception under `adaptive-execution.md`; do not claim equivalent independence.
 
 ## Migration
 

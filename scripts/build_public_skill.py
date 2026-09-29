@@ -17,12 +17,21 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 12
+PUBLIC_SKILL_PACKAGE_VERSION = 16
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
 PUBLIC_DESCRIPTION_NAME = "agile-iteration-method"
 REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
+    (Path("docs/workflow/adaptive-execution.md"), Path("adaptive-execution.md")),
+    (Path("docs/workflow/engineering-delivery.md"), Path("engineering-delivery.md")),
+    (Path("docs/workflow/role-skill-po.md"), Path("role-skill-po.md")),
+    (Path("docs/workflow/role-skill-tdo.md"), Path("role-skill-tdo.md")),
+    (Path("docs/workflow/role-skill-dev.md"), Path("role-skill-dev.md")),
+    (Path("docs/workflow/role-skill-reviewer.md"), Path("role-skill-reviewer.md")),
+    (Path("docs/workflow/skill-user-guide.md"), Path("skill-user-guide.md")),
+    (Path("docs/workflow/skill-command-runtime.md"), Path("skill-command-runtime.md")),
+    (Path("docs/workflow/skill-completion.md"), Path("skill-completion.md")),
     (Path("docs/workflow/agile-iteration-method.md"), Path("agile-iteration-method.md")),
     (Path("docs/workflow/adapter-command-contract.md"), Path("adapter-command-contract.md")),
     (Path("docs/workflow/adapter-entry-model.md"), Path("adapter-entry-model.md")),
@@ -49,6 +58,23 @@ SCHEMA_SOURCES: tuple[Path, ...] = (
 INSTALL_MANIFEST_SOURCE = Path("install/aim-install-manifest.yaml")
 DOCUMENTATION_LICENSE_SOURCE = Path("docs/LICENSE-DOCS")
 UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
+    Path("scripts/aim_http.py"),
+    Path("scripts/aim_engineering.py"),
+    Path("scripts/aim_quality/__init__.py"),
+    Path("scripts/aim_quality/files.py"),
+    Path("scripts/aim_quality/skills.py"),
+    Path("scripts/aim_quality/evidence.py"),
+    Path("scripts/aim_quality/timing.py"),
+    Path("scripts/aim_quality/profiles.py"),
+    Path("scripts/aim_quality/localities.py"),
+    Path("scripts/aim_quality/delegation.py"),
+    Path("scripts/aim_quality/review.py"),
+    Path("scripts/aim_quality/knowledge.py"),
+    Path("scripts/aim_installer/__init__.py"),
+    Path("scripts/aim_installer/yaml_lite.py"),
+    Path("scripts/aim_validator/__init__.py"),
+    Path("scripts/aim_validator/schema_subset.py"),
+    Path("scripts/aim_validator/profile_contract.py"),
     Path("scripts/aim_runtime_contract.py"),
     Path("scripts/aim_activation.py"),
     Path("scripts/aim_start.py"),

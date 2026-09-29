@@ -20,8 +20,9 @@ MAX_STATE_BYTES = 1_000_000
 CANDIDATE_PATTERN = re.compile(r"INC-[A-Z0-9-]+")
 EPIC_PATTERN = re.compile(r"EPIC-[A-Z0-9-]+")
 INCREMENT_PATTERN = re.compile(r"DI-[0-9]+")
-TIMESTAMP_PATTERN = re.compile(
-    r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z"
+CHECKPOINT_TIMESTAMP_PATTERN = re.compile(
+    r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}"
+    r"(?:\.[0-9]{1,9})?(?:Z|\+00:00)"
 )
 CURRENT_STATUSES = {
     "epic_initialized",
@@ -237,17 +238,27 @@ def _validate_declared_state(raw: str, state: dict[str, Any]) -> None:
             raise ActivationPreflightError(
                 f"Declared workspace {raw} has a non-canonical {field}."
             )
-    updated_at = state.get("updatedAt")
-    if not isinstance(updated_at, str) or TIMESTAMP_PATTERN.fullmatch(updated_at) is None:
-        raise ActivationPreflightError(
-            f"Declared workspace {raw} has a non-canonical timestamp."
-        )
     try:
-        datetime.strptime(updated_at, "%Y-%m-%dT%H:%M:%SZ")
+        validate_checkpoint_timestamp(state.get("updatedAt"))
     except ValueError as exc:
-        raise ActivationPreflightError(
-            f"Declared workspace {raw} has an impossible runtime timestamp."
-        ) from exc
+        raise ActivationPreflightError(f"Declared workspace {raw} has {exc}.") from exc
+
+
+def validate_checkpoint_timestamp(value: Any) -> None:
+    """Accept bounded, explicit UTC instants without normalizing checkpoint bytes.
+
+    Historical ISO-format writers use fractional seconds and +00:00. The raw
+    representation must remain intact for preview/apply concurrency checks.
+    New starts continue to write second-precision Z timestamps.
+    """
+    if not isinstance(value, str) or CHECKPOINT_TIMESTAMP_PATTERN.fullmatch(value) is None:
+        raise ValueError("an invalid UTC timestamp")
+    try:
+        # Fraction/zone syntax is already checked. Validate the calendar without
+        # Python-version-dependent fromisoformat fractional precision handling.
+        datetime.strptime(value[:19], "%Y-%m-%dT%H:%M:%S")
+    except ValueError as exc:
+        raise ValueError("an impossible runtime timestamp") from exc
 
 
 def _portfolio_parent(aim_root: Path) -> Path:

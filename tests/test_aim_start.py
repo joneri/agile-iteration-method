@@ -344,6 +344,59 @@ class AimStartTests(unittest.TestCase):
                 else:
                     self.assertEqual(json.loads((repo / ".aim/portfolio-run.json").read_text())["status"], "paused")
 
+    def test_existing_utc_timestamp_spellings_preserve_history_on_start(self) -> None:
+        for timestamp in (
+            "2026-08-23T10:00:00Z",
+            "2026-08-23T10:00:00+00:00",
+            "2026-08-23T10:00:00.123456+00:00",
+            "2026-08-23T10:00:00.123456789Z",
+        ):
+            with self.subTest(timestamp=timestamp), tempfile.TemporaryDirectory() as temporary:
+                repo = self._repo(Path(temporary))
+                path = repo / ".aim/state.json"
+                state = json.loads(path.read_text())
+                state["updatedAt"] = timestamp
+                path.write_text(json.dumps(state))
+                before = path.read_bytes()
+                plan = plan_start(repo, **self._request())
+                self.assertEqual(path.read_bytes(), before)
+                apply_start(repo, **self._request(), expected_start_sha256=plan["startSha256"])
+                self.assertEqual(path.read_bytes(), before)
+                self.assertEqual(len(build_board(repo)["epics"]), 2)
+
+    def test_existing_utc_timestamp_rejects_invalid_or_ambiguous_values(self) -> None:
+        for timestamp in (
+            None, True, "", "2026-08-23", "2026-08-23T10:00:00",
+            "2026-08-23T10:00:00+02:00", "2026-08-23T10:00:00-00:00",
+            "2026-08-23T10:00:00Z\n", "2026-02-30T10:00:00.1+00:00",
+            "2026-08-23T25:00:00Z", "2026-08-23T10:00:00.Z",
+        ):
+            with self.subTest(timestamp=timestamp), tempfile.TemporaryDirectory() as temporary:
+                repo = self._repo(Path(temporary))
+                path = repo / ".aim/state.json"
+                state = json.loads(path.read_text())
+                state["updatedAt"] = timestamp
+                path.write_text(json.dumps(state))
+                before = {p: p.read_bytes() for p in (repo / ".aim").rglob("*") if p.is_file()}
+                with self.assertRaisesRegex(AimStartError, "timestamp"):
+                    apply_start(repo, **self._request())
+                self.assertEqual({p: p.read_bytes() for p in before}, before)
+                self.assertFalse((repo / ".aim/portfolio").exists())
+
+    def test_equivalent_timestamp_rewrite_still_invalidates_start_preview(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = self._repo(Path(temporary))
+            plan = plan_start(repo, **self._request())
+            path = repo / ".aim/state.json"
+            state = json.loads(path.read_text())
+            state["updatedAt"] = "2026-08-23T10:00:00.000000+00:00"
+            path.write_text(json.dumps(state))
+            before = path.read_bytes()
+            with self.assertRaisesRegex(AimStartError, "changed"):
+                apply_start(repo, **self._request(), expected_start_sha256=plan["startSha256"])
+            self.assertEqual(path.read_bytes(), before)
+            self.assertFalse((repo / ".aim/portfolio").exists())
+
     def test_preview_is_no_write_and_apply_is_visible_with_current_contract(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             repo = self._repo(Path(temporary))

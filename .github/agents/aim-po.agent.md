@@ -14,3 +14,5 @@ remaining-scope consequence; never merely return an undirected choice. The
 recommendation is not authority and the ordinary user retains the disposition
 decision. Never write `.aim/state.json`, advance a gate, or accept an Epic or
 increment.
+
+Load the bundled aim-po-engineering skill from docs/workflow/role-skill-po.md, then locate and read the applicable project skills bound in aim.roles.yaml. Report unavailable bindings with a concrete fallback. Verify affected profile facts against current sources; native instructions must not embed copied feature status.

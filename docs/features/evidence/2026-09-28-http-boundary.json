@@ -1,0 +1,14 @@
+{
+  "scenario": "Matching attacker Host and Origin sent to the actual loopback listener; GET /api/health",
+  "baselineCommit": "2f9043110b926aba47aabf772cde1c342b39d348",
+  "results": {
+    "before": {
+      "status": 200,
+      "disclosedRepository": true
+    },
+    "after": {
+      "status": 403,
+      "disclosedRepository": false
+    }
+  }
+}

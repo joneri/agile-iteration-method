@@ -1,10 +1,10 @@
-# Agile Iteration Method (AIM) 3.0
+# Agile Iteration Method (AIM) 3.1
 
-![AIM 3.0.8 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 3.1.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
-It works with Codex, Claude Code, and GitHub Copilot.
+Switch between Codex, Claude Code, and GitHub Copilot while keeping your project knowledge and saved AIM work. Discuss ideas with your repository before starting implementation. Each tool needs AIM and access to the same current repository and saved state.
 
 ## Install
 
@@ -141,18 +141,17 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v3.0.8
+## What is new in v3.1.0
 
-AIM UI preserves readable work when another workspace or its catalog is damaged.
-A missing catalog can be rebuilt from unambiguous, validated local workspaces;
-ambiguous work stays visible without exposing unsafe actions.
+**AIM 3.1 brings project-specific skills, adaptive agent allocation and review evidence tied to current code.** Returning from early 3.0? AIM UI now brings clearer workflows, preserved work and verified recovery status together in one control room.
 
-Background actions distinguish a selected task, agent activity and a verified
-work result. Saved actions survive UI reloads without duplicate submission, and
-quiet model execution no longer times out after one minute. A developer
-[measurement guide](docs/product/aim-ui-journey-measurement.md) covers real-agent
-startup, interruption and recovery. Restarting interrupted agent work can still
-require an explicit continuation in the selected task.
+- **Project skill matching:** verify available role instructions and refresh affected bindings as the project changes.
+- **Useful agent allocation:** choose work from dependencies, risk, ownership and available host capacity.
+- **Current-code review:** separate reviewers for material changes; explicit proportional self-review for genuinely small, understood changes.
+- **Scoped repository knowledge:** retain sources, calibrated coverage, contradictions and prior evidence.
+- **Stronger engineering checks:** exercise mutation recovery, resource workloads and installed runtime dependencies.
+
+**Less memory. Faster code in our latest data test:** the AIM-built program used **59% less peak RAM with 12% shorter runtime** than the same model without AIM. This measured three stages of one product using a pre-3.1 candidate. Development took longer and both products retained a behavior defect; no overall protocol win was established. See the [evaluation notes](docs/features/aim-3.1-evaluation.md) and [feature guide](docs/product/features.md).
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
@@ -172,8 +171,9 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 
 ## Documentation
 
+- [Engineering delivery and role skills](docs/workflow/engineering-delivery.md) · [Enigma comparison analysis and measured improvements](docs/features/engineering-reset-analysis.md)
 - [Feature guide](docs/product/features.md) · [AIM UI control room](docs/product/aim-ui.md) · [First-time journey](docs/product/getting-started.md)
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product release: **v3.0.8**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product version: **v3.1.0**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).

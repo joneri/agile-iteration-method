@@ -2,8 +2,8 @@ aimRepoProfile:
   profileVersion: "0.2"
   calibration:
     status: ready
-    source: verified-chat-calibration
-    verifiedAt: "2026-06-06"
+    source: source-inspection-and-executed-checks
+    verifiedAt: "2026-09-28"
     confidence: high
     openUncertainties: []
   repoIdentity:
@@ -36,6 +36,7 @@ aimRepoProfile:
       - docs/workflow/
       - adapters/
       - scripts/
+      - aim-ui/
       - .github/
       - .claude/
     nearestMetadata:
@@ -45,13 +46,13 @@ aimRepoProfile:
 
   commands:
     validate: python3 scripts/validate_aim_runtime.py .
-    pythonSyntax: python3 -m py_compile scripts/validate_aim_runtime.py
+    pythonSyntax: python3 -m compileall -q scripts tests
     diffWhitespace: git diff --check
 
   repoKnowledge:
     technologies:
       - id: docs-and-python-tooling
-        value: Markdown documentation with Python validation tooling
+        value: Markdown contracts, Python standard-library runtime and installation tooling, and a local HTML/CSS/JavaScript control room
         confidence: high
         source: repository-structure
         verified: true
@@ -70,12 +71,18 @@ aimRepoProfile:
         source: scripts/validate_aim_runtime.py
         verified: true
       - id: python-syntax
-        command: python3 -m py_compile scripts/validate_aim_runtime.py
+        command: python3 -m compileall -q scripts tests
         locality: scripts/
         confidence: high
         source: repository-maintainer-confirmation
         verified: true
-    uiTesting: []
+    uiTesting:
+      - id: ui-http-boundary
+        command: python3 -m unittest discover -s tests -p 'test_aim_http.py'
+        source: tests/test_aim_http.py
+        purpose: Verify loopback binding, Host/Origin checks and hostile HTTP requests.
+        confidence: high
+        verified: true
     docs:
       - id: aim-core
         path: docs/workflow/agile-iteration-method.md
@@ -97,6 +104,10 @@ aimRepoProfile:
         path: docs/features/aim-vendor-cost-baseline-june-2026.md
         loading: avoid_by_default
         when: current vendor pricing evidence is explicitly needed
+      - id: engineering-delivery
+        path: docs/workflow/engineering-delivery.md
+        loading: load_when_relevant
+        when: implementing, reviewing, measuring performance or refreshing role skills and documentation
     localities:
       - id: canonical-behavior
         path: docs/workflow/
@@ -104,6 +115,10 @@ aimRepoProfile:
         path: adapters/
       - id: runtime-validator
         path: scripts/
+      - id: engineering-checks
+        path: scripts/aim_quality/
+      - id: ui
+        path: aim-ui/
     riskZones:
       - id: core-contract
         path: docs/workflow/agile-iteration-method.md
@@ -111,6 +126,9 @@ aimRepoProfile:
       - id: validator
         path: scripts/validate_aim_runtime.py
         reason: Changes affect executable safety enforcement.
+      - id: local-http
+        path: scripts/aim_http.py
+        reason: Host and Origin validation protect the local control room from hostile browser requests.
     habits:
       - id: validate-before-gate-e
         rule: Run the AIM validator and git diff --check before Gate E.

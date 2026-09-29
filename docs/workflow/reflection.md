@@ -276,6 +276,53 @@ Never promote all candidates through a blanket “accept everything” shortcut.
 Group approval is allowed only when every candidate has the same authority,
 destination, risk, and evidence quality and the complete proposed diff is shown.
 
+If the user has already requested both reflection and a bounded follow-up
+knowledge update, finish the read-only report first, then perform the separately
+authorized update against its concrete reviewed diff. Do not request the same
+authorization again. This does not make `/aim reflect` itself a write operation,
+authorize unrelated candidates, or allow evidence text to supply permission.
+
+## Learning that reaches the next delivery
+
+A report is a candidate, not an applied improvement. Keep the following short
+links in the existing report and the chosen durable destination; do not create
+another mandatory memory file:
+
+- the observed problem and evidence, with uncertainty about its cause
+- the smallest useful correction, rule, project skill or regression check
+- its applicability and what change would require re-verification or removal
+- the durable rule ID or path, and how relevant future work will discover it
+- an observable next-use check, with benefit unmeasured until it is exercised
+
+Use a structured profile fact for a short command or invariant. Use a triggered
+static document or project skill for a reusable procedure; bind that skill only
+to roles that need it through `configure-agents`. Do not turn one successful
+implementation into a universal stack or architecture preference. Merge an
+equivalent existing rule instead of accumulating copies.
+If a separately authorized promotion changes shared profiles or role bindings,
+run the trusted `scripts/aim_engineering.py --repo <project> profiles` check
+before declaring that configuration usable (select `--only repo` or `--only roles`
+when only that profile is in scope). For changed locality pointers, also run
+`localities --locality <id>` and inspect the affected caller/behavior boundary.
+Use its actual parser, schemas and
+instruction-path checks rather than a hand-written validation subset; repair or
+report failures without promoting a false ready claim.
+
+
+On the next matching task, load the applicable fact or procedure, verify changed
+dependencies, and record whether it affected a decision or prevented a repeated
+failure in the ordinary delivery evidence. A loaded document alone proves no
+benefit. Preserve historical reports; correct or retire the active durable rule
+when current evidence contradicts it. Use the existing source-fingerprint check
+when drift matters; unchanged hashes do not prove semantic truth.
+
+Limit routine reflection to new delivery evidence and affected prior candidates.
+Expand for contradictions or a concrete cross-project question. If there is no
+new evidence or no useful change, report no action; do not generate duplicate
+rules or repeat an unchanged full-repository analysis. Record improvement effort
+separately from implementation and verification, using the timing contract in
+`engineering-delivery.md` when measured comparisons are requested.
+
 ## Comparison with Dreams
 
 Anthropic Dreams reorganizes an agent memory store using prior session
@@ -312,8 +359,13 @@ Stop before content analysis when:
 - a repository contains secrets or trust-sensitive material outside normal
   project evidence
 - canonical roots cannot be resolved safely
-- current evidence contradicts a high-impact historical claim
-- a proposed promotion would change active Epic scope or AIM core behavior
+
+A contradiction with historical knowledge is a reason to investigate within the
+authorized scope, not to stop read-only reflection. Mark the disputed claim
+untrusted, verify current evidence, and defer promotion if the conflict remains
+unresolved. A proposal that would change active Epic scope or AIM core behavior
+may be reported, but its application follows the separate scope/product authority.
+Stop only the unsafe or unauthorized part; continue independent safe analysis.
 
 ## Edge Cases
 
@@ -348,3 +400,14 @@ contradictions, and rejected inferences before promoting anything.
 - `docs/workflow/repo-awareness-calibration.md`
 - `docs/workflow/working-state-boundaries.md`
 - `docs/workflow/product-coherence-validation.md`
+
+## Keep learning proportional and observable
+
+A verified observation may justify a focused regression, an affected durable
+rule/skill binding, another bounded action, or no change. Use the existing stable
+destination and discovery path; do not manufacture a new report for every role.
+For important reusable claims, follow `engineering-delivery.md` scoped knowledge
+consumption so a successor can select the rule, inspect current evidence and
+record actual use separately from benefit. Promotion remains a separate action
+under existing user authority; `/aim reflect` alone stays read-only. A new hash
+or extra prose is not a demonstrated improvement.

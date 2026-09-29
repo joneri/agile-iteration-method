@@ -51,3 +51,5 @@ Write `.aim/reviews/review-{increment:03d}.md` including:
 - concrete change list
 - file-boundary signal: clearer cohesive modules, acceptable unchanged structure, or needless fragmentation/context hog risk
 - recommendation signal for Gate E
+
+Load the bundled aim-reviewer-engineering skill from docs/workflow/role-skill-reviewer.md, then locate and read the applicable project skills bound in aim.roles.yaml. Report unavailable bindings with a concrete fallback. Verify affected profile facts against current sources; native instructions must not embed copied feature status.

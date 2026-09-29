@@ -38,6 +38,25 @@
         },
         "confidence": {
           "$ref": "#/$defs/confidence"
+        },
+        "appliesTo": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "expectedUse": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recheckWhen": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": true
@@ -68,6 +87,25 @@
         },
         "confidence": {
           "$ref": "#/$defs/confidence"
+        },
+        "appliesTo": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "expectedUse": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recheckWhen": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": true
@@ -120,7 +158,7 @@
         "localities": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/knowledgeEntry"
+            "$ref": "#/$defs/localityEntry"
           }
         },
         "riskZones": {
@@ -198,6 +236,30 @@
                 "type": "string",
                 "minLength": 1
               }
+            },
+            "scope": {
+              "type": "object",
+              "description": "Explicit coverage claimed by calibration. Omitted legacy scope is unspecified, not repository-wide. Product validation requires localityIds only for localities and resolves each ID against repoKnowledge.localities.",
+              "required": [
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "repository",
+                    "localities"
+                  ]
+                },
+                "localityIds": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "$ref": "#/$defs/stableId"
+                  }
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -336,6 +398,61 @@
         }
       },
       "additionalProperties": false
+    },
+    "localityEntry": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "tests": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "appliesTo": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "expectedUse": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recheckWhen": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": true
     }
   }
 }

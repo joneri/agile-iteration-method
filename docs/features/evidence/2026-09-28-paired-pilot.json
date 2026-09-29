@@ -1,0 +1,722 @@
+{
+  "archive": "/Users/jonaseriksson/Documents/Codex/2026-09-28/aim-engineering-pilot",
+  "run": {
+    "status": "assessed",
+    "authorization": "User explicitly authorized AIM solely within two comparison runs",
+    "observedBothRunningAt": "2026-09-28T21:16:58Z",
+    "parentCeilingAt": "2026-09-28T21:55:00Z",
+    "timingNote": "Common conservative parent cutoff; individual agent start and completion times will be recorded when reported. Builder starts were slightly staggered.",
+    "agents": {
+      "A": "/root/pilot_raw",
+      "B": "/root/pilot_aim"
+    },
+    "model": "gpt-6-astra",
+    "reasoningEffort": "high",
+    "initialManifestHash": "7a624e1878e563a1c7d60b9b12ed5f039fb7c29954c29221ce2136c69071e2e8",
+    "lockedFilesChanged": [],
+    "humanInterventions": [
+      {
+        "kind": "timing metadata request",
+        "sameForBoth": true
+      }
+    ],
+    "submissions": {
+      "A": {
+        "completedAt": "2026-09-28T21:29:32Z",
+        "reportedStart": "parent observation only",
+        "secondsFromCommonObservation": 754
+      },
+      "B": {
+        "completedAt": "2026-09-28T21:36:19Z",
+        "reportedStart": "parent observation only",
+        "secondsFromCommonObservation": 1161
+      }
+    },
+    "parentRepositoryChangesAfterFreeze": [
+      {
+        "area": "AIM UI evidence file reads",
+        "reason": "Independent reproduced symlink escape and bounded-read regression",
+        "includedInBuilderPackage": false
+      }
+    ],
+    "assessmentCompletedAt": "2026-09-28T21:44:10.511936+00:00",
+    "assessment": {
+      "vectorsPassed": {
+        "A": 123,
+        "B": 123
+      },
+      "independentlyReplayedCandidates": 207,
+      "invalidCandidates": 0,
+      "searchRuns": 84,
+      "timeouts": 0,
+      "mutationsDetectedByNpmTest": {
+        "A": 3,
+        "B": 2
+      },
+      "browserSuitesPassed": {
+        "A": 8,
+        "B": 6
+      },
+      "buildsPassed": [
+        "A",
+        "B"
+      ],
+      "sourceIntegrity": "All initial inputs and frozen submission files verified unchanged",
+      "assessor": "Parent agent; method identity visible; fixed common rubric",
+      "score": "99/100 each; explanatory judgments and tradeoffs in report",
+      "decision": "Mixed outcome: AIM faster completed searches and lower memory on demanding cases; raw faster development, stronger tested mutation detection, earlier candidate in simple cases. No general superiority claim."
+    }
+  },
+  "runtimeSummary": [
+    {
+      "label": "A",
+      "id": "pairs-0",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.135187333,
+      "medianFirstCandidateSeconds": 0.003211041999999999,
+      "medianPeakRssBytes": 80461824,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "pairs-1",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.13766375,
+      "medianFirstCandidateSeconds": 0.003328666,
+      "medianPeakRssBytes": 80396288,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "pairs-3",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.13627424999999999,
+      "medianFirstCandidateSeconds": 0.003254125,
+      "medianPeakRssBytes": 80412672,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "pairs-6",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.135807958,
+      "medianFirstCandidateSeconds": 0.003306457999999999,
+      "medianPeakRssBytes": 80379904,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "pairs-10",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.13446550000000002,
+      "medianFirstCandidateSeconds": 0.003227709000000001,
+      "medianPeakRssBytes": 80379904,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "offset-known",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.13373025000000002,
+      "medianFirstCandidateSeconds": 0.093370334,
+      "medianPeakRssBytes": 80920576,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "offset-auto",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 1.040097084,
+      "medianFirstCandidateSeconds": 0.7199500000000001,
+      "medianPeakRssBytes": 98861056,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "multiple",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 0,
+      "medianCompletionSeconds": null,
+      "medianFirstCandidateSeconds": 0.0005317500000000006,
+      "medianPeakRssBytes": 51576832,
+      "candidates": [
+        20,
+        20,
+        20
+      ],
+      "endTypes": [
+        "cap",
+        "cap",
+        "cap"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "none",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.10814720800000001,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 80560128,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "impossible",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.00024133299999999912,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 49889280,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "impossible-auto",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.00024704200000000043,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 49823744,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "pairs-10-full",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.144963959,
+      "medianFirstCandidateSeconds": 0.0033481250000000013,
+      "medianPeakRssBytes": 80330752,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "unicode-prefix",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.13382570800000002,
+      "medianFirstCandidateSeconds": 0.003230708,
+      "medianPeakRssBytes": 80363520,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "short-crib",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.12326612499999999,
+      "medianFirstCandidateSeconds": 0.0028801249999999994,
+      "medianPeakRssBytes": 79249408,
+      "candidates": [
+        5,
+        5,
+        5
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-0",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.060673292000000004,
+      "medianFirstCandidateSeconds": 0.010998708000000001,
+      "medianPeakRssBytes": 61702144,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-1",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.061228250000000005,
+      "medianFirstCandidateSeconds": 0.011142667000000002,
+      "medianPeakRssBytes": 61587456,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-3",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.061218875,
+      "medianFirstCandidateSeconds": 0.011040791999999999,
+      "medianPeakRssBytes": 61521920,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-6",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.061078957999999996,
+      "medianFirstCandidateSeconds": 0.011024084,
+      "medianPeakRssBytes": 61390848,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-10",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.06109912499999999,
+      "medianFirstCandidateSeconds": 0.011069750000000003,
+      "medianPeakRssBytes": 61587456,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "offset-known",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.06251829199999999,
+      "medianFirstCandidateSeconds": 0.04575525,
+      "medianPeakRssBytes": 60719104,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "offset-auto",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.471924666,
+      "medianFirstCandidateSeconds": 0.091623292,
+      "medianPeakRssBytes": 62472192,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "multiple",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 0,
+      "medianCompletionSeconds": null,
+      "medianFirstCandidateSeconds": 0.009680791,
+      "medianPeakRssBytes": 57081856,
+      "candidates": [
+        20,
+        20,
+        20
+      ],
+      "endTypes": [
+        "cap",
+        "cap",
+        "cap"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "none",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.052272292,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 58425344,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "impossible",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.00022091600000000077,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 49774592,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "impossible-auto",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.00021820800000000063,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 49823744,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-10-full",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.06159466699999999,
+      "medianFirstCandidateSeconds": 0.011145709,
+      "medianPeakRssBytes": 61652992,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "unicode-prefix",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.06099008300000001,
+      "medianFirstCandidateSeconds": 0.010969249999999998,
+      "medianPeakRssBytes": 61603840,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "short-crib",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.06448370899999999,
+      "medianFirstCandidateSeconds": 0.010976542,
+      "medianPeakRssBytes": 61833216,
+      "candidates": [
+        6,
+        6,
+        6
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    }
+  ],
+  "mutationResults": {
+    "A": [
+      {
+        "mutation": "baseline",
+        "returnCode": 0,
+        "failedAssertions": 0,
+        "assertionFailureObserved": false
+      },
+      {
+        "mutation": "reflector-C",
+        "returnCode": 1,
+        "failedAssertions": 4,
+        "assertionFailureObserved": true
+      },
+      {
+        "mutation": "rotor-V",
+        "returnCode": 1,
+        "failedAssertions": 3,
+        "assertionFailureObserved": true
+      },
+      {
+        "mutation": "notch-II",
+        "returnCode": 1,
+        "failedAssertions": 3,
+        "assertionFailureObserved": true
+      }
+    ],
+    "B": [
+      {
+        "mutation": "baseline",
+        "returnCode": 0,
+        "failedAssertions": 0
+      },
+      {
+        "mutation": "reflector-C",
+        "returnCode": 1,
+        "failedAssertions": 3
+      },
+      {
+        "mutation": "rotor-V",
+        "returnCode": 0,
+        "failedAssertions": 0
+      },
+      {
+        "mutation": "notch-II",
+        "returnCode": 1,
+        "failedAssertions": 2
+      }
+    ]
+  },
+  "browserChecks": {
+    "A": {
+      "case": "pairs-10-full",
+      "status": "Alla m\u00f6jliga startpositioner och valda placeringar har unders\u00f6kts. En kandidat visas. H\u00f6gst en panel per start och placering visas. En enda tr\u00e4ff garanterar d\u00e4rf\u00f6r inte en unik nyckel.",
+      "candidates": 1,
+      "handoff": {
+        "output": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+        "input": "XRUZBGXCYBBFGRNMYANYSRGKPZZXXFIWIWRSWLXOYRMSVPDYJAXYMRNQSMZPVBPZJQWLIM",
+        "ref": "C",
+        "ring": "M"
+      },
+      "handoffAfterEditsPassed": true,
+      "mobile": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "cancelStatus": "S\u00f6kningen avbr\u00f6ts. 0 kandidater hittades i den unders\u00f6kta delen. Resterande kombinationer \u00e4r inte kontrollerade.",
+      "repeatedSearchStatus": "Om\u00f6jlig cribplacering: minst en bokstav skulle krypteras till sig sj\u00e4lv i varje pr\u00f6vad placering. Enigma till\u00e5ter aldrig detta. \u00c4ndra cribben eller dess placering.",
+      "externalRuntimeRequests": []
+    },
+    "B": {
+      "case": "pairs-10-full",
+      "status": "En kandidat hittades. Ol\u00f6sta kopplingar kan ge fler fullst\u00e4ndiga nycklar; kontrollera hela meddelandet i simulatorn. 17\u00a0576 / 17\u00a0576 startpositioner och placeringar \u00b7 0.1 s. 0 placeringar utesl\u00f6ts av sj\u00e4lv-kryptering.",
+      "candidates": 1,
+      "handoff": {
+        "output": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+        "input": "XRUZBGXCYBBFGRNMYANYSRGKPZZXXFIWIWRSWLXOYRMSVPDYJAXYMRNQSMZPVBPZJQWLIM",
+        "ref": "C",
+        "ring": "M"
+      },
+      "handoffAfterEditsPassed": true,
+      "mobile": {
+        "width": 390,
+        "scrollWidth": 390
+      },
+      "cancelStatus": "Avbruten efter 1\u00a0664 av 33\u00a0411\u00a0976 startpositioner och placeringar. 0 kandidater sparade. Resultatet \u00e4r ofullst\u00e4ndigt.",
+      "repeatedSearchStatus": "Om\u00f6jlig crib: p\u00e5 varje vald placering skulle minst en bokstav krypteras till sig sj\u00e4lv. Enigma kan aldrig g\u00f6ra det. Byt crib eller placering. 0 / 0 startpositioner och placeringar \u00b7 0.0 s. 3 placeringar utesl\u00f6ts av sj\u00e4lv-kryptering.",
+      "externalRuntimeRequests": []
+    }
+  }
+}

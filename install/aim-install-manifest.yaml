@@ -119,8 +119,26 @@ aimInstallManifest:
       targetOwned: true
     aimUi:
       files:
+        - scripts/aim_http.py
+        - scripts/aim_engineering.py
+        - scripts/aim_quality/__init__.py
+        - scripts/aim_quality/files.py
+        - scripts/aim_quality/skills.py
+        - scripts/aim_quality/evidence.py
+        - scripts/aim_quality/timing.py
+        - scripts/aim_quality/profiles.py
+        - scripts/aim_quality/localities.py
+        - scripts/aim_quality/delegation.py
+        - scripts/aim_quality/review.py
+        - scripts/aim_quality/knowledge.py
+        - scripts/aim_installer/__init__.py
+        - scripts/aim_installer/yaml_lite.py
+        - scripts/aim_validator/__init__.py
+        - scripts/aim_validator/schema_subset.py
+        - scripts/aim_validator/profile_contract.py
         - scripts/aim_activation.py
         - scripts/aim_start.py
+        - scripts/aim_recovery.py
         - scripts/aim_catalog_repair.py
         - scripts/aim_backlog.py
         - scripts/aim_portfolio.py

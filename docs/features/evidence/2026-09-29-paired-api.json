@@ -1,0 +1,118 @@
+{
+  "task": "Held-out Team Notes API",
+  "model": "gpt-6-astra",
+  "reasoningEffort": "high",
+  "runtimeEnvironment": {
+    "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+    "os": "macOS-27.2-arm64-arm-64bit",
+    "machine": "arm64"
+  },
+  "variants": {
+    "A": {
+      "elapsedSeconds": 534,
+      "httpCasesPassed": 129,
+      "httpCasesTotal": 129,
+      "restartPersistence": true,
+      "nativeTests": 10,
+      "mutationsDetected": 3,
+      "mutationTotal": 3,
+      "benchmark": {
+        "notesPerTenant": 10000,
+        "bodyBytes": 128,
+        "setupSeconds": 32.6004665,
+        "measurement": "Warm server; fresh HTTP connection per request; serial requests; wall latency includes client and transport",
+        "workloads": [
+          {
+            "name": "list-50",
+            "samples": 200,
+            "medianMs": 0.5018335,
+            "p95Ms": 0.534166,
+            "maxMs": 0.574209
+          },
+          {
+            "name": "read",
+            "samples": 500,
+            "medianMs": 0.421,
+            "p95Ms": 0.456,
+            "maxMs": 10.00075
+          },
+          {
+            "name": "optimistic-update",
+            "samples": 200,
+            "medianMs": 1.3583129999999999,
+            "p95Ms": 1.5225,
+            "maxMs": 6.864833
+          }
+        ],
+        "serverResources": {
+          "exitCode": -15,
+          "peakRssBytes": 20561920,
+          "userCpuSeconds": 2.996241,
+          "systemCpuSeconds": 9.275015,
+          "scope": "server process lifetime including startup and fixture setup; wait4 rusage; excludes HTTP client"
+        }
+      }
+    },
+    "B": {
+      "elapsedSeconds": 828.722,
+      "httpCasesPassed": 129,
+      "httpCasesTotal": 129,
+      "restartPersistence": true,
+      "nativeTests": 12,
+      "mutationsDetected": 3,
+      "mutationTotal": 3,
+      "benchmark": {
+        "notesPerTenant": 10000,
+        "bodyBytes": 128,
+        "setupSeconds": 30.915888125,
+        "measurement": "Warm server; fresh HTTP connection per request; serial requests; wall latency includes client and transport",
+        "workloads": [
+          {
+            "name": "list-50",
+            "samples": 200,
+            "medianMs": 0.500958,
+            "p95Ms": 0.541792,
+            "maxMs": 0.590375
+          },
+          {
+            "name": "read",
+            "samples": 500,
+            "medianMs": 0.4247705,
+            "p95Ms": 0.46225,
+            "maxMs": 1.665708
+          },
+          {
+            "name": "optimistic-update",
+            "samples": 200,
+            "medianMs": 1.4065,
+            "p95Ms": 1.608166,
+            "maxMs": 2.083208
+          }
+        ],
+        "serverResources": {
+          "exitCode": -15,
+          "peakRssBytes": 19431424,
+          "userCpuSeconds": 3.142513,
+          "systemCpuSeconds": 9.038269,
+          "scope": "server process lifetime including startup and fixture setup; wait4 rusage; excludes HTTP client"
+        }
+      }
+    }
+  },
+  "integrity": {
+    "initialFiles": 60,
+    "initialChanged": [],
+    "submissions": {
+      "A": {
+        "files": 9,
+        "changed": []
+      },
+      "B": {
+        "files": 22,
+        "changed": []
+      }
+    }
+  },
+  "judgment": "No blanket winner: AIM submission took longer, modularized responsibilities and added local-origin defenses; runtime similar and peak RSS somewhat lower in this one run. No safety-standard certification or general model superiority follows.",
+  "archive": "/Users/jonaseriksson/Documents/Codex/2026-09-29/aim-permissions-pilot"
+}

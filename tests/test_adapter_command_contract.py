@@ -21,6 +21,20 @@ PACKAGE_REFERENCE_RE = re.compile(
 )
 
 
+def read_contract_surface(relative: str) -> str:
+    """Follow the two explicitly routed command references, retaining assertions.
+
+    A thin entry point need not duplicate every rule. Removing its explicit
+    routing reference still makes the corresponding parity assertions fail.
+    """
+    content = (REPO_ROOT / relative).read_text(encoding="utf-8")
+    if relative == "adapters/portable/agile-iteration-method/SKILL.md":
+        for name in ("skill-command-runtime.md", "skill-completion.md"):
+            if f"`references/{name}`" in content:
+                content += "\n" + (REPO_ROOT / "docs/workflow" / name).read_text(encoding="utf-8")
+    return content
+
+
 class AdapterCommandContractTests(unittest.TestCase):
     def test_reviewed_catalog_repair_is_shared_and_package_owned(self) -> None:
         surfaces = (
@@ -38,7 +52,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             "install/aim-install-manifest.yaml",
         )
         combined = "\n".join(
-            (REPO_ROOT / relative).read_text(encoding="utf-8")
+            read_contract_surface(relative)
             for relative in surfaces
         ).lower()
         for marker in (
@@ -93,11 +107,11 @@ class AdapterCommandContractTests(unittest.TestCase):
             ".claude/commands/discuss-aim.md",
         )
         combined = "\n".join(
-            (REPO_ROOT / relative).read_text(encoding="utf-8")
+            read_contract_surface(relative)
             for relative in surfaces
         )
         for relative in surfaces:
-            content = (REPO_ROOT / relative).read_text(encoding="utf-8")
+            content = read_contract_surface(relative)
             with self.subTest(surface=relative):
                 self.assertIn("/aim discuss", content)
         for marker in (
@@ -115,7 +129,7 @@ class AdapterCommandContractTests(unittest.TestCase):
         )
         portable = (
             REPO_ROOT / "adapters/portable/agile-iteration-method/SKILL.md"
-        ).read_text(encoding="utf-8")
+        ).read_text(encoding="utf-8") + (REPO_ROOT / "docs/workflow/skill-user-guide.md").read_text(encoding="utf-8")
         for marker in (
             "Activate INC-UI-CONTROL-001",
             "Set portfolio capacity to 2",
@@ -140,7 +154,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             ".claude/commands/ui-aim.md",
         )
         for relative in surfaces:
-            content = (REPO_ROOT / relative).read_text(encoding="utf-8")
+            content = read_contract_surface(relative)
             with self.subTest(surface=relative):
                 self.assertIn("/aim ui", content)
                 self.assertIn("loopback", content.lower())
@@ -160,11 +174,11 @@ class AdapterCommandContractTests(unittest.TestCase):
             ".claude/commands/to-backlog-aim.md",
         )
         for relative in surfaces:
-            content = (REPO_ROOT / relative).read_text(encoding="utf-8")
+            content = read_contract_surface(relative)
             with self.subTest(surface=relative):
                 self.assertIn("/aim to-backlog", content)
         combined = "\n".join(
-            (REPO_ROOT / relative).read_text(encoding="utf-8") for relative in surfaces
+            read_contract_surface(relative) for relative in surfaces
         )
         for marker in (
             "untrusted evidence",
@@ -188,7 +202,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             ".claude/commands/start-aim.md",
         )
         combined = "\n".join(
-            (REPO_ROOT / relative).read_text(encoding="utf-8")
+            read_contract_surface(relative)
             for relative in surfaces
         )
         for marker in (
@@ -217,7 +231,7 @@ class AdapterCommandContractTests(unittest.TestCase):
         )
         for relative in runtime_surfaces:
             content = " ".join(
-                (REPO_ROOT / relative).read_text(encoding="utf-8").split()
+                read_contract_surface(relative).split()
             ).lower().replace("-", " ")
             with self.subTest(surface=relative):
                 self.assertIn("gate e", content)
@@ -252,7 +266,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             ".claude/commands/start-aim.md",
         ):
             content = " ".join(
-                (REPO_ROOT / relative).read_text(encoding="utf-8").split()
+                read_contract_surface(relative).split()
             ).lower().replace("-", " ")
             with self.subTest(start_surface=relative):
                 self.assertIn("epic closure", content)
@@ -275,7 +289,7 @@ class AdapterCommandContractTests(unittest.TestCase):
         )
         for relative in runtime_surfaces:
             content = " ".join(
-                (REPO_ROOT / relative).read_text(encoding="utf-8").split()
+                read_contract_surface(relative).split()
             ).lower().replace("-", " ")
             with self.subTest(surface=relative):
                 for marker in (
@@ -318,7 +332,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             ".claude/agents/aim-po.md",
         ):
             content = " ".join(
-                (REPO_ROOT / relative).read_text(encoding="utf-8").split()
+                read_contract_surface(relative).split()
             ).lower().replace("-", " ")
             with self.subTest(po_specialist=relative):
                 self.assertIn("done_increment_accepted", content)
@@ -338,7 +352,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             "adapters/codex/agile-iteration-method/SKILL.md",
         )
         for relative in surfaces:
-            content = (REPO_ROOT / relative).read_text(encoding="utf-8")
+            content = read_contract_surface(relative)
             with self.subTest(surface=relative):
                 self.assertIn("aim_runtime_contract.py", content)
                 self.assertIn("gate_b_pending", content)
@@ -369,7 +383,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "3.0.8")
+        self.assertEqual(version, "3.1.0")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",

@@ -44,6 +44,9 @@ from aim_runtime_contract import (
     terminal_acceptance,
 )
 from aim_ui_control import AimUiControlError, resolve_product_version
+from aim_http import local_request_allowed
+from aim_quality.files import read_evidence
+from aim_quality.profiles import read_repo_profile
 
 READ_MODEL_VERSION = "9.0"
 PORTFOLIO_VERSION = "1.0"
@@ -97,6 +100,7 @@ UI_PROTOCOL_VERSION = "1.3"
 PAYLOAD_FILES = (
     "scripts/aim_ui_control.py",
     "scripts/aim_ui.py",
+    "scripts/aim_http.py",
     "scripts/aim_recovery.py",
     "scripts/aim_codex_bridge.py",
     "scripts/aim_runtime_contract.py",
@@ -1199,45 +1203,50 @@ def _discussion_projection(
     }
 
 
+def _repo_calibration(repo_root: Path) -> dict[str, Any]:
+    """Project declared coverage, never inferred calibration or semantic truth."""
+    result = {
+        "status": "unavailable", "scope": {"kind": "unspecified"},
+        "configured": False, "repositoryReady": False, "hasKnowledge": False,
+        "semanticTruthVerified": False, "label": "Calibration is not established",
+        "diagnostics": [],
+    }
+    try:
+        document, issues = read_repo_profile(repo_root)
+    except (OSError, ValueError, UnicodeError, IndexError, RecursionError) as exc:
+        result["diagnostics"] = [str(exc)]
+        return result
+    if issues:
+        result["diagnostics"] = [str(issue) for issue in issues]
+        return result
+    profile = document["aimRepoProfile"]
+    calibration = profile["calibration"]
+    scope = calibration.get("scope", {"kind": "unspecified"})
+    has_knowledge = any(profile["repoKnowledge"].values())
+    status = calibration["status"]
+    coverage = (
+        "repository"
+        if scope["kind"] == "repository"
+        else "localities: " + ", ".join(scope["localityIds"])
+        if scope["kind"] == "localities"
+        else "unspecified scope (repository coverage is not established)"
+    )
+    result.update({
+        "status": status, "scope": scope, "hasKnowledge": has_knowledge,
+        "configured": has_knowledge and status in {"ready", "partially_ready"},
+        "repositoryReady": has_knowledge and status == "ready" and scope["kind"] == "repository",
+        "label": (
+            f"Calibration reported {status.replace('_', ' ')} for {coverage}"
+            if has_knowledge
+            else "Calibration is not established: the profile contains no repository knowledge"
+        ),
+    })
+    return result
+
+
 def _repo_calibrated(repo_root: Path) -> bool:
-    """Return a presentation-only calibration signal from the shared profile."""
-
-    profile = repo_root / "aim.profile.yaml"
-    if profile.is_symlink() or not profile.is_file() or profile.stat().st_size > 1_000_000:
-        return False
-    lines = profile.read_text(encoding="utf-8", errors="replace").splitlines()
-
-    def indentation(line: str) -> int:
-        return len(line) - len(line.lstrip(" "))
-
-    profile_indent: int | None = None
-    calibration_indent: int | None = None
-    calibration_child_indent: int | None = None
-    for line in lines:
-        stripped = line.strip()
-        leading = line[: len(line) - len(line.lstrip())]
-        if not stripped or stripped.startswith("#") or "\t" in leading:
-            continue
-        current_indent = indentation(line)
-        if profile_indent is None:
-            if re.fullmatch(r"aimRepoProfile:\s*(?:#.*)?", stripped):
-                profile_indent = current_indent
-            continue
-        if current_indent <= profile_indent:
-            break
-        if calibration_indent is None:
-            if re.fullmatch(r"calibration:\s*(?:#.*)?", stripped):
-                calibration_indent = current_indent
-            continue
-        if current_indent <= calibration_indent:
-            break
-        if calibration_child_indent is None:
-            calibration_child_indent = current_indent
-        if current_indent == calibration_child_indent and re.fullmatch(
-            r"status:\s*(?:ready|[\"']ready[\"'])\s*(?:#.*)?", stripped
-        ):
-            return True
-    return False
+    """Return explicit, knowledge-bearing repository coverage for presentation."""
+    return _repo_calibration(repo_root)["repositoryReady"]
 
 
 def _recovery_projection(
@@ -1316,24 +1325,25 @@ def _recovery_projection(
             "readOnly": True,
         }
     if source_kind == "uninitialized" and not roadmap["configured"]:
-        calibrated = _repo_calibrated(repo_root)
+        calibration = _repo_calibration(repo_root)
+        configured = calibration["configured"]
         return {
             "kind": "empty_repository",
             "title": "AIM is ready for a Roadmap",
             "message": (
-                "This calibrated repository has no AIM runtime. Discuss the next product "
+                f"{calibration['label']}. This repository has no AIM runtime. Discuss the next product "
                 "direction, then explicitly promote the result into a Roadmap."
-                if calibrated
+                if configured
                 else "This repository has no AIM runtime. Calibrate it first, then discuss "
                 "the product direction before creating a Roadmap."
             ),
             "recommendedAction": {
                 "label": (
-                    "Discuss the next Roadmap" if calibrated else "Calibrate this repository"
+                    "Discuss the next Roadmap" if configured else "Calibrate this repository"
                 ),
                 "intent": (
                     '/aim discuss "What outcomes belong in our next Roadmap?"'
-                    if calibrated
+                    if configured
                     else "/aim calibrate-repo"
                 ),
             },
@@ -1343,7 +1353,7 @@ def _recovery_projection(
             "found": {
                 "checkpointCount": 0,
                 "history": "none",
-                "contract": "calibrated; runtime not initialized" if calibrated else "not initialized",
+                "contract": f"{calibration['label']}; runtime not initialized" if configured else "not initialized",
                 "roadmap": "not created",
                 "portfolioCatalog": "not configured",
             },
@@ -2007,12 +2017,17 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     """Build a safe multi-Epic UI projection without mutating the repository."""
 
     repo_root = repo_root.resolve()
-    aim_root = (repo_root / ".aim").resolve()
+    # Preserve the lexical root until the link check has run. Resolving first
+    # hides the link from workspace discovery and can traverse another project.
+    aim_root = repo_root / ".aim"
+    if aim_root.is_symlink():
+        raise AimUiError("The AIM directory must not be a symbolic link.")
     warnings: list[str] = []
     source_kind, workspaces, workspace_diagnostics = _workspace_roots(
         repo_root, aim_root, warnings
     )
-    calibrated = _repo_calibrated(repo_root)
+    calibration = _repo_calibration(repo_root)
+    configured = calibration["configured"]
     generated_at = utc_now()
     base = {
         "readModelVersion": READ_MODEL_VERSION,
@@ -2023,7 +2038,8 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             "refreshMs": DEFAULT_REFRESH_MS,
             "workspaceCount": len(workspaces),
             "retainedWorkspaceCount": len(workspaces),
-            "calibrated": calibrated,
+            "calibrated": calibration["repositoryReady"],
+            "calibration": calibration,
         },
         "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
         "epics": [],
@@ -2046,13 +2062,13 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             {
                 "state": "not_initialized",
                 "message": (
-                    "AIM UI is ready. This calibrated repository has no AIM runtime yet."
-                    if calibrated
+                    f"AIM UI is ready. {calibration['label']}. This repository has no AIM runtime yet."
+                    if configured
                     else "AIM UI is ready. This repository has no AIM runtime yet."
                 ),
                 "nextAction": (
                     '/aim discuss "What outcomes belong in our next Roadmap?"'
-                    if calibrated
+                    if configured
                     else "/aim calibrate-repo"
                 ),
             }
@@ -2304,18 +2320,22 @@ def build_board(repo_root: Path) -> dict[str, Any]:
 
 
 def resolve_evidence_path(repo_root: Path, requested: str) -> Path:
-    """Resolve a requested evidence path strictly inside the repo's .aim root."""
+    """Preflight a contained evidence path; use read_evidence for the actual read.
+
+    Keep the lexical path so descriptor-based reads can reject every symlink
+    component even if the path changes after this preflight.
+    """
 
     repo_root = repo_root.resolve()
-    aim_root = (repo_root / ".aim").resolve()
     relative = Path(unquote(requested))
-    if relative.is_absolute() or not relative.parts or relative.parts[0] != ".aim":
+    if (relative.is_absolute() or not relative.parts or relative.parts[0] != ".aim"
+            or ".." in relative.parts):
         raise AimUiError("Evidence paths must stay inside .aim.")
-    candidate = (repo_root / relative).resolve()
-    try:
-        candidate.relative_to(aim_root)
-    except ValueError as exc:
-        raise AimUiError("Evidence path leaves the .aim workspace.") from exc
+    candidate = repo_root
+    for component in relative.parts:
+        candidate = candidate / component
+        if candidate.is_symlink():
+            raise AimUiError("Evidence paths must not traverse symbolic links.")
     if not candidate.is_file():
         raise AimUiError("Evidence file was not found.")
     return candidate
@@ -2334,6 +2354,8 @@ class AimUiServer(ThreadingHTTPServer):
         product_version: str | None = None,
         quiet: bool = False,
     ):
+        if address[0] not in {"127.0.0.1", "localhost", "::1"}:
+            raise AimUiError("AIM UI must bind to a loopback address.")
         self.repo_root = repo_root.resolve()
         self.ui_root = ui_root.resolve()
         self.instance_id = instance_id
@@ -2352,6 +2374,18 @@ class AimUiServer(ThreadingHTTPServer):
 
 class AimUiHandler(BaseHTTPRequestHandler):
     server: AimUiServer
+
+    def parse_request(self) -> bool:
+        if not super().parse_request():
+            return False
+        if not local_request_allowed(
+            self.headers, self.server.server_address[1],
+            mutation=self.command not in {"GET", "HEAD", "OPTIONS"},
+        ):
+            self.close_connection = True
+            self._json(HTTPStatus.FORBIDDEN, {"error": "Local request authority was not accepted."})
+            return False
+        return True
 
     def log_message(self, format: str, *args: object) -> None:
         if not self.server.quiet:
@@ -2383,7 +2417,7 @@ class AimUiHandler(BaseHTTPRequestHandler):
             raise AimUiError("Action request origin was not accepted.")
         try:
             value = json.loads(self.rfile.read(length))
-        except json.JSONDecodeError as exc:
+        except (json.JSONDecodeError, UnicodeDecodeError) as exc:
             raise AimUiError("Action request contains invalid JSON.") from exc
         if not isinstance(value, dict):
             raise AimUiError("Action request must contain a JSON object.")
@@ -2444,7 +2478,11 @@ class AimUiHandler(BaseHTTPRequestHandler):
             )
             return
         if parsed.path == "/api/board":
-            board = build_board(self.server.repo_root)
+            try:
+                board = build_board(self.server.repo_root)
+            except AimUiError as exc:
+                self._json(HTTPStatus.SERVICE_UNAVAILABLE, {"error": str(exc)})
+                return
             board["product"] = {
                 "name": "AIM",
                 "version": self.server.product_version,
@@ -2500,8 +2538,10 @@ class AimUiHandler(BaseHTTPRequestHandler):
             requested = parse_qs(parsed.query).get("path", [""])[0]
             try:
                 evidence = resolve_evidence_path(self.server.repo_root, requested)
-                body = evidence.read_bytes()
-            except (AimUiError, OSError) as exc:
+                body = read_evidence(
+                    self.server.repo_root, evidence.relative_to(self.server.repo_root).as_posix(),
+                )
+            except (AimUiError, OSError, ValueError) as exc:
                 self._json(HTTPStatus.NOT_FOUND, {"error": str(exc)})
                 return
             self._send(HTTPStatus.OK, body, "text/plain; charset=utf-8")

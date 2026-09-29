@@ -10,7 +10,9 @@
     "references/adapter-command-contract.md",
     "references/adapter-entry-model.md",
     "references/adapter-skill-bootstrap.md",
+    "references/adaptive-execution.md",
     "references/agile-iteration-method.md",
+    "references/engineering-delivery.md",
     "references/epic-closure-truth-audit.md",
     "references/install/aim-install-manifest.yaml",
     "references/operating-modes.md",
@@ -20,24 +22,48 @@
     "references/repo-awareness-calibration.md",
     "references/repo-awareness-two-layer-model.md",
     "references/repo-awareness.md",
+    "references/role-skill-dev.md",
+    "references/role-skill-po.md",
+    "references/role-skill-reviewer.md",
+    "references/role-skill-tdo.md",
     "references/schemas/aim-personal-hints.schema.json",
     "references/schemas/aim-portfolio-run.schema.json",
     "references/schemas/aim-project-roles.schema.json",
     "references/schemas/aim-repo-profile.schema.json",
     "references/schemas/aim-runtime-state.schema.json",
+    "references/skill-command-runtime.md",
+    "references/skill-completion.md",
+    "references/skill-user-guide.md",
     "references/version-and-installation.md",
     "scripts/aim_actions.py",
     "scripts/aim_activation.py",
     "scripts/aim_backlog.py",
     "scripts/aim_catalog_repair.py",
     "scripts/aim_codex_bridge.py",
+    "scripts/aim_engineering.py",
+    "scripts/aim_http.py",
+    "scripts/aim_installer/__init__.py",
+    "scripts/aim_installer/yaml_lite.py",
     "scripts/aim_portfolio.py",
     "scripts/aim_portfolio_run.py",
+    "scripts/aim_quality/__init__.py",
+    "scripts/aim_quality/delegation.py",
+    "scripts/aim_quality/evidence.py",
+    "scripts/aim_quality/files.py",
+    "scripts/aim_quality/knowledge.py",
+    "scripts/aim_quality/localities.py",
+    "scripts/aim_quality/profiles.py",
+    "scripts/aim_quality/review.py",
+    "scripts/aim_quality/skills.py",
+    "scripts/aim_quality/timing.py",
     "scripts/aim_recovery.py",
     "scripts/aim_runtime_contract.py",
     "scripts/aim_start.py",
     "scripts/aim_ui.py",
-    "scripts/aim_ui_control.py"
+    "scripts/aim_ui_control.py",
+    "scripts/aim_validator/__init__.py",
+    "scripts/aim_validator/profile_contract.py",
+    "scripts/aim_validator/schema_subset.py"
   ],
   "generatedNotice": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
   "generator": "python3 scripts/build_public_skill.py",
@@ -52,29 +78,74 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "3.0.8",
+  "productVersion": "3.1.0",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
     "repoProfile": "0.2"
   },
-  "publicSkillPackageVersion": 12,
+  "publicSkillPackageVersion": 16,
   "runtimeContractVersion": "2.0",
   "runtimeStateSchemaVersion": "1.0",
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "6a8c2e6de3419e0d4d96fa2c230e845cf9c633638608729ad9c0d0f2708b9459",
+      "sha256": "5bd202826a6cffbe54baf9ecd552d0f9baca7442ea03164268e16b6e0cc82fa0",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
+      "output": "references/adaptive-execution.md",
+      "sha256": "6aa63f0929f6688a284b677acfd393b1789b4524dba7d3d45aa7a3f9397b9597",
+      "source": "docs/workflow/adaptive-execution.md"
+    },
+    {
+      "output": "references/engineering-delivery.md",
+      "sha256": "b3716b2441b37c36300f0b7db44a229d96639726feb7c634371e00551614f551",
+      "source": "docs/workflow/engineering-delivery.md"
+    },
+    {
+      "output": "references/role-skill-po.md",
+      "sha256": "c8b77ac0cc2b8041452129c296098750f7d2e7d1f13a2bb37c9351ba29b35967",
+      "source": "docs/workflow/role-skill-po.md"
+    },
+    {
+      "output": "references/role-skill-tdo.md",
+      "sha256": "9c9ebe54aabbe746ef63d3825aa0fe59a2938c85735bbe8d42e0e592bcad2019",
+      "source": "docs/workflow/role-skill-tdo.md"
+    },
+    {
+      "output": "references/role-skill-dev.md",
+      "sha256": "bd0c1ace0cfeadb2471a17ca3ddb219cf04650ebe5aaf5ae68575a8686ec498c",
+      "source": "docs/workflow/role-skill-dev.md"
+    },
+    {
+      "output": "references/role-skill-reviewer.md",
+      "sha256": "da46a5a4e7f0a1e2c0e72f1b0c30dc9a7f6d7c0356f1c1088d7cff0ea6f4152a",
+      "source": "docs/workflow/role-skill-reviewer.md"
+    },
+    {
+      "output": "references/skill-user-guide.md",
+      "sha256": "c137fc113ee97afab93e880d46d08c3a964411629c145b2cc41c367dc165cb8c",
+      "source": "docs/workflow/skill-user-guide.md"
+    },
+    {
+      "output": "references/skill-command-runtime.md",
+      "sha256": "1788df6a7a0fa570aaf97710e288dcdb2566d07c5acd7bbc890aec1024a4201c",
+      "source": "docs/workflow/skill-command-runtime.md"
+    },
+    {
+      "output": "references/skill-completion.md",
+      "sha256": "c0b652b96c92cddb0a84697f483d1e71d9eb5d8a1d1c44840dd36bcb4e32b55d",
+      "source": "docs/workflow/skill-completion.md"
+    },
+    {
       "output": "references/agile-iteration-method.md",
-      "sha256": "94b3efd500e339ee4965d24bc2bfd311b196960efa871ac9bc7364c61ebfbde0",
+      "sha256": "83514dd8c4568004a9653a5304bf787e6e9c978a66a7854f79a2b5a6de4f9114",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "f01deb42f30df01f4053579e9e4880de1e8a0c66637a85c225e02db0f8984770",
+      "sha256": "fbf309ce379fd3a200dfcd6b2f6787a922aabc044542acfe68766fe16991ea17",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
@@ -89,12 +160,12 @@
     },
     {
       "output": "references/project-agent-configuration.md",
-      "sha256": "8afea232621542e5bf6ba0262d8b2eda3429d9d3723e197cf122d970178d7d7d",
+      "sha256": "c3edc9d45ec1d0aac26d5fa25a718feef9382f034804c2e1031c7843781b5cc1",
       "source": "docs/workflow/project-agent-configuration.md"
     },
     {
       "output": "references/reflection.md",
-      "sha256": "0c5abd339aec85902b6de43afa465643304dff870b1ba2f3433aa1982d117f54",
+      "sha256": "7db81348ce6a7352df6c7b80331dd337e0737941280dca608a867c73dc8c2b2e",
       "source": "docs/workflow/reflection.md"
     },
     {
@@ -104,17 +175,17 @@
     },
     {
       "output": "references/product-coherence-validation.md",
-      "sha256": "5593e55fddadf807d09417411efa377eab69a4c63bb36434936b5e8ca17aa1cf",
+      "sha256": "ddd12308cc223c820b33bed847997695ae9ea94e3df7e237515a8f479539bd79",
       "source": "docs/workflow/product-coherence-validation.md"
     },
     {
       "output": "references/epic-closure-truth-audit.md",
-      "sha256": "805d3dd1ea76455f8d4144549dfb65b26e4c7909f5fde475d307770338c4b65e",
+      "sha256": "8033c0cdbd9a6340658ef70c0659d0dcb3d4ac3c0693a724eeddd65e40e595bf",
       "source": "docs/workflow/epic-closure-truth-audit.md"
     },
     {
       "output": "references/repo-awareness-calibration.md",
-      "sha256": "73ee3b64d85e95421d2a3bd427120f0f57056e50277f7c4d5fdef6e8291cd34d",
+      "sha256": "e72a9d35144a833fc98f09eb1a692ec28b265eca460efdff8efbb4bd7de5fcd9",
       "source": "docs/workflow/repo-awareness-calibration.md"
     },
     {
@@ -129,12 +200,12 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "2f16b5253a559afaa14ceefa5daf130790fe5826d78fe01efb72b8105d25a70e",
+      "sha256": "941cae3e9aa901b012836f118a727aa4128b844767e9987f41c19cb787faac48",
       "source": "docs/workflow/version-and-installation.md"
     },
     {
       "output": "references/schemas/aim-repo-profile.schema.json",
-      "sha256": "7703cb84e1744420542ef317ebdbf7e047009c53519f30f23e8c234d7afffae9",
+      "sha256": "33851914775b14cfb0bbd96d6b0431c61843ec8b08d28f376ec031dbe6e8173d",
       "source": "schemas/aim-repo-profile.schema.json"
     },
     {
@@ -144,7 +215,7 @@
     },
     {
       "output": "references/schemas/aim-project-roles.schema.json",
-      "sha256": "d859eca8c12702384e0c1a1a0341c082489b07782b2c1043242320a72d965e3e",
+      "sha256": "0c51c5a8891c126e340546a5c816a30c271db15dcf5ac48f8d8dcb9aca523f90",
       "source": "schemas/aim-project-roles.schema.json"
     },
     {
@@ -159,7 +230,7 @@
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
-      "sha256": "0b9e556be5e1c8bb188da7655a19fe7e02f00191bf57e0d8f3d112634e22ff35",
+      "sha256": "9696329efc24696057a2069052604a5f0d95b7d225a0f6dd038574e3f6672345",
       "source": "install/aim-install-manifest.yaml"
     },
     {
@@ -169,7 +240,7 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "2a612f3f9494fa52305039d3474f9448e4eadcdbca3517a767df080009a393e9",
+      "sha256": "b2f44d3b6e29f8b1b73ea4735f006affc4d198e1fd9c7d50e736159b1ef636c6",
       "source": "VERSION"
     },
     {
@@ -179,22 +250,107 @@
     },
     {
       "output": "manifest.json",
-      "sha256": "fbcbbbd51b678290f2d234f8a1fb8a57e7020b62e4618a9c053d9e540e728a91",
+      "sha256": "a249e13d72836dac542435d4fb5436c3d131d4dd1dbb15f09d8c4a3555de6c25",
       "source": "scripts/build_public_skill.py"
     },
     {
+      "output": "scripts/aim_http.py",
+      "sha256": "512ad497b3ec35eeb32f363b849f99df44299dca6f79e5b16039fba16075c781",
+      "source": "scripts/aim_http.py"
+    },
+    {
+      "output": "scripts/aim_engineering.py",
+      "sha256": "7bd1cc16a0811a07414f1be48e9d4cedc8e908d8329584083979a09d83efa929",
+      "source": "scripts/aim_engineering.py"
+    },
+    {
+      "output": "scripts/aim_quality/__init__.py",
+      "sha256": "e8a079b0bd5eb312b66eb1e79d8e042d553b68ed289f1e931f7dfcdaeb4a4e11",
+      "source": "scripts/aim_quality/__init__.py"
+    },
+    {
+      "output": "scripts/aim_quality/files.py",
+      "sha256": "45a7023bc7acf0a9695bc94cfd94c3a0143b5cc3aab74f8c17ae2f710192f664",
+      "source": "scripts/aim_quality/files.py"
+    },
+    {
+      "output": "scripts/aim_quality/skills.py",
+      "sha256": "7d0ce5a5c3fa35166aed11d8f3d03a007e647cf65257fa7f9418fa97d2f8b011",
+      "source": "scripts/aim_quality/skills.py"
+    },
+    {
+      "output": "scripts/aim_quality/evidence.py",
+      "sha256": "8137e2cd3e0393ec7ca2c422595654aa93f8661b469e39bfe9c3ffa8e54bd790",
+      "source": "scripts/aim_quality/evidence.py"
+    },
+    {
+      "output": "scripts/aim_quality/timing.py",
+      "sha256": "c4e73dda8c3fe5c0f80a793ba8052653aedff89169ce53928a401e0173e0c47d",
+      "source": "scripts/aim_quality/timing.py"
+    },
+    {
+      "output": "scripts/aim_quality/profiles.py",
+      "sha256": "a080792129b05aa5d6e3b1e5cb4627c967496d9632b0549b4ed08dd0fabb8c41",
+      "source": "scripts/aim_quality/profiles.py"
+    },
+    {
+      "output": "scripts/aim_quality/localities.py",
+      "sha256": "3cb01551b9a11ada643e93da11e7b47de1d805a318b2058e817404094778c4d8",
+      "source": "scripts/aim_quality/localities.py"
+    },
+    {
+      "output": "scripts/aim_quality/delegation.py",
+      "sha256": "6b6cc8ad066616a47914382db71eaead26620ca7bb1ebea62d2b596a1007e918",
+      "source": "scripts/aim_quality/delegation.py"
+    },
+    {
+      "output": "scripts/aim_quality/review.py",
+      "sha256": "0e3e4bb172b55105186b5dcad60b9c2ea8246d322c8950245e181628aa3c3f21",
+      "source": "scripts/aim_quality/review.py"
+    },
+    {
+      "output": "scripts/aim_quality/knowledge.py",
+      "sha256": "4d458c9295dadedc3ad797d7e20a87991c94c82ddb370481410c0e48e721ef84",
+      "source": "scripts/aim_quality/knowledge.py"
+    },
+    {
+      "output": "scripts/aim_installer/__init__.py",
+      "sha256": "f28ba3a90601e4456e0d92d16ab7d6cc04a615940a8d4e4eb4215fb2a2e9cb76",
+      "source": "scripts/aim_installer/__init__.py"
+    },
+    {
+      "output": "scripts/aim_installer/yaml_lite.py",
+      "sha256": "73c0dc9780571cc86a4b19dbe2f4f3093c4a13faabb38a17656a99a88381b4b5",
+      "source": "scripts/aim_installer/yaml_lite.py"
+    },
+    {
+      "output": "scripts/aim_validator/__init__.py",
+      "sha256": "69054412a638d267647faef3076b4a88113b79fc7c37d08f3460177853296822",
+      "source": "scripts/aim_validator/__init__.py"
+    },
+    {
+      "output": "scripts/aim_validator/schema_subset.py",
+      "sha256": "b2633f3dec4659d9fe60e5873d20364debfa7a68289d4f9c550deb6ed1c2cf9e",
+      "source": "scripts/aim_validator/schema_subset.py"
+    },
+    {
+      "output": "scripts/aim_validator/profile_contract.py",
+      "sha256": "aa4f25f359c6e8f2ad93ad1cd0927a314d8dbdc7bb97c6af38b7a7234270c28f",
+      "source": "scripts/aim_validator/profile_contract.py"
+    },
+    {
       "output": "scripts/aim_runtime_contract.py",
-      "sha256": "29246556c8c35a9f589541a146080652d60d67ee5c26a0ee76998616af849164",
+      "sha256": "4bb2be54d094b6b18d2172de908db728d4d349268923ce526d633d6e1f368319",
       "source": "scripts/aim_runtime_contract.py"
     },
     {
       "output": "scripts/aim_activation.py",
-      "sha256": "335a9d97825db370e130a9948c8cd19eb080ac0b18d8db132e9ede57c1b7e192",
+      "sha256": "fcc7716329b23dc416058618a6b5824f92ebdbf2452ec561ef336a59a4a4a3f3",
       "source": "scripts/aim_activation.py"
     },
     {
       "output": "scripts/aim_start.py",
-      "sha256": "2f038c481d702fcc13b3d22ee78cdf44e242c326717c1e8b2f01fdf5074e30b7",
+      "sha256": "497cab0580cc72452020f17e1ced0b9c44c790ad6477bce9462b82e1280e4412",
       "source": "scripts/aim_start.py"
     },
     {
@@ -229,12 +385,12 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "fb37e57618173a7e861570b6e1f682d46d64f9b6b097f6bd147bb235f17364ab",
+      "sha256": "e263e22928a8ffdff50298939d86df85e79e0b41a21a147f77df5720ada85d1a",
       "source": "scripts/aim_ui.py"
     },
     {
       "output": "scripts/aim_ui_control.py",
-      "sha256": "07ec6196cbd6259953c3335cb274877c615a3ff09cbdfab27206c3d68d34a77d",
+      "sha256": "3e3c30d31eb535bfda1edf1cbc0809b26ee697bec3a06dae82186fdb858e75c5",
       "source": "scripts/aim_ui_control.py"
     },
     {

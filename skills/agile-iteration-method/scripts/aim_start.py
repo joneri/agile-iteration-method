@@ -208,15 +208,12 @@ def _validate_declared_state(raw: str, state: dict[str, Any]) -> None:
         raise AimStartError(f"Declared workspace {raw} has a non-canonical AIM mode.")
     if state.get("costProfile") not in {"Standard", "Cost Control", "Deep"}:
         raise AimStartError(f"Declared workspace {raw} has a non-canonical cost profile.")
-    updated_at = state.get("updatedAt")
-    if not isinstance(updated_at, str) or TIMESTAMP_PATTERN.fullmatch(updated_at) is None:
-        raise AimStartError(f"Declared workspace {raw} has a non-canonical timestamp.")
+    from aim_activation import validate_checkpoint_timestamp
+
     try:
-        datetime.strptime(updated_at, "%Y-%m-%dT%H:%M:%SZ")
+        validate_checkpoint_timestamp(state.get("updatedAt"))
     except ValueError as exc:
-        raise AimStartError(
-            f"Declared workspace {raw} has an impossible runtime timestamp."
-        ) from exc
+        raise AimStartError(f"Declared workspace {raw} has {exc}.") from exc
     if not isinstance(state.get("aimVersion"), str) or not state["aimVersion"]:
         raise AimStartError(f"Declared workspace {raw} has no AIM version.")
     if not isinstance(state.get("platform"), str) or not state["platform"]:

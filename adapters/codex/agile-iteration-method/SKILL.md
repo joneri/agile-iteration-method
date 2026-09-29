@@ -41,7 +41,22 @@ Treat `/aim <intent>` and explicit `$agile-iteration-method <intent>` as two
 ways to select this same skill contract. They must expose the same complete
 command family and state effects.
 
+## Adaptive product execution
+
+For product implementation or material review, read
+`references/adaptive-execution.md` before allocating work. Delegate independent
+activities when useful and permitted; use a separate final reviewer for material
+changes. Keep coordinator-owned runtime and user acceptance intact. Record actual
+agent IDs and current-code evidence; a sequential role switch is self-review.
+Do not load this contract for a simple status/help command.
+
 ## First Response
+
+For already-authorized Auto product work, infer provisional skills from binding
+requirements and reach the first technical risk experiment without an onboarding
+round-trip. An empty repo or absent profile is normal startup context. Use the
+trusted start helper once; retain Gate A/B decisions and state rules. This grants
+no new authority, changes no Strict decision and does not accept the product.
 
 Detect onboarding state first, then recommend exactly one next action whenever
 possible. For first-run, help, or "what should I do now" requests, answer in
@@ -89,7 +104,7 @@ Then perform only the context loading needed for that state:
 5. Read `aim.profile.yaml` when present as the primary shared repo-awareness source.
 6. Apply compatible Personal AIM hints from `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`.
 7. Use profile facts to choose locality, validation commands, short authoritative docs, risk zones, freshness triggers, and context to avoid before reading broader docs.
-8. Load `references/agile-iteration-method.md`, then only the package-local references required by the current role, gate, command, or risk.
+8. Consult the relevant section of `references/agile-iteration-method.md` only for a missing or disputed contract, then load only the package-local references required by the current role, gate, command, or risk.
 9. Load Codex-specific packaging only when Codex mechanics matter.
 10. Read ordinary repository maintainer docs only when the requested change actually needs them.
 11. Default to `Mode: Strict` unless the user explicitly chooses `Mode: Auto`.
@@ -310,9 +325,13 @@ PO performs a closure truth audit against the complete Epic and its declared
 `Outcome class: Product|Pilot|POC`. Every acceptance criterion must be `proven`
 with concrete evidence; counterevidence must be actively searched; unresolved
 findings, contradictions, and remaining gaps must be empty. Product and Pilot
-require an unassisted representative black-box pass. Synthetic, fixture,
-mocked, or implementation-assisted evidence may close only an explicitly
-bounded POC and must never be presented as Product evidence.
+require representative user-journey verification through the normal entry point.
+The implementing agent may perform this verification, including automated
+end-to-end tests; record the actual performer and any assistance. This permits
+implementer-run journey checks; it does not waive independent material-change
+review under `adaptive-execution.md`. Unassisted operation is required only when
+the user or project acceptance criteria require it. Synthetic or mocked evidence
+alone may close only an explicitly bounded POC, not prove a Product outcome.
 
 Missing or contradictory evidence forces `continue` and another coherent Done
 Increment; prefer that over premature closure. `split` cannot discard unmet
@@ -387,7 +406,7 @@ Use the shared bootstrap sequence:
 9. Resolve platform capability and repo-policy limits.
 10. Enter the role sequence.
 
-Only the main AIM thread may write `.aim/state.json`, advance gates, change role, change increment status, or accept/complete an Epic. Subagents, when explicitly allowed by the host and repo policy, may only produce scoped analysis in allowed locations and never own runtime state.
+The main AIM thread alone owns runtime (including Portfolio workspaces), gates, active role, status and acceptance. Permitted subagents may implement disjoint assigned product files or investigate/review read-only. Within `.aim/`, they may write only assigned `.aim/analysis/` output. Follow the adaptive execution contract.
 
 ## Role Loop
 
@@ -439,7 +458,7 @@ AIM allows focused files, components, hooks, helpers, domain modules, services, 
 Cost profile controls runtime depth, not approval semantics.
 
 - `Standard`: default AIM with progressive context loading and compact gates unless risk requires detail.
-- `Cost Control`: use for low-risk, reversible cleanup, docs maintenance, and narrow fixes. Preserve roles, gates, and escalation while using narrow context, no subagents by default, concise checkpoints, and short trace artifacts.
+- `Cost Control`: use for low-risk, reversible cleanup, docs maintenance, and narrow fixes. Preserve roles, gates, and escalation while using narrow context, no implementation subagents by default, independent material review under the adaptive execution contract, concise checkpoints, and short trace artifacts.
 - `Deep`: use for trust-sensitive, data correctness, public API, migration, deployment, security, or broad method changes. Broader inspection and stronger review evidence are expected.
 
 Escalate from `Cost Control` to `Standard` or `Deep` when trust, data correctness, user-facing meaning, migration, deployment, security, API, unclear acceptance, or scope risk appears.
@@ -488,3 +507,20 @@ the visible rationale and persisted value agree. Treat model/reasoning effort
 as independent supplier configuration. Use a read-only in-memory normalization
 for supported legacy state; never rewrite it during validation, installation,
 or upgrade.
+
+## Engineering and role skills
+
+Apply `references/engineering-delivery.md` for product implementation, review,
+performance work and knowledge refresh. Load only the active role skill:
+
+- PO: `references/role-skill-po.md`
+- TDO: `references/role-skill-tdo.md`
+- Dev: `references/role-skill-dev.md`
+- Reviewer: `references/role-skill-reviewer.md`
+
+Resolve project-specific skills from `aim.roles.yaml`, read their actual
+instructions and report missing capabilities. For an empty project infer
+provisional candidates from the supplied goal, requirements, Epic or PRD;
+bootstrap verification is part of startup, not a prerequisite interview.
+Keep native agents as thin loaders of current facts. Do not duplicate temporary
+feature status in their instructions. The engineering checks add no new gate.

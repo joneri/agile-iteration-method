@@ -8,12 +8,15 @@ repository is restored to its pre-apply state.
 
 from __future__ import annotations
 
-import shutil
+import os
+import secrets
+import stat
 from pathlib import Path
 from typing import Any
 
 from . import seed
 from .manifest import Manifest
+from .paths import checked_destination
 
 
 class ApplyRefused(Exception):
@@ -25,67 +28,162 @@ class ApplyFailed(Exception):
 
 
 class _Journal:
-    """Records reversible operations so a failed apply can be undone."""
+    """Rollback via pinned parents; random exclusive backups never touch user files."""
 
     def __init__(self) -> None:
-        self._created_files: list[Path] = []
-        self._created_dirs: list[Path] = []
-        self._backups: list[tuple[Path, Path]] = []  # (original, backup)
+        self.operations = []
+        self.directories = []
 
-    def record_created_dir(self, path: Path) -> None:
-        self._created_dirs.append(path)
-
-    def record_created_file(self, path: Path) -> None:
-        self._created_files.append(path)
-
-    def record_backup(self, original: Path, backup: Path) -> None:
-        self._backups.append((original, backup))
+    def finish(self, rollback: bool = False) -> None:
+        errors = []
+        for parent, name, backup in reversed(self.operations):
+            try:
+                if rollback:
+                    if backup is None:
+                        _unlink(parent, name)
+                    else:
+                        _replace(parent, backup, name)
+                elif backup is not None:
+                    _unlink(parent, backup)
+            except OSError as exc:
+                errors.append(str(exc))
+            finally:
+                if isinstance(parent, int):
+                    os.close(parent)
+        for parent, name in reversed(self.directories):
+            try:
+                if rollback:
+                    if isinstance(parent, int):
+                        os.rmdir(name, dir_fd=parent)
+                    else:
+                        (parent / name).rmdir()
+            except OSError:
+                pass  # Never remove nonempty directories or broaden recovery.
+            finally:
+                if isinstance(parent, int):
+                    os.close(parent)
+        if errors:
+            raise ApplyFailed("install recovery needs attention; backups retained: " + "; ".join(errors))
 
     def rollback(self) -> None:
-        for path in reversed(self._created_files):
-            if path.exists():
-                path.unlink()
-        for original, backup in reversed(self._backups):
-            shutil.copy2(backup, original)
-            backup.unlink()
-        for path in reversed(self._created_dirs):
-            try:
-                path.rmdir()
-            except OSError:
-                pass  # not empty; leave it
+        self.finish(rollback=True)
 
     def cleanup_backups(self) -> None:
-        for _original, backup in self._backups:
-            if backup.exists():
-                backup.unlink()
+        self.finish()
 
 
-def _ensure_parents(path: Path, journal: _Journal) -> None:
-    missing: list[Path] = []
-    parent = path.parent
-    while not parent.exists():
-        missing.append(parent)
-        parent = parent.parent
-    for directory in reversed(missing):
-        directory.mkdir()
-        journal.record_created_dir(directory)
-
-
-def _backup_path(original: Path) -> Path:
-    return original.with_name(original.name + ".aim-backup")
-
-
-def _write_file(dest: Path, data: bytes, journal: _Journal) -> None:
-    existed = dest.exists()
-    if existed:
-        backup = _backup_path(dest)
-        shutil.copy2(dest, backup)
-        journal.record_backup(dest, backup)
+def _unlink(parent, name):
+    if isinstance(parent, int):
+        os.unlink(name, dir_fd=parent)
     else:
-        _ensure_parents(dest, journal)
-    dest.write_bytes(data)
-    if not existed:
-        journal.record_created_file(dest)
+        (parent / name).unlink()
+
+
+def _replace(parent, source, destination):
+    if isinstance(parent, int):
+        os.replace(source, destination, src_dir_fd=parent, dst_dir_fd=parent)
+    else:
+        os.replace(parent / source, parent / destination)
+
+
+def _parent_handle(root: Path, dest: Path, journal: _Journal):
+    root = root.absolute().parent.resolve() / root.name
+    relative = dest.relative_to(root)
+    if not root.exists():
+        missing = []
+        current = root
+        while not current.exists():
+            missing.append(current)
+            current = current.parent
+        for directory in reversed(missing):
+            directory.mkdir()
+            journal.directories.append((directory.parent, directory.name))
+    checked_destination(root, dest)
+    if os.open not in os.supports_dir_fd:
+        # Portable path checks reject static links/reparse points. They do not
+        # provide the POSIX descriptor guarantee against concurrent parent moves.
+        missing = []
+        parent = dest.parent
+        while not parent.exists():
+            missing.append(parent)
+            parent = parent.parent
+        for directory in reversed(missing):
+            directory.mkdir()
+            journal.directories.append((directory.parent, directory.name))
+        checked_destination(root, dest)
+        return dest.parent
+    fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    current = root
+    try:
+        for component in relative.parts[:-1]:
+            current = current / component
+            try:
+                child = os.open(component, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)
+            except FileNotFoundError:
+                os.mkdir(component, dir_fd=fd)
+                journal.directories.append((os.dup(fd), component))
+                child = os.open(component, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=fd)
+            os.close(fd)
+            fd = child
+        return fd
+    except BaseException:
+        os.close(fd)
+        raise
+
+
+def _temporary(parent, data: bytes, mode: int):
+    # O_EXCL reserves an unpredictable sibling without clobbering user backups.
+    name = ".aim-install-" + secrets.token_hex(16)
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    fd = (os.open(name, flags, mode, dir_fd=parent) if isinstance(parent, int)
+          else os.open(parent / name, flags, mode))
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            if hasattr(os, "fchmod"):
+                os.fchmod(stream.fileno(), mode)
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+    except BaseException:
+        _unlink(parent, name)
+        raise
+    return name
+
+
+def _write_file(dest: Path, data: bytes, journal: _Journal, root: Path) -> None:
+    dest = checked_destination(root, dest)
+    parent = _parent_handle(root, dest, journal)
+    backup = temporary = None
+    owned = False
+    try:
+        try:
+            flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+            fd = (os.open(dest.name, flags, dir_fd=parent) if isinstance(parent, int)
+                  else os.open(dest, flags))
+        except FileNotFoundError:
+            original = None
+            mode = 0o644
+        else:
+            with os.fdopen(fd, "rb") as stream:
+                metadata = os.fstat(stream.fileno())
+                if not stat.S_ISREG(metadata.st_mode):
+                    raise ApplyRefused("install destination must be a regular file")
+                original = stream.read()
+                mode = stat.S_IMODE(metadata.st_mode)
+        if original is not None:
+            backup = _temporary(parent, original, mode)
+        temporary = _temporary(parent, data, mode)
+        _replace(parent, temporary, dest.name)
+        temporary = None
+        journal.operations.append((parent, dest.name, backup))
+        owned = True
+    finally:
+        if not owned:
+            for name in (temporary, backup):
+                if name is not None:
+                    _unlink(parent, name)
+            if isinstance(parent, int):
+                os.close(parent)
 
 
 def _desired_bytes(
@@ -140,6 +238,16 @@ def apply_plan(
                 + ", ".join(missing)
             )
 
+    # Recheck the entire reviewed plan before any write; force never bypasses
+    # destination containment or permits a home action outside the chosen home.
+    for action in plan["actions"]:
+        root = Path(plan.get("home", str(Path.home()))) if action.get("scope") == "home" else target_root
+        destination = Path(action["destination"]) if action.get("scope") == "home" else root / action["destination"]
+        try:
+            checked_destination(root, destination)
+        except ValueError as exc:
+            raise ApplyRefused(str(exc)) from exc
+
     journal = _Journal()
     applied: list[dict[str, str]] = []
     mode = str(plan.get("mode", "team"))
@@ -163,7 +271,8 @@ def apply_plan(
             else:
                 dest = target_root / action["destination"]
             data = _desired_bytes(action, source_root, target_root, manifest, fragments, mode)
-            _write_file(dest, data, journal)
+            root = Path(plan.get("home", str(Path.home()))) if action.get("scope") == "home" else target_root
+            _write_file(dest, data, journal, root)
             applied.append(
                 {
                     "destination": action["destination"],

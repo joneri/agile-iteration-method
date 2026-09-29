@@ -15,6 +15,13 @@
           "minLength": 1,
           "type": "string"
         },
+        "skills": {
+          "items": {
+            "$ref": "#/$defs/skill"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
         "validation": {
           "items": {
             "minLength": 1,
@@ -31,6 +38,42 @@
         "mission",
         "expertise",
         "writeScope"
+      ],
+      "type": "object"
+    },
+    "skill": {
+      "additionalProperties": false,
+      "properties": {
+        "fallback": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "verified",
+            "inferred",
+            "unavailable"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "status"
       ],
       "type": "object"
     }

@@ -9,7 +9,8 @@ This repo is both:
 ## Versioning policy (AIM 2.0)
 - This repository is the source of truth for AIM.
 - Documentation updates here are method updates.
-- AIM changes should be proposed and reviewed using AIM itself.
+- AIM may be used for method changes, but is not required. Respect an explicit
+  request for independent analysis or implementation without AIM.
 - Keep changes incremental: one coherent method change per PR.
 
 ---
@@ -116,7 +117,22 @@ Open an issue first describing:
 
 ## Local checks
 
-No build is required.
+Python tooling, schemas, adapters and the public skill form an executable
+distribution. After changing canonical sources, regenerate the public skill.
+
+```bash
+python3 scripts/build_public_skill.py
+python3 -m unittest discover -s tests
+python3 scripts/build_public_skill.py --check
+python3 scripts/audit_documentation.py .
+python3 scripts/aim_engineering.py check docs/features/evidence/engineering-knowledge.json
+python3 scripts/validate_aim_runtime.py . --release
+git diff --check
+```
+
+When a knowledge freshness check fails, recheck the claim against the changed
+sources before refreshing its fingerprints. Unchanged hashes are not a semantic
+review. Do not update fingerprints merely to make CI pass.
 
 Before submitting:
 - spell-check changed sections

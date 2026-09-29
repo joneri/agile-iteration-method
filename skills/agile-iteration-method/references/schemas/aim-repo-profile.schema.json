@@ -12,8 +12,19 @@
     "documentEntry": {
       "additionalProperties": true,
       "properties": {
+        "appliesTo": {
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
         "confidence": {
           "$ref": "#/$defs/confidence"
+        },
+        "expectedUse": {
+          "minLength": 1,
+          "type": "string"
         },
         "id": {
           "$ref": "#/$defs/stableId"
@@ -30,6 +41,14 @@
         "path": {
           "minLength": 1,
           "type": "string"
+        },
+        "recheckWhen": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
         }
       },
       "required": [
@@ -42,11 +61,85 @@
     "knowledgeEntry": {
       "additionalProperties": true,
       "properties": {
+        "appliesTo": {
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
         "confidence": {
           "$ref": "#/$defs/confidence"
         },
+        "expectedUse": {
+          "minLength": 1,
+          "type": "string"
+        },
         "id": {
           "$ref": "#/$defs/stableId"
+        },
+        "recheckWhen": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    },
+    "localityEntry": {
+      "additionalProperties": true,
+      "properties": {
+        "appliesTo": {
+          "items": {
+            "$ref": "#/$defs/stableId"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "dependsOn": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "expectedUse": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "paths": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "recheckWhen": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "tests": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
         }
       },
       "required": [
@@ -89,7 +182,7 @@
         },
         "localities": {
           "items": {
-            "$ref": "#/$defs/knowledgeEntry"
+            "$ref": "#/$defs/localityEntry"
           },
           "type": "array"
         },
@@ -191,6 +284,30 @@
                 "type": "string"
               },
               "type": "array"
+            },
+            "scope": {
+              "additionalProperties": false,
+              "description": "Explicit coverage claimed by calibration. Omitted legacy scope is unspecified, not repository-wide. Product validation requires localityIds only for localities and resolves each ID against repoKnowledge.localities.",
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "repository",
+                    "localities"
+                  ],
+                  "type": "string"
+                },
+                "localityIds": {
+                  "items": {
+                    "$ref": "#/$defs/stableId"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "kind"
+              ],
+              "type": "object"
             },
             "source": {
               "minLength": 1,

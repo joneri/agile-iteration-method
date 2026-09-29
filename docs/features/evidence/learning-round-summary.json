@@ -1,0 +1,632 @@
+{
+  "date": "2026-09-29",
+  "model": "gpt-6-astra",
+  "reasoning": "high",
+  "primaryMethods": {
+    "A": "without AIM",
+    "B": "frozen AIM with full learning cycle"
+  },
+  "exploratoryControls": {
+    "C": "configured knowledge removed; retained proposal contaminates contrast",
+    "D": "also removes full proposal; product docs retained; post-observation amendment"
+  },
+  "checks": {
+    "stage1-A": {
+      "baseline": {
+        "passed": 129,
+        "total": 129
+      },
+      "batchUpdate": {
+        "passed": 141,
+        "total": 141
+      },
+      "restartPersistence": {
+        "pass": true,
+        "actual": {
+          "id": 4,
+          "title": "Ordering 2",
+          "body": "",
+          "version": 1
+        }
+      }
+    },
+    "stage1-B": {
+      "baseline": {
+        "passed": 129,
+        "total": 129
+      },
+      "batchUpdate": {
+        "passed": 141,
+        "total": 141
+      },
+      "restartPersistence": {
+        "pass": true,
+        "actual": {
+          "id": 4,
+          "title": "Ordering 2",
+          "body": "",
+          "version": 1
+        }
+      }
+    },
+    "stage2-A": {
+      "baseline": {
+        "passed": 129,
+        "total": 129
+      },
+      "batchUpdate": {
+        "passed": 141,
+        "total": 141
+      },
+      "batchDelete": {
+        "passed": 130,
+        "total": 130
+      },
+      "restartPersistence": {
+        "pass": true,
+        "actual": {
+          "id": 4,
+          "title": "Ordering 2",
+          "body": "",
+          "version": 1
+        }
+      }
+    },
+    "stage2-B": {
+      "baseline": {
+        "passed": 129,
+        "total": 129
+      },
+      "batchUpdate": {
+        "passed": 141,
+        "total": 141
+      },
+      "batchDelete": {
+        "passed": 130,
+        "total": 130
+      },
+      "restartPersistence": {
+        "pass": true,
+        "actual": {
+          "id": 4,
+          "title": "Ordering 2",
+          "body": "",
+          "version": 1
+        }
+      }
+    },
+    "stage2-C": {
+      "baseline": {
+        "passed": 129,
+        "total": 129
+      },
+      "batchUpdate": {
+        "passed": 141,
+        "total": 141
+      },
+      "batchDelete": {
+        "passed": 130,
+        "total": 130
+      },
+      "restartPersistence": {
+        "pass": true,
+        "actual": {
+          "id": 4,
+          "title": "Ordering 2",
+          "body": "",
+          "version": 1
+        }
+      }
+    },
+    "stage2-D": {
+      "baseline": {
+        "passed": 129,
+        "total": 129
+      },
+      "batchUpdate": {
+        "passed": 141,
+        "total": 141
+      },
+      "batchDelete": {
+        "passed": 130,
+        "total": 130
+      },
+      "restartPersistence": {
+        "pass": true,
+        "actual": {
+          "id": 4,
+          "title": "Ordering 2",
+          "body": "",
+          "version": 1
+        }
+      }
+    }
+  },
+  "timing": {
+    "stage1-A": {
+      "version": 1,
+      "intervals": 6,
+      "secondsByActivity": {
+        "calibration": 28.08603,
+        "configuration": 0.0,
+        "reflection": 0.0,
+        "knowledge-maintenance": 41.799138,
+        "implementation": 108.427457,
+        "verification": 159.392673,
+        "coordination": 0.0,
+        "waiting": 0.0
+      },
+      "secondsByCategory": {
+        "coordination": 0.0,
+        "implementation": 108.427457,
+        "repositoryImprovement": 69.885168,
+        "verification": 159.392673,
+        "waiting": 0.0
+      },
+      "recordedSeconds": 337.705298,
+      "elapsedSeconds": 337.705298,
+      "unattributedSeconds": 0.0,
+      "activityIndependentlyVerified": false,
+      "scope": "one sequential session; includes recorded waiting; gaps remain unattributed"
+    },
+    "stage1-B": {
+      "version": 1,
+      "intervals": 13,
+      "secondsByActivity": {
+        "calibration": 55.937502,
+        "configuration": 28.547009,
+        "reflection": 42.149777,
+        "knowledge-maintenance": 152.292928,
+        "implementation": 81.784266,
+        "verification": 153.589331,
+        "coordination": 61.81321,
+        "waiting": 0.0
+      },
+      "secondsByCategory": {
+        "coordination": 61.81321,
+        "implementation": 81.784266,
+        "repositoryImprovement": 278.927216,
+        "verification": 153.589331,
+        "waiting": 0.0
+      },
+      "recordedSeconds": 576.114023,
+      "elapsedSeconds": 576.114023,
+      "unattributedSeconds": 0.0,
+      "activityIndependentlyVerified": false,
+      "scope": "one sequential session; includes recorded waiting; gaps remain unattributed"
+    },
+    "stage2-A": {
+      "version": 1,
+      "intervals": 7,
+      "secondsByActivity": {
+        "calibration": 25.0,
+        "configuration": 0.0,
+        "reflection": 0.0,
+        "knowledge-maintenance": 27.300774,
+        "implementation": 120.0,
+        "verification": 195.0,
+        "coordination": 0.0,
+        "waiting": 0.0
+      },
+      "secondsByCategory": {
+        "coordination": 0.0,
+        "implementation": 120.0,
+        "repositoryImprovement": 52.300774,
+        "verification": 195.0,
+        "waiting": 0.0
+      },
+      "recordedSeconds": 367.300774,
+      "elapsedSeconds": 9430.0,
+      "unattributedSeconds": 9062.699226,
+      "activityIndependentlyVerified": false,
+      "scope": "one sequential session; includes recorded waiting; gaps remain unattributed"
+    },
+    "features-features": {
+      "version": 1,
+      "intervals": 12,
+      "secondsByActivity": {
+        "calibration": 30.0,
+        "configuration": 41.0,
+        "reflection": 61.0,
+        "knowledge-maintenance": 42.0,
+        "implementation": 0.0,
+        "verification": 455.0,
+        "coordination": 415.0,
+        "waiting": 0.0
+      },
+      "secondsByCategory": {
+        "coordination": 415.0,
+        "implementation": 0.0,
+        "repositoryImprovement": 174.0,
+        "verification": 455.0,
+        "waiting": 0.0
+      },
+      "recordedSeconds": 1044.0,
+      "elapsedSeconds": 1099.0,
+      "unattributedSeconds": 55.0,
+      "activityIndependentlyVerified": false,
+      "scope": "one sequential session; includes recorded waiting; gaps remain unattributed"
+    },
+    "stage2-B": {
+      "version": 1,
+      "intervals": 7,
+      "secondsByActivity": {
+        "calibration": 49.812578,
+        "configuration": 0.0,
+        "reflection": 95.817013,
+        "knowledge-maintenance": 42.072172,
+        "implementation": 0.049187,
+        "verification": 78.600153,
+        "coordination": 72.296937,
+        "waiting": 0.0
+      },
+      "secondsByCategory": {
+        "coordination": 72.296937,
+        "implementation": 0.049187,
+        "repositoryImprovement": 187.701763,
+        "verification": 78.600153,
+        "waiting": 0.0
+      },
+      "recordedSeconds": 338.64804,
+      "elapsedSeconds": 9629.952427,
+      "unattributedSeconds": 9291.304387,
+      "activityIndependentlyVerified": false,
+      "scope": "one sequential session; includes recorded waiting; gaps remain unattributed"
+    },
+    "stage2-C": {
+      "version": 1,
+      "intervals": 17,
+      "secondsByActivity": {
+        "calibration": 20.579064,
+        "configuration": 0.054296,
+        "reflection": 94.722369,
+        "knowledge-maintenance": 35.856999,
+        "implementation": 85.700914,
+        "verification": 102.179262,
+        "coordination": 130.820683,
+        "waiting": 9144.0
+      },
+      "secondsByCategory": {
+        "coordination": 130.820683,
+        "implementation": 85.700914,
+        "repositoryImprovement": 151.212728,
+        "verification": 102.179262,
+        "waiting": 9144.0
+      },
+      "recordedSeconds": 9613.913587,
+      "elapsedSeconds": 9613.913587,
+      "unattributedSeconds": 0.0,
+      "activityIndependentlyVerified": false,
+      "scope": "one sequential session; includes recorded waiting; gaps remain unattributed"
+    },
+    "fixed-profiles": {
+      "version": 1,
+      "intervals": 9,
+      "secondsByActivity": {
+        "calibration": 46.883622,
+        "configuration": 60.059691,
+        "reflection": 61.814794,
+        "knowledge-maintenance": 32.239286,
+        "implementation": 0.0,
+        "verification": 37.710599,
+        "coordination": 73.15236,
+        "waiting": 0.0
+      },
+      "secondsByCategory": {
+        "coordination": 73.15236,
+        "implementation": 0.0,
+        "repositoryImprovement": 200.997393,
+        "verification": 37.710599,
+        "waiting": 0.0
+      },
+      "recordedSeconds": 311.860352,
+      "elapsedSeconds": 311.860613,
+      "unattributedSeconds": 0.000261,
+      "activityIndependentlyVerified": false,
+      "scope": "one sequential session; includes recorded waiting; gaps remain unattributed"
+    },
+    "stage2-D": {
+      "version": 1,
+      "intervals": 10,
+      "secondsByActivity": {
+        "calibration": 54.573636,
+        "configuration": 0.044243,
+        "reflection": 59.555693,
+        "knowledge-maintenance": 186.636771,
+        "implementation": 151.986772,
+        "verification": 123.054326,
+        "coordination": 60.155255,
+        "waiting": 0.0
+      },
+      "secondsByCategory": {
+        "coordination": 60.155255,
+        "implementation": 151.986772,
+        "repositoryImprovement": 300.810343,
+        "verification": 123.054326,
+        "waiting": 0.0
+      },
+      "recordedSeconds": 636.006696,
+      "elapsedSeconds": 636.006696,
+      "unattributedSeconds": 0.0,
+      "activityIndependentlyVerified": false,
+      "scope": "one sequential session; includes recorded waiting; gaps remain unattributed"
+    }
+  },
+  "performance": {
+    "primaryRuns": 3,
+    "initialExploratoryControlRuns": 1,
+    "rows": [
+      {
+        "operation": "update",
+        "batchSize": 1,
+        "A": {
+          "runMediansMs": [
+            1.4953335,
+            1.3168545,
+            1.3931875
+          ],
+          "medianOfRunMediansMs": 1.3931875,
+          "runP95Ms": [
+            1.617625,
+            1.4485,
+            1.797584
+          ]
+        },
+        "B": {
+          "runMediansMs": [
+            1.3375415,
+            1.3842915,
+            1.33725
+          ],
+          "medianOfRunMediansMs": 1.3375415,
+          "runP95Ms": [
+            1.492,
+            1.540125,
+            1.554584
+          ]
+        }
+      },
+      {
+        "operation": "update",
+        "batchSize": 10,
+        "A": {
+          "runMediansMs": [
+            2.7395415,
+            1.4214795,
+            1.4544169999999998
+          ],
+          "medianOfRunMediansMs": 1.4544169999999998,
+          "runP95Ms": [
+            5.459209,
+            1.543667,
+            1.561292
+          ]
+        },
+        "B": {
+          "runMediansMs": [
+            1.409708,
+            1.4513335,
+            1.4575835000000001
+          ],
+          "medianOfRunMediansMs": 1.4513335,
+          "runP95Ms": [
+            1.543875,
+            1.610333,
+            1.761875
+          ]
+        }
+      },
+      {
+        "operation": "update",
+        "batchSize": 25,
+        "A": {
+          "runMediansMs": [
+            2.842979,
+            1.5558125,
+            1.5552295
+          ],
+          "medianOfRunMediansMs": 1.5558125,
+          "runP95Ms": [
+            5.209,
+            1.673292,
+            1.705125
+          ]
+        },
+        "B": {
+          "runMediansMs": [
+            1.531625,
+            1.5782500000000002,
+            1.5448335000000002
+          ],
+          "medianOfRunMediansMs": 1.5448335000000002,
+          "runP95Ms": [
+            1.67125,
+            1.692333,
+            1.701458
+          ]
+        }
+      },
+      {
+        "operation": "delete",
+        "batchSize": 1,
+        "A": {
+          "runMediansMs": [
+            2.6269584999999998,
+            1.4233125,
+            1.386438
+          ],
+          "medianOfRunMediansMs": 1.4233125,
+          "runP95Ms": [
+            4.552458,
+            1.534459,
+            1.549917
+          ]
+        },
+        "B": {
+          "runMediansMs": [
+            1.3912710000000001,
+            1.413021,
+            1.4331040000000002
+          ],
+          "medianOfRunMediansMs": 1.413021,
+          "runP95Ms": [
+            1.550959,
+            1.574625,
+            1.6045
+          ]
+        }
+      },
+      {
+        "operation": "delete",
+        "batchSize": 10,
+        "A": {
+          "runMediansMs": [
+            2.5481670000000003,
+            1.4261045,
+            1.4738955
+          ],
+          "medianOfRunMediansMs": 1.4738955,
+          "runP95Ms": [
+            2.696292,
+            1.5705,
+            1.629209
+          ]
+        },
+        "B": {
+          "runMediansMs": [
+            1.457333,
+            1.4519375,
+            1.4411874999999998
+          ],
+          "medianOfRunMediansMs": 1.4519375,
+          "runP95Ms": [
+            1.640041,
+            1.586167,
+            1.680583
+          ]
+        }
+      },
+      {
+        "operation": "delete",
+        "batchSize": 25,
+        "A": {
+          "runMediansMs": [
+            2.4593335,
+            1.507396,
+            1.541688
+          ],
+          "medianOfRunMediansMs": 1.541688,
+          "runP95Ms": [
+            2.647666,
+            1.665375,
+            1.699167
+          ]
+        },
+        "B": {
+          "runMediansMs": [
+            1.5243335,
+            1.528833,
+            1.5035205
+          ],
+          "medianOfRunMediansMs": 1.5243335,
+          "runP95Ms": [
+            1.699792,
+            1.698084,
+            1.715167
+          ]
+        }
+      }
+    ],
+    "resources": {
+      "A": {
+        "peakRssMiBByRun": [
+          20.0,
+          20.0,
+          19.71875
+        ],
+        "medianPeakRssMiB": 20.0,
+        "serverCpuSecondsByRun": [
+          12.874859999999998,
+          11.524332999999999,
+          14.331664
+        ],
+        "scope": "server lifetime including startup and20000-note seeding; not isolated batch resource cost"
+      },
+      "B": {
+        "peakRssMiBByRun": [
+          19.515625,
+          19.6875,
+          19.703125
+        ],
+        "medianPeakRssMiB": 19.6875,
+        "serverCpuSecondsByRun": [
+          11.563624,
+          11.50772,
+          11.970256
+        ],
+        "scope": "server lifetime including startup and20000-note seeding; not isolated batch resource cost"
+      },
+      "C": {
+        "peakRssMiBByRun": [
+          19.484375
+        ],
+        "medianPeakRssMiB": 19.484375,
+        "serverCpuSecondsByRun": [
+          11.813408
+        ],
+        "scope": "server lifetime including startup and20000-note seeding; not isolated batch resource cost"
+      },
+      "D": {
+        "peakRssMiBByRun": [
+          19.6875
+        ],
+        "medianPeakRssMiB": 19.6875,
+        "serverCpuSecondsByRun": [
+          11.69152
+        ],
+        "scope": "server lifetime including startup and20000-note seeding; not isolated batch resource cost"
+      }
+    },
+    "repeatProtocol": "assessor/performance-repeat-amendment.json",
+    "caveat": "Same local machine, serial runs after agents stopped.100 sequential samples per operation/size per run. Timing varies; no significance or general dominance claim."
+  },
+  "featureCoverage": {
+    "entries": 39,
+    "exercised": 35,
+    "regressionOnly": 2,
+    "unavailable": 1,
+    "notApplicable": 1
+  },
+  "latestProfileCorrection": {
+    "version": 1,
+    "valid": true,
+    "checked": [
+      "aim.profile.yaml",
+      "aim.roles.yaml"
+    ],
+    "diagnostics": [],
+    "semanticTruthVerified": false,
+    "scope": "AIM YAML syntax, published profile schemas and readable role-skill bindings"
+  },
+  "rootTestsPassed": 412,
+  "archive": "/Users/jonaseriksson/Documents/Codex/2026-09-29/aim-learning-round",
+  "nativeRechecks": {
+    "A": {
+      "passedGroups": 28,
+      "exitCode": 0
+    },
+    "B": {
+      "passedGroups": 26,
+      "exitCode": 0
+    },
+    "C": {
+      "passedGroups": 28,
+      "exitCode": 0
+    },
+    "D": {
+      "passedGroups": 26,
+      "exitCode": 0
+    }
+  },
+  "sourceChecks": "Full case-by-case evidence retained in archive assessor/stage*-*.json"
+}

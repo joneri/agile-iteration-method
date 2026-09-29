@@ -1,0 +1,731 @@
+{
+  "archive": "/Users/jonaseriksson/Documents/Codex/2026-09-29/aim-engineering-pilot2",
+  "run": {
+    "schemaVersion": 1,
+    "status": "assessed",
+    "authorization": "2026-09-29 user clarified AIM is permitted in all tests of these improvements; root implementation continues without AIM",
+    "dispatchWindowStart": "2026-09-28T23:31:34Z",
+    "observedBothDispatchedAt": "2026-09-28T23:32:16.518631+00:00",
+    "agents": {
+      "A": "/root/pilot2_raw",
+      "B": "/root/pilot2_aim"
+    },
+    "model": "gpt-6-astra",
+    "reasoningEffort": "high",
+    "secondsPerBuilderCeiling": 1800,
+    "method": "Same locked prompts and PRD; separate fresh agents; API adaptations only after submission; no additional delegation by builders",
+    "parentChangesAfterFreeze": [
+      {
+        "area": "Bundled role instruction lookup",
+        "reason": "New project profiles incorrectly searched the consumer repo for bundled instructions; now resolve against running AIM package; project skills remain project-relative",
+        "includedInBuilderPackage": false,
+        "targetedTestsPassed": 15
+      }
+    ],
+    "submissions": {
+      "B": {
+        "reportedStart": "2026-09-28T23:31:58Z",
+        "completedAt": "2026-09-28T23:50:39Z",
+        "elapsedSeconds": 1121,
+        "agentReportedChecks": [
+          "11 domain tests",
+          "9 browser tests",
+          "2 production browser recovery workflows",
+          "production build",
+          "dependency audit"
+        ],
+        "assessmentStatus": "not assessed"
+      },
+      "A": {
+        "reportedStart": "2026-09-28T23:31:49Z",
+        "completedAt": "2026-09-28T23:55:20Z",
+        "elapsedSeconds": 1411,
+        "agentReportedChecks": [
+          "20 automated tests",
+          "build",
+          "WebKit browser acceptance"
+        ],
+        "assessmentStatus": "not assessed"
+      }
+    },
+    "assessmentCompletedAt": "2026-09-29T00:06:39.767412+00:00",
+    "assessment": {
+      "vectorsPassed": {
+        "A": 123,
+        "B": 123
+      },
+      "invalidPlugboardsRejected": {
+        "A": 3,
+        "B": 3
+      },
+      "candidateReplays": 204,
+      "invalidCandidates": 0,
+      "searchRuns": 84,
+      "timeouts": 0,
+      "mutationsDetected": {
+        "A": 3,
+        "B": 3
+      },
+      "nativeTestsAndBuildsRerun": true,
+      "independentBrowserChecks": {
+        "A": "passed",
+        "B": "passed"
+      },
+      "score": {
+        "A": 99,
+        "B": 99
+      },
+      "scoreLimit": "Visible method identity; rubric judgment, not statistical precision",
+      "decision": "AIM shorter build and completed-search times with slightly lower memory and same observed functional/test outcomes. Raw earlier first candidate for automatic placement. One pair, not general superiority."
+    }
+  },
+  "runtimeSummary": [
+    {
+      "label": "A",
+      "id": "pairs-0",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.088707875,
+      "medianFirstCandidateSeconds": 0.018041625000000002,
+      "medianPeakRssBytes": 64602112,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "pairs-1",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.08984149999999999,
+      "medianFirstCandidateSeconds": 0.018359250000000004,
+      "medianPeakRssBytes": 68730880,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "pairs-3",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.089828542,
+      "medianFirstCandidateSeconds": 0.017949417,
+      "medianPeakRssBytes": 68567040,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "pairs-6",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.089643708,
+      "medianFirstCandidateSeconds": 0.018043833,
+      "medianPeakRssBytes": 68698112,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "pairs-10",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.08822066599999999,
+      "medianFirstCandidateSeconds": 0.018215457999999997,
+      "medianPeakRssBytes": 68829184,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "offset-known",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.091035833,
+      "medianFirstCandidateSeconds": 0.066686916,
+      "medianPeakRssBytes": 64815104,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "offset-auto",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.711779625,
+      "medianFirstCandidateSeconds": 0.13265087499999997,
+      "medianPeakRssBytes": 78053376,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "multiple",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 0,
+      "medianCompletionSeconds": null,
+      "medianFirstCandidateSeconds": 0.017103209,
+      "medianPeakRssBytes": 57704448,
+      "candidates": [
+        20,
+        20,
+        20
+      ],
+      "endTypes": [
+        "cap",
+        "cap",
+        "cap"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "none",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.067522416,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 61915136,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "impossible",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.0002279169999999997,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 49872896,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "impossible-auto",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.0002323329999999988,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 49872896,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "pairs-10-full",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.093040959,
+      "medianFirstCandidateSeconds": 0.018115875000000004,
+      "medianPeakRssBytes": 68927488,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "unicode-prefix",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.08863325000000001,
+      "medianFirstCandidateSeconds": 0.018520416,
+      "medianPeakRssBytes": 69009408,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "A",
+      "id": "short-crib",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.084620583,
+      "medianFirstCandidateSeconds": 0.017859958,
+      "medianPeakRssBytes": 64946176,
+      "candidates": [
+        5,
+        5,
+        5
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-0",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.077957167,
+      "medianFirstCandidateSeconds": 0.011668958,
+      "medianPeakRssBytes": 63225856,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-1",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.07787516700000001,
+      "medianFirstCandidateSeconds": 0.011547042,
+      "medianPeakRssBytes": 63569920,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-3",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.07832775,
+      "medianFirstCandidateSeconds": 0.011655374999999999,
+      "medianPeakRssBytes": 63406080,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-6",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.078687709,
+      "medianFirstCandidateSeconds": 0.011582666,
+      "medianPeakRssBytes": 63504384,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-10",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.078494875,
+      "medianFirstCandidateSeconds": 0.011926458000000001,
+      "medianPeakRssBytes": 63209472,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "offset-known",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.077117291,
+      "medianFirstCandidateSeconds": 0.05549104100000001,
+      "medianPeakRssBytes": 63602688,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "offset-auto",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.630187833,
+      "medianFirstCandidateSeconds": 0.440197792,
+      "medianPeakRssBytes": 76857344,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "multiple",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 0,
+      "medianCompletionSeconds": null,
+      "medianFirstCandidateSeconds": 0.010364292,
+      "medianPeakRssBytes": 57180160,
+      "candidates": [
+        20,
+        20,
+        20
+      ],
+      "endTypes": [
+        "cap",
+        "cap",
+        "cap"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "none",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.06583779099999999,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 62734336,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "impossible",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.00024087500000000083,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 49709056,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "impossible-auto",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.00023895899999999947,
+      "medianFirstCandidateSeconds": null,
+      "medianPeakRssBytes": 49741824,
+      "candidates": [
+        0,
+        0,
+        0
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "pairs-10-full",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.08142254199999999,
+      "medianFirstCandidateSeconds": 0.011787082999999999,
+      "medianPeakRssBytes": 63946752,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "unicode-prefix",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.078283833,
+      "medianFirstCandidateSeconds": 0.011718458,
+      "medianPeakRssBytes": 63340544,
+      "candidates": [
+        1,
+        1,
+        1
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    },
+    {
+      "label": "B",
+      "id": "short-crib",
+      "runs": 3,
+      "timeouts": 0,
+      "completed": 3,
+      "medianCompletionSeconds": 0.079128125,
+      "medianFirstCandidateSeconds": 0.011747874999999998,
+      "medianPeakRssBytes": 63963136,
+      "candidates": [
+        5,
+        5,
+        5
+      ],
+      "endTypes": [
+        "done",
+        "done",
+        "done"
+      ]
+    }
+  ],
+  "mutations": [
+    {
+      "label": "A",
+      "mutation": "reflector-c",
+      "exitCode": 1,
+      "assertionDetection": true,
+      "failedTests": 3,
+      "mutatedSourceSha256": "b531e6f29289b578353ed969960f24cbf30273368dd96931a4676c5e74eba168"
+    },
+    {
+      "label": "A",
+      "mutation": "rotor-v",
+      "exitCode": 1,
+      "assertionDetection": true,
+      "failedTests": 1,
+      "mutatedSourceSha256": "0e0582c3a47fed46db83f03602d383993cc438fd1a7ba2ca1b5d9f386fcf12f0"
+    },
+    {
+      "label": "A",
+      "mutation": "notch-ii",
+      "exitCode": 1,
+      "assertionDetection": true,
+      "failedTests": 4,
+      "mutatedSourceSha256": "f9258fd121f58af7d98a7f3de9d8a03d550329581258abff3903823de24c6cdd"
+    },
+    {
+      "label": "B",
+      "mutation": "reflector-c",
+      "exitCode": 1,
+      "assertionDetection": true,
+      "failedTests": 4,
+      "mutatedSourceSha256": "47a82d17807b357459af83de32f3267b952d329a79b8a5443873f8716be2019f"
+    },
+    {
+      "label": "B",
+      "mutation": "rotor-v",
+      "exitCode": 1,
+      "assertionDetection": true,
+      "failedTests": 2,
+      "mutatedSourceSha256": "fefb939f7fbceb127519791c836eed51f18a82385adceab17e9c251dd93f1c69"
+    },
+    {
+      "label": "B",
+      "mutation": "notch-ii",
+      "exitCode": 1,
+      "assertionDetection": true,
+      "failedTests": 3,
+      "mutatedSourceSha256": "40bb3d31023bf357dec5acb90897b4db7ef5aad0d58a3c1a9361f9f58e9be8ce"
+    }
+  ],
+  "browser": {
+    "A": {
+      "fixture": "pairs-10-full",
+      "candidates": 1,
+      "snapshotHandoff": true,
+      "cancellation": "Avbruten s\u00f6kning. 0 kandidater hittades i den kontrollerade delen. \u00c5terst\u00e5ende kombinationer \u00e4r inte pr\u00f6vade. Du kan granska f\u00f6rslagen eller starta en ny s\u00f6kning.",
+      "restart": true,
+      "mobileWidth": 390,
+      "errors": [],
+      "outside": []
+    },
+    "B": {
+      "fixture": "pairs-10-full",
+      "candidates": 1,
+      "snapshotHandoff": true,
+      "cancellation": "S\u00f6kningen avbr\u00f6ts med 0 kandidater. Fler l\u00f6sningar kan finnas.",
+      "restart": true,
+      "mobileWidth": 390,
+      "errors": [],
+      "outside": []
+    }
+  },
+  "sourceIntegrity": {
+    "initialInputChanges": [],
+    "submissions": {
+      "B": {
+        "filesChecked": 44,
+        "changed": [],
+        "excludedFromRecheck": "Browser binary cache; original hashes retained in submission manifest"
+      },
+      "A": {
+        "filesChecked": 37,
+        "changed": [],
+        "excludedFromRecheck": "Browser binary cache; original hashes retained in submission manifest"
+      }
+    }
+  }
+}

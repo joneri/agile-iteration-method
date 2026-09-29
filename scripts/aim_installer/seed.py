@@ -9,6 +9,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from aim_quality.skills import suggest_skills
+from aim_quality.files import read_evidence
+
 
 def shared_profile_seed(mode: str = "standard") -> str:
     """Return the bootstrap shared profile content.
@@ -64,8 +67,11 @@ def _package_json_facts(target_root: Path) -> tuple[list[str], list[str]]:
     if not path.is_file():
         return [], []
     try:
-        package = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+        package = json.loads(read_evidence(target_root, "package.json"))
+    except (OSError, ValueError, UnicodeError):
+        return ["JavaScript or TypeScript (package.json detected)"], []
+
+    if not isinstance(package, dict):
         return ["JavaScript or TypeScript (package.json detected)"], []
 
     dependencies: dict[str, object] = {}
@@ -133,13 +139,29 @@ def project_roles_seed(target_root: Path) -> str:
     role_command_lines = "\n".join(
         f"        - {item}" for item in dict.fromkeys(commands)
     )
+    skill_plan = suggest_skills(target_root)
+
+    def role_skills(role: str) -> str:
+        lines = ["      skills:", f"        - id: aim-{role}-engineering",
+                 "          source: bundled", "          status: available"]
+        candidates = skill_plan["roles"][role]["candidates"]
+        if candidates:
+            lines.append("      skillCandidates:")
+            for candidate in candidates:
+                lines.extend([
+                    f"        - capability: {candidate['capability']}",
+                    "          status: inferred", "          confidence: low",
+                    f"          source: {json.dumps(candidate['source'], ensure_ascii=False)}",
+                    f"          line: {candidate['line']}",
+                ])
+        return "\n".join(lines)
     return f"""\
 aimProjectRoles:
   profileVersion: "0.1"
   status: needs_calibration
   source: installer-detection
   project:
-    name: {target_root.name}
+    name: {json.dumps(target_root.name, ensure_ascii=False)}
     technologies:
 {project_technology_lines}
     validation:
@@ -151,21 +173,25 @@ aimProjectRoles:
     modelPolicy: inherit-supplier-default
   roles:
     po:
+{role_skills('po')}
       mission: Own user value, Epic intent, acceptance, and continuation decisions.
       expertise:
         - Product outcomes and repository-specific user context
       writeScope: AIM Epic and acceptance decisions only
     tdo:
+{role_skills('tdo')}
       mission: Turn the Epic into one coherent end-to-end Done Increment and validate delivery.
       expertise:
         - Architecture, delivery planning, risk, and project validation strategy
       writeScope: AIM increment plans, synthesis, and decision records only
     dev:
+{role_skills('dev')}
       mission: Implement exactly the approved Done Increment with project-native practices.
       expertise:
 {role_technology_lines}
       writeScope: Approved implementation files and Dev trace artifacts
     reviewer:
+{role_skills('reviewer')}
       mission: Independently verify correctness, risk, regression coverage, and acceptance evidence.
       expertise:
 {role_technology_lines}

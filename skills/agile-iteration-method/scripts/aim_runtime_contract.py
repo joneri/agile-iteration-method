@@ -15,6 +15,8 @@ from pathlib import Path
 from pathlib import PurePosixPath
 from typing import Any
 
+from aim_quality.files import read_evidence
+
 
 CANONICAL_RUNTIME_STATUSES = {
     "epic_initialized",
@@ -47,7 +49,6 @@ EVIDENCE_KINDS = {
     "test_log",
     "user_observation",
 }
-BLACK_BOX_PERFORMERS = {"external_observer", "reviewer", "user"}
 CRITERION_EVIDENCE_KINDS = {
     "black_box_result",
     "external_receipt",
@@ -299,7 +300,8 @@ def _contained_decision_path(
 
 
 def _evidence_reference_issues(
-    workspace: Path, references: Any, label: str
+    workspace: Path, references: Any, label: str,
+    cache: dict[str, dict[str, Any] | str] | None = None,
 ) -> tuple[list[str], list[dict[str, Any]]]:
     """Verify hash-bound, non-empty evidence files inside the Epic workspace."""
 
@@ -307,6 +309,9 @@ def _evidence_reference_issues(
         return [f"{label} has no concrete evidence"], []
     issues: list[str] = []
     manifests: list[dict[str, Any]] = []
+    # One audit owns this cache. Never reuse evidence across checks or requests.
+    if cache is None:
+        cache = {}
     seen: set[str] = set()
     for raw in references:
         if not isinstance(raw, dict):
@@ -338,41 +343,32 @@ def _evidence_reference_issues(
         ):
             issues.append(f"{label} contains an unsafe evidence path")
             continue
-        current = workspace.resolve()
-        unsafe = False
-        for part in relative.parts:
-            current = current / part
-            if current.is_symlink():
-                unsafe = True
-                break
-        try:
-            current.resolve().relative_to(workspace.resolve())
-        except (OSError, ValueError):
-            unsafe = True
-        if unsafe or not current.is_file():
-            issues.append(f"{label} evidence file is missing or unsafe: {raw_path}")
+        if raw_path not in cache:
+            try:
+                payload = read_evidence(workspace, raw_path, MAX_REFERENCED_EVIDENCE_BYTES)
+                cache[raw_path] = ({
+                    "sha256": hashlib.sha256(payload).hexdigest(),
+                    "size": len(payload), "resolved": workspace.resolve() / raw_path,
+                } if payload and not payload.isspace() else "is empty")
+            except ValueError as exc:
+                cache[raw_path] = ("exceeds the size limit" if "size limit" in str(exc)
+                                   else "is missing or unsafe")
+            except OSError:
+                cache[raw_path] = "is missing or unsafe"
+        metadata = cache[raw_path]
+        if isinstance(metadata, str):
+            issues.append(f"{label} evidence file {metadata}: {raw_path}")
             continue
-        try:
-            payload = current.read_bytes()
-        except OSError:
-            issues.append(f"{label} evidence file is unreadable: {raw_path}")
-            continue
-        if len(payload) > MAX_REFERENCED_EVIDENCE_BYTES:
-            issues.append(f"{label} evidence file exceeds the size limit: {raw_path}")
-            continue
-        if not payload.strip():
-            issues.append(f"{label} evidence file is empty: {raw_path}")
-            continue
-        actual_sha256 = hashlib.sha256(payload).hexdigest()
+        actual_sha256 = metadata["sha256"]
         if expected_sha256 != actual_sha256:
             issues.append(f"{label} evidence sha256 does not match: {raw_path}")
         manifests.append(
             {
                 "path": raw_path,
                 "sha256": actual_sha256,
-                "size": len(payload),
+                "size": metadata["size"],
                 "kind": kind,
-                "resolved": current.resolve(),
+                "resolved": metadata["resolved"],
             }
         )
     return issues, manifests
@@ -424,7 +420,6 @@ def _black_box_record_issues(
         "kind": "black_box_result",
         "status": "passed",
         "representative": True,
-        "operatorAssistance": False,
     }
     for field, required in expected.items():
         if value.get(field) != required:
@@ -444,10 +439,11 @@ def _black_box_record_issues(
             issues.append(
                 f"{label} black-box result {field} does not match the closure audit"
             )
-    if str(value.get("performedBy") or "").strip().lower() not in BLACK_BOX_PERFORMERS:
+    if not isinstance(value.get("operatorAssistance"), bool):
+        issues.append(f"{label} black-box result has no boolean operatorAssistance")
+    elif value["operatorAssistance"] != expected_metadata.get("operatorAssistance"):
         issues.append(
-            f"{label} black-box result names the implementation side or an "
-            "unsupported performer"
+            f"{label} black-box result operatorAssistance does not match the closure audit"
         )
     return issues
 
@@ -533,6 +529,7 @@ def _epic_closure_evidence_analysis(
     criteria = evidence.get("acceptanceCriteria")
     evidence_criterion_ids: set[str] = set()
     manifests: list[dict[str, Any]] = []
+    evidence_cache: dict[str, dict[str, Any] | str] = {}
     if not isinstance(criteria, list) or not criteria:
         issues.append("closure evidence has no acceptance-criterion mapping")
     else:
@@ -555,7 +552,7 @@ def _epic_closure_evidence_analysis(
             if criterion.get("status") != "proven":
                 issues.append(f"{prefix} is not proven")
             reference_issues, reference_manifests = _evidence_reference_issues(
-                workspace, criterion.get("evidence"), prefix
+                workspace, criterion.get("evidence"), prefix, evidence_cache
             )
             issues.extend(reference_issues)
             manifests.extend(reference_manifests)
@@ -597,7 +594,7 @@ def _epic_closure_evidence_analysis(
         if counterevidence.get("unresolvedFindings") != []:
             issues.append("counterevidence contains unresolved findings")
         reference_issues, reference_manifests = _evidence_reference_issues(
-            workspace, counterevidence.get("evidence"), "counterevidence search"
+            workspace, counterevidence.get("evidence"), "counterevidence search", evidence_cache
         )
         issues.extend(reference_issues)
         manifests.extend(reference_manifests)
@@ -619,8 +616,8 @@ def _epic_closure_evidence_analysis(
                 issues.append("representative black-box validation did not pass")
             if black_box.get("representative") is not True:
                 issues.append("black-box validation is synthetic or non-representative")
-            if black_box.get("operatorAssistance") is not False:
-                issues.append("black-box validation required implementation-team assistance")
+            if not isinstance(black_box.get("operatorAssistance"), bool):
+                issues.append("black-box validation has no boolean operatorAssistance")
             for field in (
                 "entryPoint",
                 "scenario",
@@ -636,6 +633,7 @@ def _epic_closure_evidence_analysis(
                 workspace,
                 black_box.get("evidence"),
                 "black-box validation",
+                evidence_cache,
             )
             issues.extend(reference_issues)
             manifests.extend(reference_manifests)
@@ -656,7 +654,7 @@ def _epic_closure_evidence_analysis(
     if authority not in {"user", "portfolio_mandate"}:
         issues.append("closure evidence has no supported decision authority")
     authority_issues, authority_manifests = _evidence_reference_issues(
-        workspace, evidence.get("authorityEvidence"), "closure authority"
+        workspace, evidence.get("authorityEvidence"), "closure authority", evidence_cache
     )
     issues.extend(authority_issues)
     manifests.extend(authority_manifests)

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -30,6 +31,28 @@ from aim_installer.yaml_lite import loads as load_yaml  # noqa: E402
 
 
 class PublicSkillTests(unittest.TestCase):
+    def test_entrypoint_routes_optional_guide_without_preloading_it(self) -> None:
+        package = render_package(REPO_ROOT)
+        entry = package[Path("SKILL.md")].decode("utf-8")
+        self.assertLess(len(entry.encode("utf-8")), 24_000)
+        self.assertNotIn("## Complete Command Guide", entry)
+        self.assertIn("references/skill-user-guide.md", entry)
+        self.assertNotIn("## Command Runtime Rules", entry)
+        self.assertNotIn("## Post-Gate-E PO Disposition", entry)
+        for name in ("skill-command-runtime.md", "skill-completion.md"):
+            self.assertIn(f"references/{name}", entry)
+            self.assertIn(Path("references") / name, package)
+        commands = package[Path("references/skill-command-runtime.md")].decode("utf-8")
+        dispatch = entry.split("## Command dispatch before state access", 1)[1].split("## Thin Front Door", 1)[0]
+        for section in re.findall(r"\*\*([^*]+)\*\*", dispatch):
+            self.assertIn(f"### {section}", commands)
+        self.assertIn("authorityStatePath", dispatch)
+        self.assertIn("before another state file", dispatch)
+        for role in ("po", "tdo", "dev", "reviewer"):
+            relative = f"references/role-skill-{role}.md"
+            self.assertIn(relative, entry)
+            self.assertIn(Path(relative), package)
+
     def _copy_repo(self, temporary: str) -> Path:
         copied = Path(temporary) / "repo"
         shutil.copytree(
@@ -202,18 +225,16 @@ class PublicSkillTests(unittest.TestCase):
         self.assertNotIn("In Codex, AIM is", skill)
 
     def test_public_front_door_is_newcomer_first_and_english(self) -> None:
-        skill = render_package(REPO_ROOT)[Path("SKILL.md")].decode("utf-8")
+        skill = render_package(REPO_ROOT)[Path("references/skill-user-guide.md")].decode("utf-8")
         ordered_headings = (
             "## Why AIM",
             "## How AIM Delivers Software",
             "## Start Here",
             "## Your First AIM Journey",
             "## Complete Command Guide",
-            "## Native Entry Surface",
         )
         positions = [skill.index(heading) for heading in ordered_headings]
         self.assertEqual(positions, sorted(positions))
-        self.assertIn("Build what you want without losing the goal", skill)
         self.assertIn("PO -> TDO -> Dev -> Reviewer -> TDO -> PO", skill)
         self.assertIn("1. Install AIM", skill)
         self.assertIn("2. Calibrate the repository", skill)
@@ -226,7 +247,7 @@ class PublicSkillTests(unittest.TestCase):
                 self.assertNotIn(marker, skill)
 
     def test_complete_command_guide_explains_every_supported_intent(self) -> None:
-        skill = render_package(REPO_ROOT)[Path("SKILL.md")].decode("utf-8")
+        skill = render_package(REPO_ROOT)[Path("references/skill-user-guide.md")].decode("utf-8")
         commands = (
             '/aim start "EPIC: ..."',
             "/aim continue",
@@ -347,6 +368,24 @@ class PublicSkillTests(unittest.TestCase):
                     f"missing generated notice in {path}",
                 )
 
+    def test_installed_release_resolves_manifest_not_consuming_application_version(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            consumer = Path(directory)
+            (consumer / "VERSION").write_text("99.88.77\n")
+            package = REPO_ROOT / PACKAGE_RELATIVE_PATH
+            program = (
+                "import sys; sys.path.insert(0, sys.argv[1]); "
+                "from aim_ui_control import resolve_product_version; "
+                "print(resolve_product_version())"
+            )
+            result = subprocess.run(
+                [sys.executable, "-S", "-c", program, str(package / "scripts")],
+                cwd=consumer, capture_output=True, text=True, timeout=10,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout.strip(), (REPO_ROOT / "VERSION").read_text().strip())
+            self.assertEqual((consumer / "VERSION").read_text(), "99.88.77\n")
+
     def test_version_contracts_are_separate_and_current(self) -> None:
         manifest = json.loads(
             (REPO_ROOT / PACKAGE_RELATIVE_PATH / "manifest.json").read_text(
@@ -429,7 +468,7 @@ class PublicSkillTests(unittest.TestCase):
                 "Outcome class: Product|Pilot|POC",
                 "closure truth audit",
                 "counterevidence",
-                "unassisted representative black-box pass",
+                "representative user-journey verification",
                 "forces `continue`",
                 "another coherent Done Increment",
                 "cannot turn missing evidence into proof",

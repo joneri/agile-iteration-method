@@ -17,7 +17,7 @@ AIM separates approval flow from runtime depth:
 `Cost Control` keeps the AIM loop intact while spending less:
 
 - compact role outputs
-- no subagents by default
+- no implementation subagents by default; material final review uses a separate available reviewer under `adaptive-execution.md`
 - narrow context loading
 - state-first resume from `.aim/state.json`
 - validator-first runtime checks

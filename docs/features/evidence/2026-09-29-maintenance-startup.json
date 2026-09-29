@@ -1,0 +1,24 @@
+{
+  "date": "2026-09-29",
+  "trigger": "Fresh AIM maintenance session blocked by existing fractional +00:00 UTC timestamp",
+  "changes": [
+    "Shared historical checkpoint timestamp validation in aim_activation and aim_start",
+    "Preserve exact prior state bytes and preview/apply fingerprint binding",
+    "New writes remain second-precision UTC Z"
+  ],
+  "verification": {
+    "targetedStartTests": 23,
+    "fullSuite": 389,
+    "documentationAudit": "pass",
+    "deterministicPackage": "pass",
+    "releaseValidation": "pass",
+    "publicationArtifact": "pass"
+  },
+  "doesNotEstablish": "Measured reduction in builder time; fix was made after frozen maintenance submission",
+  "originalSubmissionReplay": {
+    "originalSecondPilotBStateAccepted": true,
+    "historicalFilesPreserved": 17,
+    "newEpicVisibleOnBoard": true,
+    "dependencyFreePackagedCli": true
+  }
+}
