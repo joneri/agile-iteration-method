@@ -42,6 +42,12 @@ This file is an optional Copilot UX layer for AIM.
 Core method semantics come from `docs/workflow/agile-iteration-method.md`.
 This packaging is expected to expose the AIM 2.0 product surface on top of the stable runtime contract.
 
+## Combined decisions
+
+Use `docs/workflow/streamlined-decisions.md` for start, acceptance and Continue.
+It defines shared chat/CLI/UI proposals, explicit combined responses and safe
+registration; legacy gate messages keep their original meaning.
+
 ## Native entry surface
 
 In GitHub Copilot, AIM is **skill-led**: `.github/skills/aim/SKILL.md` is the
@@ -79,7 +85,7 @@ First-run onboarding contract:
 Onboarding states:
 - installed but not calibrated: recommend `/aim calibrate-repo`
 - calibrated but no Epic exists: recommend `/aim start "EPIC: <desired outcome>"`
-- Epic exists but is not approved: recommend reviewing Gate A and replying `approve` or `change: ...`
+- Epic exists but is not approved: prepare the direction and first Increment together for approval
 - Epic approved: recommend `/aim continue`
 - blocked: recommend resolving the named blocking issue
 
@@ -353,7 +359,7 @@ After that: <one short sentence>.
 Default state routing:
 - installed but not calibrated: `/aim calibrate-repo`
 - calibrated but no Epic exists: `/aim start "EPIC: <desired outcome>"`
-- Epic exists but is not approved: review Gate A and reply `approve` or `change: ...`
+- Epic exists but is not approved: review the combined direction and first-Increment proposal
 - Epic approved: `/aim continue`
 - blocked: resolve the named blocking issue
 

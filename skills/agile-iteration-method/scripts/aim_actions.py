@@ -12,9 +12,11 @@ from urllib.parse import urlencode
 
 
 ACTION_VERSION = "1.2"
+PROPOSAL_ACTION_VERSION = "1.3"
 WORKSPACE_ACTION_VERSION = "1.1"
 LEGACY_ACTION_VERSION = "1.0"
 SUPPORTED_ACTION_VERSIONS = {
+    PROPOSAL_ACTION_VERSION,
     LEGACY_ACTION_VERSION,
     WORKSPACE_ACTION_VERSION,
     ACTION_VERSION,
@@ -42,7 +44,10 @@ ACTION_PROMPT_PREAMBLE = (
     "action, resolve workspace relative to .aim; a v1.0 envelope has no direct "
     "runtime locator and must use the documented fail-closed compatibility "
     "resolution. Approve at Gate E accepts the Increment only; it does not close "
-    "the Epic."
+    "the Epic. For v1.3, validate the exact published decisionProposal and its "
+    "proposalSha256, then use aim_decisions.py apply with only the selected decisions "
+    "and this actual user response as provenance. A v1.3 Change invalidates the "
+    "proposal using aim_decisions.py change before replanning. Never expand older actions."
 )
 
 
@@ -119,7 +124,7 @@ def resolve_action_state_path(repo_root: Path, envelope: dict[str, Any]) -> Path
     """Resolve a v1.2 gate action to one exact state file under `.aim`."""
 
     validate_action_envelope(envelope)
-    if envelope.get("actionVersion") != ACTION_VERSION or envelope.get("action") == "activate":
+    if envelope.get("actionVersion") not in {ACTION_VERSION, PROPOSAL_ACTION_VERSION} or envelope.get("action") == "activate":
         raise AimActionError("Only v1.2 gate actions have an authorityStatePath.")
     selector = envelope.get("authorityStatePath")
     _validate_authority_state_path(selector)
@@ -175,6 +180,7 @@ def validate_action_envelope(value: Any) -> None:
         "actionVersion", "action", "epicId", "candidateId", "incrementId",
         "gate", "expectedStatus", "expectedUpdatedAt", "backlogUpdatedAt",
         "changeRequest", "workspace", "authorityStatePath", "expectedLastGatePassed",
+        "proposalId", "proposalSha256", "decisions",
     }
     extra = sorted(set(value) - allowed)
     if extra:
@@ -198,6 +204,29 @@ def validate_action_envelope(value: Any) -> None:
     timestamp = value.get("expectedUpdatedAt")
     if not isinstance(timestamp, str) or not 1 <= len(timestamp) <= 64:
         raise AimActionError("expectedUpdatedAt must be present and bounded.")
+    if version == PROPOSAL_ACTION_VERSION:
+        from aim_decisions import DECISIONS, ID
+        _validate_authority_state_path(value.get("authorityStatePath"))
+        if action not in {"approve", "change"} or not ID.fullmatch(str(value.get("proposalId", ""))):
+            raise AimActionError("v1.3 requires an explicit proposal and approve/change action.")
+        if not re.fullmatch(r"[0-9a-f]{64}", str(value.get("proposalSha256", ""))):
+            raise AimActionError("v1.3 requires the published proposal digest.")
+        if not DI_RE.fullmatch(str(value.get("incrementId", ""))):
+            raise AimActionError("v1.3 requires a canonical Increment.")
+        choices = value.get("decisions")
+        if not isinstance(choices, list) or not choices or any(not isinstance(x, str) for x in choices) or len(choices) != len(set(choices)) or not set(choices) <= DECISIONS:
+            raise AimActionError("v1.3 requires exact selected decisions.")
+        checkpoints = {"gate_a_pending": None, "gate_b_pending": "Gate A", "po_approval_pending": "Gate D", "done_increment_accepted": "Gate E"}
+        if value.get("expectedStatus") not in checkpoints or "expectedLastGatePassed" not in value or value["expectedLastGatePassed"] != checkpoints[value["expectedStatus"]]:
+            raise AimActionError("v1.3 checkpoint is contradictory.")
+        if any(key in value for key in ("workspace", "gate", "candidateId", "backlogUpdatedAt")):
+            raise AimActionError("v1.3 uses proposal authority, not legacy gate selectors.")
+        request = value.get("changeRequest")
+        if request is not None and (action != "change" or not isinstance(request, str) or not 1 <= len(request.strip()) <= 2000):
+            raise AimActionError("Invalid changeRequest.")
+        return
+    if any(key in value for key in ("proposalId", "proposalSha256", "decisions")):
+        raise AimActionError("Legacy actions cannot carry combined decisions.")
     if action == "activate":
         if not isinstance(value.get("candidateId"), str) or not INC_RE.fullmatch(value["candidateId"]):
             raise AimActionError("Activate requires a canonical INC-* candidateId.")
@@ -277,6 +306,9 @@ def validate_against_current(
     validate_action_envelope(envelope)
     issues: list[str] = []
     for expected_key, current_key in (
+        ("proposalId", "proposalId"),
+        ("proposalSha256", "proposalSha256"),
+        ("decisions", "decisions"),
         ("epicId", "epicId"),
         ("candidateId", "candidateId"),
         ("incrementId", "incrementId"),
@@ -293,3 +325,20 @@ def validate_against_current(
     if envelope["action"] == "activate" and not admission_allowed:
         issues.append("Portfolio admission is no longer available.")
     return issues
+
+
+def proposal_action(action: str, proposal: dict, state: dict, decisions: list[str]) -> dict:
+    from aim_decisions import digest
+    if not set(decisions) <= set(proposal["decisions"]):
+        raise AimActionError("Selected decisions were not offered.")
+    envelope = {
+        "actionVersion": PROPOSAL_ACTION_VERSION, "action": action,
+        "epicId": proposal["epicId"], "incrementId": proposal["incrementId"],
+        "authorityStatePath": proposal["authorityStatePath"],
+        "expectedStatus": state["epicStatus"], "expectedUpdatedAt": state["updatedAt"],
+        "expectedLastGatePassed": state["lastGatePassed"],
+        "proposalId": proposal["proposalId"], "proposalSha256": digest(proposal),
+        "decisions": decisions,
+    }
+    validate_action_envelope(envelope)
+    return envelope

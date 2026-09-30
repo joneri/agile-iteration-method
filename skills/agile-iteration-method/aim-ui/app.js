@@ -415,6 +415,24 @@ function renderPeople(epics, board) {
   });
 }
 
+function renderDecisionContext(control, item) {
+  const old = control.querySelector(".decision-summary");
+  if (old) old.remove();
+  const summary = item.decisionSummary;
+  const next = item.nextStep;
+  if (!summary && !next) return;
+  const section = el("div", "decision-summary");
+  if (summary) {
+    section.append(el("p", "", summary.summary));
+    section.append(el("p", "", `Scope: ${summary.scope}`));
+    section.append(el("p", "", `Remaining: ${summary.remainingWork}`));
+    section.append(el("p", "", `Risk: ${summary.risk}`));
+  }
+  if (next) section.append(el("p", "", `${next.summary} ${next.nextDecision}`));
+  control.prepend(section);
+  control.hidden = false;
+}
+
 function actionEnvelope() {
   if (!state.pendingAction) return null;
   const envelope = { ...state.pendingAction.envelope };
@@ -444,7 +462,7 @@ function openActionDialog(action) {
   state.pendingAction = action;
   $("action-dialog-title").textContent = `${action.label} with AIM`;
   const target = action.envelope.candidateId || action.envelope.incrementId || action.envelope.epicId;
-  $("action-target").textContent = `${target} · ${action.envelope.gate || "portfolio admission"}`;
+  $("action-target").textContent = `${target} · ${action.envelope.proposalId ? "delivery decision" : action.envelope.gate || "portfolio admission"}`;
   const needsInput = action.kind === "change";
   $("change-field").hidden = !needsInput;
   $("change-request").value = "";
@@ -673,6 +691,7 @@ function renderCard(increment, epic, index, existingCard = null) {
     unavailable.textContent = reason;
   }
   control.hidden = actions.childElementCount === 0 && !reason;
+  renderDecisionContext(control, increment);
   return card;
 }
 
@@ -856,6 +875,7 @@ function renderEpicLaneCard(epic, index, existingCard = null) {
   unavailable.hidden = !reason;
   unavailable.textContent = reason || "";
   control.hidden = actions.childElementCount === 0 && !reason;
+  renderDecisionContext(control, epic);
   return card;
 }
 

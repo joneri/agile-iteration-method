@@ -1,5 +1,11 @@
 # Command runtime reference
 
+New combined proposals follow [Combined decisions and predictable continuation](streamlined-decisions.md).
+They preserve logical gates while allowing one explicit response for direction
+plus first plan, or delivery plus disposition. Legacy gate actions retain their
+original scope. Use the same shared helper and next-step resolver in chat, CLI
+and UI; no UI session is required.
+
 Load only the section selected by the portable entry point. Script paths are
 relative to the trusted package root, not this reference directory. These rules
 preserve command behavior; progressive loading does not grant new authority.
@@ -125,6 +131,11 @@ acceptance, revalidate again, record the distinct `Epic closure` decision with `
 provenance, complete the active candidate, and activate the next snapshot
 candidate without another user message. Gate E still accepts the Increment
 only; the mandate authorizes the subsequent closure transition.
+Select the next candidate only as `activation_pending`; keep it Planned while
+creating or continuing its contained workspace and verifying its canonical
+`runtimeIncrementId`, Backlog and catalog links. Only then checkpoint the
+workspace status. Resume pending activation deterministically without another
+user message; missing later relations remain fail-closed.
 A validated completed or stopped run may be moved unchanged into contained
 `.aim/archive/` only through the helper's explicit, timestamp-guarded `archive`
 command. Running, paused, stale, malformed, symlinked, or colliding state blocks
@@ -274,11 +285,12 @@ identity and expected state field; zero or multiple matches fail closed, and
 root state is not an implicit fallback. Reject unknown versions, stale,
 replayed, ambiguous, malformed, or no-longer-admissible envelopes without
 mutation. A prefilled composer is not evidence that the user sent or approved
-it. Gate E approval accepts the Increment only; Epic closure remains a separate
+it. Legacy Gate E approval accepts the Increment only; Epic closure remains a separate
 explicit PO decision. Ordinary runs require the user for that decision. In
 Portfolio Auto, the active revalidated bounded mandate is the explicit PO
-authority for the subsequent separate closure; a Gate E action envelope never
-performs it.
+authority for the subsequent separate closure; a legacy Gate E action envelope never
+performs it. Version 1.3 explicitly names selected combined decisions as defined
+in `streamlined-decisions.md`; validate the proposal digest before apply.
 
 ### UI gate publication
 

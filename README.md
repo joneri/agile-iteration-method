@@ -1,6 +1,6 @@
-# Agile Iteration Method (AIM) 3.1
+# Agile Iteration Method (AIM) 3.2
 
-![AIM 3.1.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 3.2.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
 
@@ -112,7 +112,7 @@ PO -> TDO -> Dev -> Reviewer -> TDO -> PO
 
 Gate A approves the Epic. Gate B approves the next increment. Gate E accepts the result. Review and technical validation happen before acceptance.
 
-`Strict` pauses at every hard gate. `Auto` continues while the approved direction remains clear, but still stops for risk, scope changes, and final Epic acceptance.
+`Strict` asks for direction and first-plan approval together, then delivery acceptance with a prepared Epic disposition. `Auto` continues while the approved direction remains clear, but still stops for risk, scope changes, and final Epic acceptance.
 
 ## Repository-aware, not repository-heavy
 
@@ -141,24 +141,24 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v3.1.0
+## What is new in v3.2.0
 
-**AIM 3.1 brings project-specific skills, adaptive agent allocation and review evidence tied to current code.** Returning from early 3.0? AIM UI now brings clearer workflows, preserved work and verified recovery status together in one control room.
+**Fewer approvals. Clearer next steps. AIM 3.2 brings the decisions together so you can focus on the work.** In a straightforward Strict Epic with one Increment, approve the direction and plan together, then accept the verified delivery and Epic closure together.
 
-- **Project skill matching:** verify available role instructions and refresh affected bindings as the project changes.
-- **Useful agent allocation:** choose work from dependencies, risk, ownership and available host capacity.
-- **Current-code review:** separate reviewers for material changes; explicit proportional self-review for genuinely small, understood changes.
-- **Scoped repository knowledge:** retain sources, calibrated coverage, contradictions and prior evidence.
-- **Stronger engineering checks:** exercise mutation recovery, resource workloads and installed runtime dependencies.
+- **One clear start:** see the Epic goal, first Increment, remaining work and risks before approving both direction and plan.
+- **One clear finish:** accept the Increment and a verified Epic closure together, or accept only the Increment and keep the Epic open.
+- **AIM finds the next step:** when work remains, accepted continuation leads to planning the next Increment. Strict still asks before implementing that plan.
+- **Predictable Continue:** chat, CLI and UI share the next-step resolver. A saved pause or blocker takes precedence over a change request; an approved scope split stays approved.
+- **Reliable registration:** interrupted or repeated approval calls preserve committed acceptance without duplicate decisions. Earlier gate approvals retain their original meaning.
+
+Project-specific skills, adaptive agent allocation, review tied to current code and reusable repository knowledge remain part of AIM. Review and whole-Epic verification still apply. See [combined decisions](docs/workflow/streamlined-decisions.md). Full agent-runtime savings have not yet been measured.
 
 **Less memory. Faster code in our latest data test:** the AIM-built program used **59% less peak RAM with 12% shorter runtime** than the same model without AIM. This measured three stages of one product using a pre-3.1 candidate. Development took longer and both products retained a behavior defect; no overall protocol win was established. See the [evaluation notes](docs/features/aim-3.1-evaluation.md) and [feature guide](docs/product/features.md).
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
 See the [AIM UI Beta guide](docs/product/aim-ui.md), or launch it with `/aim ui`.
-AIM Reflect still **goes beyond memory cleanup for repository work** through
-verified provenance and user-owned promotion. The AIM runtime contract remains
-2.0; product, runtime, installer, and schema versions stay separate.
+AIM Reflect still **goes beyond memory cleanup for repository work** through verified provenance and user-owned promotion. The AIM runtime contract remains 2.0; product, runtime, installer, and schema versions stay separate.
 
 ## Safety
 
@@ -176,4 +176,4 @@ verified provenance and user-owned promotion. The AIM runtime contract remains
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product version: **v3.1.0**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product version: **v3.2.0**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).

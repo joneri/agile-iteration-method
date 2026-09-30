@@ -287,10 +287,10 @@ OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
-        "# Agile Iteration Method (AIM) 3.1",
+        "# Agile Iteration Method (AIM) 3.2",
         "## Install",
         "## How AIM works",
-        "## What is new in v3.1.0",
+        "## What is new in v3.2.0",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",

@@ -1,6 +1,6 @@
 # AIM feature guide
 
-This is the short map of what AIM 3.1 does. Follow the links only when you need
+This is the short map of what AIM 3.2 does. Follow the links only when you need
 the operating detail.
 
 Returning from early 3.0? AIM UI combines clearer workflows with preserved work,
@@ -17,8 +17,9 @@ it does not replace checking relevant code or guarantee whole-repository coverag
 - One Done Increment is active at a time.
 - PO, TDO, Dev, and Reviewer keep planning, implementation, review, validation,
   and acceptance separate.
-- Gate A approves the Epic, Gate B approves the increment, and Gate E accepts
-  the result.
+- Direction and the first Increment can be approved together. Delivery and its
+  prepared Epic disposition can share one explicit acceptance. Logical Gate A,
+  B and E decisions remain traceable.
 - Failed review or validation returns the increment for correction.
 
 See the [canonical AIM method](../workflow/agile-iteration-method.md).
@@ -36,7 +37,8 @@ This makes AIM audience-aware from the first generated artifact. See the
 
 ## Control and cost
 
-- `Strict` pauses at all hard gates.
+- `Strict` asks for plan approval and delivery acceptance; combined proposals
+  avoid separate routine Epic approvals.
 - `Auto` continues until risk, changed scope, uncertainty, or final acceptance
   requires a person.
 - `Standard`, `Cost Control`, and `Deep` change context and verification depth;
@@ -200,3 +202,6 @@ and [adaptive installation](../workflow/install-aim-2.0.md).
 - Publication builds a deterministic Pages artifact before deployment.
 
 See [release and publication](../workflow/release-publication-model.md).
+
+See [combined decisions and Continue](../workflow/streamlined-decisions.md) for
+chat/CLI operation, partial acceptance, recovery and legacy compatibility.

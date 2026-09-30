@@ -30,6 +30,14 @@ validates it, and asks for the decisions that still belong to you.
 
 Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into a portable Agent Skill.
 
+## Combined approvals and continuation
+
+For start, approval, Continue or completion, load
+`references/streamlined-decisions.md`. Combine direction with the first plan,
+and prepare the Epic disposition before delivery acceptance. Use the shared
+`aim_decisions.py` helper. Chat and CLI work without UI; legacy actions retain
+their scope. Keep handoffs concise and preserve existing Auto mandates.
+
 ## On-demand user guide
 
 For installation, first-time explanations or the complete command overview,
@@ -116,7 +124,7 @@ State routing:
 
 1. Installed but not calibrated: recommend `/aim calibrate-repo`.
 2. Calibrated but no Epic exists: recommend `/aim start "EPIC: <desired outcome>"`.
-3. Epic exists but is not approved: recommend reviewing Gate A and replying `approve` or `change: ...`.
+3. Epic exists but is not approved: prepare the direction and first Increment together for approval.
 4. Epic approved: recommend `/aim continue`.
 5. Blocked: recommend resolving the named blocking issue.
 
@@ -252,7 +260,7 @@ onboarding state first and show only the first useful choice by default:
 
 - installed but not calibrated: `/aim calibrate-repo`
 - calibrated but no Epic exists: `/aim start "EPIC: <desired outcome>"`
-- Epic exists but is not approved: review Gate A and reply `approve` or `change: ...`
+- Epic exists but is not approved: review the combined direction and first-Increment proposal
 - Epic approved: `/aim continue`
 - blocked: resolve the named blocking issue
 
@@ -308,10 +316,9 @@ Canonical roles are only `PO`, `TDO`, `Dev`, and `Reviewer`. Map aliases explici
 
 Hard gates:
 
-- Gate A: Epic ready. Approval is meaningful.
+- Gate A: Epic ready; normally approved with the first Gate B proposal.
 - Gate B: Done Increment spec ready. Approval is meaningful.
-- Gate E: Increment acceptance, followed by a separate Epic continuation or
-  closure decision. Approval is meaningful.
+- Gate E: Increment acceptance and a prepared, explicitly scoped Epic disposition. Approval is meaningful.
 
 Soft gates:
 
@@ -365,7 +372,16 @@ Every hard-gate checkpoint must make clear:
 - exact files planned or touched
 - how the user should evaluate the step
 
-Use `approve` and `change: ...` as transport shortcuts at hard gates. In Strict mode, stop at Gate A, Gate B, and Gate E and wait for explicit user approval or change direction before advancing state or doing further work. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion. For ordinary Auto, the final pause returns Epic acceptance to the user. For Portfolio Auto, perform the full review as a required execution checkpoint and use the revalidated mandate to record a separate eligible Epic closure. For the final candidate in an Epic, preserve the closed workspace, accepted evidence, Backlog runtime link, and UI catalog entry before completing it. Earlier candidates complete at Gate E and continue in the same Epic as described above. Select the next candidate only as `activation_pending`; keep it Planned while creating and validating its contained workspace, canonical state, and `runtimeIncrementId`, then advance the Portfolio checkpoint to the exact workspace status. Resume an interrupted `activation_pending` transition deterministically and fail closed on any later missing or mismatched runtime relation. This sequence needs no additional user message unless an escalation condition applies.
+Use `approve` and `change: ...` for the exact presented proposal. In Strict,
+combine direction and first plan, and prepare the Epic disposition before
+acceptance. Wait before unapproved implementation and acceptance. Auto retains
+its mandate and escalation rules; ordinary Auto returns final acceptance to the
+user. Portfolio Auto uses its revalidated bounded mandate and preserves canonical
+closure evidence. Use `references/streamlined-decisions.md` for combined decisions
+and retries, and the Portfolio sections of `references/skill-command-runtime.md`
+for candidate completion, activation_pending and recovery. No routine extra
+operator message is required for already authorized work.
+
 
 ## State And Validation
 

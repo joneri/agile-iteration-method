@@ -23,6 +23,18 @@ the portable fallback.
 
 Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into Codex skill form.
 
+## Combined approvals and continuation
+
+For startup, plan/delivery approval, Continue or completion, use
+`references/streamlined-decisions.md`. Prepare Epic direction and first
+Increment together; prepare the Epic disposition before delivery acceptance.
+A clearly offered combined response can authorize both logical decisions.
+Use the shared `aim_decisions.py` helper; legacy messages never gain authority.
+Chat and terminal agents are complete paths without UI. Keep next-step and
+Continue guidance to one or two sentences at actual handoffs. Reuse valid
+approvals for administrative retries; changed accepted deliverables need a new
+proposal. Auto and Portfolio mandates retain their existing boundaries.
+
 ## Native Entry Surface
 
 In Codex, AIM is **skill/package-first**: this installed AIM skill/package is the
@@ -73,7 +85,7 @@ State routing:
 
 1. Installed but not calibrated: recommend `/aim calibrate-repo`.
 2. Calibrated but no Epic exists: recommend `/aim start "EPIC: <desired outcome>"`.
-3. Epic exists but is not approved: recommend reviewing Gate A and replying `approve` or `change: ...`.
+3. Epic exists but is not approved: prepare the direction and first Increment together for approval.
 4. Epic approved: recommend `/aim continue`.
 5. Blocked: recommend resolving the named blocking issue.
 
@@ -316,8 +328,9 @@ accepted evidence, non-goals, and remaining gaps. PO must recommend exactly one
 of `close`, `continue`, or `split`, state the rationale and remaining-scope
 consequence, and must not merely ask the user to choose among undirected
 options. The recommendation is not authority: ordinary Strict and Auto require
-the user's separate disposition decision. Resume at this checkpoint repeats the
-assessment before mutation. Portfolio Auto records the same recommendation
+the user's explicit disposition decision, which may share the presented
+Increment-acceptance response. On resume, reuse current evidence and a recorded
+valid decision; reassess only missing or changed inputs. Portfolio Auto records the same recommendation
 before its separately revalidated mandate may authorize eligible closure.
 
 An accepted Increment proves only that Increment. Before recommending `close`,
@@ -336,8 +349,9 @@ alone may close only an explicitly bounded POC, not prove a Product outcome.
 Missing or contradictory evidence forces `continue` and another coherent Done
 Increment; prefer that over premature closure. `split` cannot discard unmet
 Epic criteria. User acceptance and Portfolio authority authorize a decision but
-cannot turn missing evidence into proof. Canonical closure must use the trusted
-package-owned `scripts/aim_runtime_contract.py close` preview/apply flow and
+cannot turn missing evidence into proof. Canonical combined closure uses `scripts/aim_decisions.py apply`; legacy
+closure uses the trusted `scripts/aim_runtime_contract.py close` preview/apply
+flow. Both
 bind its contained JSON truth audit through `epicClosureEvidence`.
 direct `epic_complete` writes are non-canonical. Closure state must also bind
 `epicClosureEvidenceSha256` and `epicClosureEvidenceSetSha256`. Every cited
@@ -370,7 +384,7 @@ onboarding state first and show only the first useful choice by default:
 
 - installed but not calibrated: `/aim calibrate-repo`
 - calibrated but no Epic exists: `/aim start "EPIC: <desired outcome>"`
-- Epic exists but is not approved: review Gate A and reply `approve` or `change: ...`
+- Epic exists but is not approved: review the combined direction and first-Increment proposal
 - Epic approved: `/aim continue`
 - blocked: resolve the named blocking issue
 
@@ -418,10 +432,9 @@ Canonical roles are only `PO`, `TDO`, `Dev`, and `Reviewer`. Map aliases explici
 
 Hard gates:
 
-- Gate A: Epic ready. Approval is meaningful.
+- Gate A: Epic ready; normally approved with the first Gate B proposal.
 - Gate B: Done Increment spec ready. Approval is meaningful.
-- Gate E: Increment acceptance, followed by a separate Epic continuation or
-  closure decision. Approval is meaningful.
+- Gate E: Increment acceptance and a prepared, explicitly scoped Epic disposition. Approval is meaningful.
 
 Soft gates:
 
@@ -474,7 +487,7 @@ Every hard-gate checkpoint must make clear:
 - exact files planned or touched
 - how the user should evaluate the step
 
-Use `approve` and `change: ...` as transport shortcuts at hard gates. In Strict mode, stop at Gate A, Gate B, and Gate E and wait for explicit user approval or change direction before advancing state or doing further work. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion. For ordinary Auto, the final pause returns Epic acceptance to the user. For Portfolio Auto, perform the full review as a required execution checkpoint and use the revalidated mandate to record a separate eligible Epic closure. Preserve the closed workspace, accepted evidence, Backlog runtime link, and UI catalog entry before completing the candidate. Select the next candidate only as `activation_pending`; keep it Planned while creating and validating its contained workspace, canonical state, and `runtimeIncrementId`, then advance the Portfolio checkpoint to the exact workspace status. Resume an interrupted `activation_pending` transition deterministically and fail closed on any later missing or mismatched runtime relation. This sequence needs no additional user message unless an escalation condition applies.
+Use `approve` and `change: ...` as transport shortcuts at hard gates. In Strict mode, combine Gate A with the first Gate B proposal and combine Gate E with the prepared disposition when explicitly offered. Wait for approval before implementation and acceptance; planning and evidence preparation need no extra pause. In Auto mode, report hard gates without pausing between increments; require a final full-review pause before Epic completion. For ordinary Auto, the final pause returns Epic acceptance to the user. For Portfolio Auto, perform the full review as a required execution checkpoint and use the revalidated mandate to record a separate eligible Epic closure. Preserve the closed workspace, accepted evidence, Backlog runtime link, and UI catalog entry before completing the candidate. Select the next candidate only as `activation_pending`; keep it Planned while creating and validating its contained workspace, canonical state, and `runtimeIncrementId`, then advance the Portfolio checkpoint to the exact workspace status. Resume an interrupted `activation_pending` transition deterministically and fail closed on any later missing or mismatched runtime relation. This sequence needs no additional user message unless an escalation condition applies.
 
 ## State And Validation
 

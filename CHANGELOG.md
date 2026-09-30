@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-09-30 - AIM 3.2 feature release v3.2.0
+
+**Fewer approvals. Clearer next steps.** AIM 3.2 brings direction and first-plan approval together, then delivery acceptance and verified Epic closure together. A straightforward single-Increment Strict Epic has two ordinary decision moments, with the same review and whole-Epic verification requirements.
+
+- Present the Epic goal, first Increment, remaining work and risks before a combined start decision.
+- Prepare the whole-Epic recommendation before offering delivery acceptance. Users can accept only the Increment, or also approve the explicitly offered close, continuation or scope split.
+- Plan the next Increment after accepted continuation; Strict still requires approval of its plan before implementation.
+- Share versioned proposals and next-step information across chat, CLI and AIM UI.
+- Register decisions with immutable receipts, a workspace process lock, an atomic state commit and idempotent recovery from interrupted calls.
+- Check closure readiness without fabricating acceptance; reject changed proof, changed product inputs and stale proposals.
+- Preserve committed acceptance, legacy gate semantics and bounded Auto/Portfolio authority.
+- Fix Continue so saved pauses and blockers take precedence over change requests, and an accepted split leads to its recorded work rather than another request for the same disposition.
+
+Compatibility: runtime contract `2.0`, runtime-state schema `1.0` and installer manifest `1.0` remain unchanged. The generated public skill package revision is `17`. Runtime-schema decision fields are optional; existing runs and gate responses retain their original meaning.
+
+Validation: 497 regression tests, including two connected headless CLI scenarios using isolated fixtures and fresh processes; the external review's two reproduced Continue issues are covered by regression tests. Release gates also check generated package integrity, official skills CLI discovery/installations, documentation, engineering evidence and deterministic publication artifacts.
+
+Migration: run `npx skills update agile-iteration-method --yes`, reload the skill session and restart AIM UI. Adaptive installations use `/aim upgrade`. No runtime-state migration is required; older approvals never silently acquire combined-decision authority.
+
+Known limitations: end-to-end runtime savings and user understanding have not yet been measured through real coding-agent sessions. The local registration microbenchmark measures only the helper function, not the full agent turn. Native execution and specialist support depend on the host; AIM UI remains Beta. Review and whole-Epic verification remain required. See [the combined-decision contract](docs/workflow/streamlined-decisions.md) and [implementation evidence](docs/plans/streamlined-aim-implementation.md).
+
 ## 2026-09-29 - AIM 3.1 feature release v3.1.0
 
 - Add validated project-specific role skill bindings and provisional requirements-based skill suggestions.

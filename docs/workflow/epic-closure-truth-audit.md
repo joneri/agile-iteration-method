@@ -42,7 +42,8 @@ its own claim.
 
 Write the artifact inside the authoritative workspace's `decisions/` directory
 and bind its repository-relative path as `epicClosureEvidence` in state only
-through `scripts/aim_runtime_contract.py close`. The transition also records
+through `scripts/aim_runtime_contract.py close` or the combined
+`scripts/aim_decisions.py apply` commit. The transition also records
 `epicClosureEvidenceSha256`, so later modification invalidates closure. Each
 referenced evidence item is an object containing `path`, `sha256`, and `kind`.
 The transition also records `epicClosureEvidenceSetSha256`, a deterministic
@@ -145,7 +146,10 @@ binds at least one concrete `negative_test` artifact.
 Closure authority is a separate, contained `authority_decision` Markdown
 record. It identifies the Epic, explicitly approves Epic closure, and matches
 `decisionAuthority`. Portfolio authority also records its mandate provenance.
-Gate E acceptance alone is not this decision.
+Gate E acceptance alone is not this decision. A clearly presented combined
+proposal may record both logical decisions from the same actual user response;
+see [combined decisions](streamlined-decisions.md). The read-only readiness
+check omits authority validation, never quality checks or required evidence.
 
 ## Required negative search
 

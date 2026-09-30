@@ -263,6 +263,27 @@ def verify_action_result(repo_root: Path, operation: dict[str, Any]) -> dict[str
             return None
         if state.get("epicId") != envelope["epicId"]:
             return None
+        if envelope.get("actionVersion") == "1.3":
+            from aim_quality.files import read_evidence
+            for reference in state.get("decisionReceipts", []):
+                payload = read_evidence(repo_root, reference["path"])
+                if hashlib.sha256(payload).hexdigest() != reference["sha256"]:
+                    return None
+                receipt = json.loads(payload)
+                response = receipt["response"]
+                if response["proposalSha256"] == envelope["proposalSha256"] and response["decisions"] == envelope["decisions"]:
+                    if "close_epic" in response["decisions"]:
+                        from aim_runtime_contract import epic_closure_evidence
+                        if state["epicStatus"] != "epic_complete" or epic_closure_evidence(repo_root, current, state)[1]:
+                            return None
+                    return {
+                        "verified": True, "checkedAt": utc_now(),
+                        "message": "Selected decisions verified against their committed receipt.",
+                        "epicId": envelope["epicId"], "incrementId": envelope["incrementId"],
+                        "statePath": state_path.relative_to(repo_root).as_posix(),
+                        "stateDigest": canonical_digest(state), "acceptancePath": reference["path"],
+                    }
+            return None
         if envelope["action"] != "activate" and state.get("updatedAt") == envelope["expectedUpdatedAt"]:
             return None
         increment_id = envelope.get("incrementId") or target.get("plannedIncrementId")

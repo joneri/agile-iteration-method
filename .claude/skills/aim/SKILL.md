@@ -16,6 +16,18 @@ Follow:
 - `docs/workflow/adapter-skill-bootstrap.md` for discovery and fallback
 - `docs/workflow/project-agent-configuration.md` for role specialization
 
+## Combined approvals and continuation
+
+For startup, plan/delivery approval, Continue or completion, use
+`docs/workflow/streamlined-decisions.md`. Prepare Epic direction and first
+Increment together; prepare the Epic disposition before delivery acceptance.
+A clearly offered combined response can authorize both logical decisions.
+Use the shared `aim_decisions.py` helper; legacy messages never gain authority.
+Chat and terminal agents are complete paths without UI. Keep next-step and
+Continue guidance to one or two sentences at actual handoffs. Reuse valid
+approvals for administrative retries; changed accepted deliverables need a new
+proposal. Auto and Portfolio mandates retain their existing boundaries.
+
 ## Adaptive product execution
 
 For product implementation or material review, read
@@ -112,8 +124,8 @@ At `done_increment_accepted`, PO evaluates the Epic goal, acceptance criteria,
 accepted evidence, non-goals, and remaining gaps. PO must recommend exactly one
 of `close`, `continue`, or `split`, with rationale and remaining-scope
 consequence; it must not merely ask the user to choose. The recommendation is
-not authority. Ordinary Strict and Auto require the user's separate decision,
-resume repeats the assessment before mutation, and Portfolio Auto records it
+not authority. Ordinary Strict and Auto require an explicit decision, which may share the
+presented delivery response; resume reuses valid evidence and authority, and Portfolio Auto records it
 before mandate-authorized closure.
 
 An accepted Increment proves only that Increment. Gate A must classify the Epic
@@ -128,8 +140,8 @@ acceptance criteria. Synthetic or mocked evidence alone can close only an
 explicit POC. Any partial criterion,
 unresolved finding, contradiction, or remaining Epic gap forces `continue` and
 another coherent Done Increment. User acceptance or Portfolio authority cannot
-substitute for evidence. Use trusted `scripts/aim_runtime_contract.py close`
-preview/apply and bind `epicClosureEvidence`; direct `epic_complete` writes are
+substitute for evidence. Use trusted `scripts/aim_decisions.py apply` for combined decisions or
+`scripts/aim_runtime_contract.py close` for legacy closure, and bind `epicClosureEvidence`; direct `epic_complete` writes are
 non-canonical. Require the state SHA-256 binding and existing contained evidence
 files, including the aggregate evidence-set SHA-256, structured black-box and
 negative-test records, and a separate matching closure-authority decision.

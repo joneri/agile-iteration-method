@@ -254,12 +254,12 @@ class AdapterCommandContractTests(unittest.TestCase):
         )
         self.assertIn("Gate E accepts the Increment only", contract)
         self.assertIn("requires the user", contract)
-        self.assertIn("no Gate E action envelope may itself", contract)
+        self.assertIn("no legacy Gate E action envelope may itself", contract)
         portable = (
             REPO_ROOT / "adapters/portable/agile-iteration-method/SKILL.md"
         ).read_text(encoding="utf-8")
         self.assertNotIn("Final Epic acceptance always remains yours", portable)
-        self.assertIn("followed by a separate Epic continuation", portable)
+        self.assertIn("a prepared, explicitly scoped Epic disposition", portable)
 
         for relative in (
             ".github/prompts/start-aim.prompt.md",
@@ -383,7 +383,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "3.1.0")
+        self.assertEqual(version, "3.2.0")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",

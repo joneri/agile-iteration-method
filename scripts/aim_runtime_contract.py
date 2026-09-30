@@ -14,6 +14,7 @@ from pathlib import PurePosixPath
 from typing import Any
 
 from aim_quality.files import read_evidence
+from aim_runtime_lock import serialized_transition
 
 
 CANONICAL_RUNTIME_STATUSES = {
@@ -498,7 +499,20 @@ def _epic_closure_evidence_analysis(
     if expected_sha256 != actual_sha256:
         issues.append("epicClosureEvidenceSha256 does not bind the current artifact")
 
-    epic_id = state.get("epicId")
+    content_issues, evidence_set_sha256 = closure_content_issues(
+        workspace, state.get("epicId"), evidence, require_authority=True
+    )
+    issues.extend(content_issues)
+    if state.get("epicClosureEvidenceSetSha256") != evidence_set_sha256:
+        issues.append("epicClosureEvidenceSetSha256 does not bind all current referenced evidence")
+    return (path if not issues else None), issues, evidence_set_sha256
+
+
+def closure_content_issues(
+    workspace: Path, epic_id: str, evidence: dict[str, Any], *, require_authority: bool
+) -> tuple[list[str], str | None]:
+    """Shared quality checks. Readiness never creates or assumes acceptance."""
+    issues: list[str] = []
     if evidence.get("schemaVersion") != "1.0":
         issues.append("closure evidence schemaVersion is not 1.0")
     if evidence.get("epicId") != epic_id:
@@ -648,23 +662,20 @@ def _epic_closure_evidence_analysis(
                         manifest, "black-box validation", black_box
                     )
                 )
-    authority = evidence.get("decisionAuthority")
-    if authority not in {"user", "portfolio_mandate"}:
-        issues.append("closure evidence has no supported decision authority")
-    authority_issues, authority_manifests = _evidence_reference_issues(
-        workspace, evidence.get("authorityEvidence"), "closure authority", evidence_cache
-    )
-    issues.extend(authority_issues)
-    manifests.extend(authority_manifests)
-    issues.extend(_authority_record_issues(authority_manifests, authority, epic_id))
+    if require_authority:
+        authority = evidence.get("decisionAuthority")
+        if authority not in {"user", "portfolio_mandate"}:
+            issues.append("closure evidence has no supported decision authority")
+        authority_issues, authority_manifests = _evidence_reference_issues(
+            workspace, evidence.get("authorityEvidence"), "closure authority", evidence_cache
+        )
+        issues.extend(authority_issues)
+        manifests.extend(authority_manifests)
+        issues.extend(_authority_record_issues(authority_manifests, authority, epic_id))
 
     evidence_set_sha256, evidence_set_issues = _evidence_set_sha256(manifests)
     issues.extend(evidence_set_issues)
-    if state.get("epicClosureEvidenceSetSha256") != evidence_set_sha256:
-        issues.append(
-            "epicClosureEvidenceSetSha256 does not bind all current referenced evidence"
-        )
-    return (path if not issues else None), issues, evidence_set_sha256
+    return issues, evidence_set_sha256
 
 
 def epic_closure_evidence(
@@ -917,6 +928,9 @@ def plan_post_gate_e_continue(
             "backlog": backlog,
         }
     candidate = dict(source)
+    for field in ("decisionProposal", "decisionChange", "epicDisposition", "nextWork"):
+        candidate.pop(field, None)
+
     if candidate_id is not None:
         candidate["portfolioCandidateId"] = candidate_id
     candidate.pop("plannedIncrementId", None)
@@ -967,6 +981,7 @@ def plan_post_gate_e_continue(
     }
 
 
+@serialized_transition
 def apply_post_gate_e_continue(
     repo_root: Path,
     *,
@@ -1147,6 +1162,7 @@ def plan_epic_closure(
     }
 
 
+@serialized_transition
 def apply_epic_closure(
     repo_root: Path,
     *,

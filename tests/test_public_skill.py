@@ -461,8 +461,8 @@ class PublicSkillTests(unittest.TestCase):
                 "recommend exactly one",
                 "`close`, `continue`, or `split`",
                 "rationale",
-                "separate disposition decision",
-                "Resume at this checkpoint",
+                "explicit disposition decision",
+                "On resume, reuse current evidence",
             ),
             "truthful Epic closure": (
                 "Outcome class: Product|Pilot|POC",

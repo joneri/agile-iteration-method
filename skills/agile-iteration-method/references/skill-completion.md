@@ -7,13 +7,20 @@ Source: docs/workflow/skill-completion.md
 
 # Post-Gate-E PO disposition
 
+New combined proposals follow [Combined decisions and predictable continuation](streamlined-decisions.md).
+They preserve logical gates while allowing one explicit response for direction
+plus first plan, or delivery plus disposition. Legacy gate actions retain their
+original scope. Use the same shared helper and next-step resolver in chat, CLI
+and UI; no UI session is required.
+
 At `done_increment_accepted`, PO evaluates the Epic goal, acceptance criteria,
 accepted evidence, non-goals, and remaining gaps. PO must recommend exactly one
 of `close`, `continue`, or `split`, state the rationale and remaining-scope
 consequence, and must not merely ask the user to choose among undirected
 options. The recommendation is not authority: ordinary Strict and Auto require
-the user's separate disposition decision. Resume at this checkpoint repeats the
-assessment before mutation. Portfolio Auto records the same recommendation
+the user's explicit disposition decision, which may share the presented
+Increment-acceptance response. On resume, reuse current evidence and a recorded
+valid decision; reassess only missing or changed inputs. Portfolio Auto records the same recommendation
 before its separately revalidated mandate may authorize eligible closure.
 
 An accepted Increment proves only that Increment. Before recommending `close`,
@@ -33,8 +40,9 @@ Missing or contradictory evidence forces `continue` and another coherent Done
 Increment; AIM must create another coherent Done Increment rather than close
 prematurely. `split` cannot discard unmet
 Epic criteria. User acceptance and Portfolio authority authorize a decision but
-cannot turn missing evidence into proof. Canonical closure must use the trusted
-package-owned `scripts/aim_runtime_contract.py close` preview/apply flow and
+cannot turn missing evidence into proof. Canonical combined closure uses `scripts/aim_decisions.py apply`; legacy
+closure uses the trusted `scripts/aim_runtime_contract.py close` preview/apply
+flow. Both
 bind its contained JSON truth audit through `epicClosureEvidence`.
 direct `epic_complete` writes are non-canonical. Closure state must also bind
 `epicClosureEvidenceSha256` and `epicClosureEvidenceSetSha256`. Every cited

@@ -11,6 +11,12 @@ Source: docs/workflow/agile-iteration-method.md
 
 # Agile iteration method
 
+New combined proposals follow [Combined decisions and predictable continuation](streamlined-decisions.md).
+They preserve logical gates while allowing one explicit response for direction
+plus first plan, or delivery plus disposition. Legacy gate actions retain their
+original scope. Use the same shared helper and next-step resolver in chat, CLI
+and UI; no UI session is required.
+
 ## Version
 
 This document describes the **AIM 2.0** product surface.
@@ -71,7 +77,7 @@ Kickoff contract:
 6. A **Reviewer** checks correctness, edge cases and technical risk.
 7. The **TDO** validates the increment against the Epic and the increment acceptance criteria.
 8. The **TDO** presents the increment as a demo, test and feedback checkpoint and asks whether the increment should be accepted or adjusted.
-9. The **PO** evaluates the accepted outcome and recommends whether the Epic
+9. Before asking for acceptance, the **PO** evaluates the verified outcome and recommends whether the Epic
    should close, continue or split new scope into a separate Epic; the user or
    separately authorized Portfolio mandate owns the resulting decision.
 10. Feedback is carried into the next Done Increment when the Epic continues.
@@ -1071,8 +1077,8 @@ Gates are reporting checkpoints (A–E). They are mandatory to report, but the l
 - **Gate B**: Done Increment specification ready (approval is meaningful)
 - **Gate C**: Implementation ready (soft gate)
 - **Gate D**: Review findings ready (soft gate)
-- **Gate E**: Increment accepted, followed by PO disposition assessment and a
-  separate continuation/closure decision (approval is meaningful)
+- **Gate E**: Increment acceptance with a prepared PO disposition; a clearly
+  offered response can authorize both decisions.
 
 ### Default gate behaviour
 
@@ -1092,15 +1098,16 @@ Approval is only semantically meaningful at Gate A, Gate B and Gate E.
 
 At Gate E, the workflow must still distinguish two decisions:
 - increment acceptance after TDO demo, test, and feedback framing
-- Epic disposition after the increment is accepted
+- Epic disposition assessed before the response and enacted after acceptance
 
 At `done_increment_accepted`, PO must evaluate the Epic goal, acceptance
 criteria, accepted evidence, non-goals, and remaining gaps, then recommend
 exactly one of `close`, `continue`, or `split`. The recommendation must state
 its rationale and remaining-scope consequence; it must not merely ask the user
 to choose among options. A recommendation is not authority. Ordinary Strict and
-Auto require the user's separate disposition decision. Resume from
-`done_increment_accepted` repeats this PO assessment before any transition.
+Auto require an explicit disposition decision, which can share a clearly
+presented delivery-acceptance response. Prepare the recommendation before that
+response; on resume reassess only missing or changed evidence or authority.
 
 Before recommending `close`, PO must perform a closure truth audit that:
 
@@ -1129,8 +1136,9 @@ recommend `continue` and TDO must propose the next coherent Done Increment.
 `split` is reserved for genuinely new scope outside the approved Epic; it must
 not be used to discard unfinished acceptance criteria.
 
-The canonical `epic_complete` transition must use the trusted
-`scripts/aim_runtime_contract.py close` preview/apply flow and bind one contained
+The canonical `epic_complete` transition uses trusted `scripts/aim_decisions.py apply`
+for combined decisions, or `scripts/aim_runtime_contract.py close` for legacy
+closure. Both bind one contained
 truth-audit JSON artifact through `epicClosureEvidence`. Directly writing
 `epic_complete`, a Gate E decision, a user `accept`, or a Portfolio mandate does
 not satisfy this closure contract.

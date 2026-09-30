@@ -3,6 +3,12 @@
 
 # AIM 2.0 Adapter Command Contract
 
+New combined proposals follow [Combined decisions and predictable continuation](streamlined-decisions.md).
+They preserve logical gates while allowing one explicit response for direction
+plus first plan, or delivery plus disposition. Legacy gate actions retain their
+original scope. Use the same shared helper and next-step resolver in chat, CLI
+and UI; no UI session is required.
+
 ## Purpose
 
 Define one command-intent contract for Codex, Claude, and GitHub Copilot.
@@ -405,7 +411,7 @@ consequence, and must not merely ask the user to choose among undirected
 options.
 
 The recommendation is not a state transition or authority. Ordinary Strict and
-Auto runs require the user's separate disposition decision. `continue` hands a
+Auto runs require an explicit disposition decision, which can share a combined acceptance. `continue` hands a
 bounded remaining outcome to TDO for the next Gate B; `split` keeps new scope
 outside the current Epic. `/aim continue` at `done_increment_accepted` repeats
 the same PO assessment and recommendation before mutation. In Portfolio Auto,
@@ -432,9 +438,9 @@ Epic. `split` applies only to genuinely new scope and cannot remove an unmet
 acceptance criterion. A user's `accept`, a Gate E decision, or a Portfolio
 mandate supplies decision authority but never substitutes for evidence.
 
-All adapters must execute Epic closure through the trusted package-owned
-`scripts/aim_runtime_contract.py close` no-write preview and digest-matched
-apply. The transition binds the reviewed JSON through
+All adapters execute combined closure through trusted `scripts/aim_decisions.py apply`,
+or legacy closure through `scripts/aim_runtime_contract.py close` with a
+no-write preview and digest-matched apply. The transition binds the reviewed JSON through
 `epicClosureEvidence` plus `epicClosureEvidenceSha256` and
 `epicClosureEvidenceSetSha256`. Every referenced evidence object binds a
 contained non-empty file by path, kind, and SHA-256; black-box, negative-test,
@@ -532,7 +538,8 @@ disposition based on the PO recommendation. For ordinary Strict and Auto runs,
 that decision requires the user.
 For an active Portfolio Auto run, the already approved, revalidated bounded
 mandate is the explicit PO authority for a subsequent separate Epic-closure
-decision; no Gate E action envelope may itself claim or perform that closure.
+decision; no legacy Gate E action envelope may itself claim or perform that closure.
+Version 1.3 uses an explicit combined proposal and selected decisions.
 
 ## First-run onboarding contract
 

@@ -33,6 +33,93 @@
       ],
       "type": "string"
     },
+    "decisionChange": {
+      "additionalProperties": false,
+      "properties": {
+        "proposalId": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "proposalId",
+        "reason"
+      ],
+      "type": "object"
+    },
+    "decisionProposal": {
+      "additionalProperties": true,
+      "properties": {
+        "decisions": {
+          "items": {
+            "enum": [
+              "approve_epic",
+              "approve_increment",
+              "accept_increment",
+              "close_epic",
+              "continue_epic",
+              "split_scope"
+            ]
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array"
+        },
+        "kind": {
+          "enum": [
+            "start",
+            "plan",
+            "delivery",
+            "disposition"
+          ]
+        },
+        "proposalVersion": {
+          "const": "1.0"
+        }
+      },
+      "required": [
+        "proposalVersion",
+        "proposalId",
+        "authorityStatePath",
+        "sourceStateSha256",
+        "decisions",
+        "bindings",
+        "kind",
+        "incrementId",
+        "summary",
+        "scope",
+        "remainingWork",
+        "risk"
+      ],
+      "type": "object"
+    },
+    "decisionReceipts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "pattern": "^\\.aim/",
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "maxItems": 1000,
+      "type": "array"
+    },
     "epicClosureEvidence": {
       "description": "Repository-relative POSIX path to contained truth-audit JSON required by the canonical Epic closure transition.",
       "maxLength": 1000,
@@ -48,6 +135,13 @@
       "description": "SHA-256 binding to the exact epicClosureEvidence artifact accepted by the canonical closure transition.",
       "pattern": "^[0-9a-f]{64}$",
       "type": "string"
+    },
+    "epicDisposition": {
+      "enum": [
+        "close",
+        "continue",
+        "split"
+      ]
     },
     "epicId": {
       "minLength": 1,

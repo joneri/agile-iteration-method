@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, unquote, urlparse
 
+from aim_decisions import next_step as decision_next_step
 from aim_actions import (
     ACTION_PROMPT_PREAMBLE,
     GATE_EXPECTATIONS,
@@ -104,6 +105,9 @@ PAYLOAD_FILES = (
     "scripts/aim_recovery.py",
     "scripts/aim_codex_bridge.py",
     "scripts/aim_runtime_contract.py",
+    "scripts/aim_decisions.py",
+    "scripts/aim_runtime_lock.py",
+    "scripts/aim_actions.py",
     "aim-ui/index.html",
     "aim-ui/app.js",
     "aim-ui/styles.css",
@@ -337,6 +341,15 @@ def _acceptance_decision(
     increment_id: str,
     warnings: list[str],
 ) -> Path | None:
+    if state.get("decisionReceipts"):
+        from aim_decisions import committed_acceptance
+        try:
+            committed = committed_acceptance(repo_root, aim_root, state, increment_id)
+            if committed is not None:
+                return committed
+        except (ValueError, OSError, KeyError, TypeError) as exc:
+            warnings.append(f"{state['epicId']} {increment_id}: {exc}; acceptance is hidden.")
+            return None
     decision, authoritative, issue = _state_acceptance_decision(
         repo_root, aim_root, state, increment_id
     )
@@ -599,6 +612,36 @@ def _attach_actions(
             if epic["workspace"] == "."
             else f".aim/{epic['workspace']}/state.json"
         )
+        if epic.get("decisionProposal") is not None or epic.get("decisionChange"):
+            from aim_decisions import validate_proposal
+            from aim_actions import proposal_action
+            for increment in epic["increments"]:
+                increment["actions"] = []
+            try:
+                state_path = repo_root / authority_state_path
+                state = json.loads(state_path.read_text(encoding="utf-8"))
+                proposal = state.get("decisionProposal")
+                validate_proposal(repo_root, authority_state_path, state, proposal)
+                target = next((item for item in epic["increments"] if item["id"] == proposal["incrementId"] and item.get("active")), epic)
+                target["decisionSummary"] = {key: proposal[key] for key in ("summary", "scope", "remainingWork", "risk")}
+                offered = proposal["decisions"]
+                label = {"start": "Approve direction and Increment", "plan": "Approve Increment", "delivery": "Accept delivery", "disposition": "Approve disposition"}[proposal["kind"]]
+                if "close_epic" in offered:
+                    label = "Accept delivery and close Epic" if "accept_increment" in offered else "Close Epic"
+                elif "continue_epic" in offered:
+                    label = "Accept delivery and plan next" if "accept_increment" in offered else "Plan next Increment"
+                elif "split_scope" in offered:
+                    label = "Accept delivery and separate new scope" if "accept_increment" in offered else "Separate new scope"
+                options = [("approve", label, offered)]
+                if "accept_increment" in offered and len(offered) > 1:
+                    options.append(("approve", "Accept Increment only", ["accept_increment"]))
+                options.append(("change", "Request change", offered))
+                for kind, title, choices in options:
+                    envelope = proposal_action(kind, proposal, state, choices)
+                    target["actions"].append(_action_descriptor(repo_root, title, envelope, requires_input=kind == "change"))
+            except (ValueError, OSError, KeyError, TypeError) as exc:
+                warnings.append(f"{epic['id']}: combined decision unavailable: {exc}")
+            continue
         planning = epic.get("planning") or {}
         candidates = planning.get("candidates") or []
         if (epic.get("runtimeStatus") == "gate_a_pending"
@@ -1875,6 +1918,9 @@ def _project_epic(
         "actions": [],
         "planning": {"candidateCount": 0, "candidates": [], "nextCandidateId": None},
         "uiDecision": state.get("uiDecision"),
+        "decisionProposal": state.get("decisionProposal"),
+        "decisionChange": state.get("decisionChange"),
+        "nextStep": decision_next_step(repo_root, (aim_root / "state.json").relative_to(repo_root).as_posix()),
         "increments": increment_items,
         "canonicalRoles": [
             {"name": role, "active": role == state["currentRole"]}

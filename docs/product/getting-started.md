@@ -4,6 +4,12 @@ This path takes a new user from installation to the first accepted increment.
 
 You do not need to read the full AIM method first.
 
+A clear single-Increment Epic normally needs two decisions in Strict: approve
+the direction and first plan together, then accept the delivery and its prepared
+Epic disposition. Chat and terminal-based agents work without AIM UI. Continue
+explains and resumes authorized work; it does not approve a waiting decision.
+See [combined decisions](../workflow/streamlined-decisions.md).
+
 ## 1. Install AIM
 
 AIM has two maintained installation paths. Both deliver the complete AIM

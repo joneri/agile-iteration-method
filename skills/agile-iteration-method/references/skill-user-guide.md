@@ -71,8 +71,8 @@ Gate A approves the Epic. Gate B approves the next Done Increment. Gate E accept
 the delivered result. Implementation and review checkpoints happen in between,
 but AIM does not ask you to approve routine internal handoffs.
 
-This is the default `Strict` experience: AIM pauses at each hard gate for your
-decision. `Auto` still reports the same gates and preserves the same ownership,
+In the default `Strict` experience, AIM presents direction and the first
+Increment together, then delivery and its recommended disposition together. `Auto` still reports the same gates and preserves the same ownership,
 but it continues between increments while the approved direction remains clear.
 Risk and scope changes always return to you. Final Epic acceptance also returns
 to you in ordinary Auto; Portfolio Auto instead uses its already approved,
@@ -115,8 +115,8 @@ Describe the result you want rather than supplying a task list:
 /aim start "EPIC: Make checkout recovery clear and reliable when payment confirmation is delayed"
 ```
 
-AIM first frames the Epic for your approval. It does not begin implementation
-until the outcome and the first Done Increment are understood.
+AIM presents the Epic direction and first Done Increment together for approval.
+Implementation begins only within approved scope.
 
 ## Your First AIM Journey
 
@@ -124,17 +124,16 @@ The steps below describe the default `Strict` experience. In `Auto`, AIM reports
 the same checkpoints but may continue without pausing when no escalation applies.
 
 1. **Frame the outcome.** PO turns your request into an Epic with value,
-  boundaries, and acceptance criteria. In Strict mode, you approve or adjust it
-  at Gate A.
+  boundaries, and acceptance criteria to show with the first Increment.
 2. **Choose one useful increment.** TDO proposes the smallest end-to-end behavior
   that can be demonstrated and evaluated. In Strict mode, you approve or adjust
-  it at Gate B.
+  the direction and plan together at Gate A/B.
 3. **Build and review.** Dev implements the approved scope. Reviewer checks the
    result independently. AIM corrects local defects before presenting the work.
 4. **Evaluate evidence.** TDO explains what changed, what was verified, and how
    to test or demonstrate it.
 5. **Keep the decision.** PO asks you to accept the increment or request
-   changes. After acceptance, PO evaluates the Epic and recommends exactly one
+   changes. Before asking, PO evaluates the Epic and recommends exactly one
    disposition: close, continue, or split. The disposition remains yours in
    ordinary runs; a bounded Portfolio Auto mandate carries that authority for
    its eligible Epics. AIM preserves the checkpoint for the next session.
