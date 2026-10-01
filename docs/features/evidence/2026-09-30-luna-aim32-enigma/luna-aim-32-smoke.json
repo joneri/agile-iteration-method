@@ -1,0 +1,49 @@
+{
+  "vectors": {
+    "passed": 123,
+    "total": 123,
+    "mismatches": []
+  },
+  "search": [
+    {
+      "id": "pairs-0",
+      "elapsedSeconds": 1.03,
+      "status": "complete",
+      "returned": 1,
+      "total": 1,
+      "valid": 1,
+      "sourceStartPresent": true,
+      "skippedByBudget": 0
+    },
+    {
+      "id": "pairs-1",
+      "elapsedSeconds": 1.52,
+      "status": "complete",
+      "returned": 1,
+      "total": 1,
+      "valid": 1,
+      "sourceStartPresent": true,
+      "skippedByBudget": 0
+    },
+    {
+      "id": "pairs-3",
+      "elapsedSeconds": 1.51,
+      "status": "complete",
+      "returned": 1,
+      "total": 1,
+      "valid": 1,
+      "sourceStartPresent": true,
+      "skippedByBudget": 0
+    },
+    {
+      "id": "offset-known",
+      "elapsedSeconds": 0.22,
+      "status": "complete",
+      "returned": 1,
+      "total": 1,
+      "valid": 1,
+      "sourceStartPresent": true,
+      "skippedByBudget": 0
+    }
+  ]
+}

@@ -27,6 +27,7 @@ Current roles:
 
 | File | Role |
 | --- | --- |
+| `aim-3.2-enigma-case.md` | completed same-Luna Enigma case, product result, runtime measurements and public evidence |
 | `aim-3.1-evaluation.md` | user benefits, measured resource gains, release validation and comparison scope |
 | `engineering-reset-analysis.md` | independent Enigma comparison analysis, engineering changes and reproducible measurements |
 | `paired-evaluation-protocol.md` | fixed protocol for isolated same-model product evaluations |

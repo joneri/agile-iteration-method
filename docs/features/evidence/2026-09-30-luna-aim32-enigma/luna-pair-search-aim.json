@@ -1,0 +1,416 @@
+[
+  {
+    "id": "pairs-0",
+    "run": 1,
+    "elapsedSeconds": 1.039,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "ADV",
+        "placement": 0,
+        "plugboard": "",
+        "preview": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS"
+      }
+    ]
+  },
+  {
+    "id": "pairs-1",
+    "run": 1,
+    "elapsedSeconds": 1.552,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "ADV",
+        "placement": 0,
+        "plugboard": "AZ",
+        "preview": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS"
+      }
+    ]
+  },
+  {
+    "id": "pairs-3",
+    "run": 1,
+    "elapsedSeconds": 1.525,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "ADV",
+        "placement": 0,
+        "plugboard": "AZ BY CX",
+        "preview": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS"
+      }
+    ]
+  },
+  {
+    "id": "pairs-6",
+    "run": 1,
+    "elapsedSeconds": 0.267,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "ADV",
+        "placement": 0,
+        "plugboard": "AZ BY CX DW EV FU",
+        "preview": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS"
+      }
+    ]
+  },
+  {
+    "id": "pairs-10",
+    "run": 1,
+    "elapsedSeconds": 0.257,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "ADV",
+        "placement": 0,
+        "plugboard": "AZ BY CX DW EV FU GT HS IR",
+        "preview": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUIRISEXVHRIFYALLSFFNALS"
+      }
+    ]
+  },
+  {
+    "id": "offset-known",
+    "run": 1,
+    "elapsedSeconds": 0.215,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "RYP",
+        "placement": 5,
+        "plugboard": "AQ BW CE DR FT GY HU IJ KO LP",
+        "preview": "CHECKNORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALSEND"
+      }
+    ]
+  },
+  {
+    "id": "offset-auto",
+    "run": 1,
+    "elapsedSeconds": 3.141,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "RYP",
+        "placement": 5,
+        "plugboard": "AQ BW CE DR FT GY HU IJ KO LP",
+        "preview": "CHECKNORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALSEND"
+      }
+    ]
+  },
+  {
+    "id": "multiple",
+    "run": 1,
+    "elapsedSeconds": 0.102,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 20,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "AAA",
+        "placement": 0,
+        "plugboard": "",
+        "preview": "A"
+      },
+      {
+        "positions": "AAB",
+        "placement": 0,
+        "plugboard": "BD",
+        "preview": "A"
+      },
+      {
+        "positions": "AAC",
+        "placement": 0,
+        "plugboard": "BZ",
+        "preview": "A"
+      },
+      {
+        "positions": "AAD",
+        "placement": 0,
+        "plugboard": "BG",
+        "preview": "A"
+      },
+      {
+        "positions": "AAE",
+        "placement": 0,
+        "plugboard": "BO",
+        "preview": "A"
+      },
+      {
+        "positions": "AAF",
+        "placement": 0,
+        "plugboard": "BW",
+        "preview": "A"
+      },
+      {
+        "positions": "AAG",
+        "placement": 0,
+        "plugboard": "BC",
+        "preview": "A"
+      },
+      {
+        "positions": "AAH",
+        "placement": 0,
+        "plugboard": "BX",
+        "preview": "A"
+      },
+      {
+        "positions": "AAI",
+        "placement": 0,
+        "plugboard": "BL",
+        "preview": "A"
+      },
+      {
+        "positions": "AAJ",
+        "placement": 0,
+        "plugboard": "BT",
+        "preview": "A"
+      },
+      {
+        "positions": "AAK",
+        "placement": 0,
+        "plugboard": "BK",
+        "preview": "A"
+      },
+      {
+        "positions": "AAL",
+        "placement": 0,
+        "plugboard": "BS",
+        "preview": "A"
+      },
+      {
+        "positions": "AAM",
+        "placement": 0,
+        "plugboard": "",
+        "preview": "A"
+      },
+      {
+        "positions": "AAN",
+        "placement": 0,
+        "plugboard": "BT",
+        "preview": "A"
+      },
+      {
+        "positions": "AAO",
+        "placement": 0,
+        "plugboard": "BM",
+        "preview": "A"
+      },
+      {
+        "positions": "AAP",
+        "placement": 0,
+        "plugboard": "BC",
+        "preview": "A"
+      },
+      {
+        "positions": "AAQ",
+        "placement": 0,
+        "plugboard": "BD",
+        "preview": "A"
+      },
+      {
+        "positions": "AAR",
+        "placement": 0,
+        "plugboard": "BL",
+        "preview": "A"
+      },
+      {
+        "positions": "AAS",
+        "placement": 0,
+        "plugboard": "BP",
+        "preview": "A"
+      },
+      {
+        "positions": "AAT",
+        "placement": 0,
+        "plugboard": "",
+        "preview": "A"
+      }
+    ]
+  },
+  {
+    "id": "none",
+    "run": 1,
+    "elapsedSeconds": 0.18,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "impossible",
+    "run": 1,
+    "elapsedSeconds": 0,
+    "status": "impossible",
+    "checked": 0,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "impossible-auto",
+    "run": 1,
+    "elapsedSeconds": 0,
+    "status": "impossible",
+    "checked": 0,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "pairs-10-full",
+    "run": 1,
+    "elapsedSeconds": 0.251,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "ADV",
+        "placement": 0,
+        "plugboard": "AZ BY CX DW EV FU GT HS IR JQ",
+        "preview": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS"
+      }
+    ]
+  },
+  {
+    "id": "unicode-prefix",
+    "run": 1,
+    "elapsedSeconds": 0,
+    "status": "impossible",
+    "checked": 0,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "short-crib",
+    "run": 1,
+    "elapsedSeconds": 0.239,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 5,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "ADV",
+        "placement": 0,
+        "plugboard": "AZ",
+        "preview": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS"
+      },
+      {
+        "positions": "MXM",
+        "placement": 0,
+        "plugboard": "AT CQ DL EP FI HU JN MR OV YZ",
+        "preview": "NORTHHARBORRMCCBBYOWILNDRIYJIZRRTMMGYBZETRQTAUZMHCJUQORFJDYZCBAMKWNMBX"
+      },
+      {
+        "positions": "ODX",
+        "placement": 0,
+        "plugboard": "AX BS CK DU FH GY LV NQ OP RZ",
+        "preview": "NORTHHARBORRWZQIPWDHRTYQWPLKZNHIJGKXWXCBOSCPTCDLYKKRGYDFJKYKVAKDBCJJUC"
+      },
+      {
+        "positions": "PRG",
+        "placement": 0,
+        "plugboard": "AM BF CY DW EV GO HZ IK LN RT",
+        "preview": "NORTHHARBORRYLINHAKPLOQGFUQGRTRZXSGENJDYLAQIBKAFYZLLWNMDFHIAYGIUZSLWSA"
+      },
+      {
+        "positions": "RVZ",
+        "placement": 0,
+        "plugboard": "AP CY DV EN FT HU IM JO LR QX",
+        "preview": "NORTHHARBORRISDNLRIGBROCZVFMRHYPJZUDXIMMGPPCHKTMOTHPXRXGWNVMDBUKEERQAG"
+      }
+    ]
+  },
+  {
+    "id": "shared-example-aim",
+    "run": 1,
+    "elapsedSeconds": 0.173,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "MCK",
+        "placement": 0,
+        "plugboard": "AV BS",
+        "preview": "WEATTACKATDAWNFROMTHENORTH"
+      }
+    ]
+  },
+  {
+    "id": "shared-example-naked",
+    "run": 1,
+    "elapsedSeconds": 0.197,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "skippedByBudget": 0,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "MCK",
+        "placement": 0,
+        "plugboard": "AV BS",
+        "preview": "WETTERBERICHTAUSBERLINMELDETSONNENSCHEIN"
+      }
+    ]
+  }
+]

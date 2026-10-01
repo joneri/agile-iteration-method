@@ -1,0 +1,138 @@
+{
+  "date": "2026-09-30",
+  "model": "gpt-6-luna",
+  "reasoningEffort": "high",
+  "aimVersion": "3.2.0",
+  "prdSha256": "59ab6a803dd15e40a68f20f56b2ffcc081b3a0ac60aec873f5c93c2d733a9493",
+  "evaluationScope": "One completed paired Enigma product comparison, using predeclared KPI weights; not a third-party audit.",
+  "kpis": [
+    {
+      "name": "Enigma correctness",
+      "weightPercent": 25,
+      "aim": 10,
+      "naked": 4
+    },
+    {
+      "name": "Cracking and valid results",
+      "weightPercent": 30,
+      "aim": 9.5,
+      "naked": 3
+    },
+    {
+      "name": "Other PRD requirements",
+      "weightPercent": 15,
+      "aim": 9,
+      "naked": 7.5
+    },
+    {
+      "name": "Performance and stability",
+      "weightPercent": 10,
+      "aim": 9.5,
+      "naked": 6
+    },
+    {
+      "name": "Usability",
+      "weightPercent": 10,
+      "aim": 8.5,
+      "naked": 8
+    },
+    {
+      "name": "Maintainability and test protection",
+      "weightPercent": 10,
+      "aim": 8.5,
+      "naked": 5.5
+    }
+  ],
+  "weightedScoreExact": {
+    "aim": 93.5,
+    "naked": 49.75
+  },
+  "publishedScoreOutOf100": {
+    "aim": 93.5,
+    "naked": 49.8
+  },
+  "vectors": {
+    "total": 123,
+    "passed": {
+      "aim": 123,
+      "naked": 1
+    }
+  },
+  "newPositiveSearchCases": [
+    "pairs-0",
+    "pairs-1",
+    "pairs-3",
+    "pairs-6",
+    "pairs-10",
+    "offset-known",
+    "offset-auto",
+    "pairs-10-full",
+    "short-crib"
+  ],
+  "newPositiveSearchCasesWithValidCandidate": {
+    "aim": 9,
+    "naked": 0
+  },
+  "returnedCandidatesValidated": {
+    "aim": {
+      "valid": 35,
+      "returned": 35
+    },
+    "naked": {
+      "valid": 21,
+      "returned": 21
+    }
+  },
+  "applicationRuntime": {
+    "scope": "Direct Node/V8 search core, two complete workloads, warmup run 0 excluded; three alternating measurements per variant. Not agent development speed.",
+    "workloads": [
+      {
+        "id": "shared-example-naked",
+        "medianSeconds": {
+          "aim": 0.207,
+          "naked": 8.467
+        },
+        "runtimeRatioNakedOverAim": 40.90338164251208
+      },
+      {
+        "id": "none",
+        "medianSeconds": {
+          "aim": 0.183,
+          "naked": 2.654
+        },
+        "runtimeRatioNakedOverAim": 14.502732240437158
+      }
+    ]
+  },
+  "developmentElapsedSeconds": {
+    "aim": 3178.849,
+    "naked": 892.062
+  },
+  "developmentScope": "Completed main-turn wall time; AIM included a parallel Luna reviewer. Human time, token costs and currency costs were not measured.",
+  "environment": {
+    "cpu": "Apple M5 Pro",
+    "ramGiB": 24,
+    "os": "macOS 27.2",
+    "architecture": "arm64",
+    "node": "26.7.0",
+    "npm": "11.19.0",
+    "reference": "Py-Enigma 1.0.2"
+  },
+  "sourceReportSha256": "8a677cb356ea74f82374c06058c60628fc8b2afdfc46735e7c20961677c954e8",
+  "publicEvidenceSha256": {
+    "cases.json": "7404f672b8893af7a4d1158f0c5df129890ae936030647e49d6ebd8b988f0580",
+    "enigma-prd.md": "59ab6a803dd15e40a68f20f56b2ffcc081b3a0ac60aec873f5c93c2d733a9493",
+    "luna-aim-32-smoke.json": "2d834ff9f66b23206e6236f42afb5a2ebe536d4955576423957d8e6cfaefb942",
+    "luna-naked-smoke.json": "70dc5be4df645a93500ecbb47de9403d7a9e41cbf88ffabfeb00966145a52bd3",
+    "luna-pair-benchmark.json": "056849ff5ceba12aba71c2cb94ff340add067c43f4335536f6e0a68622e1f335",
+    "luna-pair-candidate-validation.json": "dd3c70a1e92268ca47eea673959c6ba2d40b916f90346f4c405cb9ae1f15e01e",
+    "luna-pair-original-integrity.json": "ed848991a3974890b64a94195179a9d003bae34e704957974a0fafb7ded56705",
+    "luna-pair-panel-isolation.json": "8a32b60f77f1d15520e4a33d8780e3bd1905a3af2561ccb71c483b45968f62aa",
+    "luna-pair-search-aim.json": "dbacc303052bc3e6e8c802d85a36f41e4cc25df6f2cf60cd744a995da447c649",
+    "luna-pair-search-naked.json": "7043b6cda7ba2f831431825e44c5aac28c419e897acede157ee981ab2b82dbfe",
+    "luna-pair-version-manifest.json": "7899cfb8efc2a6529e1e226545be57385c120f4745792056318d1d6d8720f660",
+    "vectors.json": "759cf9d0d158950248ccb6db7f59bc0dd3a24fd6e06ee6cbf5e3212381c377ed",
+    "verify-reference.py": "45c3e60dc90e3a437dd771e22e645842b609cf106f20e4d170862ca1f76e4977"
+  },
+  "privacyNote": "Original absolute machine paths removed from version manifest. Other evidence files retained byte-for-byte. No product source or chat history is included."
+}

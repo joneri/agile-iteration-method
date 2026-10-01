@@ -1,0 +1,198 @@
+{
+  "aim": [
+    {
+      "id": "pairs-0",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    },
+    {
+      "id": "pairs-1",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    },
+    {
+      "id": "pairs-3",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    },
+    {
+      "id": "pairs-6",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    },
+    {
+      "id": "pairs-10",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    },
+    {
+      "id": "offset-known",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    },
+    {
+      "id": "offset-auto",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    },
+    {
+      "id": "multiple",
+      "returned": 20,
+      "valid": 20,
+      "invalidIndices": []
+    },
+    {
+      "id": "none",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "impossible",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "impossible-auto",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "pairs-10-full",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    },
+    {
+      "id": "unicode-prefix",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "short-crib",
+      "returned": 5,
+      "valid": 5,
+      "invalidIndices": []
+    },
+    {
+      "id": "shared-example-aim",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    },
+    {
+      "id": "shared-example-naked",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    }
+  ],
+  "naked": [
+    {
+      "id": "pairs-0",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "pairs-1",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "pairs-3",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "pairs-6",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "pairs-10",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "offset-known",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "offset-auto",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "multiple",
+      "returned": 20,
+      "valid": 20,
+      "invalidIndices": []
+    },
+    {
+      "id": "none",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "impossible",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "impossible-auto",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "pairs-10-full",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "unicode-prefix",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "short-crib",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "shared-example-aim",
+      "returned": 0,
+      "valid": 0,
+      "invalidIndices": []
+    },
+    {
+      "id": "shared-example-naked",
+      "returned": 1,
+      "valid": 1,
+      "invalidIndices": []
+    }
+  ]
+}

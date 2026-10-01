@@ -2,7 +2,7 @@
 
 ![AIM 3.2.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
-AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you.
+AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you. **Same model. Stronger software:** in our Enigma pair, GPT-6 Luna (high) with AIM 3.2 scored **93.5/100 versus 49.8/100** with the same PRD and predefined KPI weights. [See the case and public evidence](docs/features/aim-3.2-enigma-case.md).
 
 Switch between Codex, Claude Code, and GitHub Copilot while keeping your project knowledge and saved AIM work. Discuss ideas with your repository before starting implementation. Each tool needs AIM and access to the same current repository and saved state.
 
@@ -153,7 +153,7 @@ AIM applies **audience-context integrity** to everything it generates: write the
 
 Project-specific skills, adaptive agent allocation, review tied to current code and reusable repository knowledge remain part of AIM. Review and whole-Epic verification still apply. See [combined decisions](docs/workflow/streamlined-decisions.md). Full agent-runtime savings have not yet been measured.
 
-**Less memory. Faster code in our latest data test:** the AIM-built program used **59% less peak RAM with 12% shorter runtime** than the same model without AIM. This measured three stages of one product using a pre-3.1 candidate. Development took longer and both products retained a behavior defect; no overall protocol win was established. See the [evaluation notes](docs/features/aim-3.1-evaluation.md) and [feature guide](docs/product/features.md).
+**A convincing win in the completed Enigma pair:** Luna + AIM 3.2 passed **123/123 independent Py-Enigma vectors versus 1/123** and found valid candidates in **9/9 new positive search cases versus 0/9**. The AIM app also had stronger visual finish and code structure. Two specific complete searches ran **40.9× and 14.5× faster**; these are application-runtime results. Luna alone built sooner (14:52 versus 52:59). [Case, method and evidence](docs/features/aim-3.2-enigma-case.md) · [Earlier resource-efficiency results](docs/features/aim-3.1-evaluation.md).
 
 ![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 

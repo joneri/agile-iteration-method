@@ -1,0 +1,82 @@
+[
+  {
+    "n": 0,
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "AAA",
+      "positions": "ADV",
+      "plugboard": ""
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "ELFBYXIZOLMGHWZTQPSEJTRFXMRGBWALKNILSQDDTLCVYGEMILOOYEBVOFOSTZKBAFBMAR"
+  },
+  {
+    "n": 1,
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "AAA",
+      "positions": "ADV",
+      "plugboard": "AZ"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "ELFBYXWAOLMGHWATQPSEJTPFXMRGBWZLKNFLSQDDTLCVYGEMILOOYEBVOFOSMAKBZFBFZR"
+  },
+  {
+    "n": 3,
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "AAA",
+      "positions": "ADV",
+      "plugboard": "AZ BY CX"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "ELFYBCWATLMGHWATQRSEJSPFCMRGYWZLKNFLSQDDELXVBGEMILOOBLYVOFOVMAKYZFYFZR"
+  },
+  {
+    "n": 6,
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "AAA",
+      "positions": "ADV",
+      "plugboard": "AZ BY CX DW EV FU"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "VLUYBCDATLMGSDATQRSVKSPUCMRGYDALKNULSQMAVXMEBSVYILOOGLSVOUAEMAKYZUYUZR"
+  },
+  {
+    "n": 10,
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "AAA",
+      "positions": "ADV",
+      "plugboard": "AZ BY CX DW EV FU GT HS IR JQ"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "VLNNVEDKGLHBHDAPRIOLKHPMPMNRBDAJKNUCQMMAVXMETHNYRQURTLHVDTAEMAKGWFYUZA"
+  }
+]

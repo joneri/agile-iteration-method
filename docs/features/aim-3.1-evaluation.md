@@ -1,5 +1,9 @@
 # AIM: benefits and measured results
 
+For the latest completed product pair, see [AIM 3.2's Enigma case](aim-3.2-enigma-case.md):
+the same GPT-6 Luna (high) and PRD produced a 93.5/100 result with AIM against
+49.8/100 without it. The data-workload results below remain a separate earlier comparison.
+
 AIM helps you carry software work across sessions and tools, reuse project
 knowledge, discuss decisions with your repository, and coordinate implementation
 and review. Our latest data test also produced a concrete resource-efficiency

@@ -1,0 +1,306 @@
+[
+  {
+    "id": "pairs-0",
+    "run": 1,
+    "elapsedSeconds": 0.003,
+    "status": "complexity_limit",
+    "checked": 0,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "pairs-1",
+    "run": 1,
+    "elapsedSeconds": 0.002,
+    "status": "complexity_limit",
+    "checked": 0,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "pairs-3",
+    "run": 1,
+    "elapsedSeconds": 0.002,
+    "status": "complexity_limit",
+    "checked": 0,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "pairs-6",
+    "run": 1,
+    "elapsedSeconds": 0.002,
+    "status": "complexity_limit",
+    "checked": 0,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "pairs-10",
+    "run": 1,
+    "elapsedSeconds": 0.002,
+    "status": "complexity_limit",
+    "checked": 0,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "offset-known",
+    "run": 1,
+    "elapsedSeconds": 7.595,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "offset-auto",
+    "run": 1,
+    "elapsedSeconds": 0.003,
+    "status": "complexity_limit",
+    "checked": 17576,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "multiple",
+    "run": 1,
+    "elapsedSeconds": 0.001,
+    "status": "result_limit",
+    "checked": 19,
+    "total": 17576,
+    "returned": 20,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "AAA",
+        "placement": 0,
+        "plugboard": "Inga par",
+        "preview": "A"
+      },
+      {
+        "positions": "AAB",
+        "placement": 0,
+        "plugboard": "BD",
+        "preview": "A"
+      },
+      {
+        "positions": "AAC",
+        "placement": 0,
+        "plugboard": "BZ",
+        "preview": "A"
+      },
+      {
+        "positions": "AAD",
+        "placement": 0,
+        "plugboard": "BG",
+        "preview": "A"
+      },
+      {
+        "positions": "AAE",
+        "placement": 0,
+        "plugboard": "BO",
+        "preview": "A"
+      },
+      {
+        "positions": "AAF",
+        "placement": 0,
+        "plugboard": "BW",
+        "preview": "A"
+      },
+      {
+        "positions": "AAG",
+        "placement": 0,
+        "plugboard": "BC",
+        "preview": "A"
+      },
+      {
+        "positions": "AAH",
+        "placement": 0,
+        "plugboard": "BX",
+        "preview": "A"
+      },
+      {
+        "positions": "AAI",
+        "placement": 0,
+        "plugboard": "BL",
+        "preview": "A"
+      },
+      {
+        "positions": "AAJ",
+        "placement": 0,
+        "plugboard": "BT",
+        "preview": "A"
+      },
+      {
+        "positions": "AAK",
+        "placement": 0,
+        "plugboard": "BK",
+        "preview": "A"
+      },
+      {
+        "positions": "AAL",
+        "placement": 0,
+        "plugboard": "BS",
+        "preview": "A"
+      },
+      {
+        "positions": "AAM",
+        "placement": 0,
+        "plugboard": "Inga par",
+        "preview": "A"
+      },
+      {
+        "positions": "AAN",
+        "placement": 0,
+        "plugboard": "BT",
+        "preview": "A"
+      },
+      {
+        "positions": "AAO",
+        "placement": 0,
+        "plugboard": "BM",
+        "preview": "A"
+      },
+      {
+        "positions": "AAP",
+        "placement": 0,
+        "plugboard": "BC",
+        "preview": "A"
+      },
+      {
+        "positions": "AAQ",
+        "placement": 0,
+        "plugboard": "BD",
+        "preview": "A"
+      },
+      {
+        "positions": "AAR",
+        "placement": 0,
+        "plugboard": "BL",
+        "preview": "A"
+      },
+      {
+        "positions": "AAS",
+        "placement": 0,
+        "plugboard": "BP",
+        "preview": "A"
+      },
+      {
+        "positions": "AAT",
+        "placement": 0,
+        "plugboard": "Inga par",
+        "preview": "A"
+      }
+    ]
+  },
+  {
+    "id": "none",
+    "run": 1,
+    "elapsedSeconds": 2.687,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "impossible",
+    "run": 1,
+    "elapsedSeconds": 0,
+    "status": "complete",
+    "checked": 0,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "impossible-auto",
+    "run": 1,
+    "elapsedSeconds": 0,
+    "status": "complete",
+    "checked": 52728,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "pairs-10-full",
+    "run": 1,
+    "elapsedSeconds": 0.001,
+    "status": "complexity_limit",
+    "checked": 0,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "unicode-prefix",
+    "run": 1,
+    "elapsedSeconds": 0,
+    "status": "complete",
+    "checked": 0,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "short-crib",
+    "run": 1,
+    "elapsedSeconds": 0.001,
+    "status": "complexity_limit",
+    "checked": 0,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "shared-example-aim",
+    "run": 1,
+    "elapsedSeconds": 0.001,
+    "status": "complexity_limit",
+    "checked": 0,
+    "total": 17576,
+    "returned": 0,
+    "sourceStartPresent": false,
+    "candidates": []
+  },
+  {
+    "id": "shared-example-naked",
+    "run": 1,
+    "elapsedSeconds": 8.18,
+    "status": "complete",
+    "checked": 17576,
+    "total": 17576,
+    "returned": 1,
+    "sourceStartPresent": true,
+    "candidates": [
+      {
+        "positions": "MCK",
+        "placement": 0,
+        "plugboard": "AV BS",
+        "preview": "WETTERBERICHTAUSBERLINMELDETSONNENSCHEIN"
+      }
+    ]
+  }
+]

@@ -164,7 +164,13 @@ See [adaptive execution](../workflow/adaptive-execution.md).
   workloads. Mixed setup, repository maintenance and delivery time remain visible.
 
 See [engineering delivery](../workflow/engineering-delivery.md) and the
-[bounded evaluation results](../features/aim-3.1-evaluation.md).
+[Enigma case: same Luna, stronger product with AIM 3.2](../features/aim-3.2-enigma-case.md).
+The completed pair scored 93.5/100 with AIM against 49.8/100 without it, passed
+123/123 independent reference vectors against 1/123, and found valid candidates
+in 9/9 new positive search cases against 0/9. Visual finish and code structure
+were also judged stronger. The case separates app runtime from development time
+and links the raw evidence. [Earlier resource-efficiency results](../features/aim-3.1-evaluation.md)
+cover a separate workload and pre-3.1 candidate.
 
 ## Adapters and commands
 

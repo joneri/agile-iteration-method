@@ -1,0 +1,250 @@
+[
+  {
+    "id": "pairs-0",
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "MZX",
+      "positions": "ADV",
+      "plugboard": ""
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "CIDQECSNYYLTFINPEOYQOHOADAXBKUCWRDQFSKKJYCGHWNCWQODFCWHYMTHJYYPECDDRRU",
+    "crib": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFOR",
+    "offset": 0
+  },
+  {
+    "id": "pairs-1",
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "MZX",
+      "positions": "ADV",
+      "plugboard": "AZ"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "CIDQECCNYYLTFINPEOYQOHTZDZXBKUCWRDIFSKKJYCGHWNCWQODFCWHYMTHJEYPECDDLRU",
+    "crib": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFOR",
+    "offset": 0
+  },
+  {
+    "id": "pairs-3",
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "MZX",
+      "positions": "ADV",
+      "plugboard": "AZ BY CX"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "XIDQEXXNYBLTFINPEABQOITZDZCYKUXWRDIFSKKJYXGHWNXWQODFXIHBMTHPEBPEXDDLRU",
+    "crib": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFOR",
+    "offset": 0
+  },
+  {
+    "id": "pairs-6",
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "MZX",
+      "positions": "ADV",
+      "plugboard": "AZ BY CX DW EV FU"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "XIWQVXXNYBLTTINPVABQHITZWZCYKFRDRWIUSKXOYIMHDPXYQOWUMINJMTZPVBPVXWWLRF",
+    "crib": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFOR",
+    "offset": 0
+  },
+  {
+    "id": "pairs-10",
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "MZX",
+      "positions": "ADV",
+      "plugboard": "AZ BY CX DW EV FU GT HS IR JQ"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "XRUZBGXCYBBFGRNMYANYSRGKPZZXXFIWIWRSWLXOYRMSVPDYJAXYMRNQSMZPVBPZJQWLIM",
+    "crib": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFOR",
+    "offset": 0
+  },
+  {
+    "id": "offset-known",
+    "config": {
+      "rotors": [
+        "III",
+        "V",
+        "I"
+      ],
+      "reflector": "B",
+      "rings": "QEL",
+      "positions": "RYP",
+      "plugboard": "AQ BW CE DR FT GY HU IJ KO LP"
+    },
+    "plaintext": "CHECKNORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALSEND",
+    "ciphertext": "HVFQRVVCVNDXWPSJEROICOQQUWRLAFEFZSUMPIMDJKDQUNBOELGZEJKBONZZJTETUJNVWSFHKQBLPQ",
+    "crib": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVE",
+    "offset": 5
+  },
+  {
+    "id": "offset-auto",
+    "config": {
+      "rotors": [
+        "III",
+        "V",
+        "I"
+      ],
+      "reflector": "B",
+      "rings": "QEL",
+      "positions": "RYP",
+      "plugboard": "AQ BW CE DR FT GY HU IJ KO LP"
+    },
+    "plaintext": "CHECKNORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALSEND",
+    "ciphertext": "HVFQRVVCVNDXWPSJEROICOQQUWRLAFEFZSUMPIMDJKDQUNBOELGZEJKBONZZJTETUJNVWSFHKQBLPQ",
+    "crib": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVE",
+    "offset": null
+  },
+  {
+    "id": "multiple",
+    "config": {
+      "rotors": [
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B",
+      "rings": "AAA",
+      "positions": "AAA",
+      "plugboard": ""
+    },
+    "ciphertext": "B",
+    "crib": "A",
+    "offset": 0
+  },
+  {
+    "id": "none",
+    "config": {
+      "rotors": [
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B",
+      "rings": "AAA",
+      "positions": "AAA",
+      "plugboard": ""
+    },
+    "ciphertext": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+    "crib": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "offset": 0
+  },
+  {
+    "id": "impossible",
+    "config": {
+      "rotors": [
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B",
+      "rings": "AAA",
+      "positions": "AAA",
+      "plugboard": ""
+    },
+    "ciphertext": "AAAA",
+    "crib": "AA",
+    "offset": 0
+  },
+  {
+    "id": "impossible-auto",
+    "config": {
+      "rotors": [
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B",
+      "rings": "AAA",
+      "positions": "AAA",
+      "plugboard": ""
+    },
+    "ciphertext": "AAAA",
+    "crib": "AA",
+    "offset": null
+  },
+  {
+    "id": "pairs-10-full",
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "MZX",
+      "positions": "ADV",
+      "plugboard": "AZ BY CX DW EV FU GT HS IR JQ"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "XRUZBGXCYBBFGRNMYANYSRGKPZZXXFIWIWRSWLXOYRMSVPDYJAXYMRNQSMZPVBPZJQWLIM",
+    "crib": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "offset": 0
+  },
+  {
+    "id": "unicode-prefix",
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "MZX",
+      "positions": "ADV",
+      "plugboard": "AZ BY CX DW EV FU GT HS IR JQ"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "\u00dfXRUZBGXCYBBFGRNMYANYSRGKPZZXXFIWIWRSWLXOYRMSVPDYJAXYMRNQSMZPVBPZJQWLIM",
+    "crib": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFOR",
+    "offset": 0
+  },
+  {
+    "id": "short-crib",
+    "config": {
+      "rotors": [
+        "V",
+        "II",
+        "III"
+      ],
+      "reflector": "C",
+      "rings": "MZX",
+      "positions": "ADV",
+      "plugboard": "AZ"
+    },
+    "plaintext": "NORTHHARBORREPORTXTHECARGOSHIPWILLARRIVEBEFORESUNRISEXVERIFYALLSIGNALS",
+    "ciphertext": "CIDQECCNYYLTFINPEOYQOHTZDZXBKUCWRDIFSKKJYCGHWNCWQODFCWHYMTHJEYPECDDLRU",
+    "crib": "NORTHHARBORR",
+    "offset": 0
+  }
+]
