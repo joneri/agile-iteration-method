@@ -19,8 +19,11 @@ BACKLOG_VERSION = "1.0"
 BACKLOG_FILE = "portfolio-backlog.json"
 MAX_BACKLOG_BYTES = 1_048_576
 MAX_ITEMS = 256
-IMPORT_FIELDS = {"id", "epicId", "epicTitle", "title", "summary", "priority"}
+IMPORT_FIELDS = {"id", "epicId", "epicTitle", "title", "summary", "priority", "sources"}
 OUTPUT_FIELDS = IMPORT_FIELDS | {"createdAt", "runtimeIncrementId"}
+SOURCE_FIELDS = {"system", "proposalId", "proposalSha256", "evidenceIds", "sourcePath"}
+MAX_SOURCES_PER_ITEM = 8
+MAX_EVIDENCE_IDS = 16
 
 
 class BacklogError(ValueError):
@@ -69,6 +72,53 @@ def _validate_candidate_id(value: str) -> str:
     return value
 
 
+def _source_key(source: dict[str, Any]) -> tuple[str, str]:
+    return source["system"], source["proposalId"]
+
+
+def normalize_sources(value: Any, field: str) -> list[dict[str, Any]]:
+    """Validate bounded source metadata as data; never dereference sourcePath."""
+
+    if not isinstance(value, list) or not 1 <= len(value) <= MAX_SOURCES_PER_ITEM:
+        raise BacklogError(f"{field} must contain 1–{MAX_SOURCES_PER_ITEM} sources.")
+    normalized: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    for index, raw in enumerate(value):
+        label = f"{field}[{index}]"
+        if not isinstance(raw, dict) or set(raw) != SOURCE_FIELDS:
+            raise BacklogError(f"{label} must contain only system, proposalId, proposalSha256, evidenceIds, and sourcePath.")
+        system = _bounded_string(raw["system"], f"{label}.system", maximum=40)
+        proposal_id = _bounded_string(raw["proposalId"], f"{label}.proposalId", maximum=120)
+        digest = _bounded_string(raw["proposalSha256"], f"{label}.proposalSha256", maximum=64)
+        source_path = _bounded_string(raw["sourcePath"], f"{label}.sourcePath", maximum=240)
+        if not re.fullmatch(r"[a-z][a-z0-9-]*", system):
+            raise BacklogError(f"{label}.system must be a lowercase source name.")
+        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]*", proposal_id):
+            raise BacklogError(f"{label}.proposalId contains unsupported characters.")
+        if not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise BacklogError(f"{label}.proposalSha256 must be a lowercase SHA-256 digest.")
+        if (not re.fullmatch(r"[A-Za-z0-9._/-]+", source_path)
+                or source_path.startswith("/")
+                or any(part in {"", ".", ".."} for part in source_path.split("/"))):
+            raise BacklogError(f"{label}.sourcePath must be a contained relative POSIX path.")
+        evidence_ids = raw["evidenceIds"]
+        if not isinstance(evidence_ids, list) or not 1 <= len(evidence_ids) <= MAX_EVIDENCE_IDS:
+            raise BacklogError(f"{label}.evidenceIds must contain 1–{MAX_EVIDENCE_IDS} IDs.")
+        if any(not isinstance(item, str) or len(item) > 120 or
+               not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]*", item)
+               for item in evidence_ids) or len(set(evidence_ids)) != len(evidence_ids):
+            raise BacklogError(f"{label}.evidenceIds contains invalid or duplicate IDs.")
+        source = {"system": system, "proposalId": proposal_id,
+                  "proposalSha256": digest, "evidenceIds": evidence_ids,
+                  "sourcePath": source_path}
+        key = _source_key(source)
+        if key in seen:
+            raise BacklogError(f"{field} contains duplicate source {system}:{proposal_id}.")
+        seen.add(key)
+        normalized.append(source)
+    return sorted(normalized, key=_source_key)
+
+
 def normalize_import(value: Any, timestamp: str) -> list[dict[str, Any]]:
     """Normalize agent-interpreted input; this function never parses source prose."""
 
@@ -82,6 +132,7 @@ def normalize_import(value: Any, timestamp: str) -> list[dict[str, Any]]:
 
     normalized: list[dict[str, Any]] = []
     seen: set[str] = set()
+    source_owners: dict[tuple[str, str], str] = {}
     for index, raw in enumerate(raw_items, start=1):
         if not isinstance(raw, dict):
             raise BacklogError(f"items[{index - 1}] must be an object.")
@@ -143,6 +194,15 @@ def normalize_import(value: Any, timestamp: str) -> list[dict[str, Any]]:
         }
         if summary:
             item["summary"] = summary
+        if "sources" in raw:
+            item["sources"] = normalize_sources(raw["sources"], f"items[{index - 1}].sources")
+            for source in item["sources"]:
+                key = _source_key(source)
+                if key in source_owners:
+                    raise BacklogError(
+                        f"source {key[0]}:{key[1]} belongs to multiple input candidates."
+                    )
+                source_owners[key] = candidate_id
         normalized.append(item)
     return normalized
 
@@ -167,6 +227,7 @@ def validate_backlog(value: Any) -> list[str]:
     if len(items) > MAX_ITEMS:
         issues.append(f"items may contain at most {MAX_ITEMS} candidates.")
     seen: set[str] = set()
+    source_owners: dict[tuple[str, str], str] = {}
     for index, item in enumerate(items):
         prefix = f"items[{index}]"
         if not isinstance(item, dict):
@@ -202,6 +263,17 @@ def validate_backlog(value: Any) -> list[str]:
             if candidate_id in seen:
                 raise BacklogError(f"duplicate candidate id {candidate_id}.")
             seen.add(candidate_id)
+            if "sources" in item:
+                sources = normalize_sources(item["sources"], f"{prefix}.sources")
+                if sources != item["sources"]:
+                    raise BacklogError(f"{prefix}.sources must use canonical source order.")
+                for source in sources:
+                    key = _source_key(source)
+                    if key in source_owners:
+                        raise BacklogError(
+                            f"source {key[0]}:{key[1]} belongs to multiple candidates."
+                        )
+                    source_owners[key] = candidate_id
         except BacklogError as exc:
             issues.append(str(exc))
     return issues
@@ -238,6 +310,10 @@ def merge_backlog(repo: Path, imported: list[dict[str, Any]], timestamp: str) ->
     path = aim_root / BACKLOG_FILE
     existing = _load_existing(path)
     by_id = {item["id"]: dict(item) for item in existing["items"]}
+    source_owners = {
+        _source_key(source): item["id"]
+        for item in existing["items"] for source in item.get("sources", [])
+    }
     added: list[str] = []
     updated: list[str] = []
     skipped: list[str] = []
@@ -245,10 +321,18 @@ def merge_backlog(repo: Path, imported: list[dict[str, Any]], timestamp: str) ->
 
     for incoming in imported:
         candidate_id = incoming["id"]
+        incoming_sources = incoming.get("sources", [])
+        for source in incoming_sources:
+            key = _source_key(source)
+            owner = source_owners.get(key)
+            if owner is not None and owner != candidate_id:
+                conflicts.append(f"{key[0]}:{key[1]} belongs to {owner}")
         current = by_id.get(candidate_id)
         if current is None:
             by_id[candidate_id] = incoming
             added.append(candidate_id)
+            for source in incoming_sources:
+                source_owners[_source_key(source)] = candidate_id
             continue
         identity = ("epicId", "epicTitle", "title")
         if any(current.get(field) != incoming.get(field) for field in identity):
@@ -258,6 +342,16 @@ def merge_backlog(repo: Path, imported: list[dict[str, Any]], timestamp: str) ->
         for field in ("summary", "priority"):
             if field in incoming:
                 merged[field] = incoming[field]
+        sources = {_source_key(source): source for source in current.get("sources", [])}
+        for source in incoming_sources:
+            key = _source_key(source)
+            if key in sources and sources[key] != source:
+                conflicts.append(f"{key[0]}:{key[1]} has different provenance")
+            else:
+                sources[key] = source
+                source_owners[key] = candidate_id
+        if sources:
+            merged["sources"] = sorted(sources.values(), key=_source_key)
         if merged == current:
             skipped.append(candidate_id)
         else:
@@ -266,8 +360,11 @@ def merge_backlog(repo: Path, imported: list[dict[str, Any]], timestamp: str) ->
 
     if conflicts:
         raise BacklogError(
-            "candidate id conflicts require review: " + ", ".join(conflicts)
+            "candidate or source conflicts require review: " + ", ".join(conflicts)
         )
+    if not added and not updated:
+        return {"path": str(path), "added": added, "updated": updated,
+                "skipped": skipped, "total": len(existing["items"])}
     items = sorted(by_id.values(), key=lambda item: (item["priority"], item["createdAt"], item["id"]))
     output = {"backlogVersion": BACKLOG_VERSION, "updatedAt": timestamp, "items": items}
     issues = validate_backlog(output)

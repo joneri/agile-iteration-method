@@ -833,9 +833,14 @@ function renderEpicLaneCard(epic, index, existingCard = null) {
   card.querySelector(".epic-id").textContent = epic.id;
   const planning = card.querySelector(".epic-planning");
   const candidateCount = epic.planning?.candidateCount || 0;
+  const sourceIds = [...new Set((epic.planning?.candidates || []).flatMap(candidate =>
+    (candidate.sources || []).map(source => `${source.system}:${source.proposalId}`)))];
+  const sourceLabel = sourceIds.length
+    ? ` · sources ${sourceIds.slice(0, 2).join(", ")}${sourceIds.length > 2 ? ` +${sourceIds.length - 2}` : ""}`
+    : "";
   planning.hidden = candidateCount === 0;
   planning.textContent = candidateCount
-    ? `${candidateCount} planned candidate${candidateCount === 1 ? "" : "s"} · next ${epic.planning.nextCandidateId}`
+    ? `${candidateCount} planned candidate${candidateCount === 1 ? "" : "s"} · next ${epic.planning.nextCandidateId}${sourceLabel}`
     : "";
   const facts = card.querySelector(".epic-facts");
   facts.replaceChildren();

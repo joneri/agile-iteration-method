@@ -22,7 +22,27 @@
           "summary": {"type": "string", "maxLength": 1000},
           "priority": {"type": "integer"},
           "createdAt": {"type": "string", "minLength": 1, "maxLength": 64},
-          "runtimeIncrementId": {"type": "string", "pattern": "^DI-[0-9]+$", "maxLength": 32}
+          "runtimeIncrementId": {"type": "string", "pattern": "^DI-[0-9]+$", "maxLength": 32},
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "required": ["system", "proposalId", "proposalSha256", "evidenceIds", "sourcePath"],
+              "properties": {
+                "system": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$", "maxLength": 40},
+                "proposalId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$", "maxLength": 120},
+                "proposalSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                "evidenceIds": {
+                  "type": "array", "minItems": 1, "maxItems": 16,
+                  "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$", "maxLength": 120}
+                },
+                "sourcePath": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\/$)[A-Za-z0-9._/-]+$", "minLength": 1, "maxLength": 240}
+              },
+              "additionalProperties": false
+            }
+          }
         },
         "additionalProperties": false
       }
