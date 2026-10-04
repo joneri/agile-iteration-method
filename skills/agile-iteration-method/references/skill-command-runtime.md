@@ -59,6 +59,10 @@ but never runtime state. Report added, updated, skipped, derived, and ambiguous
 counts, then invoke the trusted AIM UI launcher. Imported candidates remain
 planning metadata on stationary Epics until a separate explicit Activate intent;
 they never masquerade as runtime Increment cards.
+For an explicitly supplied RnDAIM proposal, verify the selected proposal and
+cited research, then include bounded source references as specified in the
+Backlog import command contract. The helper never fetches another repository;
+the source ID and digest record provenance, not approval.
 
 ### Catalog repair
 

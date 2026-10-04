@@ -203,6 +203,21 @@ classifies related updates and conflicts, and atomically merges the bounded
 result into `.aim/portfolio-backlog.json`. A failed validation or conflict
 preserves the prior file byte-for-byte.
 
+A selected research proposal may add bounded `sources` to its normalized
+candidate. Each source records a lowercase source system (for example
+`rndaim`), the proposal's stable ID, SHA-256 of that selected proposal's
+canonical JSON (UTF-8, sorted keys, compact separators), evidence IDs, and a
+path relative to that source system's root.
+The path is provenance data and is never followed by the merge helper. For
+RnDAIM, the adapter verifies the explicitly selected proposal and its cited
+research before normalizing it; it does not import every proposal in a file.
+The stable source identity is `(system, proposalId)`, so matching local IDs
+from different systems remain distinct. Repeating the same source and candidate
+leaves Backlog bytes and `updatedAt` unchanged. A second source for the same
+candidate is retained; reuse of a source identity with different content or
+a different candidate fails for review. Source references are planning evidence,
+never PO consent or activation authority.
+
 Successful import reports added, updated, skipped, derived, and ambiguous
 counts. It then starts or reopens the repository through the trusted `/aim ui`
 launcher. UI launch failure does not roll back valid planning input; the adapter

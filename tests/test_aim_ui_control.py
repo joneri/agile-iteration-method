@@ -98,11 +98,11 @@ class AimUiControlTests(unittest.TestCase):
         first = control.start(repo, open_browser=False)
         self.assertEqual(first["status"], "running")
         self.assertFalse(first["reused"])
-        self.assertEqual(first["productVersion"], "3.2.0")
+        self.assertEqual(first["productVersion"], "3.2.1")
         with urlopen(f"{first['url']}api/board", timeout=2) as response:
             board = json.loads(response.read().decode("utf-8"))
         self.assertEqual(board["source"]["kind"], "uninitialized")
-        self.assertEqual(board["product"]["version"], "3.2.0")
+        self.assertEqual(board["product"]["version"], "3.2.1")
         self.assertIn(
             board["backgroundControl"]["status"], {"configured", "view_only"}
         )

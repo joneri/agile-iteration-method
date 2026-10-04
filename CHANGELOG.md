@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-04 - AIM 3.2 patch release v3.2.1
+
+- Preserve bounded RnDAIM proposal identity, digest, evidence IDs and source path on planning backlog candidates; show source IDs in the read-only planned Epic card.
+- Leave identical reimports byte-for-byte unchanged. Reject conflicting source identities without changing the backlog or active runtime.
+- Keep source-less candidates valid, align backlog read limits across import, UI and activation, and reject unsafe source paths in both helper and schema.
+
+Compatibility: backlog contract remains `1.0`, runtime contract `2.0`, runtime-state schema `1.0` and public skill package format `17`. No runtime-state migration is required. Import does not activate an Epic or grant PO authority.
+
+Validation: 503 regression tests on the feature commit, independent review, release validator, generated skill and official CLI checks, plus a representative generated CLI and local browser journey using RnDAIM proposal `P-20261004-002`. Final release-commit validation and global installation are separate checks.
+
+Migration: update the global skill from the verified release source between jobs, reload Codex sessions that use AIM, and restart active AIM UI instances. Retain the previous package for rollback.
+
 ## 2026-09-30 - AIM 3.2 feature release v3.2.0
 
 **Fewer approvals. Clearer next steps.** AIM 3.2 brings direction and first-plan approval together, then delivery acceptance and verified Epic closure together. A straightforward single-Increment Strict Epic has two ordinary decision moments, with the same review and whole-Epic verification requirements.
