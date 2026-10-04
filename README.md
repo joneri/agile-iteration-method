@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 3.2
 
-![AIM 3.2.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 3.2.1 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you. **Same model. Stronger software:** in our Enigma pair, GPT-6 Luna (high) with AIM 3.2 scored **93.5/100 versus 49.8/100** with the same PRD and predefined KPI weights. [See the case and public evidence](docs/features/aim-3.2-enigma-case.md).
 
@@ -176,4 +176,4 @@ AIM Reflect still **goes beyond memory cleanup for repository work** through ver
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product version: **v3.2.0**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product version: **v3.2.1**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
