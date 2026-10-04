@@ -418,6 +418,14 @@ creates runtime state. Stable candidate IDs, bounded validation, conflict
 classification, and atomic replacement make retries idempotent and leave the
 prior backlog unchanged on failure.
 
+Optional bounded `sources` preserve research proposal provenance on a planning
+candidate: source system, proposal ID and digest, cited evidence IDs, and a
+relative source path. The helper never dereferences that path. An exact replay
+does not rewrite Backlog bytes or its timestamp; multiple distinct sources may
+support one candidate, while a changed digest for the same source identity or
+one source claimed by different candidates requires review. These source facts
+do not grant approval or alter active runtime, Portfolio snapshots, or Gates.
+
 An explicitly approved catalog repair is the only operation that may combine
 workspace archival with retirement of a runtime-linked Backlog record. The
 main AIM thread resolves one exact candidate/Epic/Increment/workspace relation

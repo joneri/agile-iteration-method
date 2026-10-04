@@ -12,11 +12,11 @@ from pathlib import Path
 from pathlib import PurePosixPath
 from typing import Any, Iterable
 
+from aim_backlog import MAX_BACKLOG_BYTES
 from aim_portfolio import activation_decision, load_portfolio_control
 
 
 BACKLOG_FILE = "portfolio-backlog.json"
-MAX_BACKLOG_BYTES = 1_000_000
 MAX_CATALOG_BYTES = 1_000_000
 MAX_STATE_BYTES = 1_000_000
 CANDIDATE_PATTERN = re.compile(r"INC-[A-Z0-9-]+")

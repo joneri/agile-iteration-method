@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, unquote, urlparse
 
+from aim_backlog import BacklogError, MAX_BACKLOG_BYTES, normalize_sources
 from aim_decisions import next_step as decision_next_step
 from aim_actions import (
     ACTION_PROMPT_PREAMBLE,
@@ -56,7 +57,6 @@ BACKLOG_VERSION = "1.0"
 BACKLOG_FILE = "portfolio-backlog.json"
 MAX_PORTFOLIO_BYTES = 1_000_000
 MAX_BACKLOG_ITEMS = 256
-MAX_BACKLOG_BYTES = 1_000_000
 MAX_ACCEPTANCE_DECISION_BYTES = 1_000_000
 MAX_GATE_B_DECISION_BYTES = 1_000_000
 RECENT_DELIVERIES_LIMIT = 10
@@ -143,9 +143,9 @@ def payload_fingerprint() -> str:
     return digest.hexdigest()
 
 
-def _read_json(path: Path) -> dict[str, Any]:
+def _read_json(path: Path, *, maximum: int = 1_000_000) -> dict[str, Any]:
     try:
-        if path.is_symlink() or path.stat().st_size > 1_000_000:
+        if path.is_symlink() or path.stat().st_size > maximum:
             raise AimUiError(f"{path.name} is not a bounded regular JSON file.")
         value = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
@@ -1650,7 +1650,7 @@ def _load_backlog(aim_root: Path, warnings: list[str]) -> list[dict[str, Any]]:
         warnings.append(f"{BACKLOG_FILE} is larger than {MAX_BACKLOG_BYTES} bytes.")
         return []
     try:
-        backlog = _read_json(path)
+        backlog = _read_json(path, maximum=MAX_BACKLOG_BYTES)
     except AimUiError as exc:
         warnings.append(str(exc))
         return []
@@ -1667,6 +1667,7 @@ def _load_backlog(aim_root: Path, warnings: list[str]) -> list[dict[str, Any]]:
 
     items: list[dict[str, Any]] = []
     seen: set[str] = set()
+    seen_sources: set[tuple[str, str]] = set()
     for index, raw in enumerate(raw_items):
         if not isinstance(raw, dict):
             warnings.append(f"Ignored backlog item {index + 1}: expected an object.")
@@ -1710,6 +1711,18 @@ def _load_backlog(aim_root: Path, warnings: list[str]) -> list[dict[str, Any]]:
         ):
             warnings.append(f"Ignored backlog item {index + 1}: invalid runtimeIncrementId.")
             continue
+        sources: list[dict[str, Any]] = []
+        if "sources" in raw:
+            try:
+                sources = normalize_sources(raw["sources"], f"items[{index}].sources")
+            except BacklogError as exc:
+                warnings.append(f"Ignored backlog item {index + 1}: {exc}")
+                continue
+            source_keys = {(source["system"], source["proposalId"]) for source in sources}
+            if source_keys & seen_sources:
+                warnings.append(f"Ignored backlog item {index + 1}: duplicate source identity.")
+                continue
+            seen_sources.update(source_keys)
         seen.add(identifier)
         items.append(
             {
@@ -1721,6 +1734,7 @@ def _load_backlog(aim_root: Path, warnings: list[str]) -> list[dict[str, Any]]:
                 "priority": raw["priority"],
                 "createdAt": raw["createdAt"].strip(),
                 "runtimeIncrementId": runtime_increment_id,
+                "sources": sources,
             }
         )
     return sorted(items, key=lambda item: (item["priority"], item["createdAt"], item["id"]))
