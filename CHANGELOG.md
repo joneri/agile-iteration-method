@@ -1,8 +1,8 @@
 # Changelog
 
-## 2026-10-12 - AIM local candidate for release v4.2.0
+## 2026-10-12 - AIM release v4.2.0
 
-Local candidate for isolated evaluation; not published. Final live approval remains pending.
+AIM 4.2 adds guidance for continuing authorized work and handling necessary questions across sessions.
 
 - Continue within current assignment authority, reuse applicable answers, and inspect original instructions and chronology before reusing a mandate. A completed delivery's approval does not authorize a later assignment; valid same-assignment authority survives interruption.
 - Present necessary independent questions with the recommendation first, preserve free text and defer dependent choices. Bind explicit replies to their exact presentation and reject stale or conflicting receipts.
@@ -11,9 +11,9 @@ Local candidate for isolated evaluation; not published. Final live approval rema
 - Retire the old AIM 3 campaign logo, conceptual Beta illustration and Portfolio Auto video/poster from current publication; retain their Git provenance and the real User Stories board capture.
 - Ignore generated local output and document evidence retention and recoverable cleanup. Preserve historical benchmarks, compatibility contracts and acceptance sources.
 
-Compatibility: product backlog1.0, runtime2.0, state schema1.0 and installer manifest1.0 are unchanged. Portable package revision is20. No data migration is needed; update the installed skill and reload its session when this version is released.
+Compatibility: product backlog1.0, runtime2.0, state schema1.0 and installer manifest1.0 are unchanged. Portable package revision is20. No data migration is needed; update the installed skill and reload its session after updating.
 
-Validation: native regression tests, isolated installed-package checks, independent review and three fresh Astra/high synthetic chronology scenarios. The earlier604-test integrated baseline precedes the chronology amendment; current candidate checks are recorded separately. Synthetic observations do not prove general efficiency gains, reliable live-history recovery or production publication safety. No new persistent decision engine is introduced; AIM UI remains Beta.
+Validation: native regression tests, isolated installed-package checks, independent review and three fresh Astra/high synthetic chronology scenarios. The frozen release candidate passed 607 native tests, independent review, publication validation and isolated installation checks for Codex, GitHub Copilot and Claude Code. Synthetic observations do not prove general efficiency gains, reliable live-history recovery or production publication safety. No new persistent decision engine is introduced; AIM UI remains Beta.
 
 ## 2026-10-12 - AIM website patch release v4.1.1
 

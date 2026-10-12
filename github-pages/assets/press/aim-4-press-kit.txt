@@ -1,5 +1,5 @@
-AIM 4.0 — PRESS KIT
-AIM 4.0 release material · 12 October 2026.
+AIM 4.2 — PRESS KIT
+AIM 4.2 release material · 12 October 2026.
 
 POSITIONING
 Start with people. Deliver what matters.
@@ -8,9 +8,15 @@ ONE SENTENCE
 AIM connects the people you build for with the software you deliver, giving AI-assisted development a clear path from intent to accepted User Stories.
 
 SHORT DESCRIPTION
-Agile Iteration Method (AIM) is an open-source method and tooling for AI-assisted software development. AIM 4.0 puts User Stories at the centre: start with an intent, identify the outcomes and people involved, then prioritize their needs across Epics. Product Owner, Technical Delivery Owner, Developer and Reviewer responsibilities connect planning to implementation, independent review and validation. Evidence supports the result; the user decides what is accepted.
+Agile Iteration Method (AIM) is an open-source method and tooling for AI-assisted software development. AIM puts User Stories at the centre: start with an intent, identify the outcomes and people involved, then prioritize their needs across Epics. Product Owner, Technical Delivery Owner, Developer and Reviewer responsibilities connect planning to implementation, independent review and validation. Evidence supports the result; the user decides what is accepted.
 
-WHAT CHANGES IN 4.0
+WHAT CHANGES IN 4.2
+- Shared guidance helps agents continue within the current assignment and reuse applicable prior answers and authority across sessions.
+- Necessary questions show a recommended option first; dependent questions wait until their prerequisites are settled.
+- An optional stateless helper checks reply scope and rejects stale or conflicting receipts. It records no decisions and grants no acceptance.
+- Legacy cleanup handles external provenance citations without reading or deleting outside the project.
+
+THE AIM 4 FOUNDATION
 - Start with an intent. The Product Owner identifies the relevant Epics and owns Story value, acceptance criteria and priority. The Technical Delivery Owner helps refine the Stories and plans delivery.
 - Select Stories across Epics. One delivery can meet several people’s needs while each Story keeps its own Epic and acceptance criteria.
 - See Stories move through the local AIM UI. Epics group outcomes; Stories are the work cards. The UI reflects recorded lifecycle transitions.
@@ -21,7 +27,9 @@ A new customer wants to try sample data. A support specialist wants a useful fai
 
 FACTS
 Name: Agile Iteration Method (AIM)
-Product version in this source: 4.2.0 (local candidate; not published)
+Product version in this source: 4.2.0
+Portable skill package revision: 20
+Runtime contract: 2.0; backlog, state and installer schemas: 1.0 (unchanged)
 Creator: Jonas Eriksson
 Agent environments supported by the method: Codex, GitHub Copilot and Claude Code
 Local visual interface: AIM UI, Beta
@@ -31,7 +39,7 @@ Getting started: https://github.com/joneri/agile-iteration-method/blob/main/docs
 Documentation licence: CC BY 4.0, with attribution to Jonas Eriksson (Agile Iteration Method, AIM). See LICENSE-DOCS.txt in this package.
 
 EVIDENCE AND AVAILABILITY
-The source repository contains validation and evaluation material. The Enigma comparisons belong to AIM 3.2 and their stated test conditions; they are not an AIM 4.0 benchmark or a promise of typical results. Release availability and downloadable assets are listed on the project’s GitHub Releases page.
+The source repository contains validation and evaluation material. The Enigma comparisons belong to AIM 3.2 and their stated test conditions; they are not an AIM 4.2 benchmark or a promise of typical results. No general speed, token-saving or quality advantage is claimed for AIM 4.2. Release availability and downloadable assets are listed on the project’s GitHub Releases page.
 
 LOGO
 aim-4-logo.png is the AIM 4.0 campaign lockup: original golden/blue folded A identity, navy AIM lettering and an expressive blue/cyan ribbon numeral 4 on a transparent background. Use on white or pale backgrounds. Preserve proportions, colours and the full lockup. Leave at least the height of the AIM capital letters as clear space. Check legibility at the intended size; do not use the entire wordmark as a tiny favicon. The versionless canonical repository artwork remains separate.

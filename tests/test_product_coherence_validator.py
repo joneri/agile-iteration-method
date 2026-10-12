@@ -57,6 +57,28 @@ class ProductCoherenceValidatorTests(unittest.TestCase):
         ):
             self.assertIn(heading, completed.stdout)
 
+    def test_readme_heading_accepts_current_version_or_neutral_but_not_stale(self) -> None:
+        version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
+        series = ".".join(version.split(".")[:2])
+        prefix = "# Agile Iteration Method (AIM)"
+        cases = [(f"{prefix} {series}", True), (f"{prefix} {version}", True),
+                 (prefix, True), (f"{prefix} 0.0", False), ("# Unrelated product", False)]
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            readme = copied / "README.md"
+            _, body = readme.read_text(encoding="utf-8").split("\n", 1)
+            # A valid family title in historical body text cannot excuse a stale H1.
+            body += f"\nHistorical title: {prefix} {series}\n"
+            for heading, valid in cases:
+                with self.subTest(heading=heading):
+                    readme.write_text(heading + "\n" + body, encoding="utf-8")
+                    completed = self._validate(copied)
+                    if valid:
+                        self.assertEqual(completed.returncode, 0, completed.stdout)
+                    else:
+                        self.assertNotEqual(completed.returncode, 0, completed.stdout)
+                        self.assertIn("current or version-neutral AIM heading", completed.stdout)
+
     def test_runtime_state_contract_drift_fails_release(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)

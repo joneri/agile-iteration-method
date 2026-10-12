@@ -1,4 +1,4 @@
-# Agile Iteration Method (AIM) 4.0
+# Agile Iteration Method (AIM) 4.2
 
 ![AIM 4.2.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
@@ -172,6 +172,6 @@ AIM Reflect still **goes beyond memory cleanup for repository work** through ver
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-AIM 4.2 is a local candidate for evaluation. It reuses applicable authority and prior answers, groups necessary independent questions, and binds replies to their exact scope. The optional question helper validates presentation and replay receipts; the coordinator still verifies sources and records decisions. See [autonomous interaction](docs/workflow/autonomous-interaction.md). The synthetic pilot does not establish general speed or token savings.
+AIM 4.2 adds shared guidance for reusing applicable authority and prior answers, grouping necessary independent questions, and binding replies to their exact scope. The optional question helper validates presentation and replay receipts; the coordinator still verifies sources and records decisions. See [autonomous interaction](docs/workflow/autonomous-interaction.md). The synthetic pilot does not establish general speed or token savings.
 
-Current product version: **v4.2.0** — local candidate with autonomous continuation and scoped question replies; not yet published. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product version: **v4.2.0** — autonomous continuation and scoped question replies. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).

@@ -1,20 +1,18 @@
-AIM 4.0
-Börja med människorna. Leverera det som gör skillnad.
+AIM 4.2
+Behåll riktningen. För arbetet framåt.
 
-Förslag till lanseringstext · AIM 4.0 · 12 oktober 2026.
+Förslag till lanseringstext · AIM 4.2 · 12 oktober 2026.
 
-AI kan hjälpa oss att bygga mer mjukvara. AIM börjar med en annan fråga: vems problem löser vi?
+AIM 4.2 ger AI-assisterad utveckling gemensamma regler för att fortsätta godkänt arbete mellan sessioner. Agenten kontrollerar vilka beslut och svar som fortfarande gäller för det aktuella uppdraget. Nödvändiga frågor visar ett rekommenderat alternativ först. Frågor som beror på andra svar väntar tills förutsättningarna är klara.
 
-AIM 4.0 sätter User Stories i centrum för AI-assisterad utveckling. En intention kan rymma flera Epics och flera människor med olika behov. Behoven blir Stories med tydligt värde och acceptanskriterier, som prioriteras tillsammans.
+En valfri hjälpfunktion kontrollerar att svar hör till rätt fråga och avvisar inaktuella eller motstridiga svarskvitton. Den lagrar inga beslut. Samordnaren verifierar fortfarande källor och dokumenterar beslut; användaren accepterar leveransen.
 
-Product Owner äger kraven och prioriteringen. Technical Delivery Owner hjälper till att förfina Stories och planerar en sammanhängande leverans. Utvecklare implementerar, en separat Reviewer granskar och valideringen knyter resultatet till kriterierna. Användaren accepterar leveransen.
+Grunden är fortsatt människornas behov: Product Owner identifierar Epics och User Stories, en leverans kan samla Stories från olika Epics och oberoende granskning och validering knyter resultatet till acceptanskriterierna. AIM UI visar hur Stories rör sig genom processen.
 
-I AIM UI är Stories korten som rör sig över brädan. Epics håller de större målen synliga. Samma leverans kan innehålla Stories från olika Epics; inkrementet är den fungerande förbättring som leveransen ger. Done betyder accepterat beteende.
+För Codex, GitHub Copilot och Claude Code. AIM UI är fortsatt Beta. Ingen datamigrering krävs; uppdatera installerad skill och starta om sessionen. De syntetiska testerna ger inget stöd för generella löften om tids- eller tokenbesparingar.
 
-För utvecklare och produktteam som använder Codex, GitHub Copilot eller Claude Code erbjuder AIM en gemensam metod från idé till mjukvara som människor kan utvärdera och acceptera.
-
-Utforska projektet: https://github.com/joneri/agile-iteration-method
-Läs om metoden: https://joneri.github.io/agile-iteration-method/
+Utforska: https://github.com/joneri/agile-iteration-method
+Installera: npx skills add joneri/agile-iteration-method --skill agile-iteration-method
 
 KORT UTKAST FÖR SOCIALA MEDIER
-AIM 4.0 börjar med människorna. Deras behov blir User Stories, en leverans kan samla Stories från flera Epics och Done betyder verifierat, accepterat beteende. Från intention till fungerande mjukvara: https://github.com/joneri/agile-iteration-method
+AIM 4.2 ger gemensamma regler för att fortsätta godkänt arbete, återanvända relevanta svar och ställa nödvändiga frågor tydligt. Från intention till granskade User Stories, med acceptansen hos dig. https://joneri.github.io/agile-iteration-method/

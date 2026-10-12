@@ -1,20 +1,18 @@
-AIM 4.0
-Start with people. Deliver what matters.
+AIM 4.2
+Keep the intent. Carry the work forward.
 
-Suggested announcement copy · AIM 4.0 · 12 October 2026.
+Suggested announcement copy · AIM 4.2 · 12 October 2026.
 
-AI can help us build more software. AIM starts with a different question: whose problem are we solving?
+AIM 4.2 gives AI-assisted development a shared contract for continuing authorized work across sessions. Agents check which decisions and answers still apply to the current assignment. Necessary questions present a recommended option first, while dependent questions wait for the answers they need.
 
-AIM 4.0 puts User Stories at the heart of AI-assisted development. An intent can reveal several Epics and several people with different needs. Those needs become Stories with clear value and acceptance criteria, prioritized together rather than confined to one Epic at a time.
+An optional stateless helper checks that replies belong to the right question and rejects stale or conflicting receipts. The coordinator still verifies sources and records decisions. User acceptance remains explicit.
 
-The Product Owner owns the requirements and priorities. The Technical Delivery Owner helps refine the Stories and selects a coherent delivery. Developers implement it, a separate Reviewer checks it, and validation connects evidence to the criteria. The user accepts the result.
+The foundation stays focused on people: a Product Owner discovers Epics and User Stories, deliveries can combine Stories from different Epics, and independent review and validation connect the result to acceptance criteria. AIM UI shows Stories moving through that process.
 
-In AIM UI, Stories are the cards that move across the board. Epics keep the bigger outcomes visible. A delivery can include Stories from different Epics; an increment is the working improvement it produces. Done means accepted behaviour.
+Available for Codex, GitHub Copilot and Claude Code. AIM UI remains Beta. No data migration is required; update the installed skill and reload its session. No general speed or token-saving benefit is claimed from the synthetic tests.
 
-For developers and product teams using Codex, GitHub Copilot or Claude Code, AIM offers a shared method for turning an idea into software people can evaluate and accept.
-
-Explore the project: https://github.com/joneri/agile-iteration-method
-Read the method: https://joneri.github.io/agile-iteration-method/
+Explore: https://github.com/joneri/agile-iteration-method
+Install: npx skills add joneri/agile-iteration-method --skill agile-iteration-method
 
 SHORT SOCIAL DRAFT
-AIM 4.0 starts with people: their needs become User Stories, one delivery can include Stories from different Epics, and Done means verified, accepted behaviour. A clearer path from intent to working software. Explore: https://github.com/joneri/agile-iteration-method
+AIM 4.2 brings shared guidance for continuing authorized work, reusing applicable answers and asking necessary questions clearly. From intent to reviewed User Stories, with acceptance in your hands. https://joneri.github.io/agile-iteration-method/

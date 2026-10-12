@@ -288,7 +288,6 @@ OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
-        "# Agile Iteration Method (AIM) 4.0",
         "## Install",
         "## How AIM works",
         "## What is new in v4.0.0",
@@ -2390,6 +2389,14 @@ def main() -> int:
         missing_product_markers = [
             marker for marker in required_markers if marker not in product_content
         ]
+        if relative_path == "README.md":
+            version = (repo_root / "VERSION").read_text(encoding="utf-8").strip()
+            title = "# Agile Iteration Method (AIM)"
+            current_series = ".".join(version.split(".")[:2])
+            allowed_titles = {title, f"{title} {version}", f"{title} {current_series}"}
+            first_line = product_content.splitlines()[0] if product_content else ""
+            if first_line.strip() not in allowed_titles:
+                missing_product_markers.append("current or version-neutral AIM heading")
         if missing_product_markers:
             add_issue(
                 issues,
