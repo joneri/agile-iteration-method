@@ -4,87 +4,63 @@
 
 # Agile iteration method
 
-New combined proposals follow [Combined decisions and predictable continuation](streamlined-decisions.md).
-They preserve logical gates while allowing one explicit response for direction
-plus first plan, or delivery plus disposition. Legacy gate actions retain their
-original scope. Use the same shared helper and next-step resolver in chat, CLI
-and UI; no UI session is required.
-
 ## Version
 
-This document describes the **AIM 2.0** product surface.
-It retains the stable AIM core method and runtime model while making AIM's cost-aware operator story explicit.
+This document describes the **AIM 4.0** product method. Product releases, the
+product-backlog schema and the preserved legacy runtime contract are separate
+versions.
 
 ## Overview
 
-Agile iteration method uses AI agents as clear roles inside one delivery loop.
+AIM turns a product intent into explicit user needs, then delivers selected
+needs through planning, implementation, independent review, validation and
+human-owned acceptance. Requirements remain visible before, during and after
+implementation.
 
-Instead of treating AI as one assistant that jumps between ideas,
-the method uses:
+## Requirements and delivery in AIM 4.0
 
-- clear roles
-- real Done Increments (not micro steps)
-- clear handoffs
-- hard approval gates
+Read [User Stories and product backlog](user-stories.md) for new intent-led work.
+The model is **Intent → Epics → User Stories → delivery selection → increment**.
+PO owns product intent, Epic outcomes, Story value, acceptance criteria and
+priority. TDO refines Stories with PO and plans implementation and verification
+for the selected Stories. A delivery can select Stories from different Epics.
+A Sprint is an optional timebox; an increment is the working product result.
+Neither is a requirement or a synonym for a Story.
 
-The goal is to move toward working software that users can evaluate while keeping human control over scope, quality and direction.
+User Stories are the moving board cards. Epics supply outcome context and
+filtering. Each Story has its own stable identity and acceptance evidence.
+Accepting Stories does not automatically close their Epics.
 
-The method is inspired by the “Ralph Wiggum loop”, adapted to real product development and renamed to reflect its Agile nature.
-
-### Stable runtime basics
-
-- Core AIM roles and gate semantics are unchanged.
-- AIM is defined as `core + runtime + repo-aware policy + platform adapters`.
-- Cost profiles are explicit: `Standard`, `Cost Control`, and `Deep`.
-- Cost profile controls runtime depth, not approval semantics.
-- The public front door is thin: start, continue, or validate first; read deeper only when needed.
-- `.aim` is treated as official repo-local runtime state.
-- Small Done Increments are defined by behavioral scope, not by minimal file count.
-- Focused file boundaries are valid when they preserve the approved behavior and reduce future context cost.
-- Canonical AIM behavior docs live in `docs/workflow/`.
-- `docs/features/` is support/reference by default, not AIM core truth.
-- Active Epic runtime state lives in `.aim/epic.md`.
-- Repository profile is a first-class concept with a defined layer order.
-- Execution modes are `Strict` and `Auto`.
-- Canonical role names are locked: `PO`, `TDO`, `Dev`, `Reviewer`.
-- Optional Copilot and Claude Code layers provide faster commands without changing method semantics.
-- Controlled parallelism is allowed only when runtime support exists and ownership remains centralized.
-- Commit-after-increment can be used as a team policy, but is not mandatory
-  for the method itself.
-
----
+Existing `.aim/state.json` and catalogued `DI-*` workspaces keep their original
+runtime semantics. The legacy protocol sections below apply only to those
+workspaces. Never relabel `DI-*` or `INC-*` as User Stories, derive acceptance
+from their status, or migrate them during start, validation, UI polling or
+upgrade. New work uses `.aim/product-backlog.json`; these stores can coexist.
 
 ## Core idea
 
-The whole development process is one continuous Agile loop, driven by roles and guarded by approvals.
+1. The user describes an **intent**, problem or desired outcome.
+2. **PO** identifies affected users and one or more outcome-focused **Epics**.
+3. **PO and TDO** refine **User Stories** under the appropriate Epics. PO owns
+   the need, value, acceptance criteria and ordering; TDO supplies feasibility,
+   dependencies, technical risks and verification design.
+4. PO prioritizes the product backlog across Epics. **TDO** proposes a bounded
+   delivery selecting ready Stories, explaining dependencies and capacity.
+5. Gate A confirms the relevant direction and Story requirements. Gate B
+   confirms the exact selected Stories and delivery plan. An explicitly scoped
+   response can cover both; existing authorized scope remains authorized.
+6. **Dev** implements that selection. **Reviewer** reviews actual behavior and
+   acceptance evidence. **TDO** validates each Story and the integrated result.
+7. **PO** presents verified results for user acceptance at Gate E. Acceptance
+   names the Stories and criteria proved; failures remain unfinished.
+8. The accepted working improvement is an **increment**. PO assesses remaining
+   needs and separately proposes Epic closure only when its outcome is proven.
+9. Reprioritize the remaining Stories and select the next delivery when authorized.
 
-Kickoff contract:
-- PO creates the Epic from desired user outcome.
-- TDO creates the next Done Increment from that Epic.
-
-1. The **Product owner (PO)** defines the problem and desired outcome.
-2. The **PO** defines an **Epic** that represents a complete piece of user value, with input from the TDO when needed.
-3. The Epic is refined until **PO and TDO** agree on scope, constraints and acceptance criteria.
-4. The **Technical delivery owner (TDO)** defines the next **Done Increment** as a shippable slice of the Epic end to end.
-5. A **Developer (Dev)** implements exactly that Done Increment.
-6. A **Reviewer** checks correctness, edge cases and technical risk.
-7. The **TDO** validates the increment against the Epic and the increment acceptance criteria.
-8. The **TDO** presents the increment as a demo, test and feedback checkpoint and asks whether the increment should be accepted or adjusted.
-9. Before asking for acceptance, the **PO** evaluates the verified outcome and recommends whether the Epic
-   should close, continue or split new scope into a separate Epic; the user or
-   separately authorized Portfolio mandate owns the resulting decision.
-10. Feedback is carried into the next Done Increment when the Epic continues.
-11. The loop repeats until the Epic is complete.
-
-An accepted Increment proves only that Increment. It is never evidence by
-itself that the Epic or product outcome is complete. AIM prefers another
-coherent Done Increment over closing an Epic on partial, synthetic, assisted,
-or contradictory evidence.
-
-In short, the PO owns the Epic and the TDO owns the Done Increment.
-
-The AI never changes direction on its own.
-Execution may proceed autonomously within an explicitly approved Done Increment but must stop and ask for guidance if scope, intent or assumptions change.
+A Story need not approximate its entire Epic. Different user perspectives may
+be implemented and accepted independently. Technical tasks support Stories;
+they do not silently replace user requirements. AIM does not expand approved
+scope or turn automatic execution into automatic product acceptance.
 
 ## Audience-context integrity
 
@@ -116,8 +92,8 @@ AIM keeps the same architecture split and uses an explicit runtime-depth layer.
 - `AIM core`:
   - the canonical role sequence
   - gates A-E
-  - Epic-first execution
-  - Done Increment discipline
+  - intent-led discovery and a PO-owned product backlog
+  - Story acceptance and coherent integrated increments
   - `Strict` and `Auto` mode semantics
 - `AIM runtime depth`:
   - `Standard`, `Cost Control`, and `Deep` cost profiles
@@ -158,6 +134,12 @@ At the architectural level, users should be able to trust that:
 The full `.aim` file contract, schema and lifecycle rules belong to the runtime specification.
 
 ### Official `.aim` contract
+
+For new Story work, `.aim/product-backlog.json` is the authoritative requirements
+and delivery ledger; see `user-stories.md`. The following files describe the
+**preserved legacy Epic/DI workspace protocol** only. They are not required to
+create a product backlog and are not a substitute for Story records.
+
 
 Required artifacts:
 - `.aim/epic.md`
@@ -215,6 +197,11 @@ At minimum, it should answer:
 Markdown artifacts remain important for human inspection, but `state.json` is the runtime checkpoint the adapter should use when resuming.
 
 ## Bootstrap and resume flow
+
+Dispatch intent-led starts and Story continuation through `user-stories.md`
+before applying the following **legacy Epic workspace bootstrap**. Resume an
+explicitly targeted legacy checkpoint unchanged; do not silently convert it.
+
 
 AIM defines one shared conceptual startup sequence across adapters:
 
@@ -320,6 +307,11 @@ If startup cannot proceed cleanly:
   - keep the same runtime contract and continue sequentially
 
 ## State transition model
+
+The states below belong to the **legacy Epic/DI runtime**. New Story states and
+delivery transitions are defined in `user-stories.md`; do not write them into
+legacy `state.json` or use legacy Gates to accept Stories.
+
 
 AIM gives `state.json` a formal runtime meaning instead of treating it as a loose status note.
 
@@ -571,12 +563,17 @@ Startup triggers (no manual bootstrap expected):
 - `Install AIM`
 - `Start working according to AIM`
 - `Starta en AIM-loop med denna EPIC: ...`
-- `/aim start "EPIC: ..."`
+- `/aim start "<desired outcome>"` (new intent-led work)
+- `/aim start "EPIC: ..."` (explicit legacy compatibility)
 - explicit Claude Code AIM start with:
   - `EPIC: <desired outcome>`
   - `Mode: Strict` or `Mode: Auto`
 
 ### Portfolio-aware normal start
+
+This is the compatibility route for explicit legacy `EPIC:` starts and existing
+Portfolio runs. Plain intent starts use the product backlog in `user-stories.md`.
+
 
 Before the first write for a genuinely new Epic, normal `/aim start "EPIC:
 ..."` must inspect `.aim/ui-portfolio.json`. When that catalog is present,
@@ -705,7 +702,7 @@ Do not stay in Cost Control when work affects:
 
 After the PO has approved:
 - the Epic, and
-- the next Done Increment specification (Gate B),
+- the selected Stories and delivery plan (Gate B),
 
 the roles **TDO → Dev → Reviewer → TDO** may execute the full loop without further PO involvement.
 
@@ -734,7 +731,7 @@ AIM replaces the generic visible approval template with a role-specific, step-sp
 Core method stays the same:
 - role order stays the same
 - gate order stays the same
-- one active Done Increment at a time stays the same
+- one bounded approved delivery selection is active at a time; it may contain several Stories from several Epics
 
 What changes is the visible response shape.
 Each role should sound like that role and should ask only for the decision that belongs at that step.
@@ -784,7 +781,7 @@ contract remains the semantic owner across adapters.
   - frames the Epic
   - explains why the Epic exists and what is being approved now
 - `TDO` before development:
-  - proposes the next single Done Increment
+  - proposes a delivery selection of ready Stories across relevant Epics
   - explains why this is the right slice now
 - `Dev`:
   - reports what was implemented and verified
@@ -807,8 +804,8 @@ contract remains the semantic owner across adapters.
 Different approvals mean different things:
 - Epic approval:
   - approve Epic framing and scope
-- increment approval:
-  - approve the next single Done Increment
+- delivery plan approval:
+  - approve the exact selected Stories, their requirements and delivery plan
 - increment acceptance:
   - accept the demonstrated increment or request adjustment
 - Epic continuation:
@@ -885,71 +882,35 @@ native agent instructions.
 
 ### Product owner (PO)
 
-The PO is responsible for value and intent.
-The PO owns the Epic.
-
-The PO:
-- defines the Epic and its user-visible value
-- sets scope and non-goals
-- evaluates accepted evidence against the Epic and recommends exactly one of
-  `close`, `continue`, or `split` before the disposition decision
-- explains the rationale and any remaining gaps instead of asking the user to
-  perform an undirected PO assessment
-- leaves ordinary Strict/Auto disposition authority with the user
-- updates Epic-level completion markers only when outcomes are demonstrably fulfilled
-- recommends completion only when the Epic outcome is demonstrably fulfilled
-
-The PO does not design technical solutions or break work into increments.
-The PO may explicitly delegate execution of a Done Increment.
-When this happens, the PO does not need to approve intermediate steps,
-only the final result or any escalated decisions.
----
+PO owns intent, Epic outcomes, User Stories, acceptance criteria and product
+backlog priority. PO identifies different user perspectives, preserves requirement
+provenance and decides which needs should be addressed next. TDO participates
+in refinement without taking over value or priority decisions. PO evaluates
+Story evidence and recommends acceptance or correction. The user retains final
+acceptance authority unless an explicit bounded mandate supplies it. PO
+assesses each Epic separately and cannot close it merely because a delivery ended.
 
 ### Technical delivery owner (TDO)
 
-The TDO owns the delivery of the Epic.
-
-The TDO:
-- ensures the Epic represents a complete, user-visible value
-- translates the Epic into Done Increments
-- proposes and validates technical approaches
-- prevents Done Increments that do not embody the Epic
-- validates delivered increments against the Epic
-
----
+TDO owns delivery planning and technical validation. TDO refines Stories with
+PO, identifies dependencies and risks, and proposes a selection of ready Stories
+from one or several Epics. The plan names Story IDs, criteria, implementation
+boundaries, integration checks and remaining scope. TDO validates the integrated
+result and evidence per Story; implementation tasks never replace the backlog.
 
 ### Developer (Dev)
 
-The Developer is responsible for implementation.
-
-The Dev:
-- works on exactly one Done Increment at a time
-- keeps scope tight
-- avoids unrelated refactors
-- ensures the increment works end to end
-- documents how the increment can be verified
-- extracts cohesive presentation, hooks, helpers, domain logic, or service modules when the approved scope is clearer and safer with focused boundaries
-
-The Dev never expands scope without approval.
-Small scope means small behavioral scope, not necessarily the fewest files.
-
----
+Dev implements the approved Story selection and records checks against each
+Story. Keep scope bounded, use focused code responsibilities, handle failures
+and avoid unrelated changes. Dev does not set priority, advance shared state,
+accept Stories or close Epics.
 
 ### Reviewer
 
-The Reviewer is responsible for quality and correctness.
-
-The Reviewer:
-- checks logic, edge cases and assumptions
-- verifies acceptance criteria
-- flags risky or misleading behavior
-- checks whether the change is easier to understand without needless fragmentation
-- produces a short, actionable change list
-
-If the increment is syntactically broken or clearly unsafe,
-the Reviewer must stop the loop until it is corrected.
-
----
+Reviewer independently checks current code, regressions, integration and each
+selected Story's criteria. Findings identify affected Story IDs. Defects return
+to implementation and affected evidence is refreshed. Material review follows
+`adaptive-execution.md`. Review supplies evidence, not acceptance authority.
 
 ## EPIC
 
@@ -975,17 +936,22 @@ a delivered Pilot or Product.
 
 ---
 
+## User Stories
+
+A User Story expresses a particular user's need and its value. It has a stable
+`US-*` identity, one primary Epic, persona, need, benefit, priority and stable
+acceptance criteria. It lives independently of any delivery plan. See
+[user-stories.md](user-stories.md) for readiness, lifecycle, evidence and examples.
+
 ## Done Increment
 
-A Done Increment is the smallest unit that:
+An increment is the integrated working product improvement resulting from one
+or more accepted Stories. Its boundaries follow the selected user needs, which
+can span Epics. An increment does not have to reproduce the whole Epic on a
+smaller scale. A Sprint, when used, is only the timebox for pursuing a goal.
 
-- embodies the EPIC end to end
-- delivers real, user-visible value
-- can be evaluated meaningfully by a user
-- is safe to get feedback on
-
-A Done Increment is **not** a partial fix, polish step or internal improvement
-unless it clearly changes the user experience as a whole.
+Legacy workspaces retain their historical `DI-*` plans and acceptance semantics.
+Those identifiers are never silently reinterpreted as Stories.
 
 ### Behavioral scope and file boundaries
 
@@ -1041,11 +1007,10 @@ This can be demoed and evaluated by a user:
 > If the change cannot reasonably be demoed and evaluated by a user,
 > it is probably too small to be its own Done Increment.
 
-Increment 1 must always aim to deliver the **full value path** of the EPIC,
-even if simplified.
-
-Subsequent increments improve robustness, edge cases and polish,
-but must still represent a coherent user experience.
+The example can be expressed as a Story for a reader who needs trustworthy
+information on uncertain days. Another Story can serve a publisher who needs
+to suppress sharing. PO can prioritize these needs independently; a delivery
+may select either or both when dependencies and user value permit.
 
 ---
 
@@ -1058,7 +1023,10 @@ When defining a Done Increment, ask:
 - A skateboard: usable, testable, end to end
 - A pedal: a local improvement without standalone value
 
-Pedals must be bundled into a larger Done Increment.
+Apply this test to the selected Story behavior, not to the entire Epic.
+A small accessibility fix, clearer error label or internal reliability change
+can be valuable when its user need and verification are explicit. Bundle only
+when a need cannot be evaluated independently.
 
 ---
 
@@ -1066,12 +1034,12 @@ Pedals must be bundled into a larger Done Increment.
 
 Gates are reporting checkpoints (A–E). They are mandatory to report, but the loop does not pause at every gate.
 
-- **Gate A**: Epic ready (approval is meaningful)
-- **Gate B**: Done Increment specification ready (approval is meaningful)
+- **Gate A**: relevant Epic direction and Story requirements ready
+- **Gate B**: selected Stories and delivery plan ready
 - **Gate C**: Implementation ready (soft gate)
 - **Gate D**: Review findings ready (soft gate)
-- **Gate E**: Increment acceptance with a prepared PO disposition; a clearly
-  offered response can authorize both decisions.
+- **Gate E**: acceptance of explicitly identified Stories with verified criteria;
+  any Epic closure remains a separate, explicitly scoped decision.
 
 ### Default gate behaviour
 
@@ -1093,7 +1061,9 @@ At Gate E, the workflow must still distinguish two decisions:
 - increment acceptance after TDO demo, test, and feedback framing
 - Epic disposition assessed before the response and enacted after acceptance
 
-At `done_increment_accepted`, PO must evaluate the Epic goal, acceptance
+For preserved legacy DI workspaces, the remainder of this Gates section is the
+compatibility acceptance/closure protocol. New Story acceptance and Epic closure
+use `user-stories.md`. At `done_increment_accepted`, PO must evaluate the Epic goal, acceptance
 criteria, accepted evidence, non-goals, and remaining gaps, then recommend
 exactly one of `close`, `continue`, or `split`. The recommendation must state
 its rationale and remaining-scope consequence; it must not merely ask the user
@@ -1169,51 +1139,20 @@ Any additional contract drift retains the existing fail-closed behavior.
 
 ## Gate B checklist: Is this a real Done Increment?
 
-Before approving Gate B (Done Increment specification), the following checklist must be satisfied.
+For AIM 4.0, evaluate the proposed **Story selection and delivery plan**:
 
-If any item fails, the increment is too small and must be bundled or reworked.
+- Are all selected Story IDs stable, ready and linked to their own Epic?
+- Does each Story identify a user, need, value and testable acceptance criteria?
+- Has PO ordered the Stories by value, with dependencies made explicit?
+- Is the selection feasible and useful, including selections across Epics?
+- Does the plan bind the exact Story requirements and list implementation
+  boundaries, integration checks, evidence and remaining scope?
+- Can the selected behavior be demonstrated, including relevant failure paths?
+- Are prior acceptance and user authority preserved without inventing consent?
 
-### Value and scope
-
-- [ ] Does the canonical plan declare `Epic: <EPIC-ID>` for an explicit runtime relation?
-- [ ] Does this increment embody a meaningful part of the Epic end to end?
-- [ ] Would a user notice and understand the change without explanation?
-- [ ] Can this be demoed as a complete behavior, not just a detail?
-- [ ] Is the scope behavioral rather than defined by minimizing file count?
-
-### Skateboard test
-
-Ask the question:
-
-> Is this a skateboard, or just a better pedal?
-
-- [ ] The increment delivers a usable experience, even if simplified
-- [ ] It does not rely on several future increments to make sense
-
-### Feedback readiness
-
-- [ ] Can a user give meaningful feedback on this increment?
-- [ ] Is the feedback about overall behavior, not just wording or colors?
-
-### File boundaries and context efficiency
-
-- [ ] Are proposed files split around stable responsibilities and ownership?
-- [ ] Do the boundaries reduce future context load for humans and AI agents?
-- [ ] Are any new files focused helpers, components, hooks, domain modules, services, or docs that preserve the approved behavior?
-- [ ] Does the plan avoid broad rewrites, arbitrary fragmentation, and giant files created only to keep the diff looking small?
-
-### Anti-patterns (automatic stop)
-
-If any of the following are true, Gate B must not be approved:
-
-- [ ] The increment only changes a single label, color or number without changing behavior
-- [ ] The increment exists mainly to “clean up” something that could be bundled
-- [ ] The increment cannot be explained in one sentence without saying “this prepares for later”
-
-### Outcome
-
-- If all checks pass: approve Gate B
-- If one or more checks fail: bundle with other changes or redefine the increment
+A failed check requires refinement or a corrected selection. Do not force the
+selection to represent every part of an Epic. Do not reject a useful small Story
+solely because it affects a label, one file or one user perspective.
 
 ## Platform adapters
 
@@ -1402,7 +1341,8 @@ The loop ends when:
   outcomes, with the actual performer and any assistance recorded
 - a counterevidence search has no unresolved findings, contradictions, or
   remaining Epic gaps
-- the closure truth-audit artifact passes the canonical runtime closure check
+- each in-scope Story has accepted evidence and the whole Epic criteria are proven
+- the applicable product-backlog or preserved legacy closure checks pass
 - closure authority is separately recorded and every referenced evidence byte
   remains bound to the reviewed preview
 - the PO explicitly accepts the EPIC as delivered

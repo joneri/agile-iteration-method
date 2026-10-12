@@ -7,12 +7,17 @@ Source images intended for the AIM website published from the `gh-pages` branch.
 - `aim-3-autonomy-logo.png`: AIM 3 campaign variant for the GitHub Pages
   Connected Codex story; its flowing 3 represents creative iteration, momentum,
   and bounded autonomy
+- `aim-4-logo.png`: AIM 4.0 campaign lockup, the original golden/blue A identity with
+  navy AIM lettering and an expressive blue/cyan ribbon numeral 4 on a
+  transparent background; 2172 × 724 RGBA PNG. Use on
+  white or pale backgrounds. This versioned campaign asset is separate from
+  the canonical versionless brand artwork.
 - `AIM_OG.png` at the repository root: byte-identical versionless Open Graph
   artwork
 - `aim-ui-beta-control-room.png`: wide AIM UI Beta feature illustration for the
   dedicated website section
-- `portfolio-auto-demo-poster.jpg`: lightweight poster frame for the real
-  Portfolio Auto demonstration shown in the website hero
+- `portfolio-auto-demo-poster.jpg`: lightweight poster frame for the historical
+  Portfolio Auto demonstration
 
 Brand artwork version policy: versionless. The two brand-image files above must
 remain byte-identical and contain no product version. The exact current release
@@ -32,6 +37,15 @@ specialist roles without embedding UI labels or logos.
 
 Keep website image assets here until they are selected and wired into the Pages layout.
 
-The silent 57-second source video is published from
-`github-pages/assets/video/portfolio-auto-demo.mp4`. The page shows the poster
-immediately and requests only video metadata until the visitor chooses to play.
+The silent 57-second historical source video remains available at
+`github-pages/assets/video/portfolio-auto-demo.mp4`.
+
+The AIM 4.0 campaign logo was generated using the built-in image generation
+tool on 2026-10-12. Its exact prompt and provenance are recorded in
+`../press/logo-generation.txt`. The selected PNG is copied unchanged into
+this repository, with source SHA-256
+`5e1cd88bed8e78b5dfe08238b24c9006d1dac9a85fcd56779c30eef6c97ff3d7`.
+The downloadable `../press/aim-4-press-kit.zip` includes that same image,
+English and Swedish launch drafts, product facts, usage notes and the
+documentation licence. It is a reviewable press package, not a record of
+publication. No vector master is included.

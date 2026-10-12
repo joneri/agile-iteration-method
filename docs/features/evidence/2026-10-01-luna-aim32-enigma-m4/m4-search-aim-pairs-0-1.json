@@ -1,0 +1,30 @@
+{
+  "id": "pairs-0",
+  "variant": "aim",
+  "run": 1,
+  "elapsedSeconds": 0.241,
+  "status": "complete",
+  "checked": 17576,
+  "checkedAlignments": 17576,
+  "skippedByBudget": 0,
+  "returned": 2,
+  "totalCandidates": 2,
+  "sourceStartPresent": true,
+  "message": "2 crib-förenliga kandidatinställningar hittades. En crib kan lämna flera möjliga startlägen och paneler.",
+  "candidates": [
+    {
+      "positions": "MBJL",
+      "placement": 0,
+      "plugboard": "",
+      "preview": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "unresolved": 5
+    },
+    {
+      "positions": "MCKL",
+      "placement": 0,
+      "plugboard": "",
+      "preview": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "unresolved": 5
+    }
+  ]
+}

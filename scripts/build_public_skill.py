@@ -17,12 +17,14 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 17
+PUBLIC_SKILL_PACKAGE_VERSION = 18
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
 PUBLIC_DESCRIPTION_NAME = "agile-iteration-method"
 REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
+    (Path("docs/workflow/user-stories.md"), Path("user-stories.md")),
+    (Path("examples/user-stories/example-user-story.md"), Path("example-user-story.md")),
     (Path("docs/workflow/streamlined-decisions.md"), Path("streamlined-decisions.md")),
     (Path("docs/workflow/adaptive-execution.md"), Path("adaptive-execution.md")),
     (Path("docs/workflow/engineering-delivery.md"), Path("engineering-delivery.md")),
@@ -54,11 +56,13 @@ SCHEMA_SOURCES: tuple[Path, ...] = (
     Path("schemas/aim-project-roles.schema.json"),
     Path("schemas/aim-runtime-state.schema.json"),
     Path("schemas/aim-portfolio-run.schema.json"),
+    Path("schemas/aim-product-backlog.schema.json"),
 )
 
 INSTALL_MANIFEST_SOURCE = Path("install/aim-install-manifest.yaml")
 DOCUMENTATION_LICENSE_SOURCE = Path("docs/LICENSE-DOCS")
 UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
+    Path("scripts/aim_stories.py"),
     Path("scripts/aim_http.py"),
     Path("scripts/aim_engineering.py"),
     Path("scripts/aim_quality/__init__.py"),
@@ -172,6 +176,7 @@ def resolved_versions(root: Path) -> dict[str, Any]:
     return {
         "productVersion": release["aimVersion"],
         "runtimeContractVersion": release["runtimeContractVersion"],
+        "productBacklogVersion": release["productBacklogVersion"],
         "installerManifestVersion": release["installerManifestVersion"],
         "profileSchemaVersions": {
             "repoProfile": _schema_version(repo_schema, "profileVersion", SCHEMA_SOURCES[0]),
@@ -235,6 +240,10 @@ def _normalize_markdown_whitespace(content: str) -> str:
 def _rewrite_package_paths(content: str, *, from_skill: bool) -> str:
     """Translate source-checkout paths into installed-package paths."""
 
+    content = content.replace(
+        "../../examples/user-stories/example-user-story.md",
+        "references/example-user-story.md" if from_skill else "example-user-story.md",
+    )
     skill_target = "SKILL.md" if from_skill else "../SKILL.md"
     content = content.replace(
         "adapters/codex/agile-iteration-method/SKILL.md",

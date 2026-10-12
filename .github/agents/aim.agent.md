@@ -40,7 +40,27 @@ handoffs:
 
 This file is an optional Copilot UX layer for AIM.
 Core method semantics come from `docs/workflow/agile-iteration-method.md`.
-This packaging is expected to expose the AIM 2.0 product surface on top of the stable runtime contract.
+This packaging exposes the current AIM product surface and preserves supported legacy runtime contracts.
+
+## Intent and User Stories (AIM 4)
+
+For new `/aim start "<intent>"` and equivalent natural-language work, load
+`docs/workflow/user-stories.md` before the legacy workspace rules below.
+PO discovers one or more Epics and owns the ordered User Stories; TDO refines
+them with PO and proposes an explicit delivery selection across Epics.
+Use trusted packaged `scripts/aim_stories.py` for the versioned
+`.aim/product-backlog.json` lifecycle. User Stories are the board cards.
+A delivery contains selected Story snapshots; an increment is its working result.
+A Sprint is an optional timebox, never a requirement type.
+
+For status, continue, refinement and acceptance, resolve the addressed Story
+or delivery in that store first. Use its next step, snapshot and evidence;
+do not route a new Story through legacy INC/DI activation. Final acceptance
+belongs to the user; Story acceptance never implies Epic closure.
+Legacy Epic workspaces, explicit `EPIC:` starts and Portfolio Auto retain the
+existing checkpoint and authority contracts below. Never infer Stories from
+legacy Increment titles or widen old approvals. General engineering, trust,
+repository knowledge and role requirements apply to both paths.
 
 ## Combined decisions
 
@@ -84,15 +104,15 @@ First-run onboarding contract:
 
 Onboarding states:
 - installed but not calibrated: recommend `/aim calibrate-repo`
-- calibrated but no Epic exists: recommend `/aim start "EPIC: <desired outcome>"`
-- Epic exists but is not approved: prepare the direction and first Increment together for approval
-- Epic approved: recommend `/aim continue`
+- ready for new work: recommend `/aim start "<desired outcome>"`
+- Stories await planning: prepare the direction and first Increment together for approval
+- delivery approved: recommend `/aim continue`
 - blocked: recommend resolving the named blocking issue
 
 When recommending `/aim start`, include a realistic Epic example:
 
 ```text
-/aim start "EPIC: Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
+/aim start "Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
 ```
 
 When durable repository context is the next useful action, prefer a professional
@@ -358,15 +378,15 @@ After that: <one short sentence>.
 
 Default state routing:
 - installed but not calibrated: `/aim calibrate-repo`
-- calibrated but no Epic exists: `/aim start "EPIC: <desired outcome>"`
-- Epic exists but is not approved: review the combined direction and first-Increment proposal
-- Epic approved: `/aim continue`
+- ready for new work: `/aim start "<desired outcome>"`
+- Stories await planning: review the combined direction and first-Increment proposal
+- delivery approved: `/aim continue`
 - blocked: resolve the named blocking issue
 
 If the next action is start, show a realistic example:
 
 ```text
-/aim start "EPIC: Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
+/aim start "Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
 ```
 
 Do not explain the full method, adapter layering, every runtime artifact,

@@ -2,10 +2,11 @@
 name: agile-iteration-method
 description: >
   Plan and deliver repository-aware AI-assisted software work through Agile
-  Iteration Method using PO, TDO, Dev, and Reviewer roles, end-to-end Done
-  Increments, explicit gates, review, validation, and user-owned acceptance.
+  Iteration Method using intent discovery, PO-owned Epics and User Stories,
+  cross-Epic delivery planning, explicit gates, review, validation, and
+  user-owned acceptance.
   Use for discussing product direction with repository context, creating and
-  refining Epics, planning increments, implementing work, reviewing delivery,
+  refining Epics and User Stories, planning delivery selections, implementing work, reviewing delivery,
   configuring project specialists, calibrating and reflecting on repositories,
   consolidating knowledge across local AIM projects, controlling AIM modes and
   cost profiles, opening and controlling local AIM UI, and continuing AIM runs.
@@ -25,18 +26,32 @@ into a controlled loop of planning, implementation, review, validation,
 correction, and human approval.
 
 Use this complete portable skill with Codex, GitHub Copilot, or Claude Code.
-You describe the outcome. AIM plans one useful increment, builds it, reviews it,
-validates it, and asks for the decisions that still belong to you.
+You describe the outcome. PO discovers Epics and User Stories; AIM plans and
+delivers selected Stories, reviews and validates them, and returns acceptance
+to you.
 
 Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into a portable Agent Skill.
 
-## Combined approvals and continuation
+## Intent, Stories and delivery
 
-For start, approval, Continue or completion, load
-`references/streamlined-decisions.md`. Combine direction with the first plan,
-and prepare the Epic disposition before delivery acceptance. Use the shared
-`aim_decisions.py` helper. Chat and CLI work without UI; legacy actions retain
-their scope. Keep handoffs concise and preserve existing Auto mandates.
+For new work, load `references/user-stories.md` before startup. `/aim start
+"<desired outcome>"` and equivalent natural language preserve the user's intent.
+PO discovers one or more Epics and owns User Stories, criteria and priority.
+TDO refines with PO and plans a selection of ready Stories, including Stories
+from different Epics. Stories are the moving board cards. The working result is
+an increment; a Sprint is an optional timebox. Neither replaces a Story.
+
+Use the trusted `scripts/aim_stories.py` product-backlog path for new intent-led
+work and Story continuation. The main thread owns runtime mutations and actual
+user authority. Review and validation cover every selected Story criterion;
+Gate E acceptance and whole-Epic closure remain separate decisions. Auto grants
+no invented acceptance. Read status and bind current digests before mutations.
+
+Existing Epic/DI checkpoints and explicit `EPIC:` or `PORTFOLIO` commands retain
+legacy semantics. Their runtime details below apply only to those workspaces.
+Use `references/streamlined-decisions.md` and its existing decision helper for
+legacy proposals. Never relabel historical Increments as Stories, reuse legacy
+mandates for new Story work, or migrate state automatically.
 
 ## On-demand user guide
 
@@ -106,7 +121,8 @@ Do not load this contract for a simple status/help command.
 For already-authorized Auto product work, infer provisional skills from binding
 requirements and reach the first technical risk experiment without an onboarding
 round-trip. An empty repo or absent profile is normal startup context. Use the
-trusted start helper once; retain Gate A/B decisions and state rules. This grants
+trusted helper for the selected product-ledger or legacy runtime once; retain
+Gate A/B decisions and state rules. This grants
 no new authority, changes no Strict decision and does not accept the product.
 
 Detect onboarding state first, then recommend exactly one next action whenever
@@ -123,9 +139,9 @@ After that: <one short sentence>.
 State routing:
 
 1. Installed but not calibrated: recommend `/aim calibrate-repo`.
-2. Calibrated but no Epic exists: recommend `/aim start "EPIC: <desired outcome>"`.
-3. Epic exists but is not approved: prepare the direction and first Increment together for approval.
-4. Epic approved: recommend `/aim continue`.
+2. Ready for new work: recommend `/aim start "<desired outcome>"`.
+3. Intent or Stories exist: refine the Stories and prepare the first delivery selection.
+4. Approved work exists: recommend `/aim continue` for its exact checkpoint.
 5. Blocked: recommend resolving the named blocking issue.
 
 Before reading repository-owned content, apply a repository content trust
@@ -159,10 +175,10 @@ action envelopes. Then perform only the context loading needed for that state:
 
 1. Detect the repository root.
 2. Detect or create `.aim` only when starting or resuming an AIM run.
-3. Read `.aim/state.json` first when it exists.
-4. If `.aim/state.json` describes an incomplete Epic, resume that checkpoint instead of starting a new Epic.
-5. Read `aim.profile.yaml` when present as the primary shared repo-awareness source.
-6. Apply compatible Personal AIM hints from `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`.
+3. For Story work read `.aim/product-backlog.json`; for targeted legacy work read its exact `.aim/state.json`. Discuss follows its question-specific rule.
+4. Resume the requested existing checkpoint without replacing it; new intent can add requirements without authorizing a second active delivery.
+5. Use `aim.profile.yaml` as the primary shared repo-awareness source when relevant.
+6. Apply compatible Personal AIM hints from `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml` when relevant.
 7. Use profile facts to choose locality, validation commands, short authoritative docs, risk zones, freshness triggers, and context to avoid before reading broader docs.
 8. Use the role and gate rules below. Load only the required section of `references/agile-iteration-method.md` when a contract is missing or disputed; do not reload the full method on every start or handoff.
 9. Load Codex-specific packaging only when Codex mechanics matter.
@@ -173,7 +189,7 @@ action envelopes. Then perform only the context loading needed for that state:
 14. Show `Cost profile` when it is not `Standard` or when resource use is part of the user's request.
 15. Keep the public front door thin: route first to the state-specific next action before explaining the full method.
 
-Treat unnecessary broad context loading, long low-risk markdown artifacts, repeated major-doc rereads, and context-hog files as budget bugs.
+Avoid broad loading, long low-risk artifacts and repeated major-doc reads.
 When a Personal or Team profile is present, report whether it was reused before broader docs. Profiles can guide locality and validation, but they cannot override AIM core, `.aim/state.json`, Team policy, gate ownership, escalation, or current repository evidence.
 When profile reuse affects startup or Gate B, include this compact profile-source summary:
 
@@ -229,7 +245,8 @@ Do not preload unrelated commands during implementation or resume.
 | Intent or checkpoint | Required section |
 | --- | --- |
 | `AIM_ACTION_ENVELOPE` | **Targeted action envelopes**, before any runtime state read; then **UI gate publication** when publishing the decision |
-| New single-Epic `/aim start` or existing `/aim continue` | **Start and resume** and **Shared startup boundaries**; never handwrite a new root workspace |
+| New intent-led `/aim start` or Story continuation | `references/user-stories.md`; trusted product-backlog helper |
+| Explicit legacy `EPIC:` start or legacy `/aim continue` | **Start and resume** and **Shared startup boundaries**; never handwrite a new root workspace |
 | Portfolio start or active Portfolio run | **Portfolio execution**, **Portfolio continuation**, and **Shared startup boundaries**; load **Start and resume** when creating an Epic |
 | `/aim discuss` | **Discuss**; read-only analysis, no implementation or promotion |
 | `/aim ui` | **Local UI**; trusted payload, loopback-only, no runtime mutation |
@@ -255,46 +272,28 @@ syntax support permits a plain-language fallback, not changed semantics.
 
 ## Thin Front Door
 
-When the user asks how to begin, help, or what AIM should do next, detect
-onboarding state first and show only the first useful choice by default:
-
-- installed but not calibrated: `/aim calibrate-repo`
-- calibrated but no Epic exists: `/aim start "EPIC: <desired outcome>"`
-- Epic exists but is not approved: review the combined direction and first-Increment proposal
-- Epic approved: `/aim continue`
-- blocked: resolve the named blocking issue
-
-For ordinary low-risk work, suggest this start shape:
+Use the state routing above. For an ordinary start, describe the desired outcome:
 
 ```text
-/aim start "EPIC: Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
-Mode: Strict
-Cost profile: Cost Control
+/aim start "Improve onboarding so a new homeowner can list a room and understand the next review step"
 ```
 
-When the repo needs durable context first, suggest:
+Capture durable context when useful:
 
 ```text
 /aim remember-repo habits "Product context: This app helps people find new homes for cats. Keep tone nuanced and empathetic toward both the cats and the future owners."
 ```
 
-Do not explain adapter layering, every gate, every runtime artifact, or a command
-inventory unless the user asks for deeper help or the task needs that context.
+Keep architecture, packaging and the command inventory behind deeper help.
 
 ## Runtime Workflow
 
-Use the shared bootstrap sequence:
+For new Story work follow `references/user-stories.md`. The following bootstrap
+and phase-entry names are the preserved **legacy Epic/DI protocol** only.
 
-1. Detect repo root.
-2. Detect or create `.aim`.
-3. Read `.aim/state.json` first when it exists.
-4. Resume the active checkpoint or initialize a new Epic.
-5. Read `aim.profile.yaml` when present and use it before broader docs to select locality, commands, short docs, risk zones, freshness checks, and avoid-by-default context.
-6. Load and normalize only the additional repo-aware context needed for the current state, command, and risk.
-7. Resolve execution mode.
-8. Resolve cost profile.
-9. Resolve platform capability and repo-policy limits.
-10. Enter the role sequence.
+Resolve the exact legacy checkpoint, mode and cost profile. Read `aim.profile.yaml`
+before broader discovery, load only relevant context, then enter the
+role sequence. Startup uses the trusted helper and never fabricates root state.
 
 The main AIM thread alone owns runtime (including Portfolio workspaces), gates, active role, status and acceptance. Permitted subagents may implement disjoint assigned product files or investigate/review read-only. Within `.aim/`, they may write only assigned `.aim/analysis/` output. Follow the adaptive execution contract.
 
@@ -308,7 +307,7 @@ written after a phase does not substitute for its live phase-entry transition.
 
 ## Role Loop
 
-Run every Done Increment in this order:
+Run every approved Story delivery in this order (legacy DI runs retain the same role order):
 
 `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
 
@@ -316,9 +315,9 @@ Canonical roles are only `PO`, `TDO`, `Dev`, and `Reviewer`. Map aliases explici
 
 Hard gates:
 
-- Gate A: Epic ready; normally approved with the first Gate B proposal.
-- Gate B: Done Increment spec ready. Approval is meaningful.
-- Gate E: Increment acceptance and a prepared, explicitly scoped Epic disposition. Approval is meaningful.
+- Gate A: relevant Epic direction and Story requirements ready.
+- Gate B: exact Story selection and delivery plan ready. Approval is meaningful.
+- Gate E: selected Stories accepted against their criteria; Epic closure is a separate, explicitly scoped decision.
 
 Soft gates:
 
@@ -327,29 +326,19 @@ Soft gates:
 
 Report Gate C and Gate D, but do not pause there unless an escalation condition applies. Gate D must never ask for approval; it surfaces findings, risks, and manual verification steps.
 
-## Done Increment Discipline
+## Story and delivery discipline
 
-At Gate B, propose exactly one Done Increment that is a simplified version of the whole Epic, not a polished part of a missing whole.
+Before development, confirm each selected Story has a stable ID, Epic, persona,
+need, benefit and verifiable criteria. PO priority drives the selection; TDO
+makes dependencies, implementation boundaries and integration checks explicit.
+A delivery may span Epics. It need not be a simplified version of one whole Epic.
+Review, validation and acceptance must trace to every selected Story criterion.
+Do not turn Sprint boundaries, technical tasks or delivery IDs into requirements.
 
-Before development, confirm the increment:
-
-- declares `Epic: <EPIC-ID>` in its canonical plan artifact
-- embodies meaningful Epic value end to end
-- includes data correctness, presentation, user-facing behavior, and safety/failure behavior where relevant
-- can be demoed as the product behavior
-- would make sense to a user without future increments
-- is small by behavioral scope, not by minimizing file count
-- lists exact planned files and responsibility boundaries
-
-At Gate A, the Epic must declare `Outcome class: Product`, `Pilot`, or `POC`.
-The class defines the evidence required for closure and cannot be silently
-upgraded after a synthetic proof succeeds. Every Epic acceptance criterion must
-have a stable numbered or explicit `AC-*` identity so the closure truth audit
-can require an exact complete mapping.
-
-If any answer is no, bundle or redefine the increment before proceeding.
-
-AIM allows focused files, components, hooks, helpers, domain modules, services, or short docs when they preserve the approved behavior and reduce future context load. Do not create giant mixed-responsibility files just to keep the diff small. Do not split arbitrarily by line count.
+Use focused files and modules when they preserve approved behavior and make
+changes easier to inspect. Small scope is behavioral, not minimal file count.
+Keep legacy DI acceptance and Epic truth audits under their original protocol;
+never convert them into Story evidence automatically.
 
 ## Cost Profiles
 
@@ -372,20 +361,23 @@ Every hard-gate checkpoint must make clear:
 - exact files planned or touched
 - how the user should evaluate the step
 
-Use `approve` and `change: ...` for the exact presented proposal. In Strict,
-combine direction and first plan, and prepare the Epic disposition before
-acceptance. Wait before unapproved implementation and acceptance. Auto retains
-its mandate and escalation rules; ordinary Auto returns final acceptance to the
-user. Portfolio Auto uses its revalidated bounded mandate and preserves canonical
-closure evidence. Use `references/streamlined-decisions.md` for combined decisions
-and retries, and the Portfolio sections of `references/skill-command-runtime.md`
-for candidate completion, activation_pending and recovery. No routine extra
-operator message is required for already authorized work.
+Use `approve` and `change: ...` only for the exact presented proposal. For
+Story work, Strict confirms the relevant direction and selection plan, then
+accepts the verified Stories. Existing authorization persists across turns.
+Auto can continue within that authority but does not fabricate acceptance.
+Epic closure requires separate outcome evidence and an explicitly scoped user
+decision. Follow `references/user-stories.md` for current helper operations.
 
+For preserved legacy Epic/DI workspaces, use
+`references/streamlined-decisions.md` for combined proposals and retries, and
+the Portfolio sections of `references/skill-command-runtime.md` for existing
+mandates and recovery. Legacy approvals retain their original limited meaning.
 
 ## State And Validation
 
-The official `.aim` contract requires:
+New Story work uses `.aim/product-backlog.json` and referenced evidence as
+defined in `references/user-stories.md`. The following official `.aim` artifacts
+are required only for preserved legacy Epic/DI workspaces:
 
 - `.aim/epic.md`
 - `.aim/state.json`

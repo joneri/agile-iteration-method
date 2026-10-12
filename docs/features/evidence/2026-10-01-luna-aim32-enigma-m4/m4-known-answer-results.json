@@ -1,0 +1,26 @@
+{
+  "M3": {
+    "aim": {
+      "total": 123,
+      "passed": 123,
+      "mismatches": []
+    },
+    "naked": {
+      "total": 123,
+      "passed": 123,
+      "mismatches": []
+    }
+  },
+  "M4": {
+    "aim": {
+      "total": 120,
+      "passed": 120,
+      "mismatches": []
+    },
+    "naked": {
+      "total": 120,
+      "passed": 120,
+      "mismatches": []
+    }
+  }
+}

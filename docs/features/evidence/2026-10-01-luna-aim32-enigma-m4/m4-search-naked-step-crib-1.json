@@ -1,0 +1,18 @@
+{
+  "id": "step-crib",
+  "variant": "naked",
+  "run": 1,
+  "elapsedSeconds": 6.015,
+  "status": "complete",
+  "checked": 17576,
+  "returned": 1,
+  "sourceStartPresent": false,
+  "candidates": [
+    {
+      "positions": "AZZV",
+      "placement": 9,
+      "plugboard": "AV BS",
+      "preview": "HTUHMGKGVOVBRBICJFPAWJEHNWDYDRJLPWAJDQDKHWUPGQQQGSSOOHVNXZZTEE"
+    }
+  ]
+}

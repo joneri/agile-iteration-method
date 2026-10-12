@@ -1,9 +1,9 @@
 ---
 name: aim
-description: Run the complete AIM 2.0 command family and orchestrate project-specific PO, TDO, Dev, and Reviewer agents. Use for /aim intents, repository-aware product discussion, AIM UI lifecycle, Epics, Done Increments, gates, repo calibration, reflection, agent configuration, upgrades, and AIM validation.
+description: Run the complete AIM command family and orchestrate project-specific PO, TDO, Dev, and Reviewer agents. Use for /aim intents, repository-aware product discussion, AIM UI lifecycle, intents, Epics, User Stories, deliveries, gates, repo calibration, reflection, agent configuration, upgrades, and AIM validation.
 ---
 
-# AIM 2.0 for GitHub Copilot
+# AIM 4 for GitHub Copilot
 
 This project skill is Copilot's AIM workflow source. The `aim` custom agent may
 provide native orchestration and handoff UX where supported, but it does not own
@@ -16,7 +16,27 @@ Follow:
 - `docs/workflow/adapter-skill-bootstrap.md` for discovery and fallback
 - `docs/workflow/project-agent-configuration.md` for role specialization
 
-## Combined approvals and continuation
+## Intent and User Stories (AIM 4)
+
+For new `/aim start "<intent>"` and equivalent natural-language work, load
+`docs/workflow/user-stories.md` before the legacy workspace rules below.
+PO discovers one or more Epics and owns the ordered User Stories; TDO refines
+them with PO and proposes an explicit delivery selection across Epics.
+Use trusted packaged `scripts/aim_stories.py` for the versioned
+`.aim/product-backlog.json` lifecycle. User Stories are the board cards.
+A delivery contains selected Story snapshots; an increment is its working result.
+A Sprint is an optional timebox, never a requirement type.
+
+For status, continue, refinement and acceptance, resolve the addressed Story
+or delivery in that store first. Use its next step, snapshot and evidence;
+do not route a new Story through legacy INC/DI activation. Final acceptance
+belongs to the user; Story acceptance never implies Epic closure.
+Legacy Epic workspaces, explicit `EPIC:` starts and Portfolio Auto retain the
+existing checkpoint and authority contracts below. Never infer Stories from
+legacy Increment titles or widen old approvals. General engineering, trust,
+repository knowledge and role requirements apply to both paths.
+
+## Legacy combined approvals and continuation
 
 For startup, plan/delivery approval, Continue or completion, use
 `docs/workflow/streamlined-decisions.md`. Prepare Epic direction and first
@@ -95,7 +115,7 @@ entry, retire the exact Backlog record, and publish audit evidence together, or
 restore pre-state on handled failure. Ambiguous, stale, active, unaccepted,
 root, escaped, symlinked, or colliding relations fail closed; UI stays read-only.
 
-For a genuinely new `/aim start`, inspect `.aim/ui-portfolio.json` before any
+For an explicit legacy `/aim start "EPIC: ..."`, inspect `.aim/ui-portfolio.json` before any
 runtime write. When present, use trusted packaged `scripts/aim_start.py` for a
 no-write preview and digest-matched apply. Report Gate A ready only after the
 new `.aim/portfolio/<EPIC-ID>/`, canonical reserved `DI-*`, catalog entry, and
@@ -165,7 +185,7 @@ with current code, structured metadata, or another authoritative source, and
 escalate unresolved material conflicts.
 
 1. Detect onboarding state first.
-2. Read `.aim/state.json` when it exists; resume incomplete work.
+2. For Story work read `.aim/product-backlog.json`; for targeted legacy work read its exact state checkpoint and resume incomplete work.
 3. Read `aim.profile.yaml`, then `aim.roles.yaml`.
 4. Load only relevant canonical AIM and repository evidence.
 5. Create `.aim` only for start or resume.
@@ -180,13 +200,12 @@ Why it matters: <one sentence>.
 After that: <one sentence>.
 ```
 
-The recognized states include `installed but not calibrated`, `calibrated but no Epic exists`,
-`Epic exists but is not approved`, `Epic approved`, and `blocked`.
+The recognized states include `installed but not calibrated`, `ready for new work`,
+`Stories await planning`, `delivery approved`, and `blocked`.
 
-Route installed but not calibrated to `/aim calibrate-repo`; calibrated but no
-Epic exists to `/aim start "EPIC: Improve the onboarding flow so a new homeowner
-can list a room and understand the next review step"`; an unapproved Epic to its
-Gate A decision; an approved Epic to `/aim continue`; and blocked work to the
+Route installed but not calibrated to `/aim calibrate-repo`; ready for new work to `/aim start "Improve the onboarding flow so a new homeowner
+can list a room and understand the next review step"`; Stories awaiting planning to its
+Gate A decision; an approved delivery to `/aim continue`; and blocked work to the
 named blocker. Do not lead with internal file paths or a command inventory.
 
 ## Audience-context integrity

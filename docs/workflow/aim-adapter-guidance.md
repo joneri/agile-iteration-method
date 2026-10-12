@@ -217,7 +217,7 @@ Codex layer:
 These phrases are valid adapter entrypoint hints when the matching layer supports them:
 - `Install AIM`
 - `Start working according to AIM`
-- `/aim start "EPIC: ..."`
+- `/aim start "<desired outcome>"`
 - `Starta en AIM-loop med denna EPIC: ...`
 
 Transport shortcuts and command surfaces are adapter UX.

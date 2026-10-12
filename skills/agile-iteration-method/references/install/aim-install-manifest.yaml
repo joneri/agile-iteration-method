@@ -145,6 +145,7 @@ aimInstallManifest:
         - scripts/aim_recovery.py
         - scripts/aim_catalog_repair.py
         - scripts/aim_backlog.py
+        - scripts/aim_stories.py
         - scripts/aim_portfolio.py
         - scripts/aim_portfolio_run.py
         - scripts/aim_runtime_contract.py
@@ -244,20 +245,20 @@ aimInstallManifest:
       legacyDestination: ~/.codex/skills/agile-iteration-method/SKILL.md
       scope: user
       reload: fresh-session
-      firstCommand: '/aim start "EPIC: <desired outcome>"'
+      firstCommand: '/aim start "<desired outcome>"'
       explicitFallback: $agile-iteration-method <intent>
     claude:
       source: .claude/skills/aim/SKILL.md
       destination: .claude/skills/aim/SKILL.md
       scope: project
       reload: live-reload-or-fresh-session
-      firstCommand: '/aim start "EPIC: <desired outcome>"'
+      firstCommand: '/aim start "<desired outcome>"'
     copilot:
       source: .github/skills/aim/SKILL.md
       destination: .github/skills/aim/SKILL.md
       scope: project
       reload: reload-skills-or-fresh-session
-      firstCommand: '/aim start "EPIC: <desired outcome>"'
+      firstCommand: '/aim start "<desired outcome>"'
 
   runtimeExclusions:
     - .aim/

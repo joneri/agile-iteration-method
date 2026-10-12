@@ -1,0 +1,12 @@
+{
+  "id": "impossible",
+  "variant": "naked",
+  "run": 1,
+  "elapsedSeconds": 0,
+  "status": "complete",
+  "checked": 0,
+  "returned": 0,
+  "sourceStartPresent": false,
+  "message": "Omöjlig crib: vid bokstav 1 skulle S krypteras till sig själv.",
+  "candidates": []
+}

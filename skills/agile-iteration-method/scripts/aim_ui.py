@@ -49,6 +49,7 @@ from aim_ui_control import AimUiControlError, resolve_product_version
 from aim_http import local_request_allowed
 from aim_quality.files import read_evidence
 from aim_quality.profiles import read_repo_profile
+from aim_stories import project_story_board
 
 READ_MODEL_VERSION = "9.0"
 PORTFOLIO_VERSION = "1.0"
@@ -106,6 +107,7 @@ PAYLOAD_FILES = (
     "scripts/aim_codex_bridge.py",
     "scripts/aim_runtime_contract.py",
     "scripts/aim_decisions.py",
+    "scripts/aim_stories.py",
     "scripts/aim_runtime_lock.py",
     "scripts/aim_actions.py",
     "aim-ui/index.html",
@@ -2103,6 +2105,7 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         },
         "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
         "epics": [],
+        "storyBoard": project_story_board(repo_root),
         "workspaceDiagnostics": workspace_diagnostics,
         "runtimeStatusDiagnostics": [],
         "recovery": None,

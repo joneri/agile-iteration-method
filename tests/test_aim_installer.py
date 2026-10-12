@@ -46,7 +46,7 @@ class ManifestYamlContractTests(unittest.TestCase):
 
     def test_canonical_manifest_commands_are_yaml_safe_and_unchanged(self) -> None:
         manifest = load_manifest(REPO_ROOT)
-        expected = '/aim start "EPIC: <desired outcome>"'
+        expected = '/aim start "<desired outcome>"'
         for adapter in ("codex", "claude", "copilot"):
             with self.subTest(adapter=adapter):
                 self.assertEqual(
@@ -793,7 +793,7 @@ class ModeFootprintContractTests(unittest.TestCase):
             manifest_path = copied / "install/aim-install-manifest.yaml"
             content = manifest_path.read_text(encoding="utf-8")
             content = content.replace(
-                "firstCommand: '/aim start \"EPIC: <desired outcome>\"'",
+                "firstCommand: '/aim start \"<desired outcome>\"'",
                 'firstCommand: /aim start "EPIC: <desired outcome>"',
                 1,
             )

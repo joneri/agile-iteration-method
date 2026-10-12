@@ -1,0 +1,133 @@
+{
+  "id": "multiple",
+  "variant": "naked",
+  "run": 1,
+  "elapsedSeconds": 0.002,
+  "status": "result_limit",
+  "checked": 19,
+  "returned": 20,
+  "sourceStartPresent": false,
+  "message": "result_limit",
+  "candidates": [
+    {
+      "positions": "MAAA",
+      "placement": 0,
+      "plugboard": "AH CT EP FO",
+      "preview": "THEITEZSENHEKJGAGOELEGYOSOXPKYFAYVZEPZLAMAEXIESIHBVWPXOAPTBXZG"
+    },
+    {
+      "positions": "MAAB",
+      "placement": 0,
+      "plugboard": "AT BH EM FS IO",
+      "preview": "THEQTJZBIAZIGKQOZSTXZIVIUKSIBQKBQNKXHRWTHFFZJTPSYZZAACYONAHNAN"
+    },
+    {
+      "positions": "MAAC",
+      "placement": 0,
+      "plugboard": "AT BH ER OZ",
+      "preview": "THEZWPEIDNYCGFWABIOUQVROQBBIFHZOIRFPYJYIUBACVZMUZTZPCVXVBNMEYU"
+    },
+    {
+      "positions": "MAAD",
+      "placement": 0,
+      "plugboard": "AT BH MS OP",
+      "preview": "THEBJLFFFUKAQYSWZNKQKWSVTJLLYCIRYBMWKWDWFQZSTBPWRJNZXJLLGEMAKN"
+    },
+    {
+      "positions": "MAAE",
+      "placement": 0,
+      "plugboard": "AT BH EL JO RS",
+      "preview": "THERHRBMCAYGWVNSOQPKALARLCOFLDQMCBBSGTOUQQLIJPHGRZILZCWZRKZNWW"
+    },
+    {
+      "positions": "MAAF",
+      "placement": 0,
+      "plugboard": "AH CT EW LO SY",
+      "preview": "THEYYEGYOZVGMFGFWZWCVHHYLEIZXWJGZTORPPQHIDMLPEKUQDVTFCVOZHNOOF"
+    },
+    {
+      "positions": "MAAG",
+      "placement": 0,
+      "plugboard": "AT BH CE LS",
+      "preview": "THENWOFMMMXZNQEPKWTVODZPVEHPBXJFRMMZULRBIOEUTZMMVPMWPDJOWVVGUT"
+    },
+    {
+      "positions": "MAAH",
+      "placement": 0,
+      "plugboard": "AT BH EY KS MO",
+      "preview": "THEWODMCKSXBGPXNMTOMUTZFAEMEPMEXJYRLNAWMIZIGUVWIAFFHJYVIHDOYMD"
+    },
+    {
+      "positions": "MAAI",
+      "placement": 0,
+      "plugboard": "AT CS DH EQ KO",
+      "preview": "THEVRJDYSPUQSGALSJGUICZBFEPCVVUHWWVGIZSPRJLGGPECEEHUCOLMGHMART"
+    },
+    {
+      "positions": "MAAJ",
+      "placement": 0,
+      "plugboard": "AT BH CE IO SY",
+      "preview": "THETJNCHEMMJXEMKYDKOBAVGKOIONJSTTMJJJCYAFVFUILDMOYEZNTOZYVJIXT"
+    },
+    {
+      "positions": "MAAK",
+      "placement": 0,
+      "plugboard": "AT BH EI LO QS",
+      "preview": "THENNFAOVNXIAVGMCYNBQYJWLYMACFOEPVGXAMJINCKMMNTAIABRFVHZAIFEAZ"
+    },
+    {
+      "positions": "MAAL",
+      "placement": 0,
+      "plugboard": "AT BE CS DH",
+      "preview": "THERFBDQFILLMLFNVAZCTXLCASIAXAYZCLCZTSVEKOTLEAWVCVXEKHDHWIJVOR"
+    },
+    {
+      "positions": "MAAM",
+      "placement": 0,
+      "plugboard": "AT CH DO EX IS",
+      "preview": "THEGXVXKXUFOGXKKTRETWJBPAZNSYKXGAXUHQSMHJNUIGUHCQQFMZOJPHFJOUZ"
+    },
+    {
+      "positions": "MAAN",
+      "placement": 0,
+      "plugboard": "AT BS CE FH OZ",
+      "preview": "THELVHADTLYOHTFHJPMDAESXXRGDMERTOXFWPLNIPYZVPEURMFPBDXLJBEIVTE"
+    },
+    {
+      "positions": "MAAO",
+      "placement": 0,
+      "plugboard": "AT BH EP KO SX",
+      "preview": "THEPFQBAIOUXODJTISVXGDFXOJCVHOMBPHJBTFDXGFYANAKHRHAYAPTNCJWOSF"
+    },
+    {
+      "positions": "MAAP",
+      "placement": 0,
+      "plugboard": "AT CS EO HM",
+      "preview": "THEUOUFUZAJSMUSDMNXGMQCWEWGKTYTEHRRPUKAXVPDVQNYPJSPGZIZKQNPDRU"
+    },
+    {
+      "positions": "MAAQ",
+      "placement": 0,
+      "plugboard": "AH BT EX JS",
+      "preview": "THELTGSXSVWMSJWUAYHAPSDRVHRWKVGECJKTGHXAFFYAYGCDAGYGXFTAGSQLZG"
+    },
+    {
+      "positions": "MAAR",
+      "placement": 0,
+      "plugboard": "AT CH EY OS",
+      "preview": "THEXGHXNASBXHAHJZTQPDONRYPDDGKWAIJQVSUTIADFZHYOONSCNKXLBHSQBMI"
+    },
+    {
+      "positions": "MAAS",
+      "placement": 0,
+      "plugboard": "AH BT EM OY SX",
+      "preview": "THEKYXQQIULJWGONRDZDTTPZDXTUQJSMLPTTEYDVGCSDUWLWPBWIMJLAODAQRT"
+    },
+    {
+      "positions": "MAAT",
+      "placement": 0,
+      "plugboard": "AT BH EN MO SY",
+      "preview": "THECDKWYCIEICEQVOJMHZHSTHAHFILDFFWCAHSULMDFHQOFGQHBMGESYOPIYGO"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "pairs-1",
+  "variant": "naked",
+  "run": 1,
+  "elapsedSeconds": 0.002,
+  "status": "complexity_limit",
+  "checked": 0,
+  "returned": 0,
+  "sourceStartPresent": false,
+  "message": "complexity_limit",
+  "candidates": []
+}

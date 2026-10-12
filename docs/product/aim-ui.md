@@ -6,19 +6,40 @@
 > bounded write endpoint can only dispatch an exact reviewed action to the
 > already-bound authoritative Codex task.
 
-AIM UI is a local, browser-based control room for readable AIM runtime evidence.
-It turns one or more independently authoritative Epic workspaces into a live
-Kanban without becoming a workflow engine.
+AIM UI is a local browser control room for requirements and delivery evidence.
+It opens on **User Stories**, a board of actual user needs from
+`.aim/product-backlog.json`. Each Story retains its Epic context; the board can
+show several Epics together without making Epics or increments the work cards.
 
-AIM UI's portfolio view displays several independently authoritative Epics on
-one board. Portfolio Backlog v1 also projects bounded planning input written by
-the main AIM chat, without turning the browser or the planning file into a
-workflow engine.
+**Delivery control** preserves existing Epic/Increment workspaces and their
+original controls. Discuss, Portfolio, AIM DATA, People & agents and Closed
+Increments remain separate tabs. Existing records are never automatically
+migrated, relabelled or treated as Story acceptance.
 
-The control room opens on **Delivery flow**, where a stationary Epic spine and
-one horizontal swimlane per Epic frame the shared Increment Kanban. Portfolio capacity and Epic summaries,
-People and agents, and Closed Increments remain available as separate tabs.
-Switching tabs is presentation-only and never changes AIM runtime state.
+## User Stories board
+
+The board columns are **Backlog**, **Ready**, **In progress**, **Review**,
+**Validation**, **Acceptance** and **Done**. Draft Stories appear in Backlog;
+all other movement reflects persisted Story lifecycle transitions. Polling,
+filtering and opening a card cannot approve work or mutate the backlog.
+
+Cards show Story ID, priority, title, Epic, persona, need and benefit. Expand a
+card to inspect acceptance criterion IDs and text; delivery references and
+contained evidence links preserve traceability. Filter by Epic or keep All Epics
+to compare needs across outcomes. Stories are ordered by priority within each
+column. A delivery selection can contain Stories from different Epics.
+
+**Copy start intent** prepares an intent-led `/aim start` prompt. **Copy refinement
+prompt** and **Copy planning prompt** prepare read-only `/aim discuss` prompts;
+the user reviews and sends them in chat. They cannot approve a selection or
+advance a Story. Actual changes go through the main AIM thread and the
+[Story lifecycle](../workflow/user-stories.md).
+
+An empty board explains intent discovery and PO/TDO refinement. Historical work
+remains available in Delivery control and Closed Increments. An invalid product
+ledger shows a diagnostic instead of guessed or stale Story cards. Refresh
+preserves card identity, expanded criteria and keyboard focus. Actual phase
+changes can animate; reduced-motion preferences are respected.
 
 ## Discuss product direction without starting delivery
 
@@ -48,19 +69,15 @@ Missing optional context is reported honestly and never invented.
 
 ## Starting in a new repository
 
-AIM creates the first Epic workspace, its board registration, and its Roadmap
-and Portfolio links together. You do not need to create a catalog or repair a
-checkpoint before following the work. Once the Portfolio mandate is approved,
-this setup runs automatically and AIM proceeds to the first Increment's scope
-and implementation. The board reflects real progress as work begins.
+Use `/aim start "<desired outcome>"`. PO discovers one or more Epics and owns
+User Stories, criteria and priority. TDO refines with PO and plans the next
+ready selection. Opening the UI alone creates no requirements or runtime state.
+Stories become visible as the main thread records the product backlog.
 
-## Plan several Increments in one Epic
-
-Keep each planned Increment in the Roadmap under its Epic. Portfolio Auto
-previews the full sequence, then works through one Increment at a time in the
-same Epic workspace. Accepted Increments remain in history as the next begins.
-The Epic closes only after the final planned Increment and the Epic-level
-acceptance review. You do not need to merge planned Increments to start a run.
+A Story expresses one user's need. It does not have to approximate its entire
+Epic. A Sprint is optional; the integrated working result of delivered Stories
+is an increment. Review and validation cover every selected criterion before
+user acceptance. Epic closure remains a separate decision.
 
 ## Launch the control room
 
@@ -138,6 +155,14 @@ opaque `CODEX_THREAD_ID`. Only a SHA-256 binding fingerprint is retained in
 instance metadata or returned by health checks; the browser never receives the
 thread id. Launching the same repository from a different Codex task replaces
 the verified instance so actions cannot silently continue an older owner.
+
+## Legacy delivery control and Portfolio reference
+
+The remainder of this guide documents the preserved **Epic/Increment runtime**
+and its Delivery control, Portfolio, history and connected-action behavior.
+These sections apply to existing workspaces and explicit legacy `EPIC:` or
+`PORTFOLIO` starts. Their Gates and mandates cannot accept new User Stories.
+The User Stories board above uses its own product ledger and evidence lifecycle.
 
 ## Declare several Epic workspaces
 

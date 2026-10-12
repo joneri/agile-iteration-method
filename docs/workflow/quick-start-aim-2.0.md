@@ -1,7 +1,7 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# Quick Start AIM 2.0
+# Quick Start AIM 4.0
 
 Use this page when AIM is installed and you want to begin real work.
 
@@ -44,9 +44,9 @@ Active work state belongs in `.aim/`.
 
 If slash commands are unavailable, ask AIM to verify and refine repository awareness.
 
-## 2. Start the Epic
+## 2. Start with intent
 
-Before starting the Epic, remember important product context when it should
+Before starting work, remember important product context when it should
 guide future work:
 
 ```text
@@ -60,26 +60,28 @@ shared repository knowledge.
 Use a desired outcome:
 
 ```text
-/aim start "EPIC: <desired user outcome>"
+/aim start "<desired user outcome>"
 ```
 
 Or use explicit intent:
 
 ```text
-EPIC: <desired user outcome>
+Start AIM from this intent: <desired user outcome>
 Mode: Strict
 Cost profile: Standard
 ```
 
 Avoid beginning with a list of implementation tasks.
-AIM uses the Epic to decide what the next useful increment should be.
+PO discovers Epics and User Stories from the intent. PO owns needs, criteria
+and priority; TDO refines and plans the next selection with PO. See
+[User Stories](user-stories.md).
 
 ## 3. Choose Execution Style
 
 - `Mode: Strict`: pause at Gate A, Gate B, and Gate E
 - `Mode: Auto`: continue between increments unless escalation is required;
   ordinary Epic closure still requires explicit user approval
-- `Portfolio Auto`: the one approved bounded mandate is the explicit PO
+- Legacy `Portfolio Auto`: the one approved bounded mandate is the explicit PO
   authority for each separate eligible Epic closure, so AIM advances across its
   immutable snapshot without another user message unless escalation is required
 
@@ -104,24 +106,29 @@ Confirm:
 - acceptance intent
 - important risks
 
-Reply `approve` when the Epic is right.
+Review the relevant Epic direction and Story requirements with the first
+delivery plan; one clearly scoped response can approve both.
 Use `change: ...` when it needs correction.
 
-## 6. Review the Increment
+## 6. Review the Story selection
 
-AIM proposes one Done Increment.
+AIM proposes ready Stories to deliver, potentially across several Epics.
 
 In Strict mode, Gate B waits for approval.
-The increment should deliver useful end-to-end value and state how it will be verified.
+The plan binds exact Story IDs, criteria, implementation boundaries and checks.
+It need not approximate the whole Epic.
 
 After implementation and review, Gate E reports:
 
 - delivered behavior
 - verification evidence
 - remaining risk
-- whether another increment is needed
+- criterion-level evidence for every selected Story
+- remaining needs and a separate Epic-closure recommendation
 
-Approve, request adjustment, continue, or close.
+Accept the proven Stories or request correction. Epic closure requires separate
+whole-outcome evidence and scoped authority. An increment is the working result;
+a Sprint is an optional timebox.
 
 ## Common Commands
 

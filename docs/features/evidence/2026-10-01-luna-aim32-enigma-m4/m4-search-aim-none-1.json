@@ -1,0 +1,15 @@
+{
+  "id": "none",
+  "variant": "aim",
+  "run": 1,
+  "elapsedSeconds": 1.478,
+  "status": "complete",
+  "checked": 17576,
+  "checkedAlignments": 17576,
+  "skippedByBudget": 0,
+  "returned": 0,
+  "totalCandidates": 0,
+  "sourceStartPresent": false,
+  "message": "Inga förenliga kandidater hittades i den kontrollerade sökrymden.",
+  "candidates": []
+}

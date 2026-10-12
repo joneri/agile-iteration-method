@@ -1,0 +1,2474 @@
+{
+  "source": "Py-Enigma 1.0.2",
+  "seed": 20261001,
+  "vectors": [
+    {
+      "id": "m4-000",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "MCKL",
+      "plugboard": [
+        "AV",
+        "BS"
+      ],
+      "plain": "HELLOWORLD",
+      "cipher": "TZZZWSNVKE",
+      "final": "MCKV"
+    },
+    {
+      "id": "m4-001",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ABCD",
+      "start": "MCKL",
+      "plugboard": [],
+      "plain": "JNSKU",
+      "cipher": "NFTEB",
+      "final": "MCKQ"
+    },
+    {
+      "id": "m4-002",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "AAAA",
+      "start": "MCKL",
+      "plugboard": [],
+      "plain": "DDTCDXMFEW",
+      "cipher": "TLMMQLFOOV",
+      "final": "MCKV"
+    },
+    {
+      "id": "m4-003",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "AAAA",
+      "start": "AZZM",
+      "plugboard": [],
+      "plain": "GKXFAGOTMEKSSLPMCRMZLESHMAX",
+      "cipher": "CFKJGNTGRZHZUVQHGNFKKDAIXJZ",
+      "final": "AACN"
+    },
+    {
+      "id": "m4-004",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "AZZM",
+      "plugboard": [],
+      "plain": "OLRWLMZPGEFOTLCITCYVMMJGRDRXLBTFBTJDGEURSFFJYJQVFEHCLE",
+      "cipher": "EFVTCUNTVTDWBQZXDJWCAEPMSOLQXYVVJLQKKAOJWMINXNTUHGQWIN",
+      "final": "AZBO"
+    },
+    {
+      "id": "m4-005",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "QELP",
+      "start": "AZZM",
+      "plugboard": [
+        "FV"
+      ],
+      "plain": "E",
+      "cipher": "O",
+      "final": "AZZN"
+    },
+    {
+      "id": "m4-006",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "BULR",
+      "start": "QZMM",
+      "plugboard": [
+        "VT"
+      ],
+      "plain": "DYYKU",
+      "cipher": "ACUTE",
+      "final": "QANR"
+    },
+    {
+      "id": "m4-007",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "QZMM",
+      "plugboard": [
+        "UT"
+      ],
+      "plain": "YFWKQSPDRM",
+      "cipher": "ZZOLKBRAWV",
+      "final": "QZNW"
+    },
+    {
+      "id": "m4-008",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ZZZZ",
+      "start": "QZMM",
+      "plugboard": [
+        "ER"
+      ],
+      "plain": "WMNILHQFQYIZIFVLWQQKMXUJDDG",
+      "cipher": "LUFPHTNWBJOCOAIGZPGSNZLARAC",
+      "final": "QAPN"
+    },
+    {
+      "id": "m4-009",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ZZZZ",
+      "start": "MMZZ",
+      "plugboard": [
+        "FY"
+      ],
+      "plain": "AQDOJYXEPVQWDRQLZNDWTYKVWREDYHLWLEPCABKQGUQINTYGYVSRMB",
+      "cipher": "KBGXYIOOHICBTWPEMYATSTTWUVQSCJNGATSJCUXLVABLJJQQDDTKDE",
+      "final": "MMCB"
+    },
+    {
+      "id": "m4-010",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "MCKD",
+      "start": "MMZZ",
+      "plugboard": [
+        "RA",
+        "XW",
+        "LF"
+      ],
+      "plain": "S",
+      "cipher": "G",
+      "final": "MMAA"
+    },
+    {
+      "id": "m4-011",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "MMZZ",
+      "plugboard": [
+        "YZ",
+        "NO",
+        "MU"
+      ],
+      "plain": "XVJZY",
+      "cipher": "SUFRF",
+      "final": "MNAE"
+    },
+    {
+      "id": "m4-012",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "BZZA",
+      "plugboard": [
+        "UX",
+        "CD",
+        "RK"
+      ],
+      "plain": "TTIJTSHHCC",
+      "cipher": "MIQMCRKJOS",
+      "final": "BZZK"
+    },
+    {
+      "id": "m4-013",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ABCD",
+      "start": "BZZA",
+      "plugboard": [
+        "TG",
+        "PS",
+        "WX"
+      ],
+      "plain": "ZOCPQIDCXOSZTUIBIRTYWNHBJSM",
+      "cipher": "UDTIWZJGZGUJLZJAEBCMYMUSMAF",
+      "final": "BACB"
+    },
+    {
+      "id": "m4-014",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "AAAA",
+      "start": "BZZA",
+      "plugboard": [
+        "GC",
+        "LQ",
+        "ZX"
+      ],
+      "plain": "OJPJZIBOGMWLEIIXQESEDBOOJHXYWMZFNKQGKBCYGIUYRZIVDLKTLO",
+      "cipher": "MXAXJRSQQRKBPGKJKIJDOIJIWQCLIILKEQKVIYEZUKATMYGPTZTXJA",
+      "final": "BZBC"
+    },
+    {
+      "id": "m4-015",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "AAAA",
+      "start": "AMAZ",
+      "plugboard": [
+        "BK",
+        "SH",
+        "NU",
+        "XQ",
+        "PY",
+        "RL"
+      ],
+      "plain": "C",
+      "cipher": "L",
+      "final": "AMBA"
+    },
+    {
+      "id": "m4-016",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "AMAZ",
+      "plugboard": [
+        "EU",
+        "DJ",
+        "HQ",
+        "KB",
+        "YF",
+        "NI"
+      ],
+      "plain": "SBSSJ",
+      "cipher": "ZGYNT",
+      "final": "AMAE"
+    },
+    {
+      "id": "m4-017",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "QELP",
+      "start": "AMAZ",
+      "plugboard": [
+        "PF",
+        "KE",
+        "MH",
+        "AW",
+        "SI",
+        "QC"
+      ],
+      "plain": "VZWLLASJCJ",
+      "cipher": "XNSZNMXEKS",
+      "final": "AMAJ"
+    },
+    {
+      "id": "m4-018",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "BULR",
+      "start": "ZYYM",
+      "plugboard": [
+        "GT",
+        "WQ",
+        "YC",
+        "FP",
+        "MH",
+        "VB"
+      ],
+      "plain": "TIXIRHAAWRGCUACEEZSVOVJJRRG",
+      "cipher": "UNFSEPHIZTCYDWFCXQNBZTXZDAW",
+      "final": "ZZCN"
+    },
+    {
+      "id": "m4-019",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "ZYYM",
+      "plugboard": [
+        "GX",
+        "SP",
+        "EA",
+        "RC",
+        "QM",
+        "KN"
+      ],
+      "plain": "HYFDQADKCOJGFDQVZSNHFSWXHPHQUKYLQDRGITMAWQVAZNBIWAMIXD",
+      "cipher": "QUPLCCXNMTMETISEHGPPJVOBLDVZKYCAISVIRLWDMHZUVYCTOFKAYF",
+      "final": "ZYAO"
+    },
+    {
+      "id": "m4-020",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ZZZZ",
+      "start": "ZYYM",
+      "plugboard": [
+        "NI",
+        "JC",
+        "KW",
+        "GT",
+        "PL",
+        "UB",
+        "QH",
+        "AX",
+        "YV",
+        "SO"
+      ],
+      "plain": "W",
+      "cipher": "Q",
+      "final": "ZYYN"
+    },
+    {
+      "id": "m4-021",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ZZZZ",
+      "start": "XMMM",
+      "plugboard": [
+        "NQ",
+        "ZO",
+        "DT",
+        "KC",
+        "HM",
+        "LB",
+        "VF",
+        "JI",
+        "WY",
+        "XS"
+      ],
+      "plain": "UOLAH",
+      "cipher": "NUDHZ",
+      "final": "XNNR"
+    },
+    {
+      "id": "m4-022",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "MCKD",
+      "start": "XMMM",
+      "plugboard": [
+        "FD",
+        "SK",
+        "OY",
+        "ER",
+        "BV",
+        "LZ",
+        "GX",
+        "IM",
+        "CH",
+        "PQ"
+      ],
+      "plain": "MKQXSXULZI",
+      "cipher": "GNVQMIXXFM",
+      "final": "XMNW"
+    },
+    {
+      "id": "m4-023",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "XMMM",
+      "plugboard": [
+        "FY",
+        "KC",
+        "WT",
+        "JB",
+        "LO",
+        "DS",
+        "MZ",
+        "XU",
+        "PV",
+        "GE"
+      ],
+      "plain": "BBZQVKHINMCXXSYLOFMAXKYCHXZ",
+      "cipher": "JQNAXUVKFUSJEHOJULCVGZIVWBD",
+      "final": "XNPN"
+    },
+    {
+      "id": "m4-024",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "MCKL",
+      "plugboard": [
+        "FM",
+        "SA",
+        "CJ",
+        "HO",
+        "DR",
+        "ZB",
+        "PU",
+        "GT",
+        "EL",
+        "NQ"
+      ],
+      "plain": "ZHSPLDUGEHQSGLMOYDBMWSBJNOUKVBKTZGAHMQABLJOHBHDMIMYYCK",
+      "cipher": "QDMMTOWVNXGDBXKBGUYBANHELIWYIZAJJRKBGTPAHVZUHOBYCXDHKI",
+      "final": "MCMN"
+    },
+    {
+      "id": "m4-025",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ABCD",
+      "start": "MCKL",
+      "plugboard": [],
+      "plain": "T",
+      "cipher": "D",
+      "final": "MCKM"
+    },
+    {
+      "id": "m4-026",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "AAAA",
+      "start": "MCKL",
+      "plugboard": [],
+      "plain": "BCLUL",
+      "cipher": "CXVWD",
+      "final": "MCKQ"
+    },
+    {
+      "id": "m4-027",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "AAAA",
+      "start": "AZZM",
+      "plugboard": [],
+      "plain": "JSBUUGHAUD",
+      "cipher": "LYYTJNOXMN",
+      "final": "AZAW"
+    },
+    {
+      "id": "m4-028",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "AZZM",
+      "plugboard": [],
+      "plain": "TRTMANTKODMFZPGSONGRJNIXPJX",
+      "cipher": "ANREHILNBXDTGAKGNIZIVWHCMIH",
+      "final": "AACN"
+    },
+    {
+      "id": "m4-029",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "QELP",
+      "start": "AZZM",
+      "plugboard": [],
+      "plain": "MJBRSKTFWHPAQUESTNVEVPNVPQVHNFXOCVWVTCQMSHQKXZLWUITXGH",
+      "cipher": "QNTVNSJWCDLRLSUXWZEYCYDZDFSLVJAMUQIJIPIBREOXMRNBCHDEOY",
+      "final": "AZBO"
+    },
+    {
+      "id": "m4-030",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "BULR",
+      "start": "QZMM",
+      "plugboard": [
+        "UJ"
+      ],
+      "plain": "C",
+      "cipher": "O",
+      "final": "QZMN"
+    },
+    {
+      "id": "m4-031",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "QZMM",
+      "plugboard": [
+        "WI"
+      ],
+      "plain": "ZOPTN",
+      "cipher": "JBXWJ",
+      "final": "QANR"
+    },
+    {
+      "id": "m4-032",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ZZZZ",
+      "start": "QZMM",
+      "plugboard": [
+        "XH"
+      ],
+      "plain": "WGDIKFMVMI",
+      "cipher": "TYUQAPAJBV",
+      "final": "QZNW"
+    },
+    {
+      "id": "m4-033",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ZZZZ",
+      "start": "MMZZ",
+      "plugboard": [
+        "QN"
+      ],
+      "plain": "VCBZBAARLKTOSBPULPACJONWYPF",
+      "cipher": "JPWMCPYLPMCRZQYYFOCZYMKLTBL",
+      "final": "MNCA"
+    },
+    {
+      "id": "m4-034",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "MCKD",
+      "start": "MMZZ",
+      "plugboard": [
+        "BH"
+      ],
+      "plain": "ELFLIFHZGSXJMUBHGWRNKXLAVQVILTUAYWBWJVFKVJJRIRZEOZVZHE",
+      "cipher": "MZPTVBPMPAIKCFMFDKWDMAQTOCLGRXFOMJLPYKGTTEDLDYJBEJJXWK",
+      "final": "MMCB"
+    },
+    {
+      "id": "m4-035",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "MMZZ",
+      "plugboard": [
+        "VN",
+        "FC",
+        "PU"
+      ],
+      "plain": "F",
+      "cipher": "B",
+      "final": "MMAA"
+    },
+    {
+      "id": "m4-036",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "BZZA",
+      "plugboard": [
+        "WS",
+        "FZ",
+        "NI"
+      ],
+      "plain": "XCRNT",
+      "cipher": "DOEIL",
+      "final": "BABF"
+    },
+    {
+      "id": "m4-037",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ABCD",
+      "start": "BZZA",
+      "plugboard": [
+        "GX",
+        "TA",
+        "VZ"
+      ],
+      "plain": "FYXEWSWICK",
+      "cipher": "EDYWXRIVTE",
+      "final": "BZZK"
+    },
+    {
+      "id": "m4-038",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "AAAA",
+      "start": "BZZA",
+      "plugboard": [
+        "VZ",
+        "TG",
+        "RE"
+      ],
+      "plain": "KFEWOLWQOKXLXALPRKUITKMQCQW",
+      "cipher": "PJJXKORRYPJGHYMXYFXAIGAUTTX",
+      "final": "BACB"
+    },
+    {
+      "id": "m4-039",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "AAAA",
+      "start": "AMAZ",
+      "plugboard": [
+        "RY",
+        "GX",
+        "HB"
+      ],
+      "plain": "ATAUPUNABDAYTHDGSTHDSZTHBIMYGBDHOIAMKTQZMQRZUCQOMYBSCV",
+      "cipher": "ELCRKNODAWIDAPXWTVTMRBOAEMCAIIPRXCJCICXLTXCODQCVYWRMYI",
+      "final": "AMDB"
+    },
+    {
+      "id": "m4-040",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "BAAM",
+      "plugboard": [
+        "GA",
+        "YV",
+        "FS",
+        "QW",
+        "CH",
+        "IT"
+      ],
+      "plain": "S",
+      "cipher": "D",
+      "final": "BAAN"
+    },
+    {
+      "id": "m4-041",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "QELP",
+      "start": "TTGP",
+      "plugboard": [
+        "IF",
+        "SM",
+        "OG",
+        "EY",
+        "AX",
+        "QU"
+      ],
+      "plain": "FKOJD",
+      "cipher": "IXTAL",
+      "final": "TTGU"
+    },
+    {
+      "id": "m4-042",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "BULR",
+      "start": "BEVZ",
+      "plugboard": [
+        "UZ",
+        "XI",
+        "DB",
+        "AM",
+        "VE",
+        "LR"
+      ],
+      "plain": "NKWTHTVFSI",
+      "cipher": "AAFMEQXDDC",
+      "final": "BEVJ"
+    },
+    {
+      "id": "m4-043",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "QWEL",
+      "plugboard": [
+        "IB",
+        "WU",
+        "GZ",
+        "HA",
+        "FQ",
+        "PO"
+      ],
+      "plain": "DDQOIFDIHNFNOOEHBVWUQQZJZYZ",
+      "cipher": "TLXKFAZJJEJKUUNOTNERDOXGGTX",
+      "final": "QWGM"
+    },
+    {
+      "id": "m4-044",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ZZZZ",
+      "start": "RENG",
+      "plugboard": [
+        "TV",
+        "FY",
+        "CW",
+        "GS",
+        "ED",
+        "KI"
+      ],
+      "plain": "TFGSDWQIMXMHMFRGJPZIMAHDRAYHTFJPWBQIUPIMHLTZMIBRCJTAVO",
+      "cipher": "SOBPCUCKAVFLJQKEVIOXNRWIMZHRILAEKZEMIHUAAAILTEPUBGDHIT",
+      "final": "REPI"
+    },
+    {
+      "id": "m4-045",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ZZZZ",
+      "start": "WGXI",
+      "plugboard": [
+        "LM",
+        "XG",
+        "UH",
+        "QP",
+        "EZ",
+        "KT",
+        "WA",
+        "SY",
+        "CJ",
+        "NB"
+      ],
+      "plain": "H",
+      "cipher": "U",
+      "final": "WGXJ"
+    },
+    {
+      "id": "m4-046",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "MCKD",
+      "start": "DLRU",
+      "plugboard": [
+        "JM",
+        "EN",
+        "LB",
+        "XV",
+        "YU",
+        "OS",
+        "PK",
+        "CF",
+        "IT",
+        "WQ"
+      ],
+      "plain": "YUZRI",
+      "cipher": "RHGXU",
+      "final": "DLRZ"
+    },
+    {
+      "id": "m4-047",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "UVJS",
+      "plugboard": [
+        "HW",
+        "LR",
+        "VA",
+        "FX",
+        "KU",
+        "MP",
+        "OT",
+        "QI",
+        "JY",
+        "ES"
+      ],
+      "plain": "DUOWJALSZS",
+      "cipher": "NWNRFWXJDQ",
+      "final": "UVKC"
+    },
+    {
+      "id": "m4-048",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "LRKY",
+      "plugboard": [
+        "TQ",
+        "XS",
+        "IL",
+        "YF",
+        "HB",
+        "AN",
+        "WV",
+        "CG",
+        "ED",
+        "UZ"
+      ],
+      "plain": "GZVVWXUYIHDYUWOUMPUYMMRWMCK",
+      "cipher": "SWLXCFYGJYONDQXRGAEJYSKPYKQ",
+      "final": "LSNZ"
+    },
+    {
+      "id": "m4-049",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ABCD",
+      "start": "CWRW",
+      "plugboard": [
+        "QE",
+        "FG",
+        "IV",
+        "PS",
+        "CU",
+        "TN",
+        "DW",
+        "BK",
+        "MR",
+        "OH"
+      ],
+      "plain": "JHVEVCIIFKHCQNQYMMVDKCEFFEJXLZUMSRBTZGUCRDKZXWGJBRFYXQ",
+      "cipher": "NWUMMTZPVRKUZDCTCADHTGJHRRDBJNLQWVNGMQRYFLTHDUJRFJQJEI",
+      "final": "CWTY"
+    },
+    {
+      "id": "m4-050",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "AAAA",
+      "start": "ELAV",
+      "plugboard": [],
+      "plain": "Q",
+      "cipher": "C",
+      "final": "ELAW"
+    },
+    {
+      "id": "m4-051",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "AAAA",
+      "start": "MEUA",
+      "plugboard": [],
+      "plain": "MFLRA",
+      "cipher": "QJTLB",
+      "final": "MEVF"
+    },
+    {
+      "id": "m4-052",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "BNVA",
+      "plugboard": [],
+      "plain": "HICBDZULLT",
+      "cipher": "UYWIHWPKEE",
+      "final": "BNVK"
+    },
+    {
+      "id": "m4-053",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "QELP",
+      "start": "GASO",
+      "plugboard": [],
+      "plain": "KRKROWANFYRPYPNNKRAICCSHXBG",
+      "cipher": "NBMETCYYEEQZOQIPSUDOUBTCLSB",
+      "final": "GAUP"
+    },
+    {
+      "id": "m4-054",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "BULR",
+      "start": "DMCP",
+      "plugboard": [],
+      "plain": "DHLSDVZQQHULVVYDIERSEVIPYRTVPPUOYYALMSAORURSLMXTHTHHMZ",
+      "cipher": "JTSBWRSHEJVGUGQAFIHFYCAHDWGWFQHYREPHCPXLLCWHPZRVSHMSNY",
+      "final": "DMER"
+    },
+    {
+      "id": "m4-055",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "ACXQ",
+      "plugboard": [
+        "FI"
+      ],
+      "plain": "P",
+      "cipher": "N",
+      "final": "ACXR"
+    },
+    {
+      "id": "m4-056",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ZZZZ",
+      "start": "GLJY",
+      "plugboard": [
+        "LX"
+      ],
+      "plain": "ZOWEG",
+      "cipher": "NTFLJ",
+      "final": "GLJD"
+    },
+    {
+      "id": "m4-057",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ZZZZ",
+      "start": "TATT",
+      "plugboard": [
+        "RG"
+      ],
+      "plain": "KCHAEMLPBQ",
+      "cipher": "GYWZTJZUNA",
+      "final": "TAUD"
+    },
+    {
+      "id": "m4-058",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "MCKD",
+      "start": "SRBT",
+      "plugboard": [
+        "GH"
+      ],
+      "plain": "QLCDDLISSPUZZBBUHYGULBPJMQS",
+      "cipher": "VZHEPTZPASZCXQAABUYZJLZPGDU",
+      "final": "SRDU"
+    },
+    {
+      "id": "m4-059",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "REXA",
+      "plugboard": [
+        "YV"
+      ],
+      "plain": "OLXRBNRAMNLHXKUSIUEEBGNJKLIRANXMGHXVRRUODFQMEKFTTCQXUZ",
+      "cipher": "UIKXSRWWDFVXRLGBTCZGGSVWXIWHKHYUBIFYMMGKHHFQLPXPIFCKWH",
+      "final": "REZC"
+    },
+    {
+      "id": "m4-060",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "KAXU",
+      "plugboard": [
+        "LS",
+        "YN",
+        "HA"
+      ],
+      "plain": "D",
+      "cipher": "U",
+      "final": "KAXV"
+    },
+    {
+      "id": "m4-061",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ABCD",
+      "start": "ZEQU",
+      "plugboard": [
+        "YC",
+        "FX",
+        "PK"
+      ],
+      "plain": "YYIMZ",
+      "cipher": "QFZOP",
+      "final": "ZEQZ"
+    },
+    {
+      "id": "m4-062",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "AAAA",
+      "start": "NILL",
+      "plugboard": [
+        "FQ",
+        "VW",
+        "BX"
+      ],
+      "plain": "GKLQPGPACP",
+      "cipher": "NYZAMFIKPM",
+      "final": "NILV"
+    },
+    {
+      "id": "m4-063",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "AAAA",
+      "start": "JZIK",
+      "plugboard": [
+        "ID",
+        "MY",
+        "ZF"
+      ],
+      "plain": "FZJWECLICDCJZUNLESZXFUOFQOK",
+      "cipher": "BTNKWOOFNXTGKKFHJMOOHSFGXJA",
+      "final": "JZKL"
+    },
+    {
+      "id": "m4-064",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "YLQM",
+      "plugboard": [
+        "UL",
+        "SE",
+        "WP"
+      ],
+      "plain": "KMEEDKOSDYMUBMVENMUUAJEHQIYMHFZBFTJOWDEXXXUAUBNGXPPLZO",
+      "cipher": "UWXYYGIWWMVEKVEMWGXDFZSTATDYJBNEJUDYEMPGIIYMMGJDBVWJTL",
+      "final": "YMTO"
+    },
+    {
+      "id": "m4-065",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "QELP",
+      "start": "RDEA",
+      "plugboard": [
+        "EO",
+        "PA",
+        "UD",
+        "QS",
+        "YF",
+        "XT"
+      ],
+      "plain": "Y",
+      "cipher": "W",
+      "final": "RDEB"
+    },
+    {
+      "id": "m4-066",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "BULR",
+      "start": "WHBY",
+      "plugboard": [
+        "ZJ",
+        "PA",
+        "ED",
+        "NU",
+        "WC",
+        "OK"
+      ],
+      "plain": "IUXPI",
+      "cipher": "GFBUT",
+      "final": "WHBD"
+    },
+    {
+      "id": "m4-067",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "UBZW",
+      "plugboard": [
+        "MC",
+        "QK",
+        "PD",
+        "GN",
+        "VW",
+        "EY"
+      ],
+      "plain": "FIPHHJKINM",
+      "cipher": "TVCNPHUPJH",
+      "final": "UBZG"
+    },
+    {
+      "id": "m4-068",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ZZZZ",
+      "start": "TPBA",
+      "plugboard": [
+        "QF",
+        "AN",
+        "CS",
+        "PE",
+        "OW",
+        "KB"
+      ],
+      "plain": "DBAJIHEKYQWXLGUSTBAFIPGCVIC",
+      "cipher": "MCOXFPCTVLZHCSKMKNBAPUIZQPG",
+      "final": "TPDB"
+    },
+    {
+      "id": "m4-069",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ZZZZ",
+      "start": "PVDD",
+      "plugboard": [
+        "WE",
+        "XO",
+        "LS",
+        "NY",
+        "GF",
+        "IR"
+      ],
+      "plain": "ECTIULJTNXEFFRZNNNTTFEFECRSDENISJARFWAQSLUZSBOONQFIXAD",
+      "cipher": "FHNARMLHIDGLKJADEMAMRWCKUOQEGOTBHIODZBYCRTCBKCUGASDRTP",
+      "final": "PVFF"
+    },
+    {
+      "id": "m4-070",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "MCKD",
+      "start": "JPMB",
+      "plugboard": [
+        "JK",
+        "OH",
+        "QP",
+        "YS",
+        "TI",
+        "VA",
+        "NE",
+        "FL",
+        "XW",
+        "GR"
+      ],
+      "plain": "W",
+      "cipher": "Y",
+      "final": "JPMC"
+    },
+    {
+      "id": "m4-071",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "DHAD",
+      "plugboard": [
+        "QS",
+        "AB",
+        "WN",
+        "DO",
+        "EK",
+        "JH",
+        "ZT",
+        "GL",
+        "XM",
+        "FV"
+      ],
+      "plain": "NCTYP",
+      "cipher": "BTUKA",
+      "final": "DHBI"
+    },
+    {
+      "id": "m4-072",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "SJLP",
+      "plugboard": [
+        "DM",
+        "XU",
+        "ZF",
+        "QW",
+        "BT",
+        "LN",
+        "AC",
+        "OG",
+        "JI",
+        "KH"
+      ],
+      "plain": "WJFYULFBLE",
+      "cipher": "SNXNKAWHUM",
+      "final": "SJMZ"
+    },
+    {
+      "id": "m4-073",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ABCD",
+      "start": "CSDZ",
+      "plugboard": [
+        "PU",
+        "BS",
+        "GM",
+        "ZR",
+        "LK",
+        "OQ",
+        "VH",
+        "NE",
+        "TI",
+        "DC"
+      ],
+      "plain": "BMFIXPZYWOQPBGMYUKQHOEKLJTE",
+      "cipher": "UHKUBIHPKXMKLFLRJXMYSYEPQRH",
+      "final": "CSGA"
+    },
+    {
+      "id": "m4-074",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "AAAA",
+      "start": "WZJM",
+      "plugboard": [
+        "EQ",
+        "CX",
+        "JI",
+        "DN",
+        "YS",
+        "WL",
+        "AF",
+        "VR",
+        "PO",
+        "KB"
+      ],
+      "plain": "IRFYKJODZMYKDHXVJVZGIILIOKZUYVAZEVCTBISSSMPHXYBUUVDKBR",
+      "cipher": "PCXLVUMIMJPLRCMQQAFIXFMZGGYISNUXHSNATJJHDEDMTEXPSFVOSL",
+      "final": "WZLO"
+    },
+    {
+      "id": "m4-075",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "AAAA",
+      "start": "WDKE",
+      "plugboard": [],
+      "plain": "K",
+      "cipher": "B",
+      "final": "WDKF"
+    },
+    {
+      "id": "m4-076",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "XPSA",
+      "plugboard": [],
+      "plain": "XAONN",
+      "cipher": "EGQXX",
+      "final": "XPTF"
+    },
+    {
+      "id": "m4-077",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "QELP",
+      "start": "NMAV",
+      "plugboard": [],
+      "plain": "LJBTWYHULM",
+      "cipher": "MWLSYVDYRJ",
+      "final": "NMBF"
+    },
+    {
+      "id": "m4-078",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "BULR",
+      "start": "BILP",
+      "plugboard": [],
+      "plain": "LOLYDVQOGJBKUBHGXOAWTDBXKCN",
+      "cipher": "ZPWBZTCBFPMFNWKLLBQPWWCWYDO",
+      "final": "BJOQ"
+    },
+    {
+      "id": "m4-079",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "JDMM",
+      "plugboard": [],
+      "plain": "UZWLQNZLHQBWKRPRBCHQLNPDFHJJCJMLFOCQTGRWYHTBSUYDDHSQHI",
+      "cipher": "XELHTPLTRRJXSHGDCWJAKTTGOJQRMINJSLSURICSFFOSGDFWKOKDMT",
+      "final": "JDOO"
+    },
+    {
+      "id": "m4-080",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ZZZZ",
+      "start": "DLZC",
+      "plugboard": [
+        "JX"
+      ],
+      "plain": "H",
+      "cipher": "L",
+      "final": "DLZD"
+    },
+    {
+      "id": "m4-081",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ZZZZ",
+      "start": "ARLG",
+      "plugboard": [
+        "SA"
+      ],
+      "plain": "ZTFSB",
+      "cipher": "XVGTT",
+      "final": "ARLL"
+    },
+    {
+      "id": "m4-082",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "MCKD",
+      "start": "TFWR",
+      "plugboard": [
+        "CQ"
+      ],
+      "plain": "XXWBNWBRPU",
+      "cipher": "JYTPASKUWH",
+      "final": "TFXB"
+    },
+    {
+      "id": "m4-083",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "LPQB",
+      "plugboard": [
+        "PU"
+      ],
+      "plain": "AFCJXKRFLWMWFKGAIDULIFAMCJT",
+      "cipher": "TSJZTUYXMEQVUTEFECRURRQGVCC",
+      "final": "LPSC"
+    },
+    {
+      "id": "m4-084",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "TJNM",
+      "plugboard": [
+        "TB"
+      ],
+      "plain": "VSWOPFDOXIZAXNERNWFQIHTKMBTBGULSDGVRDPPOOHQXXMIYQRORYJ",
+      "cipher": "EWOJFXUFNLNUCQRBFPPOWNZPTFKPDZRPTBCYPYTTKGMGCPDKJJLBQS",
+      "final": "TJPO"
+    },
+    {
+      "id": "m4-085",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ABCD",
+      "start": "WOAZ",
+      "plugboard": [
+        "BV",
+        "DK",
+        "LT"
+      ],
+      "plain": "A",
+      "cipher": "C",
+      "final": "WOBA"
+    },
+    {
+      "id": "m4-086",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "AAAA",
+      "start": "EWOI",
+      "plugboard": [
+        "DJ",
+        "YL",
+        "TM"
+      ],
+      "plain": "HKQAO",
+      "cipher": "PWNCB",
+      "final": "EWON"
+    },
+    {
+      "id": "m4-087",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "AAAA",
+      "start": "PSLN",
+      "plugboard": [
+        "TB",
+        "US",
+        "YO"
+      ],
+      "plain": "KAYYVCZPXC",
+      "cipher": "XVDWBIOLLX",
+      "final": "PSMX"
+    },
+    {
+      "id": "m4-088",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "SXID",
+      "plugboard": [
+        "MQ",
+        "RK",
+        "BG"
+      ],
+      "plain": "SSKFMEFGGDSXDBIWTDQVFVNGPAM",
+      "cipher": "ZNJERNEMFJEDRRRNPWJNNHQJLRD",
+      "final": "SXKE"
+    },
+    {
+      "id": "m4-089",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "QELP",
+      "start": "QYAL",
+      "plugboard": [
+        "CX",
+        "KN",
+        "DR"
+      ],
+      "plain": "WRKQLYBHVFFWTQZAKDXSLJAFBIDSUTWIICUSALNAHWGJMTHYQIGXRM",
+      "cipher": "AJVXEGYBROLRPIUBPWRJKDHCESZCWEDVYSGYJRKCOLPOXKKHURAFWP",
+      "final": "QYCN"
+    },
+    {
+      "id": "m4-090",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "BULR",
+      "start": "ELLK",
+      "plugboard": [
+        "AF",
+        "HO",
+        "GC",
+        "XY",
+        "JR",
+        "UE"
+      ],
+      "plain": "D",
+      "cipher": "M",
+      "final": "ELLL"
+    },
+    {
+      "id": "m4-091",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "QJDS",
+      "plugboard": [
+        "SR",
+        "HA",
+        "KD",
+        "FV",
+        "CL",
+        "YO"
+      ],
+      "plain": "KXSVB",
+      "cipher": "WPKBL",
+      "final": "QJDX"
+    },
+    {
+      "id": "m4-092",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ZZZZ",
+      "start": "YOLL",
+      "plugboard": [
+        "VC",
+        "LS",
+        "HX",
+        "YW",
+        "TG",
+        "QF"
+      ],
+      "plain": "POFAHSNIZJ",
+      "cipher": "VELNXKJLCI",
+      "final": "YOLV"
+    },
+    {
+      "id": "m4-093",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ZZZZ",
+      "start": "NVYF",
+      "plugboard": [
+        "UJ",
+        "KM",
+        "EC",
+        "OG",
+        "SV",
+        "BL"
+      ],
+      "plain": "RDOLOLNGAYGWQPWIVMQXTYYGLPX",
+      "cipher": "BBECCTHBTDURDVYVWDYAGSHLEQO",
+      "final": "NWBG"
+    },
+    {
+      "id": "m4-094",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "MCKD",
+      "start": "GCAO",
+      "plugboard": [
+        "AT",
+        "CR",
+        "XL",
+        "WH",
+        "ON",
+        "IV"
+      ],
+      "plain": "IBUZROQYHMHRPVNMVVVZVRKQAUQFGQJVGWBCPEWEZEUSIGUXNCXGNW",
+      "cipher": "SVAIQDUQDVPXDZCSIMSQUFHBWHCWJKEBMTNLJOXQDHCNNKVKTIUMGI",
+      "final": "GCCQ"
+    },
+    {
+      "id": "m4-095",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "XIWI",
+      "plugboard": [
+        "VM",
+        "WG",
+        "BY",
+        "LK",
+        "OH",
+        "TA",
+        "QJ",
+        "PE",
+        "ID",
+        "ZC"
+      ],
+      "plain": "Y",
+      "cipher": "I",
+      "final": "XIWJ"
+    },
+    {
+      "id": "m4-096",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "DJUT",
+      "plugboard": [
+        "HJ",
+        "IM",
+        "OE",
+        "TV",
+        "LW",
+        "SN",
+        "CP",
+        "KB",
+        "XQ",
+        "DF"
+      ],
+      "plain": "WSWVT",
+      "cipher": "FKTZC",
+      "final": "DJUY"
+    },
+    {
+      "id": "m4-097",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ABCD",
+      "start": "WCLL",
+      "plugboard": [
+        "MW",
+        "BD",
+        "UC",
+        "ES",
+        "VT",
+        "QP",
+        "FR",
+        "YN",
+        "AX",
+        "LK"
+      ],
+      "plain": "XJWPQRXQYH",
+      "cipher": "OXINXZUVFF",
+      "final": "WCLV"
+    },
+    {
+      "id": "m4-098",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "AAAA",
+      "start": "MOIZ",
+      "plugboard": [
+        "IA",
+        "ER",
+        "MY",
+        "JT",
+        "LF",
+        "XV",
+        "CD",
+        "QG",
+        "PK",
+        "UB"
+      ],
+      "plain": "VLCJNYCFWWPAVFBAVJSZVQMXXYR",
+      "cipher": "MNBQXONJPREHBIJKDLIBFKAYNXV",
+      "final": "MOLA"
+    },
+    {
+      "id": "m4-099",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "AAAA",
+      "start": "XVEF",
+      "plugboard": [
+        "JV",
+        "CD",
+        "LU",
+        "PT",
+        "FM",
+        "YI",
+        "BO",
+        "HQ",
+        "NE",
+        "AK"
+      ],
+      "plain": "KJUMXFRESUHWWONVLKXYFIWITEHJWHODFSMJQCJLSZNVYIDIPCSOKX",
+      "cipher": "CRAZZTNMAZZEGJFLPPBBXCSLYGJHOEVQOIVONYTEFPEAXGPXJSYLHO",
+      "final": "XVGH"
+    },
+    {
+      "id": "m4-100",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "YLLV",
+      "plugboard": [],
+      "plain": "V",
+      "cipher": "I",
+      "final": "YLLW"
+    },
+    {
+      "id": "m4-101",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "QELP",
+      "start": "XSEK",
+      "plugboard": [],
+      "plain": "IDGGP",
+      "cipher": "WQAZY",
+      "final": "XSEP"
+    },
+    {
+      "id": "m4-102",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "BULR",
+      "start": "GDVD",
+      "plugboard": [],
+      "plain": "EJYYPVKTWV",
+      "cipher": "SMZVIDOZHZ",
+      "final": "GDVN"
+    },
+    {
+      "id": "m4-103",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "ZZYA",
+      "plugboard": [],
+      "plain": "QZHSSQJNVVEASVCHASABNJMSRXA",
+      "cipher": "OCTRKXSTHRWUENGPWYFVYMPIUJC",
+      "final": "ZABB"
+    },
+    {
+      "id": "m4-104",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ZZZZ",
+      "start": "TIOJ",
+      "plugboard": [],
+      "plain": "CVBRTMKVOGNKLSPGTKTPXNEHGZDMRQGXCOETFYPZKVIFKTZWLDMGJS",
+      "cipher": "JYLJZVMCQLRUFHXNAGCAEJWWBIEBVNRQHPVBSXNDJTQMMFURYWQTHI",
+      "final": "TJRL"
+    },
+    {
+      "id": "m4-105",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ZZZZ",
+      "start": "BZMV",
+      "plugboard": [
+        "XD"
+      ],
+      "plain": "R",
+      "cipher": "W",
+      "final": "BZMW"
+    },
+    {
+      "id": "m4-106",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "MCKD",
+      "start": "HNOS",
+      "plugboard": [
+        "YI"
+      ],
+      "plain": "VEFCX",
+      "cipher": "QAUDI",
+      "final": "HNOX"
+    },
+    {
+      "id": "m4-107",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "TOUG",
+      "plugboard": [
+        "IB"
+      ],
+      "plain": "OMLMHJYGED",
+      "cipher": "JJQHQYIMKM",
+      "final": "TOUQ"
+    },
+    {
+      "id": "m4-108",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "ELXO",
+      "plugboard": [
+        "WO"
+      ],
+      "plain": "TLIMKNLRJAFBKVXTEMHXWFVRMXX",
+      "cipher": "PUYXXCAGVUQQMZMUGKJHVMJXUOL",
+      "final": "EMAP"
+    },
+    {
+      "id": "m4-109",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ABCD",
+      "start": "JHOC",
+      "plugboard": [
+        "FJ"
+      ],
+      "plain": "MGQAAVAHJUKHPDQXGQSSLUDFIHJCVXZRCSMCCDRAAIWULMGENWWBUT",
+      "cipher": "TDGECRDSQEBNOETAUHNVPEHYYYCNOBBCEULMOMSXUBBJKEEFVEBGWG",
+      "final": "JIRE"
+    },
+    {
+      "id": "m4-110",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "AAAA",
+      "start": "WNJR",
+      "plugboard": [
+        "HL",
+        "PK",
+        "NX"
+      ],
+      "plain": "S",
+      "cipher": "Q",
+      "final": "WOKS"
+    },
+    {
+      "id": "m4-111",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "AAAA",
+      "start": "XGPI",
+      "plugboard": [
+        "TV",
+        "QD",
+        "GS"
+      ],
+      "plain": "FMJUP",
+      "cipher": "HATDJ",
+      "final": "XGPN"
+    },
+    {
+      "id": "m4-112",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "IXVG",
+      "plugboard": [
+        "TN",
+        "UD",
+        "EB"
+      ],
+      "plain": "BVAFRDFHYW",
+      "cipher": "RWTSQOBZLO",
+      "final": "IXVQ"
+    },
+    {
+      "id": "m4-113",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "QELP",
+      "start": "FZBQ",
+      "plugboard": [
+        "XS",
+        "TK",
+        "RL"
+      ],
+      "plain": "DTKKFCUKIWWCZCNTZKSBTGZPEUK",
+      "cipher": "QRVACSTSWIVKEGUUBZFDMUQQSQE",
+      "final": "FZDR"
+    },
+    {
+      "id": "m4-114",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "BULR",
+      "start": "WLGR",
+      "plugboard": [
+        "YJ",
+        "EC",
+        "RG"
+      ],
+      "plain": "FFIARXTBKILUGTLPXEZOBLOGKFWKBGZUXKDYOSEOKPAVHTGKBCTDZX",
+      "cipher": "SMBVVRAJMOXEIPNUZGPHMZWJWGNNYYELOYYJPTFYXXFPYFXNGAKKOV",
+      "final": "WLIT"
+    },
+    {
+      "id": "m4-115",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "GFHG",
+      "plugboard": [
+        "GL",
+        "PQ",
+        "ZU",
+        "AV",
+        "FY",
+        "DS"
+      ],
+      "plain": "F",
+      "cipher": "Q",
+      "final": "GFHH"
+    },
+    {
+      "id": "m4-116",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ZZZZ",
+      "start": "XZQW",
+      "plugboard": [
+        "MJ",
+        "EY",
+        "QU",
+        "OG",
+        "BL",
+        "AW"
+      ],
+      "plain": "AKMPA",
+      "cipher": "MQROF",
+      "final": "XZQB"
+    },
+    {
+      "id": "m4-117",
+      "rotors": [
+        "Beta",
+        "I",
+        "II",
+        "III"
+      ],
+      "reflector": "C-Thin",
+      "rings": "ZZZZ",
+      "start": "OBPY",
+      "plugboard": [
+        "PA",
+        "VZ",
+        "QJ",
+        "EU",
+        "YO",
+        "IT"
+      ],
+      "plain": "RSQNLHXAQK",
+      "cipher": "ODKKNPOZBG",
+      "final": "OBPI"
+    },
+    {
+      "id": "m4-118",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "B-Thin",
+      "rings": "MCKD",
+      "start": "DPQF",
+      "plugboard": [
+        "WQ",
+        "RP",
+        "XY",
+        "TD",
+        "IS",
+        "AJ"
+      ],
+      "plain": "IXAYYRHGJDSQIYXNEIGOKMUOLXJ",
+      "cipher": "NAXIZJFBQJYWWUUZSKAKJYSVAAL",
+      "final": "DPSG"
+    },
+    {
+      "id": "m4-119",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "VNIY",
+      "plugboard": [
+        "VX",
+        "RL",
+        "GN",
+        "CH",
+        "AJ",
+        "MZ"
+      ],
+      "plain": "QSOYEEJCITLZLFFWWDBIZIDWHDPEADFYOQMUQZVIGASXDCFXEEYWJY",
+      "cipher": "WOSZQVETAKJKCYXIEBPOYWNOPWTBEYCXVJLIKRNVABHKEDLUNHSEUH",
+      "final": "VNLA"
+    }
+  ]
+}

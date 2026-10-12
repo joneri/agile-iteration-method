@@ -7,6 +7,13 @@ Source: docs/workflow/streamlined-decisions.md
 
 # Combined decisions and predictable continuation
 
+This document specifies the preserved **legacy Epic/DI workspace protocol**.
+For AIM 4.0 Story work, use [User Stories and product backlog](user-stories.md):
+accept verified Stories with actual user authority, then evaluate each Epic for
+a separate closure decision. The legacy helpers and mandates below cannot
+accept new Stories or convert historical Increments into requirements.
+
+
 This is the canonical contract for new combined AIM proposals. It preserves the
 logical Gate A, B and E decisions and the separate whole-Epic closure check.
 Those decisions can share one explicitly scoped user response. Legacy gate

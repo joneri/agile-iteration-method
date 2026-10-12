@@ -3,6 +3,11 @@
 Skill id: `aim-tdo-engineering`. Bundled with AIM; applies to architecture,
 technical planning and evidence synthesis.
 
+- Refine PO-owned Stories for feasibility, dependencies and verification. Plan
+  exact ready Story IDs, including selections across Epics, with implementation
+  boundaries and integration checks. Do not require every delivery to embody
+  the whole Epic or treat an increment or Sprint as a requirement.
+
 - Read requirements and current code before relying on profile claims. Identify
   the hardest correctness/performance assumption and test it early.
 - Choose stable responsibility boundaries: domain, state/job lifecycle, I/O and

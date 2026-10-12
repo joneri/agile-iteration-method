@@ -1,0 +1,24 @@
+{
+  "id": "pairs-0",
+  "variant": "naked",
+  "run": 3,
+  "elapsedSeconds": 13.276,
+  "status": "complete",
+  "checked": 17576,
+  "returned": 2,
+  "sourceStartPresent": true,
+  "candidates": [
+    {
+      "positions": "MBJL",
+      "placement": 0,
+      "plugboard": "Inga par",
+      "preview": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE"
+    },
+    {
+      "positions": "MCKL",
+      "placement": 0,
+      "plugboard": "Inga par",
+      "preview": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE"
+    }
+  ]
+}

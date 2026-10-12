@@ -1,4 +1,4 @@
-# Discover AIM 2.8
+# Discover AIM 4.0
 
 This is the public product guide for Agile Iteration Method.
 
@@ -6,8 +6,8 @@ Start here when you want to understand AIM before reading its detailed workflow 
 
 For a two-minute inventory, read the [feature guide](features.md).
 
-To see Epics, Increments, roles, Gates, evidence, decisions, and helper agents
-move through a shared delivery board, run `/aim ui` from chat and explore [AIM
+To see User Stories from different Epics move through planning, implementation,
+review, validation and acceptance, run `/aim ui` from chat and explore [AIM
 UI Beta](aim-ui.md).
 
 For AIM's evidence-backed alternative to opaque memory consolidation, read
@@ -18,7 +18,7 @@ For AIM's evidence-backed alternative to opaque memory consolidation, read
 AIM is a structured AI delivery system.
 
 You describe the outcome you want.
-AIM turns that outcome into one useful increment at a time, implements it, reviews it, validates it, corrects problems when evidence requires it, and returns meaningful decisions to you.
+PO discovers Epics and User Stories from your intent. PO and TDO refine the needs; TDO plans a prioritized selection that can cross Epic boundaries. AIM implements it, reviews and validates every Story, and returns acceptance to you. The working result is an increment; a Sprint is an optional timebox.
 
 AIM is designed for real repositories and real delivery constraints:
 
@@ -51,9 +51,9 @@ It takes you through:
 1. choosing the portable public Agent Skill or adaptive installer
 2. repository calibration
 3. opening AIM UI from chat
-4. the first Epic
-5. Gate A
-6. the first increment and acceptance
+4. intent discovery, Epics and User Stories
+5. the first prioritized delivery selection
+6. Story acceptance and separate Epic closure
 
 ### I need to choose a setup
 

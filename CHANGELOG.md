@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-10-12 - AIM 4 major release v4.0.0
+
+**Intent becomes requirements. User Stories become the work on the board.**
+
+- Start from an ordinary-language intent. PO identifies Epics and owns User Stories, value, acceptance criteria and priority; TDO contributes refinement and delivery planning.
+- Give Stories stable identities, personas, needs, benefits and numbered acceptance criteria independent of any delivery.
+- Select Stories from multiple Epics for one delivery, preserving selection order and approved requirement snapshots. An increment is the working result; a Sprint is an optional timebox.
+- Require independent review, validation and complete Story criterion evidence before user acceptance. Closing an Epic remains a separate evidence-backed decision.
+- Open AIM UI on User Stories with cross-Epic filters and meaningful card movement. Preserve earlier runs in Delivery control and history without inferring Stories or widening previous approvals.
+- Introduce the AIM 4 website and press identity, with copyable Terminal and AI-agent installation instructions in the first viewport.
+- Preserve AIM UI reading position, keyboard focus and panel scroll during background status updates.
+- Provide a headless Story lifecycle and atomic product backlog with stale-update protection. Ship the helper, schema and method through both portable and adaptive distribution.
+
+Compatibility: the new product backlog is version `1.0`; the legacy runtime contract `2.0`, state schema `1.0` and installer manifest `1.0` remain supported. The portable package revision is `18`. New intent-first work uses the Story lifecycle; existing Epic/Portfolio runs retain their original authorities.
+
+UI remains Beta. Story actions prepare chat intents; the existing connected execution bridge applies to legacy delivery controls. Historical AIM 3 evaluation results are not evidence of AIM 4 performance.
+
+See [the User Story contract](docs/workflow/user-stories.md) and [the AIM 4 feature guide](docs/features/aim-4-user-stories.md).
+
 ## 2026-10-04 - AIM 3.2 patch release v3.2.1
 
 - Preserve bounded RnDAIM proposal identity, digest, evidence IDs and source path on planning backlog candidates; show source IDs in the read-only planned Epic card.

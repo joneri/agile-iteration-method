@@ -2,6 +2,21 @@
 mode: aim
 ---
 
+## New intent-first work
+
+Use `/aim start "<desired outcome>"` and load `docs/workflow/user-stories.md`.
+PO identifies Epics and owns User Stories and priority; TDO refines with PO and
+proposes selected Stories across Epics. Use trusted `scripts/aim_stories.py`
+for `.aim/product-backlog.json`. Resolve an existing Story delivery before
+considering a new one. Do not create legacy DI workspaces for this path.
+Default to Strict unless existing user authorization supplies a different mode.
+
+## Legacy Epic and Portfolio compatibility
+
+The following rules apply only to an explicitly addressed existing Epic
+workspace, `EPIC:` start or legacy `PORTFOLIO` run.
+
+
 Start AIM 2.0 in this repository.
 
 Before reading major docs, check `.aim/state.json`.
@@ -11,7 +26,7 @@ If Personal AIM hints exist at `~/.aim/repo-awareness/<repo-fingerprint>/hints.y
 Use profile facts to choose locality, commands, short authoritative docs, risk zones, freshness triggers, and context to avoid before broader docs.
 
 If no Epic is provided yet:
-- ask for one line: `EPIC: ...`, or offer `/aim start "PORTFOLIO" mode:auto`
+- ask for an intent in ordinary language, or offer `/aim start "PORTFOLIO" mode:auto`
   when the user wants one approved run over the visible AIM UI Backlog
 - default to `Mode: Strict`
 - suggest `Cost profile: Cost Control` for ordinary low-risk work
@@ -34,7 +49,7 @@ If Epic is provided:
   normalization for documented legacy state and stop on conflicts or
   unsupported versions
 - keep supplier model/reasoning effort independent from AIM cost profile
-- run `/aim start "EPIC: ..."`
+- run `/aim start "..."`
 - remind me that approvals are meaningful at Gate A, B, and E
 
 If `PORTFOLIO` with `mode:auto` is provided, preview an immutable ordered

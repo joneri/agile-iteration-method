@@ -23,17 +23,17 @@ aimProjectRoles:
         - id: aim-po-engineering
           source: bundled
           status: available
-      mission: Own AIM user value, public product coherence, Epic acceptance, and continuation decisions.
+      mission: Own intent discovery, Epic outcomes, User Stories, acceptance criteria, backlog priority, and acceptance recommendations.
       expertise:
         - AIM product positioning and newcomer comprehension
         - Cross-adapter user outcomes without supplier-specific leakage into AIM core
-      writeScope: AIM Epic and acceptance decisions only
+      writeScope: Assigned Epic and User Story analysis; runtime and acceptance stay with the coordinator
     tdo:
       skills:
         - id: aim-tdo-engineering
           source: bundled
           status: available
-      mission: Turn each Epic into one coherent end-to-end Done Increment and validate delivery.
+      mission: Refine User Stories with PO, plan delivery selections across Epics, and validate each Story and the integrated result.
       expertise:
         - AIM core, runtime, repo-awareness, adapter, installer, and publication boundaries
         - Migration safety, manifest closure, and release-readiness evidence
@@ -43,7 +43,7 @@ aimProjectRoles:
         - id: aim-dev-engineering
           source: bundled
           status: available
-      mission: Implement exactly the approved Done Increment with repo-native practices.
+      mission: Implement exactly the approved User Story selection with repo-native practices.
       expertise:
         - Python standard-library tooling and unittest
         - Manifest-driven installation, rollback, and Markdown contract maintenance

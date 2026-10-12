@@ -1,0 +1,156 @@
+{
+  "id": "multiple",
+  "variant": "aim",
+  "run": 1,
+  "elapsedSeconds": 0.185,
+  "status": "complete",
+  "checked": 17576,
+  "checkedAlignments": 17576,
+  "skippedByBudget": 0,
+  "returned": 20,
+  "totalCandidates": 17576,
+  "sourceStartPresent": false,
+  "message": "17576 crib-förenliga kandidatinställningar hittades. En crib kan lämna flera möjliga startlägen och paneler.",
+  "candidates": [
+    {
+      "positions": "MAAA",
+      "placement": 0,
+      "plugboard": "CT EP",
+      "preview": "THEUTEZSEUAEKJGHGFENIGYFSFXPKYOHYVZEPZLHMHEXIESIABVWLXOHPTBXZG",
+      "unresolved": 19
+    },
+    {
+      "positions": "MAAB",
+      "placement": 0,
+      "plugboard": "DE GO JS",
+      "preview": "THENPWZLGSZBONQGKHAIUCGGUKFBEQKRQNKXBRAQIJJZSWQFYZZTFCLKNTXNTB",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAC",
+      "placement": 0,
+      "plugboard": "DS EJ OX",
+      "preview": "THESWPRWSNYYGFWTCKZUQVNZQHHWILXFIJFPVEYTIHTCTOGUXCXPSGOXHSPRYT",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAD",
+      "placement": 0,
+      "plugboard": "AH DS EN OR",
+      "preview": "THEXPBFFDUKLQNMWWNKQKLTVHJLMACOKYAKWWWSLOQZMDTXWOJEZBJLXGNPTLE",
+      "unresolved": 17
+    },
+    {
+      "positions": "MAAE",
+      "placement": 0,
+      "plugboard": "DE JS OV",
+      "preview": "THEIBJHDCTYUIORRNDPKTDCJDDSWIEQQZHHRKFSFAMEIQLHGJZYDYCWWJKCNWK",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAF",
+      "placement": 0,
+      "plugboard": "ER NS OP",
+      "preview": "THESNWGNYZVGMFGFRXQTVAPNTWILIRAGZCWEWOQAJHMFDIKAQDFTETVLZARXWF",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAG",
+      "placement": 0,
+      "plugboard": "DS EI NO",
+      "preview": "THENWNFMRMXYOQCSBLAVNSFPVCBHRXZNRMMZUDDPCTCUAJPMVPPZRSJAWVLYUA",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAH",
+      "placement": 0,
+      "plugboard": "EL JO RS",
+      "preview": "THEFJSJSRKXHGBXNJMIJUPUHTYJOIJYXOLSAVTWJTOIWHGKETFWBMLVIJDOLJL",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAI",
+      "placement": 0,
+      "plugboard": "AT CS EQ OR",
+      "preview": "THEXOJHYSPUZSGALZJGUICZNFEPCVVUHWWVZSZSXOJLGLPECEEDUYKLYODMAOT",
+      "unresolved": 17
+    },
+    {
+      "positions": "MAAJ",
+      "placement": 0,
+      "plugboard": "EW LS OU",
+      "preview": "THEFJNRBCMMJXCMPLQIIHTTGRIOECJYAAMJJJWYTZMFAUYRVLLONMAIZLVLKXA",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAK",
+      "placement": 0,
+      "plugboard": "EX OY",
+      "preview": "THESNFTLVNKXTVGOCPAHSOMWYOMAMFLIPIGETMPXZZKRMONSXWDRPVBZTXOITZ",
+      "unresolved": 19
+    },
+    {
+      "positions": "MAAL",
+      "placement": 0,
+      "plugboard": "EF GO SW",
+      "preview": "THEVEFHQENLKMLENMIZBOXWWACIAGTYSWLWZACVEVGALBGOVWVXTADOHSIBGGR",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAM",
+      "placement": 0,
+      "plugboard": "DE IO SX",
+      "preview": "THEHDVDKDUFXGDKRWJSAWJRPTZNXHKDFTDUCQOUMONUXGQCHQAFNQEJZCFPYUZ",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAN",
+      "placement": 0,
+      "plugboard": "EX FS OU",
+      "preview": "THETVSLDABYZSAHSJYMPSCZEERWZUHRAZEHWPLNIZYUVPWARDUPENVTJFEVUAC",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAO",
+      "placement": 0,
+      "plugboard": "DS EU IO",
+      "preview": "THETFQNTOKESKSJUFOVDGSMPKJQDWKMPUBOAAFLSVFYTNZOBIWTYNUAKSJXKFF",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAP",
+      "placement": 0,
+      "plugboard": "EI OR SX",
+      "preview": "THERQBFUZTJCHPCBHJSGHUUWRWGYYYARMOOPCKJSAPDVNVYPJIPIVEZKQNWJOU",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAQ",
+      "placement": 0,
+      "plugboard": "AE BH GO SU",
+      "preview": "THEVHOHRJVWMJUWSBPEBPJTRVELMHVOXCUKHOEABBFYBYMXDARYOMFHBOJWLZW",
+      "unresolved": 17
+    },
+    {
+      "positions": "MAAR",
+      "placement": 0,
+      "plugboard": "DO EU IS",
+      "preview": "THEJGCINTDBACTCPEPVPOIGRUPFVWKWISJQVDEYWSOFRCOIMGDHKNXLCCDBSMS",
+      "unresolved": 18
+    },
+    {
+      "positions": "MAAS",
+      "placement": 0,
+      "plugboard": "AS BH CO EW",
+      "preview": "THEEOVQQIULJEYYNRTLDHQVZNAHFFJXWLPHHMCDVFOXHUGUOPMEGCJLBYDNLRH",
+      "unresolved": 17
+    },
+    {
+      "positions": "MAAT",
+      "placement": 0,
+      "plugboard": "AH EJ GO SU",
+      "preview": "THEHVLDRLINICXQVMNNBZPQHBTPRJLTFFWCTBYSLMDFPQAILTBAGMNYUMPSUOQ",
+      "unresolved": 17
+    }
+  ]
+}

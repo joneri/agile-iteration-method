@@ -1,6 +1,6 @@
 # AIM feature guide
 
-This is the short map of what AIM 3.2 does. Follow the links only when you need
+This is the short map of what AIM 4.0 does. Follow the links only when you need
 the operating detail.
 
 Returning from early 3.0? AIM UI combines clearer workflows with preserved work,
@@ -13,16 +13,17 @@ it does not replace checking relevant code or guarantee whole-repository coverag
 
 ## Delivery loop
 
-- Epics describe outcomes.
-- One Done Increment is active at a time.
-- PO, TDO, Dev, and Reviewer keep planning, implementation, review, validation,
-  and acceptance separate.
-- Direction and the first Increment can be approved together. Delivery and its
-  prepared Epic disposition can share one explicit acceptance. Logical Gate A,
-  B and E decisions remain traceable.
-- Failed review or validation returns the increment for correction.
+- Start with intent; PO discovers one or more Epics and their user perspectives.
+- PO owns User Stories, criteria and product backlog priority; TDO refines with PO.
+- Each Story has an identity and lifecycle independent of its delivery plan.
+- TDO selects ready Stories across Epics and plans implementation and verification.
+- Dev, Reviewer and TDO supply implementation, review and criterion-level evidence.
+- The user accepts the verified Story selection. Epic closure remains separate.
+- The integrated working result is an increment. A Sprint is an optional timebox.
+- Existing Epic/Increment records retain their original semantics without migration.
 
-See the [canonical AIM method](../workflow/agile-iteration-method.md).
+See [User Stories and product backlog](../workflow/user-stories.md) and the
+[canonical AIM method](../workflow/agile-iteration-method.md).
 
 ## Audience-context integrity
 
@@ -53,10 +54,11 @@ See [cost profiles](../workflow/cost-control-mode.md).
 - Source, adaptive, and public Agent Skill distributions carry the same trusted
   launcher, and a new repo can open truthful onboarding without creating
   `.aim`.
-- AIM UI Beta projects several independently authoritative Epic workspaces and
-  their Increments into one live five-column Kanban.
-- Delivery flow is the primary surface; portfolio summaries, People and agents,
-  and complete Closed Increment history live in dedicated tabs.
+- The User Stories board projects the product backlog into moving Story cards,
+  each retaining its Epic, user perspective, priority and criteria.
+- Existing Epic workspaces and Increment history remain in the legacy delivery surface.
+- The Story board is the primary surface. Legacy delivery flow, portfolio
+  summaries, People and agents and Closed Increment history stay available.
 - The header identifies the exact AIM product release captured when the local
   server started, separately from repository runtime-contract versions.
 - Connected Codex control shows whether eligible Start and Approve actions can
@@ -67,10 +69,10 @@ See [cost profiles](../workflow/cost-control-mode.md).
   state-aware next command.
 - The main AIM chat owns portfolio capacity, focus, backlog planning, activation,
   Gates, and runtime state.
-- Every card retains its Epic identity and separates canonical role ownership
-  from optional bounded helper-agent activity.
-- Auto mode appears as automatic card movement because the UI polls canonical
-  runtime evidence; the UI itself cannot advance a gate or write `.aim` state.
+- Every Story retains its Epic identity and individual acceptance evidence.
+  Legacy cards keep their canonical role and bounded helper-agent details.
+- Card movement reflects persisted lifecycle evidence. Polling, filtering and
+  viewing never advance a Story or accept work.
 - Polling stays visually quiet and only genuine workflow movement is animated.
 - When connected, eligible Activate and Approve actions dispatch exact,
   freshness-checked intents to the same Codex task. Change and free-form paths
@@ -164,12 +166,15 @@ See [adaptive execution](../workflow/adaptive-execution.md).
   workloads. Mixed setup, repository maintenance and delivery time remain visible.
 
 See [engineering delivery](../workflow/engineering-delivery.md) and the
-[Enigma case: same Luna, stronger product with AIM 3.2](../features/aim-3.2-enigma-case.md).
-The completed pair scored 93.5/100 with AIM against 49.8/100 without it, passed
-123/123 independent reference vectors against 1/123, and found valid candidates
-in 9/9 new positive search cases against 0/9. Visual finish and code structure
-were also judged stronger. The case separates app runtime from development time
-and links the raw evidence. [Earlier resource-efficiency results](../features/aim-3.1-evaluation.md)
+[Enigma study: better software from the same AI](../features/aim-3.2-enigma-case.md).
+The frozen M4 pair scored 93.5/100 with AIM against 62.8/100 without it. Both
+pass 243/243 external M3/M4 machine vectors; AIM finds valid candidates in 8/8
+new positive M4 search cases against 1/8, with 32/32 valid returned candidates
+against 22/23. The same complete M4 search is 55.7× faster in the AIM app
+(0.242 versus 13.477 s). The reviewed UI and code boundaries are also stronger.
+The case separates application runtime, agent elapsed time and calculated token
+cost, and links the public evidence. The [frozen M3 result](../features/aim-3.2-enigma-m3-case.md)
+remains historical; [earlier resource-efficiency results](../features/aim-3.1-evaluation.md)
 cover a separate workload and pre-3.1 candidate.
 
 ## Adapters and commands

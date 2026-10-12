@@ -16,7 +16,7 @@
       <span class="aim-mark" aria-hidden="true">AIM</span>
       <div>
         <p class="product-name">Control room <span class="product-version" id="product-version">AIM …</span></p>
-        <p class="product-note">Portfolio control</p>
+        <p class="product-note">User needs, shared direction, working software</p>
       </div>
     </div>
     <div class="connection-tools">
@@ -75,7 +75,8 @@
 
     <section id="control-room" hidden>
       <nav class="section-tabs" aria-label="AIM control room views">
-        <button class="section-tab" type="button" data-view="board" aria-pressed="true">Delivery flow</button>
+        <button class="section-tab" type="button" data-view="stories" aria-pressed="true">User Stories</button>
+        <button class="section-tab" type="button" data-view="board" aria-pressed="false">Delivery control</button>
         <button class="section-tab" type="button" data-view="discuss" aria-pressed="false">Discuss</button>
         <button class="section-tab" type="button" data-view="portfolio" aria-pressed="false">Portfolio</button>
         <button class="section-tab" type="button" data-view="data" aria-pressed="false">AIM DATA</button>
@@ -248,11 +249,30 @@
         <div class="people-grid" id="people-grid"></div>
       </section>
 
-      <section class="workflow" id="workflow-panel" aria-labelledby="workflow-title">
+      <section class="story-workspace" id="story-workspace" aria-labelledby="story-title">
+        <header class="story-heading">
+          <div>
+            <p class="eyebrow">One board · every user perspective</p>
+            <h1 id="story-title">User Stories</h1>
+            <p id="story-summary">Start with the change you want to make.</p>
+          </div>
+          <div class="story-entry">
+            <button class="primary-action" id="copy-story-start" type="button">Copy start intent</button>
+            <p class="action-feedback" id="story-start-feedback" role="status" aria-live="polite"></p>
+          </div>
+        </header>
+        <p class="story-model-note">Epics connect the goals. Stories describe user needs. Increments deliver working improvements.</p>
+        <div class="epic-filters story-filters" id="story-filters" aria-label="Filter User Stories by Epic"></div>
+        <div class="story-board-note" id="story-board-note" role="status"></div>
+        <div class="story-board" id="story-board" aria-label="User Story progress across Epics"></div>
+        <p class="story-boundary">Story progress reflects recorded requirements. Refine and plan in AIM chat; delivery evidence and acceptance remain linked to each Story.</p>
+      </section>
+
+      <section class="workflow" id="workflow-panel" aria-labelledby="workflow-title" hidden>
         <div class="workflow-heading">
           <div id="workflow-title-group">
-            <p class="eyebrow">Delivery flow</p>
-            <h2 id="workflow-title">Epic delivery board</h2>
+            <p class="eyebrow">Legacy delivery runtime</p>
+            <h2 id="workflow-title">Delivery control</h2>
           </div>
           <div class="workflow-status">
             <div class="epic-filters" id="epic-filters" aria-label="Filter board by Epic"></div>

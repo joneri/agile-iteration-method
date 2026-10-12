@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 import aim_ui_control as control  # noqa: E402
-from aim_ui import build_board  # noqa: E402
+from aim_ui import build_board, payload_fingerprint as server_payload_fingerprint  # noqa: E402
 from aim_installer.seed import shared_profile_seed  # noqa: E402
 
 
@@ -44,6 +44,9 @@ class AimUiControlTests(unittest.TestCase):
             control.stop(self.repo.resolve())
         except OSError:
             pass
+
+    def test_launcher_and_server_fingerprint_the_same_payload(self) -> None:
+        self.assertEqual(control.payload_fingerprint(), server_payload_fingerprint())
 
     def test_empty_repository_projects_truthful_onboarding_without_writes(self) -> None:
         board = build_board(self.repo)
@@ -98,11 +101,11 @@ class AimUiControlTests(unittest.TestCase):
         first = control.start(repo, open_browser=False)
         self.assertEqual(first["status"], "running")
         self.assertFalse(first["reused"])
-        self.assertEqual(first["productVersion"], "3.2.1")
+        self.assertEqual(first["productVersion"], "4.0.0")
         with urlopen(f"{first['url']}api/board", timeout=2) as response:
             board = json.loads(response.read().decode("utf-8"))
         self.assertEqual(board["source"]["kind"], "uninitialized")
-        self.assertEqual(board["product"]["version"], "3.2.1")
+        self.assertEqual(board["product"]["version"], "4.0.0")
         self.assertIn(
             board["backgroundControl"]["status"], {"configured", "view_only"}
         )

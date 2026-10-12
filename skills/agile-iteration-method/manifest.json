@@ -1,5 +1,5 @@
 {
-  "description": "Plan and deliver repository-aware AI-assisted software work through Agile Iteration Method using PO, TDO, Dev, and Reviewer roles, end-to-end Done Increments, explicit gates, review, validation, and user-owned acceptance. Use for discussing product direction with repository context, creating and refining Epics, planning increments, implementing work, reviewing delivery, configuring project specialists, calibrating and reflecting on repositories, consolidating knowledge across local AIM projects, controlling AIM modes and cost profiles, opening and controlling local AIM UI, and continuing AIM runs.",
+  "description": "Plan and deliver repository-aware AI-assisted software work through Agile Iteration Method using intent discovery, PO-owned Epics and User Stories, cross-Epic delivery planning, explicit gates, review, validation, and user-owned acceptance. Use for discussing product direction with repository context, creating and refining Epics and User Stories, planning delivery selections, implementing work, reviewing delivery, configuring project specialists, calibrating and reflecting on repositories, consolidating knowledge across local AIM projects, controlling AIM modes and cost profiles, opening and controlling local AIM UI, and continuing AIM runs.",
   "files": [
     "SKILL.md",
     "aim-ui/app.js",
@@ -14,6 +14,7 @@
     "references/agile-iteration-method.md",
     "references/engineering-delivery.md",
     "references/epic-closure-truth-audit.md",
+    "references/example-user-story.md",
     "references/install/aim-install-manifest.yaml",
     "references/operating-modes.md",
     "references/product-coherence-validation.md",
@@ -28,6 +29,7 @@
     "references/role-skill-tdo.md",
     "references/schemas/aim-personal-hints.schema.json",
     "references/schemas/aim-portfolio-run.schema.json",
+    "references/schemas/aim-product-backlog.schema.json",
     "references/schemas/aim-project-roles.schema.json",
     "references/schemas/aim-repo-profile.schema.json",
     "references/schemas/aim-runtime-state.schema.json",
@@ -35,6 +37,7 @@
     "references/skill-completion.md",
     "references/skill-user-guide.md",
     "references/streamlined-decisions.md",
+    "references/user-stories.md",
     "references/version-and-installation.md",
     "scripts/aim_actions.py",
     "scripts/aim_activation.py",
@@ -62,6 +65,7 @@
     "scripts/aim_runtime_contract.py",
     "scripts/aim_runtime_lock.py",
     "scripts/aim_start.py",
+    "scripts/aim_stories.py",
     "scripts/aim_ui.py",
     "scripts/aim_ui_control.py",
     "scripts/aim_validator/__init__.py",
@@ -81,24 +85,35 @@
     ],
     "validatedVersion": "1.5.17"
   },
-  "productVersion": "3.2.1",
+  "productBacklogVersion": "1.0",
+  "productVersion": "4.0.0",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
     "repoProfile": "0.2"
   },
-  "publicSkillPackageVersion": 17,
+  "publicSkillPackageVersion": 18,
   "runtimeContractVersion": "2.0",
   "runtimeStateSchemaVersion": "1.0",
   "sourceProvenance": [
     {
       "output": "SKILL.md",
-      "sha256": "786ee6c36c2e74d9de1d9bf7474c755c1f5bcbe6b32c5fa911da4cc9c9e3c552",
+      "sha256": "10e797f744e436b14a62df7aced3beb5df6de164a512db98d4c11c4c65d23b27",
       "source": "adapters/portable/agile-iteration-method/SKILL.md"
     },
     {
+      "output": "references/user-stories.md",
+      "sha256": "cc19aed28e3b01ad43f7f2a91509a94855867603bcb106178e1cee851c0f51ff",
+      "source": "docs/workflow/user-stories.md"
+    },
+    {
+      "output": "references/example-user-story.md",
+      "sha256": "01364a2b55243aeb4d0b510b6cfa59d1e69e7b1d64ad2f4b2e30f9d2aaeb9e3b",
+      "source": "examples/user-stories/example-user-story.md"
+    },
+    {
       "output": "references/streamlined-decisions.md",
-      "sha256": "3f65743233f3aa8ba96b6b7758c6c7485e2e36fe4a4ba2bd6f3ca180a9864397",
+      "sha256": "51d8acb69c528a9989a10ed3fea87d8dd442919d6271968f29c05c74fb262b44",
       "source": "docs/workflow/streamlined-decisions.md"
     },
     {
@@ -113,52 +128,52 @@
     },
     {
       "output": "references/role-skill-po.md",
-      "sha256": "c8b77ac0cc2b8041452129c296098750f7d2e7d1f13a2bb37c9351ba29b35967",
+      "sha256": "71e23b329bc5ec4a9a3a608b74762c0064ff790ca6386d7ac3018491ee40e47f",
       "source": "docs/workflow/role-skill-po.md"
     },
     {
       "output": "references/role-skill-tdo.md",
-      "sha256": "9c9ebe54aabbe746ef63d3825aa0fe59a2938c85735bbe8d42e0e592bcad2019",
+      "sha256": "3f0b0e1ad9ff57a54329a7db59acf9a1d3f06e9bdbc57a03c199b10a2a9a0e17",
       "source": "docs/workflow/role-skill-tdo.md"
     },
     {
       "output": "references/role-skill-dev.md",
-      "sha256": "bd0c1ace0cfeadb2471a17ca3ddb219cf04650ebe5aaf5ae68575a8686ec498c",
+      "sha256": "39b26dc4e6e0d8ce543f19d15381fa627bd5903527ea064195018027544b53fc",
       "source": "docs/workflow/role-skill-dev.md"
     },
     {
       "output": "references/role-skill-reviewer.md",
-      "sha256": "da46a5a4e7f0a1e2c0e72f1b0c30dc9a7f6d7c0356f1c1088d7cff0ea6f4152a",
+      "sha256": "cd5054740b961674eaffc23a23c5bf11231a08831297c67e4fe54f4c29a76ab2",
       "source": "docs/workflow/role-skill-reviewer.md"
     },
     {
       "output": "references/skill-user-guide.md",
-      "sha256": "41f2881fcaa810431fc2b6cafa03ff62cf5f93168275bb476c4cf6a2415a2c7d",
+      "sha256": "f7b43e36681ddae33e2cdf5a0c7c21fc17138389351cc5b83e6ba344328d4d8d",
       "source": "docs/workflow/skill-user-guide.md"
     },
     {
       "output": "references/skill-command-runtime.md",
-      "sha256": "7c308391d03fd6bb76d3d0376c660e8e43b91f6ab1f78dfeeae0d5fe5e33c5e8",
+      "sha256": "1dd315ff637cd690f5be6850d7c80dedd93bfc64783a0e42a74529cbb4c9c9b6",
       "source": "docs/workflow/skill-command-runtime.md"
     },
     {
       "output": "references/skill-completion.md",
-      "sha256": "141a7534fffe8ad31b668f6f4ba4304ef62aa8b556894b1316b2c6ecfb310108",
+      "sha256": "cde4c7088b128601c63dc9e108e0bba798ee339f0dd3b00595b855008203d9bf",
       "source": "docs/workflow/skill-completion.md"
     },
     {
       "output": "references/agile-iteration-method.md",
-      "sha256": "ed9f820b128a82ed911e84a2d50a0e0cd86c5aab564622208993a3648a3b267d",
+      "sha256": "7aa7ab141e06e1dc6ca20d917db98e397ac113aa016fcd1db5afe92c92b89c3b",
       "source": "docs/workflow/agile-iteration-method.md"
     },
     {
       "output": "references/adapter-command-contract.md",
-      "sha256": "549f41fa06f26f085a6d966bb1b890e06715c99d6c03501720b5b79b9e122cf1",
+      "sha256": "db6d2ae147c92ffd4234144da7499a6f8ff698c1d3ddee84381b994985253195",
       "source": "docs/workflow/adapter-command-contract.md"
     },
     {
       "output": "references/adapter-entry-model.md",
-      "sha256": "243d59997b69c553acbd77791dfe9fc372e6cb1d99b23546ae1ffb8b909c2b9b",
+      "sha256": "dcf59bd4df55bd18ea7c908b413519bc05b194210eca984a7ab6837c0371e0a2",
       "source": "docs/workflow/adapter-entry-model.md"
     },
     {
@@ -203,7 +218,7 @@
     },
     {
       "output": "references/repo-awareness.md",
-      "sha256": "a15ac3bef1b922564e6ffe1fae9400909564986cd34a2e67be0d051dc698d2ef",
+      "sha256": "8277d33908b8a7aa65f20bae6ef2daf5eea910e066ef9a8bd7249027b02dee54",
       "source": "docs/workflow/repo-awareness.md"
     },
     {
@@ -237,8 +252,13 @@
       "source": "schemas/aim-portfolio-run.schema.json"
     },
     {
+      "output": "references/schemas/aim-product-backlog.schema.json",
+      "sha256": "9080793c730964b2f4a5430db9fc7a1c83873c5faf94c252a918d2c149afcf11",
+      "source": "schemas/aim-product-backlog.schema.json"
+    },
+    {
       "output": "references/install/aim-install-manifest.yaml",
-      "sha256": "dc1c555dc0ebd7fabd4bde90d8f9a9d0549d4c41dfe0826e31a934e92103821b",
+      "sha256": "c28e6df0918ae59a84f224996a612e678848d2f5b39e9ebbbac809cc048c492c",
       "source": "install/aim-install-manifest.yaml"
     },
     {
@@ -248,18 +268,23 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "3822728783049fc2f22a56d1ee74d62352c49fbf81c6b54b50830d6f61c3af22",
+      "sha256": "e1d49c569ae09b2ede16e2d83820a3809b35eb6c44c13ba9b5330598d6b8f43c",
       "source": "VERSION"
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "1dce7d4cbb4bd5b36ac129352fc51c4d4007456155314a7c62cde7b5a11b6458",
+      "sha256": "796038ef9f2819f1a1bb7822ce959ab4e9e17cb50fbc3af4ca8b9c5fcb53a510",
       "source": "scripts/aim_publication.py"
     },
     {
       "output": "manifest.json",
-      "sha256": "c34a977041f38d6a8174131bc046a436ea0c3cac3f6602468b3cea2e50ba9c53",
+      "sha256": "30ea3e1fc8f21f2ec1fd54de684c90acb88db0de67a4006b6de3aefd866d8b12",
       "source": "scripts/build_public_skill.py"
+    },
+    {
+      "output": "scripts/aim_stories.py",
+      "sha256": "72b75cfe4a6104c9383a2cd0f8c675813202d56a7994655da37a1016e946cf45",
+      "source": "scripts/aim_stories.py"
     },
     {
       "output": "scripts/aim_http.py",
@@ -403,12 +428,12 @@
     },
     {
       "output": "scripts/aim_ui.py",
-      "sha256": "ce65d847c1344b998d343579a6b9f5b70b797d420cd963f7c3399321f5085bfb",
+      "sha256": "a419bd6181e599f9da05ff3a1183e71943edf921773ab98b238fc4a9456185f8",
       "source": "scripts/aim_ui.py"
     },
     {
       "output": "scripts/aim_ui_control.py",
-      "sha256": "3b1243682a03ae5bf5dc4d0b17179cdbe51f442e510a2574f6137ff9552362f2",
+      "sha256": "38ffcab6506789d238befe8e0c6527746acbaeb3db7573a47f274ea60c838189",
       "source": "scripts/aim_ui_control.py"
     },
     {
@@ -418,17 +443,17 @@
     },
     {
       "output": "aim-ui/index.html",
-      "sha256": "4443bc26490a374f511bb76c6bed1fd48524c36f835b3a984797169b9ee94233",
+      "sha256": "68ed7764a781450aa53525f97113951836c6b84ece34ca646f4533670485aa75",
       "source": "aim-ui/index.html"
     },
     {
       "output": "aim-ui/styles.css",
-      "sha256": "9ebc7129525178ca7477736dddc70f3f7958ef3706325be16efaffb6b4a9d61f",
+      "sha256": "9c3e5e41365f246d871bad832d0ed8031de4ccbb0c1e8852763f56107b6fe814",
       "source": "aim-ui/styles.css"
     },
     {
       "output": "aim-ui/app.js",
-      "sha256": "ea51dafb156de884056b5003e28173b3b3b9833dd1d98c189bb94755bf1cf971",
+      "sha256": "b56773a89716322a4541e0cc7c9e89eec963d9972c6e1a2655c8a6fa60891308",
       "source": "aim-ui/app.js"
     }
   ]

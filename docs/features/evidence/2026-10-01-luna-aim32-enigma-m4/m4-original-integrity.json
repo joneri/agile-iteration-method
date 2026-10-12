@@ -1,0 +1,15 @@
+{
+  "verifiedAt": "2026-10-01T13:45:05.582083+00:00",
+  "projects": {
+    "luna-aim": {
+      "expectedFiles": 55,
+      "changed": [],
+      "missing": []
+    },
+    "luna-naked": {
+      "expectedFiles": 14,
+      "changed": [],
+      "missing": []
+    }
+  }
+}

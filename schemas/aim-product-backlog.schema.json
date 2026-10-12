@@ -1,0 +1,793 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-product-backlog.schema.json",
+  "title": "AIM product requirements and Story delivery runtime",
+  "description": "PO-owned Intent, Epic and Story requirements with independently scoped delivery execution. Cross-record relationships, positive revisions and priorities, evidence fingerprints and gate sequencing are additionally enforced by aim_stories.py. This contract never grants user authority.",
+  "type": "object",
+  "properties": {
+    "productBacklogVersion": {
+      "const": "1.0"
+    },
+    "revision": {
+      "type": "integer"
+    },
+    "updatedAt": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "\\S"
+    },
+    "intents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/intent"
+      },
+      "minItems": 0,
+      "maxItems": 256
+    },
+    "epics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/epic"
+      },
+      "minItems": 0,
+      "maxItems": 256
+    },
+    "stories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/story"
+      },
+      "minItems": 0,
+      "maxItems": 256
+    },
+    "deliveries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/delivery"
+      },
+      "minItems": 0,
+      "maxItems": 256
+    }
+  },
+  "required": [
+    "productBacklogVersion",
+    "revision",
+    "updatedAt",
+    "intents",
+    "epics",
+    "stories",
+    "deliveries"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "criterion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^AC-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "maxLength": 1000,
+          "pattern": "^\\.aim/"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "authority": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "user"
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 1000,
+          "pattern": "^\\.aim/"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "scopeSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "kind",
+        "path",
+        "sha256",
+        "scopeSha256"
+      ],
+      "additionalProperties": false
+    },
+    "criterionEvidence": {
+      "type": "object",
+      "properties": {
+        "storyId": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^US-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "criterionId": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^AC-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        }
+      },
+      "required": [
+        "storyId",
+        "criterionId",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "epicCriterionEvidence": {
+      "type": "object",
+      "properties": {
+        "criterionId": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^AC-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        }
+      },
+      "required": [
+        "criterionId",
+        "evidence"
+      ],
+      "additionalProperties": false
+    },
+    "epicSnapshot": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^EPIC-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "intentId": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^INT-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "\\S"
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/criterion"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "revision": {
+          "type": "integer"
+        },
+        "outcomeClass": {
+          "enum": [
+            "Product",
+            "Pilot",
+            "POC"
+          ]
+        },
+        "nonGoals": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "pattern": "\\S"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "intentId",
+        "title",
+        "outcome",
+        "acceptanceCriteria",
+        "revision",
+        "outcomeClass",
+        "nonGoals"
+      ],
+      "additionalProperties": false
+    },
+    "storySnapshot": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^US-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "epicId": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^EPIC-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "\\S"
+        },
+        "persona": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "need": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "benefit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/criterion"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "revision": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "epicId",
+        "title",
+        "persona",
+        "need",
+        "benefit",
+        "acceptanceCriteria",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "intent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^INT-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "revision": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "statement",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "epic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^EPIC-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "intentId": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^INT-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "\\S"
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/criterion"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "revision": {
+          "type": "integer"
+        },
+        "originalAcceptanceCriteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/criterion"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "status": {
+          "enum": [
+            "open",
+            "closed"
+          ]
+        },
+        "closure": {
+          "type": "object",
+          "properties": {
+            "criteria": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/epicCriterionEvidence"
+              },
+              "minItems": 1,
+              "maxItems": 64
+            },
+            "authority": {
+              "$ref": "#/$defs/authority"
+            },
+            "closedAt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "criteria",
+            "authority",
+            "closedAt"
+          ],
+          "additionalProperties": false
+        },
+        "outcomeClass": {
+          "enum": [
+            "Product",
+            "Pilot",
+            "POC"
+          ]
+        },
+        "nonGoals": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "pattern": "\\S"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "intentId",
+        "title",
+        "outcome",
+        "acceptanceCriteria",
+        "revision",
+        "originalAcceptanceCriteria",
+        "status",
+        "outcomeClass",
+        "nonGoals"
+      ],
+      "additionalProperties": false
+    },
+    "story": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^US-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "epicId": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^EPIC-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "\\S"
+        },
+        "persona": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "need": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "benefit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/criterion"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "revision": {
+          "type": "integer"
+        },
+        "originalAcceptanceCriteria": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/criterion"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "ready",
+            "in_progress",
+            "review",
+            "validation",
+            "acceptance",
+            "done"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "epicId",
+        "title",
+        "persona",
+        "need",
+        "benefit",
+        "acceptanceCriteria",
+        "revision",
+        "originalAcceptanceCriteria",
+        "priority",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "delivery": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^DI-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "\\S"
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "status": {
+          "enum": [
+            "planned",
+            "in_progress",
+            "review",
+            "validation",
+            "acceptance",
+            "accepted",
+            "cancelled",
+            "blocked"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "\\S"
+        },
+        "stories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/storySnapshot"
+          },
+          "minItems": 1,
+          "maxItems": 256
+        },
+        "epics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/epicSnapshot"
+          },
+          "minItems": 1,
+          "maxItems": 256
+        },
+        "scopeSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "approval": {
+          "$ref": "#/$defs/authority"
+        },
+        "reviewEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "validationEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "criterionEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/criterionEvidence"
+          },
+          "minItems": 1,
+          "maxItems": 16384
+        },
+        "acceptanceSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "acceptance": {
+          "$ref": "#/$defs/authority"
+        },
+        "acceptedAt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "\\S"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "blockedFrom": {
+          "enum": [
+            "in_progress",
+            "review",
+            "validation",
+            "acceptance"
+          ]
+        },
+        "reworkHistory": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000,
+                "pattern": "\\S"
+              },
+              "from": {
+                "enum": [
+                  "review",
+                  "validation",
+                  "acceptance"
+                ]
+              },
+              "at": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "\\S"
+              },
+              "reviewEvidence": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/evidence"
+                },
+                "minItems": 1,
+                "maxItems": 64
+              },
+              "validationEvidence": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/evidence"
+                },
+                "minItems": 1,
+                "maxItems": 64
+              },
+              "criterionEvidence": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/criterionEvidence"
+                },
+                "minItems": 1,
+                "maxItems": 16384
+              },
+              "acceptanceSha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "productBindings": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 64,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "sha256"
+                  ],
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 1000
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "blockedReason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000,
+                "pattern": "\\S"
+              }
+            },
+            "required": [
+              "reason",
+              "from",
+              "at"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 256
+        },
+        "planEvidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "productBindings": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "intents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/intent"
+          },
+          "minItems": 1,
+          "maxItems": 256
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "goal",
+        "status",
+        "createdAt",
+        "stories",
+        "epics",
+        "scopeSha256",
+        "planEvidence",
+        "intents"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

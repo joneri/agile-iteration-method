@@ -3,6 +3,11 @@
 Skill id: `aim-po-engineering`. Bundled with AIM; applies to product framing
 and acceptance. Read binding requirements and the current acceptance evidence.
 
+- Own intent discovery, one or more Epic outcomes, User Stories, acceptance
+  criteria and product backlog ordering. Identify distinct user perspectives;
+  refine with TDO without handing requirement ownership to technical planning.
+  Accept Stories only within actual user authority; assess Epic closure separately.
+
 - Preserve requirement provenance. Separate requested behavior, implementation
   assumptions and optional improvement ideas. Clarify only decisions that would
   materially change the product or exceed existing authority.

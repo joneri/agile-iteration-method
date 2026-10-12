@@ -13,11 +13,13 @@ AIM gives AI-assisted development a clear delivery shape:
 
 - **Start from an outcome.** Define the user or product result before choosing
   implementation tasks.
-- **Deliver one useful increment.** Build a small version of the whole behavior,
-  not an isolated piece that only becomes valuable later.
+- **Make user needs explicit.** PO discovers Epics and owns their User Stories.
+  TDO refines with PO and plans a selection across the prioritized backlog.
+- **Deliver useful behavior.** Build and verify the selected Stories; their
+  integrated working result is an increment. A Sprint is an optional timebox.
 - **Review before acceptance.** Separate implementation from correctness and
   risk review.
-- **Keep human control.** You approve the Epic, the next increment, and the
+- **Keep human control.** You approve the relevant direction, selected Stories and
   delivered result. AIM stops when intent, scope, trust, or evidence is unclear.
 - **Reuse repository knowledge.** AIM remembers verified commands, constraints,
   documentation, and risk areas without loading the whole repository every time.
@@ -46,31 +48,18 @@ which projects support it, and who approved keeping it.
 
 ## How AIM Delivers Software
 
-Every Done Increment follows one explicit loop:
+Every delivery follows `PO → TDO → Dev → Reviewer → TDO → PO`.
+PO turns intent into one or more Epics, identifies different user needs as
+Stories and orders them by value. TDO refines those Stories with PO and proposes
+which ready Stories to deliver next. A selection can include several Epics.
+Dev implements the selection, Reviewer checks the actual result, and TDO
+validates each Story's criteria and the integration between them.
 
-`PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
-
-- **PO** defines the desired outcome and decides whether the result delivers
-  enough value.
-- **TDO** chooses the next end-to-end Done Increment and defines how it will be
-  demonstrated and validated.
-- **Dev** implements exactly the approved increment.
-- **Reviewer** looks for correctness problems, regressions, unsafe assumptions,
-  and missing evidence.
-- **TDO** turns implementation and review into a practical acceptance checkpoint.
-- **PO** accepts the increment, requests a correction, or decides what comes next.
-
-Gate A approves the Epic. Gate B approves the next Done Increment. Gate E accepts
-the delivered result. Implementation and review checkpoints happen in between,
-but AIM does not ask you to approve routine internal handoffs.
-
-In the default `Strict` experience, AIM presents direction and the first
-Increment together, then delivery and its recommended disposition together. `Auto` still reports the same gates and preserves the same ownership,
-but it continues between increments while the approved direction remains clear.
-Risk and scope changes always return to you. Final Epic acceptance also returns
-to you in ordinary Auto; Portfolio Auto instead uses its already approved,
-bounded mandate as the explicit PO authority for each eligible separate Epic
-closure.
+Gate A confirms direction and requirements; Gate B confirms the selected plan.
+These can share one clearly scoped response. Gate E accepts the verified Stories.
+Epic closure requires a separate assessment and decision. Strict asks for plan
+approval and acceptance; Auto progresses within existing authority but does not
+invent final acceptance. See [User Stories](user-stories.md).
 
 ## Start Here
 
@@ -105,10 +94,11 @@ Calibration is reviewable repository knowledge, not permission to change code.
 Describe the result you want rather than supplying a task list:
 
 ```text
-/aim start "EPIC: Make checkout recovery clear and reliable when payment confirmation is delayed"
+/aim start "Make checkout recovery clear and reliable when payment confirmation is delayed"
 ```
 
-AIM presents the Epic direction and first Done Increment together for approval.
+PO discovers Epics and User Stories. AIM presents the relevant direction and
+first Story selection together for approval.
 Implementation begins only within approved scope.
 
 ## Your First AIM Journey
@@ -116,20 +106,16 @@ Implementation begins only within approved scope.
 The steps below describe the default `Strict` experience. In `Auto`, AIM reports
 the same checkpoints but may continue without pausing when no escalation applies.
 
-1. **Frame the outcome.** PO turns your request into an Epic with value,
-  boundaries, and acceptance criteria to show with the first Increment.
-2. **Choose one useful increment.** TDO proposes the smallest end-to-end behavior
-  that can be demonstrated and evaluated. In Strict mode, you approve or adjust
-  the direction and plan together at Gate A/B.
-3. **Build and review.** Dev implements the approved scope. Reviewer checks the
-   result independently. AIM corrects local defects before presenting the work.
-4. **Evaluate evidence.** TDO explains what changed, what was verified, and how
-   to test or demonstrate it.
-5. **Keep the decision.** PO asks you to accept the increment or request
-   changes. Before asking, PO evaluates the Epic and recommends exactly one
-   disposition: close, continue, or split. The disposition remains yours in
-   ordinary runs; a bounded Portfolio Auto mandate carries that authority for
-   its eligible Epics. AIM preserves the checkpoint for the next session.
+1. **Discover needs.** PO preserves intent, identifies Epics and writes Stories
+   for the relevant user perspectives, refining them with TDO.
+2. **Choose the next delivery.** PO orders Stories; TDO proposes a feasible
+   selection, potentially across Epics, with implementation and verification scope.
+3. **Build and review.** Dev implements the selection. Reviewer checks current
+   behavior and TDO validates evidence for every Story criterion.
+4. **Accept proven behavior.** You accept the named Stories after seeing the
+   evidence. Failures remain unfinished and return for correction.
+5. **Assess outcomes.** PO separately evaluates which Epics can close and which
+   need more work. The backlog retains remaining needs for the next selection.
 
 At any point, `/aim help` recommends one useful next action based on the current
 state instead of showing a wall of internal options.
@@ -144,7 +130,7 @@ state transitions through the platform's native skill route.
 
 | Command | Use when | What it does | What happens next |
 | --- | --- | --- | --- |
-| `/aim start "EPIC: ..."` | You have a new desired outcome. | Creates or resumes the Epic framing process and presents Gate A. | Review the Epic and approve it or request a change. |
+| `/aim start "<desired outcome>"` | You have a new desired outcome. | PO discovers Epics and User Stories, then TDO plans the next selection. | Review relevant direction and the selected Story plan. |
 | `/aim start "PORTFOLIO" mode:auto` | You want AIM to finish the visible Backlog sequentially. | Previews one immutable snapshot and asks for one bounded Portfolio mandate. | After approval, AIM runs included Epics through the full loop and pauses only on escalation. |
 | `/aim continue` | An AIM run already exists. | Reads the durable checkpoint and continues from the current role and gate. | AIM performs the next automatic step or presents the next decision. |
 | `Start working according to AIM` | You want to begin but prefer plain language. | Maps the request to AIM startup without changing method semantics. | AIM detects whether to calibrate, start, or resume. |

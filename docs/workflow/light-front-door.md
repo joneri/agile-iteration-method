@@ -10,7 +10,7 @@ The front door should help a user choose the next action first, not teach the fu
 
 ## How it works
 
-AIM 2.0 detects onboarding state first, then recommends exactly one next action
+AIM 4.0 detects onboarding state first, then recommends exactly one next action
 whenever possible.
 
 Use this default shape before showing commands, paths, or architecture:
@@ -27,9 +27,9 @@ Onboarding states:
 | State | Meaning | Recommended next action |
 | --- | --- | --- |
 | 1. Installed but not calibrated | AIM files are present, but reusable repo knowledge is missing or stale. | `/aim calibrate-repo` |
-| 2. Calibrated but no Epic exists | Repo awareness is ready and no active AIM runtime is in progress. | `/aim start "EPIC: <desired outcome>"` |
-| 3. Epic exists but is not approved | Gate A is waiting for explicit user decision. | Review Gate A and reply `approve` or `change: ...` |
-| 4. Epic approved | AIM has an approved checkpoint and can continue the current loop. | `/aim continue` |
+| 2. Ready for new work | No active delivery requires continuation. | `/aim start "<desired outcome>"` |
+| 3. Intent or Stories await planning | PO discovers Epics and refines Stories with TDO. | Review the relevant direction and first Story selection |
+| 4. Delivery approved | AIM has an approved selection and can continue its checkpoint. | `/aim continue` |
 | 5. Blocked | AIM cannot progress without resolving a stated blocker. | Resolve the blocking issue named in status |
 
 AIM may still route to install, upgrade, validate, or deeper help when the state
@@ -63,7 +63,7 @@ When recommending `/aim start`, show a realistic example instead of only a
 placeholder:
 
 ```text
-/aim start "EPIC: Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
+/aim start "Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
 ```
 
 or, for repository-awareness context:
@@ -83,7 +83,8 @@ config`, `/aim validate`, and the workflow docs.
 
 ## Edge cases
 
-- If an active `.aim/state.json` exists, continue or validate instead of starting a second Epic.
+- Resume the requested active Story ledger or legacy checkpoint; preserve its identity. New intents can add requirements without starting a second active delivery.
+- PO discovers one or more Epics and owns Stories and priority. TDO refines and plans selections across Epics; see `user-stories.md`.
 - If the repo is missing AIM files, install before starting.
 - If work is high risk, use `Deep` even if the user entered through the lightweight path.
 

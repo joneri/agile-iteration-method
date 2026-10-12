@@ -9,6 +9,10 @@ Source: docs/workflow/role-skill-dev.md
 
 Skill id: `aim-dev-engineering`. Bundled with AIM; applies to implementation.
 
+- Implement the approved Story selection and trace checks to Story criteria.
+  Preserve Story identities and Epic context; implementation tasks and files
+  do not become replacement requirements.
+
 - Use the actual framework and local idioms. Start at the riskiest behavior,
   retain an independent correctness oracle, and finish the end-to-end flow.
 - Cover every advertised algorithm variant with an independent expected result,

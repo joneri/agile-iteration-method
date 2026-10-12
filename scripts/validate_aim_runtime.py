@@ -43,6 +43,7 @@ from aim_validator.runtime_state import (
 from aim_validator.schema_subset import unsupported_keywords, validate as validate_schema
 from aim_portfolio_run import validate_run as validate_portfolio_run
 from aim_runtime_contract import epic_closure_evidence
+from aim_stories import StoryError, load as load_product_backlog
 
 
 EXIT_CODES = {
@@ -287,10 +288,10 @@ OPERATING_MODE_DOC_PATH = "docs/workflow/operating-modes.md"
 DOCUMENTATION_MODEL_DOC_PATH = "docs/workflow/documentation-model.md"
 PUBLIC_PRODUCT_DOC_PATHS = {
     "README.md": [
-        "# Agile Iteration Method (AIM) 3.2",
+        "# Agile Iteration Method (AIM) 4.0",
         "## Install",
         "## How AIM works",
-        "## What is new in v3.2.0",
+        "## What is new in v4.0.0",
         "/aim reflect",
         "/aim reflect-all",
         "goes beyond memory cleanup for repository work",
@@ -321,10 +322,10 @@ PUBLIC_PRODUCT_DOC_PATHS = {
         "## 2. Calibrate the Repository",
         "## 3. Remember Important Project Context",
         "## 4. Reflect on Completed Work",
-        "## 5. Start an Epic",
-        "## 6. Review Gate A",
-        "## 7. Approve the Next Increment",
-        "## 8. Build With Confidence",
+        "## 5. Start with intent",
+        "## 6. Refine needs and choose the delivery",
+        "## 7. Build, review and validate",
+        "## 8. Accept Stories and assess Epics",
     ],
     "docs/product/platforms-and-adoption.md": [
         "# Platforms and Project Agents",
@@ -467,12 +468,12 @@ REQUIRED_ONBOARDING_DOC_MARKERS = [
     "You are here",
     "Recommended next action",
     "installed but not calibrated",
-    "calibrated but no Epic exists",
-    "Epic exists but is not approved",
-    "Epic approved",
+    "ready for new work",
+    "Stories",
+    "approved",
     "blocked",
     "/aim calibrate-repo",
-    '/aim start "EPIC:',
+    '/aim start "',
     "do not lead with internal file paths",
     "command inventories",
 ]
@@ -483,12 +484,12 @@ REQUIRED_ONBOARDING_CONTRACT_MARKERS = [
     "You are here",
     "Recommended next action",
     "installed but not calibrated",
-    "calibrated but no Epic exists",
-    "Epic exists but is not approved",
-    "Epic approved",
+    "ready for new work",
+    "Stories",
+    "approved",
     "blocked",
     "/aim calibrate-repo",
-    '/aim start "EPIC:',
+    '/aim start "',
     "must not lead with internal file paths",
     "command inventory",
 ]
@@ -500,12 +501,12 @@ ONBOARDING_SURFACES = {
         "You are here",
         "Recommended next action",
         "installed but not calibrated",
-        "calibrated but no Epic exists",
-        "Epic exists but is not approved",
-        "Epic approved",
+        "ready for new work",
+        "Stories",
+        "approved",
         "blocked",
         "/aim calibrate-repo",
-        '/aim start "EPIC:',
+        '/aim start "',
         "do not lead with internal file paths",
         "command\ninventory",
         "new homes for cats",
@@ -516,12 +517,12 @@ ONBOARDING_SURFACES = {
         "You are here",
         "Recommended next action",
         "installed but not calibrated",
-        "calibrated but no Epic exists",
-        "Epic exists but is not approved",
-        "Epic approved",
+        "ready for new work",
+        "Stories",
+        "approved",
         "blocked",
         "/aim calibrate-repo",
-        '/aim start "EPIC:',
+        '/aim start "',
         "do not lead with internal file paths",
         "command inventory",
         "new homeowner",
@@ -532,12 +533,12 @@ ONBOARDING_SURFACES = {
         "You are here",
         "Recommended next action",
         "installed but not calibrated",
-        "calibrated but no Epic exists",
-        "an unapproved Epic",
-        "an approved Epic",
+        "ready for new work",
+        "Stories",
+        "approved",
         "blocked",
         "/aim calibrate-repo",
-        '/aim start "EPIC:',
+        '/aim start "',
         "Do not lead with internal file paths",
         "command inventory",
         "new homeowner",
@@ -548,12 +549,12 @@ ONBOARDING_SURFACES = {
         "You are here",
         "Recommended next action",
         "installed but not calibrated",
-        "calibrated but no Epic exists",
-        "Epic exists but is not approved",
-        "Epic approved",
+        "ready for new work",
+        "Stories",
+        "approved",
         "blocked",
         "/aim calibrate-repo",
-        '/aim start "EPIC:',
+        '/aim start "',
         "Do not lead with internal file paths",
         "command inventory",
         "new homes for cats",
@@ -564,12 +565,12 @@ ONBOARDING_SURFACES = {
         "You are here",
         "Recommended next action",
         "installed but not calibrated",
-        "calibrated but no Epic exists",
-        "Epic exists but is not approved",
-        "Epic approved",
+        "ready for new work",
+        "Stories",
+        "approved",
         "blocked",
         "/aim calibrate-repo",
-        '/aim start "EPIC:',
+        '/aim start "',
         "Do not lead with internal file paths",
         "command inventory",
     ],
@@ -1711,6 +1712,24 @@ def main() -> int:
     checked: list[str] = []
     issues: list[dict[str, object]] = []
 
+    product_backlog_path = repo_root / ".aim/product-backlog.json"
+    has_product_backlog = product_backlog_path.exists() or product_backlog_path.is_symlink()
+    if has_product_backlog:
+        checked.append("AIM 4 product backlog, delivery scope and evidence")
+        try:
+            load_product_backlog(repo_root, check_evidence=True)
+        except (StoryError, OSError, UnicodeError) as exc:
+            add_issue(
+                issues,
+                "contradictory",
+                ".aim/product-backlog.json",
+                f"invalid User Story lifecycle: {exc}",
+                "Inspect the Story ledger and its referenced evidence; preserve existing decisions and correct the exact failed relation before continuing.",
+                tier="Behavioral",
+                category="Contradiction",
+                release_impact="fail",
+            )
+
     runtime_state_result = load_runtime_state(repo_root)
     checked.append("AIM runtime-state schema contract")
     checked.append(
@@ -1780,6 +1799,10 @@ def main() -> int:
         repo_root / ".aim/decisions",
         repo_root / ".aim/reviews",
     ]
+    if has_product_backlog and not (repo_root / ".aim/state.json").exists():
+        # An intent-first workspace is complete without fabricating a legacy
+        # Epic, Increment or checkpoint. Existing legacy state is still checked.
+        required_runtime_paths = [repo_root / ".aim", product_backlog_path]
 
     for path in required_repo_files:
         checked.append(str(path.relative_to(repo_root)))

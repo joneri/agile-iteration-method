@@ -1,0 +1,214 @@
+{
+  "date": "2026-10-01",
+  "stage": "Frozen M4 follow-up of the original M3 pair; not a new independent pair.",
+  "model": "gpt-6-luna",
+  "reasoningEffort": "high",
+  "aimVersion": "3.2.0",
+  "prdSha256": "59ab6a803dd15e40a68f20f56b2ffcc081b3a0ac60aec873f5c93c2d733a9493",
+  "evaluationScope": "One sequential pair assessed by the AIM author using Codex; not an external third-party audit.",
+  "kpis": [
+    {
+      "name": "Enigma correctness",
+      "weightPercent": 25,
+      "aim": 10,
+      "naked": 10
+    },
+    {
+      "name": "Cracking and valid results",
+      "weightPercent": 30,
+      "aim": 9.5,
+      "naked": 3
+    },
+    {
+      "name": "Other requirements",
+      "weightPercent": 15,
+      "aim": 9,
+      "naked": 7.5
+    },
+    {
+      "name": "Performance and stability",
+      "weightPercent": 10,
+      "aim": 9.5,
+      "naked": 4
+    },
+    {
+      "name": "Usability",
+      "weightPercent": 10,
+      "aim": 8.5,
+      "naked": 7.5
+    },
+    {
+      "name": "Maintainability and test protection",
+      "weightPercent": 10,
+      "aim": 8.5,
+      "naked": 6
+    }
+  ],
+  "weightedScoreExact": {
+    "aim": 93.5,
+    "naked": 62.75
+  },
+  "publishedScoreOutOf100": {
+    "aim": 93.5,
+    "naked": 62.8
+  },
+  "machineVectors": {
+    "M3": {
+      "total": 123,
+      "passed": {
+        "aim": 123,
+        "naked": 123
+      }
+    },
+    "M4": {
+      "total": 120,
+      "passed": {
+        "aim": 120,
+        "naked": 120
+      }
+    }
+  },
+  "newPositiveSearchCases": [
+    "pairs-0",
+    "pairs-1",
+    "pairs-3",
+    "pairs-6",
+    "pairs-10",
+    "offset-known",
+    "offset-auto",
+    "step-crib"
+  ],
+  "newPositiveSearchCasesWithValidCandidate": {
+    "aim": 8,
+    "naked": 1
+  },
+  "returnedCandidatesValidated": {
+    "aim": {
+      "checked": 32,
+      "valid": 32,
+      "previewMatches": 32,
+      "invalid": []
+    },
+    "naked": {
+      "checked": 23,
+      "valid": 22,
+      "previewMatches": 23,
+      "invalid": [
+        {
+          "case": "step-crib",
+          "positions": "AZZV",
+          "offset": 9,
+          "valid": false,
+          "previewMatches": true
+        }
+      ]
+    }
+  },
+  "applicationRuntime": {
+    "scope": "Same complete M4 pairs-0 search; 17,576 moving starts and two valid candidates in both apps. Run 1 warmup excluded; runs 2-4 alternated. Node/V8 app runtime, not agent time.",
+    "timeoutSeconds": 20,
+    "variants": {
+      "aim": {
+        "warmupSeconds": 0.241,
+        "measuredSeconds": [
+          0.274,
+          0.241,
+          0.242
+        ],
+        "medianSeconds": 0.242,
+        "rawResults": [
+          "m4-search-aim-pairs-0-1.json",
+          "m4-search-aim-pairs-0-2.json",
+          "m4-search-aim-pairs-0-3.json",
+          "m4-search-aim-pairs-0-4.json"
+        ]
+      },
+      "naked": {
+        "warmupSeconds": 14.129,
+        "measuredSeconds": [
+          13.477,
+          13.276,
+          13.486
+        ],
+        "medianSeconds": 13.477,
+        "rawResults": [
+          "m4-search-naked-pairs-0-1.json",
+          "m4-search-naked-pairs-0-2.json",
+          "m4-search-naked-pairs-0-3.json",
+          "m4-search-naked-pairs-0-4.json"
+        ]
+      }
+    },
+    "runtimeRatioNakedOverAim": 55.6900826446281
+  },
+  "m4AgentElapsedSeconds": {
+    "aim": 1844,
+    "naked": 1193
+  },
+  "agentTimeScope": "Reported M4 agent passes including AIM reviewer, not time to two equivalent working products. Time to repair the Luna-only product is unknown. Sequential runs under observed service slowness.",
+  "m4TokenCost": {
+    "extraAimStandardCredits": 1.061572,
+    "extraAimApiUsdEquivalent": 0.042462880000000036,
+    "scope": "Calculated text-token consumption at the recorded rates; not an actual Codex subscription invoice. Cached input and reasoning output counted once."
+  },
+  "environment": {
+    "cpu": "Apple M5 Pro",
+    "os": "macOS 27.2",
+    "architecture": "arm64",
+    "node": "26.7.0",
+    "npm": "11.19.0",
+    "reference": "Py-Enigma 1.0.2"
+  },
+  "previousM3Evidence": "../2026-09-30-luna-aim32-enigma/summary.json",
+  "sourceReportSha256": "164acf7e30f13ada56ec36a64a0ad6b741a06074f6e51b3b0298a7935d91f321",
+  "sourcePayloadSha256": {
+    "m4-version-manifest.json": "5839848aec7a75e6517cb5e2db6522da8063c576d95c063e0df73042bdf1f637",
+    "m4-token-cost.json": "7fcfefbd702593806a62b6963c6adbc05bb5aec4a13087b4c5d1bf1f53d14bc0"
+  },
+  "publicEvidenceSha256": {
+    "benchmark.json": "c87df859b3162b8a534633255d50dbd99a74bfcdf7dd41527a0c518d666ec4b3",
+    "m4-candidate-validation.json": "fa9b23fb5c32be125160f109e62fa9573e4459b8667149a9e9ae1e6c8c2136f1",
+    "m4-cases.json": "2cc38c33e47d017464ca84fe5470650d2a594c888b04372edd45620eb8326cba",
+    "m4-known-answer-results.json": "47e8430c0dc0e19f19e671d7531f2d8670e1f8d69f4a797dcad5caacc9113745",
+    "m4-original-integrity.json": "5ef4873d773d62f4f865f7c29da554c2378940bde4b2747b55ced2d86e898219",
+    "m4-search-aim-impossible-1.json": "1b422300f17a5a42472bb37ba385afe4b7a99a8c1f5407e125ebdcb7762f2584",
+    "m4-search-aim-multiple-1.json": "ff0a634a73b5740dc6d7367fe1fd67b899ff329f9b7a2b7183a4027f45e31d6b",
+    "m4-search-aim-none-1.json": "563b1e72964f59908428ffbe301aa9cb74733b8efb7cd4ad5cc2a0c5eda602d5",
+    "m4-search-aim-offset-auto-1.json": "af5148ef0019656b2ed3937377ffb32375d7bc923aeaa3f378ee8b19459d401e",
+    "m4-search-aim-offset-known-1.json": "88a0a8157495d98467abb639712ceda1820ae63df959ea87961acd0e52bb2b1a",
+    "m4-search-aim-pairs-0-1.json": "1b141b38c248d05cf8d94f7a2a1852853454115c3396640345dadda172340268",
+    "m4-search-aim-pairs-0-2.json": "1caff6dbbee9e4cc1c703cf4490b8d540820af4195491c62be83dd8e5d134bcb",
+    "m4-search-aim-pairs-0-3.json": "177a43bd58d13e9116efdc201b680acbcce77ed4f34a99b9a43e4dda9acd07d7",
+    "m4-search-aim-pairs-0-4.json": "174ae269c7acae2ae59f8f363a8f32c91c18681a16fb69ef187782d91a2c54c0",
+    "m4-search-aim-pairs-0-cancel.json": "ff2b9ddcc24df7e608553ba5e17a31623ba536b213cfc14770cde804604e8065",
+    "m4-search-aim-pairs-1-1.json": "85ce211aeb2089bd8e05f4f8a0c8cf20fb703141f0157be9f9375b7503d69a63",
+    "m4-search-aim-pairs-10-1.json": "1dd31e6d8eedd44ea9d15e3c5cc9c1392f7055e7f2eb85f4a5e018ea6a5c331d",
+    "m4-search-aim-pairs-3-1.json": "2e612afb83e3fb7854578f18a684b89119c2a1874fb9a2112c87b86f0283bcfe",
+    "m4-search-aim-pairs-6-1.json": "92925f43313a0c6fb8bf91e924ef529038a9410d885766f201a6d029cb61036f",
+    "m4-search-aim-step-crib-1.json": "904b8a9121723f843e733a49713acdd2e4c900006b09908ef9d4e3a6b7d2c8ed",
+    "m4-search-naked-impossible-1.json": "effea4f01ef3df78232a713ba8a44ad73cc51e03b4169bcbd57994dcb1dd20e1",
+    "m4-search-naked-multiple-1.json": "5351ea8c12621d4a3f6c6b2ca3e88724ee2fcafa31aa175bac6d0e186dada301",
+    "m4-search-naked-none-1.json": "e400a8954964169644fa738cf1cea5983563c6b0190536d09e6eb0b26dda7557",
+    "m4-search-naked-offset-auto-1.json": "91bf3d417d109c6a17102ebb5cba215171d9db4b67c847ef19ae1d31c36c4d5e",
+    "m4-search-naked-offset-known-1.json": "7d26a48fa74f3e8dda6957dd92d7ea7c0a7784b471f8f020fefd80e388369d79",
+    "m4-search-naked-pairs-0-1.json": "36f5222d0be887760fd0d6b286308a115259911b5a684f398714cd667b0d2738",
+    "m4-search-naked-pairs-0-2.json": "7c4c9b8038f2e4d0f9cca257682be224484463a2b99ef60b1ab859c6e4eeba32",
+    "m4-search-naked-pairs-0-3.json": "22a48f5550dc4c9a14cbe539f27917bb8bd991ca22248d58c777f4f00efb9647",
+    "m4-search-naked-pairs-0-4.json": "a2d934c8d595dbaf7c9002bf4b5ab8804059d0343450aab8af38075ad77ee60d",
+    "m4-search-naked-pairs-0-cancel.json": "dacd4d83b165050555ab6e213c24efeeebd9d3d325d04f907fc9f0e6aea1a99f",
+    "m4-search-naked-pairs-1-1.json": "5fa22e507e1d31fcc01361833baf4ba1f38b2d78e23e64a4e37111c48a592454",
+    "m4-search-naked-pairs-10-1.json": "2b13ec11b3ee2445d908b3833609d165569859a353499ebc1bc8676e426416a0",
+    "m4-search-naked-pairs-3-1.json": "87033d6ac0b5f4a91719681edc60b61c5e3a2d12a8b56ae02f0c05901e98c735",
+    "m4-search-naked-pairs-6-1.json": "8fb74016ecfa712d317afff3b7c92bb512a593f8bd6740e3d6d42422b339fece",
+    "m4-search-naked-step-crib-1.json": "dbcfec7111b5ed3222bedb08bb4c0aa5068a996253152199d6768dd4237f7ad8",
+    "m4-testplan.md": "4277e2521ee16bc8de0e8d8f6c5fc50e4115f9ecbcdcbf5344a336856140e307",
+    "m4-token-cost.json": "68612fdf5e43cbf0944e166d2a9e1e8bd999df4c83e48e6c2eb609e2b747d51e",
+    "m4-vectors.json": "68a62caf1f92bcd6622b63cff0a2309a72f9db16710b61068d4af603abe306ce",
+    "m4-version-manifest.json": "cb564993f838d3a2bd020e3f7d897ef7e03eddb642a3d9af0ab01a0edb1727a0",
+    "search-results.md": "4ef0f9e5f321a1dba44ad5b16e4e5ea38988a10bef5b0ec95077d0fddfea305f",
+    "verify-reference.py": "ded11ba235d039df611fdfef1184f1ec663050fee1d439ed47e5a1eb7b9deb25",
+    "../2026-09-30-luna-aim32-enigma/vectors.json": "759cf9d0d158950248ccb6db7f59bc0dd3a24fd6e06ee6cbf5e3212381c377ed",
+    "../2026-09-30-luna-aim32-enigma/enigma-prd.md": "59ab6a803dd15e40a68f20f56b2ffcc081b3a0ac60aec873f5c93c2d733a9493"
+  },
+  "privacyNote": "Absolute workstation paths removed from manifest; session identifiers and log paths removed from token record. Other copied inputs/results retain original bytes. Product code and private chat logs excluded."
+}

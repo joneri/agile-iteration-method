@@ -25,7 +25,7 @@ For a public-skill first run, use this sequence:
 1. run `/aim calibrate-repo` when repository knowledge is not calibrated
 2. after calibration, run `/aim configure-agents` when project-specific
    specialists are wanted but `aim.roles.yaml` or native role files are absent
-3. run `/aim start "EPIC: ..."` when the repository is ready
+3. run `/aim start "<desired outcome>"` when the repository is ready
 
 The repository remains the AIM source of truth.
 The local Codex skill is the launcher and runtime guide for the Codex command surface.

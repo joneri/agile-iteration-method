@@ -1,0 +1,23 @@
+{
+  "id": "pairs-3",
+  "variant": "aim",
+  "run": 1,
+  "elapsedSeconds": 0.259,
+  "status": "complete",
+  "checked": 17576,
+  "checkedAlignments": 17576,
+  "skippedByBudget": 0,
+  "returned": 1,
+  "totalCandidates": 1,
+  "sourceStartPresent": true,
+  "message": "En crib-förenlig kandidat hittades. Den är inte bevisad som den enda möjliga fullständiga nyckeln.",
+  "candidates": [
+    {
+      "positions": "AZZM",
+      "placement": 0,
+      "plugboard": "AV BS",
+      "preview": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDGONTINUEEISTAFTERSUNRISE",
+      "unresolved": 3
+    }
+  ]
+}

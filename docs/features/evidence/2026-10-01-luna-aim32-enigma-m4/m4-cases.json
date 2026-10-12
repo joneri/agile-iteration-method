@@ -1,0 +1,203 @@
+{
+  "source": "Py-Enigma 1.0.2",
+  "cases": [
+    {
+      "id": "pairs-0",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "MCKL",
+      "plugboard": "",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "SOTOMMUJNFQDVMVIDEYFFMEKWVUTSZNDVQPKRVIDELVYRSBYUXLCOZFDKZTCPJ",
+      "crib": "THEFLEETWILLMEETATDAWNNEARTHEH",
+      "placement": 0,
+      "sourceOffset": 0
+    },
+    {
+      "id": "pairs-1",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "QZMM",
+      "plugboard": "AV",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "GLJBRKRRXDDQQRCAGQJNRHWFKJEAHSFVYMDGPMDYCRYEBCMXKBBARCTLQGAHAV",
+      "crib": "THEFLEETWILLMEETATDAWNNEARTHEH",
+      "placement": 0,
+      "sourceOffset": 0
+    },
+    {
+      "id": "pairs-3",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "AZZM",
+      "plugboard": "AV BS CG",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "JJQAESYVIBZIOMLHHNFWJBJFLUJXNKSUERTHONWQKRSMZILGEVMEQVTWTYLWMX",
+      "crib": "THEFLEETWILLMEETATDAWNNEARTHEHAR",
+      "placement": 0,
+      "sourceOffset": 0
+    },
+    {
+      "id": "pairs-6",
+      "rotors": [
+        "Gamma",
+        "VIII",
+        "VII",
+        "VI"
+      ],
+      "reflector": "C-Thin",
+      "rings": "MCKD",
+      "start": "MMZZ",
+      "plugboard": "AV BS CG DL FU HZ",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "FJQPMDSIMHAKWOLGBMPJMSPKSFWMBAWEMXAPIVDCOITALIIFXXZBCLLMZHTOAF",
+      "crib": "THEFLEETWILLMEETATDAWNNEARTHEHARBORA",
+      "placement": 0,
+      "sourceOffset": 0
+    },
+    {
+      "id": "pairs-10",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "AMAZ",
+      "plugboard": "AV BS CG DL FU HZ IN KM OW RX",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "CNIBQTNFNFNREKPUJCPPKKMIPUDCQCZEMQAUBIIYFRPFNJBHTRKZCWQMJUANRK",
+      "crib": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONT",
+      "placement": 0,
+      "sourceOffset": 0
+    },
+    {
+      "id": "offset-known",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "QZMM",
+      "plugboard": "AV BS CG",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "CLJSRKRRXDDQQRGACQJNRHWFKJEAHBFVAMDCPMQYGRYESGMXQSSARGTTQCAHKV",
+      "crib": "TWILLMEETATDAWNNEARTHEHARBORANDCONTIN",
+      "placement": 7,
+      "sourceOffset": 7
+    },
+    {
+      "id": "offset-auto",
+      "rotors": [
+        "Gamma",
+        "VI",
+        "VIII",
+        "II"
+      ],
+      "reflector": "C-Thin",
+      "rings": "BULR",
+      "start": "QZMM",
+      "plugboard": "AV BS CG",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "CLJSRKRRXDDQQRGACQJNRHWFKJEAHBFVAMDCPMQYGRYESGMXQSSARGTTQCAHKV",
+      "crib": "TWILLMEETATDAWNNEARTHEHARBORANDCONTIN",
+      "placement": null,
+      "sourceOffset": 7
+    },
+    {
+      "id": "step-crib",
+      "rotors": [
+        "Beta",
+        "VI",
+        "I",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "ABCD",
+      "start": "AZZM",
+      "plugboard": "AV BS",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "JJQAESYVIBZIOMLHHNFWJBJFLUJXNKSUERTHONOQKRSMZILCEVMEQVTWTYLWMX",
+      "crib": "ILLMEETATDAWNNEARTHEHARBORANDCONTINU",
+      "placement": 9,
+      "sourceOffset": 9
+    },
+    {
+      "id": "multiple",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "MCKL",
+      "plugboard": "",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "SOTOMMUJNFQDVMVIDEYFFMEKWVUTSZNDVQPKRVIDELVYRSBYUXLCOZFDKZTCPJ",
+      "crib": "THE",
+      "placement": 0,
+      "sourceOffset": 0
+    },
+    {
+      "id": "impossible",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "MCKL",
+      "plugboard": "",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "SOTOMMUJNFQDVMVIDEYFFMEKWVUTSZNDVQPKRVIDELVYRSBYUXLCOZFDKZTCPJ",
+      "crib": "SO",
+      "placement": 0,
+      "sourceOffset": 0
+    },
+    {
+      "id": "none",
+      "rotors": [
+        "Beta",
+        "VII",
+        "IV",
+        "V"
+      ],
+      "reflector": "B-Thin",
+      "rings": "QELP",
+      "start": "MCKL",
+      "plugboard": "",
+      "plaintext": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "ciphertext": "SOTOMMUJNFQDVMVIDEYFFMEKWVUTSZNDVQPKRVIDELVYRSBYUXLCOZFDKZTCPJ",
+      "crib": "HKLRTXVNDUEHZYCWFBFPNGLGSIIMZGKAHSHYIPPG",
+      "placement": 0,
+      "sourceOffset": 0
+    }
+  ]
+}

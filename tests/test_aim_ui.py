@@ -1084,19 +1084,20 @@ class AimUiTests(unittest.TestCase):
         self.assertEqual(board["health"], "partial")
         self.assertTrue(any("conflicts with lastGatePassed" in item for item in board["warnings"]))
 
-    def test_delivery_flow_is_default_and_secondary_views_use_tabs(self) -> None:
+    def test_stories_are_default_and_delivery_control_remains_available(self) -> None:
         markup = (REPO_ROOT / "aim-ui/index.html").read_text(encoding="utf-8")
         script = (REPO_ROOT / "aim-ui/app.js").read_text(encoding="utf-8")
         styles = (REPO_ROOT / "aim-ui/styles.css").read_text(encoding="utf-8")
 
-        self.assertIn('data-view="board" aria-pressed="true">Delivery flow', markup)
+        self.assertIn('data-view="stories" aria-pressed="true">User Stories', markup)
+        self.assertIn('data-view="board" aria-pressed="false">Delivery control', markup)
         self.assertIn('data-view="portfolio" aria-pressed="false">Portfolio', markup)
         self.assertIn('data-view="data" aria-pressed="false">AIM DATA', markup)
         self.assertIn('data-view="people" aria-pressed="false">People &amp; agents', markup)
         self.assertIn('id="epic-rail" hidden', markup)
         self.assertIn('id="data-panel" aria-labelledby="data-title" hidden', markup)
         self.assertIn('id="people-panel" aria-labelledby="people-title" hidden', markup)
-        self.assertIn('view: "board"', script)
+        self.assertIn('view: "stories"', script)
         self.assertIn("renderData(board)", script)
         self.assertNotIn("board-view-button", script)
         self.assertNotIn("closed-view-button", script)
@@ -2597,7 +2598,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/board", timeout=3) as response:
                     payload = json.load(response)
                     self.assertTrue(payload["source"]["readOnly"])
-                    self.assertEqual(payload["product"]["version"], "3.2.1")
+                    self.assertEqual(payload["product"]["version"], "4.0.0")
                     self.assertTrue(payload["product"]["capturedAtLaunch"])
                     self.assertIn(
                         payload["backgroundControl"]["status"],
@@ -2617,7 +2618,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/health", timeout=3) as response:
                     health = json.load(response)
                     self.assertEqual(health["protocolVersion"], "1.3")
-                    self.assertEqual(health["productVersion"], "3.2.1")
+                    self.assertEqual(health["productVersion"], "4.0.0")
                     self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST",
                                   headers={"Origin": url})

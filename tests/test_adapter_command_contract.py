@@ -28,7 +28,8 @@ def read_contract_surface(relative: str) -> str:
     routing reference still makes the corresponding parity assertions fail.
     """
     content = (REPO_ROOT / relative).read_text(encoding="utf-8")
-    if relative == "adapters/portable/agile-iteration-method/SKILL.md":
+    if relative in {"adapters/portable/agile-iteration-method/SKILL.md",
+                    "adapters/codex/agile-iteration-method/SKILL.md"}:
         for name in ("skill-command-runtime.md", "skill-completion.md"):
             if f"`references/{name}`" in content:
                 content += "\n" + (REPO_ROOT / "docs/workflow" / name).read_text(encoding="utf-8")
@@ -259,7 +260,7 @@ class AdapterCommandContractTests(unittest.TestCase):
             REPO_ROOT / "adapters/portable/agile-iteration-method/SKILL.md"
         ).read_text(encoding="utf-8")
         self.assertNotIn("Final Epic acceptance always remains yours", portable)
-        self.assertIn("a prepared, explicitly scoped Epic disposition", portable)
+        self.assertIn("Gate E acceptance and whole-Epic closure remain separate decisions", portable)
 
         for relative in (
             ".github/prompts/start-aim.prompt.md",
@@ -383,7 +384,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "3.2.1")
+        self.assertEqual(version, "4.0.0")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",

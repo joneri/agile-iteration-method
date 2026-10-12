@@ -1,0 +1,23 @@
+{
+  "id": "pairs-6",
+  "variant": "aim",
+  "run": 1,
+  "elapsedSeconds": 0.276,
+  "status": "complete",
+  "checked": 17576,
+  "checkedAlignments": 17576,
+  "skippedByBudget": 0,
+  "returned": 1,
+  "totalCandidates": 1,
+  "sourceStartPresent": true,
+  "message": "En crib-förenlig kandidat hittades. Den är inte bevisad som den enda möjliga fullständiga nyckeln.",
+  "candidates": [
+    {
+      "positions": "MMZZ",
+      "placement": 0,
+      "plugboard": "AV BS CG DL FU HZ",
+      "preview": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "unresolved": 1
+    }
+  ]
+}

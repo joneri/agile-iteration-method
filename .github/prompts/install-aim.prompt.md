@@ -35,7 +35,7 @@ Actions:
 4. Return a short checklist and tell me the next command to run.
 
 After setup, suggest:
-- `/aim start "EPIC: ..."`
+- `/aim start "..."`
 - `/aim help`
 - `/aim upgrade`
 - `/aim status`

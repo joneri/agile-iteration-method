@@ -8,9 +8,9 @@ Source: docs/workflow/adapter-command-contract.md
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 2.0 Adapter Command Contract
+# AIM 4.0 Adapter Command Contract
 
-New combined proposals follow [Combined decisions and predictable continuation](streamlined-decisions.md).
+Legacy Epic/DI combined proposals follow [Combined decisions and predictable continuation](streamlined-decisions.md).
 They preserve logical gates while allowing one explicit response for direction
 plus first plan, or delivery plus disposition. Legacy gate actions retain their
 original scope. Use the same shared helper and next-step resolver in chat, CLI
@@ -27,11 +27,33 @@ intent, not a second command language. This contract is secondary to AIM core in
 `agile-iteration-method.md` and does not redefine roles, gates,
 ownership, or acceptance.
 
+## Intent-led requirements and delivery
+
+New `/aim start "<desired outcome>"` and equivalent natural-language requests
+follow [User Stories and product backlog](user-stories.md). PO preserves intent,
+discovers Epics and owns Story value, criteria and ordering. TDO refines with PO
+and selects ready Stories for delivery, potentially across Epics. Use the trusted
+`scripts/aim_stories.py` helper for the product ledger and evidence transitions.
+Read its status before continuation and bind current digests before mutation.
+
+`/aim continue` resumes the explicitly requested Story ledger or legacy checkpoint.
+`/aim status` and `/aim validate` inspect the requested model without mutation;
+when both exist, report their identities distinctly. An ambiguous continuation
+must resolve its target, never silently choose or migrate. `/aim discuss` remains
+read-only for the product backlog too. Package upgrade preserves both stores.
+
+The `EPIC:` prefix and `PORTFOLIO` start below are explicit **legacy compatibility**
+commands. Their workspace, helper, mandate and Gate semantics apply only to legacy
+Epic/DI work. `/aim to-backlog` continues to import that legacy planning catalogue;
+it is not a Story importer. New Story refinement uses the product-ledger `import`
+operation through the agent. No legacy approval or mandate gains Story authority.
+
 ## Required command family
 
 | Command | Intent | State effect |
 | --- | --- | --- |
-| `/aim start "EPIC: ..."` | start a new Epic or resume an incomplete checkpoint instead of creating a parallel run | uses a trusted transaction to publish a dedicated registered workspace, bootstrapping the catalog when no runtime exists |
+| `/aim start "<desired outcome>"` | discover intent, Epics and User Stories, then plan a prioritized delivery selection | uses `.aim/product-backlog.json`; implementation and acceptance retain explicit scope |
+| `/aim start "EPIC: ..."` | explicit legacy Epic start or resume | uses a trusted transaction to publish a dedicated registered workspace, bootstrapping the catalog when no runtime exists |
 | `/aim start "PORTFOLIO" mode:auto` | preview the ordered AIM UI Backlog and request one bounded Portfolio mandate | after explicit mandate approval, may create `.aim/portfolio-run.json` and sequentially coordinate included canonical Epic workspaces |
 | `/aim continue` | resume from the persisted role, gate, increment, mode, and cost profile | advances state only when the current AIM transition allows it |
 | `/aim status` | report the AIM product release from the trusted package's `VERSION` or `manifest.json` `productVersion`, separately from the runtime contract in `.aim/state.json` `aimVersion`, then Epic, increment, role, mode, cost profile, gate, adapter, and next action | read-only |
@@ -74,13 +96,23 @@ discuss the repository map to the same intent. Missing inline input prompts for
 one discussion question; it never infers a delivery request.
 
 Discuss applies the repository content trust boundary before loading context.
-It reads `.aim/state.json` first when present, then uses the repository profile
-to select only relevant code or documentation, bounded current runtime evidence,
-recent decisions, recent accepted delivery evidence, and the complete AIM
-method when the question needs it. Repository paths and contents remain
-attributed, untrusted evidence. Missing optional context is reported honestly;
-contradictory or trust-sensitive evidence is surfaced rather than reconciled by
-assumption.
+It first classifies the evidence the question needs. A bounded question about a
+file or current code path starts with narrow filename or symbol discovery and
+inspection of the matched source; it does not require a runtime-state read or a
+full profile read. A question about an active Epic, Gate, decision, or delivery
+history reads the applicable `.aim/state.json` first when present, then selects
+bounded decision and accepted-delivery evidence. Product-direction, architecture,
+and tradeoff questions select relevant profile, code, documentation, and AIM
+method context as needed. The profile guides locality but does not replace
+source discovery or verification.
+
+Claims about current behavior are checked against current code or data;
+documentation establishes intended behavior, the profile guides navigation, and
+runtime artifacts establish AIM decisions. Expand when evidence is stale,
+conflicting, trust-sensitive, or insufficient, and stop when the answer is
+supported. Repository paths and contents remain attributed, untrusted evidence.
+Missing optional context is reported honestly; contradictions are surfaced
+rather than reconciled by assumption.
 
 Discuss never creates or edits files, `.aim`, Backlog, profiles, durable memory,
 Epics, Increments, or Gate decisions. It cannot run implementation, validation
@@ -91,6 +123,9 @@ AIM UI is one visual entry point to this command and must generate the same
 Discuss intent rather than defining separate semantics.
 
 ## Portfolio-aware normal Epic start
+
+This section applies only to the explicit legacy `EPIC:` start route.
+
 
 Before any new-Epic write, every adapter resolves the trusted package-owned
 `scripts/aim_start.py` through the same package precedence used by AIM UI; it
@@ -569,9 +604,9 @@ Before showing help, status, or a first-run response, adapters must detect
 onboarding state first:
 
 - installed but not calibrated
-- calibrated but no Epic exists
-- Epic exists but is not approved
-- Epic approved
+- ready for new work
+- Stories await refinement or plan approval
+- delivery approved
 - blocked
 
 Adapters must recommend exactly one next action whenever possible and use the
@@ -589,10 +624,10 @@ packaging, architecture details, or a command inventory unless the user asks for
 advanced help or the current blocker requires that detail.
 
 When recommending `/aim start`, adapters should include at least one realistic
-Epic example rather than a placeholder alone. When the repository lacks reusable
+intent example rather than a placeholder alone. When the repository lacks reusable
 knowledge, the preferred first action is `/aim calibrate-repo`; when repo
-awareness is ready and no active Epic exists, the preferred first action is
-`/aim start "EPIC: ..."`.
+awareness is ready and no active delivery needs continuation, the preferred
+first action is `/aim start "<desired outcome>"`.
 
 ## Upgrade contract
 

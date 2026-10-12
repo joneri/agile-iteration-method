@@ -1,0 +1,22 @@
+{
+  "aim": {
+    "checked": 32,
+    "valid": 32,
+    "previewMatches": 32,
+    "invalid": []
+  },
+  "naked": {
+    "checked": 23,
+    "valid": 22,
+    "previewMatches": 23,
+    "invalid": [
+      {
+        "case": "step-crib",
+        "positions": "AZZV",
+        "offset": 9,
+        "valid": false,
+        "previewMatches": true
+      }
+    ]
+  }
+}

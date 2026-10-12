@@ -1,34 +1,43 @@
-# Epic: instant value on first visit
+# EPIC-ONBOARD: A useful first session
 
-## Purpose
-A new user should understand the product and get value within 60 seconds, without reading docs or setting up anything.
+Intent: INT-START — Help customers get started and recover from setup problems
+Outcome class: Product
+Owner: PO
 
-## User value
-As a new user, I can try the product immediately and I know what to do next.
+## Outcome
 
-## Scope
-- Add a “try with sample data” flow
-- Make empty states explain what is missing and how to fix it
-- Ensure the first-run experience is fast and predictable
+A new customer can understand the product and obtain useful first-session value
+without private setup knowledge. PO preserves this outcome while independently
+prioritizing the Stories that contribute to it.
+
+## User perspectives and Stories
+
+- [US-SAMPLE](../user-stories/example-user-story.md): a new customer tries a sample
+  workspace before entering real data.
+- US-NEXT-STEP (draft): a returning customer understands which setup step remains.
+
+A related support need belongs to EPIC-SUPPORT:
+[US-DIAGNOSE](../user-stories/support-story.md). Stories from both Epics can share
+a delivery selection. Do not treat that selection or an optional Sprint as the
+requirement layer.
 
 ## Non-goals
-- No full redesign
-- No new analytics initiative
-- No multi-language support in this epic
 
-## Acceptance criteria
-- First visit: user sees a meaningful screen within 2 seconds
-- “Try with sample data” creates a usable workspace and takes the user to the main view
-- Empty state has: what it is, why it’s empty, one primary action
-- The sample workspace can be removed in one action
+- A full product redesign
+- A new analytics initiative
+- Multi-language support
 
-## Trust and safety rules
-- Never show scary numbers or warnings on first visit unless something is truly broken
-- If something fails, show a clear recovery path, not a dead end
+## Epic acceptance criteria
 
-## Evidence required
-- Screen recording (or screenshots) of first visit
-- Notes on what is shown in each empty state
+- AC-1: A representative first-session journey reaches useful sample behavior
+  without private instructions.
+- AC-2: The customer can distinguish sample data from real data and remove the
+  sample workspace safely.
+- AC-3: Returning after an interruption exposes the next meaningful setup action.
 
-## Related docs
-- docs/features/onboarding.md
+## Closure evidence
+
+Each in-scope Story has accepted criterion evidence. PO additionally verifies
+the complete first-session and return journeys against these Epic criteria and
+checks counterevidence. Finishing US-SAMPLE alone cannot close this Epic while
+the return journey is unproven. Epic closure needs a separate scoped user decision.

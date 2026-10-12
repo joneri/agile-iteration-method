@@ -1,0 +1,30 @@
+{
+  "id": "offset-auto",
+  "variant": "aim",
+  "run": 1,
+  "elapsedSeconds": 2.213,
+  "status": "complete",
+  "checked": 17576,
+  "checkedAlignments": 123032,
+  "skippedByBudget": 0,
+  "returned": 2,
+  "totalCandidates": 2,
+  "sourceStartPresent": true,
+  "message": "2 crib-förenliga kandidatinställningar hittades. En crib kan lämna flera möjliga startlägen och paneler. 19 placeringar hoppades över eftersom en crib-bokstav skulle krypteras till sig själv.",
+  "candidates": [
+    {
+      "positions": "QANM",
+      "placement": 7,
+      "plugboard": "AV BS CG",
+      "preview": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "unresolved": 2
+    },
+    {
+      "positions": "QZMM",
+      "placement": 7,
+      "plugboard": "AV BS CG",
+      "preview": "THEFLEETWILLMEETATDAWNNEARTHEHARBORANDCONTINUEEASTAFTERSUNRISE",
+      "unresolved": 2
+    }
+  ]
+}

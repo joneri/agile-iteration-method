@@ -1,0 +1,11 @@
+AIM 4 campaign logo generation provenance
+Tool: built-in image_gen (not CLI)
+Date: 2026-10-12
+Use case: logo-brand
+Reference1: ../images/aim-2-hero-dark.png (canonical original A)
+Reference2: ../images/aim-3-autonomy-logo.png (established campaign composition)
+These references remain unchanged in the repository and are not ZIP members.
+Selected direction: original A identity, expressive numeral4.
+
+Final prompt:
+Use case: logo-brand. Edit the provided AIM brand references into one horizontal AIM 4 campaign lockup on a genuinely transparent background. CRITICAL IDENTITY INVARIANT: preserve the ORIGINAL folded A emblem exactly as in the references: rounded triangular loop, golden yellow/orange upper apex and both upper diagonal strokes, blue horizontal base across the bottom, cyan-blue lower right foot, blue lower left foot, open dark/transparent triangular centre. Preserve that exact silhouette, ribbon overlap order, original colour placement and proportions; do not redesign, rotate, reinterpret or reverse the A. Reference1 is the canonical original, reference2 shows the original A next to AIM and a version numeral. Keep the AIM letterforms from reference2 but render letters flat dark navy #06142d for a light website. CHANGE THE VERSION NUMERAL: replace the3 with a large, beautifully crafted numeral4, clearly legible as4, formed of flowing blue and cyan ribbons with a slender lime and amber accent tracking its edges, subtly suggesting several story paths converging. Be bold only in the numeral4; the emblem and AIM wordmark stay established. No .0 needed. Exact lettering: AIM 4. Emblem left, AIM centre, expressive4 right, balanced on one baseline. Remove all background scenery, grid, orbiting dots, tagline and extra words. True transparent background, ample clear space, tightly composed landscape logo. No extra A emblem, no mockups. Output one polished production-ready logo.

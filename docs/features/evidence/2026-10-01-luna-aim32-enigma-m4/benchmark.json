@@ -1,0 +1,37 @@
+{
+  "scope": "Same complete M4 pairs-0 search; 17,576 moving starts and two valid candidates in both apps. Run 1 warmup excluded; runs 2-4 alternated. Node/V8 app runtime, not agent time.",
+  "timeoutSeconds": 20,
+  "variants": {
+    "aim": {
+      "warmupSeconds": 0.241,
+      "measuredSeconds": [
+        0.274,
+        0.241,
+        0.242
+      ],
+      "medianSeconds": 0.242,
+      "rawResults": [
+        "m4-search-aim-pairs-0-1.json",
+        "m4-search-aim-pairs-0-2.json",
+        "m4-search-aim-pairs-0-3.json",
+        "m4-search-aim-pairs-0-4.json"
+      ]
+    },
+    "naked": {
+      "warmupSeconds": 14.129,
+      "measuredSeconds": [
+        13.477,
+        13.276,
+        13.486
+      ],
+      "medianSeconds": 13.477,
+      "rawResults": [
+        "m4-search-naked-pairs-0-1.json",
+        "m4-search-naked-pairs-0-2.json",
+        "m4-search-naked-pairs-0-3.json",
+        "m4-search-naked-pairs-0-4.json"
+      ]
+    }
+  },
+  "runtimeRatioNakedOverAim": 55.6900826446281
+}

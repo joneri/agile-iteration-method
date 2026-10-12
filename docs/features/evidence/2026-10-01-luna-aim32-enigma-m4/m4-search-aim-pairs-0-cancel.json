@@ -1,0 +1,15 @@
+{
+  "id": "pairs-0",
+  "variant": "aim",
+  "run": null,
+  "elapsedSeconds": 0.066,
+  "status": "incomplete",
+  "checked": 0,
+  "checkedAlignments": 0,
+  "skippedByBudget": 0,
+  "returned": 0,
+  "totalCandidates": 0,
+  "sourceStartPresent": false,
+  "message": "Sökningen avbröts. Visade kandidater är bekräftade crib-träffar, men resten av sökrymden har inte kontrollerats.",
+  "candidates": []
+}

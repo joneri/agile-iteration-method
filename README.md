@@ -1,8 +1,8 @@
-# Agile Iteration Method (AIM) 3.2
+# Agile Iteration Method (AIM) 4.0
 
-![AIM 3.2.1 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 4.0.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
-AIM is a delivery method for AI-assisted software work. You describe the outcome. AIM plans one useful increment, builds it, reviews it, validates it, and asks for the decisions that still belong to you. **Same model. Stronger software:** in our Enigma pair, GPT-6 Luna (high) with AIM 3.2 scored **93.5/100 versus 49.8/100** with the same PRD and predefined KPI weights. [See the case and public evidence](docs/features/aim-3.2-enigma-case.md).
+AIM is a delivery method for AI-assisted software work. Start with an intent. PO discovers Epics and User Stories, then AIM plans a prioritized selection, builds it, reviews it and validates every Story before user acceptance. **Better software. From the same AI:** we tested GPT-6 Luna building the same web app with and without AIM, first at initial delivery and again after the same major upgrade. AIM 3.2 delivered the stronger product in both tests: **93.5 versus 49.8**, then **93.5 versus 62.8**, out of 100 against predefined criteria. [See the case and public evidence](docs/features/aim-3.2-enigma-case.md).
 
 Switch between Codex, Claude Code, and GitHub Copilot while keeping your project knowledge and saved AIM work. Discuss ideas with your repository before starting implementation. Each tool needs AIM and access to the same current repository and saved state.
 
@@ -83,40 +83,39 @@ Reflect verifies historical lessons against current repository evidence, preserv
 Then start with an outcome, not a task list:
 
 ```text
-/aim start "EPIC: Make checkout recovery clear and reliable when payment confirmation is delayed"
+/aim start "Make checkout recovery clear and reliable when payment confirmation is delayed"
 ```
 
 Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning.
 
-## From product direction to a moving Portfolio
+## From intent to accepted User Stories
 
-After calibration, launch `/aim ui` from the authoritative Codex task. The Control room displays its exact AIM launch release and shows whether Connected Codex control or View-only mode is active. Then follow one visible route:
 ```text
-/aim calibrate-repo -> /aim ui -> /aim discuss [question]
--> /aim to-backlog -> review Roadmap -> /aim start "PORTFOLIO" mode:auto
--> approve one bounded mandate -> monitor the run—or step away
+Intent → Epics → User Stories → delivery selection → working increment
 ```
 
-Discuss uses relevant durable repository knowledge and delivery evidence but does not create work. `/aim to-backlog` is the explicit promotion into planned Roadmap candidates. After mandate approval, AIM runs every included Epic through its complete role loop and returns control when the approved boundary no longer covers the next decision.
+Describe what you want to achieve. PO discovers Epics and owns Stories, criteria and priority. TDO refines with PO and plans a selection that can include Stories from different Epics.
+
+Run `/aim ui` to follow **User Stories as moving cards**, with Epic context and individual evidence. A Sprint is an optional timebox. An increment is the working result of delivered Stories.
+
+Existing Epic/Increment work keeps its original state and approvals in Delivery control. Nothing is automatically migrated or relabelled. See [the requirements model](docs/workflow/user-stories.md).
 
 ## How AIM works
 
 ```text
-PO -> TDO -> Dev -> Reviewer -> TDO -> PO
+PO → TDO → Dev → Reviewer → TDO → PO
 ```
 
-- **PO** owns the outcome and acceptance.
-- **TDO** chooses the next end-to-end Done Increment and validates delivery.
-- **Dev** implements the approved increment.
-- **Reviewer** looks for correctness problems, regressions, and risk.
+- **PO** owns intent, Epic outcomes, Stories, criteria and priority.
+- **TDO** refines with PO, plans the Story selection and validates delivery.
+- **Dev** implements the approved selection.
+- **Reviewer** checks current behavior, regressions and Story evidence.
 
-Gate A approves the Epic. Gate B approves the next increment. Gate E accepts the result. Review and technical validation happen before acceptance.
+Gate A confirms direction and requirements. Gate B approves the selection and plan. Gate E accepts verified Stories. Epic closure is a separate decision supported by whole-outcome evidence.
 
-`Strict` asks for direction and first-plan approval together, then delivery acceptance with a prepared Epic disposition. `Auto` continues while the approved direction remains clear, but still stops for risk, scope changes, and final Epic acceptance.
+`Strict` asks for plan approval and acceptance. `Auto` progresses within existing authority, returning for changed scope, risk or final acceptance.
 
 ## Repository-aware, not repository-heavy
-
-AIM keeps four things separate:
 
 | Surface | Purpose |
 | --- | --- |
@@ -141,28 +140,29 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v3.2.0
+## What is new in v4.0.0
 
-**Fewer approvals. Clearer next steps. AIM 3.2 brings the decisions together so you can focus on the work.** In a straightforward Strict Epic with one Increment, approve the direction and plan together, then accept the verified delivery and Epic closure together.
+**User needs have their own identity and lifecycle.** AIM 4.0 introduces a PO-owned product backlog and Story board, separating requirements from plans and delivered increments.
 
-- **One clear start:** see the Epic goal, first Increment, remaining work and risks before approving both direction and plan.
-- **One clear finish:** accept the Increment and a verified Epic closure together, or accept only the Increment and keep the Epic open.
-- **AIM finds the next step:** when work remains, accepted continuation leads to planning the next Increment. Strict still asks before implementing that plan.
-- **Predictable Continue:** chat, CLI and UI share the next-step resolver. A saved pause or blocker takes precedence over a change request; an approved scope split stays approved.
-- **Reliable registration:** interrupted or repeated approval calls preserve committed acceptance without duplicate decisions. Earlier gate approvals retain their original meaning.
+- **Intent-led start:** describe a problem; PO discovers one or more Epics.
+- **Explicit Stories:** preserve each user's need, benefit, priority and criteria.
+- **Cross-Epic selection:** deliver the highest-value ready Stories together.
+- **Evidence per Story:** review, validation and acceptance remain traceable.
+- **Separate Epic closure:** a completed delivery does not silently close a goal.
+- **Preserved history:** existing Epic/Increment runs keep their original meaning.
 
-Project-specific skills, adaptive agent allocation, review tied to current code and reusable repository knowledge remain part of AIM. Review and whole-Epic verification still apply. See [combined decisions](docs/workflow/streamlined-decisions.md). Full agent-runtime savings have not yet been measured.
+See the [Story contract](docs/workflow/user-stories.md). The measurements below describe the earlier AIM 3.2 study; they are not a benchmark of 4.0.
 
-**A convincing win in the completed Enigma pair:** Luna + AIM 3.2 passed **123/123 independent Py-Enigma vectors versus 1/123** and found valid candidates in **9/9 new positive search cases versus 0/9**. The AIM app also had stronger visual finish and code structure. Two specific complete searches ran **40.9× and 14.5× faster**; these are application-runtime results. Luna alone built sooner (14:52 versus 52:59). [Case, method and evidence](docs/features/aim-3.2-enigma-case.md) · [Earlier resource-efficiency results](docs/features/aim-3.1-evaluation.md).
+**The advantage held through both tests:** at initial delivery, Luna + AIM solved **9/9 new search challenges versus 0/9** and passed **123/123 machine checks versus 1/123**. After the upgrade, it solved **8/8 versus 1/8**, while both passed **243/243 checks**. Every checked AIM result after the upgrade was valid (32/32); Luna alone returned one false match. The same complete upgraded search ran **55.7× faster** (0.242 versus 13.477 s, application runtime). [Both tests, method and evidence](docs/features/aim-3.2-enigma-case.md) · [Original test in detail](docs/features/aim-3.2-enigma-m3-case.md) · [Earlier resource-efficiency results](docs/features/aim-3.1-evaluation.md).
 
-![AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
+![Earlier AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
 
 See the [AIM UI Beta guide](docs/product/aim-ui.md), or launch it with `/aim ui`.
-AIM Reflect still **goes beyond memory cleanup for repository work** through verified provenance and user-owned promotion. The AIM runtime contract remains 2.0; product, runtime, installer, and schema versions stay separate.
+AIM Reflect still **goes beyond memory cleanup for repository work** through verified provenance and user-owned promotion. The preserved legacy runtime contract remains 2.0; the new product-backlog schema is 1.0. Product, runtime, installer and schema versions stay separate.
 
 ## Safety
 
-- one main AIM thread owns `.aim/state.json` and gate transitions
+- one main AIM thread owns the product backlog, legacy state and gate transitions
 - native specialists never accept work or create parallel AIM runtimes
 - existing files are collision-protected
 - apply is rollback-protected and idempotent
@@ -176,4 +176,4 @@ AIM Reflect still **goes beyond memory cleanup for repository work** through ver
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product version: **v3.2.1**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product version: **v4.0.0**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).

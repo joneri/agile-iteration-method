@@ -21,15 +21,15 @@ After that: <one short sentence>.
 
 State routing:
 - installed but not calibrated: `/aim calibrate-repo`
-- calibrated but no Epic exists: `/aim start "EPIC: <desired outcome>"`
-- Epic exists but is not approved: review Gate A and reply `approve` or `change: ...`
-- Epic approved: `/aim continue`
+- ready for new work: `/aim start "<desired outcome>"`
+- Stories await planning: review Gate A and reply `approve` or `change: ...`
+- delivery approved: `/aim continue`
 - blocked: resolve the named blocking issue
 
 When recommending `/aim start`, include a realistic example such as:
 
 ```text
-/aim start "EPIC: Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
+/aim start "Improve the onboarding flow so a new homeowner can list a room and understand the next review step"
 ```
 
 Do not lead with internal file paths, runtime locations, adapter packaging,
@@ -38,3 +38,6 @@ or a blocker requires that detail.
 
 If command-file routing is unavailable, state that limitation and handle the
 same `/aim help` intent in ordinary Claude chat.
+
+For new work, follow `docs/workflow/user-stories.md`: PO discovers Epics and
+User Stories from intent, and TDO proposes the delivery selection.

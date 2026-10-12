@@ -235,13 +235,13 @@ class PublicSkillTests(unittest.TestCase):
         )
         positions = [skill.index(heading) for heading in ordered_headings]
         self.assertEqual(positions, sorted(positions))
-        self.assertIn("PO -> TDO -> Dev -> Reviewer -> TDO -> PO", skill)
+        self.assertIn("PO -> TDO -> Dev -> Reviewer -> TDO -> PO", skill.replace("→", "->"))
         self.assertIn("1. Install AIM", skill)
         self.assertIn("2. Calibrate the repository", skill)
         self.assertIn("3. Start with an outcome", skill)
         self.assertIn("default `Strict` experience", skill)
-        self.assertIn("The disposition remains yours in", skill)
-        self.assertIn("a bounded Portfolio Auto mandate carries that authority", skill)
+        self.assertIn("Epic closure requires a separate assessment and decision", skill)
+        self.assertIn("invent final acceptance", skill)
         for marker in ("å", "ä", "ö", "Använd när", "Vad gör"):
             with self.subTest(marker=marker):
                 self.assertNotIn(marker, skill)
@@ -249,7 +249,7 @@ class PublicSkillTests(unittest.TestCase):
     def test_complete_command_guide_explains_every_supported_intent(self) -> None:
         skill = render_package(REPO_ROOT)[Path("references/skill-user-guide.md")].decode("utf-8")
         commands = (
-            '/aim start "EPIC: ..."',
+            '/aim start "<desired outcome>"',
             "/aim continue",
             "/aim status",
             "/aim validate",
@@ -331,7 +331,7 @@ class PublicSkillTests(unittest.TestCase):
             parsed["canonicalCommand"],
             "source-only adaptive installer; not executable from the portable package",
         )
-        expected_command = '/aim start "EPIC: <desired outcome>"'
+        expected_command = '/aim start "<desired outcome>"'
         for adapter in ("codex", "claude", "copilot"):
             with self.subTest(adapter=adapter):
                 self.assertEqual(
@@ -421,8 +421,8 @@ class PublicSkillTests(unittest.TestCase):
         scenarios = {
             "help": ("/aim help", "Recommended next action"),
             "not calibrated": ("Installed but not calibrated", "/aim calibrate-repo"),
-            "calibrated without Epic": ("Calibrated but no Epic exists", "/aim start"),
-            "Epic not approved": ("Epic exists but is not approved", "Gate A"),
+            "ready without requirements": ("Ready for new work", "/aim start"),
+            "Stories await planning": ("Stories await", "Gate A"),
             "approved Epic needs increment": ("TDO", "Done Increment", "Gate B"),
             "Dev completed and review required": ("Gate C", "Reviewer", "Gate D"),
             "scope change": ("scope expansion beyond Gate B", "escalation"),

@@ -25,7 +25,7 @@ Actions:
 5. End with the exact next command to run:
    - `/aim calibrate-repo`
    - `/aim continue`
-   - `/aim start "EPIC: ..."`
+   - `/aim start "..."`
 
 Make clear that upgrading AIM is different from continuing an Epic:
 - upgrade refreshes installed AIM surfaces

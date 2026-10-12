@@ -1,0 +1,12 @@
+{
+  "id": "pairs-0",
+  "variant": "naked",
+  "run": null,
+  "elapsedSeconds": 0.02,
+  "status": "cancelled",
+  "checked": 21,
+  "returned": 0,
+  "sourceStartPresent": false,
+  "message": "cancelled",
+  "candidates": []
+}

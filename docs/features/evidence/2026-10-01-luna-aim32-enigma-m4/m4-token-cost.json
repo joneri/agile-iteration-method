@@ -1,0 +1,84 @@
+{
+  "pricing": {
+    "credits_per_million": {
+      "uncached_input": 2.5,
+      "cached_input": 0.25,
+      "output": 12.5
+    },
+    "api_usd_per_million": {
+      "uncached_input": 0.1,
+      "cached_input": 0.01,
+      "output": 0.5
+    }
+  },
+  "sessions": {
+    "aim_main": {
+      "records": 138,
+      "first_token_timestamp": "2026-10-01T07:32:32.778Z",
+      "last_token_timestamp": "2026-10-01T08:02:35.847Z",
+      "input_tokens": 17484791,
+      "cached_input_tokens": 16998912,
+      "uncached_input_tokens": 485879,
+      "output_tokens": 68677,
+      "reasoning_output_tokens_included_in_output": 29161,
+      "credits_per_million": 6.322888,
+      "api_usd_per_million": 0.25291552,
+      "compactions": [
+        "2026-10-01T07:37:57.621Z"
+      ]
+    },
+    "aim_reviewer": {
+      "records": 9,
+      "first_token_timestamp": "2026-10-01T07:46:29.992Z",
+      "last_token_timestamp": "2026-10-01T07:52:34.348Z",
+      "input_tokens": 1093598,
+      "cached_input_tokens": 967424,
+      "uncached_input_tokens": 126174,
+      "output_tokens": 4418,
+      "reasoning_output_tokens_included_in_output": 3365,
+      "credits_per_million": 0.612516,
+      "api_usd_per_million": 0.02450064,
+      "compactions": []
+    },
+    "naked_main": {
+      "records": 119,
+      "first_token_timestamp": "2026-10-01T11:27:21.955Z",
+      "last_token_timestamp": "2026-10-01T11:47:03.353Z",
+      "input_tokens": 16495082,
+      "cached_input_tokens": 15977088,
+      "uncached_input_tokens": 517994,
+      "output_tokens": 46766,
+      "reasoning_output_tokens_included_in_output": 20943,
+      "credits_per_million": 5.873832,
+      "api_usd_per_million": 0.23495328,
+      "compactions": [
+        "2026-10-01T11:43:19.131Z"
+      ]
+    }
+  },
+  "aim": {
+    "records": 147,
+    "input_tokens": 18578389,
+    "cached_input_tokens": 17966336,
+    "uncached_input_tokens": 612053,
+    "output_tokens": 73095,
+    "reasoning_output_tokens_included_in_output": 32526,
+    "credits_per_million": 6.935404,
+    "api_usd_per_million": 0.27741616
+  },
+  "naked": {
+    "records": 119,
+    "input_tokens": 16495082,
+    "cached_input_tokens": 15977088,
+    "uncached_input_tokens": 517994,
+    "output_tokens": 46766,
+    "reasoning_output_tokens_included_in_output": 20943,
+    "credits_per_million": 5.873832,
+    "api_usd_per_million": 0.23495328
+  },
+  "comparison": {
+    "aim_to_naked_credits_ratio": 1.1807290368536247,
+    "extra_aim_credits": 1.061572,
+    "extra_aim_api_usd_equivalent": 0.042462880000000036
+  }
+}

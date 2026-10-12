@@ -69,7 +69,7 @@ This is an optional local reuse layer.
 It may narrow startup or remember local preferences, but it does not replace or override a shared `aim.profile.yaml`.
 Stable repo-awareness must never use a path under `.aim/`.
 
-When both exist:
+For startup, resume, and questions about active AIM work, when both exist:
 
 1. read active `.aim/state.json`
 2. read Enterprise external memory when Enterprise external mode is active
@@ -77,6 +77,10 @@ When both exist:
 4. apply compatible Personal profile hints
 5. inspect directly affected files
 6. expand only when evidence, risk, or the active command requires it
+
+For a bounded repository-fact discussion, discover and inspect the relevant
+source first. Read profile locality hints only when useful and runtime state
+only if the question or discovered evidence makes it relevant.
 
 ## Generic root files
 
@@ -152,7 +156,7 @@ Do not preload the full workflow family.
 
 ### Codex
 
-- Start with `/aim start "EPIC: ..."` when the AIM skill is installed.
+- Start with `/aim start "<desired outcome>"` when the AIM skill is installed.
 - Explicit plain-language AIM intent remains a fallback.
 - The skill loads active state, `aim.profile.yaml`, and only the required workflow docs.
 

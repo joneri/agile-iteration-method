@@ -6,12 +6,15 @@ import hashlib
 import json
 import shutil
 import struct
+import zipfile
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
 
 PUBLIC_ORIGIN = "https://joneri.github.io/agile-iteration-method/"
 SCHEMA_RELATIVE_PATHS = (
+    "schemas/aim-product-backlog.schema.json",
     "schemas/aim-repo-profile.schema.json",
     "schemas/aim-personal-hints.schema.json",
     "schemas/aim-runtime-state.schema.json",
@@ -38,11 +41,19 @@ PUBLIC_BRAND_IMAGE_SHA256 = (
     "75b1a6a632f311a377e4d6d3f70c75e1445d3183637c9eaa43524566fc5991c5"
 )
 VERSIONLESS_BRAND_ARTWORK_MARKER = "Brand artwork version policy: versionless"
-PUBLIC_CAMPAIGN_IMAGE_PATH = "github-pages/assets/images/aim-3-autonomy-logo.png"
-PUBLIC_CAMPAIGN_IMAGE_SIZE = (1730, 909)
+PUBLIC_CAMPAIGN_IMAGE_PATH = "github-pages/assets/images/aim-4-logo.png"
+PUBLIC_CAMPAIGN_IMAGE_SIZE = (2172, 724)
 PUBLIC_CAMPAIGN_IMAGE_SHA256 = (
-    "c736fa884cd92a75f528f435143a65289849cae0789395181c6d69079ee35505"
+    "5e1cd88bed8e78b5dfe08238b24c9006d1dac9a85fcd56779c30eef6c97ff3d7"
 )
+PUBLIC_SITE_ASSETS = ("github-pages/assets/aim4-site.css", "github-pages/assets/aim4-site.js")
+PUBLIC_AGENT_INSTRUCTIONS_PATH = "github-pages/assets/aim-install-agent.txt"
+PUBLIC_PRESS_KIT_PATH = "github-pages/assets/press/aim-4-press-kit.zip"
+PUBLIC_PRESS_TEXT_PATH = "github-pages/assets/press/aim-4-press-kit.txt"
+PUBLIC_PRESS_MEMBERS = {
+    "aim-4-logo.png", "aim-4-press-kit.txt", "launch-copy-en.txt",
+    "launch-copy-sv.txt", "logo-generation.txt", "LICENSE-DOCS.txt",
+}
 PUBLIC_FEATURE_IMAGE_PATH = "github-pages/assets/images/aim-ui-beta-control-room.png"
 PUBLIC_FEATURE_IMAGE_SIZE = (1729, 910)
 PUBLIC_DEMO_VIDEO_PATH = "github-pages/assets/video/portfolio-auto-demo.mp4"
@@ -60,6 +71,82 @@ PUBLIC_ADAPTIVE_SOURCE_COMMAND = (
 
 class PublicationError(ValueError):
     """Raised when source or assembled public artifacts violate the contract."""
+
+
+class _Homepage(HTMLParser):
+    """Read navigable publication assets without executing page content."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.ids: set[str] = set()
+        self.links: set[str] = set()
+        self.assets: set[str] = set()
+        self.hero_images: list[dict[str, str]] = []
+        self.in_hero = False
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attributes = dict(attrs)
+        if attributes.get("id"):
+            self.ids.add(attributes["id"])
+        if tag == "header" and "hero-intro" in attributes.get("class", "").split():
+            self.in_hero = True
+        if tag == "a" and attributes.get("href"):
+            self.links.add(attributes["href"])
+        if tag == "script" and attributes.get("src"):
+            self.assets.add(attributes["src"])
+        if tag == "link" and attributes.get("rel") == "stylesheet":
+            self.assets.add(attributes.get("href", ""))
+        if tag == "img" and self.in_hero:
+            self.hero_images.append(attributes)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "header":
+            self.in_hero = False
+
+
+def _homepage_contract(root: Path) -> None:
+    index = _read_text(root / "index.html")
+    page = _Homepage()
+    page.feed(index)
+    if not any(image.get("src") == PUBLIC_CAMPAIGN_IMAGE_PATH
+               and image.get("alt") == "AIM 4 — Agile Iteration Method"
+               for image in page.hero_images):
+        raise PublicationError("index.html: AIM 4 campaign artwork and accessible hero label are required")
+    for identifier in ("ui", "method", "start", "evidence", "press", "story-demo", "story-detail"):
+        if identifier not in page.ids:
+            raise PublicationError(f"index.html: required AIM 4 section is missing: {identifier}")
+    for href in page.links:
+        if href.startswith("#") and href[1:] not in page.ids:
+            raise PublicationError(f"index.html: broken section link: {href}")
+    for path in PUBLIC_SITE_ASSETS:
+        if path not in page.assets or not (root / path).is_file():
+            raise PublicationError(f"index.html: required interactive site asset is missing: {path}")
+    for path in (PUBLIC_CAMPAIGN_IMAGE_PATH, PUBLIC_PRESS_KIT_PATH, PUBLIC_PRESS_TEXT_PATH,
+                 PUBLIC_AGENT_INSTRUCTIONS_PATH):
+        if path not in page.links or not (root / path).is_file():
+            raise PublicationError(f"index.html: required press download is missing: {path}")
+    for marker in ("Start with people.", "Deliver what matters.", "Illustrative walkthrough",
+                   "Simplified board", "Moving a card never accepts work.", "Historical · AIM 3.2"):
+        if marker not in index:
+            raise PublicationError(f"index.html: AIM 4 semantic boundary is missing: {marker}")
+
+
+def _press_contract(root: Path, *, artifact: bool = False) -> None:
+    try:
+        with zipfile.ZipFile(root / PUBLIC_PRESS_KIT_PATH) as archive:
+            if set(archive.namelist()) != PUBLIC_PRESS_MEMBERS or archive.testzip():
+                raise PublicationError("AIM 4 press kit has missing, unexpected or corrupt members")
+            for member in PUBLIC_PRESS_MEMBERS:
+                if member == "aim-4-logo.png":
+                    source = root / PUBLIC_CAMPAIGN_IMAGE_PATH
+                elif member == "LICENSE-DOCS.txt":
+                    source = root / (PUBLIC_LICENSE_PATH if artifact else "docs/LICENSE-DOCS")
+                else:
+                    source = root / "github-pages/assets/press" / member
+                if not source.is_file() or archive.read(member) != source.read_bytes():
+                    raise PublicationError(f"AIM 4 press kit does not match its source: {member}")
+    except (OSError, zipfile.BadZipFile) as exc:
+        raise PublicationError(f"AIM 4 press kit cannot be read: {exc}") from exc
 
 
 def expected_schema_id(relative_path: str) -> str:
@@ -141,20 +228,8 @@ def validate_source(repo_root: Path) -> None:
         raise PublicationError(
             f"index.html: brand-version must match VERSION ({product_version})"
         )
-    expected_campaign = (
-        f'src="{PUBLIC_CAMPAIGN_IMAGE_PATH}" alt="AIM 3 creative autonomy logo"'
-    )
-    if expected_campaign not in index:
-        raise PublicationError(
-            "index.html: AIM 3 campaign artwork and accessible label are required"
-        )
-    hero_start = index.find('<header class="hero-intro"')
-    hero_end = index.find("</header>", hero_start)
-    campaign_position = index.find(expected_campaign, hero_start)
-    if not hero_start <= campaign_position < hero_end:
-        raise PublicationError(
-            "index.html: AIM 3 campaign artwork must be visible in the hero"
-        )
+    _homepage_contract(repo_root)
+    _press_contract(repo_root)
     campaign_image = repo_root / PUBLIC_CAMPAIGN_IMAGE_PATH
     if _png_dimensions(campaign_image) != PUBLIC_CAMPAIGN_IMAGE_SIZE:
         raise PublicationError(f"{PUBLIC_CAMPAIGN_IMAGE_PATH}: unexpected dimensions")
@@ -252,33 +327,13 @@ def validate_source(repo_root: Path) -> None:
             index,
             "docs/product/aim-ui.md",
         ),
-        "index.html Portfolio Auto headline": (
-            index,
-            "Put the backlog in motion.",
-        ),
-        "index.html AIM UI Beta artwork": (
-            index,
-            PUBLIC_FEATURE_IMAGE_PATH,
-        ),
-        "index.html Portfolio Auto demo video": (
+        "index.html historical Portfolio Auto demo": (
             index,
             PUBLIC_DEMO_VIDEO_PATH,
         ),
-        "index.html Portfolio Auto demo poster": (
+        "index.html historical demo poster": (
             index,
             PUBLIC_DEMO_POSTER_PATH,
-        ),
-        "index.html Reflect positioning": (
-            index,
-            "AIM Reflect goes beyond memory cleanup for repository work",
-        ),
-        "index.html audience-context integrity": (
-            index,
-            "Writes for the reader, not its own chat",
-        ),
-        "index.html AIM 3 campaign logo alt text": (
-            index,
-            'alt="AIM 3 creative autonomy logo"',
         ),
         "install.sh fail-closed notice": (
             install_script,
@@ -334,6 +389,7 @@ def release_manifest(root: Path) -> dict[str, Any]:
         "aimVersion": product_version(root),
         "runtimeContractVersion": "2.0",
         "runtimeStateSchemaVersion": runtime_state_schema_version(root),
+        "productBacklogVersion": "1.0",
         "installerManifestVersion": installer_manifest_version(root),
         "aimUi": {
             "version": "1",
@@ -348,6 +404,8 @@ def release_manifest(root: Path) -> dict[str, Any]:
             "readOnly": True,
             "multiEpic": True,
             "cardActions": True,
+            "defaultBoard": "user-stories",
+            "crossEpicDeliveries": True,
             "portfolioAutoDemo": PUBLIC_DEMO_VIDEO_PATH,
         },
         "artifactType": "github-pages",
@@ -457,6 +515,8 @@ def validate_artifact(output_root: Path) -> None:
                 f"{relative_path}: brand artwork differs from the approved "
                 "versionless source"
             )
+    _homepage_contract(output_root)
+    _press_contract(output_root, artifact=True)
     campaign_image = output_root / PUBLIC_CAMPAIGN_IMAGE_PATH
     if _png_dimensions(campaign_image) != PUBLIC_CAMPAIGN_IMAGE_SIZE:
         raise PublicationError(f"{PUBLIC_CAMPAIGN_IMAGE_PATH}: unexpected dimensions")

@@ -7,6 +7,13 @@ Source: docs/workflow/skill-completion.md
 
 # Post-Gate-E PO disposition
 
+This document specifies the preserved **legacy Epic/DI workspace protocol**.
+For AIM 4.0 Story work, use [User Stories and product backlog](user-stories.md):
+accept verified Stories with actual user authority, then evaluate each Epic for
+a separate closure decision. The legacy helpers and mandates below cannot
+accept new Stories or convert historical Increments into requirements.
+
+
 New combined proposals follow [Combined decisions and predictable continuation](streamlined-decisions.md).
 They preserve logical gates while allowing one explicit response for direction
 plus first plan, or delivery plus disposition. Legacy gate actions retain their

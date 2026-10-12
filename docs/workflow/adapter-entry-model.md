@@ -126,10 +126,10 @@ not be presented as the primary user-facing AIM entrypoint:
 
 A new user should be told exactly one first action per adapter:
 
-- **Codex**: install/enable the user AIM skill, then run `/aim start "EPIC: ..."`
+- **Codex**: install/enable the user AIM skill, then run `/aim start "<desired outcome>"`
   or explicitly select `$agile-iteration-method` with the same intent.
-- **GitHub Copilot**: load the project AIM skill, then request `/aim start "EPIC: ..."`.
-- **Claude**: load the project AIM skill, then run `/aim start "EPIC: ..."`.
+- **GitHub Copilot**: load the project AIM skill, then request `/aim start "<desired outcome>"`.
+- **Claude**: load the project AIM skill, then run `/aim start "<desired outcome>"`.
 
 After starting, the next commands are the same everywhere: `/aim continue`,
 `/aim validate`, `/aim help`.
@@ -140,7 +140,7 @@ If the preferred native surface is unavailable, the supported fallback is **expl
 AIM intent** that preserves the canonical behavior model:
 
 ```text
-EPIC: <desired outcome>
+Start AIM from this intent: <desired outcome>
 Mode: Strict
 Cost profile: Cost Control
 ```
@@ -148,7 +148,7 @@ Cost profile: Cost Control
 or:
 
 ```text
-EPIC: <desired outcome>
+Start AIM from this intent: <desired outcome>
 Mode: Auto
 Cost profile: Standard
 ```

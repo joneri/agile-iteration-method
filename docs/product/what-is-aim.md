@@ -24,13 +24,18 @@ The point is to produce work that remains aligned, inspectable, and ready for a 
 
 AIM is not tied to a language, framework, platform, or repository type.
 
-An Epic describes the outcome.
-The next increment must deliver a useful part of that outcome end to end.
+Start with an intent. PO discovers Epics and writes User Stories for the
+relevant user perspectives, owning their value, criteria and priority. TDO
+refines with PO and plans a selection that can include several Epics. The
+integrated working result of accepted Stories is an increment. A Sprint is an
+optional timebox, not a requirement.
 This keeps the work centered on user value instead of a growing task list or whatever implementation detail was mentioned most recently.
 
 ## Never Lose Track
 
-AIM records the active Epic, increment, role, and gate in durable runtime state.
+AIM records intent, Epics, Stories, delivery selections and acceptance evidence
+in a durable product backlog. Existing Epic/Increment runtimes remain readable
+and resumable under their original protocol.
 
 That gives each session a clear answer to:
 
@@ -46,9 +51,9 @@ When work resumes, AIM uses that state before rebuilding context from scratch.
 
 AIM assumes generated work may be incomplete or wrong.
 
-Before an increment is accepted:
+Before a Story selection is accepted:
 
-1. implementation is checked against the approved increment
+1. implementation is checked against the selected Story criteria
 2. a Reviewer looks for correctness issues, edge cases, and risk
 3. technical validation checks the delivered result
 4. failed evidence sends the work back for correction
@@ -82,7 +87,7 @@ AIM separates persistent repository knowledge from active runtime context:
 
 - shared facts: `aim.profile.yaml`
 - personal hints: user-level storage outside the repository
-- active Epic state: `.aim/`
+- active requirements and delivery state: `.aim/`
 - deep operational guidance: loaded only when relevant
 
 This allows future sessions to reuse what matters without carrying the whole repository manual all the time.
@@ -137,7 +142,7 @@ It is a design that creates repeated opportunities to discover and repair them.
 
 People own:
 
-- the Epic and desired outcome
+- intent, Epic outcomes and User Story priority
 - acceptance boundaries
 - scope changes
 - trust-sensitive decisions
@@ -159,18 +164,14 @@ AIM does not replace:
 
 It provides a disciplined way for AI work to operate inside those systems.
 
-## Why AIM 2.0
+## Why AIM 4.0
 
-AIM 2.0 is a structural rebuild, not a pile of patches.
+Requirements and delivery have different jobs. User Stories make distinct needs
+visible and independently prioritizable. Epics explain the larger outcomes;
+delivery plans select the next useful work; increments capture the result.
 
-It preserves the proven role and gate loop while separating workflow, repo awareness, runtime state, installation, and adapters.
-
-For users, that means:
-
-- easier onboarding
-- guided installation
-- safer repository boundaries
-- clearer platform support
-- persistent repo knowledge
-- less repeated context loading
-- a product that can grow without mixing every concern together
+This gives users a board of actual needs, planning across Epics and acceptance
+that remains traceable to individual criteria. The established engineering,
+repository knowledge, review and validation practices support that model.
+Existing work keeps its original identity and history. See the
+[Story contract](../workflow/user-stories.md).

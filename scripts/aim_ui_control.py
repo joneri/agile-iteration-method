@@ -48,6 +48,7 @@ PAYLOAD_FILES = (
     "scripts/aim_codex_bridge.py",
     "scripts/aim_runtime_contract.py",
     "scripts/aim_decisions.py",
+    "scripts/aim_stories.py",
     "scripts/aim_runtime_lock.py",
     "scripts/aim_actions.py",
     "aim-ui/index.html",

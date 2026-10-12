@@ -2,6 +2,10 @@
 
 Skill id: `aim-reviewer-engineering`. Bundled with AIM; applies to review.
 
+- Verify each selected Story against its own acceptance criteria and inspect
+  integration across the delivery. Identify affected Story IDs in findings;
+  a finished delivery does not prove its parent Epics are complete.
+
 - Derive counterexamples from the binding requirements before adopting the
   implementation's examples. Verify public behavior and independent known
   answers; round trips and tests mirroring the code are insufficient alone.

@@ -1,19 +1,15 @@
 # Your First AIM Journey
 
-This path takes a new user from installation to the first accepted increment.
-
-You do not need to read the full AIM method first.
-
-A clear single-Increment Epic normally needs two decisions in Strict: approve
-the direction and first plan together, then accept the delivery and its prepared
-Epic disposition. Chat and terminal-based agents work without AIM UI. Continue
-explains and resumes authorized work; it does not approve a waiting decision.
-See [combined decisions](../workflow/streamlined-decisions.md).
+This path takes a new user from an intent to accepted User Stories. You do not
+need to supply an Epic or read the full method first. PO discovers outcomes and
+needs; TDO refines and plans delivery with PO. Chat and terminal agents are
+complete paths without AIM UI. Continue resumes authorized work; it does not
+approve a waiting decision. See [User Stories](../workflow/user-stories.md).
 
 ## 1. Install AIM
 
 AIM has two maintained installation paths. Both deliver the complete AIM
-method; the public Agent Skill is not AIM Lite and is generated from the same
+method; the public Agent Skill is full AIM, not AIM Lite and is generated from the same
 canonical sources as the adaptive installation.
 
 ### Public Agent Skill
@@ -114,53 +110,19 @@ manually.
 
 If your platform does not expose slash commands, ask AIM to verify and refine repo awareness for the repository.
 
-## Shape and run a Portfolio
+## Follow the Story board
 
-After calibration, AIM can reuse verified repository knowledge across sessions
-and load the runtime, decisions, accepted delivery evidence, code, and docs that
-matter to the current question. It does not keep every repository byte in one
-prompt or treat old history as automatic truth.
+Run `/aim ui` to open the local control room. User Stories are the moving cards;
+each shows its Epic context. A delivery can select Stories from different Epics.
+The browser reflects saved evidence and cannot accept work itself.
 
-Start the control room from the authoritative Codex task for this repository:
+Use `/aim discuss "Which users and outcomes should we consider?"` for read-only
+exploration before starting. To turn the idea into requirements and delivery,
+use `/aim start "<desired outcome>"` as described below.
 
-```text
-/aim ui
-```
-
-That launch connects eligible Start and Approve actions to the same Codex task
-when Codex uses ChatGPT-managed usage. AIM UI shows **Codex connected** when the
-route is available and **View only** with setup instructions when it is not.
-The read-only board and reviewed handoff remain usable in either state.
-
-Use AIM Discuss to shape the product direction before creating work:
-
-```text
-/aim discuss "What outcomes belong in our next Roadmap?"
-```
-
-Discuss is analysis only. When the direction is ready, promote it explicitly:
-
-```text
-/aim to-backlog
-```
-
-Paste the reviewed Epics, include them in the same message, or use
-`/aim to-backlog from docs/product-plan.md` for one explicit source. AIM creates
-planned `INC-*` candidates. Review their order and scope in the Portfolio tab,
-then run:
-
-```text
-/aim start "PORTFOLIO" mode:auto
-```
-
-AIM freezes the eligible ordered snapshot and asks for one bounded Portfolio
-mandate. After approval, AIM runs every included Epic through the complete
-PO/TDO/Dev/Reviewer/TDO/PO loop without repeating decisions already covered by
-that mandate. Follow the movement in AIM UI—or step away.
-
-AIM returns control when scope changes, effects become unsafe, evidence is
-contradictory, concurrency conflicts, or an operator decision is required.
-`/aim continue` resumes the preserved checkpoint after the issue is resolved.
+Existing Roadmap, Portfolio and Epic/Increment runs remain available as legacy
+work. Their original commands and approvals remain valid for those records;
+they do not become User Stories automatically.
 
 ## 3. Remember Important Project Context
 
@@ -200,80 +162,52 @@ attention and gives one concrete `remember-repo`, `forget-repo`, reviewed edit,
 or Epic path. When no durable change is justified, Reflect says that no action
 is needed. You still decide whether to run or approve the proposed action.
 
-## 5. Start an Epic
+## 5. Start with intent
 
-Describe the outcome, not a list of files to edit.
-
-```text
-/aim start "EPIC: Make checkout recovery clear and reliable for users whose payment confirmation is delayed"
-```
-
-Choose:
-
-- **Strict** when you want explicit approval at each important gate
-- **Auto** when the direction is clear and you want AIM to continue between increments unless escalation is needed
-
-Start with Cost Control for narrow, reversible work.
-Use Standard or Deep when risk and uncertainty justify more context and verification.
-
-## 6. Review Gate A
-
-Gate A confirms the Epic.
-
-Check:
-
-- is the outcome clear?
-- are important non-goals visible?
-- is acceptance understandable?
-- are trust, migration, deployment, or user-facing risks identified?
-
-Approve when AIM is solving the right problem.
-Request a change when the framing is wrong.
-
-## 7. Approve the Next Increment
-
-AIM proposes one Done Increment at a time.
-
-A good increment:
-
-- delivers recognizable value
-- is small enough to review
-- includes the relevant implementation and verification
-- does not depend on several imaginary future increments before it makes sense
-
-In Strict mode, Gate B waits for approval.
-In Auto mode, AIM may continue when the approved Epic makes the next step unambiguous and no escalation condition is present.
-
-## 8. Build With Confidence
-
-AIM implements the increment, reviews it, validates it, and corrects blocking findings.
-
-At the final checkpoint you should see:
-
-- what changed
-- what was verified
-- what risks remain
-- whether the Epic is complete
-- what decision is needed
-
-You can approve, request a change, continue with another increment, or close the Epic.
-
-## A Good First Epic
-
-Prefer an outcome like:
+Describe the problem or desired result:
 
 ```text
-EPIC: Let a new contributor install the project and run its checks without private setup knowledge.
+/aim start "Make checkout recovery clear for customers and help support staff resolve delayed payment confirmations"
 ```
 
-Avoid a loose task pile like:
+PO identifies the relevant Epics and Stories for those different users. A
+customer may need a reliable payment status; a support specialist may need a
+safe way to find the delayed confirmation. These needs retain separate identity,
+priority and acceptance criteria even when delivered together.
 
-```text
-Update README, refactor setup script, maybe fix CI, add tests if needed.
-```
+Choose Strict for explicit plan approval and acceptance. Auto progresses within
+existing authorization and returns for scope changes, risks and final acceptance.
+Cost Control suits narrow reversible work; Standard or Deep provide more context
+and verification when warranted. None of these settings replaces user authority.
 
-The Epic gives AIM a destination.
-The increment gives AIM a controlled next step.
+## 6. Refine needs and choose the delivery
+
+PO owns Story value, criteria and ordering. TDO refines feasibility, dependencies
+and verification with PO, then proposes which ready Stories to implement next.
+A delivery can span Epics; a Story need not cover every aspect of its Epic.
+
+Check that the proposal names the selected Stories, their user needs, criteria,
+implementation boundaries, integration checks and remaining scope. Gate A
+confirms direction and requirements; Gate B approves the selection and plan.
+A clearly scoped decision may cover both.
+
+## 7. Build, review and validate
+
+Dev implements the approved selection. Reviewer examines current behavior and
+risks. TDO verifies evidence for every selected Story criterion and for the
+integrated result. Defects return for correction. The board shows these stages
+without pretending that elapsed time or a successful build proves acceptance.
+
+## 8. Accept Stories and assess Epics
+
+Review the demonstration, criterion evidence and limitations. Gate E accepts
+the named Story selection; the current helper requires every selected Story to
+be proven before accepting that delivery. Its working result is an increment.
+
+PO then separately assesses the Epic outcomes. Finishing the delivery can leave
+one or several Epics open. Closing an Epic requires its whole-outcome evidence
+and a separate scoped decision. A Sprint is an optional timebox and does not
+change these acceptance rules.
 
 ## Platform Starts
 
@@ -291,7 +225,7 @@ npx skills add joneri/agile-iteration-method \
 Then run:
 
 ```text
-/aim start "EPIC: ..."
+/aim start "<desired outcome>"
 ```
 
 ### GitHub Copilot
@@ -308,7 +242,7 @@ npx skills add joneri/agile-iteration-method \
 Then request:
 
 ```text
-/aim start "EPIC: ..."
+/aim start "<desired outcome>"
 ```
 
 ### Claude
@@ -322,11 +256,11 @@ npx skills add joneri/agile-iteration-method \
   --yes
 ```
 
-Run `/aim start "EPIC: ..."`. Legacy installed commands remain compatible. If
+Run `/aim start "<desired outcome>"`. Legacy installed commands remain compatible. If
 skill routing is unavailable, state:
 
 ```text
-EPIC: ...
+Start AIM from this intent: <desired outcome>
 Mode: Strict
 Cost profile: Standard
 ```

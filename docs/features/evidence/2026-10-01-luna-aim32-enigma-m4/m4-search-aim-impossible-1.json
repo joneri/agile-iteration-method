@@ -1,0 +1,15 @@
+{
+  "id": "impossible",
+  "variant": "aim",
+  "run": 1,
+  "elapsedSeconds": 0,
+  "status": "impossible",
+  "checked": 0,
+  "checkedAlignments": 0,
+  "skippedByBudget": 0,
+  "returned": 0,
+  "totalCandidates": 0,
+  "sourceStartPresent": false,
+  "message": "Cribben är omöjlig vid placering 0: bokstaven S skulle krypteras till sig själv.",
+  "candidates": []
+}
