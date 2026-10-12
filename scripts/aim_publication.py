@@ -47,6 +47,9 @@ PUBLIC_CAMPAIGN_IMAGE_SHA256 = (
     "5e1cd88bed8e78b5dfe08238b24c9006d1dac9a85fcd56779c30eef6c97ff3d7"
 )
 PUBLIC_SITE_ASSETS = ("github-pages/assets/aim4-site.css", "github-pages/assets/aim4-site.js")
+PUBLIC_PRODUCT_CAPTURES = (
+    "github-pages/assets/images/aim-control-board.png",
+)
 PUBLIC_AGENT_INSTRUCTIONS_PATH = "github-pages/assets/aim-install-agent.txt"
 PUBLIC_PRESS_KIT_PATH = "github-pages/assets/press/aim-4-press-kit.zip"
 PUBLIC_PRESS_TEXT_PATH = "github-pages/assets/press/aim-4-press-kit.txt"
@@ -81,40 +84,72 @@ class _Homepage(HTMLParser):
         self.ids: set[str] = set()
         self.links: set[str] = set()
         self.assets: set[str] = set()
-        self.hero_images: list[dict[str, str]] = []
-        self.in_hero = False
+        self.captures: list[dict[str, Any]] = []
+        self.current_capture: dict[str, Any] | None = None
+        self.in_caption = False
+        self.evidence_version: str | None = None
+        self.evidence_text = ""
+        self.evidence_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attributes = dict(attrs)
         if attributes.get("id"):
             self.ids.add(attributes["id"])
-        if tag == "header" and "hero-intro" in attributes.get("class", "").split():
-            self.in_hero = True
+        if attributes.get("id") == "evidence":
+            self.evidence_version = attributes.get("data-evidence-version")
+        if tag == "section":
+            if attributes.get("id") == "evidence":
+                self.evidence_depth = 1
+            elif self.evidence_depth:
+                self.evidence_depth += 1
+        if tag == "figure" and "data-product-capture" in attributes:
+            self.current_capture = {"kind": attributes["data-product-capture"], "images": [], "caption": ""}
+            self.captures.append(self.current_capture)
+        if tag == "figcaption":
+            self.in_caption = True
         if tag == "a" and attributes.get("href"):
             self.links.add(attributes["href"])
         if tag == "script" and attributes.get("src"):
             self.assets.add(attributes["src"])
         if tag == "link" and attributes.get("rel") == "stylesheet":
             self.assets.add(attributes.get("href", ""))
-        if tag == "img" and self.in_hero:
-            self.hero_images.append(attributes)
+        if tag == "img" and self.current_capture is not None:
+            self.current_capture["images"].append(attributes)
+
+    def handle_data(self, data: str) -> None:
+        if self.in_caption and self.current_capture is not None:
+            self.current_capture["caption"] += data
+        if self.evidence_depth:
+            self.evidence_text += data
 
     def handle_endtag(self, tag: str) -> None:
-        if tag == "header":
-            self.in_hero = False
+        if tag == "figure":
+            self.current_capture = None
+        if tag == "figcaption":
+            self.in_caption = False
+        if tag == "section" and self.evidence_depth:
+            self.evidence_depth -= 1
 
 
 def _homepage_contract(root: Path) -> None:
     index = _read_text(root / "index.html")
     page = _Homepage()
     page.feed(index)
-    if not any(image.get("src") == PUBLIC_CAMPAIGN_IMAGE_PATH
-               and image.get("alt") == "AIM 4 — Agile Iteration Method"
-               for image in page.hero_images):
-        raise PublicationError("index.html: AIM 4 campaign artwork and accessible hero label are required")
-    for identifier in ("ui", "method", "start", "evidence", "press", "story-demo", "story-detail"):
+    for identifier in ("ui", "method", "start", "evidence", "press"):
         if identifier not in page.ids:
             raise PublicationError(f"index.html: required AIM 4 section is missing: {identifier}")
+    for path in PUBLIC_PRODUCT_CAPTURES:
+        if not (root / path).is_file():
+            raise PublicationError(f"required AIM Control capture is missing: {path}")
+        _png_dimensions(root / path)
+        if not any(capture["kind"] == "example"
+                   and "example" in capture["caption"].lower()
+                   and any(image.get("src") == path and image.get("alt", "").strip()
+                           for image in capture["images"])
+                   for capture in page.captures):
+            raise PublicationError(f"index.html: product capture needs alt text and an example caption: {path}")
+    if page.evidence_version != "3.2" or "AIM 3.2" not in page.evidence_text:
+        raise PublicationError("index.html: comparison must identify the tested AIM version")
     for href in page.links:
         if href.startswith("#") and href[1:] not in page.ids:
             raise PublicationError(f"index.html: broken section link: {href}")
@@ -125,10 +160,6 @@ def _homepage_contract(root: Path) -> None:
                  PUBLIC_AGENT_INSTRUCTIONS_PATH):
         if path not in page.links or not (root / path).is_file():
             raise PublicationError(f"index.html: required press download is missing: {path}")
-    for marker in ("Start with people.", "Deliver what matters.", "Illustrative walkthrough",
-                   "Simplified board", "Moving a card never accepts work.", "Historical · AIM 3.2"):
-        if marker not in index:
-            raise PublicationError(f"index.html: AIM 4 semantic boundary is missing: {marker}")
 
 
 def _press_contract(root: Path, *, artifact: bool = False) -> None:

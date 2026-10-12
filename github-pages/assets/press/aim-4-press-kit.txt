@@ -21,7 +21,7 @@ A new customer wants to try sample data. A support specialist wants a useful fai
 
 FACTS
 Name: Agile Iteration Method (AIM)
-Product version in this source: 4.1.0
+Product version in this source: 4.1.1
 Creator: Jonas Eriksson
 Agent environments supported by the method: Codex, GitHub Copilot and Claude Code
 Local visual interface: AIM UI, Beta

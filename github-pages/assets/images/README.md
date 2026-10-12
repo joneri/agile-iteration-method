@@ -49,3 +49,23 @@ The downloadable `../press/aim-4-press-kit.zip` includes that same image,
 English and Swedish launch drafts, product facts, usage notes and the
 documentation licence. It is a reviewable press package, not a record of
 publication. No vector master is included.
+
+## AIM Control product capture
+
+- `aim-control-board.png`: the actual AIM Control 4.1.0 User Stories Kanban
+  board, captured at a 2160-pixel desktop browser width. All seven columns are
+  visible: Backlog, Ready, In progress, Review, Validation, Acceptance and Done.
+  The board contains six example booking Stories. Finding and booking are Done,
+  cancellation awaits acceptance, rescheduling/calendar are Ready and reminders
+  are in Backlog. The three active-work columns are empty at this checkpoint.
+
+Captured with Chromium/Playwright on 12 October 2026 from this repository's
+`aim-ui/` served by `scripts/aim_ui.py`. The isolated `booking-example` fixture
+uses the installed Story helper to create synthetic requirements, plan authority,
+review and acceptance records. Done cards illustrate state in the example;
+they do not assert real user acceptance or a completed customer product.
+The website explicitly labels the image as example data. The PNG is an unedited
+browser capture of the whole board element at twice CSS pixel density
+(4088 × 2150). No generated UI, annotations, retouching or private workspace
+content is used. The Delivery control and narrow Acceptance-column images from
+the earlier draft are no longer publication assets.

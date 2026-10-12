@@ -1,5 +1,19 @@
 # Changelog
 
+## 2026-10-12 - AIM website patch release v4.1.1
+
+- Explain how a product intent becomes planned, reviewed increments with repository-aware agents, Localities and project-specific skills.
+- Put copyable terminal and coding-agent installation instructions next to a prominent AIM logo.
+- Bring the bounded GPT-6 Luna / AIM 3.2 comparison near the top of the page, retaining its source and test conditions.
+- Show the real desktop AIM Control Kanban board with labelled example data and introduce code-aware discussion through AIM Discuss.
+- Simplify the page structure and improve keyboard, narrow-screen and no-JavaScript installation access; validate screenshot attribution and historical evidence during publication.
+
+Compatibility: runtime behavior, commands, schemas and installation contracts are unchanged. This is a website and publication-validation update. No migration is required; existing AIM installations continue to work.
+
+Validation: independent review, responsive browser checks, clipboard/fallback/keyboard/no-JavaScript checks and repository release gates. The full release gate runs against the tagged source before publication.
+
+Known limitations: the Kanban capture uses illustrative project data; open the full-size image for fine detail. The Enigma comparison is historical AIM 3.2 evidence, not a new benchmark or a guarantee for every model or project. AIM UI remains Beta.
+
 ## 2026-10-12 - AIM 4.1 feature release v4.1.0
 
 - Use the current product backlog across Delivery control, Discuss, Portfolio, AIM Data, People & agents and accepted delivery history.

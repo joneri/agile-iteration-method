@@ -21,6 +21,7 @@ from aim_publication import (  # noqa: E402
     PUBLIC_DEMO_POSTER_PATH,
     PUBLIC_DEMO_VIDEO_PATH,
     PUBLIC_ORIGIN,
+    PUBLIC_PRODUCT_CAPTURES,
     PUBLIC_PRESS_KIT_PATH,
     PUBLIC_PRESS_MEMBERS,
     PUBLIC_SITE_ASSETS,
@@ -69,7 +70,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "4.1.0")
+            self.assertEqual(manifest["aimVersion"], "4.1.1")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
@@ -139,23 +140,14 @@ class PublicationContractTests(unittest.TestCase):
         )
         self.assertIn("## Smarter output from the start", readme)
         self.assertIn("audience-context integrity", readme)
-        self.assertIn("People’s needs, prioritized independently.", index)
-        self.assertIn("Acceptance stays with you.", index)
-        self.assertIn('id="ui"', index)
+        for identifier in ("ui", "method", "evidence", "start"):
+            self.assertIn(f'id="{identifier}"', index)
         self.assertIn("docs/product/aim-ui.md", index)
         self.assertIn(f'src="{PUBLIC_CAMPAIGN_IMAGE_PATH}"', index)
-        self.assertIn('alt="AIM 4 — Agile Iteration Method"', index)
-        hero = index[index.index('<header class="hero-intro"') : index.index("</header>")]
-        self.assertIn('class="hero-brand"', hero)
-        self.assertIn(f'src="{PUBLIC_CAMPAIGN_IMAGE_PATH}"', hero)
-        self.assertIn('<span class="brand-version">4.1.0</span>', index)
-        self.assertIn("Start with people.", hero)
-        self.assertIn("Deliver what matters.", hero)
-        self.assertNotIn("Rebuilt for AIM 2", index)
-        self.assertIn("Illustrative walkthrough", index)
-        self.assertIn("Moving a card never accepts work.", index)
-        self.assertIn("Historical · AIM 3.2", index)
-        self.assertIn("They do not establish AIM 4’s performance.", index)
+        self.assertIn('<span class="brand-version">4.1.1</span>', index)
+        for capture in PUBLIC_PRODUCT_CAPTURES:
+            self.assertIn(f'src="{capture}"', index)
+        self.assertIn('data-evidence-version="3.2"', index)
         self.assertIn("github-pages/assets/images/aim-ui-beta-control-room.png", index)
         self.assertIn(PUBLIC_DEMO_VIDEO_PATH, index)
         self.assertIn(PUBLIC_DEMO_POSTER_PATH, index)
@@ -193,18 +185,20 @@ class PublicationContractTests(unittest.TestCase):
             with self.assertRaisesRegex(PublicationError, "press kit does not match|campaign artwork changed"):
                 validate_source(copied)
 
-    def test_hero_installation_has_terminal_and_self_contained_agent_routes(self) -> None:
+    def test_single_installation_has_terminal_and_self_contained_agent_routes(self) -> None:
         import html
         import re
         index = (REPO_ROOT / "index.html").read_text(encoding="utf-8")
-        hero = index[index.index('<header class="hero-intro"'):index.index("</header>")]
-        self.assertIn('id="terminal-install"', hero)
-        self.assertIn('id="agent-install"', hero)
-        self.assertIn('data-copy="hero-terminal-command"', hero)
-        self.assertIn('data-copy="hero-agent-prompt"', hero)
-        self.assertIn(PUBLIC_SKILL_INSTALL_COMMAND, hero)
+        setup = index[index.index('<header class="hero-intro"'):index.index("</header>")]
+        self.assertIn('id="terminal-install"', setup)
+        self.assertIn('id="agent-install"', setup)
+        self.assertIn('data-copy="terminal-command"', setup)
+        self.assertIn('data-copy="agent-prompt"', setup)
+        self.assertIn(PUBLIC_SKILL_INSTALL_COMMAND, setup)
+        self.assertEqual(index.count('id="terminal-install"'), 1)
+        self.assertEqual(index.count('id="agent-install"'), 1)
         prompt = (REPO_ROOT / "github-pages/assets/aim-install-agent.txt").read_text().strip()
-        displayed = re.search(r'<code id="hero-agent-prompt">(.*?)</code>', hero, re.S)
+        displayed = re.search(r'<code id="agent-prompt">(.*?)</code>', setup, re.S)
         self.assertIsNotNone(displayed)
         self.assertEqual(html.unescape(displayed.group(1)), prompt)
         self.assertIn(PUBLIC_SKILL_INSTALL_COMMAND, prompt)
@@ -222,7 +216,7 @@ class PublicationContractTests(unittest.TestCase):
             self.assertEqual(archive.read("aim-4-logo.png"), (REPO_ROOT / PUBLIC_CAMPAIGN_IMAGE_PATH).read_bytes())
             self.assertIn(b"AIM 4", archive.read("aim-4-press-kit.txt"))
 
-    def test_missing_story_script_blocks_assembled_publication(self) -> None:
+    def test_missing_install_script_blocks_assembled_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary) / "site"
             build_artifact(REPO_ROOT, output)
@@ -242,52 +236,45 @@ class PublicationContractTests(unittest.TestCase):
             with self.assertRaisesRegex(PublicationError, "missing, unexpected or corrupt"):
                 validate_source(copied)
 
-    def test_unlabelled_illustration_and_broken_section_link_are_rejected(self) -> None:
+    def test_unlabelled_capture_stale_comparison_and_broken_section_link_are_rejected(self) -> None:
         for before, after, expected in (
-            ("Illustrative walkthrough", "Live delivery", "semantic boundary"),
+            ('data-product-capture="example"', 'data-product-capture="live"', "example caption"),
+            ('Actual AIM Control 4.1.0 · Desktop Kanban board with example project data.', 'Actual AIM Control 4.1.0 · Live project.', "example caption"),
+            ('data-evidence-version="3.2"', 'data-evidence-version="4.1"', "tested AIM version"),
+            ("AIM 3.2", "AIM 4.1", "tested AIM version"),
             ('href="#start"', 'href="#missing"', "broken section link"),
         ):
             with self.subTest(expected=expected), tempfile.TemporaryDirectory() as temporary:
                 copied = self._copy_repo(temporary)
                 index = copied / "index.html"
-                index.write_text(index.read_text(encoding="utf-8").replace(before, after), encoding="utf-8")
+                content = index.read_text(encoding="utf-8")
+                self.assertIn(before, content, "The negative-case mutation must match current markup")
+                index.write_text(content.replace(before, after), encoding="utf-8")
                 with self.assertRaisesRegex(PublicationError, expected):
                     validate_source(copied)
 
-    @unittest.skipUnless(shutil.which("node"), "Node required for interactive example behavior")
-    def test_example_requires_scope_and_evidence_before_user_acceptance(self) -> None:
-        script = (REPO_ROOT / PUBLIC_SITE_ASSETS[1]).read_text(encoding="utf-8")
-        function = script[script.index("function scenarioForStep("):script.index("let exampleStep")]
-        result = subprocess.run(
-            ["node", "-e", function + "console.log(JSON.stringify([0,1,2,3,4].map(scenarioForStep)));"],
-            capture_output=True, text=True, check=True,
-        )
-        stages = json.loads(result.stdout)
-        self.assertEqual([stage["phase"] for stage in stages], ["backlog", "backlog", "in_progress", "acceptance", "done"])
-        self.assertEqual(stages[0]["selected"], [])
-        self.assertTrue(all(stage["selected"] == ["retry", "support"] for stage in stages[1:]))
-        self.assertFalse(stages[3]["complete"])
-        self.assertIn("user acceptance", stages[3]["next"])
-        self.assertIn("both Epics remain open", stages[4]["explanation"])
-        self.assertTrue(stages[4]["complete"])
+    def test_missing_product_capture_blocks_assembled_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "site"
+            build_artifact(REPO_ROOT, output)
+            (output / PUBLIC_PRODUCT_CAPTURES[0]).unlink()
+            with self.assertRaisesRegex(PublicationError, "AIM Control capture is missing"):
+                validate_artifact(output)
 
-    @unittest.skipUnless(shutil.which("node"), "Node required for interactive example behavior")
-    def test_example_scrolls_its_board_to_destination_and_resets_with_reduced_motion(self) -> None:
-        script = (REPO_ROOT / PUBLIC_SITE_ASSETS[1]).read_text(encoding="utf-8")
-        function = script[script.index("function scrollExampleBoard("):script.index("let exampleStep")]
-        probe = """
-const requests = [];
-const window = {getComputedStyle: () => ({paddingLeft: '15px'})};
-const board = {scrollLeft: 0, getBoundingClientRect: () => ({left: 20}), scrollTo: options => requests.push(options)};
-scrollExampleBoard(board, {getBoundingClientRect: () => ({left: 535})}, false);
-board.scrollLeft = 500;
-scrollExampleBoard(board, {getBoundingClientRect: () => ({left: -465})}, true);
-console.log(JSON.stringify(requests));
-"""
-        result = subprocess.run(["node", "-e", function + probe], capture_output=True, text=True, check=True)
-        self.assertEqual(json.loads(result.stdout), [
-            {"left": 500, "behavior": "smooth"}, {"left": 0, "behavior": "instant"},
-        ])
+    def test_product_capture_requires_accessible_description(self) -> None:
+        import re
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            page = copied / "index.html"
+            markup = page.read_text()
+            markup, count = re.subn(
+                r'(<img src="' + re.escape(PUBLIC_PRODUCT_CAPTURES[0]) + r'"[^>]*?alt=")[^"]*',
+                r'\1', markup,
+            )
+            self.assertEqual(count, 1)
+            page.write_text(markup)
+            with self.assertRaisesRegex(PublicationError, "alt text"):
+                validate_source(copied)
 
     def test_missing_versionless_artwork_policy_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -324,7 +311,7 @@ console.log(JSON.stringify(requests));
             index = copied / "index.html"
             index.write_text(
                 index.read_text(encoding="utf-8").replace(
-                    '<span class="brand-version">4.1.0</span>',
+                    '<span class="brand-version">4.1.1</span>',
                     '<span class="brand-version">2.7</span>',
                 ),
                 encoding="utf-8",

@@ -89,7 +89,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.1.0",
+  "productVersion": "4.1.1",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -271,12 +271,12 @@
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "3b10b6ad566eadbcacadb33c591f1ec629593d6adf47442e56e0f61996829ef7",
+      "sha256": "9737915fce5e934ea348658fccb82a4c532157d2161bb032a240c2837b8f66cb",
       "source": "VERSION"
     },
     {
       "output": "references/version-and-installation.md",
-      "sha256": "796038ef9f2819f1a1bb7822ce959ab4e9e17cb50fbc3af4ca8b9c5fcb53a510",
+      "sha256": "bedc53411541c0047f975dda7c4a00a54b4f721d10c032281cc2fcbe2149752f",
       "source": "scripts/aim_publication.py"
     },
     {
