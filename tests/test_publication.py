@@ -18,8 +18,6 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 from aim_publication import (  # noqa: E402
     PUBLIC_ADAPTIVE_SOURCE_COMMAND,
     PUBLIC_CAMPAIGN_IMAGE_PATH,
-    PUBLIC_DEMO_POSTER_PATH,
-    PUBLIC_DEMO_VIDEO_PATH,
     PUBLIC_ORIGIN,
     PUBLIC_PRODUCT_CAPTURES,
     PUBLIC_PRESS_KIT_PATH,
@@ -60,8 +58,13 @@ class PublicationContractTests(unittest.TestCase):
                 self.assertNotIn(marker, install_content)
             self.assertTrue((output / "LICENSE").is_file())
             self.assertTrue((output / "licenses/LICENSE-DOCS").is_file())
-            self.assertGreater((output / PUBLIC_DEMO_VIDEO_PATH).stat().st_size, 1_000_000)
-            self.assertGreater((output / PUBLIC_DEMO_POSTER_PATH).stat().st_size, 10_000)
+            for retired in (
+                "github-pages/assets/images/aim-3-autonomy-logo.png",
+                "github-pages/assets/images/aim-ui-beta-control-room.png",
+                "github-pages/assets/images/portfolio-auto-demo-poster.jpg",
+                "github-pages/assets/video/portfolio-auto-demo.mp4",
+            ):
+                self.assertFalse((output / retired).exists(), retired)
             for relative_path in SCHEMA_RELATIVE_PATHS:
                 schema = json.loads(
                     (output / relative_path).read_text(encoding="utf-8")
@@ -70,7 +73,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "4.1.1")
+            self.assertEqual(manifest["aimVersion"], "4.2.0")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
@@ -92,9 +95,7 @@ class PublicationContractTests(unittest.TestCase):
             self.assertTrue(manifest["aimUi"]["readOnly"])
             self.assertTrue(manifest["aimUi"]["multiEpic"])
             self.assertTrue(manifest["aimUi"]["cardActions"])
-            self.assertEqual(
-                manifest["aimUi"]["portfolioAutoDemo"], PUBLIC_DEMO_VIDEO_PATH
-            )
+            self.assertNotIn("portfolioAutoDemo", manifest["aimUi"])
             self.assertEqual(
                 manifest["aimUi"]["repoLaunch"], "python3 scripts/aim_ui.py"
             )
@@ -144,15 +145,13 @@ class PublicationContractTests(unittest.TestCase):
             self.assertIn(f'id="{identifier}"', index)
         self.assertIn("docs/product/aim-ui.md", index)
         self.assertIn(f'src="{PUBLIC_CAMPAIGN_IMAGE_PATH}"', index)
-        self.assertIn('<span class="brand-version">4.1.1</span>', index)
+        self.assertIn('<span class="brand-version">4.2.0</span>', index)
         for capture in PUBLIC_PRODUCT_CAPTURES:
             self.assertIn(f'src="{capture}"', index)
         self.assertIn('data-evidence-version="3.2"', index)
-        self.assertIn("github-pages/assets/images/aim-ui-beta-control-room.png", index)
-        self.assertIn(PUBLIC_DEMO_VIDEO_PATH, index)
-        self.assertIn(PUBLIC_DEMO_POSTER_PATH, index)
-        self.assertIn('preload="none"', index)
-        self.assertNotIn('autoplay', index)
+        self.assertNotIn("aim-ui-beta-control-room.png", index)
+        self.assertNotIn("portfolio-auto-demo", index)
+        self.assertNotIn("aim-ui-beta-control-room.png", readme)
         for command in (
             "/aim upgrade",
             "/aim calibrate-repo",
@@ -171,8 +170,8 @@ class PublicationContractTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("Brand artwork version policy: versionless", inventory)
         self.assertIn("contain no product version", inventory)
-        self.assertIn("aim-3-autonomy-logo.png", inventory)
-        self.assertIn("AIM UI Beta", inventory)
+        self.assertIn("aim-4-logo.png", inventory)
+        self.assertIn("aim-control-board.png", inventory)
 
     def test_changed_aim_4_campaign_artwork_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -311,7 +310,7 @@ class PublicationContractTests(unittest.TestCase):
             index = copied / "index.html"
             index.write_text(
                 index.read_text(encoding="utf-8").replace(
-                    '<span class="brand-version">4.1.1</span>',
+                    '<span class="brand-version">4.2.0</span>',
                     '<span class="brand-version">2.7</span>',
                 ),
                 encoding="utf-8",

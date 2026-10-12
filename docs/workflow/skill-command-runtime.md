@@ -345,3 +345,13 @@ preparation, then make `visibility: ready` plus a fresh `updatedAt` the final
 runtime mutation immediately before presenting the hard gate. A mismatched or
 malformed explicit marker must hide actions. Missing markers preserve legacy
 behavior. This extension controls UI timing only and never owns gate authority.
+
+### Necessary questions and continuation
+
+Start/continue and role handoffs follow [Autonomous interaction](autonomous-interaction.md).
+Reuse applicable authority and saved answers before asking. Prepare only currently
+needed independent choices; use supported structured controls or equivalent text.
+A pending, dismissed or defaulted question is not an answer. Resume from the
+original sources and recorded answer before presenting another copy. These rules
+also guide read-only Discuss, which cannot persist questions or decisions; any
+promotion remains a separately authorized action.

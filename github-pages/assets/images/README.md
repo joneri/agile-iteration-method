@@ -4,9 +4,6 @@ Source images intended for the AIM website published from the `gh-pages` branch.
 
 - `aim-2-hero-dark.png`: canonical dark, versionless AIM logo and website hero
   artwork
-- `aim-3-autonomy-logo.png`: AIM 3 campaign variant for the GitHub Pages
-  Connected Codex story; its flowing 3 represents creative iteration, momentum,
-  and bounded autonomy
 - `aim-4-logo.png`: AIM 4.0 campaign lockup, the original golden/blue A identity with
   navy AIM lettering and an expressive blue/cyan ribbon numeral 4 on a
   transparent background; 2172 × 724 RGBA PNG. Use on
@@ -14,10 +11,6 @@ Source images intended for the AIM website published from the `gh-pages` branch.
   the canonical versionless brand artwork.
 - `AIM_OG.png` at the repository root: byte-identical versionless Open Graph
   artwork
-- `aim-ui-beta-control-room.png`: wide AIM UI Beta feature illustration for the
-  dedicated website section
-- `portfolio-auto-demo-poster.jpg`: lightweight poster frame for the historical
-  Portfolio Auto demonstration
 
 Brand artwork version policy: versionless. The two brand-image files above must
 remain byte-identical and contain no product version. The exact current release
@@ -28,17 +21,10 @@ The approved source SHA-256 is
 
 The versionless AIM brand artwork is the selected existing source image and is
 copied without generation, retouching, recompression, or other transformation.
-The separate AIM 3 campaign variant was generated with the built-in image
-generation workflow from the versionless artwork as a visual reference. It does
-not replace the canonical logo or its versionless publication policy.
-The AIM UI Beta feature illustration uses AIM's navy, cyan, lime, and paper
-palette to depict five delivery stations, moving work tickets, and four
-specialist roles without embedding UI labels or logos.
 
-Keep website image assets here until they are selected and wired into the Pages layout.
-
-The silent 57-second historical source video remains available at
-`github-pages/assets/video/portfolio-auto-demo.mp4`.
+Keep only selected current publication assets here. Retired campaign artwork,
+the earlier conceptual UI illustration and the Portfolio Auto demonstration
+remain recoverable from Git history; they are not current website resources.
 
 The AIM 4.0 campaign logo was generated using the built-in image generation
 tool on 2026-10-12. Its exact prompt and provenance are recorded in

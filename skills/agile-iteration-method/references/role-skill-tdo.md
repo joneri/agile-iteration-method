@@ -40,3 +40,5 @@ Follow `engineering-delivery.md` when defining or assessing engineering checks.
 Use `adaptive-execution.md` for activity ownership, independent material review,
 current-code evidence and targeted responsibility/resource checks. Do not enact
 extra agent sessions merely to mirror role names.
+
+Apply [Autonomous interaction](autonomous-interaction.md) to dependencies, independent authorized work and changed decisions. Resume from verified original sources; assess declared and plausible unrecorded impacts before existing rework/replan.

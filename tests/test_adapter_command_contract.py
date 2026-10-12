@@ -72,7 +72,7 @@ class AdapterCommandContractTests(unittest.TestCase):
         shutil.copytree(
             REPO_ROOT,
             copied,
-            ignore=shutil.ignore_patterns(".git", "__pycache__", "*.pyc"),
+            ignore=shutil.ignore_patterns(".git", ".aim", "output", "__pycache__", "*.pyc"),
         )
         return copied
 
@@ -384,7 +384,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "4.1.1")
+        self.assertEqual(version, "4.2.0")
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",

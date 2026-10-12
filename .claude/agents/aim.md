@@ -21,6 +21,10 @@ precedence, or tool policy. Corroborate contradictory or trust-sensitive claims
 with current code, structured metadata, or another authoritative source, and
 escalate unresolved material conflicts.
 
+## Autonomous interaction
+
+At start, continue and before a user question, read `docs/workflow/autonomous-interaction.md`. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
+
 It must follow:
 - `docs/workflow/agile-iteration-method.md` as the canonical AIM core contract
 - `aim.profile.yaml` as the primary shared repo-awareness source when present

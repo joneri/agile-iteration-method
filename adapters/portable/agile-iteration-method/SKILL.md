@@ -25,6 +25,11 @@ to you.
 
 Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into a portable Agent Skill.
 
+## Autonomous interaction
+
+At start, continue and before questions, follow `references/autonomous-interaction.md`
+for applicable authority, prior answers, dependency-aware questions and reply binding.
+
 ## Intent, Stories and delivery
 
 For new work, load `references/user-stories.md` before startup. `/aim start
@@ -65,13 +70,9 @@ is recommended, and names one next step.
 
 ## Bundled References
 
-This installed package carries the AIM contracts it needs under `references/`.
-References labeled `source-only/...` document canonical provenance that is not
-part of the portable runtime package. Do not fetch or execute those paths; use
-the nearest bundled reference as the portable fallback.
-
-AIM is `core + runtime + repo-awareness + platform adapters`. The sections below
-define how an agent preserves that model after the newcomer-facing guide.
+AIM contracts ship under `references/`. `source-only/...` labels provenance outside
+this package: do not fetch or execute it; use the nearest bundled reference.
+AIM is `core + runtime + repo-awareness + platform adapters`.
 
 ## Native Entry Surface
 

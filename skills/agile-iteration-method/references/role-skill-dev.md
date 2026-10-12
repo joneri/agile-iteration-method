@@ -50,3 +50,5 @@ reducing repeated work. Follow the performance scope in `engineering-delivery.md
 Use `adaptive-execution.md` for activity ownership, independent material review,
 current-code evidence and targeted responsibility/resource checks. Do not enact
 extra agent sessions merely to mirror role names.
+
+Use [Autonomous interaction](autonomous-interaction.md) before escalating a routine choice. Keep assumptions distinct from observed facts and delegated choices; continue independent approved work without guessing a blocked dependency.

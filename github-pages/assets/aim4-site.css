@@ -148,7 +148,6 @@ details > p { max-width: 800px; margin-bottom: 20px; font-size: .85rem; }
 .footer-main { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
 .footer-main > div { display: flex; flex-wrap: wrap; gap: 24px; }
 .resources { margin-top: 30px; }
-.resources video { width: min(100%, 800px); display: block; margin-bottom: 18px; }
 @media (max-width: 1000px) {
   .container { width: calc(100% - 48px); }
   .nav-inner { gap: 20px; }

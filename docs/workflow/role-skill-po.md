@@ -24,3 +24,5 @@ and acceptance. Read binding requirements and the current acceptance evidence.
 Use the project's bound product/domain skills when available. Return only the
 decision, evidence gap and next useful action. Acceptance authority stays with
 the main thread and the user's existing mandate; a specialist cannot accept.
+
+Before clarification, apply [Autonomous interaction](autonomous-interaction.md): reuse applicable answers, separate discoverable facts from business choices, and prepare the smallest necessary recommended-first question. Preserve each question's scope and actual authority.

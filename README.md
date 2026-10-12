@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 4.0
 
-![AIM 4.1.1 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 4.2.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. Start with an intent. PO discovers Epics and User Stories, then AIM plans a prioritized selection, builds it, reviews it and validates every Story before user acceptance. **Better software. From the same AI:** we tested GPT-6 Luna building the same web app with and without AIM, first at initial delivery and again after the same major upgrade. AIM 3.2 delivered the stronger product in both tests: **93.5 versus 49.8**, then **93.5 versus 62.8**, out of 100 against predefined criteria. [See the case and public evidence](docs/features/aim-3.2-enigma-case.md).
 
@@ -153,8 +153,6 @@ AIM 4.0 introduced a PO-owned product backlog, independent User Stories, cross-E
 
 **The advantage held through both tests:** at initial delivery, Luna + AIM solved **9/9 new search challenges versus 0/9** and passed **123/123 machine checks versus 1/123**. After the upgrade, it solved **8/8 versus 1/8**, while both passed **243/243 checks**. Every checked AIM result after the upgrade was valid (32/32); Luna alone returned one false match. The same complete upgraded search ran **55.7× faster** (0.242 versus 13.477 s, application runtime). [Both tests, method and evidence](docs/features/aim-3.2-enigma-case.md) · [Original test in detail](docs/features/aim-3.2-enigma-m3-case.md) · [Earlier resource-efficiency results](docs/features/aim-3.1-evaluation.md).
 
-![Earlier AIM UI Beta control room](github-pages/assets/images/aim-ui-beta-control-room.png)
-
 See the [AIM UI Beta guide](docs/product/aim-ui.md), or launch it with `/aim ui`.
 AIM Reflect still **goes beyond memory cleanup for repository work** through verified provenance and user-owned promotion. The preserved legacy runtime contract remains 2.0; the new product-backlog schema is 1.0. Product, runtime, installer and schema versions stay separate.
 
@@ -174,4 +172,6 @@ AIM Reflect still **goes beyond memory cleanup for repository work** through ver
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product version: **v4.1.1** — website and publication-validation improvements. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+AIM 4.2 is a local candidate for evaluation. It reuses applicable authority and prior answers, groups necessary independent questions, and binds replies to their exact scope. The optional question helper validates presentation and replay receipts; the coordinator still verifies sources and records decisions. See [autonomous interaction](docs/workflow/autonomous-interaction.md). The synthetic pilot does not establish general speed or token savings.
+
+Current product version: **v4.2.0** — local candidate with autonomous continuation and scoped question replies; not yet published. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).

@@ -214,6 +214,86 @@ class LegacyCleanupTests(unittest.TestCase):
         self.assertFalse(cleanup.preview(self.repo)["legacyDetected"])
         self.assertFalse(cleanup.detect(self.repo)["legacyDetected"])
 
+    def add_current_report(self, sources):
+        report = self.put(".aim/reviews/current-report.json", json.dumps({"sources": sources}))
+        self.fixture.mutate("review", {"deliveryId": "DI-1", "bindings": [self.fixture.binding]})
+        self.fixture.mutate("validate", {"deliveryId": "DI-1", "evidence": [report]})
+        return report
+
+    def test_external_absolute_provenance_is_never_read_or_deleted(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            outside = Path(temporary).resolve()
+            external = outside / "journal.json"
+            external.write_text(json.dumps({"path": ".aim/reviews/review-001.md"}))
+            alias = outside / "journal-link.json"
+            alias.symlink_to(external)
+            original = external.read_bytes()
+            report = self.add_current_report([{"path": str(external)}, {"path": str(alias)},
+                                              {"path": str(outside / "unavailable.json")}])
+            original_lstat, original_resolve = Path.lstat, Path.resolve
+            original_reader = cleanup.read_evidence
+
+            def deny_external_metadata(path, *args, **kwargs):
+                self.assertFalse(path.is_relative_to(outside), "External provenance was inspected")
+                return original_lstat(path, *args, **kwargs)
+
+            def deny_external_resolution(path, *args, **kwargs):
+                self.assertFalse(path.is_relative_to(outside), "External provenance was resolved")
+                return original_resolve(path, *args, **kwargs)
+
+            def contained_read(repo, relative, *args):
+                self.assertFalse(Path(relative).is_absolute(), "External provenance was read")
+                self.assertNotIn("..", Path(relative).parts)
+                return original_reader(repo, relative, *args)
+
+            with patch.object(Path, "lstat", deny_external_metadata), \
+                 patch.object(Path, "resolve", deny_external_resolution), \
+                 patch("aim_legacy_cleanup.read_evidence", side_effect=contained_read):
+                detected = cleanup.detect(self.repo)
+                self.assertEqual(detected["warnings"], [])
+                plan = cleanup.preview(self.repo)
+                # Reading the external JSON would incorrectly protect this old file.
+                self.assertIn(".aim/reviews/review-001.md", {item["path"] for item in plan["files"]})
+                self.assertIn(report["path"], plan["retainedCurrentRefs"])
+                result = cleanup.apply(self.repo, plan["inventorySha256"], confirm=True)
+                self.assertEqual(result["status"], "complete")
+            self.assertEqual(external.read_bytes(), original)
+            self.assertTrue(alias.is_symlink())
+            self.assertTrue((self.repo / report["path"]).is_file())
+            load(self.repo)
+
+    def test_absolute_current_evidence_inside_repo_is_protected_through_json_chain(self):
+        nested = self.put(".aim/reviews/keep-current.md", "Current evidence")
+        chain = self.put(".aim/reviews/keep-chain.json", json.dumps({"path": str(self.repo.resolve() / nested["path"])}))
+        self.add_current_report([{"path": str(self.repo.resolve() / chain["path"])}])
+        self.assertEqual(cleanup.detect(self.repo)["warnings"], [])
+        plan = cleanup.preview(self.repo)
+        for reference in (nested, chain):
+            self.assertIn(reference["path"], plan["retainedCurrentRefs"])
+            self.assertNotIn(reference["path"], {item["path"] for item in plan["files"]})
+        result = cleanup.apply(self.repo, plan["inventorySha256"], confirm=True)
+        self.assertEqual(result["status"], "complete")
+        self.assertEqual((self.repo / nested["path"]).read_text(), "Current evidence")
+        self.assertTrue((self.repo / chain["path"]).is_file())
+        load(self.repo)
+
+    def test_current_reference_traversal_noncanonical_paths_and_links_fail_closed(self):
+        unsafe = [".aim/reviews/../state.json", ".aim//reviews/review-001.md",
+                  str(self.repo) + "/.aim/reviews/../state.json",
+                  str(self.repo) + "/.aim//reviews/review-001.md",
+                  str(self.repo) + "/.aim/./reviews/review-001.md"]
+        for value in unsafe:
+            with self.subTest(value=value), self.assertRaisesRegex(cleanup.LegacyCleanupError, "Unsafe"):
+                cleanup._reference_closure(self.repo, {"path": value})
+        with tempfile.TemporaryDirectory() as temporary:
+            outside = Path(temporary) / "evidence.json"
+            outside.write_text('{}')
+            link = self.repo / ".aim/reviews/current-link.json"
+            link.symlink_to(outside)
+            with self.assertRaisesRegex(cleanup.LegacyCleanupError, "links"):
+                cleanup._reference_closure(self.repo, {"path": str(link)})
+            self.assertEqual(outside.read_text(), '{}')
+
     def test_detect_never_hashes_or_validates_full_product_evidence(self):
         with patch("aim_legacy_cleanup._record", side_effect=AssertionError("No hashing during detection")), \
              patch("aim_legacy_cleanup.load_product", side_effect=AssertionError("No full validation during detection")):

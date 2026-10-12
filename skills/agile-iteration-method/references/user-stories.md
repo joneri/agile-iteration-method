@@ -68,6 +68,15 @@ requirements on selected or accepted Stories cannot silently invalidate the
 approved scope; preserve history and use a new requirement or an explicitly
 replanned delivery as appropriate.
 
+## Questions and reusable decisions
+
+Apply [Autonomous interaction](autonomous-interaction.md) before interrupting the
+user and when resuming. Link material questions and answers to existing Story
+and criterion IDs and their original evidence. The product ledger remains the
+only Story/gate state; question receipts cannot accept Stories. A blocked choice
+halts its dependent action, not independent work already within the plan. Changed
+decisions use existing refinement/rework paths and retain historical acceptance.
+
 ## Planning, gates and acceptance
 
 TDO selects ready Stories according to PO priority, dependencies and capacity.

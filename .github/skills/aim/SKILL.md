@@ -16,6 +16,10 @@ Follow:
 - `docs/workflow/adapter-skill-bootstrap.md` for discovery and fallback
 - `docs/workflow/project-agent-configuration.md` for role specialization
 
+## Autonomous interaction
+
+At start, continue and before a user question, read `docs/workflow/autonomous-interaction.md`. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
+
 ## Intent and User Stories (AIM 4)
 
 For new `/aim start "<intent>"` and equivalent natural-language work, load

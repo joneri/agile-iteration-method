@@ -6,7 +6,7 @@ This repo is both:
 1) the public method definition, and
 2) a copyable implementation kit for real projects.
 
-## Versioning policy (AIM 2.0)
+## Versioning policy
 - This repository is the source of truth for AIM.
 - Documentation updates here are method updates.
 - AIM may be used for method changes, but is not required. Respect an explicit
@@ -144,3 +144,24 @@ Before submitting:
 ## License
 
 By contributing, you agree your contribution is licensed under **CC BY 4.0** (same as this repository).
+
+## Local outputs and evidence retention
+
+Use ignored `output/` or a temporary directory for browser captures, build output
+and downloaded release assets. Published assets belong in `github-pages/assets/`
+and portable skill output must be regenerated with `scripts/build_public_skill.py`;
+those reviewed distribution files remain tracked.
+
+Keep maintained test fixtures, evidence behind public claims (including negative
+results), compatibility references and current acceptance sources. Age or an
+`evidence` filename is not a deletion criterion. Before removing work logs, inspect
+the product ledger and transitive source references, preserve active writers and
+lock files, and record each removal with its path, tracking status, reason and
+SHA-256. For unchanged files recoverable from published Git history, record the
+commit and path. Archive unique untracked or locally changed bytes outside the
+repository and verify recovery before removal. Do not rewrite accepted evidence
+to make cleanup pass.
+
+A candidate version is not a publication mandate. Validate and freeze the exact
+reviewed local source for evaluation; pushing `main` deploys Pages and a `v*` tag
+starts the release workflow. Follow the current scoped publication instruction.

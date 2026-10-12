@@ -17,13 +17,14 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 19
+PUBLIC_SKILL_PACKAGE_VERSION = 20
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
 PUBLIC_DESCRIPTION_NAME = "agile-iteration-method"
 REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
     (Path("docs/workflow/user-stories.md"), Path("user-stories.md")),
+    (Path("docs/workflow/autonomous-interaction.md"), Path("autonomous-interaction.md")),
     (Path("examples/user-stories/example-user-story.md"), Path("example-user-story.md")),
     (Path("docs/workflow/streamlined-decisions.md"), Path("streamlined-decisions.md")),
     (Path("docs/workflow/adaptive-execution.md"), Path("adaptive-execution.md")),
@@ -63,6 +64,7 @@ INSTALL_MANIFEST_SOURCE = Path("install/aim-install-manifest.yaml")
 DOCUMENTATION_LICENSE_SOURCE = Path("docs/LICENSE-DOCS")
 UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_stories.py"),
+    Path("scripts/aim_interaction.py"),
     Path("scripts/aim_http.py"),
     Path("scripts/aim_engineering.py"),
     Path("scripts/aim_quality/__init__.py"),

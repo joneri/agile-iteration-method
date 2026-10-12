@@ -4,7 +4,12 @@ Date: 2026-10-12
 Use case: logo-brand
 Reference1: ../images/aim-2-hero-dark.png (canonical original A)
 Reference2: ../images/aim-3-autonomy-logo.png (established campaign composition)
-These references remain unchanged in the repository and are not ZIP members.
+Reference1 remains unchanged in the repository. Reference2 is a historical source,
+retired from the current publication assets and recoverable from Git:
+Commit: 7c7300e47ade0550b78b6551d476999af8e41f1a
+Path: github-pages/assets/images/aim-3-autonomy-logo.png
+SHA-256: c736fa884cd92a75f528f435143a65289849cae0789395181c6d69079ee35505
+Neither reference image is a ZIP member. The original final prompt below is unchanged.
 Selected direction: original A identity, expressive numeral4.
 
 Final prompt:

@@ -13,3 +13,11 @@
 
 # Local screen-recording source projects; publish only reviewed exported media.
 /*.screenflow/
+
+# Regenerable local development, publication and browser-check output.
+/output/
+/site/
+/release-assets/
+/.playwright-cli/
+__pycache__/
+*.py[cod]

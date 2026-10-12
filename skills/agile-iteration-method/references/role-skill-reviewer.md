@@ -47,3 +47,5 @@ state. Re-review changed behavior after a fix, not every previously passed fact.
 Use `adaptive-execution.md` for activity ownership, independent material review,
 current-code evidence and targeted responsibility/resource checks. Do not enact
 extra agent sessions merely to mirror role names.
+
+Check [Autonomous interaction](autonomous-interaction.md) with an independently derived counterexample: stale or ambiguous answers, changed dependencies, silent/default responses and unaffected work. No reduced question count can compensate for fabricated authority.

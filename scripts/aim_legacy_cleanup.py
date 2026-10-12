@@ -121,6 +121,17 @@ def _reference_closure(repo, document):
     json_bytes = 0
     while pending:
         relative = pending.pop()
+        candidate = Path(relative)
+        if candidate.is_absolute():
+            # Evidence may attribute an external source. Classify lexically:
+            # resolving or reading it would exceed this cleanup's repository scope.
+            _require(len(relative) <= 2000 and "\\" not in relative
+                     and ".." not in candidate.parts and candidate.as_posix() == relative,
+                     f"Unsafe or noncanonical evidence path: {relative}")
+            try:
+                relative = candidate.relative_to(repo).as_posix()
+            except ValueError:
+                continue
         path = _canonical(relative)
         if not path.parts or path.parts[0] != ".aim" or relative in visited:
             continue

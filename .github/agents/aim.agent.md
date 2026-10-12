@@ -42,6 +42,10 @@ This file is an optional Copilot UX layer for AIM.
 Core method semantics come from `docs/workflow/agile-iteration-method.md`.
 This packaging exposes the current AIM product surface and preserves supported legacy runtime contracts.
 
+## Autonomous interaction
+
+At start, continue and before a user question, read `docs/workflow/autonomous-interaction.md`. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
+
 ## Intent and User Stories (AIM 4)
 
 For new `/aim start "<intent>"` and equivalent natural-language work, load

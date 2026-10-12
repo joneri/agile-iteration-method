@@ -24,6 +24,10 @@ the portable fallback.
 
 Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into Codex skill form.
 
+## Autonomous interaction
+
+At start, continue and before a user question, read `references/autonomous-interaction.md`. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
+
 ## Intent, Stories and delivery
 
 For new work, load `references/user-stories.md` before startup. `/aim start

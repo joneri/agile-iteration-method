@@ -57,10 +57,6 @@ PUBLIC_PRESS_MEMBERS = {
     "aim-4-logo.png", "aim-4-press-kit.txt", "launch-copy-en.txt",
     "launch-copy-sv.txt", "logo-generation.txt", "LICENSE-DOCS.txt",
 }
-PUBLIC_FEATURE_IMAGE_PATH = "github-pages/assets/images/aim-ui-beta-control-room.png"
-PUBLIC_FEATURE_IMAGE_SIZE = (1729, 910)
-PUBLIC_DEMO_VIDEO_PATH = "github-pages/assets/video/portfolio-auto-demo.mp4"
-PUBLIC_DEMO_POSTER_PATH = "github-pages/assets/images/portfolio-auto-demo-poster.jpg"
 PUBLIC_LICENSE_PATH = "licenses/LICENSE-DOCS"
 RELEASE_MANIFEST_PATH = "release-manifest.json"
 PUBLIC_SKILL_INSTALL_COMMAND = (
@@ -283,24 +279,6 @@ def validate_source(repo_root: Path) -> None:
         raise PublicationError(
             f"README.md: hero artwork alt text must match VERSION ({product_version})"
         )
-    image_readme = _read_text(repo_root / "github-pages/assets/images/README.md")
-    feature_dimensions = _png_dimensions(repo_root / PUBLIC_FEATURE_IMAGE_PATH)
-    if feature_dimensions != PUBLIC_FEATURE_IMAGE_SIZE:
-        raise PublicationError(
-            f"{PUBLIC_FEATURE_IMAGE_PATH}: expected {PUBLIC_FEATURE_IMAGE_SIZE[0]}x"
-            f"{PUBLIC_FEATURE_IMAGE_SIZE[1]}, got "
-            f"{feature_dimensions[0]}x{feature_dimensions[1]}"
-        )
-    for relative_path in (PUBLIC_DEMO_VIDEO_PATH, PUBLIC_DEMO_POSTER_PATH):
-        if not (repo_root / relative_path).is_file():
-            raise PublicationError(
-                f"required Portfolio Auto demo asset is missing: {relative_path}"
-            )
-    if "AIM UI Beta" not in image_readme:
-        raise PublicationError(
-            "github-pages image inventory must identify the AIM UI Beta feature asset"
-        )
-
     index = _read_text(repo_root / "index.html")
     install_script_path = repo_root / "install.sh"
     install_script = _read_text(install_script_path)
@@ -357,14 +335,6 @@ def validate_source(repo_root: Path) -> None:
         "index.html AIM UI guide": (
             index,
             "docs/product/aim-ui.md",
-        ),
-        "index.html historical Portfolio Auto demo": (
-            index,
-            PUBLIC_DEMO_VIDEO_PATH,
-        ),
-        "index.html historical demo poster": (
-            index,
-            PUBLIC_DEMO_POSTER_PATH,
         ),
         "install.sh fail-closed notice": (
             install_script,
@@ -437,7 +407,6 @@ def release_manifest(root: Path) -> dict[str, Any]:
             "cardActions": True,
             "defaultBoard": "user-stories",
             "crossEpicDeliveries": True,
-            "portfolioAutoDemo": PUBLIC_DEMO_VIDEO_PATH,
         },
         "artifactType": "github-pages",
         "publicOrigin": PUBLIC_ORIGIN,
@@ -556,18 +525,6 @@ def validate_artifact(output_root: Path) -> None:
         != PUBLIC_CAMPAIGN_IMAGE_SHA256
     ):
         raise PublicationError(f"{PUBLIC_CAMPAIGN_IMAGE_PATH}: campaign artwork changed")
-    feature_dimensions = _png_dimensions(output_root / PUBLIC_FEATURE_IMAGE_PATH)
-    if feature_dimensions != PUBLIC_FEATURE_IMAGE_SIZE:
-        raise PublicationError(
-            f"{PUBLIC_FEATURE_IMAGE_PATH}: expected {PUBLIC_FEATURE_IMAGE_SIZE[0]}x"
-            f"{PUBLIC_FEATURE_IMAGE_SIZE[1]}, got "
-            f"{feature_dimensions[0]}x{feature_dimensions[1]}"
-        )
-    for relative_path in (PUBLIC_DEMO_VIDEO_PATH, PUBLIC_DEMO_POSTER_PATH):
-        if not (output_root / relative_path).is_file():
-            raise PublicationError(
-                f"publication artifact is missing Portfolio Auto demo asset: {relative_path}"
-            )
     for relative_path in SCHEMA_RELATIVE_PATHS:
         _schema_contract(output_root, relative_path)
 
