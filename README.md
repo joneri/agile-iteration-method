@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 4.0
 
-![AIM 4.0.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 4.1.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. Start with an intent. PO discovers Epics and User Stories, then AIM plans a prioritized selection, builds it, reviews it and validates every Story before user acceptance. **Better software. From the same AI:** we tested GPT-6 Luna building the same web app with and without AIM, first at initial delivery and again after the same major upgrade. AIM 3.2 delivered the stronger product in both tests: **93.5 versus 49.8**, then **93.5 versus 62.8**, out of 100 against predefined criteria. [See the case and public evidence](docs/features/aim-3.2-enigma-case.md).
 
@@ -13,8 +13,7 @@ Install the complete, self-contained AIM Agent Skill through the open skills eco
 [![skills.sh](https://skills.sh/b/joneri/agile-iteration-method)](https://skills.sh/joneri/agile-iteration-method)
 
 ```bash
-npx skills add joneri/agile-iteration-method \
-  --skill agile-iteration-method
+npx skills add joneri/agile-iteration-method --skill agile-iteration-method
 ```
 
 This is full AIM, not AIM Lite. The package is generated from the same canonical workflow, adapter, installer, and schema sources as the adaptive AIM distribution. It does not require a separate AIM npm publication.
@@ -23,16 +22,13 @@ Target one supported agent explicitly when needed:
 
 ```bash
 # Codex
-npx skills add joneri/agile-iteration-method \
-  --skill agile-iteration-method --agent codex --yes
+npx skills add joneri/agile-iteration-method --skill agile-iteration-method --agent codex --yes
 
 # GitHub Copilot
-npx skills add joneri/agile-iteration-method \
-  --skill agile-iteration-method --agent github-copilot --yes
+npx skills add joneri/agile-iteration-method --skill agile-iteration-method --agent github-copilot --yes
 
 # Claude Code
-npx skills add joneri/agile-iteration-method \
-  --skill agile-iteration-method --agent claude-code --yes
+npx skills add joneri/agile-iteration-method --skill agile-iteration-method --agent claude-code --yes
 ```
 
 Update an installed public skill with:
@@ -140,18 +136,20 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
+## What is new in v4.1.0
+
+**One current product across every Control room view.** Delivery control, Discuss, Portfolio, AIM Data, People & agents and accepted history share the same User Stories and evidence.
+
+- Prepare cross-Epic delivery proposals from ready Stories with current context.
+- Preserve reading position, keyboard focus and drafts during background updates.
+- Review optional Legacy cleanup with your AI agent; delete after consent while preserving current Stories and evidence.
+- Open a simpler Control room without the obsolete Connection guide.
+
+See the [Control room guide](docs/product/aim-ui.md) and [changelog](CHANGELOG.md).
+
 ## What is new in v4.0.0
 
-**User needs have their own identity and lifecycle.** AIM 4.0 introduces a PO-owned product backlog and Story board, separating requirements from plans and delivered increments.
-
-- **Intent-led start:** describe a problem; PO discovers one or more Epics.
-- **Explicit Stories:** preserve each user's need, benefit, priority and criteria.
-- **Cross-Epic selection:** deliver the highest-value ready Stories together.
-- **Evidence per Story:** review, validation and acceptance remain traceable.
-- **Separate Epic closure:** a completed delivery does not silently close a goal.
-- **Preserved history:** existing Epic/Increment runs keep their original meaning.
-
-See the [Story contract](docs/workflow/user-stories.md). The measurements below describe the earlier AIM 3.2 study; they are not a benchmark of 4.0.
+AIM 4.0 introduced a PO-owned product backlog, independent User Stories, cross-Epic delivery selection and evidence-backed acceptance. See the [Story contract](docs/workflow/user-stories.md). The measurements below describe the earlier AIM 3.2 study; they are not a benchmark of AIM 4.
 
 **The advantage held through both tests:** at initial delivery, Luna + AIM solved **9/9 new search challenges versus 0/9** and passed **123/123 machine checks versus 1/123**. After the upgrade, it solved **8/8 versus 1/8**, while both passed **243/243 checks**. Every checked AIM result after the upgrade was valid (32/32); Luna alone returned one false match. The same complete upgraded search ran **55.7× faster** (0.242 versus 13.477 s, application runtime). [Both tests, method and evidence](docs/features/aim-3.2-enigma-case.md) · [Original test in detail](docs/features/aim-3.2-enigma-m3-case.md) · [Earlier resource-efficiency results](docs/features/aim-3.1-evaluation.md).
 
@@ -165,7 +163,7 @@ AIM Reflect still **goes beyond memory cleanup for repository work** through ver
 - one main AIM thread owns the product backlog, legacy state and gate transitions
 - native specialists never accept work or create parallel AIM runtimes
 - existing files are collision-protected
-- apply is rollback-protected and idempotent
+- installer apply is rollback-protected and idempotent
 - unavailable native delegation falls back to the same sequential role loop
 - tags, releases, deploys, and other external changes still need explicit scope
 
@@ -176,4 +174,4 @@ AIM Reflect still **goes beyond memory cleanup for repository work** through ver
 - [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
 - [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
 
-Current product version: **v4.0.0**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product version: **v4.1.0**. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).

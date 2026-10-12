@@ -27,6 +27,8 @@ from aim_actions import (
     action_prompt,
     codex_deep_link,
 )
+from aim_legacy_cleanup import detect as detect_legacy_cleanup
+
 from aim_codex_bridge import (
     CodexBridgeError,
     DispatchManager,
@@ -48,6 +50,7 @@ from aim_http import local_request_allowed
 from aim_quality.files import read_evidence
 from aim_quality.profiles import read_repo_profile
 from aim_stories import project_story_board
+from aim_ui_product import project_product_context
 
 READ_MODEL_VERSION = "9.0"
 PORTFOLIO_VERSION = "1.0"
@@ -106,10 +109,13 @@ PAYLOAD_FILES = (
     "scripts/aim_runtime_contract.py",
     "scripts/aim_decisions.py",
     "scripts/aim_stories.py",
+    "scripts/aim_ui_product.py",
+    "scripts/aim_legacy_cleanup.py",
     "scripts/aim_runtime_lock.py",
     "scripts/aim_actions.py",
     "aim-ui/index.html",
     "aim-ui/app.js",
+    "aim-ui/product-views.js",
     "aim-ui/styles.css",
 )
 
@@ -2089,6 +2095,10 @@ def build_board(repo_root: Path) -> dict[str, Any]:
     calibration = _repo_calibration(repo_root)
     configured = calibration["configured"]
     generated_at = utc_now()
+    story_board = project_story_board(repo_root)
+    product_context = project_product_context(repo_root, story_board, generated_at)
+    if not product_context["valid"]:
+        warnings.extend(f"Product backlog: {issue}" for issue in product_context["issues"])
     base = {
         "readModelVersion": READ_MODEL_VERSION,
         "generatedAt": generated_at,
@@ -2103,7 +2113,8 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         },
         "columns": [{"id": item[0], "label": item[1]} for item in KANBAN_COLUMNS],
         "epics": [],
-        "storyBoard": project_story_board(repo_root),
+        "storyBoard": story_board,
+        "productContext": product_context,
         "workspaceDiagnostics": workspace_diagnostics,
         "runtimeStatusDiagnostics": [],
         "recovery": None,
@@ -2137,6 +2148,14 @@ def build_board(repo_root: Path) -> dict[str, Any]:
             else None
         ),
     }
+    if not product_context["valid"]:
+        base["onboarding"] = {
+            "state": "product_repair_required",
+            "message": "The product backlog needs repair before product planning or delivery can continue.",
+            "nextAction": '/aim discuss "Inspect the product backlog validation issues and propose a repair without changing state."',
+        }
+    elif product_context["configured"]:
+        base["onboarding"] = None
     seen_epics: set[str] = set()
     ambiguous_epics: set[str] = set()
     for index, workspace in enumerate(workspaces):
@@ -2368,11 +2387,14 @@ def build_board(repo_root: Path) -> dict[str, Any]:
         "closedIncrements": accepted,
         "unresolvedRuntimeRelations": unresolved_runtime_relations,
     }
+    base["legacyCleanup"] = detect_legacy_cleanup(repo_root)
     base["discussion"] = _discussion_projection(repo_root, base["epics"], accepted)
     base["deliveryData"] = _delivery_data(base["epics"], accepted, generated_at)
     base["health"] = (
         "degraded"
-        if not base["epics"] and (warnings or workspace_diagnostics)
+        if not product_context["valid"] or (
+            not base["epics"] and not product_context["configured"] and (warnings or workspace_diagnostics)
+        )
         else "partial"
         if warnings or workspace_diagnostics
         else "healthy"

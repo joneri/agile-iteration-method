@@ -11,10 +11,12 @@ It opens on **User Stories**, a board of actual user needs from
 `.aim/product-backlog.json`. Each Story retains its Epic context; the board can
 show several Epics together without making Epics or increments the work cards.
 
-**Delivery control** preserves existing Epic/Increment workspaces and their
-original controls. Discuss, Portfolio, AIM DATA, People & agents and Closed
-Increments remain separate tabs. Existing records are never automatically
-migrated, relabelled or treated as Story acceptance.
+All current-product views share the validated product ledger: **Delivery control**,
+**Discuss**, **Portfolio**, **AIM Data**, **People & agents** and accepted delivery
+history. An explicit workspace selector opens retained **legacy workspaces** and
+their original controls. Existing records are never automatically migrated,
+relabelled or counted as Story acceptance. A broken product ledger stays visibly
+unavailable instead of silently switching to old work.
 
 ## User Stories board
 
@@ -29,25 +31,73 @@ contained evidence links preserve traceability. Filter by Epic or keep All Epics
 to compare needs across outcomes. Stories are ordered by priority within each
 column. A delivery selection can contain Stories from different Epics.
 
-**Copy start intent** prepares an intent-led `/aim start` prompt. **Copy refinement
-prompt** and **Copy planning prompt** prepare read-only `/aim discuss` prompts;
-the user reviews and sends them in chat. They cannot approve a selection or
-advance a Story. Actual changes go through the main AIM thread and the
-[Story lifecycle](../workflow/user-stories.md).
+**Copy start intent** prepares an intent-led `/aim start` prompt. Contextual
+Story actions prepare a discussion about refinement or planning; accepted Stories
+lead to a follow-up user need rather than rewriting their accepted requirements.
+Delivery references open the corresponding selection and evidence. Copying a
+prompt never changes runtime state. Actual changes go through the main AIM thread
+and the [Story lifecycle](../workflow/user-stories.md).
 
-An empty board explains intent discovery and PO/TDO refinement. Historical work
-remains available in Delivery control and Closed Increments. An invalid product
+An empty board explains intent discovery and PO/TDO refinement. Historical Epic/Increment work
+remains available through the legacy workspace selector. An invalid product
 ledger shows a diagnostic instead of guessed or stale Story cards. Refresh
 preserves card identity, expanded criteria and keyboard focus. Actual phase
 changes can animate; reduced-motion preferences are respected.
+
+## Follow the current delivery
+
+Delivery control shows the selected Stories, their Epic context, delivery goal,
+checkpoint, blocker and supporting evidence. A delivery can cross Epic boundaries;
+its Story selection and approval scope remain explicit. The contextual handoff
+names the product ledger, observed digest and delivery identity. The receiving
+AIM task reloads and checks the current scope before making changes. Plan approval
+and final acceptance remain user decisions. Current Story controls use reviewed
+chat handoffs; direct legacy Start/Approve dispatch does not apply to them.
+
+Accepted delivery history preserves the selection and its acceptance evidence.
+Done Stories and accepted deliveries do not imply that their Epics are closed.
+
+## Plan across Epics
+
+Portfolio groups the current Stories by their Epic outcomes. Select ready Stories
+across those groups to prepare a delivery-planning proposal. The proposal carries
+the exact selected identities and observed ledger digest. It is not approval of a
+plan. An active delivery prevents another selection; a changed ledger clears
+obsolete selection so it cannot be reused silently. Legacy Portfolio Auto and its
+capacity policy appear only in the legacy workspace scope.
+
+## Understand outcomes and responsibility
+
+AIM Data counts the current ledger's Stories, accepted deliveries and open/closed
+Epics. Its acceptance timeline links to recorded evidence. Throughput includes
+only valid explicit acceptance timestamps; unavailable or future timestamps are
+excluded and explained. Current delivery records do not store approval timestamps,
+so AIM UI does not invent approval-to-acceptance duration. Development effort,
+agent usage and elapsed delivery time are different measurements.
+
+People & agents describes each AIM role and the responsibility associated with
+the current delivery checkpoint. A blocked delivery retains its underlying phase.
+This is not presence detection: live helper activity is shown as unrecorded when
+there is no supported activity record. Legacy workspace activity remains available
+in its original scope.
+
+## Refresh without losing context
+
+Polling compares meaningful data, excluding generated display timestamps. An
+unchanged response does not redraw the control room. Relevant changes update the
+visible view while retaining typed discussion text, focus and scroll position.
+Hidden views are rendered when opened. A selection invalidated by changed product
+scope is explicitly cleared rather than kept as an apparently current plan.
 
 ## Discuss product direction without starting delivery
 
 The **Discuss** tab is a visual entry point to the first-class `/aim discuss`
 capability. It opens a bounded product-thinking surface and shows the
 operator which context a separate Codex discussion can consult: the complete
-AIM method, the repository knowledge profile when available, contained runtime
-checkpoints, recent Gate decisions, and recent accepted delivery evidence.
+AIM method, the repository knowledge profile when available, the current product
+ledger and bounded recent accepted-delivery evidence. Current Intent, Epic, Story
+and delivery counts describe that scope. Legacy runtime checkpoints and decisions
+are consulted when the legacy workspace scope is explicitly selected.
 
 The operator enters a product idea, tradeoff, concern, or reflection, then
 copies the generated prompt or opens it in Codex. AIM UI does not send the
@@ -102,16 +152,10 @@ must agree; a changed or invalid release identity prevents stale-process reuse.
 
 For direct **Connected Codex control**, use Codex with ChatGPT-managed usage,
 open the authoritative Codex task for the repository, and run `/aim ui` from
-that task. The UI shows **Codex task selected** when a task binding is configured.
-That label does not claim a live connection or agent activity: the bridge checks
-the task before dispatch. **Board updated** describes read-model freshness only. If the UI was launched elsewhere, it
-shows **View only**, keeps the full read-only board available, and explains how
-to reconnect. No internal task identifier is exposed.
-
-The large Connected Codex explanation is a one-off browser onboarding surface.
-Choose **Hide guide** to keep it hidden across later AIM UI ports and repository
-sessions in that browser. A compact **Connection guide** control in the header
-can reopen it temporarily; clearing browser site data resets the preference.
+that task. The bridge checks the bound task before dispatching an eligible
+legacy action. Product proposals are reviewed and sent in chat. **Board updated**
+in the header describes data freshness, not agent activity or a live Codex
+connection. No internal task identifier is exposed.
 
 The terminal commands below remain supported as foreground diagnostics and
 compatibility entry points.
@@ -709,3 +753,14 @@ continuations and transcript-reviewed questions or repairs. It keeps missing
 observations unknown and separates verified action results from agent activity.
 A verified Start after reconnecting does not establish that Codex is still
 working; the action status now says when current agent activity is unconfirmed.
+
+### Optional Legacy workspace cleanup
+
+When older workspace data is found, the Control room offers **Review cleanup
+in Codex** and **Copy for your AI agent**. The agent previews the removable
+files, preserves current User Stories and their evidence, and deletes only
+with the user's consent. No archive copy is created. Opening the UI or copying
+the request does not delete data. The offer and Legacy workspace selector
+vanish once no removable legacy data remains. Evidence still used by the
+current product can remain at its original path without retaining a Legacy
+workspace on the board.

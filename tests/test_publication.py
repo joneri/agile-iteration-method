@@ -69,7 +69,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "4.0.0")
+            self.assertEqual(manifest["aimVersion"], "4.1.0")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
@@ -148,7 +148,7 @@ class PublicationContractTests(unittest.TestCase):
         hero = index[index.index('<header class="hero-intro"') : index.index("</header>")]
         self.assertIn('class="hero-brand"', hero)
         self.assertIn(f'src="{PUBLIC_CAMPAIGN_IMAGE_PATH}"', hero)
-        self.assertIn('<span class="brand-version">4.0.0</span>', index)
+        self.assertIn('<span class="brand-version">4.1.0</span>', index)
         self.assertIn("Start with people.", hero)
         self.assertIn("Deliver what matters.", hero)
         self.assertNotIn("Rebuilt for AIM 2", index)
@@ -324,7 +324,7 @@ console.log(JSON.stringify(requests));
             index = copied / "index.html"
             index.write_text(
                 index.read_text(encoding="utf-8").replace(
-                    '<span class="brand-version">4.0.0</span>',
+                    '<span class="brand-version">4.1.0</span>',
                     '<span class="brand-version">2.7</span>',
                 ),
                 encoding="utf-8",

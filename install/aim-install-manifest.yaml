@@ -142,6 +142,8 @@ aimInstallManifest:
         - scripts/aim_catalog_repair.py
         - scripts/aim_backlog.py
         - scripts/aim_stories.py
+        - scripts/aim_ui_product.py
+        - scripts/aim_legacy_cleanup.py
         - scripts/aim_portfolio.py
         - scripts/aim_portfolio_run.py
         - scripts/aim_runtime_contract.py
@@ -154,6 +156,7 @@ aimInstallManifest:
         - aim-ui/index.html
         - aim-ui/styles.css
         - aim-ui/app.js
+        - aim-ui/product-views.js
       repoDestination: .
       homeDestination: .aim/installs/agile-iteration-method/
       includedWith: all-footprints

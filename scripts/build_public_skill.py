@@ -17,7 +17,7 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 18
+PUBLIC_SKILL_PACKAGE_VERSION = 19
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
@@ -92,11 +92,14 @@ UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_portfolio.py"),
     Path("scripts/aim_portfolio_run.py"),
     Path("scripts/aim_ui.py"),
+    Path("scripts/aim_ui_product.py"),
+    Path("scripts/aim_legacy_cleanup.py"),
     Path("scripts/aim_ui_control.py"),
     Path("scripts/aim_codex_bridge.py"),
     Path("aim-ui/index.html"),
     Path("aim-ui/styles.css"),
     Path("aim-ui/app.js"),
+    Path("aim-ui/product-views.js"),
 )
 
 GENERATED_NOTICE = (

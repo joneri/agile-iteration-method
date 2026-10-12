@@ -23,6 +23,8 @@ from typing import Any
 from urllib.error import URLError
 from urllib.request import urlopen
 
+from aim_legacy_cleanup import detect as detect_legacy_cleanup
+
 from aim_codex_bridge import binding_fingerprint
 
 try:
@@ -51,10 +53,13 @@ PAYLOAD_FILES = (
     "scripts/aim_runtime_contract.py",
     "scripts/aim_decisions.py",
     "scripts/aim_stories.py",
+    "scripts/aim_ui_product.py",
+    "scripts/aim_legacy_cleanup.py",
     "scripts/aim_runtime_lock.py",
     "scripts/aim_actions.py",
     "aim-ui/index.html",
     "aim-ui/app.js",
+    "aim-ui/product-views.js",
     "aim-ui/styles.css",
 )
 
@@ -472,7 +477,9 @@ def start(
     repo: Path, *, port: int | None = None, open_browser: bool = True
 ) -> dict[str, Any]:
     with _instance_lock(repo):
-        return _start(repo, port=port, open_browser=open_browser)
+        result = _start(repo, port=port, open_browser=open_browser)
+        result["legacyCleanup"] = detect_legacy_cleanup(repo)
+        return result
 
 
 def status(repo: Path) -> dict[str, Any]:
@@ -517,6 +524,7 @@ def open_instance(repo: Path) -> dict[str, Any]:
     if current["status"] != "running":
         raise AimUiControlError("No healthy AIM UI instance is running for this repository.")
     webbrowser.open(current["url"])
+    current["legacyCleanup"] = detect_legacy_cleanup(repo)
     return current
 
 
@@ -570,6 +578,8 @@ def _print_result(result: dict[str, Any], *, as_json: bool) -> None:
         )
         print(f"{label} for {result['repo']}")
         print(f"Open {result['url']}")
+        if result.get("legacyCleanup", {}).get("legacyDetected"):
+            print("Legacy workspace data found. Offer to remove it after preview; preserve current product evidence. Deletion requires the user’s consent.")
     elif result["status"] == "stale":
         print(f"AIM UI payload is stale for {result['repo']}")
         print("Run `/aim ui` to replace the verified instance.")

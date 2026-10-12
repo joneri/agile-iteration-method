@@ -58,6 +58,18 @@ open a repo without `.aim`, stores lifecycle metadata under the user's AIM
 home, and never creates or mutates repository runtime state. If no trusted UI
 payload exists, recommend `/aim upgrade`.
 
+When start/open reports `legacyCleanup.legacyDetected`, offer to remove the
+older workspace data. Opening, polling and preview never authorize deletion.
+Use the trusted package's `scripts/aim_legacy_cleanup.py --repo <repo> preview`
+and summarize the removable inventory and retained current evidence. Obtain
+explicit user consent unless the user already requested this cleanup in the
+conversation. Then run `apply --expected-sha256 <inventorySha256> --confirm`
+with the same repository argument. The helper rechecks the exact inventory
+under runtime locks and preserves the product ledger, all referenced evidence,
+unknown files and lock inodes. It does not make an archive copy. Report partial
+failures honestly; a retry requires a new preview, never blind replay. Unsafe
+paths or an invalid product ledger require repair before cleanup.
+
 ### Backlog import
 
 `/aim to-backlog` follows the package-local command contract. Bare invocation

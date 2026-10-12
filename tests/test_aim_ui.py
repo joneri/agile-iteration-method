@@ -1053,24 +1053,21 @@ class AimUiTests(unittest.TestCase):
         self.assertIn(".discuss-question textarea:focus", styles)
         self.assertIn('.discuss-context details:not([open]) > :not(summary)', styles)
 
-    def test_control_room_fronts_version_codex_setup_and_portfolio_journey(self) -> None:
+    def test_control_room_fronts_version_status_and_portfolio_journey(self) -> None:
         script = (REPO_ROOT / "aim-ui/app.js").read_text(encoding="utf-8")
         styles = (REPO_ROOT / "aim-ui/styles.css").read_text(encoding="utf-8")
         markup = (REPO_ROOT / "aim-ui/index.html").read_text(encoding="utf-8")
 
         self.assertIn('id="product-version"', markup)
-        self.assertIn('id="codex-connection"', markup)
-        self.assertIn('id="dismiss-codex-onboarding"', markup)
-        self.assertIn('id="show-codex-onboarding"', markup)
-        self.assertIn("aim_ui_connected_codex_guide_3", script)
-        self.assertIn("Max-Age=315360000", script)
+        self.assertIn('id="connection-label"', markup)
+        self.assertNotIn('id="codex-connection"', markup)
+        self.assertNotIn('id="show-codex-onboarding"', markup)
+        self.assertNotIn("CODEX_GUIDE_COOKIE", script)
         self.assertIn('id="portfolio-journey"', markup)
         self.assertIn('data-journey-step="discuss"', markup)
         self.assertIn('data-journey-step="mandate"', markup)
-        self.assertIn("function renderCodexConnection", script)
         self.assertIn("function portfolioJourneyState", script)
         self.assertIn("Discuss stays read only", markup)
-        self.assertIn('.codex-connection[data-status="connected"]', styles)
         self.assertIn(".portfolio-journey-steps li.is-active", styles)
 
     def test_contradictory_gate_checkpoint_hides_actions_and_warns(self) -> None:
@@ -2598,7 +2595,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/board", timeout=3) as response:
                     payload = json.load(response)
                     self.assertTrue(payload["source"]["readOnly"])
-                    self.assertEqual(payload["product"]["version"], "4.0.0")
+                    self.assertEqual(payload["product"]["version"], "4.1.0")
                     self.assertTrue(payload["product"]["capturedAtLaunch"])
                     self.assertIn(
                         payload["backgroundControl"]["status"],
@@ -2618,7 +2615,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/health", timeout=3) as response:
                     health = json.load(response)
                     self.assertEqual(health["protocolVersion"], "1.3")
-                    self.assertEqual(health["productVersion"], "4.0.0")
+                    self.assertEqual(health["productVersion"], "4.1.0")
                     self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST",
                                   headers={"Origin": url})

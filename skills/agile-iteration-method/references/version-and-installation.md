@@ -7,14 +7,14 @@ Source: docs/workflow/version-and-installation.md
 
 ## Resolved package metadata
 
-- AIM product release: `4.0.0`
+- AIM product release: `4.1.0`
 - Runtime contract: `2.0`
 - Runtime-state schema: `1.0`
 - Installer manifest: `1.0`
 - Repo-profile schema: `0.2`
 - Personal-hints schema: `0.1`
 - Project-role schema: `0.1`
-- Public skill package format: `18`
+- Public skill package format: `19`
 
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.

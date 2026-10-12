@@ -63,7 +63,15 @@ class ShippedStoryJourneyTests(unittest.TestCase):
             result = subprocess.run([sys.executable, "-c", code, str(PACKAGE / "scripts"), str(repo)],
                                     text=True, capture_output=True, cwd=repo, timeout=10)
             self.assertEqual(result.returncode, 0, result.stderr)
-            board = json.loads(result.stdout)["storyBoard"]
+            payload = json.loads(result.stdout)
+            context = payload["productContext"]
+            self.assertTrue(context["valid"])
+            self.assertEqual(context["activeDeliveryId"], "DI-001")
+            self.assertEqual(context["counts"]["stories"], 3)
+            self.assertEqual(context["currentRole"], "TDO")
+            self.assertIn(".aim/product-backlog.json", [item["path"] for item in context["discussion"]["sources"]])
+            self.assertIsNone(payload["onboarding"])
+            board = payload["storyBoard"]
             self.assertTrue(board["valid"])
             self.assertEqual([s["id"] for s in board["stories"]], ["US-RETRY", "US-FIND", "US-REPORT"])
             self.assertEqual(board["stories"][2]["deliveryIds"], [])
@@ -73,6 +81,23 @@ class ShippedStoryJourneyTests(unittest.TestCase):
             self.assertFalse((repo / ".aim/portfolio-backlog.json").exists())
             self.assertTrue((PACKAGE / "references/schemas/aim-product-backlog.schema.json").is_file())
             self.assertTrue((PACKAGE / "references/user-stories.md").is_file())
+            self.assertTrue((PACKAGE / "aim-ui/product-views.js").is_file())
+            # Run the shipped cleanup helper from the consuming repository.
+            legacy = repo / ".aim/state.json"
+            legacy.write_text('{"aimVersion":"3.0"}')
+            cleanup = [sys.executable, str(PACKAGE / "scripts/aim_legacy_cleanup.py"), "--repo", str(repo)]
+            preview = subprocess.run(cleanup + ["preview"], cwd=repo, capture_output=True, text=True, timeout=10)
+            self.assertEqual(preview.returncode, 0, preview.stderr)
+            inventory = json.loads(preview.stdout)
+            self.assertEqual(inventory["totalFiles"], 1)
+            self.assertIn(".aim/plan.md", inventory["retainedCurrentRefs"])
+            applied = subprocess.run(cleanup + ["apply", "--expected-sha256", inventory["inventorySha256"], "--confirm"],
+                                     cwd=repo, capture_output=True, text=True, timeout=10)
+            self.assertEqual(applied.returncode, 0, applied.stderr)
+            self.assertFalse(legacy.exists())
+            self.assertTrue(plan.exists())
+            self.assertEqual((repo / ".aim/product-backlog.json").read_bytes(), snapshot)
+
 
 
 if __name__ == "__main__":

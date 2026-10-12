@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-10-12 - AIM 4.1 feature release v4.1.0
+
+- Use the current product backlog across Delivery control, Discuss, Portfolio, AIM Data, People & agents and accepted delivery history.
+- Prepare cross-Epic delivery proposals from ready Stories with current scope and explicit chat handoffs; stale selections are cleared before reuse.
+- Show current roles, acceptance evidence and delivery counts without mixing historical workspace data into product metrics.
+- Preserve reading position, keyboard focus, expanded evidence and drafts during background updates; render only the active view and fit narrow screens.
+- Offer optional Legacy workspace cleanup when opening a Control room. Preview an exact inventory, require user consent, preserve current Stories and referenced evidence, and delete classified older data without an archive copy. Changed inventories and unsafe paths are rejected; partial failures are reported honestly.
+- Remove the obsolete Connection guide and modernize discussion examples and context for AIM 4.
+
+Compatibility: product backlog version `1.0`, legacy runtime contract `2.0`, runtime-state schema `1.0` and installer manifest `1.0` are unchanged. The portable package revision is `19`. No automatic migration or deletion runs during installation, UI opening or polling.
+
+Migration: update the installed AIM skill, reload the skill session and restart AIM UI. Adaptive installations use `/aim upgrade`. Older workspaces remain available unless their removal is explicitly requested; current evidence stored in an older workspace is retained.
+
+Validation: independent review of all Control room and cleanup changes, native regression tests, fault-injection cleanup checks, a shipped-package CLI journey, and browser journeys including polling stability, all seven views and responsive layouts. Full release gates run against the tagged source before publication.
+
+Known limitations: AIM UI remains Beta. Story actions prepare chat proposals; connected direct dispatch remains limited to legacy controls. Cleanup requires safe directory-relative filesystem operations; unsupported platforms fail before deleting files. Recorded role responsibility is not live agent telemetry.
+
 ## 2026-10-12 - AIM 4 major release v4.0.0
 
 **Intent becomes requirements. User Stories become the work on the board.**

@@ -181,3 +181,10 @@ requested ledger/checkpoint explicitly; never fall back to whichever is easiest.
 Validation, package upgrade and UI polling are read-only with respect to either
 runtime. Creating new Stories from legacy material requires explicit refinement
 and preserves the source history.
+
+Users may explicitly remove legacy workspaces through the trusted
+`aim_legacy_cleanup.py` preview/apply flow. Offer this when opening a Control
+room that detects older data. Cleanup preserves the current product ledger and
+its referenced evidence, including evidence stored inside an older workspace.
+Unreferenced classified legacy data is deleted without an archive copy; unknown
+files remain. This optional cleanup does not migrate or accept Stories.

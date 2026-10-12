@@ -42,7 +42,7 @@ invents personas, requirements or acceptance for them. Delivery control and
 history remain available beside the new Story board. New Stories use the
 delivery-level lifecycle rather than the legacy per-Epic scheduler.
 
-The public source version is 4.0.0. Publication is separate from source
+User Stories were introduced in AIM 4.0.0. The current product version is recorded in `VERSION`. Publication is separate from source
 preparation. AIM UI remains Beta, and prior AIM 3 benchmark results remain
 historical evidence.
 

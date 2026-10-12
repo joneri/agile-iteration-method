@@ -13,6 +13,7 @@ Source: aim-ui/index.html
   <meta name="theme-color" content="#06142d">
   <title>AIM Control Room</title>
   <link rel="stylesheet" href="/styles.css">
+  <script src="/product-views.js" defer></script>
   <script src="/app.js" defer></script>
 </head>
 <body>
@@ -30,32 +31,10 @@ Source: aim-ui/index.html
         <span class="connection-light" id="connection-light" aria-hidden="true"></span>
         <span id="connection-label">Connecting to AIM…</span>
       </div>
-      <button class="connection-guide" id="show-codex-onboarding" type="button" hidden>Connection guide</button>
     </div>
   </header>
 
   <main id="board" tabindex="-1">
-    <section class="codex-connection" id="codex-connection" aria-labelledby="codex-connection-title">
-      <div class="codex-connection-signal" aria-hidden="true"><span></span></div>
-      <div class="codex-connection-copy">
-        <p class="eyebrow">Connected Codex control</p>
-        <h2 id="codex-connection-title">Checking the Codex connection…</h2>
-        <p id="codex-connection-summary">AIM UI remains a safe read-only control room while the connection is checked.</p>
-      </div>
-      <div class="codex-connection-state">
-        <span class="connection-status" id="codex-control-status">Checking</span>
-        <p id="codex-control-route"></p>
-        <button class="onboarding-dismiss" id="dismiss-codex-onboarding" type="button" aria-label="Hide the Connected Codex onboarding permanently">
-          <span aria-hidden="true">×</span> Hide guide
-        </button>
-      </div>
-      <div class="codex-setup" id="codex-setup" hidden>
-        <ol id="codex-setup-steps"></ol>
-        <button class="secondary-action" id="copy-connect-command" type="button">Copy /aim ui</button>
-        <p class="action-feedback" id="codex-setup-feedback" role="status" aria-live="polite"></p>
-      </div>
-    </section>
-
     <section class="workspace-integrity" id="workspace-integrity" aria-labelledby="workspace-integrity-title" hidden>
       <div>
         <p class="eyebrow" id="workspace-integrity-eyebrow">Board status</p>
@@ -80,6 +59,22 @@ Source: aim-ui/index.html
     </section>
 
     <section id="control-room" hidden>
+      <div class="workspace-switch" aria-label="Choose AIM workspace">
+        <div><p class="eyebrow">Workspace</p><strong id="workspace-description">Product · User Stories and deliveries</strong></div>
+        <div class="workspace-options">
+          <button type="button" data-workspace="product" aria-pressed="true">Current product</button>
+          <button type="button" data-workspace="legacy" aria-pressed="false">Legacy workspaces</button>
+        </div>
+      </div>
+      <aside id="legacy-cleanup" class="legacy-cleanup" aria-labelledby="legacy-cleanup-title" hidden>
+        <div><strong id="legacy-cleanup-title">Remove older workspace data?</strong>
+          <p>Let your AI agent review and remove Legacy workspaces. Current User Stories and their evidence are kept.</p></div>
+        <div class="workspace-options">
+          <button id="open-legacy-cleanup" type="button">Review cleanup in Codex</button>
+          <button id="copy-legacy-cleanup" type="button">Copy for your AI agent</button>
+        </div>
+        <p id="legacy-cleanup-feedback" role="status" aria-live="polite"></p>
+      </aside>
       <nav class="section-tabs" aria-label="AIM control room views">
         <button class="section-tab" type="button" data-view="stories" aria-pressed="true">User Stories</button>
         <button class="section-tab" type="button" data-view="board" aria-pressed="false">Delivery control</button>
@@ -87,8 +82,14 @@ Source: aim-ui/index.html
         <button class="section-tab" type="button" data-view="portfolio" aria-pressed="false">Portfolio</button>
         <button class="section-tab" type="button" data-view="data" aria-pressed="false">AIM DATA</button>
         <button class="section-tab" type="button" data-view="people" aria-pressed="false">People &amp; agents</button>
-        <button class="section-tab" type="button" data-view="closed" aria-pressed="false">Closed Increments <span id="closed-count">0</span></button>
+        <button class="section-tab" type="button" data-view="closed" aria-pressed="false"><span id="history-tab-label">Accepted deliveries</span> <span id="closed-count">0</span></button>
       </nav>
+
+      <section class="product-workspace" id="product-workspace" aria-labelledby="product-view-title" hidden>
+        <header class="product-heading"><div><p class="eyebrow" id="product-view-eyebrow">Current product</p><h1 id="product-view-title">Delivery control</h1></div><p id="product-view-summary"></p></header>
+        <p class="product-notice" id="product-notice" role="status" hidden></p>
+        <div id="product-content"></div>
+      </section>
 
       <section class="background-operation" id="background-operation" role="status" aria-live="polite" hidden>
         <span class="background-operation-light" aria-hidden="true"></span>
@@ -197,7 +198,8 @@ Source: aim-ui/index.html
             <p class="eyebrow">Your question</p>
             <h3 id="discuss-question-title">What should AIM help you think through?</h3>
             <label for="discuss-input">Product idea, tradeoff, concern, or reflection</label>
-            <textarea id="discuss-input" maxlength="4000" rows="8" placeholder="For example: How should AIM 3.0 help an operator explore an idea without accidentally starting delivery?"></textarea>
+            <textarea id="discuss-input" maxlength="4000" rows="8" placeholder="Which user needs should we prioritize next, and what evidence would show they are met?"></textarea>
+            <div class="discussion-presets" id="discussion-presets" aria-label="Example discussion questions"></div>
             <div class="discuss-actions">
               <button class="secondary-action" id="copy-discussion" type="button" disabled>Copy discussion prompt</button>
               <button class="primary-action" id="open-discussion" type="button" disabled>Open in Codex</button>
@@ -222,7 +224,7 @@ Source: aim-ui/index.html
           <div>
             <p class="eyebrow">AIM DATA · evidence ledger</p>
             <h2 id="data-title">Delivery outcomes, with receipts</h2>
-            <p>Counts use contained AIM workspaces. Time measures use explicit Gate evidence only.</p>
+            <p id="data-scope-note">Counts use the current product ledger. Time measures require explicitly recorded timestamps.</p>
           </div>
           <p class="data-as-of" id="data-as-of"></p>
         </header>
@@ -360,7 +362,7 @@ Source: aim-ui/index.html
       <nav class="delivery-detail-evidence" id="delivery-detail-evidence" aria-label="Accepted Increment evidence"></nav>
       <section class="follow-up-panel" aria-labelledby="follow-up-title">
         <p class="eyebrow">New work, preserved history</p>
-        <h3 id="follow-up-title">Create follow-up Epic</h3>
+        <h3 id="follow-up-title">Explore a follow-up need</h3>
         <p>This opens a reviewable AIM chat proposal. It does not reopen or change the source Epic.</p>
         <pre id="follow-up-intent" tabindex="0"></pre>
         <div class="follow-up-actions">

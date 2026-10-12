@@ -84,6 +84,8 @@ class PublicSkillTests(unittest.TestCase):
             "scripts/aim_catalog_repair.py",
             "scripts/aim_ui_control.py",
             "scripts/aim_ui.py",
+            "scripts/aim_ui_product.py",
+            "scripts/aim_legacy_cleanup.py",
             "scripts/aim_codex_bridge.py",
             "scripts/aim_actions.py",
             "scripts/aim_portfolio.py",
@@ -92,6 +94,7 @@ class PublicSkillTests(unittest.TestCase):
             "aim-ui/index.html",
             "aim-ui/styles.css",
             "aim-ui/app.js",
+            "aim-ui/product-views.js",
         ):
             self.assertTrue((package / relative).is_file(), relative)
         completed = subprocess.run(

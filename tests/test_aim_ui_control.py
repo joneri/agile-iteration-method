@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from urllib.request import urlopen
 
@@ -44,6 +45,22 @@ class AimUiControlTests(unittest.TestCase):
             control.stop(self.repo.resolve())
         except OSError:
             pass
+
+    def test_open_and_start_offer_cleanup_without_deleting(self) -> None:
+        legacy = self.repo / ".aim" / "state.json"
+        legacy.parent.mkdir()
+        legacy.write_text('{"aimVersion":"3.0"}')
+        running = {"status":"running", "repo":str(self.repo), "url":"http://127.0.0.1:12345/"}
+        with patch.object(control, "_start", return_value=dict(running)):
+            result = control.start(self.repo, open_browser=False)
+        self.assertTrue(result["legacyCleanup"]["legacyDetected"])
+        with patch.object(control, "status", return_value=dict(running)), patch.object(control.webbrowser, "open"):
+            opened = control.open_instance(self.repo)
+        self.assertTrue(opened["legacyCleanup"]["legacyDetected"])
+        self.assertEqual(legacy.read_text(), '{"aimVersion":"3.0"}')
+        self.assertTrue(build_board(self.repo)["legacyCleanup"]["legacyDetected"])
+        legacy.unlink()
+        self.assertFalse(build_board(self.repo)["legacyCleanup"]["legacyDetected"])
 
     def test_launcher_and_server_fingerprint_the_same_payload(self) -> None:
         self.assertEqual(control.payload_fingerprint(), server_payload_fingerprint())
@@ -101,11 +118,11 @@ class AimUiControlTests(unittest.TestCase):
         first = control.start(repo, open_browser=False)
         self.assertEqual(first["status"], "running")
         self.assertFalse(first["reused"])
-        self.assertEqual(first["productVersion"], "4.0.0")
+        self.assertEqual(first["productVersion"], "4.1.0")
         with urlopen(f"{first['url']}api/board", timeout=2) as response:
             board = json.loads(response.read().decode("utf-8"))
         self.assertEqual(board["source"]["kind"], "uninitialized")
-        self.assertEqual(board["product"]["version"], "4.0.0")
+        self.assertEqual(board["product"]["version"], "4.1.0")
         self.assertIn(
             board["backgroundControl"]["status"], {"configured", "view_only"}
         )
