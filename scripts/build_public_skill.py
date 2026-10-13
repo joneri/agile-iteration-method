@@ -17,7 +17,7 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 20
+PUBLIC_SKILL_PACKAGE_VERSION = 21
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
@@ -372,7 +372,7 @@ def _source_provenance(root: Path) -> list[dict[str, str]]:
         {
             "source": source.as_posix(),
             "output": output.as_posix(),
-            "sha256": _sha256(_read(root, source)),
+            "sourceSha256": _sha256(_read(root, source)),
         }
         for source, output in mappings
     ]
@@ -535,6 +535,10 @@ def validate_rendered_package(rendered: dict[Path, bytes]) -> None:
     if manifest["files"] != sorted(path.as_posix() for path in rendered):
         raise PublicSkillError("manifest file inventory does not match generated output")
     for item in manifest["sourceProvenance"]:
+        if set(item) != {"source", "output", "sourceSha256"}:
+            raise PublicSkillError(
+                "source provenance must name source, output, and sourceSha256"
+            )
         output = Path(item["output"])
         if output not in rendered:
             raise PublicSkillError(

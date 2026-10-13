@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM) 4.2
 
-![AIM 4.2.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 4.2.1 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
 AIM is a delivery method for AI-assisted software work. Start with an intent. PO discovers Epics and User Stories, then AIM plans a prioritized selection, builds it, reviews it and validates every Story before user acceptance. **Better software. From the same AI:** we tested GPT-6 Luna building the same web app with and without AIM, first at initial delivery and again after the same major upgrade. AIM 3.2 delivered the stronger product in both tests: **93.5 versus 49.8**, then **93.5 versus 62.8**, out of 100 against predefined criteria. [See the case and public evidence](docs/features/aim-3.2-enigma-case.md).
 
@@ -174,4 +174,4 @@ AIM Reflect still **goes beyond memory cleanup for repository work** through ver
 
 AIM 4.2 adds shared guidance for reusing applicable authority and prior answers, grouping necessary independent questions, and binding replies to their exact scope. The optional question helper validates presentation and replay receipts; the coordinator still verifies sources and records decisions. See [autonomous interaction](docs/workflow/autonomous-interaction.md). The synthetic pilot does not establish general speed or token savings.
 
-Current product version: **v4.2.0** — autonomous continuation and scoped question replies. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product version: **v4.2.1** — explicit public-package source provenance. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).

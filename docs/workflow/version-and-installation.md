@@ -157,6 +157,14 @@ The package-format version changes only when the generated public package
 structure or compatibility contract changes. It is not a second AIM product
 version.
 
+Each `sourceProvenance` entry records the canonical input in `source`, its
+generated destination in `output`, and the input bytes' digest in
+`sourceSha256`. That digest is source provenance, not a checksum of the
+transformed output. Generated-package integrity is established by deterministic
+regeneration, the complete file inventory, and byte comparison with the
+rendered package. The manifest does not attempt to embed a self-referential
+checksum of `manifest.json`.
+
 ## Generation and verification
 
 ```bash

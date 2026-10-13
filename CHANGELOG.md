@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-13 - AIM patch release v4.2.1
+
+- Rename the ambiguous public-package provenance member from `sha256` to `sourceSha256`, making clear that it fingerprints the canonical source rather than the transformed package output.
+- Document how deterministic regeneration and byte comparison establish generated-package integrity without an impossible self-referential manifest checksum.
+- Add regression coverage for the provenance shape and the intentional difference between canonical and generated `SKILL.md` bytes.
+
+Compatibility: product backlog `1.0`, runtime `2.0`, state schema `1.0` and installer manifest `1.0` are unchanged. Portable package revision is `21`. No data migration is needed; package-metadata consumers should read `sourceSha256` for canonical source provenance.
+
 ## 2026-10-12 - AIM release v4.2.0
 
 AIM 4.2 adds guidance for continuing authorized work and handling necessary questions across sessions.

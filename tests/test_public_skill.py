@@ -312,11 +312,24 @@ class PublicSkillTests(unittest.TestCase):
         manifest = json.loads(rendered[Path("manifest.json")])
         for item in manifest["sourceProvenance"]:
             with self.subTest(item=item):
+                self.assertEqual(
+                    set(item),
+                    {"source", "output", "sourceSha256"},
+                )
                 self.assertIn(Path(item["output"]), rendered)
                 self.assertEqual(
-                    item["sha256"],
+                    item["sourceSha256"],
                     hashlib.sha256((REPO_ROOT / item["source"]).read_bytes()).hexdigest(),
                 )
+        skill_provenance = next(
+            item
+            for item in manifest["sourceProvenance"]
+            if item["output"] == "SKILL.md"
+        )
+        self.assertNotEqual(
+            skill_provenance["sourceSha256"],
+            hashlib.sha256(rendered[Path("SKILL.md")]).hexdigest(),
+        )
         self.assertIn(
             Path("references/install/aim-install-manifest.yaml"),
             rendered,
