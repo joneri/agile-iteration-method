@@ -24,9 +24,9 @@ The point is to produce work that remains aligned, inspectable, and ready for a 
 
 AIM is not tied to a language, framework, platform, or repository type.
 
-Start with an intent. PO discovers Epics and writes User Stories for the
-relevant user perspectives, owning their value, criteria and priority. TDO
-refines with PO and plans a selection that can include several Epics. The
+Start with an intent. PO owns Epics and product priority. TDO creates and
+owns User Stories and criteria for the relevant user perspectives, and plans a
+coherent increment whose Stories can come from several Epics. The
 integrated working result of accepted Stories is an increment. A Sprint is an
 optional timebox, not a requirement.
 This keeps the work centered on user value instead of a growing task list or whatever implementation detail was mentioned most recently.

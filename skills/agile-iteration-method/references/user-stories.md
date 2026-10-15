@@ -8,9 +8,10 @@ Source: docs/workflow/user-stories.md
 # User Stories and the product backlog
 
 AIM 4.0 separates requirements from delivery. Start with an intent. PO discovers
-one or more Epics, owns their User Stories and orders the product backlog. TDO
-refines Stories with PO and plans a delivery selection. Implementing and
-accepting that selection produces a working increment.
+one or more Epics and owns product priority. TDO creates and refines their User
+Stories and acceptance criteria, and owns the coherent increment commitment.
+Implementing, integrating and verifying that selection prepares it for user
+acceptance.
 
 ## The model
 
@@ -18,9 +19,9 @@ accepting that selection produces a working increment.
 | --- | --- | --- |
 | Intent | What problem or desired result brought us here? | User, framed by PO |
 | Epic | What larger outcome serves that intent? | PO |
-| User Story | Who needs what, and why is it valuable? | PO, refined with TDO |
+| User Story | Who needs what, and why is it valuable? | TDO, within PO-owned Epic intent and product priority |
 | Delivery plan | Which ready Stories do we implement next, and how do we verify them? | TDO with PO priority |
-| Increment | What integrated, working improvement did we deliver? | Delivery result |
+| Increment | What integrated, working improvement did we deliver? | TDO owns delivery; user owns acceptance |
 | Sprint | What optional timebox and goal organize the work? | Team planning |
 
 A Sprint is optional. Neither a Sprint nor an increment is a User Story. A
@@ -44,20 +45,28 @@ failure reference. PO may prioritize both ahead of a second onboarding Story.
 The source repository includes complementary onboarding and support Stories
 under `examples/user-stories/`; the model here is sufficient in portable packages.
 
-PO owns Story value, acceptance criteria and priority. TDO contributes technical
-feasibility, dependencies, scope slicing and verification. TDO may draft Stories
-but does not become the sole source of requirements. Technical tasks live under
+PO owns Epic intent, outcomes, audience, scope, overall quality and product
+priority, including priority between Stories. TDO owns Story creation, refinement,
+acceptance criteria, dependencies and the coherent delivery commitment. Resolve
+conflicts together: technical sequencing must not silently reprioritize product
+goals, remove necessary scope or lower quality. Technical tasks live under
 the selected Story or delivery plan; do not disguise implementation layers as
 personas or manufacture a user need for an unrelated task.
 
 A ready Story has:
 
 - A stable `US-*` ID and exactly one primary `epicId`.
-- A concise title, actual persona, need and benefit.
+- A concise title, relevant user or actor, need and benefit.
 - Explicit, observable acceptance criteria with stable criterion IDs.
 - PO priority, with a smaller positive number ordered first.
 - Enough refinement to expose relevant dependencies, failure behavior and risks
   in the supporting delivery plan or evidence.
+
+Story count and size serve clarity of need, ownership and verification; there is
+no count target or requirement to deploy each Story independently. Preserve the
+user journey and coherent design. Shared quality requirements may be referenced
+from a common contract. Do not introduce Story Points, generic complexity scores
+or invented time estimates as required planning or capacity fields.
 
 Open Epics and their intent can evolve after an accepted delivery. Historical
 selections retain their original snapshots; active selections freeze the relevant
@@ -65,8 +74,12 @@ requirements. Closed Epics and accepted Stories remain immutable.
 
 Draft Stories remain visible but cannot enter a delivery selection. Changing
 requirements on selected or accepted Stories cannot silently invalidate the
-approved scope; preserve history and use a new requirement or an explicitly
-replanned delivery as appropriate.
+approved scope. Preserve the selected criteria and agreed increment outcome as
+the review baseline; never rewrite them to make delivered behavior pass. Technical
+choices may change within mandate. Changed product outcome, scope or lowered
+requirements need the applicable owner decision. Use existing history and
+decision surfaces to retain the original commitment, decision, reason and
+remaining need; never overwrite accepted requirements or results.
 
 ## Questions and reusable decisions
 
@@ -75,17 +88,36 @@ user and when resuming. Link material questions and answers to existing Story
 and criterion IDs and their original evidence. The product ledger remains the
 only Story/gate state; question receipts cannot accept Stories. A blocked choice
 halts its dependent action, not independent work already within the plan. Changed
-decisions use existing refinement/rework paths and retain historical acceptance.
+decisions use only supported refinement/rework paths and retain historical
+acceptance; approved scope changes retain the tooling limitation below.
 
 ## Planning, gates and acceptance
 
 TDO selects ready Stories according to PO priority, dependencies and capacity.
 The selection can cross Epic boundaries. A delivery plan names exact Story IDs,
-its goal, implementation boundaries and checks for both individual needs and
-the integrated result. One active delivery selection is supported in a product
-backlog. The selected requirement snapshot binds the plan approval.
+the coherent usable capability or improvement it will deliver, why the selected
+Stories suffice, implementation boundaries and checks for individual needs and
+the integrated result. An easy-to-finish subset is insufficient if it misses the
+agreed value. Verified learning can be the primary outcome only for an explicitly
+exploratory assignment, never as a substitute for an ordered functioning product.
+One active delivery selection is supported in a product backlog. The selected requirement snapshot binds the plan approval.
 
-The role loop remains `PO → TDO → Dev → Reviewer → TDO → PO`:
+The commitment covers every selected Story through implementation, integration
+and verification across sessions and context windows. A session ending or some
+closed Stories cannot make an incomplete increment finished. TDO chooses
+sequential or parallel execution from dependencies, integration risk, resources
+and existing mandate; parallel work grants no additional agents or budget.
+Verify parts and review consequential risks early, integrate as soon as relevant
+parts can work together, then review and validate the whole increment. Each Story
+does not require a separate full role and acceptance cycle.
+
+If a real blocker or mandate/resource conflict prevents completion, preserve
+finished work, decisions and remaining commitments, report the gap and propose
+a concrete path forward. Do not silently defer scope or exceed the mandate to
+force completion. Verified implementation and user acceptance remain distinct;
+waiting for acceptance neither repeats implementation nor authorizes consent.
+
+The integrated delivery role loop remains `PO → TDO → Dev → Reviewer → TDO → PO`:
 
 - Gate A: relevant Epic direction and Story requirements are understood.
 - Gate B: the precise Story selection and plan are approved. A clearly scoped
@@ -95,11 +127,23 @@ The role loop remains `PO → TDO → Dev → Reviewer → TDO → PO`:
 - Gate D: review has passed and TDO validates the current result.
 - Gate E: the user accepts the explicitly named Stories after validation.
 
-Review and validation must trace evidence to every selected Story. Passing a
-suite alone does not prove all criteria. The coordinator records what each
-check establishes, its limitations and relevant counterevidence. A correction
-invalidates affected review and validation evidence. A Story is Done only after
-its criteria are proven and acceptance authority is recorded.
+Reviewer independently checks whether the decomposition covers the agreed
+contribution to Epic intent as well as every selected criterion and the actual
+integrated product. The entire Epic need not finish in this increment. Review
+and validation must trace evidence to every selected Story. Passing a suite
+alone does not prove all criteria or product quality. The coordinator records
+what each check establishes, its limitations and relevant counterevidence. A correction
+invalidates affected review and validation evidence; re-review and reverify
+affected criteria and integrations, reusing unchanged relevant evidence. A Story
+is Done only after its criteria are proven and acceptance authority is recorded.
+
+The current helper has no approved-scope replanning transition. `rework` corrects
+implementation against the same frozen scope; `cancel` releases only an unapproved
+plan. If an approved commitment cannot be met, use `block` with the obstacle and
+remaining commitment and present the concrete owner decision needed. Even an
+explicit scope-change decision does not make unsupported ledger edits valid:
+preserve the original scope/history and report the tooling limitation rather than
+rewriting selected requirements or inventing a migration.
 
 The current helper accepts the complete verified delivery selection together,
 with individual criterion coverage for every Story. It does not support silent

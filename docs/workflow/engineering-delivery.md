@@ -6,11 +6,19 @@ gate and does not select a model or authorize delegation.
 
 ## Start with the hard part
 
+Reuse binding requirements, valid quality goals, prior decisions, relevant skills
+and durable project knowledge across sessions. Mature input normally shortens
+preparation: resolve only consequential gaps or contradictions, without reducing
+implementation or verification quality. A new increment alone warrants neither
+new onboarding nor full recalibration. Read and apply relevant skill instructions;
+listing skill names is not quality evidence.
+
 Translate binding requirements into observable outcomes before implementation.
 For a bounded product, keep one cohesive delivery unless an earlier independently
 useful result would change a real decision. Do not turn a PRD into a sequence of
-administrative Epics. Resolve the riskiest technical assumption with a small
-executable experiment before investing in surrounding UI or documentation.
+administrative Epics. Resolve a consequential uncertain technical assumption with a bounded
+investigation or executable experiment before depending on it; reuse sufficient
+existing evidence rather than adding an experiment by ritual.
 An experiment is evidence inside the work, not a substitute for the product.
 
 Use a compact evidence table in the existing increment or review artifact:
@@ -28,6 +36,62 @@ Keep the exit status and result of each required check. A later successful shell
 command must not conceal an earlier failed test. Advance an evidence-dependent
 phase only after its required checks pass; a failed fix stays in implementation
 until the affected regression passes. Preserve failed attempts as history.
+
+## Integrated product quality and correction
+
+Before substantial implementation, concretize decisive qualities in the existing
+requirements or delivery plan: observable characteristics, relevant references or
+examples that would fail the assignment. PO owns overall quality; TDO translates
+it into Story criteria and integrated checks. Shared quality contracts may be
+referenced instead of copied. This adds no form or approval gate.
+
+Judge the functioning product: behavior, comprehensibility, visual expression,
+interaction between parts and relevant user experience. For a game this can mean
+movement feel, feedback, presentation and learning the mechanics. Technical tests
+prove what they exercise; they do not alone establish good design or experience.
+Do not hide a failure of the whole behind individually satisfied Story criteria.
+Keep human/AI code readability, appropriate components, maintainability, loading
+and runtime performance, and security in scope where relevant.
+
+Correct material requirement and quality defects within the mandate, then
+re-review and verify affected criteria and integrations. A final defects list is
+insufficient when correction is authorized and feasible. Reuse still-relevant
+unchanged evidence. Distinguish agreed quality defects from optional improvements
+or reviewer taste; suggestions do not become requirements without authority.
+If tools and evidence cannot assess a decisive experience quality, mark it
+unverified; working code or a still image cannot prove what they do not show.
+If quality and resources conflict, expose the conflict and recommend a concrete
+path within the existing owner decision process; do not silently lower quality.
+
+## Useful copy in context
+
+Every text should help its intended audience understand, navigate, act, decide or
+experience the product. Rewrite or remove empty sales claims, obvious layout
+descriptions, repetition and text that only fills a visual template. Keep an
+explanation when it adds a next step, limitation or consequence of a choice.
+A description that fits unrelated products unchanged deserves scrutiny; standard
+functional labels such as “Save”, “Settings” and “Cancel” need no novelty.
+
+Headings, subheadings and eyebrow text each need a purpose. Identify the content,
+task, actual state or concrete benefit; omit an extra visible heading when the
+context is already clear. Preserve necessary accessible names, understandable
+navigation and semantic structure when removing decorative text.
+
+Functional views do not receive advertising language by default. Marketing may
+persuade through concrete supported claims. Words such as “smart”, “powerful”,
+“seamless”, “best” or “AAA” cannot replace information or evidence; this is not a
+banned-word list. Personality, humor, narrative and drama belong when they serve
+the product. Instructions, buttons, status and errors must describe real behavior:
+never assert saved data, safety or undo support that the product does not provide.
+Product copy stands on its own in the audience's current context; private chats,
+AI mistakes and discarded alternatives belong only in intentionally historical
+artifacts when relevant.
+
+PO owns audience and communicative purpose; TDO owns relevant acceptance criteria
+and coherence; Dev writes and adapts text; Reviewer inspects comprehensibility,
+relevance, redundancy, tone and factual claims in the rendered view or equivalent
+use context. A word list or automated text check is insufficient. Meaningless or
+misleading copy is a product quality defect, not automatically optional polish.
 
 ## Correctness, boundaries and readability
 
@@ -183,11 +247,26 @@ refresh affected bindings when requirements, dependencies or architecture change
 For already-authorized Auto delivery, perform this provisional selection inside
 startup. Do not redirect a concrete product request into onboarding because a
 profile is absent. Preserve real scope and Gate A/B decisions under the existing
-authority, initialize through the trusted helper once, then test the hardest
-product assumption. This does not replace a required Strict decision or grant
+authority, initialize through the trusted helper once, then address any consequential
+unresolved product assumption. Reuse sufficient evidence; do not run an experiment
+merely because implementation is starting. This does not replace a required Strict decision or grant
 new authority. Record startup work only in the existing evidence artifact.
 
 ## Spend effort where it changes the result
+
+Quality ambition is bounded by the assignment, resource limits and applicable
+approvals. Assess cumulative time, cost, product, quality, external effects and
+reversibility across all agents before a material deviation. No numeric budget
+means proportionate work, not unlimited resources or an invented expansion
+threshold. A complexity label alone cannot change cost profile, product priority
+or ambition. Use the existing plan/decision surfaces, not a per-tool checklist.
+
+Any evaluation must stay within its authorized campaign, run count and predefined
+quality criteria. Record comparable starting conditions, models, resources and
+assessment, and retain failed attempts and uncertainty. Aggregate gains cannot
+hide an unacceptable loss of an important quality requirement; faster or cheaper
+work is not improvement when the product becomes materially worse. This contract
+authorizes no new comparison campaign, extra products or runs.
 
 Load the active role, current checkpoint, selected locality and affected facts.
 Read the full method or other role instructions only to resolve a specific

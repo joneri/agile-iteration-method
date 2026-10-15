@@ -16,10 +16,10 @@ SOURCE = ".aim/product-backlog.json"
 MAX_DISCUSSION_SOURCES = 16
 MAX_RECENT_DELIVERIES = 10
 ROLE_RESPONSIBILITIES = (
-    ("PO", "Own user needs, Epic outcomes, Story priority and acceptance recommendations."),
-    ("TDO", "Refine Stories, plan the selected delivery and verify the integrated result."),
+    ("PO", "Own Epic intent, scope, quality, product priority and acceptance recommendations."),
+    ("TDO", "Own Stories and criteria, plan a coherent increment and verify the integrated result."),
     ("Dev", "Implement the approved Story selection and its acceptance criteria."),
-    ("Reviewer", "Independently review the implementation, risks and acceptance evidence."),
+    ("Reviewer", "Review Story coverage of the agreed Epic contribution, implementation and acceptance evidence."),
 )
 PHASE_ROLE = {
     "planned": "TDO", "in_progress": "Dev", "review": "Reviewer",

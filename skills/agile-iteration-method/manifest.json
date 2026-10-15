@@ -1,5 +1,5 @@
 {
-  "description": "Plan and deliver repository-aware AI-assisted software work through Agile Iteration Method using intent discovery, PO-owned Epics and User Stories, cross-Epic delivery planning, explicit gates, review, validation, and user-owned acceptance. Use for discussing product direction with repository context, creating and refining Epics and User Stories, planning delivery selections, implementing work, reviewing delivery, configuring project specialists, calibrating and reflecting on repositories, consolidating knowledge across local AIM projects, controlling AIM modes and cost profiles, opening and controlling local AIM UI, and continuing AIM runs.",
+  "description": "Plan and deliver repository-aware AI-assisted software work through Agile Iteration Method using intent discovery, PO-owned Epics, TDO-owned User Stories, cross-Epic delivery planning, explicit gates, review, validation, and user-owned acceptance. Use for discussing product direction with repository context, creating and refining Epics and User Stories, planning delivery selections, implementing work, reviewing delivery, configuring project specialists, calibrating and reflecting on repositories, consolidating knowledge across local AIM projects, controlling AIM modes and cost profiles, opening and controlling local AIM UI, and continuing AIM runs.",
   "files": [
     "SKILL.md",
     "aim-ui/app.js",
@@ -91,7 +91,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.2.1",
+  "productVersion": "4.3.0",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -104,22 +104,22 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "6bcb4ac760784c7626e600ea9ad8ecaebdf377c3aadcede5cb92e4f64f7d4939"
+      "sourceSha256": "bb3432615924a5f28d9a6153fd40ffdd5b3ac8a2d5ecc26d0ea1b0fcb95dbd8e"
     },
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "74c81d8b39c6af86ee1cade3aedcbe787312cbd231cdb6a88f5c1af8130f58a0"
+      "sourceSha256": "83298b7e8ca365c5e90b81ba1f31f2eafeacc669bdfb5749ea812ae1dde230c5"
     },
     {
       "output": "references/autonomous-interaction.md",
       "source": "docs/workflow/autonomous-interaction.md",
-      "sourceSha256": "b8dbb3140210ba238aea929f060e4bd1b471f3a7eee2a9f184537aef948eb099"
+      "sourceSha256": "460fac64c78e2428dd0e3de2146b3dd7ff5077441637cca5fdca211128d40cf0"
     },
     {
       "output": "references/example-user-story.md",
       "source": "examples/user-stories/example-user-story.md",
-      "sourceSha256": "01364a2b55243aeb4d0b510b6cfa59d1e69e7b1d64ad2f4b2e30f9d2aaeb9e3b"
+      "sourceSha256": "e1b64067f639476a96db7bf29f4a3f6f5b65d63da0c6ebb2d55b0abb49bb03e4"
     },
     {
       "output": "references/streamlined-decisions.md",
@@ -129,42 +129,42 @@
     {
       "output": "references/adaptive-execution.md",
       "source": "docs/workflow/adaptive-execution.md",
-      "sourceSha256": "6aa63f0929f6688a284b677acfd393b1789b4524dba7d3d45aa7a3f9397b9597"
+      "sourceSha256": "575d12311ff643721433f19d3992e67714f364f3e488d10d7bce0e772df4287b"
     },
     {
       "output": "references/engineering-delivery.md",
       "source": "docs/workflow/engineering-delivery.md",
-      "sourceSha256": "b3716b2441b37c36300f0b7db44a229d96639726feb7c634371e00551614f551"
+      "sourceSha256": "6501f1ca71d4c98ec188e1ba047923d1caf9fc2656da2d7b2c8badf2abb0ccd3"
     },
     {
       "output": "references/role-skill-po.md",
       "source": "docs/workflow/role-skill-po.md",
-      "sourceSha256": "fc0752feaab0905c77dc914ab2a9fd210d079e873e3944c744a4740b2a7dc8da"
+      "sourceSha256": "43ba392144b9c84730bb5b3f7cda22c2bdaff6a89c5013153cb8bf8797d6bfa2"
     },
     {
       "output": "references/role-skill-tdo.md",
       "source": "docs/workflow/role-skill-tdo.md",
-      "sourceSha256": "cb53859f5c2565ce032a8f5b3a8d7f7f267518607761256c9f8bac3014c3edfb"
+      "sourceSha256": "edfc333a2eec786c63897afc3219d00801afdd25f5d172d23d73e02443ee1ca0"
     },
     {
       "output": "references/role-skill-dev.md",
       "source": "docs/workflow/role-skill-dev.md",
-      "sourceSha256": "cb33cb2df37d09cd95ad9e594d9a718f6951ed7c25c5b6209aa50f01925d05c0"
+      "sourceSha256": "71b52df29a90663e3bf8a9f7c002886550ff1f31149c80734b4aad3d78fb080b"
     },
     {
       "output": "references/role-skill-reviewer.md",
       "source": "docs/workflow/role-skill-reviewer.md",
-      "sourceSha256": "02fe6f2a9cddfc61cdf448b287db1a59322887c1ad4a10acc87f871c805597f3"
+      "sourceSha256": "554ef472a1e4f327bed857553f0ad5b692ed3399865760b4155d1cbcf8c8918d"
     },
     {
       "output": "references/skill-user-guide.md",
       "source": "docs/workflow/skill-user-guide.md",
-      "sourceSha256": "f7b43e36681ddae33e2cdf5a0c7c21fc17138389351cc5b83e6ba344328d4d8d"
+      "sourceSha256": "b9222ac77178b8b244ac6993839a54a249a8112214f3a92e638fafa6b0ac01a6"
     },
     {
       "output": "references/skill-command-runtime.md",
       "source": "docs/workflow/skill-command-runtime.md",
-      "sourceSha256": "231824ab199bd296a2ce71dcc927fb963ab46172b292e6de2eb7c75aa0e05c61"
+      "sourceSha256": "fecf366a4d30bc672d7cb3f7283fae20f3b2207b51227916b5ed1c828b4d9aab"
     },
     {
       "output": "references/skill-completion.md",
@@ -174,12 +174,12 @@
     {
       "output": "references/agile-iteration-method.md",
       "source": "docs/workflow/agile-iteration-method.md",
-      "sourceSha256": "7aa7ab141e06e1dc6ca20d917db98e397ac113aa016fcd1db5afe92c92b89c3b"
+      "sourceSha256": "867ad6bf966e0bc052cf18d58bd1bc79b3a94b2f0a1781ead17d836a09484fcf"
     },
     {
       "output": "references/adapter-command-contract.md",
       "source": "docs/workflow/adapter-command-contract.md",
-      "sourceSha256": "db6d2ae147c92ffd4234144da7499a6f8ff698c1d3ddee84381b994985253195"
+      "sourceSha256": "31181a3456a96c0cb1f1e8636fc44ac3a38d0361401479b73e92c14a7d11925a"
     },
     {
       "output": "references/adapter-entry-model.md",
@@ -264,7 +264,7 @@
     {
       "output": "references/schemas/aim-product-backlog.schema.json",
       "source": "schemas/aim-product-backlog.schema.json",
-      "sourceSha256": "9080793c730964b2f4a5430db9fc7a1c83873c5faf94c252a918d2c149afcf11"
+      "sourceSha256": "1ff7841314912ae23a6f6f2ef1b712462ece4d66b2b2282764550175b8f4ef36"
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
@@ -279,7 +279,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "e5d77a995a7d89c4b24498cb8947c3b40e53f4d2c0ba2380796cdb059d237848"
+      "sourceSha256": "1e5302003691b6fdc7bddc0736eef7ce3adc870e97afdfcfb497dde2a78ed545"
     },
     {
       "output": "references/version-and-installation.md",
@@ -294,7 +294,7 @@
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "72b75cfe4a6104c9383a2cd0f8c675813202d56a7994655da37a1016e946cf45"
+      "sourceSha256": "f4c300db0f411d04df3b28ca04594af6975ad1c0708ad7c841eee1d64e7fabfa"
     },
     {
       "output": "scripts/aim_interaction.py",
@@ -449,7 +449,7 @@
     {
       "output": "scripts/aim_ui_product.py",
       "source": "scripts/aim_ui_product.py",
-      "sourceSha256": "9627b065e7e646f39560e8ff3db105a5c7d8a5521713a45578781a0dd676edae"
+      "sourceSha256": "a3ac55a24b0764861dbae6c6fb9fbff84f1f4a54c40f0fc100fe388be7e56b5d"
     },
     {
       "output": "scripts/aim_legacy_cleanup.py",
@@ -479,12 +479,12 @@
     {
       "output": "aim-ui/app.js",
       "source": "aim-ui/app.js",
-      "sourceSha256": "6f80455d8d249aaffed065573f0865d3528f059ecd083f0321613f6072604b22"
+      "sourceSha256": "1461f070babff502db7e4f74b9533b6cf8dffa77cb5713fb13e0dd490ca9d22e"
     },
     {
       "output": "aim-ui/product-views.js",
       "source": "aim-ui/product-views.js",
-      "sourceSha256": "1d2d7621a6c8ba4a328a9226e56d6bec49b9efa6f91a26d0cb4777029e605185"
+      "sourceSha256": "fa6bfbaf1c5933d0729ac605e9b940d38b8fdb1e6457b8dd1227be2d50c5dd1b"
     }
   ]
 }

@@ -28,7 +28,7 @@ Onboarding states:
 | --- | --- | --- |
 | 1. Installed but not calibrated | AIM files are present, but reusable repo knowledge is missing or stale. | `/aim calibrate-repo` |
 | 2. Ready for new work | No active delivery requires continuation. | `/aim start "<desired outcome>"` |
-| 3. Intent or Stories await planning | PO discovers Epics and refines Stories with TDO. | Review the relevant direction and first Story selection |
+| 3. Intent or Stories await planning | PO owns Epics; TDO creates and refines Stories. | Review the relevant direction and first Story selection |
 | 4. Delivery approved | AIM has an approved selection and can continue its checkpoint. | `/aim continue` |
 | 5. Blocked | AIM cannot progress without resolving a stated blocker. | Resolve the blocking issue named in status |
 
@@ -84,7 +84,7 @@ config`, `/aim validate`, and the workflow docs.
 ## Edge cases
 
 - Resume the requested active Story ledger or legacy checkpoint; preserve its identity. New intents can add requirements without starting a second active delivery.
-- PO discovers one or more Epics and owns Stories and priority. TDO refines and plans selections across Epics; see `user-stories.md`.
+- PO owns Epics and product priority. TDO owns Stories, criteria and a coherent increment that may span Epics; see `user-stories.md`.
 - If the repo is missing AIM files, install before starting.
 - If work is high risk, use `Deep` even if the user entered through the lightweight path.
 

@@ -4,8 +4,18 @@ Skill id: `aim-dev-engineering`. Bundled with AIM; applies to implementation.
 
 - Implement the approved Story selection and trace checks to Story criteria.
   Preserve Story identities and Epic context; implementation tasks and files
-  do not become replacement requirements.
+  do not become replacement requirements. Complete and integrate all committed
+  work; retain unfinished obligations across sessions rather than declaring a
+  partial result finished. Fix material in-scope requirement and quality defects,
+  then reverify affected behavior and integration.
 
+- Inspect the working product against agreed observable quality goals: function,
+  clarity, visual expression, interaction and relevant experience. Tests alone
+  do not prove good design; disclose qualities the available evidence cannot show.
+- Write concrete, useful copy in context. Remove repetition and decorative
+  headings while retaining accessible names, navigation and semantic structure.
+  Labels, status and errors must describe actual behavior and supported claims.
+  Follow the copy contract in `engineering-delivery.md`.
 - Use the actual framework and local idioms. Start at the riskiest behavior,
   retain an independent correctness oracle, and finish the end-to-end flow.
 - Cover every advertised algorithm variant with an independent expected result,

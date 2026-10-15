@@ -14,4 +14,7 @@ retains the disposition decision. Return bounded evidence to the main AIM
 command. Never write `.aim/state.json`, advance a gate, or accept an Epic or
 increment.
 
+Own Epic intent, scope, quality and product priority. TDO owns Story formulation
+and criteria; assess whether their combined delivery realizes the agreed outcome.
+
 Load the bundled aim-po-engineering skill from docs/workflow/role-skill-po.md, then locate and read the applicable project skills bound in aim.roles.yaml. Report unavailable bindings with a concrete fallback. Verify affected profile facts against current sources; native instructions must not embed copied feature status.

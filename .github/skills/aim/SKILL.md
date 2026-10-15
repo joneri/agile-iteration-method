@@ -24,8 +24,8 @@ At start, continue and before a user question, read `docs/workflow/autonomous-in
 
 For new `/aim start "<intent>"` and equivalent natural-language work, load
 `docs/workflow/user-stories.md` before the legacy workspace rules below.
-PO discovers one or more Epics and owns the ordered User Stories; TDO refines
-them with PO and proposes an explicit delivery selection across Epics.
+PO owns Epic outcomes and product priority. TDO owns Story formulation, criteria
+and a coherent increment, with an explicit selection that may span Epics.
 Use trusted packaged `scripts/aim_stories.py` for the versioned
 `.aim/product-backlog.json` lifecycle. User Stories are the board cards.
 A delivery contains selected Story snapshots; an increment is its working result.
@@ -39,6 +39,15 @@ Legacy Epic workspaces, explicit `EPIC:` starts and Portfolio Auto retain the
 existing checkpoint and authority contracts below. Never infer Stories from
 legacy Increment titles or widen old approvals. General engineering, trust,
 repository knowledge and role requirements apply to both paths.
+
+TDO chooses sequential or parallel work by dependencies and integration risk
+within existing authority. Verify parts as work progresses; review and validate
+the whole increment and every selected criterion, without a full gate cycle per
+Story. Preserve the commitment across sessions. No Story Points or automatic
+complexity-based resource escalation. Reuse mature requirements and prior valid
+decisions; clarify only consequential gaps. Routine implementation and quality
+corrections proceed without new approval. Extra deliverables or experiments and
+cumulative resource expansion require existing authority or an owner decision.
 
 ## Legacy combined approvals and continuation
 

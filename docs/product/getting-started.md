@@ -2,7 +2,7 @@
 
 This path takes a new user from an intent to accepted User Stories. You do not
 need to supply an Epic or read the full method first. PO discovers outcomes and
-needs; TDO refines and plans delivery with PO. Chat and terminal agents are
+product priority; TDO owns Stories, criteria and the increment. Chat and terminal agents are
 complete paths without AIM UI. Continue resumes authorized work; it does not
 approve a waiting decision. See [User Stories](../workflow/user-stories.md).
 
@@ -170,7 +170,7 @@ Describe the problem or desired result:
 /aim start "Make checkout recovery clear for customers and help support staff resolve delayed payment confirmations"
 ```
 
-PO identifies the relevant Epics and Stories for those different users. A
+PO identifies the relevant Epics; TDO creates Stories for those different users. A
 customer may need a reliable payment status; a support specialist may need a
 safe way to find the delayed confirmation. These needs retain separate identity,
 priority and acceptance criteria even when delivered together.
@@ -182,8 +182,8 @@ and verification when warranted. None of these settings replaces user authority.
 
 ## 6. Refine needs and choose the delivery
 
-PO owns Story value, criteria and ordering. TDO refines feasibility, dependencies
-and verification with PO, then proposes which ready Stories to implement next.
+PO owns Epic outcomes and product priority. TDO owns Story formulation, criteria,
+dependencies and verification, then proposes a coherent increment of ready Stories.
 A delivery can span Epics; a Story need not cover every aspect of its Epic.
 
 Check that the proposal names the selected Stories, their user needs, criteria,

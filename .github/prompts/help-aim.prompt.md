@@ -49,5 +49,5 @@ If AIM helper files or instructions were updated recently, mention `/aim upgrade
 If no active Epic exists and calibration is ready, end by telling me the exact
 next start command to run.
 
-For new work, follow `docs/workflow/user-stories.md`: PO discovers Epics and
-User Stories from intent, and TDO proposes the delivery selection.
+For new work, follow `docs/workflow/user-stories.md`: PO owns Epics and
+product priority; TDO owns Stories, criteria and the coherent delivery selection.

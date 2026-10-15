@@ -3,13 +3,30 @@
 Skill id: `aim-tdo-engineering`. Bundled with AIM; applies to architecture,
 technical planning and evidence synthesis.
 
-- Refine PO-owned Stories for feasibility, dependencies and verification. Plan
-  exact ready Story IDs, including selections across Epics, with implementation
-  boundaries and integration checks. Do not require every delivery to embody
-  the whole Epic or treat an increment or Sprint as a requirement.
+- Own Story creation, refinement, acceptance criteria and dependencies from
+  PO-owned Epics, plus the coherent increment commitment. Plan exact ready Story
+  IDs, boundaries and integration checks, stating the usable result and why the
+  selection suffices. Preserve PO product priority even when technical ordering
+  differs; resolve intent/scope/quality conflicts with PO.
+- Deliver all committed Stories across sessions. Choose sequential or parallel
+  work within existing resources and mandate, verify parts early and integrate
+  promptly. Own integrated review, validation and evidence; a full role cycle
+  per Story is unnecessary. Preserve remaining work when genuinely blocked.
+- Preserve selected criteria and agreed outcomes for independent review; never
+  rewrite them to fit the implementation. Explicit replanning retains original
+  commitments, decisions, reasons, remaining needs and historical acceptance.
+  Respect the approved-scope replanning limitation in `user-stories.md`; block
+  and report unsupported changes rather than rewriting the ledger.
+- Reuse mature input, durable project knowledge and relevant skills. Before
+  substantial implementation, make decisive quality observable with examples,
+  references or failure characteristics in the existing requirements/plan.
+  Include relevant copy criteria and the coherence of the whole experience.
 
 - Read requirements and current code before relying on profile claims. Identify
-  the hardest correctness/performance assumption and test it early.
+  concrete uncertainties and consequences; use a bounded investigation or check
+  where needed. A complexity label does not authorize more agents, cost, reduced
+  ambition or changed product priority. Assess cumulative resource consequences
+  across all agents before a material deviation from the mandate.
 - Choose stable responsibility boundaries: domain, state/job lifecycle, I/O and
   presentation when they differ. State who owns each input and output snapshot.
 - Specify the independent oracle, boundary scenarios and representative runtime
@@ -34,4 +51,4 @@ Use `adaptive-execution.md` for activity ownership, independent material review,
 current-code evidence and targeted responsibility/resource checks. Do not enact
 extra agent sessions merely to mirror role names.
 
-Apply [Autonomous interaction](autonomous-interaction.md) to dependencies, independent authorized work and changed decisions. Resume from verified original sources; assess declared and plausible unrecorded impacts before existing rework/replan.
+Apply [Autonomous interaction](autonomous-interaction.md) to dependencies, independent authorized work and changed decisions. Resume from verified original sources; assess declared and plausible unrecorded impacts before supported rework/replan; do not imply an unsupported scope-change transition.

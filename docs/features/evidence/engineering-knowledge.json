@@ -6,7 +6,7 @@
       "claim": "Every role binds its bundled engineering instructions.",
       "document": {
         "path": "aim.roles.yaml",
-        "sha256": "d97a8333ae62360c615a0819db814f47fce816e23c9a1722e806e907d3de3018"
+        "sha256": "9027c4804cd02f68c37e85b0ab729bb411dc0cad4a91cc0d930d1eab8a6b58b9"
       },
       "sources": [
         {
@@ -15,19 +15,19 @@
         },
         {
           "path": "docs/workflow/role-skill-po.md",
-          "sha256": "fc0752feaab0905c77dc914ab2a9fd210d079e873e3944c744a4740b2a7dc8da"
+          "sha256": "43ba392144b9c84730bb5b3f7cda22c2bdaff6a89c5013153cb8bf8797d6bfa2"
         },
         {
           "path": "docs/workflow/role-skill-tdo.md",
-          "sha256": "cb53859f5c2565ce032a8f5b3a8d7f7f267518607761256c9f8bac3014c3edfb"
+          "sha256": "edfc333a2eec786c63897afc3219d00801afdd25f5d172d23d73e02443ee1ca0"
         },
         {
           "path": "docs/workflow/role-skill-dev.md",
-          "sha256": "cb33cb2df37d09cd95ad9e594d9a718f6951ed7c25c5b6209aa50f01925d05c0"
+          "sha256": "71b52df29a90663e3bf8a9f7c002886550ff1f31149c80734b4aad3d78fb080b"
         },
         {
           "path": "docs/workflow/role-skill-reviewer.md",
-          "sha256": "02fe6f2a9cddfc61cdf448b287db1a59322887c1ad4a10acc87f871c805597f3"
+          "sha256": "554ef472a1e4f327bed857553f0ad5b692ed3399865760b4155d1cbcf8c8918d"
         }
       ]
     },

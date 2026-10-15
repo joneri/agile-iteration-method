@@ -8,17 +8,20 @@ This is canonical AIM cost-review behavior at startup, Gate B, implementation, a
 
 ## How it works
 
-Use this checklist whenever AI cost is a meaningful concern.
+Use relevant questions when cost is a material concern; do not run a mandatory
+interview or complete a form for every increment. Reuse known platform facts and
+prior authority. Concrete uncertainty may justify a recommendation, never automatic
+profile, model, priority or scope changes. Follow `autonomous-interaction.md`.
 
 ### Before starting the Epic
 
-- Ask which vendor surface is being used:
+- Resolve the vendor surface from available context; ask only if necessary:
   - GitHub Copilot chat, CLI, cloud agent, review, or another AI-credit surface
   - Claude Code
   - Codex
-- Ask whether current vendor billing facts matter to the task.
-- Default to `Cost Control` only if the work is low-risk and the pricing model itself is not under investigation.
-- Start in `Deep` if stale billing assumptions could mislead the work.
+- Determine whether current vendor billing facts actually affect the decision.
+- Preserve the selected profile; `Standard` is the default. Recommend `Cost Control` when useful within authority.
+- Recommend proportionate investigation if stale billing assumptions could mislead the work; do not automatically switch to `Deep`.
 
 ### At Gate B
 
@@ -32,8 +35,8 @@ Use this checklist whenever AI cost is a meaningful concern.
 
 - Avoid broad retries without a new hypothesis.
 - Avoid dragging large stale context forward if it is no longer needed.
-- Prefer one focused clarification increment over a long drifting session.
-- Treat pricing investigation as its own increment when it is the real blocker.
+- Resolve a consequential uncertainty with a bounded check inside the commitment when possible; do not substitute a new investigation for the agreed product.
+- Propose a separately scoped pricing investigation only when necessary and authorized.
 
 ### At Gate E
 
@@ -61,12 +64,12 @@ Inputs:
 Outputs:
 
 - a better choice of `Cost Control`, `Standard`, or `Deep`
-- a narrower and cheaper Done Increment
+- a resource-appropriate increment that retains its agreed value and quality
 - clearer justification for when expensive work is actually worth it
 
 ## Edge cases
 
-- If billing facts themselves are the work, the run usually starts in `Deep`.
+- For billing research, choose evidence depth within the agreed resource mandate.
 - If GitHub Copilot review is part of the workflow, remember that Actions minutes may also matter.
 - If the work is trust-sensitive, saving money is secondary to getting the decision right.
 - If a team repeatedly needs `Deep` for the same class of work, the next improvement may need automation or tooling rather than more checklist language.

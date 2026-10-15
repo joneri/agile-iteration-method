@@ -71,9 +71,9 @@ Mode: Strict
 Cost profile: Standard
 ```
 
-Avoid beginning with a list of implementation tasks.
-PO discovers Epics and User Stories from the intent. PO owns needs, criteria
-and priority; TDO refines and plans the next selection with PO. See
+An idea or detailed requirements are both valid starting points.
+PO owns Epics and product priority. TDO owns Stories, criteria and the coherent
+increment, reusing decisions and clarifying only consequential gaps. See
 [User Stories](user-stories.md).
 
 ## 3. Choose Execution Style

@@ -31,8 +31,8 @@ ownership, or acceptance.
 
 New `/aim start "<desired outcome>"` and equivalent natural-language requests
 follow [User Stories and product backlog](user-stories.md). PO preserves intent,
-discovers Epics and owns Story value, criteria and ordering. TDO refines with PO
-and selects ready Stories for delivery, potentially across Epics. Use the trusted
+owns Epics and product priority. TDO creates and owns Stories and their criteria
+and selects ready Stories for a coherent increment, potentially across Epics. Use the trusted
 `scripts/aim_stories.py` helper for the product ledger and evidence transitions.
 Read its status before continuation and bind current digests before mutation.
 
@@ -77,10 +77,11 @@ operation through the agent. No legacy approval or mandate gains Story authority
 Startup reads and classifies the versioned runtime state before selecting cost.
 Incomplete state resumes its persisted cost profile. A genuinely new Epic makes
 a fresh explicit/policy/default choice and never inherits a completed Epic's
-profile. Gate B may escalate or de-escalate only when the visible decision and
-persisted state agree. Supported legacy state is normalized read-only;
+profile. Gate B may change depth only within applicable resource authority and
+when the visible decision and persisted state agree. Complexity alone never
+changes cost profile, model, product priority or agent count. Supported legacy state is normalized read-only;
 unsupported or contradictory state stops without mutation.
-| `/aim replan` | return the active, unaccepted increment to Gate B planning with the reason preserved | updates the active checkpoint; never rewrites accepted history |
+| `/aim replan` | legacy Epic/DI only: return the active, unaccepted increment to Gate B planning with the reason preserved | updates that legacy checkpoint; never rewrites accepted history. Story deliveries have no approved-scope replan transition; use the blocked-commitment guidance in `user-stories.md`. |
 
 `/aim calibrate-repo`, `/aim remember-repo`, and `/aim forget-repo` follow
 `repo-awareness-calibration.md`. `/aim reflect` and

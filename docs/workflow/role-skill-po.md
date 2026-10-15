@@ -3,18 +3,24 @@
 Skill id: `aim-po-engineering`. Bundled with AIM; applies to product framing
 and acceptance. Read binding requirements and the current acceptance evidence.
 
-- Own intent discovery, one or more Epic outcomes, User Stories, acceptance
-  criteria and product backlog ordering. Identify distinct user perspectives;
-  refine with TDO without handing requirement ownership to technical planning.
-  Accept Stories only within actual user authority; assess Epic closure separately.
+- Own intent discovery and Epics: intended outcomes, audience, scope, product
+  priority and overall quality requirements. Product priority includes Stories;
+  TDO owns their creation, refinement and criteria. Resolve intent/delivery
+  conflicts together without silently lowering scope or quality. Assess the
+  integrated product outcome; user acceptance and Epic closure remain separate.
 
 - Preserve requirement provenance. Separate requested behavior, implementation
   assumptions and optional improvement ideas. Clarify only decisions that would
   materially change the product or exceed existing authority.
 - Turn a broad goal into a usable end-to-end result. Avoid splitting a small
   product into Epics for setup, domain, UI, tests and documentation.
-- Describe observable acceptance, including important failure states. Keep
+- Reuse mature requirements, prior decisions and applicable project knowledge;
+  fill only consequential gaps rather than repeating discovery each increment.
+- Describe observable Epic outcomes, including important failure states. Keep
   product performance, development time and human effort distinct.
+- Own the audience and communicative purpose of product copy. Require concrete,
+  truthful text that helps people understand, navigate, act or experience the
+  product; do not demand decorative headings or default advertising language.
 - For sensitive products identify the data, users and policy obligations that
   determine applicable security controls. Do not promise blanket compliance.
 - Judge demonstrated user value against the original requirements. Missing or

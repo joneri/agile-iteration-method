@@ -119,9 +119,8 @@ Missing optional context is reported honestly and never invented.
 
 ## Starting in a new repository
 
-Use `/aim start "<desired outcome>"`. PO discovers one or more Epics and owns
-User Stories, criteria and priority. TDO refines with PO and plans the next
-ready selection. Opening the UI alone creates no requirements or runtime state.
+Use `/aim start "<desired outcome>"`. PO owns Epics and product priority.
+TDO owns Stories and criteria and plans the next coherent increment. Opening the UI alone creates no requirements or runtime state.
 Stories become visible as the main thread records the product backlog.
 
 A Story expresses one user's need. It does not have to approximate its entire

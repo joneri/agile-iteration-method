@@ -2,9 +2,20 @@
 
 Skill id: `aim-reviewer-engineering`. Bundled with AIM; applies to review.
 
-- Verify each selected Story against its own acceptance criteria and inspect
-  integration across the delivery. Identify affected Story IDs in findings;
-  a finished delivery does not prove its parent Epics are complete.
+- Independently compare the decomposition with the agreed contribution to Epic
+  intent, then verify every selected criterion and the integrated working
+  product. Use the preserved requirements, not criteria rewritten to fit the
+  result. Identify affected Story IDs and missing contribution in findings; the
+  whole Epic need not finish in this increment.
+- Evaluate function, clarity, visual expression, interaction and relevant user
+  experience against concrete agreed quality goals. Green tests or a still image
+  cannot establish qualities they do not exercise. Mark those unverified.
+- Review copy in its rendered view or equivalent use context for purpose,
+  relevance, redundancy, tone and supported claims. Preserve accessibility when
+  removing decorative text. Meaningless or misleading copy is a quality defect;
+  distinguish defects from personal taste and optional enhancements. Material
+  in-scope defects require correction and affected re-review, not only a final
+  list of limitations.
 
 - Derive counterexamples from the binding requirements before adopting the
   implementation's examples. Verify public behavior and independent known

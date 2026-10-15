@@ -4,7 +4,8 @@
 
 Explain, in plain operator terms, how AIM saves money on GitHub Copilot, Codex, Claude Code, and similar coding-agent platforms without weakening quality gates.
 
-This is canonical AIM cost-saving and cost-escalation behavior.
+Apply the mandate boundaries in `autonomous-interaction.md` and the profile rules
+in `cost-control-mode.md`. This guidance reduces waste within those boundaries.
 
 ## How it works
 
@@ -15,8 +16,8 @@ AIM cuts cost by reducing waste before it turns into billable tokens or AI credi
 - progressive context loading instead of full-method rereads
 - validator-first and evidence-first checks where possible
 - escalation before expensive wandering, not after
-- smaller behavioral scope so sessions stay shorter and retries stay narrower
-- explicit cost review before work starts, at Gate B, and again at Gate E
+- bounded implementation and targeted retries that preserve the committed product outcome
+- proportionate resource decisions in existing planning and review, without a new gate or routine questionnaire
 
 For GitHub Copilot specifically, this matters because the June 1, 2026 billing model prices usage through AI Credits rather than old premium-request intuition. Long agent sessions, repeated retries, unnecessary large contexts, expensive model choices, and broad ambiguous tasks can now become directly visible spend.
 
@@ -26,8 +27,8 @@ For a concrete behavior-by-behavior comparison, see `docs/features/aim-cost-comp
 
 - AIM 2.0 markets cost savings directly because users now feel the spend directly.
 - The method does not promise "cheapest possible" output. It promises lower waste with preserved trust.
-- `Cost Control` is the default low-cost operating mode, not a weaker method.
-- `Deep` remains mandatory when billing facts, trust, data correctness, or public behavior are at stake.
+- `Standard` is the default cost profile. Select `Cost Control` within applicable authority for bounded low-risk work; it is not a weaker method.
+- Concrete risks can justify recommending `Deep`; they do not automatically change the profile, model, scope or resource mandate.
 - The cost-saving story must stay grounded in official vendor behavior, especially for GitHub Copilot AI Credits.
 
 ## Inputs/outputs

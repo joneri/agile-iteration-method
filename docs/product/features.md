@@ -14,7 +14,7 @@ it does not replace checking relevant code or guarantee whole-repository coverag
 ## Delivery loop
 
 - Start with intent; PO discovers one or more Epics and their user perspectives.
-- PO owns User Stories, criteria and product backlog priority; TDO refines with PO.
+- PO owns Epics and product priority; TDO owns User Stories, criteria and the coherent increment.
 - Each Story has an identity and lifecycle independent of its delivery plan.
 - TDO selects ready Stories across Epics and plans implementation and verification.
 - Dev, Reviewer and TDO supply implementation, review and criterion-level evidence.

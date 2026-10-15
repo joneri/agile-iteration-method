@@ -13,8 +13,8 @@ AIM gives AI-assisted development a clear delivery shape:
 
 - **Start from an outcome.** Define the user or product result before choosing
   implementation tasks.
-- **Make user needs explicit.** PO discovers Epics and owns their User Stories.
-  TDO refines with PO and plans a selection across the prioritized backlog.
+- **Make user needs explicit.** PO owns Epic outcomes and product priority.
+  TDO owns Stories and criteria and plans a coherent increment.
 - **Deliver useful behavior.** Build and verify the selected Stories; their
   integrated working result is an increment. A Sprint is an optional timebox.
 - **Review before acceptance.** Separate implementation from correctness and
@@ -49,9 +49,9 @@ which projects support it, and who approved keeping it.
 ## How AIM Delivers Software
 
 Every delivery follows `PO → TDO → Dev → Reviewer → TDO → PO`.
-PO turns intent into one or more Epics, identifies different user needs as
-Stories and orders them by value. TDO refines those Stories with PO and proposes
-which ready Stories to deliver next. A selection can include several Epics.
+PO owns Epic outcomes and product priority. TDO creates and owns Stories and
+criteria for the relevant needs, then proposes a coherent increment of ready
+Stories. A selection can include several Epics.
 Dev implements the selection, Reviewer checks the actual result, and TDO
 validates each Story's criteria and the integration between them.
 
@@ -91,13 +91,13 @@ Calibration is reviewable repository knowledge, not permission to change code.
 
 ### 3. Start with an outcome
 
-Describe the result you want rather than supplying a task list:
+Describe the result you want, or supply an existing detailed requirement:
 
 ```text
 /aim start "Make checkout recovery clear and reliable when payment confirmation is delayed"
 ```
 
-PO discovers Epics and User Stories. AIM presents the relevant direction and
+PO owns Epics; TDO creates and owns Stories. AIM presents the relevant direction and
 first Story selection together for approval.
 Implementation begins only within approved scope.
 
@@ -106,8 +106,8 @@ Implementation begins only within approved scope.
 The steps below describe the default `Strict` experience. In `Auto`, AIM reports
 the same checkpoints but may continue without pausing when no escalation applies.
 
-1. **Discover needs.** PO preserves intent, identifies Epics and writes Stories
-   for the relevant user perspectives, refining them with TDO.
+1. **Discover needs.** PO preserves intent and owns Epics. TDO creates and owns Stories
+   and criteria for the relevant user perspectives.
 2. **Choose the next delivery.** PO orders Stories; TDO proposes a feasible
    selection, potentially across Epics, with implementation and verification scope.
 3. **Build and review.** Dev implements the selection. Reviewer checks current
@@ -130,7 +130,7 @@ state transitions through the platform's native skill route.
 
 | Command | Use when | What it does | What happens next |
 | --- | --- | --- | --- |
-| `/aim start "<desired outcome>"` | You have a new desired outcome. | PO discovers Epics and User Stories, then TDO plans the next selection. | Review relevant direction and the selected Story plan. |
+| `/aim start "<desired outcome>"` | You have a new desired outcome. | PO owns Epics and priority; TDO owns Stories and plans a coherent increment. | Review relevant direction and the selected Story plan. |
 | `/aim start "PORTFOLIO" mode:auto` | You want AIM to finish the visible Backlog sequentially. | Previews one immutable snapshot and asks for one bounded Portfolio mandate. | After approval, AIM runs included Epics through the full loop and pauses only on escalation. |
 | `/aim continue` | An AIM run already exists. | Reads the durable checkpoint and continues from the current role and gate. | AIM performs the next automatic step or presents the next decision. |
 | `Start working according to AIM` | You want to begin but prefer plain language. | Maps the request to AIM startup without changing method semantics. | AIM detects whether to calibrate, start, or resume. |
@@ -196,8 +196,8 @@ state transitions through the platform's native skill route.
 | Command | Use when | What it does | What happens next |
 | --- | --- | --- | --- |
 | `/aim mode strict\|auto` | You want to change how AIM pauses at hard gates. | Selects explicit approval pauses or transparent automatic continuation. | The role loop continues under the selected approval policy. |
-| `/aim cost standard\|control\|deep` | Work needs a different context and review depth. | Selects normal, budget-focused, or risk-focused execution without weakening AIM roles or gates. | AIM uses that depth and escalates when risk requires more evidence. |
-| `/aim replan` | The active unaccepted increment is no longer the right plan. | Returns that increment to Gate B while preserving the Epic and accepted history. | TDO proposes one revised Done Increment for approval. |
+| `/aim cost standard\|control\|deep` | Work needs a different context and review depth. | Selects normal, budget-focused, or risk-focused execution without weakening AIM roles or gates. | AIM uses that depth; material resource changes require applicable authority. |
+| `/aim replan` | A legacy Epic/DI increment needs a different plan. | Returns that unaccepted legacy increment to Gate B with its reason and accepted history preserved. | Review the revised legacy plan. Story deliveries preserve their approved scope; see the blocked-commitment limitation in [User Stories](user-stories.md). |
 
 ### Control a multi-Epic portfolio
 

@@ -3,8 +3,8 @@
 ## New intent-first work
 
 Use `/aim start "<desired outcome>"` and load `docs/workflow/user-stories.md`.
-PO identifies Epics and owns User Stories and priority; TDO refines with PO and
-proposes selected Stories across Epics. Use trusted `scripts/aim_stories.py`
+PO identifies and owns Epics and product priority; TDO creates and owns Stories,
+their criteria and a coherent delivery selection that may span Epics. Use trusted `scripts/aim_stories.py`
 for `.aim/product-backlog.json`. Resolve an existing Story delivery before
 considering a new one. Do not create legacy DI workspaces for this path.
 Default to Strict unless existing user authorization supplies a different mode.

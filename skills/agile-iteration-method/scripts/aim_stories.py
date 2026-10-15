@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py
 # Source: scripts/aim_stories.py
-"""PO-owned requirements and independent, cross-Epic delivery execution.
+"""PO-owned Epics, TDO-owned Stories and coherent cross-Epic delivery execution.
 
 The caller supplies real decisions and evidence. This helper validates their
 scope and persistence; it cannot authenticate the human behind an authority

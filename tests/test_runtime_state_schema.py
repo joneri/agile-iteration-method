@@ -198,7 +198,7 @@ class RuntimeStateSchemaTests(unittest.TestCase):
         for marker in (
             "completed Epic's persisted profile is history",
             "persisted cost profile remains authoritative",
-            "escalation or de-escalation",
+            "justified change within existing authority",
         ):
             self.assertIn(marker, core)
         self.assertIn("does not by itself require", cost)

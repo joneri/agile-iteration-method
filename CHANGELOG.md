@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-15 - AIM release v4.3.0
+
+- Assign Epic intent, scope, quality and product priority to PO; assign Story creation, criteria and coherent increment delivery to TDO.
+- Preserve the full delivery commitment across sessions. Let TDO sequence or parallelize work within existing authority, with early checks and integrated review rather than a complete gate cycle per Story.
+- Clarify cumulative resource and scope boundaries. Routine defect correction and bounded investigation proceed within authority; complexity does not automatically change priority, model, cost profile or agent count.
+- Require observable product-quality goals, correction of material in-scope defects and useful, accurate copy in context. Remove redundant slogans and heading levels while preserving accessibility and appropriate personality.
+- Align native roles, adapters, Control handoff prompts and the generated portable skill; make startup experiments conditional on unresolved uncertainty.
+
+Compatibility: product backlog `1.0`, runtime `2.0`, state schema `1.0`, installer manifest `1.0` and portable package format `21` are unchanged. No migration is required. Update the installed skill and reload its session to use these instructions.
+
+Known limitations: approved Story-scope replanning is not supported by the CLI. Block preserves the commitment; rework preserves its scope; cancellation applies only before approval. Instructions and existing delivery/delegation checks do not meter total agent expenditure. No new product comparison establishes an end-product quality gain for this release. AIM UI remains Beta.
+
 ## 2026-10-13 - AIM patch release v4.2.1
 
 - Rename the ambiguous public-package provenance member from `sha256` to `sourceSha256`, making clear that it fingerprints the canonical source rather than the transformed package output.

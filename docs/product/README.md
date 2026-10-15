@@ -18,7 +18,7 @@ For AIM's evidence-backed alternative to opaque memory consolidation, read
 AIM is a structured AI delivery system.
 
 You describe the outcome you want.
-PO discovers Epics and User Stories from your intent. PO and TDO refine the needs; TDO plans a prioritized selection that can cross Epic boundaries. AIM implements it, reviews and validates every Story, and returns acceptance to you. The working result is an increment; a Sprint is an optional timebox.
+PO owns Epics and product priority. TDO creates and owns Stories and criteria, then plans a coherent increment that can cross Epic boundaries. AIM implements it, reviews and validates every Story, and returns acceptance to you. The working result is an increment; a Sprint is an optional timebox.
 
 AIM is designed for real repositories and real delivery constraints:
 

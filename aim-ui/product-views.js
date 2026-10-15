@@ -47,7 +47,7 @@ function productHandoffPrompt(board, request) {
     if (!selection.size || !request.goal?.trim() || [...selection].some((id) => !eligible.some((story) => story.id === id))) return "";
     metadata.goal = request.goal.trim();
     metadata.storyIds = [...selection];
-    task = "Propose a coherent delivery for these selected ready User Stories with PO and TDO. This is a planning proposal, not plan approval or authorization to implement.";
+    task = "Have TDO propose a coherent increment for these selected ready User Stories, preserving PO-owned Epic intent and product priority. This is a planning proposal, not plan approval or authorization to implement.";
   } else if (request.kind === "delivery") {
     const delivery = model.deliveries.find((item) => item.id === request.deliveryId);
     if (!delivery || !/^[a-f0-9]{64}$/.test(delivery.scopeSha256)) return "";
@@ -55,7 +55,7 @@ function productHandoffPrompt(board, request) {
       acceptanceSha256: delivery.acceptanceSha256 || null, status: delivery.status,
       storyIds: delivery.stories.map((story) => story.id) });
     task = delivery.status === "accepted"
-      ? "Explore a new follow-up user need related to this accepted delivery. Preserve accepted Stories and evidence. PO may place a new Story under an open Epic or propose a new Epic when the outcome requires it."
+      ? "Explore a new follow-up user need related to this accepted delivery. Preserve accepted Stories and evidence. TDO may propose a new Story under an open Epic; PO owns any new Epic and product priority."
       : delivery.status === "blocked"
         ? "Examine this blocked delivery and propose how to resolve its recorded blocker. Preserve the current checkpoint; this prompt grants no transition authority."
         : "Review the current delivery checkpoint and its evidence, and explain the next required action and decision. This request does not approve a plan, accept work, or authorize a runtime transition.";
@@ -67,8 +67,8 @@ function productHandoffPrompt(board, request) {
       .map((delivery) => ({ id: delivery.id, status: delivery.status, scopeSha256: delivery.scopeSha256,
         acceptanceSha256: delivery.acceptanceSha256 || null }));
     task = story.status === "done"
-      ? "Explore a new follow-up user need. Preserve this accepted Story and its evidence. Propose a new Story under an appropriate open Epic, or a new Epic when a different outcome requires one."
-      : "Refine this user need and its observable acceptance criteria with PO and TDO. Do not alter approved delivery scope; explain any required rework or separate follow-up.";
+      ? "Explore a new follow-up user need. Preserve this accepted Story and its evidence. TDO may propose a new Story under an appropriate open Epic; PO owns any new Epic and product priority."
+      : "Have TDO refine this user need and its observable acceptance criteria against PO-owned Epic intent and product priority. Do not alter approved delivery scope; explain any required rework or separate follow-up.";
   } else return "";
   return ["/aim discuss " + task,
     "Reload .aim/product-backlog.json and revalidate the observed store and scope fingerprints before any proposed mutation. Treat a mismatch as stale context and obtain a fresh proposal.",
@@ -309,7 +309,7 @@ function renderCurrentPortfolio(model, content) {
     () => productHandoffPrompt(state.board, { kind: "plan", storyIds: state.productSelection, goal: state.productPlanGoal }),
     "product-plan", "Copy planning proposal");
   goal.addEventListener("input", () => { state.productPlanGoal = goal.value; updatePrompt(); });
-  planning.append(el("p", "product-boundary", "Selection is a proposal. PO and TDO must review it; approved scope and final acceptance remain user-owned decisions."));
+  planning.append(el("p", "product-boundary", "TDO plans the increment against PO-owned Epic intent and product priority. This selection grants no plan approval or final acceptance."));
   content.append(planning);
 }
 

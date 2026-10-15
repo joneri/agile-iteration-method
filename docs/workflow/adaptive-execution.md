@@ -1,7 +1,8 @@
 # Adaptive execution and independent review
 
 Use this contract when allocating product implementation or review. The main
-AIM session owns integration, runtime state and decisions. This contract selects
+AIM session owns runtime state and decisions; TDO owns the coherent increment,
+integration and consolidated delivery evidence. This contract selects
 useful work and reviewer separation; it adds no approval gate and never overrides
 host limits, user instructions or existing authorization.
 
@@ -9,7 +10,10 @@ host limits, user instructions or existing authorization.
 
 At the first concrete change plan, choose the smallest useful allocation from
 the dependency boundaries and risk. Record one short reason in the existing
-plan; do not create an orchestration report for a one-file edit.
+plan; do not create an orchestration report for a one-file edit. TDO chooses
+sequential or parallel execution from dependencies, integration risk and existing
+mandate. The commitment covers all selected Stories across sessions; parallelism
+does not authorize extra agents, a new cost profile or more scope.
 
 - Keep a small cohesive implementation with one author. Use another session for
   material review, not four sessions merely to enact four role names.
@@ -28,7 +32,11 @@ plan; do not create an orchestration report for a one-file edit.
 - Delegation is useful when it shortens the critical path or adds independent
   evidence worth its handoff cost. A serial dependency chain does not become
   faster by giving each link a different agent. Stay within available slots and
-  the project budget; do not switch model or reasoning without authority.
+  the project budget; do not switch model or reasoning without authority. Count
+  cumulative work across all agents, including preparation, experiments and
+  rechecks. Splitting or delegating a larger undertaking cannot bypass limits.
+  Concrete uncertainty can justify a bounded check; a complexity label alone
+  cannot justify more agents, lower quality or changed product priority.
 
 Tell the user briefly which agents are working and why, then report useful
 findings rather than repeated agent status. Keep wall time and summed agent work
@@ -44,15 +52,25 @@ and `dependsOn` IDs. Final review depends on relevant writers. It does not infer
 host permission, launch workers, inspect semantic dependencies or prove speedup.
 Use native tools for actual delegation; record their returned session IDs.
 
+Verify parts and review consequential risks during implementation. Integrate as
+soon as relevant parts can work together, then review and validate the complete
+increment against its outcome and all selected criteria. There is no full role
+and acceptance cycle per Story. A session boundary preserves decisions, completed
+work and remaining commitments; it cannot turn partial delivery into completion.
+
 ## Review is a separate judgment
 
 For material changes to product behavior, security, concurrency, data integrity,
 resource behavior or reusable architecture, delegate final review to an available
 separate agent that did not implement the change. A role-name switch in the same
 session is self-review. Fresh reviewer context contains the binding requirements,
-current diff/source, relevant constraints and test entry points; do not substitute
+agreed increment outcome and preserved Story criteria, current diff/source,
+relevant constraints and test entry points; do not substitute
 the author's conclusions for that evidence or pass unrelated conversation history.
-The reviewer may ask for a design rationale when needed.
+The reviewer independently checks whether the decomposition covers the agreed
+contribution to Epic intent, as well as criterion coverage and actual product
+quality. The entire Epic need not finish in the increment. The reviewer may ask
+for a design rationale when needed.
 
 A nonmaterial change with bounded, understood impact and a direct native check
 may use a brief documented self-review exception: for example, wording or a
@@ -69,8 +87,10 @@ review and narration; it does not silently turn material review into self-review
 The reviewer uses `role-skill-reviewer.md` and affected project skills, inspects
 code read-only, derives its own counterexamples, and returns reproducible material
 findings with evidence. A clean review is allowed; finding counts are not a target.
-The implementer fixes findings. Reuse the reviewer for affected rechecks rather
-than rebuilding all context or rerunning unrelated checks. Review the integrated
+The implementer corrects material in-scope defects; optional improvements and
+personal preferences do not silently become requirements. Reuse the reviewer
+for affected rechecks rather than rebuilding all context or rerunning unrelated
+checks. Review the integrated
 result after parallel writes stop. Only then may the coordinator synthesize the
 existing review/validation decision; user acceptance stays user-owned.
 

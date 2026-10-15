@@ -19,19 +19,22 @@ AIM separates approval flow from runtime depth:
 - compact role outputs
 - no implementation subagents by default; material final review uses a separate available reviewer under `adaptive-execution.md`
 - narrow context loading
-- state-first resume from `.aim/state.json`
+- state-first resume from the targeted Story ledger or legacy `.aim/state.json`
 - validator-first runtime checks
 - concise review evidence
 - short trace artifacts for low-risk work
-- escalation to `Standard` or `Deep` when risk appears
+- a concrete recommendation when risk needs more depth, within existing authority
 
 `Standard` also becomes cheaper in AIM 2.0 by using state-first resume and progressive context loading.
-Agents read `.aim/state.json` before rebuilding runtime context, then load the shortest authoritative context first and load deeper docs only when the task needs them.
+Agents read the targeted `.aim/product-backlog.json` or legacy `.aim/state.json`
+before rebuilding runtime context, then load the shortest authoritative context
+first and load deeper docs only when the task needs them.
 
-For a new Epic, select cost depth afresh; never copy it from an
+For a preserved legacy Epic, select cost depth afresh on new work; never copy it from an
 `epic_complete` checkpoint. Resume preserves an incomplete Epic's persisted
-choice. Gate B may move depth in either direction when the visible decision,
-risk rationale, and persisted state agree.
+choice. Gate B may move depth in either direction only within existing authority
+or an applicable owner decision; the visible rationale and persisted state must
+agree. Concrete risk informs the recommendation, not automatic profile changes.
 
 Cost Control's default trace budget keeps Gate A, Gate B, Gate E, the active
 increment, and required review evidence. Gates C and D remain visible but do
@@ -45,7 +48,8 @@ named risk or failure.
 - Cost Control is not a weaker method. It changes runtime depth, not acceptance.
 - `Strict` and `Auto` remain approval modes.
 - Cost profiles are orthogonal to execution modes.
-- Risk controls the profile. Low-risk work can stay narrow; trust-sensitive work must expand.
+- Concrete risk informs depth within mandate. Complexity alone changes neither
+  cost profile nor product priority, and never authorizes lower quality.
 - Standard AIM should be cheaper by default, not only when Cost Control is selected.
 - Context hogs, repeated major-doc rereads, and long low-risk markdown artifacts are budget bugs.
 
@@ -55,7 +59,7 @@ Inputs:
 
 - Epic or task intent
 - execution mode
-- selected or inferred cost profile
+- selected cost profile or documented default, subject to existing authority
 - repo-aware policy
 - risk signals discovered during inspection
 
@@ -63,30 +67,49 @@ Outputs:
 
 - visible `Cost profile` when resource use matters or when not `Standard`
 - compact or expanded checkpoints according to risk
-- resumed state without rebuilding context when `.aim/state.json` is coherent
-- explicit escalation when deeper runtime depth is required
+- resumed state without rebuilding context when the targeted ledger is coherent
+- a concrete recommendation and owner decision when required depth exceeds authority
 - verification evidence scaled to the work
 
 ## Edge cases
 
-- A user may request `Cost Control`, but AIM must escalate if trust, data correctness, public API, deployment, migration, security, or unclear acceptance risk appears.
+- When trust, data correctness, public API, deployment, migration, security or
+  unclear acceptance risk appears, identify the concrete consequence and needed
+  evidence. Work within existing resources when sufficient; if deeper effort
+  exceeds the mandate, obtain the applicable owner decision before spending it.
 - `Auto` plus `Cost Control` is allowed, but final Epic completion still requires the normal AIM final review rule.
 - `Deep` does not allow scope creep. It only permits broader inspection and stronger evidence inside approved scope.
 - Repository policy may require `Standard` or `Deep` for some work.
 - An established, reversible public release path does not by itself require
   `Deep`; deployment mechanics, migration, public API, trust, or unresolved
-  release risk may still require escalation.
+  release risk may still require a recommendation for more depth within mandate.
+
+## Cumulative resource boundaries
+
+Count time and cost across preparation, implementation, experiments, rechecks and
+all delegated agents; keep summed agent work distinct from elapsed wall time.
+Small steps and parallel sessions cannot bypass an agreed run count or resource
+limit. No numeric budget grants unlimited work; remain proportionate to the
+assignment and never invent an expansion threshold. Reversible edits cannot
+recover spent time or cost.
+
+Quality ambition does not enlarge the mandate, and limited resources do not
+permit silently reducing agreed quality. When they conflict, report the actual
+remaining commitment and recommend a concrete path with consequences. Stop only
+the dependent expansion while independent authorized work continues. Use existing
+plans and decision evidence, not a new approval gate or per-action cost form.
 
 ## Debugging
 
-At Gate B, check whether the selected cost profile matches the risk:
+At Gate B, assess the selected cost profile against concrete risk and existing
+authority. These are recommendations, not automatic escalation rules:
 
 - low-risk and reversible: `Cost Control`
 - normal product work: `Standard`
 - trust-sensitive or high-blast-radius: `Deep`
 
 If a run feels expensive, inspect whether AIM loaded documents or ran verification that were not required by the selected profile.
-For `/aim continue`, first check whether the agent resumed from `.aim/state.json` before rereading the full workflow doc, adapter guides, or broad repository material.
+For `/aim continue`, first check whether the agent resumed from its targeted ledger before rereading the full workflow doc, adapter guides, or broad repository material.
 
 ## Related files
 

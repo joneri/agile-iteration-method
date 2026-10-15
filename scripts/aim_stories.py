@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""PO-owned requirements and independent, cross-Epic delivery execution.
+"""PO-owned Epics, TDO-owned Stories and coherent cross-Epic delivery execution.
 
 The caller supplies real decisions and evidence. This helper validates their
 scope and persistence; it cannot authenticate the human behind an authority

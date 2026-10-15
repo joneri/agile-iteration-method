@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://joneri.github.io/agile-iteration-method/schemas/aim-product-backlog.schema.json",
   "title": "AIM product requirements and Story delivery runtime",
-  "description": "PO-owned Intent, Epic and Story requirements with independently scoped delivery execution. Cross-record relationships, positive revisions and priorities, evidence fingerprints and gate sequencing are additionally enforced by aim_stories.py. This contract never grants user authority.",
+  "description": "PO-owned Intent and Epic requirements, TDO-owned Stories and coherent delivery execution. Cross-record relationships, positive revisions and priorities, evidence fingerprints and gate sequencing are additionally enforced by aim_stories.py. This contract never grants user authority.",
   "type": "object",
   "properties": {
     "productBacklogVersion": {

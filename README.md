@@ -1,8 +1,8 @@
-# Agile Iteration Method (AIM) 4.2
+# Agile Iteration Method (AIM) 4.3
 
-![AIM 4.2.1 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM 4.3.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
-AIM is a delivery method for AI-assisted software work. Start with an intent. PO discovers Epics and User Stories, then AIM plans a prioritized selection, builds it, reviews it and validates every Story before user acceptance. **Better software. From the same AI:** we tested GPT-6 Luna building the same web app with and without AIM, first at initial delivery and again after the same major upgrade. AIM 3.2 delivered the stronger product in both tests: **93.5 versus 49.8**, then **93.5 versus 62.8**, out of 100 against predefined criteria. [See the case and public evidence](docs/features/aim-3.2-enigma-case.md).
+AIM is a delivery method for AI-assisted software work. Start with an intent. PO owns Epics and product priority; TDO owns Stories and plans a coherent increment. AIM builds, reviews and validates the result before user acceptance. In an earlier study, GPT-6 Luna built the same web app with and without AIM, first at initial delivery and again after the same major upgrade. AIM 3.2 scored **93.5 versus 49.8**, then **93.5 versus 62.8**, out of 100 against predefined criteria. These results do not establish a quality gain for the current revision. [See the case and public evidence](docs/features/aim-3.2-enigma-case.md).
 
 Switch between Codex, Claude Code, and GitHub Copilot while keeping your project knowledge and saved AIM work. Discuss ideas with your repository before starting implementation. Each tool needs AIM and access to the same current repository and saved state.
 
@@ -90,7 +90,7 @@ Use `/aim help` when you want the next useful action. The same command family al
 Intent → Epics → User Stories → delivery selection → working increment
 ```
 
-Describe what you want to achieve. PO discovers Epics and owns Stories, criteria and priority. TDO refines with PO and plans a selection that can include Stories from different Epics.
+Describe what you want to achieve, or provide detailed requirements. PO owns Epic outcomes and product priority. TDO creates and owns Stories and criteria, then plans a coherent increment that can include Stories from different Epics.
 
 Run `/aim ui` to follow **User Stories as moving cards**, with Epic context and individual evidence. A Sprint is an optional timebox. An increment is the working result of delivered Stories.
 
@@ -102,8 +102,8 @@ Existing Epic/Increment work keeps its original state and approvals in Delivery 
 PO → TDO → Dev → Reviewer → TDO → PO
 ```
 
-- **PO** owns intent, Epic outcomes, Stories, criteria and priority.
-- **TDO** refines with PO, plans the Story selection and validates delivery.
+- **PO** owns intent, Epic outcomes and product priority.
+- **TDO** owns Stories and criteria, plans the coherent increment and validates delivery.
 - **Dev** implements the approved selection.
 - **Reviewer** checks current behavior, regressions and Story evidence.
 
@@ -174,4 +174,4 @@ AIM Reflect still **goes beyond memory cleanup for repository work** through ver
 
 AIM 4.2 adds shared guidance for reusing applicable authority and prior answers, grouping necessary independent questions, and binding replies to their exact scope. The optional question helper validates presentation and replay receipts; the coordinator still verifies sources and records decisions. See [autonomous interaction](docs/workflow/autonomous-interaction.md). The synthetic pilot does not establish general speed or token savings.
 
-Current product version: **v4.2.1** — explicit public-package source provenance. See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Current product version: **v4.3.0** — TDO-owned Stories, coherent increments and bounded autonomy. See [the change and its limitations](docs/features/aim-4-coherent-increments.md). See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).

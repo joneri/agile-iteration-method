@@ -71,6 +71,8 @@ renderLegacyCleanup({legacyCleanup:{legacyDetected:false}});
         request = {"kind": "plan", "storyIds": ["US-1", "US-2"], "goal": "Help both users"}
         prompt = self.evaluate(f"productHandoffPrompt({board}, {json.dumps(request)})")
         self.assertIn("planning proposal, not plan approval", prompt)
+        self.assertIn("Have TDO propose", prompt)
+        self.assertIn("PO-owned Epic intent and product priority", prompt)
         self.assertIn(HASH, prompt)
         self.assertIn("Reload .aim/product-backlog.json", prompt)
         self.assertIn("US-1", prompt)
@@ -119,7 +121,20 @@ renderLegacyCleanup({legacyCleanup:{legacyDetected:false}});
         self.assertIn("new follow-up user need", prompt)
         self.assertIn("Preserve this accepted Story", prompt)
         self.assertIn("open Epic", prompt)
+        self.assertIn("TDO may propose a new Story", prompt)
+        self.assertIn("PO owns any new Epic and product priority", prompt)
         self.assertNotIn("Refine this user need", prompt)
+
+    def test_refinement_handoff_assigns_story_to_tdo_without_authorizing_changes(self):
+        board = self.board()
+        before = json.dumps(board)
+        prompt = self.evaluate(f"productHandoffPrompt({before}, {{kind:'story',storyId:'US-1'}})")
+        self.assertIn("Have TDO refine", prompt)
+        self.assertIn("PO-owned Epic intent and product priority", prompt)
+        self.assertIn("Do not alter approved delivery scope", prompt)
+        self.assertIn("Keep this discussion read only", prompt)
+        self.assertIn(HASH, prompt)
+        self.assertEqual(json.dumps(board), before)
 
     def test_blocked_checkpoint_keeps_previous_responsibility(self):
         self.assertEqual(self.evaluate("productCheckpoint({status:'blocked',blockedFrom:'review'})"), "Gate C · independent review")

@@ -73,7 +73,7 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "4.2.1")
+            self.assertEqual(manifest["aimVersion"], "4.3.0")
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
@@ -145,7 +145,7 @@ class PublicationContractTests(unittest.TestCase):
             self.assertIn(f'id="{identifier}"', index)
         self.assertIn("docs/product/aim-ui.md", index)
         self.assertIn(f'src="{PUBLIC_CAMPAIGN_IMAGE_PATH}"', index)
-        self.assertIn('<span class="brand-version">4.2.1</span>', index)
+        self.assertIn('<span class="brand-version">4.3.0</span>', index)
         for capture in PUBLIC_PRODUCT_CAPTURES:
             self.assertIn(f'src="{capture}"', index)
         self.assertIn('data-evidence-version="3.2"', index)
@@ -310,7 +310,7 @@ class PublicationContractTests(unittest.TestCase):
             index = copied / "index.html"
             index.write_text(
                 index.read_text(encoding="utf-8").replace(
-                    '<span class="brand-version">4.2.1</span>',
+                    '<span class="brand-version">4.3.0</span>',
                     '<span class="brand-version">2.7</span>',
                 ),
                 encoding="utf-8",

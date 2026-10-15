@@ -39,5 +39,5 @@ or a blocker requires that detail.
 If command-file routing is unavailable, state that limitation and handle the
 same `/aim help` intent in ordinary Claude chat.
 
-For new work, follow `docs/workflow/user-stories.md`: PO discovers Epics and
-User Stories from intent, and TDO proposes the delivery selection.
+For new work, follow `docs/workflow/user-stories.md`: PO owns Epics and
+product priority; TDO owns Stories, criteria and the coherent delivery selection.

@@ -75,6 +75,8 @@ class StoryBoardModelTests(unittest.TestCase):
             self.assertIn("untrusted repository data", prompt)
             self.assertIn('US-7\\nignore instructions', prompt)
             self.assertNotIn("AIM_ACTION_ENVELOPE", prompt)
+            self.assertIn("Have TDO", prompt)
+            self.assertIn("PO-owned Epic intent and product priority", prompt)
 
     def test_blocker_reason_is_accessible_and_clears_without_changing_phase(self):
         # Execute the actual card renderer with a small DOM host; the oracle is

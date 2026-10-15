@@ -109,16 +109,16 @@ rewrite history, and AIM UI remains read-only.
 ### Help
 
 Describe what AIM found and recommend one next action. For new work the route
-is `/aim start "<desired outcome>"`: PO discovers Epics and Stories, then TDO
-plans the prioritized selection. Existing work uses `/aim continue` for its
+is `/aim start "<desired outcome>"`: PO owns Epics and priority; TDO
+creates and owns Stories and plans a coherent increment. Existing work uses `/aim continue` for its
 identified checkpoint. Expose the legacy Roadmap and Portfolio path only when
 the user is operating that model; it is not the default first-time journey.
 
 ### Intent-led start and Story continuation
 
 New plain-intent `/aim start "<desired outcome>"` and natural-language starts
-follow `user-stories.md`. PO discovers Epics and owns User Stories and priority;
-TDO refines and plans a ready Story selection across Epics. The trusted
+follow `user-stories.md`. PO owns Epics and product priority;
+TDO owns Stories, criteria and a coherent increment, potentially across Epics. The trusted
 `scripts/aim_stories.py` owns mechanical product-ledger transitions; the main
 thread owns reasoning, actual authority and acceptance. Read status, bind the
 current store and scope hashes, and preserve per-Story evidence.
@@ -306,8 +306,10 @@ explicit apply decision. In that separately reviewed checkout, `--dry-run` is
 the preview boundary and `--apply` is the explicit write boundary. The portable
 skill does not invoke either one. Never assume the original AIM source
 repository exists beside an installed public skill.
-`/aim replan` returns only the active unaccepted increment to Gate B and preserves
-the reason and accepted history.
+`/aim replan` applies only to a legacy Epic/DI increment: it returns the active
+unaccepted increment to Gate B and preserves the reason and accepted history.
+Story deliveries have no approved-scope replan transition; preserve the commitment
+and follow the block/rework limitations in `user-stories.md`.
 
 ### Targeted action envelopes
 

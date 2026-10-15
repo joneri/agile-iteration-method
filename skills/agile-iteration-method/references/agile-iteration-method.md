@@ -28,9 +28,9 @@ implementation.
 
 Read [User Stories and product backlog](user-stories.md) for new intent-led work.
 The model is **Intent → Epics → User Stories → delivery selection → increment**.
-PO owns product intent, Epic outcomes, Story value, acceptance criteria and
-priority. TDO refines Stories with PO and plans implementation and verification
-for the selected Stories. A delivery can select Stories from different Epics.
+PO owns Epic intent, outcomes, audience, scope, overall quality and product
+priority, including priority between Stories. TDO owns Story creation, refinement,
+acceptance criteria and dependencies, and the coherent increment commitment. A delivery can select Stories from different Epics.
 A Sprint is an optional timebox; an increment is the working product result.
 Neither is a requirement or a synonym for a Story.
 
@@ -48,26 +48,74 @@ upgrade. New work uses `.aim/product-backlog.json`; these stores can coexist.
 
 1. The user describes an **intent**, problem or desired outcome.
 2. **PO** identifies affected users and one or more outcome-focused **Epics**.
-3. **PO and TDO** refine **User Stories** under the appropriate Epics. PO owns
-   the need, value, acceptance criteria and ordering; TDO supplies feasibility,
-   dependencies, technical risks and verification design.
+3. **TDO** creates and refines **User Stories** and their acceptance criteria
+   from the Epics. PO and TDO resolve conflicts between product intent and
+   delivery; technical sequencing cannot silently change priority or quality.
 4. PO prioritizes the product backlog across Epics. **TDO** proposes a bounded
-   delivery selecting ready Stories, explaining dependencies and capacity.
+   delivery selecting ready Stories, stating its coherent usable result, why
+   the selection suffices, dependencies and capacity.
 5. Gate A confirms the relevant direction and Story requirements. Gate B
    confirms the exact selected Stories and delivery plan. An explicitly scoped
    response can cover both; existing authorized scope remains authorized.
-6. **Dev** implements that selection. **Reviewer** reviews actual behavior and
-   acceptance evidence. **TDO** validates each Story and the integrated result.
+6. **Dev** implements the entire commitment. **Reviewer** independently checks
+   decomposition against the agreed contribution to Epic intent, actual product
+   behavior and selected criteria. **TDO** owns integration and validates the
+   result and consolidated evidence.
 7. **PO** presents verified results for user acceptance at Gate E. Acceptance
    names the Stories and criteria proved; failures remain unfinished.
 8. The accepted working improvement is an **increment**. PO assesses remaining
    needs and separately proposes Epic closure only when its outcome is proven.
 9. Reprioritize the remaining Stories and select the next delivery when authorized.
 
-A Story need not approximate its entire Epic. Different user perspectives may
-be implemented and accepted independently. Technical tasks support Stories;
-they do not silently replace user requirements. AIM does not expand approved
+A Story need not approximate its entire Epic or be deployable independently.
+Different user perspectives can share one coherent commitment. Technical tasks
+support Stories; they do not silently replace user requirements. AIM does not expand approved
 scope or turn automatic execution into automatic product acceptance.
+
+## Coherent delivery and bounded autonomy
+
+The delivery run is the work toward the selected increment, not an agent session
+or context window. All committed Stories must be implemented, integrated and
+verified. Session endings, partial checks or closed Stories cannot make an
+incomplete increment finished. Preserve decisions, completed work and remaining
+commitments on interruption. Distinguish verified implementation from user
+acceptance; waiting for acceptance neither repeats implementation nor grants it.
+
+TDO chooses sequential or parallel work from dependencies, integration risk and
+existing resources and authority. Verify parts and review consequential risks
+early; integrate as soon as relevant parts can work together. The final review
+and validation cover the increment outcome and every selected criterion. A full
+role and acceptance cycle is not required per Story. Corrections require affected
+re-review and verification; unchanged relevant evidence can be reused.
+
+Preserve agreed outcomes and selected criteria as the review baseline. Technical
+choices may change within mandate; requirements must not be rewritten to fit the
+result. Changed scope, outcome or lowered requirements require the applicable
+owner decision. Preserve original commitments, decisions, reasons and remaining
+needs in existing history; accepted requirements and results are never overwritten.
+Follow the actual ledger's supported transitions in `user-stories.md`.
+
+Reuse mature requirements, prior decisions, relevant skills and durable project
+knowledge; supplement consequential gaps instead of restarting onboarding each
+increment. Before substantial implementation, make decisive quality observable
+through characteristics, references or failure examples in existing planning.
+Judge the working product's function, clarity, visual expression and interactions,
+alongside relevant maintainability, performance and security. Fix material in-scope
+quality defects and verify again; green tests alone do not prove good experience.
+Mark qualities that available evidence cannot show as unverified. Apply the useful
+copy and contextual review contract in `engineering-delivery.md`.
+
+Choose routine technical details and relevant verification autonomously within
+the mandate. Before a material deviation, assess cumulative time, cost, product,
+quality, external effects and reversibility across all steps and agents. Better
+quality intentions, reversible files and complexity labels grant no extra scope,
+agents, cost profile or product reprioritization. Explicit limits remain binding;
+no numeric budget means proportionate work, not unlimited resources. Resource
+limits do not silently lower agreed quality. If a real blocker or conflict arises,
+state completed and remaining work and recommend a concrete path with consequences;
+stop the dependent expansion and continue independent authorized work. Use existing
+plan and decision surfaces, not a new form or gate. See `autonomous-interaction.md`
+and `source-only/cost-control-mode.md` for mandate and resource boundaries.
 
 ## Audience-context integrity
 
@@ -99,7 +147,7 @@ AIM keeps the same architecture split and uses an explicit runtime-depth layer.
 - `AIM core`:
   - the canonical role sequence
   - gates A-E
-  - intent-led discovery and a PO-owned product backlog
+  - intent-led discovery, PO-owned Epics and priority, and TDO-owned Stories
   - Story acceptance and coherent integrated increments
   - `Strict` and `Auto` mode semantics
 - `AIM runtime depth`:
@@ -291,13 +339,14 @@ If `.aim/state.json` exists and points to an incomplete Epic:
 - the runtime does not silently create a new Epic
 - the active Epic, increment, gate, and mode come from the checkpoint unless repo policy or explicit user direction requires a stop-and-ask decision
 - the persisted cost profile remains authoritative unless the user explicitly
-  changes it or Gate B records a justified escalation or de-escalation
+  changes it or Gate B records a justified change within existing authority
 
 If no active checkpoint exists:
 - the runtime starts a new Epic at Gate A
-- cost profile is selected afresh from an explicit user choice, repository
-  minimum policy, current risk, or the `Standard` default; a completed Epic's
-  persisted profile is history and must not be inherited
+- cost profile is selected afresh from an explicit user choice, applicable
+  authorized repository minimum or the `Standard` default; concrete risk informs
+  a recommendation within mandate. A completed Epic's persisted profile is
+  history and must not be inherited
 
 ### Fallback behavior
 
@@ -407,8 +456,8 @@ The state model does not replace Gate A-E.
 It makes the runtime meaning of those gates durable:
 - Gate A approval moves the runtime from `gate_a_pending` to `gate_b_pending`
 - Gate B approval moves the runtime into `increment_in_progress`
-- Gate B may escalate or de-escalate cost depth when its visible rationale and
-  persisted `costProfile` agree
+- Gate B may change cost depth within existing authority or an applicable owner
+  decision when its visible rationale and persisted `costProfile` agree
 - Gate D review output supports transition into `tdo_validation_in_progress`
 - Gate E approval moves the runtime into `done_increment_accepted`; a subsequent
   separately authorized disposition based on the PO recommendation moves the
@@ -683,7 +732,8 @@ Defined cost profiles:
     `adaptive-execution.md`, including explicit capability exceptions
   - narrow file reads and short visible checkpoints
   - short trace artifacts by default
-  - expand to `Standard` or `Deep` if risk appears
+  - recommend deeper effort for concrete risk; change profile only within
+    existing authority or an applicable owner decision
 - `Deep`:
   - high-assurance AIM for trust, data correctness, migration, deployment, security, API, or broad public-method changes
   - broader context loading and stronger review evidence are expected
@@ -698,7 +748,7 @@ Safe Cost Control candidates:
 - narrow adapter helper updates
 - reversible local changes with obvious verification
 
-Do not stay in Cost Control when work affects:
+Assess whether the existing mandate and depth can cover concrete risks in:
 - trust or user-facing meaning
 - data correctness
 - deployment or migration
@@ -707,9 +757,9 @@ Do not stay in Cost Control when work affects:
 
 ## Delegated execution
 
-After the PO has approved:
-- the Epic, and
-- the selected Stories and delivery plan (Gate B),
+After applicable Gate A/B authority covers:
+- the PO-owned Epic direction, and
+- the TDO-owned selected Stories and delivery plan,
 
 the roles **TDO → Dev → Reviewer → TDO** may execute the full loop without further PO involvement.
 
@@ -721,7 +771,8 @@ During delegated execution:
 
 - The AI may proceed through Gate C and Gate D autonomously.
 - The TDO may validate and prepare release notes.
-- The loop must stop and escalate to the PO if:
+- Stop the dependent action and resolve with PO when existing authority is
+  insufficient and:
   - scope needs to change
   - the Epic intent is unclear or contradicted
   - feature-doc rules or runtime context conflict
@@ -729,7 +780,7 @@ During delegated execution:
   - a new Done Increment would materially change direction
 
 Delegated execution accelerates delivery,
-but **never replaces PO ownership of value or acceptance**.
+but **never replaces PO ownership of value or the user’s acceptance authority**.
 
 ## Interaction model
 
@@ -889,21 +940,24 @@ native agent instructions.
 
 ### Product owner (PO)
 
-PO owns intent, Epic outcomes, User Stories, acceptance criteria and product
-backlog priority. PO identifies different user perspectives, preserves requirement
-provenance and decides which needs should be addressed next. TDO participates
-in refinement without taking over value or priority decisions. PO evaluates
-Story evidence and recommends acceptance or correction. The user retains final
+PO owns Epics: product intent, outcomes, audience, scope, overall quality and
+product priority, including priority between Stories. PO preserves requirement
+provenance and decides which product needs come next. TDO owns Story detail and
+criteria within that intent. PO assesses the integrated product outcome and
+recommends acceptance or correction. The user retains final
 acceptance authority unless an explicit bounded mandate supplies it. PO
 assesses each Epic separately and cannot close it merely because a delivery ended.
 
 ### Technical delivery owner (TDO)
 
-TDO owns delivery planning and technical validation. TDO refines Stories with
-PO, identifies dependencies and risks, and proposes a selection of ready Stories
-from one or several Epics. The plan names Story IDs, criteria, implementation
-boundaries, integration checks and remaining scope. TDO validates the integrated
-result and evidence per Story; implementation tasks never replace the backlog.
+TDO owns Story creation, refinement, acceptance criteria, dependencies and the
+coherent increment commitment. The plan names ready Story IDs from one or several
+Epics, the usable result, why the selection suffices, boundaries, integration
+checks and remaining scope. TDO sequences work within mandate, preserving PO
+product priority, and owns integration and consolidated evidence for all selected
+Stories across sessions. Resolve intent/delivery conflicts with PO; do not remove
+necessary content or lower quality through Story wording. Implementation tasks
+never replace the backlog.
 
 ### Developer (Dev)
 
@@ -914,8 +968,9 @@ accept Stories or close Epics.
 
 ### Reviewer
 
-Reviewer independently checks current code, regressions, integration and each
-selected Story's criteria. Findings identify affected Story IDs. Defects return
+Reviewer independently checks whether the decomposition covers the agreed
+contribution to Epic intent, then current code, regressions, the integrated
+product and each selected Story’s preserved criteria. Findings identify affected Story IDs. Defects return
 to implementation and affected evidence is refreshed. Material review follows
 `adaptive-execution.md`. Review supplies evidence, not acceptance authority.
 
@@ -933,7 +988,8 @@ An EPIC must include:
 An EPIC is a contract between PO and TDO.
 It is not a technical design document.
 
-An EPIC is complete only when the PO explicitly accepts it.
+An EPIC is complete only after PO assesses its full outcome and actual acceptance
+authority is recorded under the applicable Story or preserved legacy protocol.
 
 The outcome class is a truth boundary, not a maturity label that may be changed
 at closure. `POC` permits synthetic or fixture-backed evidence only for the
@@ -962,8 +1018,9 @@ Those identifiers are never silently reinterpreted as Stories.
 
 ### Behavioral scope and file boundaries
 
-AIM optimizes for increments that are easy to review now and cheaper to change later.
-That means small behavioral scope, not necessarily minimal file count.
+AIM chooses coherent usable increments that satisfy the agreed value and are
+clear to review and maintain. A small easy-to-finish selection is insufficient
+when it misses that value. Bounded behavior does not mean minimal file count.
 
 More files can be better when each file has one clear responsibility.
 Agents should split by stable responsibility and ownership, not by arbitrary line counts.
@@ -1030,10 +1087,12 @@ When defining a Done Increment, ask:
 - A skateboard: usable, testable, end to end
 - A pedal: a local improvement without standalone value
 
-Apply this test to the selected Story behavior, not to the entire Epic.
-A small accessibility fix, clearer error label or internal reliability change
-can be valuable when its user need and verification are explicit. Bundle only
-when a need cannot be evaluated independently.
+Apply this test to the increment’s agreed usable result; the whole Epic need not
+finish. A small accessibility fix, clearer error label or internal reliability
+change can be valuable when its need and verification are explicit. Select enough
+Stories to preserve the agreed journey and design; independent deployability is
+not a Story requirement. Verified learning is a primary result only for explicitly
+exploratory work, never a substitute for a requested functioning product.
 
 ---
 
@@ -1050,17 +1109,18 @@ Gates are reporting checkpoints (A–E). They are mandatory to report, but the l
 
 ### Default gate behaviour
 
-- The agent must run the full workflow in one continuous run:
-  PO → TDO → Dev → Reviewer → TDO → PO.
+- Complete the integrated delivery workflow, preserving its commitment across
+  interruptions and sessions: PO → TDO → Dev → Reviewer → TDO → PO.
 - The agent must not stop at Gate C or Gate D unless an escalation condition is met.
 
 ### When the loop must stop and escalate to the PO
 
-Stop and ask for input if:
-- scope must expand beyond what was agreed at Gate B
+Stop the dependent action and ask for input when no existing authority resolves:
+- scope that must expand beyond what was agreed at Gate B
 - Epic intent, runtime context, or feature-doc rules are unclear or contradictory
 - acceptance checks cannot be met without new assumptions
-- there is risk to trust, data correctness or user-facing meaning
+- a material unresolved risk to trust, data correctness or user-facing meaning
+  that cannot be handled within the mandate
 
 Approval is only semantically meaningful at Gate A, Gate B and Gate E.
 
@@ -1151,10 +1211,13 @@ For AIM 4.0, evaluate the proposed **Story selection and delivery plan**:
 - Are all selected Story IDs stable, ready and linked to their own Epic?
 - Does each Story identify a user, need, value and testable acceptance criteria?
 - Has PO ordered the Stories by value, with dependencies made explicit?
-- Is the selection feasible and useful, including selections across Epics?
+- Does the selection deliver the agreed coherent usable result, and does the
+  plan explain why these Stories suffice, including selections across Epics?
 - Does the plan bind the exact Story requirements and list implementation
   boundaries, integration checks, evidence and remaining scope?
-- Can the selected behavior be demonstrated, including relevant failure paths?
+- Are decisive quality goals observable, with relevant prior goals reused?
+- Can the selected behavior and integrated outcome be demonstrated, including
+  relevant failure paths, within the mandate and cumulative resource limits?
 - Are prior acceptance and user authority preserved without inventing consent?
 
 A failed check requires refinement or a corrected selection. Do not force the
@@ -1299,7 +1362,9 @@ At minimum, the matrix must classify:
 ## Controlled parallelism
 
 AIM allocates bounded work under `adaptive-execution.md` when the runtime and
-applicable policy permit it. Independent implementation may run in parallel with
+applicable policy and the existing mandate permit it. TDO chooses order from
+dependencies and integration risk; concurrency alone authorizes no extra agents,
+profile change or scope. Independent implementation may run in parallel with
 explicit write ownership; final material review uses a separate agent by default.
 Only actual tool/session evidence supports a claim of independent review.
 

@@ -25,8 +25,8 @@ product before entering my own data.
 
 ## Refinement
 
-PO owns the need, benefit, priority and criteria. TDO verifies isolation and
-retry behavior with PO before proposing a delivery. Implementation tasks cover
+TDO owns the Story and criteria, verifying isolation and retry behavior before
+proposing a coherent increment. PO owns Epic intent and product priority. Implementation tasks cover
 storage, the entry action and checks; they are not separate user requirements.
 
 This Story can be selected with US-DIAGNOSE from EPIC-SUPPORT. Their shared
