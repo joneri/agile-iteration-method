@@ -19,7 +19,8 @@ evidence. Accepting them leaves both Epics open until their outcomes are proven.
 
 ## Interface and persistence
 
-AIM UI opens on User Stories. Each card displays its user perspective, value,
+The User Stories tab displays the requirements board (since 4.3, AIM UI opens
+on the coherent Increment view). Each Story card displays its user perspective, value,
 Epic, priority, state and acceptance criteria. Filters do not regroup delivery
 selection or rewrite priorities. Status changes move the affected cards; an
 unchanged refresh keeps the board stable.

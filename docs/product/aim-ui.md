@@ -7,13 +7,14 @@
 > already-bound authoritative Codex task.
 
 AIM UI is a local browser control room for requirements and delivery evidence.
-It opens on **User Stories**, a board of actual user needs from
-`.aim/product-backlog.json`. Each Story retains its Epic context; the board can
-show several Epics together without making Epics or increments the work cards.
+It opens on **Increment**, showing the coherent delivery selected from
+`.aim/product-backlog.json`: goal, selected Stories, checkpoint, criterion
+evidence and user acceptance. The **User Stories** tab retains the requirements
+board, with Epic context and product priority on each card.
 
-All current-product views share the validated product ledger: **Delivery control**,
-**Discuss**, **Portfolio**, **AIM Data**, **People & agents** and accepted delivery
-history. An explicit workspace selector opens retained **legacy workspaces** and
+All current-product views share the validated product ledger: **Increment**,
+**User Stories**, **Discuss**, **Plan increment**, **Delivery data**, **Roles**
+and **Accepted increments**. An explicit workspace selector opens retained **legacy workspaces** and
 their original controls. Existing records are never automatically migrated,
 relabelled or counted as Story acceptance. A broken product ledger stays visibly
 unavailable instead of silently switching to old work.
@@ -44,10 +45,14 @@ ledger shows a diagnostic instead of guessed or stale Story cards. Refresh
 preserves card identity, expanded criteria and keyboard focus. Actual phase
 changes can animate; reduced-motion preferences are respected.
 
-## Follow the current delivery
+## Follow the current increment
 
-Delivery control shows the selected Stories, their Epic context, delivery goal,
-checkpoint, blocker and supporting evidence. A delivery can cross Epic boundaries;
+Increment shows the selected Stories, their Epic context, delivery goal,
+checkpoint, blocker and supporting evidence. Plan approval and final acceptance
+are shown separately. Criteria with recorded evidence are not a completion or
+pass rate. Stories keep their recorded scope order; TDO chooses execution order
+from dependencies rather than simply following PO-owned product priority.
+A delivery can cross Epic boundaries;
 its Story selection and approval scope remain explicit. The contextual handoff
 names the product ledger, observed digest and delivery identity. The receiving
 AIM task reloads and checks the current scope before making changes. Plan approval
@@ -59,7 +64,7 @@ Done Stories and accepted deliveries do not imply that their Epics are closed.
 
 ## Plan across Epics
 
-Portfolio groups the current Stories by their Epic outcomes. Select ready Stories
+Plan increment groups the current Stories by their Epic outcomes. Select ready Stories
 across those groups to prepare a delivery-planning proposal. The proposal carries
 the exact selected identities and observed ledger digest. It is not approval of a
 plan. An active delivery prevents another selection; a changed ledger clears
@@ -68,14 +73,14 @@ capacity policy appear only in the legacy workspace scope.
 
 ## Understand outcomes and responsibility
 
-AIM Data counts the current ledger's Stories, accepted deliveries and open/closed
+Delivery data counts the current ledger's Stories, accepted deliveries and open/closed
 Epics. Its acceptance timeline links to recorded evidence. Throughput includes
 only valid explicit acceptance timestamps; unavailable or future timestamps are
 excluded and explained. Current delivery records do not store approval timestamps,
 so AIM UI does not invent approval-to-acceptance duration. Development effort,
 agent usage and elapsed delivery time are different measurements.
 
-People & agents describes each AIM role and the responsibility associated with
+Roles describes each AIM role and the responsibility associated with
 the current delivery checkpoint. A blocked delivery retains its underlying phase.
 This is not presence detection: live helper activity is shown as unrecorded when
 there is no supported activity record. Legacy workspace activity remains available

@@ -405,7 +405,7 @@ def release_manifest(root: Path) -> dict[str, Any]:
             "readOnly": True,
             "multiEpic": True,
             "cardActions": True,
-            "defaultBoard": "user-stories",
+            "defaultBoard": "increment",
             "crossEpicDeliveries": True,
         },
         "artifactType": "github-pages",

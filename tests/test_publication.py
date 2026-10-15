@@ -87,6 +87,7 @@ class PublicationContractTests(unittest.TestCase):
             self.assertEqual(manifest["installerManifestVersion"], "1.0")
             self.assertEqual(manifest["aimUi"]["version"], "1")
             self.assertEqual(manifest["aimUi"]["releaseStage"], "beta")
+            self.assertEqual(manifest["aimUi"]["defaultBoard"], "increment")
             self.assertEqual(
                 manifest["aimUi"]["availability"],
                 "public-skill-and-adaptive-installer",

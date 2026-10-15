@@ -284,7 +284,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "scripts/aim_publication.py",
-      "sourceSha256": "e3bd13c5348d688279a8b3b82e932893a296b62b6f15110a97dc76a1e1c3b461"
+      "sourceSha256": "393f0b2838f8bee4343f3ecde4e4f9616e4314d316fcfd009c28a837c514777c"
     },
     {
       "output": "manifest.json",
