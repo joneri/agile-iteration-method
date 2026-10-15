@@ -5,7 +5,7 @@ const state = {
   boardSignature: null,
   timer: null,
   filter: "all",
-  view: "stories",
+  view: "board",
   workspace: "product",
   productSelection: [],
   productStoreHash: null,
@@ -828,8 +828,8 @@ function renderStories(board) {
   const note = $("story-board-note");
   note.hidden = model.available && model.stories.length > 0;
   note.textContent = !model.available && model.configured
-    ? "The requirements board cannot be read safely. Ask AIM chat to repair the requirements catalog. Delivery control and accepted history remain available."
-    : "Describe your intent in AIM chat. PO owns Epics and product priority; TDO owns Stories, criteria and the increment. Existing Increments remain in Delivery control and accepted history.";
+    ? "The requirements board cannot be read safely. Ask AIM chat to repair the requirements catalog. Repair the ledger before using increment actions."
+    : "Describe your intent in AIM chat. PO owns Epics and product priority; TDO owns Stories, criteria and the increment. Inspect the shared commitment in Increment.";
   const container = $("story-board");
   const scrollLeft = container.scrollLeft;
   const previousCards = new Map(Array.from(container.querySelectorAll("[data-story-id]"),
@@ -1249,7 +1249,7 @@ function renderData(board) {
     {
       key: "Done",
       value: data.increments?.accepted ?? "—",
-      label: product ? "accepted deliveries" : "accepted Increments",
+      label: product ? "accepted increments" : "accepted Increments",
       note: product ? `${data.stories?.done ?? 0} accepted Stories` : "validated Gate E evidence",
     },
     {
@@ -1261,7 +1261,7 @@ function renderData(board) {
     {
       key: "Time",
       value: formatHours(elapsed.medianHours),
-      label: product ? "delivery elapsed time" : "median Gate B → Gate E",
+      label: product ? "increment elapsed time" : "median Gate B → Gate E",
       note: product ? "No approval timestamps recorded" : `${elapsed.sample ?? 0} measured · ${elapsed.excluded ?? 0} excluded`,
     },
   ];
@@ -1317,7 +1317,7 @@ function renderData(board) {
     history.append(row);
   });
   if (items.length === 0) {
-    history.append(el("li", "data-history-empty", product ? "No accepted deliveries are recorded yet." : "No accepted Increment evidence is available yet."));
+    history.append(el("li", "data-history-empty", product ? "No accepted increments are recorded yet." : "No accepted Increment evidence is available yet."));
   }
 
   const definitions = $("data-definitions");
@@ -1337,7 +1337,7 @@ function renderData(board) {
       ? "Some time measures are unavailable because their Gate evidence has no explicit timestamp. Counts remain valid."
       : "Every displayed time measure is backed by explicit Gate evidence.";
   $("data-scope-note").textContent = product
-    ? "Current product ledger only. Accepted deliveries and Stories retain their own identities; legacy history is separate."
+    ? "Counts cover this product ledger. Increment acceptance and Epic closure are separate decisions."
     : "Counts use contained AIM workspaces. Time measures use explicit Gate evidence only.";
   if (product) quality.textContent = "Elapsed delivery time is unavailable because no approval timestamps are recorded. Throughput uses explicit acceptance timestamps; missing or future timestamps are excluded.";
 }
@@ -1627,8 +1627,10 @@ function render(board, { preserveViewport = false } = {}) {
     button.setAttribute("aria-pressed", String(button.dataset.workspace === state.workspace));
   });
   $("workspace-description").textContent = product
-    ? "Product · User Stories and deliveries" : "Legacy · Epic runtime and historical Increments";
-  $("history-tab-label").textContent = product ? "Accepted deliveries" : "Closed Increments";
+    ? "Current product" : "Legacy · Epic runtime and historical Increments";
+  $("history-tab-label").textContent = product ? "Accepted increments" : "Closed Increments";
+  document.querySelector('[data-view="board"]').textContent = product ? "Increment" : "Legacy increments";
+  document.querySelector('[data-view="portfolio"]').textContent = product ? "Plan increment" : "Portfolio Auto";
   $("closed-count").textContent = product
     ? model.available ? model.context.counts.acceptedDeliveries : "—"
     : board.history?.acceptedCount || 0;

@@ -42,6 +42,34 @@ class ProductViewTests(unittest.TestCase):
         return {"id": "DEL-1", "status": status, "scopeSha256": SCOPE,
                 "goal": "Shared improvement", "stories": [{"id": "US-1"}, {"id": "US-2"}], "epics": []}
 
+    def test_increment_coverage_matches_story_and_criterion_without_reordering(self):
+        delivery = self.delivery("review")
+        delivery["stories"] = [
+            {"id": "US-2", "acceptanceCriteria": [{"id": "AC-1", "text": "Second Story"}]},
+            {"id": "US-1", "acceptanceCriteria": [{"id": "AC-1", "text": "First Story"}, {"id": "AC-2", "text": "Other"}]}]
+        delivery["criterionEvidence"] = [{"storyId": "US-1", "criterionId": "AC-1", "evidence": [{"path": "proof.md"}]}]
+        detail = self.evaluate(f"productDeliveryDetail({json.dumps(delivery)})")
+        self.assertEqual([story["id"] for story in detail["stories"]], ["US-2", "US-1"])
+        self.assertEqual(detail["stories"][0]["criteria"][0]["evidence"], [])
+        self.assertEqual(detail["stories"][1]["criteria"][0]["evidence"], [{"path": "proof.md"}])
+        self.assertEqual((detail["evidencedCriteria"], detail["totalCriteria"]), (1, 3))
+        delivery["criterionEvidence"] = []
+        self.assertEqual(self.evaluate(f"productDeliveryDetail({json.dumps(delivery)}).evidencedCriteria"), 0)
+
+    def test_approval_evidence_and_final_acceptance_are_distinct(self):
+        delivery = self.delivery("acceptance")
+        delivery["approval"] = {"path": "plan-authority.md"}
+        delivery["acceptanceSha256"] = "c" * 64
+        detail = self.evaluate(f"productDeliveryDetail({json.dumps(delivery)})")
+        self.assertEqual(detail["plan"], "Approved scope")
+        self.assertEqual(detail["acceptance"], "Awaiting user acceptance")
+        delivery.update(status="blocked", blockedFrom="acceptance", reason="Needs corrections")
+        detail = self.evaluate(f"productDeliveryDetail({json.dumps(delivery)})")
+        self.assertEqual(detail["phase"], "acceptance")
+        self.assertEqual(detail["acceptance"], "Not accepted · blocked")
+        delivery.update(status="accepted", acceptance={"path": "user-acceptance.md"})
+        self.assertEqual(self.evaluate(f"productDeliveryDetail({json.dumps(delivery)}).acceptance"), "Accepted by user")
+
     def test_cleanup_offer_handoff_does_not_authorize_deletion(self):
         functions = source_function("legacyCleanupPrompt(", "renderLegacyCleanup(")
         prompt = self.evaluate("legacyCleanupPrompt()", functions=functions)

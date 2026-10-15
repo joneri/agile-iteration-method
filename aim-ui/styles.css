@@ -892,3 +892,22 @@ main { padding: clamp(22px, 4vw, 58px); }
 .legacy-cleanup { margin: -8px 0 22px; padding: 16px 22px; border: 1px solid var(--line); background: var(--white); }
 .legacy-cleanup p { margin: 6px 0 12px; overflow-wrap: anywhere; }
 .legacy-cleanup [role="status"]:empty { display: none; }
+
+/* The increment is the shared commitment; evidence is not a progress meter. */
+.product-identity { margin: 0; color: var(--muted); font: .72rem/1.5 var(--mono); overflow-wrap: anywhere; }
+.product-goal { max-width: 75ch; font-size: 1rem; line-height: 1.65; }
+.product-next { padding: 16px 18px; background: var(--paper); border-left: 3px solid var(--cyan); line-height: 1.55; }
+.product-blocker { padding: 16px 18px; border-left: 3px solid #943737; }
+.product-scope-note { color: var(--muted); font-size: .82rem; line-height: 1.6; max-width: 90ch; }
+.product-scope-stories { align-items: start; }
+.product-scope-stories h4 { margin: 8px 0 12px; font: 800 1.2rem/1.25 var(--display); }
+.product-scope-stories .product-criteria { padding: 0; list-style: none; }
+.product-criteria > li { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 12px; }
+.product-criteria p { margin: 0 0 8px; }
+.product-evidence-state { display: block; font: .68rem/1.5 var(--mono); color: var(--muted); }
+.has-evidence .product-evidence-state { color: #256340; }
+.product-criteria .product-evidence { margin-top: 10px; }
+.product-role-current { display: block; margin-top: 16px; color: #075d83; font-size: .75rem; line-height: 1.5; }
+.product-role h2 { margin-top: 0; }
+.product-role p { line-height: 1.6; }
+.product-delivery h2, .product-scope-stories h4, .product-role h2 { overflow-wrap: anywhere; }

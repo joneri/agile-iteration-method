@@ -7,6 +7,8 @@
 - Clarify cumulative resource and scope boundaries. Routine defect correction and bounded investigation proceed within authority; complexity does not automatically change priority, model, cost profile or agent count.
 - Require observable product-quality goals, correction of material in-scope defects and useful, accurate copy in context. Remove redundant slogans and heading levels while preserving accessibility and appropriate personality.
 - Align native roles, adapters, Control handoff prompts and the generated portable skill; make startup experiments conditional on unresolved uncertainty.
+- Make the coherent increment the default AIM UI view, with visible selected Stories, criterion evidence, separate plan approval and user acceptance, blockers and the next action. Preserve recorded scope order without treating product priority as execution order.
+- Align planning, roles, accepted history and navigation with the increment model; remove redundant headings and slogans and correct approved-scope cancellation guidance.
 
 Compatibility: product backlog `1.0`, runtime `2.0`, state schema `1.0`, installer manifest `1.0` and portable package format `21` are unchanged. No migration is required. Update the installed skill and reload its session to use these instructions.
 

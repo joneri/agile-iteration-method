@@ -469,22 +469,22 @@
     {
       "output": "aim-ui/index.html",
       "source": "aim-ui/index.html",
-      "sourceSha256": "55941484532c7ee18c9a0db93918730a5c7447f2cc8360db96d6ffe55b4260b6"
+      "sourceSha256": "5924f784f2c569912c773d78bcd8c957779430477f282433e89ee8aa1d0c8369"
     },
     {
       "output": "aim-ui/styles.css",
       "source": "aim-ui/styles.css",
-      "sourceSha256": "6a9e05542d340de9fb1ec834a5a43788379a730a8812a39316b90d9a1fad4b85"
+      "sourceSha256": "f5f9ca5bc739b215edc1198e34c4a83860fef9a38a413127a3831f6fb63f03ac"
     },
     {
       "output": "aim-ui/app.js",
       "source": "aim-ui/app.js",
-      "sourceSha256": "1461f070babff502db7e4f74b9533b6cf8dffa77cb5713fb13e0dd490ca9d22e"
+      "sourceSha256": "0d9ea98644ff4483d5bebeacf0ccb15e3652864e8c1a712c639421c4db92c23c"
     },
     {
       "output": "aim-ui/product-views.js",
       "source": "aim-ui/product-views.js",
-      "sourceSha256": "fa6bfbaf1c5933d0729ac605e9b940d38b8fdb1e6457b8dd1227be2d50c5dd1b"
+      "sourceSha256": "ae036a8e2a61490e82464a8a0936633678c7d8bf830497d2ef7cb50ce6efe5ee"
     }
   ]
 }

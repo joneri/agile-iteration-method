@@ -1081,20 +1081,20 @@ class AimUiTests(unittest.TestCase):
         self.assertEqual(board["health"], "partial")
         self.assertTrue(any("conflicts with lastGatePassed" in item for item in board["warnings"]))
 
-    def test_stories_are_default_and_delivery_control_remains_available(self) -> None:
+    def test_increment_is_default_and_other_product_views_remain_available(self) -> None:
         markup = (REPO_ROOT / "aim-ui/index.html").read_text(encoding="utf-8")
         script = (REPO_ROOT / "aim-ui/app.js").read_text(encoding="utf-8")
         styles = (REPO_ROOT / "aim-ui/styles.css").read_text(encoding="utf-8")
 
-        self.assertIn('data-view="stories" aria-pressed="true">User Stories', markup)
-        self.assertIn('data-view="board" aria-pressed="false">Delivery control', markup)
-        self.assertIn('data-view="portfolio" aria-pressed="false">Portfolio', markup)
-        self.assertIn('data-view="data" aria-pressed="false">AIM DATA', markup)
-        self.assertIn('data-view="people" aria-pressed="false">People &amp; agents', markup)
+        self.assertIn('data-view="stories" aria-pressed="false">User Stories', markup)
+        self.assertIn('data-view="board" aria-pressed="true">Increment', markup)
+        self.assertIn('data-view="portfolio" aria-pressed="false">Plan increment', markup)
+        self.assertIn('data-view="data" aria-pressed="false">Delivery data', markup)
+        self.assertIn('data-view="people" aria-pressed="false">Roles', markup)
         self.assertIn('id="epic-rail" hidden', markup)
         self.assertIn('id="data-panel" aria-labelledby="data-title" hidden', markup)
         self.assertIn('id="people-panel" aria-labelledby="people-title" hidden', markup)
-        self.assertIn('view: "stories"', script)
+        self.assertIn('view: "board"', script)
         self.assertIn("renderData(board)", script)
         self.assertNotIn("board-view-button", script)
         self.assertNotIn("closed-view-button", script)

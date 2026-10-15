@@ -11,13 +11,12 @@
   <script src="/app.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#board">Skip to board</a>
+  <a class="skip-link" href="#board">Skip to workspace</a>
   <header class="command-bar">
     <div class="brand-lockup" aria-label="Agile Iteration Method control room">
       <span class="aim-mark" aria-hidden="true">AIM</span>
       <div>
         <p class="product-name">Control room <span class="product-version" id="product-version">AIM …</span></p>
-        <p class="product-note">User needs, shared direction, working software</p>
       </div>
     </div>
     <div class="connection-tools">
@@ -54,7 +53,7 @@
 
     <section id="control-room" hidden>
       <div class="workspace-switch" aria-label="Choose AIM workspace">
-        <div><p class="eyebrow">Workspace</p><strong id="workspace-description">Product · User Stories and deliveries</strong></div>
+        <div><p class="eyebrow">Workspace</p><strong id="workspace-description">Current product</strong></div>
         <div class="workspace-options">
           <button type="button" data-workspace="product" aria-pressed="true">Current product</button>
           <button type="button" data-workspace="legacy" aria-pressed="false">Legacy workspaces</button>
@@ -62,7 +61,7 @@
       </div>
       <aside id="legacy-cleanup" class="legacy-cleanup" aria-labelledby="legacy-cleanup-title" hidden>
         <div><strong id="legacy-cleanup-title">Remove older workspace data?</strong>
-          <p>Let your AI agent review and remove Legacy workspaces. Current User Stories and their evidence are kept.</p></div>
+          <p>Ask your AI agent to review older workspaces for removal while preserving current User Stories and their evidence.</p></div>
         <div class="workspace-options">
           <button id="open-legacy-cleanup" type="button">Review cleanup in Codex</button>
           <button id="copy-legacy-cleanup" type="button">Copy for your AI agent</button>
@@ -70,17 +69,17 @@
         <p id="legacy-cleanup-feedback" role="status" aria-live="polite"></p>
       </aside>
       <nav class="section-tabs" aria-label="AIM control room views">
-        <button class="section-tab" type="button" data-view="stories" aria-pressed="true">User Stories</button>
-        <button class="section-tab" type="button" data-view="board" aria-pressed="false">Delivery control</button>
+        <button class="section-tab" type="button" data-view="stories" aria-pressed="false">User Stories</button>
+        <button class="section-tab" type="button" data-view="board" aria-pressed="true">Increment</button>
         <button class="section-tab" type="button" data-view="discuss" aria-pressed="false">Discuss</button>
-        <button class="section-tab" type="button" data-view="portfolio" aria-pressed="false">Portfolio</button>
-        <button class="section-tab" type="button" data-view="data" aria-pressed="false">AIM DATA</button>
-        <button class="section-tab" type="button" data-view="people" aria-pressed="false">People &amp; agents</button>
-        <button class="section-tab" type="button" data-view="closed" aria-pressed="false"><span id="history-tab-label">Accepted deliveries</span> <span id="closed-count">0</span></button>
+        <button class="section-tab" type="button" data-view="portfolio" aria-pressed="false">Plan increment</button>
+        <button class="section-tab" type="button" data-view="data" aria-pressed="false">Delivery data</button>
+        <button class="section-tab" type="button" data-view="people" aria-pressed="false">Roles</button>
+        <button class="section-tab" type="button" data-view="closed" aria-pressed="false"><span id="history-tab-label">Accepted increments</span> <span id="closed-count">0</span></button>
       </nav>
 
       <section class="product-workspace" id="product-workspace" aria-labelledby="product-view-title" hidden>
-        <header class="product-heading"><div><p class="eyebrow" id="product-view-eyebrow">Current product</p><h1 id="product-view-title">Delivery control</h1></div><p id="product-view-summary"></p></header>
+        <header class="product-heading"><div><p id="product-view-eyebrow" hidden></p><h1 id="product-view-title">Increment</h1></div><p id="product-view-summary"></p></header>
         <p class="product-notice" id="product-notice" role="status" hidden></p>
         <div id="product-content"></div>
       </section>
@@ -96,20 +95,19 @@
       <section class="portfolio-journey" id="portfolio-journey" aria-labelledby="portfolio-journey-title" hidden>
         <header class="portfolio-journey-heading">
           <div>
-            <p class="eyebrow">From direction to delivery</p>
-            <h2 id="portfolio-journey-title">Set the Roadmap. Approve one mandate. Let AIM move.</h2>
+            <h2 id="portfolio-journey-title">Set up Portfolio Auto</h2>
           </div>
           <p id="portfolio-journey-guidance"></p>
         </header>
         <ol class="portfolio-journey-steps" aria-label="AIM Portfolio setup journey">
           <li data-journey-step="calibrate"><span>01</span><strong>Calibrate</strong><code>/aim calibrate-repo</code></li>
           <li data-journey-step="ui"><span>02</span><strong>Open AIM UI</strong><code>/aim ui</code></li>
-          <li data-journey-step="discuss"><span>03</span><strong>Shape direction</strong><code>/aim discuss [question]</code></li>
-          <li data-journey-step="backlog"><span>04</span><strong>Promote Roadmap</strong><code>/aim to-backlog</code></li>
-          <li data-journey-step="review"><span>05</span><strong>Review the cards</strong><small>Human review in AIM UI</small></li>
+          <li data-journey-step="discuss"><span>03</span><strong>Discuss product direction</strong><code>/aim discuss [question]</code></li>
+          <li data-journey-step="backlog"><span>04</span><strong>Add to backlog</strong><code>/aim to-backlog</code></li>
+          <li data-journey-step="review"><span>05</span><strong>Review planned work</strong><small>In AIM UI</small></li>
           <li data-journey-step="start"><span>06</span><strong>Start Portfolio Auto</strong><code>/aim start "PORTFOLIO" mode:auto</code></li>
-          <li data-journey-step="mandate"><span>07</span><strong>Approve the mandate</strong><small>One bounded snapshot</small></li>
-          <li data-journey-step="move"><span>08</span><strong>Monitor—or take a walk</strong><small>AIM pauses at the edges</small></li>
+          <li data-journey-step="mandate"><span>07</span><strong>Approve the mandate</strong><small>Review scope and limits</small></li>
+          <li data-journey-step="move"><span>08</span><strong>Monitor progress</strong><small>Resolve pauses in AIM chat</small></li>
         </ol>
         <div class="portfolio-journey-next">
           <div>
@@ -126,8 +124,7 @@
       <div class="epic-rail" id="epic-rail" hidden>
         <div class="epic-signal" aria-hidden="true"><span></span></div>
         <div class="epic-copy">
-          <p class="eyebrow">Active portfolio</p>
-          <h1>Multi-Epic command view</h1>
+          <h1>Active Epics</h1>
           <p class="portfolio-summary" id="portfolio-summary"></p>
           <dl class="runtime-facts" id="runtime-facts"></dl>
         </div>
@@ -136,8 +133,7 @@
 
       <section class="portfolio-run" id="portfolio-run-panel" aria-labelledby="portfolio-run-title" hidden>
         <div class="control-copy">
-          <p class="eyebrow">Portfolio Auto</p>
-          <h2 id="portfolio-run-title">One mandate, ordered delivery</h2>
+          <h2 id="portfolio-run-title">Portfolio Auto</h2>
           <p id="portfolio-run-summary"></p>
         </div>
         <dl class="control-facts" id="portfolio-run-facts"></dl>
@@ -149,8 +145,7 @@
 
       <section class="roadmap-panel" id="roadmap-panel" aria-labelledby="roadmap-title" hidden>
         <div class="control-copy">
-          <p class="eyebrow">Roadmap review</p>
-          <h2 id="roadmap-title">Execute this Roadmap</h2>
+          <h2 id="roadmap-title">Review roadmap</h2>
           <p id="roadmap-summary"></p>
         </div>
         <dl class="control-facts" id="roadmap-facts"></dl>
@@ -166,7 +161,6 @@
 
       <section class="portfolio-control" id="portfolio-control-panel" aria-labelledby="portfolio-control-title" hidden>
         <div class="control-copy">
-          <p class="eyebrow">Chat-owned policy</p>
           <h2 id="portfolio-control-title">Portfolio capacity</h2>
           <p id="portfolio-control-summary"></p>
         </div>
@@ -180,8 +174,7 @@
       <section class="discuss-panel" id="discuss-panel" aria-labelledby="discuss-title" hidden>
         <header class="discuss-heading">
           <div>
-            <p class="eyebrow">AIM Discuss · read only</p>
-            <h2 id="discuss-title">Think with the product context in view</h2>
+            <h2 id="discuss-title">Discuss</h2>
             <p id="discuss-summary"></p>
           </div>
           <span class="discuss-mode" id="discuss-mode">Analysis only</span>
@@ -189,8 +182,7 @@
         <dl class="discuss-facts" id="discuss-facts"></dl>
         <div class="discuss-workspace">
           <section class="discuss-question" aria-labelledby="discuss-question-title">
-            <p class="eyebrow">Your question</p>
-            <h3 id="discuss-question-title">What should AIM help you think through?</h3>
+            <h3 id="discuss-question-title">Your question</h3>
             <label for="discuss-input">Product idea, tradeoff, concern, or reflection</label>
             <textarea id="discuss-input" maxlength="4000" rows="8" placeholder="Which user needs should we prioritize next, and what evidence would show they are met?"></textarea>
             <div class="discussion-presets" id="discussion-presets" aria-label="Example discussion questions"></div>
@@ -201,8 +193,7 @@
             <p class="action-feedback" id="discussion-feedback" role="status" aria-live="polite"></p>
           </section>
           <aside class="discuss-context" aria-labelledby="discuss-context-title">
-            <p class="eyebrow">Context manifest</p>
-            <h3 id="discuss-context-title">What the discussion can consult</h3>
+            <h3 id="discuss-context-title">Discussion sources</h3>
             <ul id="discuss-sources"></ul>
             <details>
               <summary>Preview generated prompt</summary>
@@ -216,8 +207,7 @@
       <section class="data-panel" id="data-panel" aria-labelledby="data-title" hidden>
         <header class="data-heading">
           <div>
-            <p class="eyebrow">AIM DATA · evidence ledger</p>
-            <h2 id="data-title">Delivery outcomes, with receipts</h2>
+            <h2 id="data-title">Delivery data</h2>
             <p id="data-scope-note">Counts use the current product ledger. Time measures require explicitly recorded timestamps.</p>
           </div>
           <p class="data-as-of" id="data-as-of"></p>
@@ -227,16 +217,14 @@
           <section class="data-history-panel" aria-labelledby="data-history-title">
             <div class="data-section-heading">
               <div>
-                <p class="eyebrow">Acceptance timeline</p>
-                <h3 id="data-history-title">Evidence through time</h3>
+                <h3 id="data-history-title">Acceptance history</h3>
               </div>
               <span class="data-sample" id="data-history-count"></span>
             </div>
             <ol class="data-history" id="data-history"></ol>
           </section>
           <aside class="data-method" aria-labelledby="data-method-title">
-            <p class="eyebrow">Measurement rules</p>
-            <h3 id="data-method-title">What each number means</h3>
+            <h3 id="data-method-title">Metric definitions</h3>
             <dl id="data-definitions"></dl>
             <p class="data-quality" id="data-quality" role="status"></p>
           </aside>
@@ -245,8 +233,7 @@
 
       <section class="people-strip" id="people-panel" aria-labelledby="people-title" hidden>
         <div class="section-intro">
-          <p class="eyebrow">People and agents</p>
-          <h2 id="people-title">Who is carrying each Epic?</h2>
+          <h2 id="people-title">Roles by Epic</h2>
         </div>
         <div class="people-grid" id="people-grid"></div>
       </section>
@@ -254,7 +241,6 @@
       <section class="story-workspace" id="story-workspace" aria-labelledby="story-title">
         <header class="story-heading">
           <div>
-            <p class="eyebrow">One board · every user perspective</p>
             <h1 id="story-title">User Stories</h1>
             <p id="story-summary">Start with the change you want to make.</p>
           </div>
@@ -263,18 +249,16 @@
             <p class="action-feedback" id="story-start-feedback" role="status" aria-live="polite"></p>
           </div>
         </header>
-        <p class="story-model-note">Epics connect the goals. Stories describe user needs. Increments deliver working improvements.</p>
         <div class="epic-filters story-filters" id="story-filters" aria-label="Filter User Stories by Epic"></div>
         <div class="story-board-note" id="story-board-note" role="status"></div>
         <div class="story-board" id="story-board" aria-label="User Story progress across Epics"></div>
-        <p class="story-boundary">Story progress reflects recorded requirements. Refine and plan in AIM chat; delivery evidence and acceptance remain linked to each Story.</p>
+        <p class="story-boundary">Refine Stories and plan increments in AIM chat.</p>
       </section>
 
       <section class="workflow" id="workflow-panel" aria-labelledby="workflow-title" hidden>
         <div class="workflow-heading">
           <div id="workflow-title-group">
-            <p class="eyebrow">Legacy delivery runtime</p>
-            <h2 id="workflow-title">Delivery control</h2>
+            <h2 id="workflow-title">Legacy increments</h2>
           </div>
           <div class="workflow-status">
             <div class="epic-filters" id="epic-filters" aria-label="Filter board by Epic"></div>
@@ -289,23 +273,20 @@
           <aside class="recent-deliveries" id="recent-deliveries" aria-labelledby="recent-deliveries-title">
             <header class="recent-deliveries-head">
               <div>
-                <p class="eyebrow">Accepted history</p>
-                <h3 id="recent-deliveries-title">Recent deliveries</h3>
+                <h3 id="recent-deliveries-title">Recently accepted</h3>
               </div>
               <span class="recent-deliveries-count" id="recent-deliveries-count">0</span>
             </header>
-            <p class="recent-deliveries-note">Latest accepted Increments, independent of priority.</p>
+            <p class="recent-deliveries-note">Increments ordered by acceptance date.</p>
             <div class="recent-deliveries-list" id="recent-deliveries-list"></div>
-            <button class="recent-view-all" id="recent-view-all" type="button">View all accepted Increments</button>
+            <button class="recent-view-all" id="recent-view-all" type="button">View all accepted increments</button>
           </aside>
         </div>
         <section class="closed-panel" id="closed-panel" aria-labelledby="closed-title" hidden>
           <header class="closed-heading">
             <div>
-              <p class="eyebrow">Accepted history</p>
-              <h3 id="closed-title">Closed Increments</h3>
+              <h3 id="closed-title">Accepted increments</h3>
             </div>
-            <p>Complete evidence stays available beyond the Recent Deliveries window.</p>
           </header>
           <div class="closed-groups" id="closed-groups"></div>
         </section>
@@ -317,7 +298,6 @@
     <form method="dialog" class="action-console" id="action-form">
       <div class="action-console-head">
         <div>
-          <p class="eyebrow">Authoritative handoff</p>
           <h2 id="action-dialog-title">Review AIM action</h2>
         </div>
         <button class="dialog-close" value="cancel" aria-label="Close action dialog">×</button>
@@ -328,7 +308,7 @@
         <textarea id="change-request" maxlength="2000" rows="4" placeholder="Describe the correction AIM should make."></textarea>
       </label>
       <div class="intent-preview">
-        <span>Intent sent to AIM chat</span>
+        <span>Intent to send to AIM chat</span>
         <pre id="action-intent"></pre>
       </div>
       <p class="action-boundary">Codex opens this repository with the intent prefilled. Review it, then press Send. AIM revalidates current state before any change.</p>
@@ -355,8 +335,7 @@
       <dl class="delivery-detail-facts" id="delivery-detail-facts"></dl>
       <nav class="delivery-detail-evidence" id="delivery-detail-evidence" aria-label="Accepted Increment evidence"></nav>
       <section class="follow-up-panel" aria-labelledby="follow-up-title">
-        <p class="eyebrow">New work, preserved history</p>
-        <h3 id="follow-up-title">Explore a follow-up need</h3>
+        <h3 id="follow-up-title">Propose follow-up work</h3>
         <p>This opens a reviewable AIM chat proposal. It does not reopen or change the source Epic.</p>
         <pre id="follow-up-intent" tabindex="0"></pre>
         <div class="follow-up-actions">

@@ -36,7 +36,20 @@ delivery with remaining commitments and a recommendation; preserve its scope.
 Rework corrects implementation under that scope, and cancel applies only to an
 unapproved plan. Do not bypass these boundaries by editing the ledger directly.
 
-Focused UI handoff tests exercise emitted instructions and authority boundaries.
+AIM UI opens on the coherent increment, displaying its title and goal, selected
+Stories, criterion evidence and next action. Plan approval and user acceptance
+are separate facts. Recorded evidence counts do not imply completion, passing
+checks or acceptance. Frozen scope order is preserved; TDO still chooses the
+actual execution order. Epic criteria are inspectable separately, without
+claiming Story evidence proves whole-Epic closure. No runtime migration is needed.
+Planning cannot replace an active commitment or suggest cancelling approved
+scope. Role cards describe responsibility, not agent presence. Current and legacy
+navigation retain their distinct meanings. Prompt buttons remain discussions,
+not direct approval or acceptance controls.
+
+Focused UI tests exercise emitted instructions, evidence keyed by both Story and
+criterion, preserved scope order, rework evidence removal, blocked acceptance and
+authority boundaries. Browser checks use clearly synthetic lifecycle fixtures.
 Existing Story lifecycle, packaged CLI, snapshot, acceptance, recovery and
 delegation tests cover the retained runtime guarantees. These checks do not
 establish that this revision produces better end products; that needs the

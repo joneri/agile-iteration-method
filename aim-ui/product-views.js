@@ -83,6 +83,33 @@ function productCheckpoint(delivery) {
     acceptance: "Gate E · user acceptance pending", accepted: "Accepted delivery", cancelled: "Cancelled selection" }[phase] || "Checkpoint unavailable";
 }
 
+// Coverage is recorded evidence, never inferred implementation progress or acceptance.
+function productDeliveryDetail(delivery) {
+  const stories = delivery.stories.map((story) => ({ ...story,
+    criteria: (story.acceptanceCriteria || []).map((criterion) => ({ ...criterion,
+      evidence: (delivery.criterionEvidence || []).filter((entry) =>
+        entry.storyId === story.id && entry.criterionId === criterion.id)
+        .flatMap((entry) => entry.evidence || []) })) }));
+  const criteria = stories.flatMap((story) => story.criteria);
+  const accepted = delivery.status === "accepted" && Boolean(delivery.acceptance);
+  return { stories, totalCriteria: criteria.length,
+    evidencedCriteria: criteria.filter((criterion) => criterion.evidence.length > 0).length,
+    phase: delivery.status === "blocked" ? delivery.blockedFrom : delivery.status,
+    plan: delivery.approval ? "Approved scope" : "Not approved",
+    acceptance: accepted ? "Accepted by user" : delivery.status === "cancelled" ? "Not accepted · cancelled"
+      : delivery.status === "acceptance" ? "Awaiting user acceptance"
+        : delivery.status === "blocked" ? "Not accepted · blocked" : "Not yet submitted",
+    next: delivery.status === "blocked" ? "Resolve the recorded blocker while preserving the approved scope."
+      : { planned: "Review the proposed scope and plan in AIM chat before implementation.",
+        in_progress: "Complete the committed Stories and integrate them into one working increment.",
+        review: "Independently review the integrated result and every selected Story criterion.",
+        validation: "TDO verifies the integrated outcome and records evidence for the selected criteria.",
+        acceptance: "Review the result and evidence, then accept or request corrections in AIM chat.",
+        accepted: "This increment is accepted. Further work requires a new commitment.",
+        cancelled: "This unapproved selection was cancelled. Its history is retained." }[delivery.status]
+        || "Ask AIM chat to inspect this checkpoint." };
+}
+
 function productEvidenceRefs(delivery) {
   const refs = [];
   for (const [key, label] of [["planEvidence", "Plan"], ["reviewEvidence", "Review"], ["validationEvidence", "Validation"]]) {
@@ -192,7 +219,7 @@ function renderCurrentDelivery(model, content) {
     state.productDeliveryId = model.context.activeDeliveryId || model.deliveries.at(-1)?.id || null;
   }
   const chooser = el("div", "product-delivery-picker");
-  const label = el("label", "", "Inspect delivery");
+  const label = el("label", "", "Inspect increment");
   label.htmlFor = "product-delivery-select";
   const select = el("select", "");
   select.id = "product-delivery-select";
@@ -206,39 +233,59 @@ function renderCurrentDelivery(model, content) {
   chooser.append(label, select);
   const delivery = model.deliveries.find((item) => item.id === state.productDeliveryId);
   if (!delivery) {
-    content.append(el("p", "product-empty", "No delivery is planned. Open Portfolio to select ready Stories and propose a shared goal."));
+    content.append(el("p", "product-empty", "No increment is planned. Use Plan increment to select ready Stories and propose a shared goal, or describe your intent in Discuss."));
     return;
   }
   content.append(chooser);
+  const detail = productDeliveryDetail(delivery);
   const panel = el("article", "product-delivery");
-  panel.append(el("p", "eyebrow", delivery.id), el("h2", "", delivery.goal));
+  panel.append(el("p", "product-identity", delivery.id), el("h2", "", delivery.title || delivery.goal));
+  if (delivery.title && delivery.title !== delivery.goal) panel.append(el("p", "product-goal", delivery.goal));
   const facts = el("dl", "product-facts");
   addFact(facts, "Checkpoint", productCheckpoint(delivery));
-  addFact(facts, "State", statusLabel(delivery.status));
-  addFact(facts, "Stories", delivery.stories.length);
-  addFact(facts, "Epics", delivery.epics.length);
+  addFact(facts, "Plan", detail.plan);
+  addFact(facts, "User acceptance", detail.acceptance);
+  addFact(facts, "Criteria with recorded evidence", `${detail.evidencedCriteria} / ${detail.totalCriteria}`);
   panel.append(facts);
   if (delivery.status === "blocked") {
-    const blocker = el("p", "attention", `Blocked: ${delivery.reason}`);
+    const blocker = el("p", "attention product-blocker", `Blocked: ${delivery.reason}`);
     blocker.setAttribute("role", "status");
     panel.append(blocker);
   }
-  const scope = el("details", "product-scope");
-  scope.dataset.productDetail = `scope-${delivery.id}`;
-  const scopeSummary = el("summary", "", "Exact selected Stories and scope");
-  scopeSummary.id = `product-scope-${delivery.id}-summary`;
-  scope.append(scopeSummary);
+  panel.append(el("p", "product-next", detail.next));
+  panel.append(el("h3", "product-section-title", `Selected scope · ${detail.stories.length} Stories`),
+    el("p", "product-scope-note", "Shown in recorded scope order. TDO chooses execution order from dependencies; the increment is reviewed and accepted as a whole."));
   const stories = el("div", "product-scope-stories");
-  delivery.stories.forEach((story) => {
+  detail.stories.forEach((story) => {
     const item = el("article", "");
-    item.append(el("p", "eyebrow", `${story.id} · ${story.epicId}`), el("h3", "", story.title),
+    item.append(el("p", "product-identity", `${story.id} · ${story.epicId}`), el("h4", "", story.title),
       el("p", "", `As ${story.persona}, I need ${story.need}, so that ${story.benefit}.`));
-    const criteria = el("ul");
-    story.acceptanceCriteria.forEach((criterion) => criteria.append(el("li", "", `${criterion.id} · ${criterion.text}`)));
+    const criteria = el("ul", "product-criteria");
+    story.criteria.forEach((criterion) => {
+      const row = el("li", criterion.evidence.length ? "has-evidence" : "");
+      row.append(el("p", "", `${criterion.id} · ${criterion.text}`),
+        el("span", "product-evidence-state", criterion.evidence.length ? "Evidence recorded" : "Evidence not recorded"));
+      if (criterion.evidence.length) row.append(productEvidenceLinks(
+        criterion.evidence.map((ref) => ({ ...ref, label: "Evidence" })), `${delivery.id}:${story.id}:${criterion.id}`));
+      criteria.append(row);
+    });
     item.append(criteria);
     stories.append(item);
   });
-  scope.append(stories, el("p", "product-hash", `Scope fingerprint: ${delivery.scopeSha256}`));
+  panel.append(stories);
+  const scope = el("details", "product-scope");
+  scope.dataset.productDetail = `scope-${delivery.id}`;
+  const scopeSummary = el("summary", "", "Epic criteria and scope fingerprints");
+  scopeSummary.id = `product-scope-${delivery.id}-summary`;
+  scope.append(scopeSummary);
+  delivery.epics.forEach((epic) => {
+    scope.append(el("h4", "", `${epic.id} · ${epic.title}`));
+    const criteria = el("ul");
+    (epic.acceptanceCriteria || []).forEach((criterion) => criteria.append(el("li", "", `${criterion.id} · ${criterion.text}`)));
+    scope.append(criteria);
+  });
+  scope.append(el("p", "product-scope-note", "Story evidence does not establish whole-Epic completion. Epic closure is a separate decision."),
+    el("p", "product-hash", `Scope fingerprint: ${delivery.scopeSha256}`));
   if (delivery.acceptanceSha256) scope.append(el("p", "product-hash", `Acceptance fingerprint: ${delivery.acceptanceSha256}`));
   panel.append(scope, el("h3", "product-section-title", "Recorded evidence"));
   const evidence = productEvidenceLinks(productEvidenceRefs(delivery), delivery.id);
@@ -247,7 +294,7 @@ function renderCurrentDelivery(model, content) {
   const deliveryId = delivery.id;
   productPromptControls(panel, () => productHandoffPrompt(state.board, { kind: "delivery", deliveryId }),
     `product-delivery-${delivery.id}`, delivery.status === "accepted" ? "Copy follow-up proposal" : "Copy checkpoint discussion");
-  panel.append(el("p", "product-boundary", "This handoff prepares a discussion. It does not approve a plan, accept work or dispatch a legacy runtime action."));
+  panel.append(el("p", "product-boundary", "Discuss in AIM chat to approve the plan or accept the result. These buttons only prepare a prompt."));
   content.append(panel);
 }
 
@@ -268,11 +315,20 @@ function renderCurrentPortfolio(model, content) {
   });
   content.append(epics);
   const planning = el("section", "product-planning");
-  planning.append(el("p", "eyebrow", "Cross-Epic delivery selection"), el("h2", "", "Which needs belong in the next delivery?"));
+  planning.append(el("h2", "", "Propose an increment"), el("p", "product-scope-note", "Select Stories that contribute to one useful outcome. Product priority belongs to PO; TDO determines dependencies and execution order."));
   const ready = readyProductStories(model);
   const readyIds = new Set(ready.map((story) => story.id));
   const candidates = model.stories.filter((story) => story.status === "ready").slice().sort((a, b) => a.priority - b.priority);
-  if (model.context.activeDeliveryId) planning.append(el("p", "attention", `Delivery ${model.context.activeDeliveryId} is active. Finish or explicitly cancel it before planning another selection.`));
+  if (model.context.activeDeliveryId) {
+    const active = model.deliveries.find((item) => item.id === model.context.activeDeliveryId);
+    planning.append(el("p", "attention", `Increment ${model.context.activeDeliveryId} is active. ${active?.status === "planned"
+      ? "Review or cancel this unapproved proposal in AIM chat before planning another."
+      : "Complete its commitment before planning another increment. Blocking or rework preserves its approved scope."}`));
+    const inspect = el("button", "secondary-action", "Inspect active increment");
+    inspect.type = "button";
+    inspect.addEventListener("click", () => navigateProductDelivery(model.context.activeDeliveryId));
+    planning.append(inspect);
+  }
   const selections = el("fieldset", "product-selection");
   selections.append(el("legend", "", "Ready User Stories"));
   candidates.forEach((story) => {
@@ -283,7 +339,7 @@ function renderCurrentPortfolio(model, content) {
     checkbox.checked = state.productSelection.includes(story.id);
     checkbox.disabled = !readyIds.has(story.id);
     const copy = el("span");
-    copy.append(el("strong", "", `${story.id} · ${story.title}`), el("small", "", `${story.epicId} · ${story.persona} · Priority ${story.priority}`));
+    copy.append(el("strong", "", `${story.id} · ${story.title}`), el("small", "", `${story.epicId} · ${story.persona} · Product priority ${story.priority}`));
     checkbox.addEventListener("change", () => {
       state.productSelection = checkbox.checked ? [...state.productSelection, story.id] : state.productSelection.filter((id) => id !== story.id);
       state.productNotice = "";
@@ -295,7 +351,7 @@ function renderCurrentPortfolio(model, content) {
   });
   if (!candidates.length) selections.append(el("p", "product-empty", "No ready Stories are available. Refine and prioritize user needs in AIM chat."));
   planning.append(selections);
-  const goalLabel = el("label", "product-goal-label", "Shared delivery goal");
+  const goalLabel = el("label", "product-goal-label", "Increment goal");
   goalLabel.htmlFor = "product-plan-goal";
   const goal = el("textarea");
   goal.id = "product-plan-goal";
@@ -318,23 +374,24 @@ function renderCurrentPeople(model, content) {
   const roles = el("div", "product-roles");
   (model.context.roles || []).forEach((role) => {
     const card = el("article", `product-role${role.current ? " is-current" : ""}`);
-    card.append(el("p", "eyebrow", role.id), el("h2", "", role.responsibility),
-      el("p", "", role.current ? "Responsible at the recorded checkpoint" : "Defined responsibility"));
+    card.append(el("h2", "", { PO: "Product Owner", TDO: "Technical Delivery Owner", Dev: "Developer", Reviewer: "Reviewer" }[role.id] || role.id),
+      el("p", "", role.responsibility));
+    if (role.current) card.append(el("strong", "product-role-current", "Responsible at this checkpoint"));
     roles.append(card);
   });
-  content.append(roles, el("p", "product-boundary", "Checkpoint responsibility is not live presence. No running agent, progress percentage or activity is inferred."));
+  content.append(roles, el("p", "product-boundary", "Roles describe responsibility, not live agent presence."));
 }
 
 function renderCurrentHistory(model, content) {
   const deliveries = model.deliveries.filter((delivery) => delivery.status === "accepted").slice().reverse();
-  if (!deliveries.length) content.append(el("p", "product-empty", "No accepted deliveries are recorded in this product ledger."));
+  if (!deliveries.length) content.append(el("p", "product-empty", "No accepted increments are recorded yet."));
   const history = el("div", "product-history");
   deliveries.forEach((delivery) => {
     const card = el("article", "product-history-card");
     card.append(el("p", "eyebrow", delivery.id), el("h2", "", delivery.goal),
       el("p", "", `${delivery.stories.length} Stories · ${delivery.epics.map((epic) => epic.title).join(" / ")}`),
       el("p", "product-accepted-at", `Accepted ${formatTime(delivery.acceptedAt)}`));
-    const button = el("button", "secondary-action", "Inspect delivery and evidence");
+    const button = el("button", "secondary-action", "Inspect increment and evidence");
     button.type = "button";
     button.id = `inspect-${delivery.id}`;
     button.addEventListener("click", () => navigateProductDelivery(delivery.id));
@@ -349,15 +406,14 @@ function renderProductWorkspace(board) {
   const content = $("product-content");
   const openDetails = new Set(Array.from(content.querySelectorAll("details[open][data-product-detail]"), (item) => item.dataset.productDetail));
   content.replaceChildren();
-  const names = { board: ["Delivery control", "Inspect the selected scope, current checkpoint and evidence."],
-    portfolio: ["Product portfolio", "Epic outcomes and a shared selection of ready User Stories."],
-    people: ["People & agents", "Responsibilities at the recorded delivery checkpoint."],
-    closed: ["Accepted deliveries", "Working improvements backed by Story acceptance evidence."],
-    data: ["AIM Data", "Product evidence is unavailable until the ledger is valid."] };
+  const names = { board: ["Increment", ""], portfolio: ["Plan increment", ""],
+    people: ["Roles", ""], closed: ["Accepted increments", ""],
+    data: ["Delivery data", "Product evidence is unavailable until the ledger is valid."] };
   const [title, summary] = names[state.view] || ["Current product", ""];
   $("product-view-title").textContent = title;
   $("product-view-title").tabIndex = -1;
   $("product-view-summary").textContent = summary;
+  $("product-view-summary").hidden = !summary;
   $("product-notice").hidden = !state.productNotice;
   $("product-notice").textContent = state.productNotice;
   if (!model.available) {
