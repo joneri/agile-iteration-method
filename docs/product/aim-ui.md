@@ -178,7 +178,7 @@ bundled launcher, selects a free loopback port, and returns a clickable URL.
 A repository does not need an existing `.aim` directory: the UI opens with a
 truthful onboarding state and does not initialize or mutate runtime data.
 
-The Control room header displays the exact AIM product release captured from
+The AIM UI header displays the exact AIM product release captured from
 the trusted package when that server instance started. This is separate from
 the runtime contract version stored as `aimVersion` in repository state. The
 launcher, instance metadata, health endpoint, board payload, and visible badge
@@ -790,7 +790,7 @@ working; the action status now says when current agent activity is unconfirmed.
 
 ### Optional Legacy workspace cleanup
 
-When older workspace data is found, the Control room offers **Review cleanup
+When older workspace data is found, AIM UI offers **Review cleanup
 in Codex** and **Copy for your AI agent**. The agent previews the removable
 files, preserves current User Stories and their evidence, and deletes only
 with the user's consent. No archive copy is created. Opening the UI or copying

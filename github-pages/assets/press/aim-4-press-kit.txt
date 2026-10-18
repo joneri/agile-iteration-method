@@ -8,7 +8,7 @@ ONE SENTENCE
 AIM turns a plain-language goal into a plan and working software, with project-specific agents, early quality checks and evidence you can inspect before acceptance.
 
 SHORT DESCRIPTION
-Agile Iteration Method (AIM) is an open-source method and tooling for AI-assisted software development. Describe the result you want. The Product Owner owns Epic outcomes and product priority; the Technical Delivery Owner owns User Stories, criteria and a coherent delivery plan. Developers build the result, a separate reviewer challenges it, and validation connects the delivered behavior to your acceptance decision. AIM Control shows the work as Story cards while keeping the larger product in view.
+Agile Iteration Method (AIM) is an open-source method and tooling for AI-assisted software development. Describe the result you want. The Product Owner owns Epic outcomes and product priority; the Technical Delivery Owner owns User Stories, criteria and a coherent delivery plan. Developers build the result, a separate reviewer challenges it, and validation connects the delivered behavior to your acceptance decision. AIM UI shows the work as Story cards while keeping the larger product in view.
 
 CURRENT CAPABILITIES
 - Agree quality goals before implementation and test the first working core before building around it. A separate reviewer challenges a material core with an independent example.

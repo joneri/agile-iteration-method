@@ -116,7 +116,7 @@
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "fb53402c324f1a03d665a6097e0d2fc226fca229ce1b6309cd2308a17e3e68a3"
+      "sourceSha256": "63f78a6e5105a1ed5f24789142d9bbe79739cb6a1c12191909a1c4664ff313c7"
     },
     {
       "output": "references/autonomous-interaction.md",
@@ -291,7 +291,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "scripts/aim_publication.py",
-      "sourceSha256": "8a295a377649bc1ca61675c8dc0e02b45105483cec1b8802479d1ce5ee288434"
+      "sourceSha256": "0d9653b2bc3dee45423b8ac43364aee9be11844bf5bf671c0efb796299d5b883"
     },
     {
       "output": "manifest.json",
@@ -311,7 +311,7 @@
     {
       "output": "scripts/aim_http.py",
       "source": "scripts/aim_http.py",
-      "sourceSha256": "512ad497b3ec35eeb32f363b849f99df44299dca6f79e5b16039fba16075c781"
+      "sourceSha256": "caab3add9bf4c4ef604746589946d6c435dfdca5f60c96aba7d4ae7386f9b001"
     },
     {
       "output": "scripts/aim_engineering.py",
@@ -506,7 +506,7 @@
     {
       "output": "aim-ui/index.html",
       "source": "aim-ui/index.html",
-      "sourceSha256": "3733b6fdb8e0bcab9d81eaddb3fcb2347675d4103da02ee66f8e22c4485c1f03"
+      "sourceSha256": "cc8de4024242222ec5ad1ec198fca9777a73ee0df943f916a6ae73e6e0a7e9ab"
     },
     {
       "output": "aim-ui/styles.css",

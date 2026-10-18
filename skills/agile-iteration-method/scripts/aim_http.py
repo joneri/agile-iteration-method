@@ -1,6 +1,6 @@
 # GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py
 # Source: scripts/aim_http.py
-"""Local HTTP trust boundary for the AIM control room."""
+"""Local HTTP trust boundary for the AIM UI."""
 
 from __future__ import annotations
 

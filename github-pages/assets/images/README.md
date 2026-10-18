@@ -36,9 +36,9 @@ English and Swedish launch drafts, product facts, usage notes and the
 documentation licence. It is a reviewable press package, not a record of
 publication. No vector master is included.
 
-## AIM Control product capture
+## AIM UI product capture
 
-- `aim-control-board.png`: the actual AIM Control 4.1.0 User Stories Kanban
+- `aim-control-board.png`: the actual AIM UI 4.1.0 User Stories Kanban
   board, captured at a 2160-pixel desktop browser width. All seven columns are
   visible: Backlog, Ready, In progress, Review, Validation, Acceptance and Done.
   The board contains six example booking Stories. Finding and booking are Done,

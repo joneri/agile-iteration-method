@@ -166,7 +166,7 @@ def _homepage_contract(root: Path) -> None:
             raise PublicationError(f"index.html: required AIM 4 section is missing: {identifier}")
     for path in PUBLIC_PRODUCT_CAPTURES:
         if not (root / path).is_file():
-            raise PublicationError(f"required AIM Control capture is missing: {path}")
+            raise PublicationError(f"required AIM UI capture is missing: {path}")
         _png_dimensions(root / path)
         if not any(capture["kind"] == "example"
                    and "example" in capture["caption"].lower()

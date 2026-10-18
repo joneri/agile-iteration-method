@@ -345,7 +345,7 @@ target the requested checkpoint explicitly. Validation, upgrades and UI polling
 are read-only. New Stories derived from legacy material need explicit refinement
 while preserving source history.
 
-Offer trusted `aim_legacy_cleanup.py` preview/apply when a Control room detects
+Offer trusted `aim_legacy_cleanup.py` preview/apply when AIM UI detects
 legacy data and the user wants removal. It preserves the current product ledger
 and its referenced evidence, including references inside old workspaces.
 Unreferenced classified legacy data is deleted without an archive; unknown files

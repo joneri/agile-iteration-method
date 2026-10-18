@@ -251,7 +251,7 @@ class PublicationContractTests(unittest.TestCase):
         reference = evidence["referenceVersion"]
         for before, after, expected in (
             ('data-product-capture="example"', 'data-product-capture="live"', "example caption"),
-            ('Actual AIM Control 4.1.0 · Desktop Kanban board with example project data.', 'Actual AIM Control 4.1.0 · Live project.', "example caption"),
+            ('Actual AIM UI 4.1.0 · Desktop Kanban board with example project data.', 'Actual AIM UI 4.1.0 · Live project.', "example caption"),
             (f'data-evidence-version="{evaluated}"', 'data-evidence-version="unassessed"', "tested AIM version"),
             (reference, "unattributed-reference", "tested AIM version"),
             ('href="#start"', 'href="#missing"', "broken section link"),
@@ -270,7 +270,7 @@ class PublicationContractTests(unittest.TestCase):
             output = Path(temporary) / "site"
             build_artifact(REPO_ROOT, output)
             (output / PUBLIC_PRODUCT_CAPTURES[0]).unlink()
-            with self.assertRaisesRegex(PublicationError, "AIM Control capture is missing"):
+            with self.assertRaisesRegex(PublicationError, "AIM UI capture is missing"):
                 validate_artifact(output)
 
     def test_product_capture_requires_accessible_description(self) -> None:

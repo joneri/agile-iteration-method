@@ -1,4 +1,4 @@
-"""Local HTTP trust boundary for the AIM control room."""
+"""Local HTTP trust boundary for the AIM UI."""
 
 from __future__ import annotations
 
