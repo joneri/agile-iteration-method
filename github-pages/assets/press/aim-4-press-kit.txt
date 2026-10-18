@@ -1,5 +1,5 @@
 AIM — PRESS KIT
-Current development source · 18 October 2026.
+AIM 4.4 · 18 October 2026.
 
 POSITIONING
 Build your product from an intent.
@@ -28,7 +28,7 @@ Choose the agent and installation scope, reload the session if needed, load the 
 
 FACTS
 Name: Agile Iteration Method (AIM)
-Source version: 4.4.0-rc.12 prerelease
+Release version: 4.4.0
 Runtime contract: 2.0; backlog, state and installer schemas: 1.0
 Platforms: Codex, GitHub Copilot and Claude Code
 AIM UI: Beta; local control room
@@ -41,7 +41,7 @@ Public releases: https://github.com/joneri/agile-iteration-method/releases
 EVIDENCE AND AVAILABILITY
 The retained Enigma M3 results compare GPT-6 Luna with AIM, scoring 96.5/100 in the latest assessment, with GPT-6 Luna without AIM at 49.8/100. Both used high reasoning effort, the same brief and the same scoring weights. The earlier AIM result was 93.5/100. The Luna-only run is from 30 September 2026; the latest assessed AIM delivery is from 18 October. Delivery conditions differ: this is a historical comparison, not a fresh paired experiment or proof of general superiority or lower development cost. The latest version of AIM includes later changes outside this application score; the assessed native delivery remained unfinished. Exact frozen versions, scope and sanitized evidence: https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-enigma-evaluation.md. Original with-and-without-AIM comparison: https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-3.2-enigma-m3-case.md.
 
-The earlier AIM 3.2 paired study remains historical with its original test conditions and evidence. Focused context and reuse are design controls, not a guaranteed percentage saving. The source is prepared as a prerelease. The installation command uses the public source; check GitHub Releases for actual availability and release status.
+The earlier AIM 3.2 paired study retains its original test conditions and evidence. AIM 4.4 is available as the current ordinary release. Install the complete skill with the command above or view the release at https://github.com/joneri/agile-iteration-method/releases/tag/v4.4.0.
 
 LOGO
 The supplied aim-4-logo.png is the established AIM campaign lockup: the golden/blue folded A identity, navy AIM lettering and a blue/cyan ribbon numeral 4 on a transparent background. Use on white or pale backgrounds. Preserve proportions, colours and the full lockup. Leave at least the height of the AIM capital letters as clear space. Check legibility at the intended size; do not use the entire wordmark as a tiny favicon. The versionless canonical repository artwork remains separate.

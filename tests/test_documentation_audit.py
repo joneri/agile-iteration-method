@@ -21,6 +21,18 @@ class DocumentationAuditTests(unittest.TestCase):
     def test_current_repository_passes(self) -> None:
         self.assertEqual([], audit(ROOT))
 
+    def test_stable_release_preserves_candidate_history_but_rejects_duplicate_release(self) -> None:
+        version = (ROOT / "VERSION").read_text().strip()
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy(temporary)
+            changelog = copied / "CHANGELOG.md"
+            changelog.write_text(changelog.read_text() +
+                                 f"\n## 2026-10-17 - AIM release v{version}-rc.99\n", encoding="utf-8")
+            self.assertFalse(any("current release must have" in error for error in audit(copied)))
+            changelog.write_text(changelog.read_text() +
+                                 f"\n## 2026-10-18 - AIM release v{version}\n", encoding="utf-8")
+            self.assertTrue(any("current release must have" in error for error in audit(copied)))
+
     def test_runtime_schema_version_is_documented_separately(self) -> None:
         content = (ROOT / "docs/workflow/version-and-installation.md").read_text(
             encoding="utf-8"

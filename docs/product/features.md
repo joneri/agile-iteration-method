@@ -3,7 +3,7 @@
 This is the short map of what AIM does. Follow the links only when you need
 the operating detail.
 
-The latest development source combines clearer workflows with preserved work,
+AIM combines clearer workflows with preserved work,
 action tracking and verified recovery status. Across Codex, Claude Code and
 GitHub Copilot, AIM keeps the same command semantics and resumes saved work when
 the next tool has AIM and access to the same current repository and state.

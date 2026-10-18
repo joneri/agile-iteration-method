@@ -383,7 +383,9 @@ class PublicationContractTests(unittest.TestCase):
                         self.assertTrue(mutations)
                         self.assertTrue(all("--prerelease" in line and "--latest=false" in line for line in mutations))
                     else:
-                        self.assertTrue(all("--prerelease" not in line for line in commands))
+                        self.assertTrue(mutations)
+                        self.assertTrue(all("--prerelease=false" in line and "--latest" in line
+                                            and "--latest=false" not in line for line in mutations))
 
     def test_schema_id_drift_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -96,7 +96,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.4.0-rc.12",
+  "productVersion": "4.4.0",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -284,7 +284,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "0be6901db53d4935ba14b4f151b0cb2dec6bd364738a758dc9e7cabaf286e096"
+      "sourceSha256": "d4e4d4e812e1dafc4e760f5ee12c48ef76f8af41d27cbf3bf2ff065505b9cfe6"
     },
     {
       "output": "references/version-and-installation.md",

@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-10-18 - AIM release v4.4.0
+
+Publish AIM 4.4 as an ordinary release and the latest GitHub Release.
+
+- Preserve relevant quality goals, measure the first working core and let failed
+  observations direct correction before delivery can finish.
+- Use a separate Reviewer for consequential core checks and final material review.
+- Reuse maintained product-route maps and executable checks of real user flows.
+- Share generalized, searchable lessons between local AIM projects during normal
+  planning, review and diagnosis. Retire manual `reflect` and `reflect-all` workflows.
+- Reuse compact receipts, project knowledge and current evidence with less routine
+  administration. Preserve user-owned acceptance and existing runtime contracts.
+- Align the public skill, website, press package and release assets on version
+  4.4.0. Present Luna with and without AIM as the primary retained comparison.
+
+Historical release candidates and frozen Enigma results retain their original
+versions and evidence. This release does not create a new Enigma assessment.
+
 ## 2026-10-18 - AIM release v4.4.0-rc.12
 
 Release preparation for the v4.4.0-rc.12 prerelease. The frozen RC11 package

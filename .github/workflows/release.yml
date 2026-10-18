@@ -94,10 +94,14 @@ jobs:
           set -- --verify-tag --title "${title}" --notes "${notes}"
           if [[ "${version}" == *-* ]]; then
             set -- "$@" --prerelease --latest=false
+          else
+            set -- "$@" --prerelease=false --latest
           fi
           if gh release view "${version}" >/dev/null 2>&1; then
             if [[ "${version}" == *-* ]]; then
               gh release edit "${version}" --prerelease --latest=false
+            else
+              gh release edit "${version}" --prerelease=false --latest
             fi
             gh release upload "${version}" release-assets/* --clobber
           else

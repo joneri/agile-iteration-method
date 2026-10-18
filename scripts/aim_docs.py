@@ -56,7 +56,8 @@ def audit(repo_root: Path) -> list[str]:
 
     if len(readme.splitlines()) > 180:
         errors.append("README.md: public front door exceeds 180 lines")
-    if "# Unreleased" in changelog or changelog.count(f"release v{version}") != 1:
+    release_heading = rf"^## \d{{4}}-\d{{2}}-\d{{2}} - AIM release v{re.escape(version)}[ \t]*$"
+    if "# Unreleased" in changelog or len(re.findall(release_heading, changelog, re.MULTILINE)) != 1:
         errors.append("CHANGELOG.md: current release must have one dated section and no stray Unreleased heading")
     for stale in ("Command-first", "Agent-first", "~/.codex/skills/agile-iteration-method"):
         if stale in index or stale in readme:

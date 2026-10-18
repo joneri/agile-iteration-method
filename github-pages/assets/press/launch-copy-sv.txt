@@ -1,7 +1,7 @@
 AIM
 Från idé till en produkt du kan granska.
 
-Förslag till lanseringstext · Aktuell utvecklingsversion · 18 oktober 2026.
+Förslag till lanseringstext · AIM 4.4 · 18 oktober 2026.
 
 Beskriv programvaran du vill ha med vanliga ord. AIM gör målet till User Stories och en sammanhängande plan, med agenter anpassade till ditt projekt. Följ utvecklingen i AIM Control, granska resultat och kontroller och acceptera den fungerande leveransen.
 

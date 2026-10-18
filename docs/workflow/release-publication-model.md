@@ -82,6 +82,8 @@ before packaging or uploading assets.
 Tags containing a prerelease suffix are marked as GitHub prereleases and are
 not promoted to Latest, including when their assets are refreshed. The product
 name in sales copy remains AIM; technical manifests retain the exact release.
+Ordinary version tags are explicitly published without prerelease status and
+marked as Latest, including when an existing release is refreshed.
 
 Public evaluation metadata identifies the build actually assessed, independently
 of `VERSION`. A newer source candidate never inherits that build's result.
