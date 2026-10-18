@@ -116,6 +116,16 @@ the user is operating that model; it is not the default first-time journey.
 
 ### Intent-led start and Story continuation
 
+Default new work to Ship delivery; preserve explicit Loop and all active frozen
+policies. Resolve delivery style independently of Strict/Auto and resource depth.
+Explain Graph engineering when guiding agent-led starts: an owner coordinates
+outcome and feedback, the AIM delivery coordinator writes its ledger, and review
+judges independently. An agent owner needs actual human delegation and scoped
+owner decisions using `deliveryPolicy` in `user-stories.md`; a role label cannot
+supply acceptance. In Strict Loop, obtain that owner's actual assessment before
+selecting the next increment. Ship completes the agreed result before final
+owner acceptance, with internal review and correction throughout.
+
 New plain-intent `/aim start "<desired outcome>"` and natural-language starts
 follow `user-stories.md`. PO owns Epics and product priority;
 TDO owns Stories, criteria and a coherent increment, potentially across Epics. The trusted

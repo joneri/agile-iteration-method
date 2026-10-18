@@ -125,6 +125,7 @@ aimInstallManifest:
         - scripts/aim_quality/files.py
         - scripts/aim_quality/goals.py
         - scripts/aim_quality/delivery.py
+        - scripts/aim_quality/delivery_policy.py
         - scripts/aim_quality/skills.py
         - scripts/aim_quality/evidence.py
         - scripts/aim_quality/timing.py

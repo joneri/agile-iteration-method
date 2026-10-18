@@ -29,6 +29,20 @@ ownership, or acceptance.
 
 ## Intent-led requirements and delivery
 
+New intent-led work defaults to **Ship**: finish the complete agreed product
+outcome before final owner acceptance. **Loop** is an explicit choice for useful
+Done Increments and recurring owner feedback. Keep delivery style independent
+of Strict/Auto and cost depth, and preserve existing frozen deliveries.
+
+Recommend **Graph engineering** when explaining agent-led work: ask the current
+agent to coordinate outcome ownership, delivery dependencies, verification and
+owner feedback. In **Strict Loop**, a human or explicitly delegated agent owner
+assesses each agreed increment. Use actual human mandate and owner decision
+evidence under the `deliveryPolicy` contract in [User Stories](user-stories.md).
+A role name or Auto setting grants no acceptance authority. Natural-language
+requests such as "Use AIM in Strict Loop; act as my product owner within this
+mandate" select this behavior without inventing a new slash command.
+
 New `/aim start "<desired outcome>"` and equivalent natural-language requests
 follow [User Stories and product backlog](user-stories.md). PO preserves intent,
 owns Epics and product priority. TDO creates and owns Stories and their criteria

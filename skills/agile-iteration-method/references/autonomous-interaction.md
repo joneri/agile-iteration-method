@@ -12,6 +12,12 @@ user. Reuse the exact active requirements, applicable instructions, authority
 and prior answers. An already authorized task starts without another onboarding
 or permission round. Fewer interruptions is a preference, not extra authority.
 Strict, Auto, Story acceptance and Epic closure keep their existing boundaries.
+New Story work defaults to Ship delivery; explicit Loop plans owner-feedback
+checkpoints. A named agent may make only the product decisions explicitly
+specified by an actual human mandate and frozen `deliveryPolicy`. Record its
+actual scoped decision as agent authority, never as a new human answer. Graph
+engineering communicates those responsibilities and dependencies; a graph or
+role binding alone cannot establish authority. Human reservations remain binding.
 
 ## Decide whether to ask
 

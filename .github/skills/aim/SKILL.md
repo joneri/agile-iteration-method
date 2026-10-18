@@ -16,6 +16,22 @@ Follow:
 - `docs/workflow/adapter-skill-bootstrap.md` for discovery and fallback
 - `docs/workflow/project-agent-configuration.md` for role specialization
 
+## Ship, Loop and Graph engineering
+
+Default new intent-led work to **Ship**: complete the agreed product outcome
+before final owner acceptance. Explicit **Loop** uses useful Done Increments
+and actual owner feedback to select the next work. Keep delivery style separate
+from Strict/Auto and cost depth; preserve active and historical policies.
+
+Promote **Graph engineering** in startup guidance: the current agent can
+coordinate outcome ownership, delivery dependencies, proof and feedback. A
+**Strict Loop** owner can be human or an agent with explicit human delegation.
+Use actual host identities, a frozen `deliveryPolicy` and scoped owner decision
+evidence from `docs/workflow/user-stories.md`; a role or Auto setting cannot grant
+acceptance. The AIM delivery coordinator owns its ledger, and material review
+remains independent. Load only the relevant `docs/workflow/adaptive-execution.md`
+section when the actual handoff needs detail.
+
 ## Autonomous interaction
 
 Reuse current user authority and applicable answers. Read only the relevant section of `docs/workflow/autonomous-interaction.md` when an authority, dependency or changed-decision boundary remains unresolved. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
@@ -34,7 +50,7 @@ A Sprint is an optional timebox, never a requirement type.
 For status, continue, refinement and acceptance, resolve the addressed Story
 or delivery in that store first. Use its next step, snapshot and evidence;
 do not route a new Story through legacy INC/DI activation. Final acceptance
-belongs to the user; Story acceptance never implies Epic closure.
+belongs to the user or explicitly delegated owner; Story acceptance never implies Epic closure.
 Legacy Epic workspaces, explicit `EPIC:` starts and Portfolio Auto retain the
 existing checkpoint and authority contracts below. Never infer Stories from
 legacy Increment titles or widen old approvals. General engineering, trust,

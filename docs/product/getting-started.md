@@ -120,6 +120,32 @@ manually.
 
 If your platform does not expose slash commands, ask AIM to verify and refine repo awareness for the repository.
 
+## Choose delivery and ownership
+
+**Ship is the default:** AIM completes the agreed product outcome before final
+acceptance, with internal tests, independent review and correction throughout.
+Choose **Loop** to receive useful Done Increments and give feedback before the
+next selection. Delivery style is separate from Strict/Auto approvals and cost
+depth. Existing deliveries keep their original policies.
+
+Use **Graph engineering** when asking your agent to coordinate the work: name
+who owns the outcome, who delivers, their dependencies and the required evidence.
+The agent you are speaking with can act as product owner under an explicit
+mandate, while an AIM delivery coordinator executes and an independent reviewer
+checks the result. For example:
+
+```text
+Use AIM in Strict Loop. Act as my product owner and delegate delivery.
+Assess each verified increment, request corrections when needed, and select
+what comes next. Your mandate covers [outcome and allowed decisions]
+within [resource limit]. Keep [reserved decisions] with me.
+```
+
+The owner must actually evaluate each result. Agent decisions need the explicit
+human delegation and scoped evidence in [User Stories](../workflow/user-stories.md);
+a role assignment or Auto setting cannot replace that mandate. Ship completes
+its agreed result; it does not itself authorize publication or deployment.
+
 ## Follow the Story board
 
 Run `/aim ui` to open the local control room. User Stories are the moving cards;

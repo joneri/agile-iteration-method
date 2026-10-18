@@ -23,6 +23,8 @@ from urllib.parse import quote
 from aim_quality.files import read_evidence
 from aim_quality.goals import validate_goals, assess as assess_goals, _sha
 from aim_quality.delivery import validate_plan, assess_checks, stages
+from aim_quality.delivery_policy import (DEFAULT_POLICY, normalize_policy, parse_owner_decision,
+                                         validate_authority_binding, validate_owner_decision)
 from aim_quality.review import check_review
 from aim_quality.graph import (change_activity, project_graph, validate_activity_receipts,
                                validate_execution_plan)
@@ -131,7 +133,7 @@ def _intent_snapshot(intent):
 
 def _scope(delivery):
     result = {key: delivery[key] for key in ("id", "title", "goal", "stories", "epics", "intents", "planEvidence")}
-    for key in ("qualityGoals", "qualityPlan", "executionPlan"):
+    for key in ("qualityGoals", "qualityPlan", "executionPlan", "deliveryPolicy"):
         if key in delivery:
             result[key] = delivery[key]
     return result
@@ -169,6 +171,7 @@ class _EvidenceCache(dict):
         self.measurement_references = dict(measurement_paths) if isinstance(measurement_paths, dict) else {}
         self.raw_references = {}
         self.raw_paths = set()
+        self.owner_decisions = {}
 
 
 def _coverage_paths(request):
@@ -362,12 +365,36 @@ def _refs(repo, values, *, product=False, cache=None):
     return result
 
 
-def _authority(repo, value, scope, *, cache=None):
-    fields(value, ("kind", "path", "sha256", "scopeSha256"))
-    require(value["kind"] == "user", "This decision requires supplied user authority; Auto is not final acceptance.")
+def _owner_authority(value, delivery, operation):
+    try:
+        validate_authority_binding(value, delivery.get("deliveryPolicy") if delivery else None, operation)
+    except ValueError as exc:
+        prefix = "Delivery has no matching user acceptance or delegated owner decision: " if operation == "accept" else ""
+        raise StoryError(prefix + str(exc)) from exc
+
+
+def _authority(repo, value, scope, *, cache=None, delivery=None, operation=None):
+    fields(value, ("kind", "path", "sha256", "scopeSha256"), ("id", "session"))
+    _owner_authority(value, delivery, operation)
     require(value["scopeSha256"] == scope, "Authority refers to a stale or different scope.")
     _ref(repo, {key: value[key] for key in ("path", "sha256")}, cache=cache)
+    if value["kind"] == "agent":
+        _owner_decision_evidence(repo, value, delivery, operation, cache=cache)
     return copy.deepcopy(value)
+
+
+def _owner_decision_evidence(repo, value, delivery, operation, *, cache=None):
+    decisions = cache.owner_decisions if cache is not None else {}
+    key = (value["path"], value["sha256"])
+    try:
+        if key not in decisions:
+            payload = read_evidence(repo, value["path"], 16384)
+            require(hashlib.sha256(payload).hexdigest() == value["sha256"],
+                    "Owner decision evidence changed while reading.")
+            decisions[key] = parse_owner_decision(payload)
+        validate_owner_decision(decisions[key], value, delivery["id"], operation)
+    except ValueError as exc:
+        raise StoryError(str(exc)) from exc
 
 
 def _criterion_evidence(repo, values, expected, *, stories, cache=None,
@@ -519,6 +546,12 @@ def validate_document(document):
                 validate_activity_receipts(delivery)
             except ValueError as exc:
                 raise StoryError(str(exc)) from exc
+        if "deliveryPolicy" in delivery:
+            try:
+                require(normalize_policy(delivery["deliveryPolicy"]) == delivery["deliveryPolicy"],
+                        "Stored delivery policy must be normalized.")
+            except ValueError as exc:
+                raise StoryError(str(exc)) from exc
         validate_goals(delivery.get("qualityGoals", []))
         if "qualityPlan" in delivery:
             validate_quality_plan(delivery["qualityPlan"], delivery.get("qualityGoals", []), delivery["stories"])
@@ -554,6 +587,7 @@ def validate_document(document):
                 require(snapshot == _intent_snapshot(intents[snapshot["id"]]), "Selected Intent changed after planning.")
         if effective != "planned":
             require("approval" in delivery, "Delivery has no Gate A/B authority.")
+            _owner_authority(delivery["approval"], delivery, "approve")
             require(delivery["approval"]["scopeSha256"] == delivery["scopeSha256"], "Approval scope mismatch.")
         if effective in {"validation", "acceptance", "accepted"}:
             require(bool(delivery.get("reviewEvidence")), "Delivery requires passed review evidence.")
@@ -570,6 +604,7 @@ def validate_document(document):
                     "Delivery requires measured quality goals.")
             require(delivery.get("acceptanceSha256") == digest(_acceptance_scope(delivery)), "Acceptance scope mismatch.")
         if effective == "accepted":
+            _owner_authority(delivery.get("acceptance", {}), delivery, "accept")
             require(delivery.get("acceptance", {}).get("scopeSha256") == delivery["acceptanceSha256"],
                     "Delivery has no matching user acceptance.")
     for story in stories.values():
@@ -577,6 +612,8 @@ def validate_document(document):
             require(story["id"] in ownership, "Story lifecycle has no delivery evidence.")
     for epic in epics.values():
         if epic["status"] == "closed":
+            require(epic.get("closure", {}).get("authority", {}).get("kind") == "user",
+                    "Epic closure requires supplied user authority.")
             members = [item for item in stories.values() if item["epicId"] == epic["id"]]
             require(bool(members) and all(item["id"] in accepted for item in members), "Closed Epic has unfinished Stories.")
             require("closure" in epic, "Epic closure requires explicit evidence and authority.")
@@ -616,6 +653,9 @@ def verify_evidence(repo, document, *, cache=None):
         if delivery["status"] == "cancelled":
             continue
         _refs(repo, delivery["planEvidence"], cache=cache)
+        owner = delivery.get("deliveryPolicy", {}).get("owner", {})
+        if owner.get("kind") == "agent":
+            _ref(repo, owner["mandate"], cache=cache)
         # Accepted bindings record the inspected historical product snapshot.
         # Later deliveries may legitimately change those same product files.
         if delivery["status"] != "accepted" and "productBindings" in delivery:
@@ -623,6 +663,9 @@ def verify_evidence(repo, document, *, cache=None):
         for key in ("approval", "acceptance"):
             if key in delivery:
                 _ref(repo, {field: delivery[key][field] for field in ("path", "sha256")}, cache=cache)
+                if delivery[key]["kind"] == "agent":
+                    _owner_decision_evidence(repo, delivery[key], delivery,
+                                             "approve" if key == "approval" else "accept", cache=cache)
         for key in ("reviewEvidence", "validationEvidence"):
             if key in delivery:
                 _refs(repo, delivery[key], cache=cache)
@@ -950,7 +993,13 @@ def _change(repo, document, command, request, *, cache=None):
         _import(document, request)
         return
     if command == "plan":
-        fields(request, ("id", "title", "goal", "storyIds", "planEvidence", "qualityPlan"), ("qualityGoals", "executionPlan"))
+        fields(request, ("id", "title", "goal", "storyIds", "planEvidence", "qualityPlan"), ("qualityGoals", "executionPlan", "deliveryPolicy"))
+        try:
+            policy = normalize_policy(request.get("deliveryPolicy", DEFAULT_POLICY))
+        except ValueError as exc:
+            raise StoryError(str(exc)) from exc
+        if policy["owner"]["kind"] == "agent":
+            _ref(repo, policy["owner"]["mandate"], cache=cache)
         validate_goals(request.get("qualityGoals", []))
         identity(request["id"], "DI")
         require(not any(item["id"] == request["id"] for item in document["deliveries"]), "Delivery identity is already allocated.")
@@ -970,6 +1019,7 @@ def _change(repo, document, command, request, *, cache=None):
                     "intents": [_intent_snapshot(item) for item in selected_intents],
                     "epics": [_epic_snapshot(item) for item in selected_epics]}
         delivery["qualityPlan"] = copy.deepcopy(request["qualityPlan"])
+        delivery["deliveryPolicy"] = policy
         if "qualityGoals" in request:
             delivery["qualityGoals"] = copy.deepcopy(request["qualityGoals"])
         if "executionPlan" in request:
@@ -1012,7 +1062,8 @@ def _change(repo, document, command, request, *, cache=None):
     status = delivery["status"]
     if command == "approve":
         require(status == "planned", "Gate A/B approval requires a planned delivery.")
-        delivery["approval"] = _authority(repo, request["authority"], delivery["scopeSha256"], cache=cache)
+        delivery["approval"] = _authority(repo, request["authority"], delivery["scopeSha256"], cache=cache,
+                                          delivery=delivery, operation="approve")
         delivery["status"] = "in_progress"
     elif command == "review":
         require(status == "in_progress", "Review requires implementation in progress.")
@@ -1071,7 +1122,8 @@ def _change(repo, document, command, request, *, cache=None):
         delivery["status"] = "acceptance"
     elif command == "accept":
         require(status == "acceptance", "Gate E acceptance requires reviewed, validated delivery evidence.")
-        delivery["acceptance"] = _authority(repo, request["authority"], delivery["acceptanceSha256"], cache=cache)
+        delivery["acceptance"] = _authority(repo, request["authority"], delivery["acceptanceSha256"], cache=cache,
+                                           delivery=delivery, operation="accept")
         delivery.update(status="accepted", acceptedAt=now())
     elif command == "cancel":
         require(status == "planned", "Only an unapproved plan can be cancelled.")
@@ -1199,7 +1251,7 @@ def compact_result(result, *, receipt=False, delivery_id=None):
             d for d in document["deliveries"] if d["status"] not in {"accepted", "cancelled"}]
         deliveries = []
         for delivery in selected:
-            entry = {k: delivery[k] for k in ("id", "status", "scopeSha256", "acceptanceSha256") if k in delivery}
+            entry = {k: delivery[k] for k in ("id", "status", "scopeSha256", "acceptanceSha256", "deliveryPolicy") if k in delivery}
             if "productBindings" in delivery:
                 entry["productBindingsSha256"] = digest(delivery["productBindings"])
             if "coreVerification" in delivery:

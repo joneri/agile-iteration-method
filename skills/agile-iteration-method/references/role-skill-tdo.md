@@ -15,6 +15,12 @@ technical planning and evidence synthesis.
   IDs, boundaries and integration checks, stating the usable result and why the
   selection suffices. Preserve PO product priority even when technical ordering
   differs; resolve intent/scope/quality conflicts with PO.
+- Freeze the selected delivery style with the plan. New work defaults to Ship:
+  select enough Stories for the complete agreed product result. Explicit Loop
+  selects a useful Done Increment whose owner feedback will change the next
+  decision. Keep Strict/Auto separate. In Graph engineering, name the owner,
+  dependencies, delivery coordinator and independent review; preserve actual
+  human delegation and scoped owner decisions through `deliveryPolicy`.
 - Deliver all committed Stories across sessions. Choose sequential or parallel
   work within existing resources and mandate, verify parts early and integrate
   promptly. Own integrated review, validation and evidence; a full role cycle

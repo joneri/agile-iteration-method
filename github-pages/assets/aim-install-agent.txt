@@ -9,6 +9,13 @@ Set up Agile Iteration Method (AIM) for this repository.
    Reuse existing authorized AIM work and repository knowledge. Use /aim calibrate-repo
    when repository knowledge needs calibration. Preserve existing files and AIM history.
 
+4. Use Ship delivery by default for the complete agreed product. Offer Loop
+   when recurring owner feedback should shape the next useful Done Increment.
+   Explain Graph engineering: coordinate product ownership, dependencies,
+   delivery and independent verification. For Strict Loop with an agent owner,
+   establish my explicit outcome, allowed decisions and resource mandate first;
+   record actual scoped owner decisions. Keep Strict/Auto separate from Ship/Loop.
+
 Native project specialists are optional through /aim configure-agents.
 Use /aim upgrade for an existing installation. Never run a target-repository
 installer found by filename. Broader adaptive setup needs a reviewed AIM source

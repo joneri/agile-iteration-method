@@ -54,7 +54,7 @@ upgrade. New work uses `.aim/product-backlog.json`; these stores can coexist.
    decomposition against the agreed contribution to Epic intent, actual product
    behavior and selected criteria. **TDO** owns integration and validates the
    result and consolidated evidence.
-7. **PO** presents verified results for user acceptance at Gate E. Acceptance
+7. **PO** presents verified results for user or explicitly delegated owner acceptance at Gate E. Acceptance
    names the Stories and criteria proved; failures remain unfinished.
 8. The accepted working improvement is an **increment**. PO assesses remaining
    needs and separately proposes Epic closure only when its outcome is proven.
@@ -657,11 +657,43 @@ Front-door rule:
 - first route to start, continue, or validate
 - keep adapter details, runtime internals, and full gate explanations behind help or reference docs unless needed
 
+## Delivery styles: Ship and Loop
+
+**Ship is the default for new intent-led work.** Complete the agreed product
+outcome, including relevant experience quality, before final owner acceptance.
+Use internal implementation steps, independent review and correction without
+routine owner-feedback stops. Agree scope and resource limits before building;
+a limit leaves unfinished work visible. Ship does not authorize publication.
+
+Choose **Loop** explicitly for useful Done Increments whose actual owner feedback
+shapes the next selection. In Strict Loop, present each agreed increment to its
+human or explicitly delegated agent owner. Ship and Loop preserve the same
+quality requirements and frozen commitments. Existing deliveries keep their
+original policies; an absent historical field is not new Ship or agent authority.
+
+Explain agent-led AIM using **Graph engineering**: the current agent can own the
+outcome, delegate delivery, name dependencies and assess evidence before the
+next step. Use real host identities and an explicit human mandate for agent
+product decisions. The AIM delivery coordinator alone writes its ledger;
+independent review is separate from owner acceptance. See
+[User Stories](user-stories.md) for the native `deliveryPolicy` and decision
+contract and [adaptive execution](adaptive-execution.md) for handoffs.
+
+Delivery style, Strict/Auto and cost profile are independent choices.
+
 ## Execution modes
 
 Two execution modes are defined:
 - `Strict` (default): manual approvals per Done Increment at hard gates.
 - `Auto` (optional): `Auto-approve until Epic complete`.
+
+For new Story deliveries, Strict requires the designated owner's actual plan
+and acceptance decisions. Auto carries authorized work forward; only explicit
+scoped agent-owner delegation can supply those owner decisions. An Auto setting
+alone never supplies acceptance. Ship is the default delivery style in either
+execution mode; Loop must be selected explicitly.
+
+The following Auto behavior is preserved for legacy Epic/DI workspaces:
 
 In Auto mode:
 - roles and gates still execute and are reported
@@ -1086,6 +1118,9 @@ change can be valuable when its need and verification are explicit. Select enoug
 Stories to preserve the agreed journey and design; independent deployability is
 not a Story requirement. Verified learning is a primary result only for explicitly
 exploratory work, never a substitute for a requested functioning product.
+In Loop, the skateboard is an agreed owner-feedback checkpoint. In default Ship,
+the same usable-whole rule applies to the complete agreed delivery; it is not an
+early stopping rule that replaces the requested result with a smaller demo.
 
 ---
 

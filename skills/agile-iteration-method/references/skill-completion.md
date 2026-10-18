@@ -9,7 +9,7 @@ Source: docs/workflow/skill-completion.md
 
 This document specifies the preserved **legacy Epic/DI workspace protocol**.
 For AIM 4.0 Story work, use [User Stories and product backlog](user-stories.md):
-accept verified Stories with actual user authority, then evaluate each Epic for
+accept verified Stories with actual user or explicitly delegated owner authority, then evaluate each Epic for
 a separate closure decision. Reuse current evidence and record only the new
 outcome assessment and actual decision. Do not produce another long account of
 completed implementation, tests and review. For Story work, `criteriaFrom` can

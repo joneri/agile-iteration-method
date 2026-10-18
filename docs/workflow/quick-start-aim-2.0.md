@@ -67,6 +67,7 @@ Or use explicit intent:
 
 ```text
 Start AIM from this intent: <desired user outcome>
+Delivery: Ship
 Mode: Strict
 Cost profile: Standard
 ```
@@ -76,10 +77,23 @@ PO owns Epics and product priority. TDO owns Stories, criteria and the coherent
 increment, reusing decisions and clarifying only consequential gaps. See
 [User Stories](user-stories.md).
 
-## 3. Choose Execution Style
+## 3. Choose Delivery and Execution Style
+
+**Ship is the default** for complete agreed product delivery. Select **Loop**
+explicitly for useful Done Increments and recurring owner feedback. Both include
+review, verification and correction. Existing work keeps its frozen policy.
+
+Promote **Graph engineering**: let the current agent coordinate outcome ownership,
+delivery dependencies and evidence. "Use AIM in Strict Loop; act as my product
+owner within [outcome, allowed decisions and resource limit]" allows an explicitly
+delegated owner agent to assess increments. Record the real mandate and actual
+scoped decisions through [User Stories](user-stories.md); a role alone grants
+no authority. A separate reviewer checks material implementation.
+
+Approval mode is independent:
 
 - `Mode: Strict`: pause at Gate A, Gate B, and Gate E
-- `Mode: Auto`: continue between increments unless escalation is required;
+- `Mode: Auto`: continue authorized work without inventing owner acceptance;
   ordinary Epic closure still requires explicit user approval
 - Legacy `Portfolio Auto`: the one approved bounded mandate is the explicit PO
   authority for each separate eligible Epic closure, so AIM advances across its

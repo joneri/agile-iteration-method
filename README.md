@@ -83,6 +83,19 @@ Learning is part of ordinary delivery: AIM recalls bounded shared advice while p
 
 Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning.
 
+## Ship by default. Loop when feedback should lead.
+
+**Ship** completes the agreed product outcome before final acceptance. Choose **Loop** for useful Done Increments and recurring owner feedback.
+Both include independent review and verification. Strict/Auto controls approvals separately.
+
+Use **Graph engineering** to let your agent coordinate outcome ownership, delivery dependencies, evidence and feedback:
+
+```text
+Use AIM in Strict Loop. Act as my product owner and delegate delivery. Assess verified increments within [outcome, allowed decisions and resource limit].
+```
+
+Agent-owner decisions require explicit human delegation; existing work keeps its frozen policy. See [delivery and owner contracts](docs/workflow/user-stories.md).
+
 ## From intent to accepted User Stories
 
 ```text
@@ -111,7 +124,7 @@ PO → TDO → Dev → Reviewer → TDO → PO
 
 Gate A confirms direction and requirements. Gate B approves the selection and plan. Gate E accepts verified Stories. Epic closure is a separate decision supported by whole-outcome evidence.
 
-`Strict` asks for plan approval and acceptance. `Auto` progresses within existing authority, returning for changed scope, risk or final acceptance.
+`Strict` asks the designated owner for plan approval and acceptance. `Auto` progresses within existing authority, returning for changed scope, risk or final acceptance. Agent-owner decisions require explicit human delegation and current evidence.
 
 ## Repository-aware, not repository-heavy
 
@@ -140,18 +153,12 @@ AIM applies **audience-context integrity** to everything it generates: write the
 
 ## What is new
 
-- **Quality goals guide the next action.** Plan relevant checks before implementation,
-  measure the first working core, and address failed or stale results before readiness.
-- **Review starts where mistakes are expensive.** A separate reviewer can challenge
-  an unproved core reference early and checks the integrated delivery later.
-- **Results stay tied to their source.** Retain raw evidence, original failures and
-  the actual build. Optional JSON observations derive values from that evidence.
-- **Product knowledge can be reused.** Keep a small map of user routes and a runnable
-  verification recipe where Dev and Reviewer can find and maintain it.
-- **Learning happens during ordinary work.** Recall relevant local shared lessons and
-  contribute generalized verified corrections without manual reflection reports.
-- **Continue with less repeated setup.** Reuse compact confirmed receipts, unchanged
-  evidence and relevant repository knowledge instead of routinely rereading everything.
+- **Quality goals guide the next action.** Plan relevant checks before implementation, measure the first working core, and address failed or stale results before readiness.
+- **Review starts where mistakes are expensive.** A separate reviewer can challenge an unproved core reference early and checks the integrated delivery later.
+- **Results stay tied to their source.** Retain raw evidence, original failures and the actual build. Optional JSON observations derive values from that evidence.
+- **Product knowledge can be reused.** Keep a small map of user routes and a runnable verification recipe where Dev and Reviewer can find and maintain it.
+- **Learning happens during ordinary work.** Recall relevant local shared lessons and contribute generalized verified corrections without manual reflection reports.
+- **Continue with less repeated setup.** Reuse compact confirmed receipts, unchanged evidence and relevant repository knowledge instead of routinely rereading everything.
 
 These are supported method capabilities. Their practical effect still depends on
 agents using them and on the repository's verification coverage. See the [feature
@@ -159,18 +166,9 @@ guide](docs/product/features.md) and [changelog](CHANGELOG.md).
 
 ## What the Enigma results show
 
-The latest completed product assessment scored **96.5/100**, against the historical
-reference's **93.5/100**. The simulator passed **123/123** reference vectors, all
-**9/9** positive search cases passed, and all **114/114** returned candidates were
-independently validated. This is one assisted run with GPT-6 Luna High; the actual
-tested build and every retained earlier result are identified in the [Enigma
-evaluation](docs/features/aim-enigma-evaluation.md).
+The latest completed product assessment scored **96.5/100**, against the historical reference's **93.5/100**. The simulator passed **123/123** reference vectors, all **9/9** positive search cases passed, and all **114/114** returned candidates were independently validated. This is one assisted run with GPT-6 Luna High; the actual tested build and every retained earlier result are identified in the [Enigma evaluation](docs/features/aim-enigma-evaluation.md).
 
-The product score does not establish general superiority, lower cost or completion
-of all method goals. The run missed one internal latency target and did not finish
-its native delivery. Both whole-workflow administration reduction targets remain
-unproved. The [historical paired study](docs/features/aim-3.2-enigma-case.md) remains
-available with its original evidence.
+The product score does not establish general superiority, lower cost or completion of all method goals. The run missed one internal latency target and did not finish its native delivery. Both whole-workflow administration reduction targets remain unproved. The [historical paired study](docs/features/aim-3.2-enigma-case.md) remains available with its original evidence.
 
 ## Versions and compatibility
 

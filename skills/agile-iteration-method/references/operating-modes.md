@@ -23,6 +23,7 @@ The current choices are independent configuration dimensions:
 - sharing and protection policy expressed in `aim.profile.yaml` or managed
   organization policy
 - execution mode: Strict or Auto
+- delivery style: Ship (default for new work) or Loop
 - runtime depth: Standard, Cost Control, or Deep
 - supplier model and reasoning effort: selected by the host or explicit user
   policy, never inferred from AIM runtime depth
@@ -33,6 +34,22 @@ must not silently change or imply the other.
 
 Do not confuse the legacy installation-mode names with Strict/Auto execution
 mode or Standard/Cost Control/Deep runtime depth.
+
+## Delivery style and owner
+
+**Ship** delivers the complete agreed product outcome before final acceptance.
+**Loop** delivers useful Done Increments whose owner feedback shapes the next
+selection. Both include implementation, independent review, verification and
+correction. Strict/Auto controls gate decisions; it does not choose the delivery
+style. Ship is independent of publishing or deployment authority.
+
+Use **Graph engineering** to explain who owns the outcome, who executes, their
+dependencies and the proof/feedback needed to continue. The current agent can
+coordinate delivery as an owner only within an actual human delegation. A
+**Strict Loop** owner may be human or an explicitly delegated agent; record its
+actual decisions with the native policy and evidence described in
+[User Stories](user-stories.md). Final human reservations remain binding.
+Old active or accepted deliveries retain their original policies and authority.
 
 ## Legacy flag mapping
 

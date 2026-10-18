@@ -1,5 +1,6 @@
 """Exercise startup/recovery from the real installed payload, away from source."""
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -37,10 +38,12 @@ class InstalledRecoveryTests(unittest.TestCase):
 
             package = repo if footprint in ('adapters', 'full') else home / '.aim/installs/agile-iteration-method'
 
-            def invoke(script, *arguments):
+            def invoke(script, *arguments, request=None):
                 result = subprocess.run(
                     [sys.executable, '-S', str(package / 'scripts' / script),
                      '--repo', str(repo), *arguments], cwd=base,
+                    input=json.dumps(request) if request is not None else None,
+                    env={key: value for key, value in os.environ.items() if key != 'PYTHONPATH'},
                     capture_output=True, text=True, timeout=10,
                 )
                 self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
@@ -65,6 +68,13 @@ class InstalledRecoveryTests(unittest.TestCase):
             self.assertEqual(json.loads(catalog.read_text()), original_catalog)
             self.assertEqual(state.read_bytes(), original_state)
             self.assertEqual(invoke('aim_recovery.py')['result'], 'unchanged')
+            # Exercise the installed Story helper's real schema dependency.
+            # An empty status alone would skip schema validation entirely.
+            invoke('aim_stories.py', 'import', request={
+                'intents': [{'id': 'INT-INSTALLED', 'statement': 'Deliver from the installed package.'}],
+            })
+            stories = invoke('aim_stories.py', 'status')
+            self.assertEqual(stories['document']['intents'][0]['id'], 'INT-INSTALLED')
             (repo / 'aim.profile.yaml').write_text(seed.shared_profile_seed())
             (repo / 'aim.roles.yaml').write_text(seed.project_roles_seed(repo))
             self.assertTrue(invoke('aim_engineering.py', 'profiles')['valid'])

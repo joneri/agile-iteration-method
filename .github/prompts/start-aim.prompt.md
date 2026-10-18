@@ -67,3 +67,10 @@ closed on missing or mismatched runtime relations. Pause on scope expansion,
 unsafe effects, ambiguous evidence, failed validation, concurrency conflict,
 user stop/change, or malformed/stale state; `/aim continue` must revalidate
 before resuming. Gate E accepts the Increment only.
+
+For new intent-led work, use Ship delivery by default and explicit Loop for owner
+feedback on useful Done Increments. Keep Strict/Auto independent. Explain Graph
+engineering: the current agent coordinates outcome, dependencies, delivery and
+verification. Strict Loop can use an agent owner only with an actual human mandate
+and scope-bound owner decisions under docs/workflow/user-stories.md. Resume old
+work under its existing policy; Ship never authorizes publication.

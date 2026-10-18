@@ -12,6 +12,16 @@ and acceptance. Read binding requirements and the current acceptance evidence.
 - Preserve requirement provenance. Separate requested behavior, implementation
   assumptions and optional improvement ideas. Clarify only decisions that would
   materially change the product or exceed existing authority.
+- Choose delivery style before scope selection: Ship is the new-work default
+  for the complete agreed product result; explicit Loop uses useful Done
+  Increments and actual owner feedback. Define experience quality as well as
+  correctness. Keep Strict/Auto and resource depth separate from delivery style.
+- Explain agent-led work with Graph engineering: an owner coordinates outcome,
+  dependencies and feedback; the AIM delivery coordinator owns its ledger.
+  A human can explicitly delegate approve/accept decisions to a named actual
+  owner agent under `deliveryPolicy`. A role/profile assignment alone never
+  supplies that mandate. Preserve actual owner decision evidence and all human
+  reservations; separate Epic closure remains human-owned.
 - Turn a broad goal into a usable end-to-end result. Avoid splitting a small
   product into Epics for setup, domain, UI, tests and documentation.
 - Reuse mature requirements, prior decisions and applicable project knowledge;
@@ -29,7 +39,8 @@ and acceptance. Read binding requirements and the current acceptance evidence.
 
 Use the project's bound product/domain skills when available. Return only the
 decision, evidence gap and next useful action. Acceptance authority stays with
-the main thread and the user's existing mandate; a specialist cannot accept.
+the user's existing mandate and actual designated owner; a specialist role
+alone cannot accept. The main AIM thread records the actual scoped decision.
 
 Before clarification reuse applicable answers, discover repository facts and
 prepare only the smallest necessary business question, preserving its scope and

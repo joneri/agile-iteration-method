@@ -105,7 +105,10 @@
       "type": "object",
       "properties": {
         "kind": {
-          "const": "user"
+          "enum": [
+            "user",
+            "agent"
+          ]
         },
         "path": {
           "type": "string",
@@ -119,6 +122,18 @@
         "scopeSha256": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "\\S"
+        },
+        "session": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "\\S"
         }
       },
       "required": [
@@ -127,7 +142,8 @@
         "sha256",
         "scopeSha256"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "User authority or a declared delegated-owner decision. aim_stories.py enforces conditional identity, frozen mandate, allowed decision and scope binding; the host verifies actual human authority and agent identity."
     },
     "criterionEvidence": {
       "type": "object",
@@ -822,6 +838,9 @@
           },
           "minItems": 0,
           "maxItems": 256
+        },
+        "deliveryPolicy": {
+          "$ref": "#/$defs/deliveryPolicy"
         }
       },
       "required": [
@@ -1368,7 +1387,7 @@
         },
         "maxWorkers": {
           "type": "integer",
-          "description": "1–8; enforced by delegation validator."
+          "description": "1\u20138; enforced by delegation validator."
         },
         "parallelBenefit": {
           "type": "string",
@@ -1434,7 +1453,7 @@
         },
         "attempt": {
           "type": "integer",
-          "description": "Sequential attempts 1–8 per activity; enforced by helper."
+          "description": "Sequential attempts 1\u20138 per activity; enforced by helper."
         },
         "status": {
           "enum": [
@@ -1516,6 +1535,67 @@
         "updatedAt",
         "scopeSha256",
         "dependencies"
+      ],
+      "additionalProperties": false
+    },
+    "deliveryOwner": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "human",
+            "agent"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "\\S"
+        },
+        "session": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "\\S"
+        },
+        "mandate": {
+          "$ref": "#/$defs/evidence"
+        },
+        "decisions": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "approve",
+              "accept"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "description": "Human owner, or actual agent id/session with immutable human mandate and explicit approve/accept delegation. Conditional fields and uniqueness are enforced by the native helper."
+    },
+    "deliveryPolicy": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "ship",
+            "loop"
+          ]
+        },
+        "owner": {
+          "$ref": "#/$defs/deliveryOwner"
+        }
+      },
+      "required": [
+        "mode",
+        "owner"
       ],
       "additionalProperties": false
     }

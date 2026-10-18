@@ -96,3 +96,10 @@ Whole-Backlog form:
 ```text
 /aim start "PORTFOLIO" mode:auto
 ```
+
+For new intent-led work, use Ship delivery by default and explicit Loop for owner
+feedback on useful Done Increments. Keep Strict/Auto independent. Explain Graph
+engineering: the current agent coordinates outcome, dependencies, delivery and
+verification. Strict Loop can use an agent owner only with an actual human mandate
+and scope-bound owner decisions under docs/workflow/user-stories.md. Resume old
+work under its existing policy; Ship never authorizes publication.

@@ -129,9 +129,19 @@
     },
     "authority": {
       "additionalProperties": false,
+      "description": "User authority or a declared delegated-owner decision. aim_stories.py enforces conditional identity, frozen mandate, allowed decision and scope binding; the host verifies actual human authority and agent identity.",
       "properties": {
+        "id": {
+          "maxLength": 240,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
         "kind": {
-          "const": "user"
+          "enum": [
+            "user",
+            "agent"
+          ]
         },
         "path": {
           "maxLength": 1000,
@@ -140,6 +150,12 @@
         },
         "scopeSha256": {
           "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "session": {
+          "maxLength": 240,
+          "minLength": 1,
+          "pattern": "\\S",
           "type": "string"
         },
         "sha256": {
@@ -366,6 +382,9 @@
           "maxItems": 16384,
           "minItems": 1,
           "type": "array"
+        },
+        "deliveryPolicy": {
+          "$ref": "#/$defs/deliveryPolicy"
         },
         "epics": {
           "items": {
@@ -613,6 +632,67 @@
         "scopeSha256",
         "planEvidence",
         "intents"
+      ],
+      "type": "object"
+    },
+    "deliveryOwner": {
+      "additionalProperties": false,
+      "description": "Human owner, or actual agent id/session with immutable human mandate and explicit approve/accept delegation. Conditional fields and uniqueness are enforced by the native helper.",
+      "properties": {
+        "decisions": {
+          "items": {
+            "enum": [
+              "approve",
+              "accept"
+            ]
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array"
+        },
+        "id": {
+          "maxLength": 240,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "human",
+            "agent"
+          ]
+        },
+        "mandate": {
+          "$ref": "#/$defs/evidence"
+        },
+        "session": {
+          "maxLength": 240,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "deliveryPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "ship",
+            "loop"
+          ]
+        },
+        "owner": {
+          "$ref": "#/$defs/deliveryOwner"
+        }
+      },
+      "required": [
+        "mode",
+        "owner"
       ],
       "type": "object"
     },

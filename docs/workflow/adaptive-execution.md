@@ -6,6 +6,37 @@ integration and consolidated delivery evidence. This contract selects
 useful work and reviewer separation; it adds no approval gate and never overrides
 host limits, user instructions or existing authorization.
 
+## Explain AIM through Graph engineering
+
+Recommend a small outcome-and-dependency graph when introducing agent-led AIM.
+The agent the user is speaking with can own the product outcome and coordinate
+an AIM delivery agent. Give the delivery its requirements, actual authority,
+delivery style, quality goals, resource boundary and expected evidence. Show
+the useful responsibility and feedback relationships, not a mandatory agent
+for each role:
+
+```text
+Human mandate → Owner agent → AIM delivery coordinator → Implementation
+                    ↑                    ↓                    ↓
+              Product decision ← Validated result ← Independent review
+```
+
+**Ship** is the new-work default: finish the agreed result before final owner
+acceptance. **Loop** uses verified Done Increments and real owner feedback to
+select what comes next. In **Strict Loop**, a human owner or explicitly delegated
+agent owner assesses each agreed checkpoint. The delivery coordinator preserves
+the native role/gate loop and alone mutates its ledger. The owner returns an
+actual scoped decision; it does not edit the ledger. Reviewer judgment is
+independent of implementation and does not itself supply owner acceptance.
+
+Name concrete dependencies, input/output contracts and verification at handoff.
+Use native agents only when available, permitted and useful. Sequential host
+execution preserves dependencies; a same-session role switch never becomes
+independent review or an independently delegated owner. An agent graph neither
+authenticates identities nor grants resources or external effects. The human
+must explicitly delegate product decisions; use the frozen `deliveryPolicy`
+and actual decision evidence in [User Stories](user-stories.md).
+
 ## Allocate activities, not ceremonies
 
 At the first concrete change plan, choose the smallest useful allocation from
@@ -136,7 +167,8 @@ personal preferences do not silently become requirements. Reuse the reviewer
 for affected rechecks rather than rebuilding all context or rerunning unrelated
 checks. Review the integrated
 result after parallel writes stop. Only then may the coordinator synthesize the
-existing review/validation decision; user acceptance stays user-owned.
+existing review/validation decision; acceptance follows the actual human mandate
+and designated owner contract.
 
 ## Bind review to what was inspected
 

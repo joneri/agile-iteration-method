@@ -43,6 +43,22 @@ project sources. Ask for a targeted audit when a concrete stale fact,
 contradiction or suspected missing lesson cannot be settled by the registry.
 Its source scope and stopping point stay bounded by the actual mandate.
 
+## Choose Ship or Loop
+
+**Ship is the default.** Ask AIM for the complete agreed product result; it
+implements, reviews and verifies before final owner acceptance. Choose **Loop**
+when you want useful Done Increments and recurring feedback to shape the next
+step. Strict/Auto controls gate decisions independently of delivery style.
+
+Use **Graph engineering** to put your agent in charge of coordinating the work:
+name the product owner, delivery responsibilities, dependencies and evidence.
+For example: "Use AIM in Strict Loop. Act as my product owner, delegate delivery,
+assess each verified increment and give feedback before selecting the next.
+Your mandate covers [outcome and allowed decisions] within [resource limit]."
+An agent needs that explicit human mandate for owner decisions; it uses actual
+identity and scope-bound decision evidence. A separate reviewer checks the
+implementation. See [User Stories](user-stories.md) for the supported contract.
+
 ## How AIM Delivers Software
 
 Every delivery follows `PO → TDO → Dev → Reviewer → TDO → PO`.

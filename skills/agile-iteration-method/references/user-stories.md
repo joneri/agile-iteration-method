@@ -10,7 +10,8 @@ Source: docs/workflow/user-stories.md
 PO frames the user's intent and owns Epic outcomes, scope, quality and product
 priority. TDO creates/refines User Stories and owns the coherent delivery
 commitment. Dev implements it, a separate Reviewer examines material work, TDO
-validates and the user accepts. Use the shared rules already loaded from the
+validates and the owner accepts: the user, or an agent with explicit human
+delegation for that decision. Use the shared rules already loaded from the
 entry point and active role. Consult other references only for a concrete missing
 rule or uncertainty; a role handoff does not reload the method.
 
@@ -41,6 +42,76 @@ work; continue independent authorized work. Consult
 [Autonomous interaction](autonomous-interaction.md) only when the authority,
 dependency or changed-decision boundary remains unclear.
 
+## Ship and Loop delivery
+
+Choose the delivery style before selecting Stories. **Ship is the default for
+new work**: deliver the complete agreed product outcome, including its relevant
+experience quality, before returning for final acceptance. Internal tests,
+independent review and correction continue throughout. Agree the outcome and
+resource boundary up front; Ship neither means unlimited work nor authorizes
+deployment or publication. A budget limit reports unfinished work truthfully.
+
+Choose **Loop** explicitly when owner feedback should shape what is built next.
+Select a useful end-to-end Done Increment, present the verified result to its
+owner, and use the actual assessment to refine the next selection. Complete the
+current commitment before that checkpoint; feedback cannot silently rewrite an
+approved selection. Ship and Loop have the same quality and evidence obligations.
+
+Delivery style is independent of Strict/Auto and Standard/Cost Control/Deep.
+**Strict Ship** asks for the plan decision and final product acceptance;
+**Strict Loop** asks the designated owner at each agreed increment checkpoint.
+Auto continues within existing authority; it never invents an owner's answer.
+Resume existing deliveries under their frozen policy. An older record without
+policy stays unchanged and gains no new default or agent authority.
+
+New native `plan` requests may supply `deliveryPolicy`; omission stores
+`{"mode":"ship","owner":{"kind":"human"}}`. Explicit Loop uses
+`{"mode":"loop","owner":{"kind":"human"}}`. The policy is part of the
+approved scope. State, compact receipts and the Story board expose that same
+policy; changing it requires a supported new selection, not an edited digest.
+
+### Graph engineering and delegated owners
+
+Graph engineering is the recommended way to explain agent-led AIM delivery:
+define who owns the outcome, who executes, what depends on what, and where proof
+or feedback determines the next action. A graph does not require an agent per
+role. Use the host's actual delegation capabilities; keep simple work simple.
+The main agent can serve as product owner and delegate an AIM delivery
+coordinator. That coordinator alone writes its AIM ledger; Dev implements,
+Reviewer judges independently, and the owner assesses the integrated result.
+Owner feedback and code review are distinct responsibilities.
+
+An agent owner needs an actual human mandate naming its identity/session,
+bounded outcome, resources and permitted decisions. Record it as attributed
+human evidence under `.aim/`, then freeze the delegation in the new plan:
+
+```json
+{"deliveryPolicy":{"mode":"loop","owner":{"kind":"agent","id":"actual-owner-id","session":"actual-owner-session","mandate":{"path":".aim/human-mandate.md","sha256":"<actual sha256>"},"decisions":["approve","accept"]}}}
+```
+
+This is a plan field, not a standalone command or a role assignment inferred
+from configuration. Use actual host-returned identities. The helper binds the
+declared mandate and decision scope; it cannot authenticate a human instruction
+or agent identity. The coordinator must corroborate both in the host conversation.
+No role name, reviewer result, Auto setting, graph edge or copied prompt grants
+product acceptance. Human reservations remain binding.
+
+Delegated `approve` or `accept` supplies `authority.kind: "agent"`, the same
+`id`/`session`, and the actual gate-decision artifact's `path`, `sha256` and
+applicable `scopeSha256`. That artifact is bounded JSON (at most 16 KiB):
+
+```json
+{"ownerDecisionVersion":1,"deliveryId":"DI-EXAMPLE","operation":"accept","scopeSha256":"<current acceptanceSha256>","id":"actual-owner-id","session":"actual-owner-session","decision":"approved","reason":"Assessment of the named criteria and current evidence."}
+```
+
+For `approve`, bind the plan's `scopeSha256`; for `accept`, bind its current
+`acceptanceSha256`. The helper verifies operation, delivery, identity, mandate
+freshness and scope against the artifact itself. Mandate copies and retargeted
+decisions reject. The owner must actually assess and issue the decision; the
+implementer cannot write a fabricated owner answer. Agent delegation covers
+only the listed delivery decisions, never separate Epic closure. Ordinary
+human authority stays supported. See [adaptive execution](adaptive-execution.md).
+
 ## Coherent delivery and gates
 
 TDO selects by PO priority, dependencies and capacity, naming the exact Stories,
@@ -59,9 +130,9 @@ parallel work grants no extra budget or authority.
 | B | Actual approval of the exact selection and plan; one scoped response may authorize A/B together. |
 | C | Implement the selection and bind the source snapshot for review. |
 | D | Complete review, then TDO validation of the current integrated result. No routine approval question. |
-| E | Actual user acceptance of every explicitly named, proven Story. |
+| E | Actual user or explicitly delegated owner acceptance of every named, proven Story. |
 
-Strict needs the user's plan decision and final acceptance. Auto carries already
+Strict needs the designated owner's plan decision and final acceptance. Auto carries already
 authorized implementation, review and correction forward; it cannot invent
 acceptance. A role label is self-review, not separation. Review checks the
 original intent/Epic contribution as well as selected criteria, representative
@@ -109,13 +180,13 @@ JSON
 | Command | Purpose and input |
 | --- | --- |
 | `import` / `refine` | Register/refine intent, Epics and unselected draft/ready Stories. |
-| `plan` | Freeze `id`, `title`, `goal`, `storyIds`, `planEvidence`, `qualityPlan` and applicable `qualityGoals`. |
+| `plan` | Freeze `id`, `title`, `goal`, `storyIds`, `planEvidence`, `qualityPlan`, `deliveryPolicy` and applicable `qualityGoals`. |
 | `approve` | Record actual Gate A/B `authority` for the approved scope. |
 | `measure` | Record source-bound early or review/validation observations, including failures. |
 | `review` | Bind `deliveryId` and either `sourcePaths` or `bindings` for review. |
 | `validate` | Enter TDO validation with eligible structured review as the first `evidence` reference. |
 | `acceptance` | Present current validation `evidence` and coverage for every selected criterion. |
-| `accept` | Record actual user Gate E `authority`; mark Stories Done. |
+| `accept` | Record actual user or explicitly delegated owner Gate E `authority`; mark Stories Done. |
 | `rework` | Correct the same scope and invalidate obsolete product/review/validation bindings. |
 | `block` / `unblock` / `cancel` | Record/resolve a blocker or release an unapproved plan. |
 | `status` / `quality` | Inspect requirements/next step or measured quality without writing. |
@@ -138,7 +209,7 @@ validation and pending acceptance reject changed product bytes. Rework binds the
 correction afresh; accepted bindings remain historical, allowing later authorized
 changes. Scope freezes the originating intent, Epics, Stories and plan.
 
-Approval/acceptance `authority` has `kind: "user"`, `path`, `sha256` and the
+Ordinary approval/acceptance `authority` has `kind: "user"`, `path`, `sha256` and the
 applicable `scopeSha256`. The helper checks scope/freshness, not human identity.
 Have the actual instruction, preserve its scope and record it truthfully; never
 invent approval evidence. Existing legacy Portfolio mandates do not authorize
@@ -315,7 +386,7 @@ is still TDO/Reviewer judgment: qualified or failed results stay qualified/faile
 A quality pass does not create missing coverage. A final quality report may
 supply both `evidence` and `criteriaFrom`; do not write another validation narrative.
 
-User acceptance is a separate scoped decision after readiness. PO then evaluates
+Owner acceptance is a separate scoped decision after readiness. PO then evaluates
 remaining Epic outcomes/counterevidence, every Epic criterion and all in-scope
 Stories. Story acceptance proves only those Stories. `closure-preview` and
 `close-epic` accept `criteria` or `criteriaFrom` using

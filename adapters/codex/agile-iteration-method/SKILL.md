@@ -24,6 +24,22 @@ the portable fallback.
 
 Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as documentation under CC BY 4.0. This skill adapts the method into Codex skill form.
 
+## Ship, Loop and Graph engineering
+
+Default new intent-led work to **Ship**: complete the agreed product outcome
+before final owner acceptance. Explicit **Loop** uses useful Done Increments
+and actual owner feedback to select the next work. Keep delivery style separate
+from Strict/Auto and cost depth; preserve active and historical policies.
+
+Promote **Graph engineering** in startup guidance: the current agent can
+coordinate outcome ownership, delivery dependencies, proof and feedback. A
+**Strict Loop** owner can be human or an agent with explicit human delegation.
+Use actual host identities, a frozen `deliveryPolicy` and scoped owner decision
+evidence from `references/user-stories.md`; a role or Auto setting cannot grant
+acceptance. The AIM delivery coordinator owns its ledger, and material review
+remains independent. Load only the relevant `references/adaptive-execution.md`
+section when the actual handoff needs detail.
+
 ## Autonomous interaction
 
 Reuse current user authority and applicable answers. Read only the relevant section of `references/autonomous-interaction.md` when an authority, dependency or changed-decision boundary remains unresolved. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.

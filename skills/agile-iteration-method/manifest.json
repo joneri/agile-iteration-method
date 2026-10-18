@@ -59,6 +59,7 @@
     "scripts/aim_quality/__init__.py",
     "scripts/aim_quality/delegation.py",
     "scripts/aim_quality/delivery.py",
+    "scripts/aim_quality/delivery_policy.py",
     "scripts/aim_quality/error_patterns.json",
     "scripts/aim_quality/evidence.py",
     "scripts/aim_quality/files.py",
@@ -111,17 +112,17 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "3f00d1de1dab0dba1b650c3b9c954a7a4bd86367e6a5f241781b269460d3a351"
+      "sourceSha256": "e71dc951ce2524509b399d62bc862677dff04cc0c3a697258d25c6af29492dcd"
     },
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "63f78a6e5105a1ed5f24789142d9bbe79739cb6a1c12191909a1c4664ff313c7"
+      "sourceSha256": "2e40463213a04fb82feba8268671743923925ea5424f2feb20f1d457efbb9855"
     },
     {
       "output": "references/autonomous-interaction.md",
       "source": "docs/workflow/autonomous-interaction.md",
-      "sourceSha256": "460fac64c78e2428dd0e3de2146b3dd7ff5077441637cca5fdca211128d40cf0"
+      "sourceSha256": "428dcf9e70e3245ab10bd830f554b4acad0bed13712e84d9e40aaf634e5bb05d"
     },
     {
       "output": "references/example-user-story.md",
@@ -136,7 +137,7 @@
     {
       "output": "references/adaptive-execution.md",
       "source": "docs/workflow/adaptive-execution.md",
-      "sourceSha256": "adfe4e5a3dc5660cbf7f01032b4dc29d2f527f46676a6acd03384fafe3477b1f"
+      "sourceSha256": "2030420d6b01613d4ee2a8a08e4cbe42f8b815af603e1bc4cf3a0e1411ce8078"
     },
     {
       "output": "references/engineering-delivery.md",
@@ -146,12 +147,12 @@
     {
       "output": "references/role-skill-po.md",
       "source": "docs/workflow/role-skill-po.md",
-      "sourceSha256": "e39e675eb0fb9e9e314a66b02cd2492802ee0032fd5cc3d8479652f4e329796c"
+      "sourceSha256": "2b970a6fbd76ba6162503972d656d2c7df8456455827393c4873714baf01f777"
     },
     {
       "output": "references/role-skill-tdo.md",
       "source": "docs/workflow/role-skill-tdo.md",
-      "sourceSha256": "f286d95f33ebc75d277c45c18922b68c737041cf5ea01d923234481aae04c2d5"
+      "sourceSha256": "ce6079982c34fce96c15848fb37996bd5f5d656c959f04f83e69aa6fa580d161"
     },
     {
       "output": "references/role-skill-dev.md",
@@ -166,27 +167,27 @@
     {
       "output": "references/skill-user-guide.md",
       "source": "docs/workflow/skill-user-guide.md",
-      "sourceSha256": "0759bedd3e4bfc522dc32c4dca582e1895159490920674d5684d0a548284f99d"
+      "sourceSha256": "3d0a614af152b1dfa54b9d099168cf6b98df7af2b086b38e45249249206a318b"
     },
     {
       "output": "references/skill-command-runtime.md",
       "source": "docs/workflow/skill-command-runtime.md",
-      "sourceSha256": "95096e019cea0f047f78a061d31293bcc1b4456177bd9cc3eaad254b4abdf4cb"
+      "sourceSha256": "680616b9535e37a1a882344deee1c5521c8112397b88034623152f2ef9ca1620"
     },
     {
       "output": "references/skill-completion.md",
       "source": "docs/workflow/skill-completion.md",
-      "sourceSha256": "0fd1e650b2ef2fd973cdf06dd6054132edf79f1049a04b29f95c75455a074e75"
+      "sourceSha256": "04e5bae3cc6b1b5632b25f181224e5404b4273ed4ce78e61d43a48d3a740093e"
     },
     {
       "output": "references/agile-iteration-method.md",
       "source": "docs/workflow/agile-iteration-method.md",
-      "sourceSha256": "0fcbdbf7084c95edbe3635fe18721e645376cdf6bfb02c48e260ad1c335eb6f6"
+      "sourceSha256": "a9915b36cc2ea66f7ea8b0710de0a45799dafb95acace6b3eddba13102f007e1"
     },
     {
       "output": "references/adapter-command-contract.md",
       "source": "docs/workflow/adapter-command-contract.md",
-      "sourceSha256": "137bfff1416b057aae9b5a13b626ac5d94a4774e142a32dbbafb018a8592819c"
+      "sourceSha256": "74ebe5b83b160f322e9d1e8828eef21b7087138a12173ba4ee57e8113d16b941"
     },
     {
       "output": "references/adapter-entry-model.md",
@@ -211,7 +212,7 @@
     {
       "output": "references/operating-modes.md",
       "source": "docs/workflow/operating-modes.md",
-      "sourceSha256": "2c181811e138462ee75ba44681cfd07a3b787fc89a5664759c27194183c24478"
+      "sourceSha256": "e99c630fc22e1eb72181002d12e21305efac02463b8a097ba412feb94c8f2fa6"
     },
     {
       "output": "references/product-coherence-validation.md",
@@ -271,12 +272,12 @@
     {
       "output": "references/schemas/aim-product-backlog.schema.json",
       "source": "schemas/aim-product-backlog.schema.json",
-      "sourceSha256": "8d6bd01944209f2f538bb6a246af947cdaa8a6ff0b119f5e6de7c387f9763875"
+      "sourceSha256": "d660909d3dd27baee31d93dd98715f1f07f4ea3848599ae6ec0ea5b6630c581a"
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
       "source": "install/aim-install-manifest.yaml",
-      "sourceSha256": "84b0c956566996f36c2fd4d6cefcd980241c841b1ddf40184b29504bdbae0d94"
+      "sourceSha256": "796385161120a03a3ff2cf1871eb8aaa3852c2ae5b090630a3d50250b43fa9fc"
     },
     {
       "output": "references/LICENSE-DOCS",
@@ -296,12 +297,12 @@
     {
       "output": "manifest.json",
       "source": "scripts/build_public_skill.py",
-      "sourceSha256": "b51d4ced1bd50f647974e3cf8732b3930c0b52805ec884afe527430b4ca6e043"
+      "sourceSha256": "5cea8c6e72273cbd4d8c08adc56ba3bb487d1d646650925e08d5c1195cb63c6c"
     },
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "b63224168d78bc0465c525b433d6f41aea415cabae4a33a75f73ea77007cf840"
+      "sourceSha256": "dced57413fe28ae6061738608f052cb3c31f568846282d90e4776c556f57115c"
     },
     {
       "output": "scripts/aim_interaction.py",
@@ -337,6 +338,11 @@
       "output": "scripts/aim_quality/delivery.py",
       "source": "scripts/aim_quality/delivery.py",
       "sourceSha256": "4e461853b27b6d90ee4d00f123bf6576c51d01ae6aa5ec33a55d089a86c95e4f"
+    },
+    {
+      "output": "scripts/aim_quality/delivery_policy.py",
+      "source": "scripts/aim_quality/delivery_policy.py",
+      "sourceSha256": "9b5d7ce9d4baf6cbdd2758db8d3f81ae22cfa914209ce2eb974bb0924f123ed8"
     },
     {
       "output": "scripts/aim_quality/skills.py",

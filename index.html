@@ -85,9 +85,16 @@
    Choose codex, claude-code, or github-copilot for &lt;agent&gt;.
 2. Load the installed agile-iteration-method skill. Confirm its product version
    from manifest.json and tell me if a session restart is needed.
-3. Use my stated outcome, or ask for it if missing. Start /aim start &quot;&lt;desired outcome&gt;&quot;.
+3. Use my stated outcome, or ask for it if missing. Start /aim start "&lt;desired outcome&gt;".
    Reuse existing authorized AIM work and repository knowledge. Use /aim calibrate-repo
    when repository knowledge needs calibration. Preserve existing files and AIM history.
+
+4. Use Ship delivery by default for the complete agreed product. Offer Loop
+   when recurring owner feedback should shape the next useful Done Increment.
+   Explain Graph engineering: coordinate product ownership, dependencies,
+   delivery and independent verification. For Strict Loop with an agent owner,
+   establish my explicit outcome, allowed decisions and resource mandate first;
+   record actual scoped owner decisions. Keep Strict/Auto separate from Ship/Loop.
 
 Native project specialists are optional through /aim configure-agents.
 Use /aim upgrade for an existing installation. Never run a target-repository
@@ -147,11 +154,11 @@ checkout and its no-write preview before apply.</code></pre>
         </div>
         <ol class="delivery-steps">
           <li><h3>Define the product.</h3><p>The Product Owner defines Epic outcomes, audience, quality and product priority. Existing requirements and decisions guide the work.</p></li>
-          <li><h3>Plan the next increment.</h3><p>The Technical Delivery Owner creates User Stories and acceptance criteria, then agrees the quality goals and checks for a coherent working result.</p></li>
+          <li><h3>Choose Ship or Loop.</h3><p>Ship is the default: complete the agreed product outcome. Choose Loop for useful Done Increments and recurring owner feedback. The Technical Delivery Owner plans Stories, quality goals and checks for that delivery.</p></li>
           <li><h3>Prove the core, then build.</h3><p>A separate reviewer challenges the first working core before costly expansion. The developer completes the plan; review and validation check the real user journeys and retained test results. Failed checks send the work back for correction.</p></li>
-          <li><h3>Approve and keep building.</h3><p>Accept the verified increment, then continue toward the full product. AIM keeps the goal, decisions and delivery history available across sessions.</p></li>
+          <li><h3>Assess the verified result.</h3><p>Ship returns the complete agreed result for final acceptance. In Strict Loop, the human or explicitly delegated agent owner assesses each agreed increment and gives feedback before the next selection.</p></li>
         </ol>
-        <p class="process-benefit">A whole product is the goal. Small, reviewable increments are how you get there.</p>
+        <p class="process-benefit">Ship completes the agreed product. Loop brings owner feedback into the next increment. Strict/Auto controls approvals independently.</p>
       </div>
     </section>
 
@@ -173,7 +180,7 @@ checkout and its no-write preview before apply.</code></pre>
           </article>
           <article class="repo-feature" id="project-agents">
             <div><span class="feature-label">Project agents &amp; skills</span><h3>Configure specialists for your stack.</h3></div>
-            <div><p>AIM can create project-specific agents for product ownership, technical planning, development and review. Each role has a defined responsibility, relevant project knowledge and skills selected for the work.</p><p class="feature-detail"><code>/aim configure-agents</code> sets up native specialists for Codex, Claude Code or GitHub Copilot, using the skills available to your project.</p></div>
+            <div><p>Use Graph engineering to let your agent coordinate outcome ownership, delivery dependencies, evidence and feedback. A human can explicitly delegate product decisions to an owner agent; a separate reviewer checks the implementation.</p><p class="feature-detail"><code>/aim configure-agents</code> sets up project specialists for Codex, Claude Code or GitHub Copilot. Roles carry project knowledge and relevant skills; the owner’s decision mandate stays explicit.</p></div>
           </article>
         </div>
         <p class="repo-payoff">AIM recalls relevant shared lessons while planning, reviewing and diagnosing failures. Verified reusable corrections feed that shared advice during ordinary work. Focused context and reuse are designed to avoid repeated effort; their cost benefit depends on the work.</p>

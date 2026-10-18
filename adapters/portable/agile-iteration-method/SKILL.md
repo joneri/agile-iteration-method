@@ -19,6 +19,22 @@ review, validation, correction and user acceptance. PO owns Epic outcomes and
 priority; TDO owns Stories and coherent increments. Attribution: Agile Iteration
 Method 2.0 by Jonas Eriksson, CC BY 4.0.
 
+## Ship, Loop and Graph engineering
+
+Default new intent-led work to **Ship**: complete the agreed product outcome
+before final owner acceptance. Explicit **Loop** uses useful Done Increments
+and actual owner feedback to select the next work. Keep delivery style separate
+from Strict/Auto and cost depth; preserve active and historical policies.
+
+Promote **Graph engineering** in startup guidance: the current agent can
+coordinate outcome ownership, delivery dependencies, proof and feedback. A
+**Strict Loop** owner can be human or an agent with explicit human delegation.
+Use actual host identities, a frozen `deliveryPolicy` and scoped owner decision
+evidence from `references/user-stories.md`; a role or Auto setting cannot grant
+acceptance. The AIM delivery coordinator owns its ledger, and material review
+remains independent. Load only the relevant `references/adaptive-execution.md`
+section when the actual handoff needs detail.
+
 ## Command dispatch before state access
 
 Reuse actual user authority and applicable answers. Discover facts before asking;
@@ -161,7 +177,7 @@ file count is not a productivity KPI.
 
 Use `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`; Planner maps to TDO, Builder to
 Dev. Start visible phases with `Role: PO/TDO/Dev/Reviewer` (the actual role) and
-`Mode: Strict` or `Mode: Auto`. Default Strict/Standard unless already chosen;
+`Mode: Strict` or `Mode: Auto`. Default Ship delivery with Strict/Standard unless already chosen;
 show a nonstandard/relevant cost profile. Cost Control narrows context/narration,
 not independent material review or quality. Deep adds justified inspection,
 not authority.
@@ -173,7 +189,7 @@ Retain shared rules; do not preload future roles, reread an assessment already
 returned or invent expertise when a capability is missing.
 
 Gate A establishes direction/requirements; Gate B approves exact selection/plan;
-Gate E requires actual user acceptance of proven Stories. Report C (implementation)
+Gate E requires actual user or explicitly delegated owner acceptance of proven Stories. Report C (implementation)
 and D (review) without routine stops; D never requests approval. Auto permits
 bounded authorized work, never invented acceptance. Keep the entire increment
 commitment across sessions and verify every selected criterion plus the integrated
