@@ -23,8 +23,8 @@ Run it in your project's terminal, choose the agent you use and the installation
 scope, then reload the agent session if needed. Load the installed AIM skill and
 run `/aim calibrate-repo`; describe your goal with `/aim start "<desired outcome>"`.
 You can give these same instructions to your coding agent. The public command
-installs the complete public skill. AIM 4.4 is available as an ordinary release;
-see [GitHub Releases](https://github.com/joneri/agile-iteration-method/releases/tag/v4.4.0)
+installs the complete public skill. AIM 4.5 is available as an ordinary release;
+see [GitHub Releases](https://github.com/joneri/agile-iteration-method/releases/tag/v4.5.0)
 for its versioned assets.
 
 Use the adaptive installer when the repository also needs a reviewed footprint,

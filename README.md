@@ -174,7 +174,5 @@ available with its original evidence.
 
 ## Versions and compatibility
 
-Marketing describes AIM's current capabilities. [VERSION](VERSION) identifies this
-release; [CHANGELOG.md](CHANGELOG.md) records releases. Product versions,
-runtime contracts and schema versions are separate. Existing active work and
-accepted evidence are preserved; an upgrade does not migrate or approve them.
+See [VERSION](VERSION) for the current release and [CHANGELOG.md](CHANGELOG.md) for changes.
+Product versions and runtime/schema contracts are separate. Upgrades preserve active work and accepted evidence.

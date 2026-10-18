@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-10-18 - AIM release v4.5.0
+
+AIM Graph connects the delivery goal, User Stories, dependent activities and
+current evidence in AIM UI and through `/aim graph`.
+
+- Inspect what can start, recorded work, blockers and bounded next assignments
+  with role skills, file responsibility and expected proof.
+- Keep source-bound activity attempts in the existing ledger. Reject obsolete
+  sessions, changed prerequisites, conflicting ownership and exhausted capacity.
+- Mark affected work and dependants stale when source or proof changes; retain
+  earlier attempts and show diagnostic graphs when native evidence is invalid.
+- Preserve keyboard focus and graph reading position during polling, with a
+  responsive mobile layout and read-only browser controls.
+- Use the name AIM UI consistently across the interface, website and press copy.
+- Ship the complete Graph module, view and schema dependencies in portable and
+  adaptive installations. Existing deliveries need no automatic migration;
+  use the updated AIM helper for deliveries with an optional execution plan.
+
+Native gates and user acceptance retain their meaning. This release adds no
+new Enigma assessment or whole-workflow productivity claim.
+
 ## 2026-10-18 - AIM release v4.4.0
 
 Publish AIM 4.4 as an ordinary release and the latest GitHub Release.

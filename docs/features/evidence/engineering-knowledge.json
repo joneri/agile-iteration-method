@@ -41,7 +41,7 @@
       "sources": [
         {
           "path": "scripts/aim_http.py",
-          "sha256": "512ad497b3ec35eeb32f363b849f99df44299dca6f79e5b16039fba16075c781"
+          "sha256": "caab3add9bf4c4ef604746589946d6c435dfdca5f60c96aba7d4ae7386f9b001"
         },
         {
           "path": "tests/test_aim_http.py",

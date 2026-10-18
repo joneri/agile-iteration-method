@@ -68,6 +68,19 @@ This makes AIM audience-aware from the first generated artifact. See the
 
 See [cost profiles](../workflow/cost-control-mode.md).
 
+## AIM Graph
+
+Use `/aim graph` or **Graph** in AIM UI to see the delivery goal, selected
+Stories, dependencies and current proof. Inspect an activity to understand its
+inputs, role skills, file responsibility and what to return. Copy a bounded
+assignment when prerequisites, ownership and capacity permit it.
+
+AIM records activity attempts in its existing ledger. Failed or stale inputs
+identify the affected work; obsolete attempts cannot unlock dependants. Without
+an execution plan, Graph shows the recorded native delivery checkpoints. The
+host runs agents and native review, validation and user acceptance still apply.
+See [AIM Graph](../workflow/adaptive-execution.md#aim-graph).
+
 ## AIM UI
 
 - `/aim ui` starts or reopens the current repository's local control room;
