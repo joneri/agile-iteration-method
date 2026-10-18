@@ -647,7 +647,6 @@ def compute_plan(
     selected_destinations = {(action.get("scope", "repo"), action["destination"])
                              for action in actions}
     helper_dependencies = {
-        "schemas/aim-product-backlog.schema.json",
         "schemas/aim-repo-profile.schema.json",
         "schemas/aim-project-roles.schema.json",
         "schemas/aim-runtime-state.schema.json",

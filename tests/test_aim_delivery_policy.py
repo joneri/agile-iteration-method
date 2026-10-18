@@ -20,11 +20,13 @@ class DeliveryPolicyTests(unittest.TestCase):
         self.owner = dict(kind="agent", id="owner", session="owner-session", mandate=self.mandate,
                           decisions=["approve", "accept"])
 
-    def plan(self, policy=None):
+    def plan(self, policy=None, execution_plan=None):
         request = dict(id="DI-1", title="Recover and explain", goal="Both fixture personas can recover",
                        storyIds=["US-BUYER", "US-AGENT"], planEvidence=[self.case.plan_evidence])
         if policy is not None:
             request["deliveryPolicy"] = policy
+        if execution_plan is not None:
+            request["executionPlan"] = execution_plan
         return self.case.mutate("plan", request)
 
     @property
@@ -100,6 +102,26 @@ class DeliveryPolicyTests(unittest.TestCase):
         self.assertEqual(saved["deliveries"][0]["status"], "accepted")
         self.assertEqual(saved["deliveries"][0]["acceptance"]["kind"], "agent")
         self.assertTrue(all(s["status"] == "done" for s in saved["stories"] if s["id"] != "US-LATER"))
+
+    def test_delegated_loop_preserves_graph_completion_gate(self):
+        graph = dict(version=1, delegationAllowed=False, maxWorkers=1, activities=[dict(
+            id="BUILD", title="Build both fixture journeys", kind="write", role="dev",
+            storyIds=["US-BUYER", "US-AGENT"], paths=["app.py"], dependsOn=[])])
+        self.plan({"mode":"loop", "owner":self.owner}, execution_plan=graph)
+        self.case.mutate("approve", dict(deliveryId="DI-1", authority=self.decision(self.delivery["scopeSha256"])))
+        self.reject("review", dict(deliveryId="DI-1", sourcePaths=["app.py"]), "unresolved or stale")
+        self.case.mutate("activity", dict(deliveryId="DI-1", activityId="BUILD", status="running", session="fixture-dev"))
+        self.case.mutate("activity", dict(deliveryId="DI-1", activityId="BUILD", status="completed",
+            session="fixture-dev", attempt=1, sourcePaths=["app.py"], evidence=[self.case.evidence]))
+        self.assertNotIn("acceptance", self.delivery)
+        self.case.mutate("review", dict(deliveryId="DI-1", bindings=[self.case.binding]))
+        self.case.mutate("validate", dict(deliveryId="DI-1", evidence=[self.case.evidence]))
+        self.case.mutate("acceptance", dict(deliveryId="DI-1", evidence=[self.case.evidence], criteria=self.case.criterion_evidence()))
+        self.case.mutate("accept", dict(deliveryId="DI-1", authority=self.decision(self.delivery["acceptanceSha256"], "accept")))
+        saved, _ = load(self.case.repo)
+        self.assertEqual(saved["deliveries"][0]["status"], "accepted")
+        self.assertEqual(saved["deliveries"][0]["deliveryPolicy"]["mode"], "loop")
+        self.assertEqual(saved["deliveries"][0]["activityReceipts"][0]["status"], "completed")
 
     def test_owner_identity_and_operation_must_match_delegation(self):
         owner = {**self.owner, "decisions":["accept"]}

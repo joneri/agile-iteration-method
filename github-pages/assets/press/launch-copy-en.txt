@@ -1,9 +1,11 @@
 AIM
 Build your product from an intent.
 
-Suggested announcement copy · AIM 4.5 · 18 October 2026.
+Suggested announcement copy · AIM 4.6 · 18 October 2026.
 
 Describe the software you want in plain language. AIM turns that goal into User Stories and a coherent plan, with agents configured for your project. Follow development in AIM UI, inspect the review and checks, and accept the working result. AIM Graph shows what can start next, what blocks delivery and which evidence needs updating.
+
+Ship is the default: complete the agreed product before final acceptance. Choose Loop for useful Done Increments with recurring owner feedback. Graph engineering makes ownership, dependencies and proof explicit; an agent owner needs your explicit mandate to decide in Strict Loop.
 
 AIM agrees quality goals before implementation. A separate reviewer challenges the first working core before costly expansion. Real user journeys and retained raw results support the final assessment. A maintained verification route helps later changes repeat the right checks.
 

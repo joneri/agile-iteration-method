@@ -15,11 +15,11 @@
         },
         {
           "path": "docs/workflow/role-skill-po.md",
-          "sha256": "e39e675eb0fb9e9e314a66b02cd2492802ee0032fd5cc3d8479652f4e329796c"
+          "sha256": "2b970a6fbd76ba6162503972d656d2c7df8456455827393c4873714baf01f777"
         },
         {
           "path": "docs/workflow/role-skill-tdo.md",
-          "sha256": "f286d95f33ebc75d277c45c18922b68c737041cf5ea01d923234481aae04c2d5"
+          "sha256": "ce6079982c34fce96c15848fb37996bd5f5d656c959f04f83e69aa6fa580d161"
         },
         {
           "path": "docs/workflow/role-skill-dev.md",

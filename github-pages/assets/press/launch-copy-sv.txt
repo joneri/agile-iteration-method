@@ -1,9 +1,11 @@
 AIM
 Från idé till en produkt du kan granska.
 
-Förslag till lanseringstext · AIM 4.5 · 18 oktober 2026.
+Förslag till lanseringstext · AIM 4.6 · 18 oktober 2026.
 
 Beskriv programvaran du vill ha med vanliga ord. AIM gör målet till User Stories och en sammanhängande plan, med agenter anpassade till ditt projekt. Följ utvecklingen i AIM UI, granska resultat och kontroller och acceptera den fungerande leveransen. AIM Graph visar vad som kan börja härnäst, vad som blockerar leveransen och vilka bevis som behöver uppdateras.
+
+Ship är standard: leverera hela den överenskomna produkten före slutacceptans. Välj Loop för användbara Done Increments med återkommande ägarfeedback. Graph engineering tydliggör ansvar, beroenden och bevis; en ägaragent behöver ditt uttryckliga mandat för att fatta beslut i Strict Loop.
 
 AIM fastställer kvalitetsmål före implementation. En separat granskare utmanar den första fungerande kärnan innan arbetet byggs ut. Verkliga användarflöden och sparade råresultat ger underlag för slutbedömningen. En underhållen verifieringsväg hjälper kommande ändringar att återanvända rätt kontroller.
 

@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-10-18 - AIM release v4.6.0
+
+Ship is the default for new work: complete the agreed product before final
+acceptance. Choose Loop for useful Done Increments with recurring owner feedback.
+
+- Keep delivery style separate from Strict/Auto approvals and resource depth.
+- Recommend Graph engineering for explicit product ownership, dependencies,
+  delivery and independent verification. Preserve AIM Graph and its activity gates.
+- Let a named agent owner approve or accept only explicitly delegated delivery
+  decisions under an immutable human mandate and actual scoped decision evidence.
+  Reject mandate copies, stale decisions and mismatched identity before writes.
+- Preserve older deliveries and their approved scope without automatic migration;
+  omission of a policy in a new plan stores Ship with a human owner.
+- Include the policy module and native Story schema in portable and adaptive
+  packages. Update the website, startup examples and press package together.
+
+The host still verifies actual human authority and agent identity. Separate Epic
+closure remains human-owned. This ordinary release adds no new Enigma assessment
+or whole-workflow productivity claim.
+
 ## 2026-10-18 - AIM release v4.5.0
 
 AIM Graph connects the delivery goal, User Stories, dependent activities and

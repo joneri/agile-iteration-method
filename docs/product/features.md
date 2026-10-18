@@ -13,12 +13,16 @@ it does not replace checking relevant code or guarantee whole-repository coverag
 
 ## Delivery loop
 
+- Ship is the default: complete the agreed product before final acceptance.
+- Choose Loop for useful Done Increments with recurring owner feedback.
+- Recommend Graph engineering to connect ownership, dependencies and proof.
 - Start with intent; PO discovers one or more Epics and their user perspectives.
 - PO owns Epics and product priority; TDO owns User Stories, criteria and the coherent increment.
 - Each Story has an identity and lifecycle independent of its delivery plan.
 - TDO selects ready Stories across Epics and plans implementation and verification.
 - Dev, Reviewer and TDO supply implementation, review and criterion-level evidence.
-- The user accepts the verified Story selection. Epic closure remains separate.
+- The user or an explicitly delegated agent owner accepts the verified selection.
+  Separate Epic closure remains human-owned.
 - The integrated working result is an increment. A Sprint is an optional timebox.
 - Existing Epic/Increment records retain their original semantics without migration.
 
@@ -55,7 +59,7 @@ This makes AIM audience-aware from the first generated artifact. See the
 
 ## Control and cost
 
-- `Strict` asks for plan approval and delivery acceptance; combined proposals
+- `Strict` asks the designated owner for plan approval and delivery acceptance; combined proposals
   avoid separate routine Epic approvals.
 - `Auto` continues until risk, changed scope, uncertainty, or final acceptance
   requires a person.
