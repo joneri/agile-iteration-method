@@ -58,6 +58,50 @@ increment against its outcome and all selected criteria. There is no full role
 and acceptance cycle per Story. A session boundary preserves decisions, completed
 work and remaining commitments; it cannot turn partial delivery into completion.
 
+## AIM Graph
+
+Use `/aim graph` to answer what can start and what blocks the current delivery.
+The trusted Story helper's `graph` command is read-only. AIM UI's **Graph** tab
+shows the same outcome, selected Stories, dependencies, activity receipts and
+proof freshness. Without an execution plan it shows the native checkpoints,
+without inventing implementation tasks or agent presence.
+
+When meaningful dependencies or parallel ownership justify it, TDO includes an
+optional `executionPlan` in the existing `plan` request, before approval. It uses
+the delegation plan above; each activity also has a `title`, selected `storyIds`,
+`role` (`po`, `tdo`, `dev`, `reviewer`) and optional actual bound `skills` IDs.
+The graph is part of the approved scope. Keep small cohesive work small; a graph
+does not require an agent per node. The coordinator still checks semantic
+dependencies, real skill availability, host authority and cumulative resources.
+
+The main thread records work through `activity` in the same product ledger:
+
+```json
+{"deliveryId":"DI-EXAMPLE","activityId":"contract","status":"running","session":"actual-session-id"}
+```
+
+The confirmed receipt includes the graph and new `attempt`. Retain it rather
+than rereading status. A completion supplies that same session and attempt,
+`sourcePaths` inside the activity's approved paths and `evidence` references to
+existing raw proof under `.aim/`. A failure supplies a concrete `reason`.
+All mutations use the last confirmed ledger digest. The host runs agents;
+record its returned session identity rather than a role label.
+
+Starts require current completed prerequisites, available capacity and no
+conflicting running ownership. A completion also checks that its prerequisite
+receipts remain current. Changed source or proof marks affected work stale and
+propagates to its dependants. Failed or stale work can receive a new attempt
+under the same scope; prior attempts and proof remain historical. A stale
+running attempt still occupies its slot until explicitly resolved; an unreadable
+proof never becomes a successful completion. Restarting fences out the old
+session/attempt. A bounded history prevents unlimited ledger growth.
+
+The read-only projection recommends a compatible subset of possible work and
+explains failures and blockers. Copying an assignment changes nothing. Task
+receipts do not prove semantic correctness, authenticate agent identities,
+measure speedup, advance gates or create user acceptance. Existing quality,
+separate review and validation requirements still apply to the complete result.
+
 ## Review is a separate judgment
 
 For material changes to product behavior, security, concurrency, data integrity,

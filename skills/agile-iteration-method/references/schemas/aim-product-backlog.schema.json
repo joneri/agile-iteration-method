@@ -1,6 +1,132 @@
 {
   "$comment": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
   "$defs": {
+    "activityDependency": {
+      "additionalProperties": false,
+      "properties": {
+        "activityId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "attempt": {
+          "type": "integer"
+        },
+        "receiptSha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "activityId",
+        "attempt",
+        "receiptSha256"
+      ],
+      "type": "object"
+    },
+    "activityReceipt": {
+      "additionalProperties": false,
+      "properties": {
+        "activityId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "at": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "attempt": {
+          "description": "Sequential attempts 1\u20138 per activity; enforced by helper.",
+          "type": "integer"
+        },
+        "dependencies": {
+          "items": {
+            "$ref": "#/$defs/activityDependency"
+          },
+          "maxItems": 32,
+          "minItems": 0,
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array"
+        },
+        "reason": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "scopeSha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "session": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "sourceBindings": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "maxLength": 1000,
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              },
+              "sha256": {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "type": "object"
+          },
+          "maxItems": 128,
+          "minItems": 1,
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "running",
+            "completed",
+            "failed"
+          ]
+        },
+        "updatedAt": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        }
+      },
+      "required": [
+        "activityId",
+        "session",
+        "attempt",
+        "status",
+        "at",
+        "updatedAt",
+        "scopeSha256",
+        "dependencies"
+      ],
+      "type": "object"
+    },
     "authority": {
       "additionalProperties": false,
       "properties": {
@@ -197,6 +323,14 @@
           "pattern": "\\S",
           "type": "string"
         },
+        "activityReceipts": {
+          "items": {
+            "$ref": "#/$defs/activityReceipt"
+          },
+          "maxItems": 256,
+          "minItems": 0,
+          "type": "array"
+        },
         "approval": {
           "$ref": "#/$defs/authority"
         },
@@ -240,6 +374,9 @@
           "maxItems": 256,
           "minItems": 1,
           "type": "array"
+        },
+        "executionPlan": {
+          "$ref": "#/$defs/executionPlan"
         },
         "goal": {
           "maxLength": 2000,
@@ -694,6 +831,129 @@
       "required": [
         "path",
         "sha256"
+      ],
+      "type": "object"
+    },
+    "executionActivity": {
+      "additionalProperties": false,
+      "properties": {
+        "dependsOn": {
+          "items": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "maxItems": 32,
+          "minItems": 0,
+          "type": "array"
+        },
+        "id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "read",
+            "write",
+            "review"
+          ]
+        },
+        "paths": {
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "maxItems": 128,
+          "minItems": 1,
+          "type": "array"
+        },
+        "role": {
+          "enum": [
+            "po",
+            "tdo",
+            "dev",
+            "reviewer"
+          ]
+        },
+        "skills": {
+          "items": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 0,
+          "type": "array"
+        },
+        "storyIds": {
+          "items": {
+            "maxLength": 100,
+            "minLength": 1,
+            "pattern": "\\S",
+            "type": "string"
+          },
+          "maxItems": 256,
+          "minItems": 1,
+          "type": "array"
+        },
+        "title": {
+          "maxLength": 240,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "role",
+        "storyIds",
+        "paths",
+        "dependsOn"
+      ],
+      "type": "object"
+    },
+    "executionPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "activities": {
+          "items": {
+            "$ref": "#/$defs/executionActivity"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "type": "array"
+        },
+        "delegationAllowed": {
+          "type": "boolean"
+        },
+        "maxWorkers": {
+          "description": "1\u20138; enforced by delegation validator.",
+          "type": "integer"
+        },
+        "parallelBenefit": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "version": {
+          "const": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "version",
+        "delegationAllowed",
+        "maxWorkers",
+        "activities"
       ],
       "type": "object"
     },

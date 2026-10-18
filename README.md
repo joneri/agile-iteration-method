@@ -93,6 +93,9 @@ Describe what you want to achieve, or provide detailed requirements. PO owns Epi
 
 Run `/aim ui` to follow **User Stories as moving cards**, with Epic context and individual evidence. A Sprint is an optional timebox. An increment is the working result of delivered Stories.
 
+Use `/aim graph` or the UI's **Graph** tab to see what can start, what blocks the delivery,
+and which proof needs updating. [How AIM Graph works](docs/workflow/adaptive-execution.md#aim-graph).
+
 Existing Epic/Increment work keeps its original state and approvals in Delivery control. Nothing is automatically migrated or relabelled. See [the requirements model](docs/workflow/user-stories.md).
 
 ## How AIM works

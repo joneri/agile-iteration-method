@@ -26,6 +26,8 @@ from aim_quality.files import read_evidence
 from aim_quality.goals import validate_goals, assess as assess_goals, _sha
 from aim_quality.delivery import validate_plan, assess_checks, stages
 from aim_quality.review import check_review
+from aim_quality.graph import (change_activity, project_graph, validate_activity_receipts,
+                               validate_execution_plan)
 from aim_quality.skills import BUNDLE_ROOT
 from aim_runtime_lock import runtime_lock
 from aim_validator.schema_subset import validate as schema_validate
@@ -39,7 +41,7 @@ COLUMNS = (("backlog", "Backlog"), ("ready", "Ready"),
            ("done", "Done"))
 PHASES = {"planned", "in_progress", "review", "validation", "acceptance", "accepted", "cancelled", "blocked"}
 COMMANDS = ("import", "refine", "plan", "approve", "review", "validate", "acceptance",
-            "accept", "measure", "rework", "cancel", "block", "unblock", "close-epic")
+            "accept", "measure", "rework", "cancel", "block", "unblock", "close-epic", "activity")
 
 
 class StoryError(ValueError):
@@ -131,7 +133,7 @@ def _intent_snapshot(intent):
 
 def _scope(delivery):
     result = {key: delivery[key] for key in ("id", "title", "goal", "stories", "epics", "intents", "planEvidence")}
-    for key in ("qualityGoals", "qualityPlan"):
+    for key in ("qualityGoals", "qualityPlan", "executionPlan"):
         if key in delivery:
             result[key] = delivery[key]
     return result
@@ -513,6 +515,12 @@ def validate_document(document):
     require(sum(item["status"] not in {"accepted", "cancelled"} for item in document["deliveries"]) <= 1,
             "Only one nonterminal delivery may run at a time.")
     for delivery in document["deliveries"]:
+        if "executionPlan" in delivery:
+            try:
+                validate_execution_plan(delivery["executionPlan"], delivery["stories"])
+                validate_activity_receipts(delivery)
+            except ValueError as exc:
+                raise StoryError(str(exc)) from exc
         validate_goals(delivery.get("qualityGoals", []))
         if "qualityPlan" in delivery:
             validate_quality_plan(delivery["qualityPlan"], delivery.get("qualityGoals", []), delivery["stories"])
@@ -646,8 +654,18 @@ def verify_evidence(repo, document, *, cache=None):
     _finish_verification(repo, cache)
 
 
+def _require_activity_completion(repo, delivery, *, cache=None):
+    if "executionPlan" not in delivery:
+        return
+    graph = project_graph(repo, {"deliveries": [delivery]}, None,
+                          check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
+    require(all(a["status"] == "completed" for a in graph["activities"]),
+            "Delivery has unresolved or stale execution activities; finish or rework before review.")
+
+
 def _require_review(repo, delivery, *, cache):
     """Consume the existing review record at the native validation boundary."""
+    _require_activity_completion(repo, delivery, cache=cache)
     policy = delivery.get("qualityPlan", {}).get("reviewPolicy")
     if policy is None:
         return  # Preserve historical approved scope; do not assert current coverage.
@@ -934,7 +952,7 @@ def _change(repo, document, command, request, *, cache=None):
         _import(document, request)
         return
     if command == "plan":
-        fields(request, ("id", "title", "goal", "storyIds", "planEvidence", "qualityPlan"), ("qualityGoals",))
+        fields(request, ("id", "title", "goal", "storyIds", "planEvidence", "qualityPlan"), ("qualityGoals", "executionPlan"))
         validate_goals(request.get("qualityGoals", []))
         identity(request["id"], "DI")
         require(not any(item["id"] == request["id"] for item in document["deliveries"]), "Delivery identity is already allocated.")
@@ -956,6 +974,12 @@ def _change(repo, document, command, request, *, cache=None):
         delivery["qualityPlan"] = copy.deepcopy(request["qualityPlan"])
         if "qualityGoals" in request:
             delivery["qualityGoals"] = copy.deepcopy(request["qualityGoals"])
+        if "executionPlan" in request:
+            try:
+                validate_execution_plan(request["executionPlan"], delivery["stories"], repo)
+            except ValueError as exc:
+                raise StoryError(str(exc)) from exc
+            delivery["executionPlan"] = copy.deepcopy(request["executionPlan"])
         delivery["scopeSha256"] = digest(_scope(delivery))
         document["deliveries"].append(delivery)
         return
@@ -966,6 +990,17 @@ def _change(repo, document, command, request, *, cache=None):
         evidence = _coverage_evidence(repo, request, [ac["id"] for ac in epic["acceptanceCriteria"]], stories=False, epic_id=epic["id"], cache=cache)
         authority = _authority(repo, request["authority"], digest(_closure_scope(document, epic, evidence)), cache=cache)
         epic.update(status="closed", closure={"criteria": evidence, "authority": authority, "closedAt": now()})
+        return
+    if command == "activity":
+        require(isinstance(request, dict) and "deliveryId" in request, "Activity request requires a delivery ID.")
+        delivery = _by_id(document, "deliveries", request["deliveryId"])
+        try:
+            change_activity(repo, delivery, request,
+                            bind_sources=lambda paths: _source_bindings(repo, paths, cache=cache),
+                            bind_evidence=lambda refs: _refs(repo, refs, cache=cache), at=now(),
+                            check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
+        except ValueError as exc:
+            raise StoryError(str(exc)) from exc
         return
     required = {"approve": ("authority",), "review": (), "validate": ("evidence",),
                 "acceptance": ("evidence",), "accept": ("authority",), "measure": ("qualityMeasurements",),
@@ -983,6 +1018,7 @@ def _change(repo, document, command, request, *, cache=None):
         delivery["status"] = "in_progress"
     elif command == "review":
         require(status == "in_progress", "Review requires implementation in progress.")
+        _require_activity_completion(repo, delivery, cache=cache)
         _require_core(repo, delivery, cache=cache)
         _one_input(request, "bindings", "sourcePaths")
         delivery["productBindings"] = (_source_bindings(repo, request["sourcePaths"], cache=cache) if "sourcePaths" in request
@@ -1096,6 +1132,9 @@ def execute(repo, command, request, expected_sha256=None):
         payload = (json.dumps(candidate, ensure_ascii=False, indent=2) + "\n").encode()
         require(len(payload) <= MAX_BYTES, "Product backlog exceeds the bounded store size.")
         result = status_result(candidate, hashlib.sha256(payload).hexdigest(), quality=quality)
+        if command == "activity":
+            result["executionGraph"] = project_graph(repo, candidate, result["storeSha256"], request["deliveryId"],
+                                                     check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
         _finish_verification(repo, cache)
         descriptor, temporary = tempfile.mkstemp(prefix=".product-backlog-", dir=aim)
         try:
@@ -1171,7 +1210,8 @@ def compact_result(result, *, receipt=False, delivery_id=None):
         confirmed = {k: document[k] for k in ("productBacklogVersion", "revision", "updatedAt")}
         confirmed["deliveries"] = deliveries
         return {"view": "receipt", "storeSha256": result["storeSha256"], "document": confirmed,
-                "nextStep": result["nextStep"], **({"quality": result["quality"]} if "quality" in result else {})}
+                "nextStep": result["nextStep"], **({"quality": result["quality"]} if "quality" in result else {}),
+                **({"executionGraph": result["executionGraph"]} if "executionGraph" in result else {})}
     active = [d for d in document["deliveries"] if d["status"] not in {"accepted", "cancelled"}]
     selected = {s["id"] for d in active for s in d["stories"]}
     visible = ([s for s in document["stories"] if s["id"] in selected] if active else
@@ -1197,11 +1237,31 @@ def project_story_board(repo):
               "columns": [{"id": key, "label": label} for key, label in COLUMNS],
               "intents": [], "epics": [], "stories": [], "deliveries": [], "issues": []}
     try:
-        document, store_hash = load(repo)
+        cache = _EvidenceCache([])
+        document, store_hash = load(repo, cache=cache)
+        graph = project_graph(repo, document, store_hash,
+                              check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
+        _finish_verification(repo, cache)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         result.update(valid=False, issues=[str(exc)])
+        # A stale native review binding blocks gates but should still expose the
+        # dependency that needs correction. Structural corruption stays closed.
+        try:
+            document, store_hash = load(repo, check_evidence=False)
+            result["executionGraph"] = project_graph(repo, document, store_hash)
+            result["executionGraph"].update(readyIds=[], retryIds=[], recommendedIds=[], nativeEvidenceValid=False)
+            for activity in result["executionGraph"]["activities"]:
+                if activity["status"] == "ready":
+                    activity.update(status="blocked", reason="Native delivery evidence could not be verified.")
+            result["executionGraph"]["summary"] = {
+                state: sum(a["status"] == state for a in result["executionGraph"]["activities"])
+                for state in result["executionGraph"]["summary"]}
+            result["executionGraph"]["blockers"].append({"status": "blocked", "reason": str(exc)})
+        except (OSError, ValueError, KeyError, TypeError):
+            pass
         return result
     result.update(intents=document["intents"], epics=document["epics"], deliveries=document["deliveries"], storeSha256=store_hash)
+    result["executionGraph"] = graph
     for story in sorted(document["stories"], key=lambda item: (item["priority"], item["id"])):
         related = [delivery for delivery in document["deliveries"] if delivery["status"] != "cancelled"
                    and any(item["id"] == story["id"] for item in delivery["stories"])]
@@ -1221,7 +1281,7 @@ def project_story_board(repo):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, required=True)
-    parser.add_argument("command", choices=(*COMMANDS, "status", "quality", "closure-preview", "review-record"))
+    parser.add_argument("command", choices=(*COMMANDS, "status", "quality", "graph", "closure-preview", "review-record"))
     parser.add_argument("--input", default="-", help="JSON file, or - for stdin")
     parser.add_argument("--expected-sha256", help="Digest returned by the last successful read or write")
     parser.add_argument("--compact", action="store_true", help="Current context for status; confirmed receipt for mutations; full history stays in the ledger")
@@ -1233,6 +1293,10 @@ def main(argv=None):
         elif args.command == "status":
             document, store_hash = load(args.repo)
             result = status_result(document, store_hash)
+        elif args.command == "graph":
+            board = project_story_board(args.repo)
+            require("executionGraph" in board, "; ".join(board["issues"]) or "Execution graph unavailable.")
+            result = board["executionGraph"]
         else:
             raw = sys.stdin.buffer.read(MAX_BYTES + 1) if args.input == "-" else Path(args.input).read_bytes()
             require(len(raw) <= MAX_BYTES, "Request exceeds input size limit.")

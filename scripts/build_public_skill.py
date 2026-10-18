@@ -77,6 +77,7 @@ UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_quality/profiles.py"),
     Path("scripts/aim_quality/localities.py"),
     Path("scripts/aim_quality/delegation.py"),
+    Path("scripts/aim_quality/graph.py"),
     Path("scripts/aim_quality/review.py"),
     Path("scripts/aim_quality/knowledge.py"),
     Path("scripts/aim_quality/patterns.py"),
@@ -107,6 +108,7 @@ UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("aim-ui/styles.css"),
     Path("aim-ui/app.js"),
     Path("aim-ui/product-views.js"),
+    Path("aim-ui/graph-views.js"),
 )
 
 GENERATED_NOTICE = (

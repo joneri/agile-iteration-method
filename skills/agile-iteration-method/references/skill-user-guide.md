@@ -145,6 +145,7 @@ state transitions through the platform's native skill route.
 | --- | --- | --- | --- |
 | `/aim help` | You are unsure what to do now. | Detects the current onboarding or runtime state and recommends one action. | Follow the named command or resolve the named blocker. |
 | `/aim status` | You want a concise progress report. | Shows the AIM release from the trusted package's `VERSION` or `manifest.json` `productVersion`, separately from `.aim/state.json` `aimVersion`, then the active Epic, increment, role, mode, cost profile, gate, and expected next step. | Continue automatically or make the decision the status identifies. |
+| `/aim graph` | You want to know what can start and what blocks the delivery. | Shows dependencies, recorded activity attempts, current proof and bounded next assignments. | Continue the recommended work through the existing AIM mandate; inspect it visually in AIM UI's Graph tab. |
 | `/aim config` | You need to understand effective AIM policy. | Shows repository awareness, role configuration, validation preferences, ownership, and adapter fallback behavior. | Adjust configuration only when the reported policy is wrong or incomplete. |
 
 ### Discuss without starting delivery

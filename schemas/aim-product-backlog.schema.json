@@ -811,6 +811,17 @@
           },
           "minItems": 0,
           "maxItems": 256
+        },
+        "executionPlan": {
+          "$ref": "#/$defs/executionPlan"
+        },
+        "activityReceipts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/activityReceipt"
+          },
+          "minItems": 0,
+          "maxItems": 256
         }
       },
       "required": [
@@ -1256,6 +1267,255 @@
       },
       "required": [
         "pointer"
+      ],
+      "additionalProperties": false
+    },
+    "executionActivity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "\\S"
+        },
+        "kind": {
+          "enum": [
+            "read",
+            "write",
+            "review"
+          ]
+        },
+        "role": {
+          "enum": [
+            "po",
+            "tdo",
+            "dev",
+            "reviewer"
+          ]
+        },
+        "storyIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "\\S"
+          },
+          "minItems": 1,
+          "maxItems": 256
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000,
+            "pattern": "\\S"
+          },
+          "minItems": 1,
+          "maxItems": 128
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "maxItems": 32
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "maxItems": 16
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "role",
+        "storyIds",
+        "paths",
+        "dependsOn"
+      ],
+      "additionalProperties": false
+    },
+    "executionPlan": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "integer",
+          "const": 1
+        },
+        "delegationAllowed": {
+          "type": "boolean"
+        },
+        "maxWorkers": {
+          "type": "integer",
+          "description": "1–8; enforced by delegation validator."
+        },
+        "parallelBenefit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "activities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/executionActivity"
+          },
+          "minItems": 1,
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "version",
+        "delegationAllowed",
+        "maxWorkers",
+        "activities"
+      ],
+      "additionalProperties": false
+    },
+    "activityDependency": {
+      "type": "object",
+      "properties": {
+        "activityId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "attempt": {
+          "type": "integer"
+        },
+        "receiptSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "activityId",
+        "attempt",
+        "receiptSha256"
+      ],
+      "additionalProperties": false
+    },
+    "activityReceipt": {
+      "type": "object",
+      "properties": {
+        "activityId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "session": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "attempt": {
+          "type": "integer",
+          "description": "Sequential attempts 1–8 per activity; enforced by helper."
+        },
+        "status": {
+          "enum": [
+            "running",
+            "completed",
+            "failed"
+          ]
+        },
+        "at": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "\\S"
+        },
+        "updatedAt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "\\S"
+        },
+        "scopeSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/activityDependency"
+          },
+          "minItems": 0,
+          "maxItems": 32
+        },
+        "sourceBindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000,
+                "pattern": "\\S"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 128
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "minItems": 1,
+          "maxItems": 64
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "activityId",
+        "session",
+        "attempt",
+        "status",
+        "at",
+        "updatedAt",
+        "scopeSha256",
+        "dependencies"
       ],
       "additionalProperties": false
     }

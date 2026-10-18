@@ -650,6 +650,7 @@ def compute_plan(
         "schemas/aim-repo-profile.schema.json",
         "schemas/aim-project-roles.schema.json",
         "schemas/aim-runtime-state.schema.json",
+        "schemas/aim-product-backlog.schema.json",
         *(f"docs/workflow/role-skill-{role}.md"
           for role in ("po", "tdo", "dev", "reviewer")),
     }

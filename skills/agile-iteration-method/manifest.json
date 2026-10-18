@@ -3,6 +3,7 @@
   "files": [
     "SKILL.md",
     "aim-ui/app.js",
+    "aim-ui/graph-views.js",
     "aim-ui/index.html",
     "aim-ui/product-views.js",
     "aim-ui/styles.css",
@@ -62,6 +63,7 @@
     "scripts/aim_quality/evidence.py",
     "scripts/aim_quality/files.py",
     "scripts/aim_quality/goals.py",
+    "scripts/aim_quality/graph.py",
     "scripts/aim_quality/knowledge.py",
     "scripts/aim_quality/learning.py",
     "scripts/aim_quality/localities.py",
@@ -109,7 +111,7 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "a1a89afbc3051d3c79ec844fa5138bf8c0528280daa537df71104e8da607ee6e"
+      "sourceSha256": "3f00d1de1dab0dba1b650c3b9c954a7a4bd86367e6a5f241781b269460d3a351"
     },
     {
       "output": "references/user-stories.md",
@@ -134,7 +136,7 @@
     {
       "output": "references/adaptive-execution.md",
       "source": "docs/workflow/adaptive-execution.md",
-      "sourceSha256": "575d12311ff643721433f19d3992e67714f364f3e488d10d7bce0e772df4287b"
+      "sourceSha256": "adfe4e5a3dc5660cbf7f01032b4dc29d2f527f46676a6acd03384fafe3477b1f"
     },
     {
       "output": "references/engineering-delivery.md",
@@ -164,7 +166,7 @@
     {
       "output": "references/skill-user-guide.md",
       "source": "docs/workflow/skill-user-guide.md",
-      "sourceSha256": "a9c80d4a139533ce843848ead2d6cf92fb9798f51efb545b1fc344ccb17059c8"
+      "sourceSha256": "0759bedd3e4bfc522dc32c4dca582e1895159490920674d5684d0a548284f99d"
     },
     {
       "output": "references/skill-command-runtime.md",
@@ -184,7 +186,7 @@
     {
       "output": "references/adapter-command-contract.md",
       "source": "docs/workflow/adapter-command-contract.md",
-      "sourceSha256": "8a8ba659c44cb9da1eb345620b2b3d838ecbf810ee67296dadbc76fa07c4ab32"
+      "sourceSha256": "137bfff1416b057aae9b5a13b626ac5d94a4774e142a32dbbafb018a8592819c"
     },
     {
       "output": "references/adapter-entry-model.md",
@@ -269,12 +271,12 @@
     {
       "output": "references/schemas/aim-product-backlog.schema.json",
       "source": "schemas/aim-product-backlog.schema.json",
-      "sourceSha256": "f91a5b1037941615ee86596035730b2cc2526a1bcb2b083fa72b3d6ea20ba3cf"
+      "sourceSha256": "8d6bd01944209f2f538bb6a246af947cdaa8a6ff0b119f5e6de7c387f9763875"
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
       "source": "install/aim-install-manifest.yaml",
-      "sourceSha256": "14298ebcb4072c6e34656668514b364aad441a7cd303e986ef1259e546584ae1"
+      "sourceSha256": "84b0c956566996f36c2fd4d6cefcd980241c841b1ddf40184b29504bdbae0d94"
     },
     {
       "output": "references/LICENSE-DOCS",
@@ -294,12 +296,12 @@
     {
       "output": "manifest.json",
       "source": "scripts/build_public_skill.py",
-      "sourceSha256": "5582938b93ced64d3590d927c143a0f957af4a453be0b68692c831fa2a641852"
+      "sourceSha256": "b51d4ced1bd50f647974e3cf8732b3930c0b52805ec884afe527430b4ca6e043"
     },
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "43cd32b828ac03d3a7ea90d221cebd8ca6f0b1c61a5eeec90d7a510b2ae19550"
+      "sourceSha256": "b63224168d78bc0465c525b433d6f41aea415cabae4a33a75f73ea77007cf840"
     },
     {
       "output": "scripts/aim_interaction.py",
@@ -365,6 +367,11 @@
       "output": "scripts/aim_quality/delegation.py",
       "source": "scripts/aim_quality/delegation.py",
       "sourceSha256": "6b6cc8ad066616a47914382db71eaead26620ca7bb1ebea62d2b596a1007e918"
+    },
+    {
+      "output": "scripts/aim_quality/graph.py",
+      "source": "scripts/aim_quality/graph.py",
+      "sourceSha256": "287cb8ae73a2a46051c5ca63de9bb198a2032b31102fbbe59008cf14df9a3c29"
     },
     {
       "output": "scripts/aim_quality/review.py",
@@ -474,7 +481,7 @@
     {
       "output": "scripts/aim_ui.py",
       "source": "scripts/aim_ui.py",
-      "sourceSha256": "f15a8afc39e189361d60bed00d270bc1fdfc64eacaf20fcd0725246a0d0ee982"
+      "sourceSha256": "0c87bbfbed619dfd16a9b4b578e533ddc5ce8d726758086fcb3ff61230e0a30e"
     },
     {
       "output": "scripts/aim_ui_product.py",
@@ -489,7 +496,7 @@
     {
       "output": "scripts/aim_ui_control.py",
       "source": "scripts/aim_ui_control.py",
-      "sourceSha256": "d012d3d39c1f1522ae35b162aaa8ea1e15a4d619542fda8b4a063ec640156ee8"
+      "sourceSha256": "35ee03f34c8c73eb241c65cbb446721678dcb2903da22dcfe07d0226b8112c40"
     },
     {
       "output": "scripts/aim_codex_bridge.py",
@@ -499,22 +506,27 @@
     {
       "output": "aim-ui/index.html",
       "source": "aim-ui/index.html",
-      "sourceSha256": "5924f784f2c569912c773d78bcd8c957779430477f282433e89ee8aa1d0c8369"
+      "sourceSha256": "3733b6fdb8e0bcab9d81eaddb3fcb2347675d4103da02ee66f8e22c4485c1f03"
     },
     {
       "output": "aim-ui/styles.css",
       "source": "aim-ui/styles.css",
-      "sourceSha256": "f5f9ca5bc739b215edc1198e34c4a83860fef9a38a413127a3831f6fb63f03ac"
+      "sourceSha256": "8f1d93c4ba5d55e9b29c4d43b9edc7a2b2ecd2352a2836afc57ddda4c24f92ea"
     },
     {
       "output": "aim-ui/app.js",
       "source": "aim-ui/app.js",
-      "sourceSha256": "0d9ea98644ff4483d5bebeacf0ccb15e3652864e8c1a712c639421c4db92c23c"
+      "sourceSha256": "59e4b58983945eb9184d81cc5c875996d0d1a803966ab2b6201bbbc57e32d774"
     },
     {
       "output": "aim-ui/product-views.js",
       "source": "aim-ui/product-views.js",
-      "sourceSha256": "ae036a8e2a61490e82464a8a0936633678c7d8bf830497d2ef7cb50ce6efe5ee"
+      "sourceSha256": "699ee40f725674adea9e532e5426b79817e2adc34d46c2525189eb34adbdbde7"
+    },
+    {
+      "output": "aim-ui/graph-views.js",
+      "source": "aim-ui/graph-views.js",
+      "sourceSha256": "db2ca2f29205d34b98a689c32c4cb51df08bbba3d4588621c8f27b668b148abe"
     }
   ]
 }

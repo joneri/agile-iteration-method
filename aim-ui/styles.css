@@ -45,6 +45,54 @@ a { color: inherit; }
 .skip-link:focus { top: 12px; }
 :focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 
+/* Graph uses the control room's blueprint palette; dependencies carry the layout. */
+.graph-outcome { border-left: 5px solid var(--cyan); padding: 4px 0 4px 22px; margin-bottom: 28px; max-width: 900px; }
+.graph-delivery-id { color: var(--muted); font: .72rem var(--mono); margin: 0 0 8px; }
+.graph-outcome h2 { font: 800 clamp(1.3rem,2.5vw,2rem)/1.15 var(--display); margin: 0 0 10px; }
+.graph-outcome p:last-child { margin: 0; color: var(--muted); }
+.graph-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(260px,320px); gap: 24px; align-items: start; }
+.graph-map { min-width: 0; border: 1px solid var(--line); background: rgba(248,251,253,.8); }
+.graph-map-hint { margin: 0; padding: 14px 20px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .78rem; }
+.graph-scroll { overflow: auto; max-height: 76vh; }
+.graph-canvas { position: relative; display: flex; gap: 56px; width: max-content; min-width: 100%; padding: 24px; }
+.graph-layer { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; width: 212px; flex: 0 0 212px; }
+.graph-layer-label { min-height: 28px; color: var(--muted); font: .65rem/1.4 var(--mono); }
+.graph-node { width: 100%; padding: 16px; text-align: left; background: var(--white); color: var(--ink); border: 1px solid var(--line); border-left: 4px solid var(--line); font-family: var(--body); cursor: pointer; box-shadow: 0 3px 0 rgba(6,20,45,.04); }
+.graph-node:hover { border-color: #7992a6; }
+.graph-node[aria-pressed="true"] { outline: 2px solid var(--navy); outline-offset: 3px; }
+.graph-node:focus-visible { outline: 3px solid #94600a; outline-offset: 5px; }
+.graph-node strong { display: block; font-size: .9rem; line-height: 1.35; margin: 8px 0 12px; overflow-wrap: anywhere; }
+.graph-node-kind { display: block; font: 700 .65rem/1.5 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.graph-node-status { display: block; font-size: .73rem; }
+.graph-node[data-status="ready"] { border-left-color: #087aa5; }
+.graph-node[data-status="running"] { border-left-color: #ad740d; background: #fffbef; }
+.graph-node[data-status="completed"] { border-left-color: #4f7d20; }
+.graph-node[data-status="stale"], .graph-node[data-status="failed"] { border-left-color: var(--red); background: #fff4f3; }
+.graph-node[data-status="blocked"] { border-left-color: #ad740d; }
+.graph-recommended { display: inline-block; background: #e1f3fa; color: #075d83; font: 700 .63rem/1.5 var(--mono); padding: 3px 5px; margin-top: 9px; }
+#graph-edges { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+#graph-edges path { stroke: #8da7b9; stroke-width: 1.5; fill: none; }
+#graph-edges path.is-selected { stroke: #087aa5; stroke-width: 2.5; }
+.graph-inspector { min-width: 0; padding: 22px; border-top: 4px solid var(--cyan); background: var(--white); box-shadow: var(--shadow); }
+.graph-inspector h2 { margin: 10px 0; font: 800 1.45rem/1.15 var(--display); overflow-wrap: anywhere; }
+.graph-reason { font-size: .83rem; color: var(--muted); white-space: pre-wrap; }
+.graph-facts { margin: 20px 0; }
+.graph-fact { border-top: 1px solid var(--line); padding: 10px 0; }
+.graph-fact dt { color: var(--muted); font-size: .7rem; margin-bottom: 4px; }
+.graph-fact dd { margin: 0; font: .72rem/1.6 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.graph-inspector .product-prompt pre { max-height: 320px; }
+.graph-inspector .primary-action { width: 100%; margin-top: 12px; }
+.graph-blockers { padding: 14px 22px 14px 38px; margin: 0 0 24px; background: #fff4dc; border-left: 4px solid #ad740d; font-size: .82rem; overflow-wrap: anywhere; }
+@media (max-width: 1100px) { .graph-layout { grid-template-columns: minmax(0,1fr); } .graph-inspector { max-width: 700px; } }
+@media (max-width: 600px) {
+  .graph-canvas { flex-direction: column; gap: 20px; width: 100%; padding: 16px; }
+  .graph-layer { width: 100%; flex-basis: auto; gap: 12px; }
+  .graph-layer-label { min-height: auto; }
+  .graph-scroll { max-height: none; }
+  #graph-edges { display: none; }
+  .graph-inspector { padding: 18px; }
+}
+
 .command-bar {
   position: sticky;
   top: 0;

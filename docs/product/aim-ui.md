@@ -12,7 +12,7 @@ It opens on **Increment**, showing the coherent delivery selected from
 evidence and user acceptance. The **User Stories** tab retains the requirements
 board, with Epic context and product priority on each card.
 
-All current-product views share the validated product ledger: **Increment**,
+All current-product views share the validated product ledger: **Increment**, **Graph**,
 **User Stories**, **Discuss**, **Plan increment**, **Delivery data**, **Roles**
 and **Accepted increments**. An explicit workspace selector opens retained **legacy workspaces** and
 their original controls. Existing records are never automatically migrated,
@@ -65,6 +65,32 @@ chat handoffs; direct legacy Start/Approve dispatch does not apply to them.
 
 Accepted delivery history preserves the selection and its acceptance evidence.
 Done Stories and accepted deliveries do not imply that their Epics are closed.
+
+## Follow dependencies in Graph
+
+Open **Graph** to see the current increment's outcome and the path through its
+activities. Select an activity to inspect its user need, prerequisites, file
+responsibility, skills to resolve and existing raw proof. Text labels identify
+ready, waiting, recorded running, failed and stale work; lines show dependencies.
+Keyboard selection, the open inspector and focus survive normal polling. On a
+phone the same work appears as a vertical sequence with explicit prerequisites.
+
+**Copy next assignment** includes the observed ledger and scope, bounded work
+and inputs. A stale or failed activity can offer **Copy corrective assignment**
+when prerequisites and capacity permit a new attempt. Review and send it through
+the existing AIM session. Copying, selecting or refreshing never starts agents
+or changes the ledger. Recorded session IDs describe receipts, not live presence.
+
+Editing a bound source or proof changes the affected activity to **Needs new
+evidence** and prevents dependants from being offered as ready. The graph is
+derived from the existing ledger and files; it creates no separate status file.
+Deliveries without an execution plan show their recorded native checkpoints.
+An invalid ledger remains unavailable. See [AIM Graph's execution contract](../workflow/adaptive-execution.md#aim-graph).
+
+Verify this route with `python3 scripts/verify_aim_graph.py`. It launches an
+identified native instance on a disposable synthetic delivery, drives the real
+Graph controls, records progress, changes an input and observes stale proof.
+Raw observations, desktop/mobile screenshots and a browser trace are preserved.
 
 ## Plan across Epics
 

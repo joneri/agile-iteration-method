@@ -30,6 +30,9 @@ product version, payload and task binding. A mismatch fails before browser use.
 | --- | --- | --- |
 | Prepare one coherent planning proposal | Open Plan increment, select the two Ready Stories, enter a goal, choose Copy planning proposal | Actual clipboard text preserves discuss/read-only, freshness and user-approval boundaries and names exactly those Story IDs, the goal and current ledger digest. Ledger bytes remain unchanged; no delivery or approval is created. |
 | Prevent use of an obsolete proposal | Keep that selection while the native helper adds a third synthetic Ready Story; let normal polling deliver the changed ledger | The new Story becomes visible, the previous selection clears, Copy planning proposal is disabled and the interface explains the change. |
+| Understand and advance dependent work | Run `python3 scripts/verify_aim_graph.py`; open Graph, select the ready contract and copy its assignment; record a native completion | Clipboard retains observed scope/digest, bounded files, skills and authority limits; normal polling unlocks the two dependent tasks and preserves keyboard focus. The UI does not mutate the ledger. |
+| Catch obsolete activity proof | In the same Graph route, edit the completed contract's bound source | The completed activity becomes stale, dependent work loses its assignment, and mobile view remains usable. Raw proof and trace are retained after verified instance cleanup. |
+| Diagnose invalid native evidence | The Graph recipe deliberately changes the disposable fixture's plan proof | The native ledger remains invalid and its diagnostic graph stays visible, with no assignment control. Actual delivery proof is preserved. |
 
 The expected behavior comes from [AIM UI](aim-ui.md) and the Story contract,
 not from the rendered output itself. The recipe drives browser controls; it does

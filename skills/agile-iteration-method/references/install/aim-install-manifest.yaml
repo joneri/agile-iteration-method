@@ -135,6 +135,7 @@ aimInstallManifest:
         - scripts/aim_quality/profiles.py
         - scripts/aim_quality/localities.py
         - scripts/aim_quality/delegation.py
+        - scripts/aim_quality/graph.py
         - scripts/aim_quality/review.py
         - scripts/aim_quality/knowledge.py
         - scripts/aim_quality/patterns.py
@@ -167,6 +168,7 @@ aimInstallManifest:
         - aim-ui/styles.css
         - aim-ui/app.js
         - aim-ui/product-views.js
+        - aim-ui/graph-views.js
       repoDestination: .
       homeDestination: .aim/installs/agile-iteration-method/
       includedWith: all-footprints

@@ -51,6 +51,7 @@ PAYLOAD_FILES = (
     "scripts/aim_runtime_contract.py",
     "scripts/aim_decisions.py",
     "scripts/aim_stories.py",
+    "scripts/aim_quality/graph.py",
     "scripts/aim_ui_product.py",
     "scripts/aim_legacy_cleanup.py",
     "scripts/aim_runtime_lock.py",
@@ -58,6 +59,7 @@ PAYLOAD_FILES = (
     "aim-ui/index.html",
     "aim-ui/app.js",
     "aim-ui/product-views.js",
+    "aim-ui/graph-views.js",
     "aim-ui/styles.css",
 )
 

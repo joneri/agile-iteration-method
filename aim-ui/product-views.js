@@ -121,6 +121,10 @@ function productEvidenceRefs(delivery) {
   (delivery.criterionEvidence || []).forEach((criterion) => {
     criterion.evidence.forEach((ref) => refs.push({ ...ref, label: `${criterion.storyId} · ${criterion.criterionId}` }));
   });
+  (delivery.activityReceipts || []).forEach((receipt) => {
+    (receipt.evidence || []).forEach((ref) => refs.push({ ...ref,
+      label: `${receipt.activityId} · attempt ${receipt.attempt}` }));
+  });
   return refs;
 }
 
@@ -406,7 +410,7 @@ function renderProductWorkspace(board) {
   const content = $("product-content");
   const openDetails = new Set(Array.from(content.querySelectorAll("details[open][data-product-detail]"), (item) => item.dataset.productDetail));
   content.replaceChildren();
-  const names = { board: ["Increment", ""], portfolio: ["Plan increment", ""],
+  const names = { board: ["Increment", ""], graph: ["AIM Graph", ""], portfolio: ["Plan increment", ""],
     people: ["Roles", ""], closed: ["Accepted increments", ""],
     data: ["Delivery data", "Product evidence is unavailable until the ledger is valid."] };
   const [title, summary] = names[state.view] || ["Current product", ""];
@@ -423,9 +427,13 @@ function renderProductWorkspace(board) {
     const issues = el("ul", "product-issues");
     model.issues.forEach((issue) => issues.append(el("li", "", issue)));
     content.append(issues);
+    if (state.view === "graph" && board.storyBoard?.executionGraph?.nativeEvidenceValid === false) {
+      renderCurrentGraph(board, model, content);
+    }
     return;
   }
   if (state.view === "board") renderCurrentDelivery(model, content);
+  if (state.view === "graph") renderCurrentGraph(board, model, content);
   if (state.view === "portfolio") renderCurrentPortfolio(model, content);
   if (state.view === "people") renderCurrentPeople(model, content);
   if (state.view === "closed") renderCurrentHistory(model, content);

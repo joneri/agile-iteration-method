@@ -54,6 +54,7 @@ while version, assignment and relevant sources remain unchanged.
 | Legacy `PORTFOLIO` | Portfolio execution/continuation and Shared startup boundaries there; no new Story authority inferred |
 | Legacy accepted increment | `references/skill-completion.md` before disposition |
 | `/aim ui` or UI decision | Local UI or UI gate publication in runtime reference; loopback-only, no invented decision |
+| `/aim graph` | AIM Graph in `references/adaptive-execution.md`; read-only current dependencies, blockers and bounded next assignments |
 | `/aim to-backlog` | Backlog import there; planning candidates, not runtime cards |
 | `/aim repair-catalog` | Catalog repair there; no-write preview and explicit operator approval |
 | Help / first use | `references/skill-user-guide.md` only on demand |

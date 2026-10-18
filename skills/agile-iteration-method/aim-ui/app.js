@@ -1451,7 +1451,7 @@ function renderView(board, epics) {
   const showingPeople = !product && state.view === "people";
   const showingClosed = !product && state.view === "closed";
   const productModel = product ? productViewModel(board) : null;
-  const productPanel = product && (["board", "portfolio", "people", "closed"].includes(state.view)
+  const productPanel = product && (["board", "graph", "portfolio", "people", "closed"].includes(state.view)
     || (showingData && !productModel.available));
   $("product-workspace").hidden = !productPanel;
   $("epic-rail").hidden = !showingPortfolio;
@@ -1469,7 +1469,7 @@ function renderView(board, epics) {
   $("closed-panel").hidden = !showingClosed;
   document.querySelectorAll(".section-tab").forEach((button) => {
     button.setAttribute("aria-pressed", String(button.dataset.view === state.view));
-    button.disabled = !product && button.dataset.view === "stories";
+    button.disabled = !product && ["stories", "graph"].includes(button.dataset.view);
   });
   if (productPanel) renderProductWorkspace(board);
   if (showingClosed) renderClosed(board, epics);
@@ -1670,7 +1670,7 @@ function render(board, { preserveViewport = false } = {}) {
 
 function switchWorkspace(workspace) {
   state.workspace = workspace;
-  if (workspace === "legacy" && state.view === "stories") state.view = "board";
+  if (workspace === "legacy" && ["stories", "graph"].includes(state.view)) state.view = "board";
   if (state.board) render(state.board);
 }
 
