@@ -3,7 +3,8 @@
 AIM's latest frozen Enigma product assessment scored **96.5/100**, passed
 **123/123 simulator vectors**, and solved **9/9 new positive search cases**.
 All **114/114 retained candidates** passed independent crib, placement and
-preview checks. The historical AIM reference scored **93.5/100**.
+preview checks. The retained GPT-6 Luna-only application scored **49.8/100**;
+the earlier AIM result was **93.5/100**.
 
 The product result is strong, while the native delivery remains unfinished:
 one selected performance goal failed and required browser proof is missing.
@@ -16,6 +17,29 @@ separate reviewer. Later AIM source revisions do not inherit a new Enigma test
 from this report. The historical reference is **3.2.0**, not 3.2.1.
 [The public comparison export](evidence/2026-10-18-enigma-comparison/comparison.json)
 contains exact retained metrics, nulls, source-artifact hashes and limits.
+
+## The same model, with and without AIM
+
+| Enigma M3 product outcome | GPT-6 Luna without AIM | GPT-6 Luna with AIM, latest assessed delivery |
+| --- | ---: | ---: |
+| Product score /100 | 49.8 | 96.5 |
+| Simulator vectors passed | 1/123 | 123/123 |
+| New positive search cases with a valid candidate | 0/9 | 9/9 |
+
+The Luna-only result is the frozen **30 September 2026** M3 build; the latest
+assessed AIM delivery is from **18 October 2026**. Both used GPT-6 Luna with
+high reasoning effort, the same original PRD, 123 simulator vectors, 14 search
+cases and six category weights. The baseline's exact weighted score is 49.75,
+published as 49.8. The [original paired comparison](aim-3.2-enigma-m3-case.md)
+and its [unchanged summary](evidence/2026-09-30-luna-aim32-enigma/summary.json)
+retain the baseline and its original AIM counterpart, which scored 93.5.
+
+These are retained results, **not a new paired experiment**. Dates, prompts,
+internal goals, assistance, budgets and delivery completion differ. The score
+comparison does not isolate AIM's causal contribution, establish a general
+advantage or prove completion of the native delivery. Subsequent source
+versions do not inherit this score. No baseline or product has been rerun for
+this presentation change. The AIM-version trend below is a secondary view.
 
 ## What was tested
 

@@ -73,11 +73,14 @@ verification entry help future changes repeat the right checks. Missing or
 failed evidence stays visible until corrected or resolved by the responsible
 owner.
 
-The [latest completed Enigma evaluation](../features/aim-enigma-evaluation.md)
-scored the AIM 4.4.0-rc.11 application at 96.5/100 against the historical AIM
-3.2.0 reference at 93.5/100. It is a result for those builds under that evaluation,
-not a general quality or cost guarantee. The latest development source includes
-further changes that have not received that application score.
+The [retained Enigma M3 results](../features/aim-enigma-evaluation.md) show
+**96.5/100** for GPT-6 Luna with AIM in the latest assessment, compared with
+**49.8/100** for the [historical Luna-only delivery](../features/aim-3.2-enigma-m3-case.md).
+The earlier AIM result was **93.5/100**. Both used the same model, high reasoning
+effort, brief and scoring weights. Different dates and delivery conditions mean
+this is a historical comparison, not a fresh paired experiment or a general
+quality or cost guarantee. The latest version of AIM includes later changes
+outside this score; the assessed native delivery remained unfinished.
 
 ## Repository-Aware
 

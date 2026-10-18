@@ -9,7 +9,7 @@ AIM agrees quality goals before implementation. A separate reviewer challenges t
 
 Repository knowledge, compact checkpoints and relevant shared lessons help agents reuse work that still applies. Learning is part of ordinary delivery, without a manual reflection step. The Product Owner owns Epic outcomes and priority; the Technical Delivery Owner owns Stories, criteria and the increment. Acceptance stays with you.
 
-The latest completed Enigma evaluation scored the AIM 4.4.0-rc.11 application at 96.5/100 against a historical AIM 3.2.0 reference at 93.5/100. That result belongs to those builds and that evaluation; it does not establish general superiority or lower cost. The current development source includes later changes and remains under review.
+The retained Enigma M3 results compare GPT-6 Luna with AIM, scoring 96.5/100 in the latest assessment, with GPT-6 Luna without AIM at 49.8/100. The earlier AIM result was 93.5/100. The same model, high reasoning effort, brief and scoring weights were used, but the runs took place on different dates under different delivery conditions. This is a historical comparison, not a fresh paired experiment or a general quality or cost guarantee. The latest version of AIM includes later changes outside this score; the assessed native delivery remained unfinished. Exact versions and evidence are in the evaluation report.
 
 For Codex, GitHub Copilot and Claude Code. AIM UI remains Beta. The public skill command installs the public source; see GitHub Releases for available releases.
 

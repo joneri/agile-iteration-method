@@ -223,7 +223,7 @@ class PublicationContractTests(unittest.TestCase):
         with zipfile.ZipFile(REPO_ROOT / PUBLIC_PRESS_KIT_PATH) as archive:
             self.assertEqual(set(archive.namelist()), PUBLIC_PRESS_MEMBERS)
             self.assertEqual(archive.read("aim-4-logo.png"), (REPO_ROOT / PUBLIC_CAMPAIGN_IMAGE_PATH).read_bytes())
-            self.assertIn(b"AIM 4", archive.read("aim-4-press-kit.txt"))
+            self.assertIn(b"Agile Iteration Method (AIM)", archive.read("aim-4-press-kit.txt"))
 
     def test_missing_install_script_blocks_assembled_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -25,6 +25,9 @@ SCHEMA_RELATIVE_PATHS = (
     "schemas/aim-ui-portfolio.schema.json",
 )
 PUBLIC_EVALUATION_PATH = "docs/features/evidence/2026-10-18-enigma-comparison/comparison.json"
+PUBLIC_NO_AIM_BASELINE_PATH = "docs/features/evidence/2026-09-30-luna-aim32-enigma/summary.json"
+PUBLIC_EVALUATION_URL = "https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-enigma-evaluation.md"
+PUBLIC_NO_AIM_BASELINE_URL = "https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-3.2-enigma-m3-case.md"
 ROOT_PUBLIC_FILES = (
     "VERSION",
     "googlea5ce5061b9ad1e90.html",
@@ -36,6 +39,7 @@ ROOT_PUBLIC_FILES = (
     "AIM_OG.png",
     "LICENSE",
     PUBLIC_EVALUATION_PATH,
+    PUBLIC_NO_AIM_BASELINE_PATH,
 )
 PUBLIC_DIRECTORIES = ("github-pages/assets",)
 PUBLIC_BRAND_IMAGE_PATHS = (
@@ -172,9 +176,22 @@ def _homepage_contract(root: Path) -> None:
             raise PublicationError(f"index.html: product capture needs alt text and an example caption: {path}")
     evidence = _evaluation_contract(root)
     if (page.evidence_version != evidence["latestEvaluatedVersion"]
-            or evidence["latestEvaluatedVersion"] not in page.evidence_text
             or evidence["referenceVersion"] not in page.evidence_text):
         raise PublicationError("index.html: comparison must identify the tested AIM version")
+    if "-rc." in page.evidence_text.lower():
+        raise PublicationError("index.html: release-candidate labels belong in linked test provenance, not marketing")
+    if not {PUBLIC_EVALUATION_URL, PUBLIC_NO_AIM_BASELINE_URL} <= page.links:
+        raise PublicationError("index.html: comparison must link to exact AIM and no-AIM test provenance")
+    baseline = json.loads(_read_text(root / PUBLIC_NO_AIM_BASELINE_PATH))
+    assessment = evidence["currentAssessment"]
+    if (baseline["model"] != assessment["model"]
+            or baseline["reasoningEffort"] != assessment["reasoningEffort"]
+            or baseline["prdSha256"] != evidence["prdSha256"]):
+        raise PublicationError("index.html: no-AIM baseline must use the same model, reasoning effort and brief")
+    if (f'{baseline["publishedScoreOutOf100"]["naked"]:g} of 100' not in page.evidence_text
+            or "GPT-6 Luna without AIM" not in page.evidence_text
+            or "GPT-6 Luna with AIM" not in page.evidence_text):
+        raise PublicationError("index.html: comparison must retain the no-AIM result and identify both conditions")
     for key in ("latestProductScore", "referenceProductScore"):
         if f'{evidence[key]:g} of 100' not in page.evidence_text:
             raise PublicationError("index.html: displayed assessment score differs from public evidence")

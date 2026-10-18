@@ -182,11 +182,15 @@ See [adaptive execution](../workflow/adaptive-execution.md).
 - Engineering guidance targets actual failure boundaries and equivalent resource
   workloads. Mixed setup, repository maintenance and delivery time remain visible.
 
-The [latest completed Enigma evaluation](../features/aim-enigma-evaluation.md)
-scored the AIM 4.4.0-rc.11 application at **96.5/100**, against the historical
-AIM 3.2.0 reference at **93.5/100**. It retains the evaluation scope and
-sanitized evidence. This single result does not establish general superiority,
-lower development cost, or the quality of subsequent source changes.
+The [retained Enigma M3 results](../features/aim-enigma-evaluation.md) compare
+GPT-6 Luna with AIM (**96.5/100** in the latest assessment) with the
+[historical Luna-only delivery](../features/aim-3.2-enigma-m3-case.md)
+(**49.8/100**). The earlier AIM result was **93.5/100**. The same model, high
+reasoning effort, brief and scoring weights were used on different dates under
+different delivery conditions. This is not a fresh paired experiment or proof
+of general superiority, lower development cost, or the quality of later AIM
+changes. The assessed native delivery remained unfinished. Exact frozen
+versions, scope and sanitized evidence are retained in the evaluation report.
 
 The earlier [AIM 3.2 paired study](../features/aim-3.2-enigma-case.md),
 [M3 result](../features/aim-3.2-enigma-m3-case.md) and

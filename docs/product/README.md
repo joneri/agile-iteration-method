@@ -25,11 +25,15 @@ the core with an independent example; runnable user journeys and retained raw
 results support the final decision. Project knowledge, compact checkpoints and
 relevant shared lessons help later sessions reuse work that still applies.
 
-The [latest completed Enigma evaluation](../features/aim-enigma-evaluation.md)
-scored the AIM 4.4.0-rc.11 application at 96.5/100 against a historical AIM
-3.2.0 reference at 93.5/100. That result belongs to those builds and that
-evaluation. The latest development source contains subsequent changes; it is
-not a claim of general quality or cost advantage.
+The [retained Enigma M3 results](../features/aim-enigma-evaluation.md) compare
+GPT-6 Luna with AIM (**96.5/100** in the latest assessment) and
+[GPT-6 Luna without AIM](../features/aim-3.2-enigma-m3-case.md) (**49.8/100**).
+The earlier AIM result was **93.5/100**. The model, high reasoning effort,
+brief and scoring weights match; the runs took place on different dates under
+different delivery conditions. This is a historical comparison, not a fresh
+paired experiment or a general quality or cost guarantee. The latest version
+of AIM includes later changes that have not received this application score;
+the assessed native delivery remained unfinished.
 
 AIM is designed for real repositories and real delivery constraints:
 
