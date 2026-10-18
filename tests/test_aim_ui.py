@@ -2595,7 +2595,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/board", timeout=3) as response:
                     payload = json.load(response)
                     self.assertTrue(payload["source"]["readOnly"])
-                    self.assertEqual(payload["product"]["version"], "4.3.0")
+                    self.assertEqual(payload["product"]["version"], (REPO_ROOT / "VERSION").read_text().strip())
                     self.assertTrue(payload["product"]["capturedAtLaunch"])
                     self.assertIn(
                         payload["backgroundControl"]["status"],
@@ -2615,7 +2615,7 @@ class AimUiTests(unittest.TestCase):
                 with urlopen(f"{url}/api/health", timeout=3) as response:
                     health = json.load(response)
                     self.assertEqual(health["protocolVersion"], "1.3")
-                    self.assertEqual(health["productVersion"], "4.3.0")
+                    self.assertEqual(health["productVersion"], (REPO_ROOT / "VERSION").read_text().strip())
                     self.assertRegex(health["payloadFingerprint"], r"^[0-9a-f]{64}$")
                 request = Request(f"{url}/api/board", data=b"{}", method="POST",
                                   headers={"Origin": url})

@@ -57,8 +57,6 @@ Every AIM skill must resolve:
 - `/aim calibrate-repo`
 - `/aim remember-repo`
 - `/aim forget-repo`
-- `/aim reflect`
-- `/aim reflect-all`
 - `/aim upgrade`
 - `/aim mode`
 - `/aim cost`

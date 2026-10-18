@@ -1,0 +1,901 @@
+{
+  "schemaVersion": "1.0",
+  "evidenceAsOf": "2026-10-18",
+  "brand": "AIM",
+  "scope": "Sanitized report of retained frozen Enigma evidence. Exporting this file runs no product and performs no new assessment.",
+  "historicalReferenceVersion": "3.2.0",
+  "nullMeaning": "Unknown, unmeasured or unavailable; never zero and never a successful result.",
+  "sourceArtifacts": [
+    {
+      "id": "retained_comparison_catalog",
+      "label": "Retained comparison catalog generated 2026-10-18",
+      "sha256": "2924df52add359fbaeba4a1b938922a5167e4dcf8d421da0f5505bfa68c14bdf"
+    },
+    {
+      "id": "frozen_rc11_assessment",
+      "label": "Frozen external assessment summary",
+      "sha256": "472c142a2138a5412126ed2009706240c03c2c296fd692f828bdce7c4147086d"
+    },
+    {
+      "id": "frozen_rc11_run",
+      "label": "Completed coordinator run record",
+      "sha256": "7a50638a58c951157fd33b21b759aea83a60132425fa0039c7526617a6dfaefb"
+    },
+    {
+      "id": "frozen_rc11_goal_map",
+      "label": "Retained goal evidence map",
+      "sha256": "25cec49e07f5eb185e96485c03500178d062e41778eee4ea203572a9f60889b0"
+    },
+    {
+      "id": "frozen_rc11_protocol",
+      "label": "Precommitted RC11 evaluation protocol",
+      "sha256": "c235176669b7394c65cca69c4a81a22c9fac7f3da844a5a562afb945a50a7cb0"
+    },
+    {
+      "id": "frozen_rc11_timing",
+      "label": "Fixed external timing results",
+      "sha256": "da0257670bd182e809356c8b75903ab57f09d10417772289d43c89567f68c637"
+    },
+    {
+      "id": "historical_m3_summary",
+      "label": "Published historical M3 summary",
+      "sha256": "0acecccde0df484cec7ba6758778a0a9bb90602635363df33b9a6fe38b597a15"
+    }
+  ],
+  "sourceExportPolicy": "Allowlisted numeric metrics, explicit outcomes and provenance hashes only. Source labels are provenance, not bundled source files. Absolute paths, private transcript content, session identities, product source and protected inventories are excluded.",
+  "categoryWeights": {
+    "correctness": 25,
+    "cracking_validity": 30,
+    "other_requirements": 15,
+    "performance_stability": 10,
+    "usability": 10,
+    "maintainability_test_protection": 10
+  },
+  "rows": [
+    {
+      "version": "3.2.0",
+      "date": "2026-09-30",
+      "score": 93.5,
+      "categories": {
+        "correctness": 10,
+        "cracking_validity": 9.5,
+        "other_requirements": 9,
+        "performance_stability": 9.5,
+        "usability": 8.5,
+        "maintainability_test_protection": 8.5
+      },
+      "vectorsPassed": 123,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 9,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 35,
+      "returnedCandidates": 35,
+      "noneMedianSeconds": 0.183,
+      "exampleMedianSeconds": 0.207,
+      "buildWallSeconds": 3178.849,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 0,
+      "externalCancelMs": null,
+      "builderReviewerOuterCalls": null,
+      "builderReviewerTokens": null,
+      "status": "Historical reference; Unicode limitation retained.",
+      "buildTimeDefinition": "Completed main-turn wall time; AIM included a parallel Luna reviewer. Human time, token costs and currency costs were not measured.",
+      "tokenScope": null,
+      "methodValidity": {
+        "activation": null,
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.3.0",
+      "date": "2026-10-15",
+      "score": 88.5,
+      "categories": {
+        "correctness": 10.0,
+        "cracking_validity": 9.5,
+        "other_requirements": 9.0,
+        "performance_stability": 5.0,
+        "usability": 8.5,
+        "maintainability_test_protection": 8.0
+      },
+      "vectorsPassed": 123,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 8,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 133,
+      "returnedCandidates": 133,
+      "noneMedianSeconds": 4.114838208,
+      "exampleMedianSeconds": 14.80923525,
+      "buildWallSeconds": 1398.86614,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 1,
+      "externalCancelMs": null,
+      "builderReviewerOuterCalls": 195,
+      "builderReviewerTokens": {
+        "input_tokens": 21146718,
+        "cached_input_tokens": 20694400,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 102749,
+        "reasoning_output_tokens": 46281,
+        "total_tokens": 21249467,
+        "uncached_input_tokens": 452318
+      },
+      "status": "Automatic-placement timeout; Unicode limitation.",
+      "buildTimeDefinition": "Actual dispatch recovered in baseline-comparability-followup to original freeze; original reporting cut was11.651098s later.",
+      "tokenScope": "Builder and its independent reviewer only, from session start through first submission freeze. Includes all their activity; excludes parent orchestration and external assessment.",
+      "methodValidity": {
+        "activation": null,
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.1",
+      "date": "2026-10-16",
+      "score": null,
+      "categories": null,
+      "vectorsPassed": 123,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 8,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 69,
+      "returnedCandidates": 69,
+      "noneMedianSeconds": 1.669425334,
+      "exampleMedianSeconds": 19.114594416,
+      "buildWallSeconds": 889.857374,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 1,
+      "externalCancelMs": null,
+      "builderReviewerOuterCalls": 133,
+      "builderReviewerTokens": {
+        "input_tokens": 12985865,
+        "cached_input_tokens": 12728320,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 72574,
+        "reasoning_output_tokens": 37417,
+        "total_tokens": 13058439,
+        "uncached_input_tokens": 257545
+      },
+      "status": "Unscored; timeout, Unicode, stale candidate identity and production worker 404.",
+      "buildTimeDefinition": null,
+      "tokenScope": "Builder and its independent reviewer only, from session start through first submission freeze. Includes all their activity; excludes parent orchestration and external assessment.",
+      "methodValidity": {
+        "activation": null,
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.2",
+      "date": "2026-10-17",
+      "score": 91.0,
+      "categories": {
+        "correctness": 10.0,
+        "cracking_validity": 9.5,
+        "other_requirements": 9.0,
+        "performance_stability": 6.5,
+        "usability": 9.0,
+        "maintainability_test_protection": 8.5
+      },
+      "vectorsPassed": 123,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 9,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 113,
+      "returnedCandidates": 113,
+      "noneMedianSeconds": 2.33392725,
+      "exampleMedianSeconds": 5.649267792,
+      "buildWallSeconds": 868.095259,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 0,
+      "externalCancelMs": 35,
+      "builderReviewerOuterCalls": 250,
+      "builderReviewerTokens": {
+        "input_tokens": 25093871,
+        "cached_input_tokens": 24736896,
+        "uncached_input_tokens": 356975,
+        "output_tokens": 105170,
+        "reasoning_output_tokens": 44950,
+        "total_tokens": 25199041
+      },
+      "status": "All nine positive cases solved; Unicode limitation.",
+      "buildTimeDefinition": null,
+      "tokenScope": "New aggregation of already stored provider token_usage_record events for named sessions, inclusiveDispatch window; no product execution.",
+      "methodValidity": {
+        "activation": null,
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.3",
+      "date": "2026-10-17",
+      "score": 82.75,
+      "categories": {
+        "correctness": 10.0,
+        "cracking_validity": 7.0,
+        "other_requirements": 9.5,
+        "performance_stability": 6.0,
+        "usability": 9.0,
+        "maintainability_test_protection": 7.5
+      },
+      "vectorsPassed": 123,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 7,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 213,
+      "returnedCandidates": 215,
+      "noneMedianSeconds": 0.140292958,
+      "exampleMedianSeconds": 1.673057917,
+      "buildWallSeconds": 1431.758781,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 1,
+      "externalCancelMs": 33,
+      "builderReviewerOuterCalls": 195,
+      "builderReviewerTokens": {
+        "input_tokens": 19276100,
+        "cached_input_tokens": 18899968,
+        "output_tokens": 123147,
+        "reasoning_output_tokens": 51193,
+        "total_tokens": 19399247,
+        "uncached_input_tokens": 376132
+      },
+      "status": "Invalid later-offset candidates; timeout.",
+      "buildTimeDefinition": null,
+      "tokenScope": "Sum of saved provider response-usage records within dispatch-to-freeze window; cached input included; reasoning subset of output.",
+      "methodValidity": {
+        "activation": null,
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.4",
+      "date": "2026-10-17",
+      "score": 86.25,
+      "categories": {
+        "correctness": 10,
+        "cracking_validity": 7.5,
+        "other_requirements": 9.5,
+        "performance_stability": 7,
+        "usability": 9,
+        "maintainability_test_protection": 8.5
+      },
+      "vectorsPassed": 123,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 8,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 17589,
+      "returnedCandidates": 17589,
+      "noneMedianSeconds": 1.743315,
+      "exampleMedianSeconds": 1.816387416,
+      "buildWallSeconds": 2093.638177,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 0,
+      "externalCancelMs": null,
+      "builderReviewerOuterCalls": 346,
+      "builderReviewerTokens": {
+        "input_tokens": 46564008,
+        "cached_input_tokens": 45964032,
+        "output_tokens": 198808,
+        "reasoning_output_tokens": 96195,
+        "total_tokens": 46762816,
+        "uncached_input_tokens": 599976
+      },
+      "status": "Valid long crib rejected by a 48-character limit.",
+      "buildTimeDefinition": null,
+      "tokenScope": "Sum of saved provider response-usage records within dispatch-to-freeze window; cached input included; reasoning subset of output.",
+      "methodValidity": {
+        "activation": null,
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.5",
+      "date": "2026-10-17",
+      "score": 83.25,
+      "categories": {
+        "correctness": 10,
+        "cracking_validity": 7,
+        "other_requirements": 9.5,
+        "performance_stability": 8.5,
+        "usability": 7,
+        "maintainability_test_protection": 7.5
+      },
+      "vectorsPassed": 123,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 7,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 112,
+      "returnedCandidates": 116,
+      "noneMedianSeconds": 0.23429925,
+      "exampleMedianSeconds": 0.407247917,
+      "buildWallSeconds": 1420.64599,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 0,
+      "externalCancelMs": null,
+      "builderReviewerOuterCalls": 260,
+      "builderReviewerTokens": {
+        "input_tokens": 28300533,
+        "cached_input_tokens": 27908608,
+        "output_tokens": 115650,
+        "reasoning_output_tokens": 51182,
+        "total_tokens": 28416183,
+        "uncached_input_tokens": 391925
+      },
+      "status": "Invalid candidates; mobile and validation findings.",
+      "buildTimeDefinition": null,
+      "tokenScope": "Sum of saved provider response-usage records within dispatch-to-freeze window; cached input included; reasoning subset of output.",
+      "methodValidity": {
+        "activation": null,
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.6",
+      "date": "2026-10-17",
+      "score": 79.5,
+      "categories": {
+        "correctness": 10,
+        "cracking_validity": 7.5,
+        "other_requirements": 8,
+        "performance_stability": 3,
+        "usability": 8.5,
+        "maintainability_test_protection": 8.5
+      },
+      "vectorsPassed": 123,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 7,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 17584,
+      "returnedCandidates": 17584,
+      "noneMedianSeconds": 12.994635333,
+      "exampleMedianSeconds": 13.041230583,
+      "buildWallSeconds": 869.055039,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 1,
+      "externalCancelMs": 35,
+      "builderReviewerOuterCalls": 125,
+      "builderReviewerTokens": {
+        "input_tokens": 11953142,
+        "cached_input_tokens": 11705728,
+        "output_tokens": 59287,
+        "reasoning_output_tokens": 24315,
+        "total_tokens": 12012429,
+        "uncached_input_tokens": 247414
+      },
+      "status": "Invalid AIM method attribution: no native ledger.",
+      "buildTimeDefinition": null,
+      "tokenScope": "Sum of saved provider response-usage records within dispatch-to-freeze window; cached input included; reasoning subset of output.",
+      "methodValidity": {
+        "activation": "invalid",
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.7",
+      "date": "2026-10-17",
+      "score": 84.25,
+      "categories": {
+        "correctness": 10,
+        "cracking_validity": 9.5,
+        "other_requirements": 7.5,
+        "performance_stability": 2,
+        "usability": 8.5,
+        "maintainability_test_protection": 9
+      },
+      "vectorsPassed": 123,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 3,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 203,
+      "returnedCandidates": 203,
+      "noneMedianSeconds": 3.977839208,
+      "exampleMedianSeconds": 9.263665416,
+      "buildWallSeconds": 1896.187139,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 6,
+      "externalCancelMs": 263,
+      "builderReviewerOuterCalls": 203,
+      "builderReviewerTokens": {
+        "input_tokens": 22544923,
+        "cached_input_tokens": 21979776,
+        "output_tokens": 153351,
+        "reasoning_output_tokens": 72324,
+        "total_tokens": 22698274,
+        "uncached_input_tokens": 565147
+      },
+      "status": "Method validity unknown; six positive-case timeouts.",
+      "buildTimeDefinition": null,
+      "tokenScope": "Sum of saved provider response-usage records within dispatch-to-freeze window; cached input included; reasoning subset of output.",
+      "methodValidity": {
+        "activation": "unknown",
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.8",
+      "date": "2026-10-17",
+      "score": null,
+      "categories": null,
+      "vectorsPassed": null,
+      "vectorsTotal": null,
+      "positiveWithValidCrib": null,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": null,
+      "independentlyValidCandidates": null,
+      "returnedCandidates": null,
+      "noneMedianSeconds": null,
+      "exampleMedianSeconds": null,
+      "buildWallSeconds": null,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": null,
+      "externalCancelMs": null,
+      "builderReviewerOuterCalls": null,
+      "builderReviewerTokens": null,
+      "status": "No full Enigma product run or product result.",
+      "buildTimeDefinition": null,
+      "tokenScope": null,
+      "methodValidity": {
+        "activation": null,
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.9",
+      "date": "2026-10-17",
+      "score": 68.0,
+      "categories": {
+        "correctness": 1,
+        "cracking_validity": 9.5,
+        "other_requirements": 10,
+        "performance_stability": 4,
+        "usability": 9,
+        "maintainability_test_protection": 9
+      },
+      "vectorsPassed": 1,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 1,
+      "positiveWithValidCribAndPreview": 0,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 102,
+      "returnedCandidates": 104,
+      "noneMedianSeconds": 0.34937875,
+      "exampleMedianSeconds": 0.866485333,
+      "buildWallSeconds": 1943.614181,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 0,
+      "externalCancelMs": 32,
+      "builderReviewerOuterCalls": 255,
+      "builderReviewerTokens": {
+        "input_tokens": 33329333,
+        "cached_input_tokens": 32776320,
+        "output_tokens": 167156,
+        "reasoning_output_tokens": 92815,
+        "total_tokens": 33496489,
+        "uncached_input_tokens": 553013
+      },
+      "status": "Stopped before native review; invalid terminal evidence; ring defect.",
+      "buildTimeDefinition": null,
+      "tokenScope": "Sum of saved provider response-usage records within dispatch-to-freeze window; cached input included; reasoning subset of output.",
+      "methodValidity": {
+        "activation": "valid",
+        "submission": "invalid",
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.10",
+      "date": null,
+      "score": null,
+      "categories": null,
+      "vectorsPassed": null,
+      "vectorsTotal": null,
+      "positiveWithValidCrib": null,
+      "positiveWithValidCribAndPreview": null,
+      "positiveTotal": null,
+      "independentlyValidCandidates": null,
+      "returnedCandidates": null,
+      "noneMedianSeconds": null,
+      "exampleMedianSeconds": null,
+      "buildWallSeconds": null,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": null,
+      "externalCancelMs": null,
+      "builderReviewerOuterCalls": null,
+      "builderReviewerTokens": null,
+      "status": "No full Enigma product run; bounded component checks only.",
+      "buildTimeDefinition": null,
+      "tokenScope": null,
+      "methodValidity": {
+        "activation": null,
+        "submission": null,
+        "retrospectiveCertification": false
+      }
+    },
+    {
+      "version": "4.4.0-rc.11",
+      "date": "2026-10-18",
+      "score": 96.5,
+      "categories": {
+        "correctness": 10,
+        "cracking_validity": 10,
+        "other_requirements": 10,
+        "performance_stability": 9,
+        "usability": 9,
+        "maintainability_test_protection": 8.5
+      },
+      "vectorsPassed": 123,
+      "vectorsTotal": 123,
+      "positiveWithValidCrib": 9,
+      "positiveWithValidCribAndPreview": 9,
+      "positiveTotal": 9,
+      "independentlyValidCandidates": 114,
+      "returnedCandidates": 114,
+      "noneMedianSeconds": 0.11309837499999997,
+      "exampleMedianSeconds": 0.11432633400000008,
+      "buildWallSeconds": 2243.502066,
+      "currencyCost": null,
+      "accountUsagePercent": null,
+      "timeouts": 0,
+      "externalCancelMs": 807,
+      "builderReviewerOuterCalls": 349,
+      "builderReviewerTokens": {
+        "input_tokens": 35187018,
+        "cached_input_tokens": 34486272,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 211244,
+        "reasoning_output_tokens": 108293,
+        "total_tokens": 35398262,
+        "uncached_input_tokens": 700746
+      },
+      "status": "Product quality floor met; native delivery unfinished and selected B target missed.",
+      "buildTimeDefinition": "Recorded dispatch-to-source-stop window for an unfinished native delivery; includes planning and overlapping review, not summed agent time or completed accepted work.",
+      "tokenScope": "Observed cumulative builder and separate reviewer trace fields, including cached replay; excludes parent coordination and external assessment. Not currency or unique method context.",
+      "methodValidity": {
+        "activation": "valid",
+        "submission": "valid",
+        "retrospectiveCertification": false,
+        "outcome": "failed"
+      }
+    }
+  ],
+  "currentAssessment": {
+    "assessedAt": "2026-10-18T08:36:56.962021+00:00",
+    "aimVersion": "4.4.0-rc.11",
+    "model": "gpt-6-luna",
+    "reasoningEffort": "high",
+    "buildsUsed": 1,
+    "separateReviewersUsed": 1,
+    "additionalBaselines": 0,
+    "modelMatrixRuns": 0,
+    "protocolSha256": "c235176669b7394c65cca69c4a81a22c9fac7f3da844a5a562afb945a50a7cb0",
+    "firstSubmissionManifestSha256": "5cfd463b9351635fab4f1a2a5d4c1307ca37e1c2c88f11ffc62f50662fd017d7",
+    "weightedScore": 96.5,
+    "minimumRequired": 93.5,
+    "historicalReference": {
+      "actualVersion": "3.2.0",
+      "score": 93.5
+    },
+    "minimumScoreMet": true,
+    "zeroMaterialCentralFlowFindings": true,
+    "productQualityFloorMet": true,
+    "allSelectedNumericGoalsMet": false,
+    "nativeDeliveryReady": false,
+    "goalMet": false,
+    "originalManifestGoalMet": false,
+    "categories": [
+      {
+        "id": "correctness",
+        "score": 10,
+        "weight": 25
+      },
+      {
+        "id": "cracking_validity",
+        "score": 10,
+        "weight": 30
+      },
+      {
+        "id": "other_requirements",
+        "score": 10,
+        "weight": 15
+      },
+      {
+        "id": "performance_stability",
+        "score": 9,
+        "weight": 10
+      },
+      {
+        "id": "usability",
+        "score": 9,
+        "weight": 10
+      },
+      {
+        "id": "maintainability_test_protection",
+        "score": 8.5,
+        "weight": 10
+      }
+    ],
+    "simulator": {
+      "passed": 123,
+      "total": 123,
+      "independentReferenceVectorsPassed": 123
+    },
+    "search": {
+      "cases": 14,
+      "completed": 14,
+      "positiveCases": 9,
+      "positiveCasesWithValidCrib": 9,
+      "positiveCasesWithValidCribAndMatchingPreview": 9,
+      "returnedCandidates": 114,
+      "independentlyValidCribs": 114,
+      "placementAllowed": 114,
+      "previewMatches": 114,
+      "validCribAndPreview": 114,
+      "timeouts": 0,
+      "errors": 0,
+      "countConsistent": 14,
+      "limit": "Native100 displayed, full feasible scan; every retained candidate independently replayed."
+    },
+    "timing": {
+      "unit": "ms",
+      "fixedWorkloadMedians": {
+        "none": 113.09837499999998,
+        "shared-example-naked": 114.32633400000009
+      },
+      "fixedRawSamples": {
+        "none": [
+          122.69541699999999,
+          113.09837499999998,
+          108.71449999999999
+        ],
+        "shared-example-naked": [
+          128.14812499999994,
+          114.32633400000009,
+          109.554667
+        ]
+      },
+      "A_coreMedian": 4391.336833000001,
+      "A_browserMedian": 4637.799999952316,
+      "B_coreMedian": 5518.997458000002,
+      "B_browserMedian": null,
+      "goal": 5000,
+      "nativeCombinedA": 4473.727729,
+      "nativeCombinedASamples": 6,
+      "limits": "Separate per-path medians, internal selected goals and fixed external timing remain separate. Different historical environments; no causal speedup."
+    },
+    "browser": {
+      "passed": 14,
+      "total": 15,
+      "heartbeatMs": 100,
+      "cancelMs": 807,
+      "errors": [],
+      "extraProbes": 1,
+      "extraProbeInFixedDenominator": false,
+      "mobileViewport": 390,
+      "mobileScrollWidth": 391,
+      "primaryControlsFit": true
+    },
+    "integrity": {
+      "frozenSourceFiles": 55,
+      "frozenSourceUnchanged": true,
+      "protectedEarlierFiles": 303,
+      "protectedEarlierUnchanged": true,
+      "pinnedInstalledMethodFiles": 80,
+      "pinnedMethodUnchanged": true,
+      "originalAssessmentInputsUnchanged": true
+    },
+    "acceptanceClaim": false,
+    "nativeSubmission": {
+      "aimMethodValidity": "valid",
+      "revision": 5,
+      "nativePhase": "in_progress",
+      "outcome": "failed",
+      "nextAction": "correct_or_decide",
+      "goals": [
+        {
+          "goalId": "KPI-SEARCH-100",
+          "state": "passed",
+          "value": 4473.727729,
+          "sampleCount": 6,
+          "unit": "ms"
+        },
+        {
+          "goalId": "KPI-SEARCH-VARIANTS",
+          "state": "failed",
+          "value": 5518.997458000002,
+          "sampleCount": 3,
+          "unit": "ms"
+        }
+      ],
+      "checks": [
+        {
+          "checkId": "QC-VECTOR",
+          "state": "passed"
+        },
+        {
+          "checkId": "QC-STEPPING",
+          "state": "passed"
+        },
+        {
+          "checkId": "QC-SEARCH-100",
+          "state": "passed"
+        },
+        {
+          "checkId": "QC-SEARCH-VARIANTS",
+          "state": "unmeasured"
+        },
+        {
+          "checkId": "QC-SEARCH-NONE",
+          "state": "unmeasured"
+        }
+      ]
+    },
+    "nativeGateDReached": false,
+    "minorFindings": [
+      {
+        "kind": "mobile_overflow",
+        "viewportWidthPx": 390,
+        "documentWidthPx": 391,
+        "primaryControlsFit": true
+      },
+      {
+        "kind": "non_ascii_crib_validation_inconsistency",
+        "fixedBrowserDenominator": false,
+        "severity": "minor",
+        "supportedAZSearchFailureEstablished": false
+      }
+    ],
+    "assistedBehavior": {
+      "coordinatorInterventions": 2,
+      "parentProductRepairs": 0,
+      "separateReviewerObserved": true,
+      "autonomousFutureAdherenceProved": false
+    },
+    "externalTimingMethod": "Shipped async search with slice1000 and limit100, matching actual UI/worker defaults; one persistent Node worker; one warmup and three raw runs, no concurrent heavy work.",
+    "externalTimingNode": "v26.7.0",
+    "externalTimingSamples": [
+      {
+        "id": "none",
+        "repeat": 0,
+        "warmup": true,
+        "elapsedMs": 124.36558399999998,
+        "coreElapsedMs": 123.828584,
+        "complete": true,
+        "checked": 17576,
+        "total": 17576
+      },
+      {
+        "id": "none",
+        "repeat": 1,
+        "warmup": false,
+        "elapsedMs": 122.79637500000001,
+        "coreElapsedMs": 122.69541699999999,
+        "complete": true,
+        "checked": 17576,
+        "total": 17576
+      },
+      {
+        "id": "none",
+        "repeat": 2,
+        "warmup": false,
+        "elapsedMs": 113.18933400000003,
+        "coreElapsedMs": 113.09837499999998,
+        "complete": true,
+        "checked": 17576,
+        "total": 17576
+      },
+      {
+        "id": "none",
+        "repeat": 3,
+        "warmup": false,
+        "elapsedMs": 108.81491700000004,
+        "coreElapsedMs": 108.71449999999999,
+        "complete": true,
+        "checked": 17576,
+        "total": 17576
+      },
+      {
+        "id": "shared-example-naked",
+        "repeat": 0,
+        "warmup": true,
+        "elapsedMs": 120.816958,
+        "coreElapsedMs": 120.64366600000005,
+        "complete": true,
+        "checked": 17576,
+        "total": 17576
+      },
+      {
+        "id": "shared-example-naked",
+        "repeat": 1,
+        "warmup": false,
+        "elapsedMs": 128.250625,
+        "coreElapsedMs": 128.14812499999994,
+        "complete": true,
+        "checked": 17576,
+        "total": 17576
+      },
+      {
+        "id": "shared-example-naked",
+        "repeat": 2,
+        "warmup": false,
+        "elapsedMs": 114.44191699999999,
+        "coreElapsedMs": 114.32633400000009,
+        "complete": true,
+        "checked": 17576,
+        "total": 17576
+      },
+      {
+        "id": "shared-example-naked",
+        "repeat": 3,
+        "warmup": false,
+        "elapsedMs": 109.63654199999996,
+        "coreElapsedMs": 109.554667,
+        "complete": true,
+        "checked": 17576,
+        "total": 17576
+      }
+    ]
+  },
+  "historicalContradictions": [
+    "Stored RC7 summary says a fixed-placement 12-letter search target of 5 seconds, while its frozen native ledger specifies all legal placements and 10 seconds. Neither source is rewritten.",
+    "Unicode category attribution differs across historical assessments. The RC9 claim of matching RC7 categorization conflicts with retained RC7 evidence. All historical scores are preserved without rescoring."
+  ],
+  "limits": [
+    "One fresh RC11 run and one separate reviewer; no rerun, new baseline or reliability distribution. RC8 and RC10 have no full Enigma result; RC1 has no retained weighted score.",
+    "Same original PRD, 123 vectors, 14 cases and six category weights; internal goals, prompts, learning, runtime paths, candidate caps, budgets and timing definitions differ. This is not a controlled causal version comparison.",
+    "Older product scores do not retroactively certify AIM activation. RC6 is invalid, RC7 unknown, RC9 activation valid but submission invalid; RC11 guard validity preserves a failed unfinished attempt.",
+    "Fixed external timing, internal witness timing, UI timing and build wall time are distinct. Historical direct cores and later async/default limits differ. No cross-version speedup ratio is claimed.",
+    "Candidate counts and caps differ. Candidate validity is not positive-case coverage; preview validation is separately reported only where retained. Unknown preview counts remain null.",
+    "The recorded 5-second A/B target is an internal engineering goal, not a numeric SLA in the original PRD. B browser proof and native variants/no-result checks remain missing.",
+    "Cached input is a subset of input tokens; reasoning is a subset of output. Outer tool calls include product work and are not method/status rounds. Historical token windows differ and may overlap parent/helper activity outside the named builder scope.",
+    "Neither original 50-percent target is proven. Pure administration, comparable complete method context, actual currency cost and account usage percentage remain unknown. No subscription charge is inferred.",
+    "RC11 learning and coordinator assistance were observed; no causal learning benefit, universal prevention, full workflow recovery, general superiority, manifest completion or user acceptance follows.",
+    "Later source revisions have no new Enigma result in this export. The latest evaluated version identifies exact frozen test provenance, not every subsequent AIM source revision.",
+    "This public numeric export supports result inspection and arithmetic checking. It is not a product rebuild kit or a complete replay package; original frozen artifacts remain preserved separately."
+  ],
+  "latestEvaluatedVersion": "4.4.0-rc.11",
+  "referenceVersion": "3.2.0",
+  "latestProductScore": 96.5,
+  "referenceProductScore": 93.5,
+  "prdSha256": "59ab6a803dd15e40a68f20f56b2ffcc081b3a0ac60aec873f5c93c2d733a9493",
+  "lockedAssessmentInputHashes": {
+    "vectors.json": "759cf9d0d158950248ccb6db7f59bc0dd3a24fd6e06ee6cbf5e3212381c377ed",
+    "cases.json": "7404f672b8893af7a4d1158f0c5df129890ae936030647e49d6ebd8b988f0580",
+    "plan.json": "08b0220798c2d40f075e6e86e648ba2f9b96fee0842a178ba41f1c13de001fc1"
+  },
+  "unmeasuredOriginalTargets": {
+    "methodStatusRoundsReductionPercent": null,
+    "wholeMethodContextReductionPercent": null,
+    "pureAdministrationSeconds": null,
+    "actualCurrencyCost": null,
+    "accountUsagePercent": null
+  }
+}

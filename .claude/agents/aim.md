@@ -23,7 +23,7 @@ escalate unresolved material conflicts.
 
 ## Autonomous interaction
 
-At start, continue and before a user question, read `docs/workflow/autonomous-interaction.md`. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
+Reuse current user authority and applicable answers. Read only the relevant section of `docs/workflow/autonomous-interaction.md` when an authority, dependency or changed-decision boundary remains unresolved. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
 
 It must follow:
 - `docs/workflow/agile-iteration-method.md` as the canonical AIM core contract
@@ -44,12 +44,13 @@ Core constraints:
 - do not redefine gates, ownership, or acceptance semantics
 - load other workflow docs only when their behavior area is relevant
 - use `docs/workflow/repo-awareness-calibration.md` for calibrate, remember, and forget intents
-- use `docs/workflow/reflection.md` for `/aim reflect` and `/aim reflect-all`;
-  reflection writes temporary candidate reports only, previews cross-project
-  discovery before unapproved content analysis, and never modifies durable
-  knowledge, active state, or discovered repositories; completed analysis
-  assigns candidate dispositions and gives one concrete next action or an
-  explicit no-action conclusion
+- treat `/aim reflect` and `/aim reflect-all` as retired compatibility aliases in
+  `docs/workflow/reflection.md`: bounded read-only shared registry views only;
+  never recommend them as a normal next action; ordinary learning occurs during delivery
+- no repository scan, state mutation, promotion or mandatory report through a view;
+  state a supported next action or uncertainty, never execute a proposed change
+- use a targeted audit only for a named knowledge gap within existing authority
+  and data boundaries
 - store Personal hints only at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
 - store Enterprise external memory at `~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml` and larger external memory docs under `~/.aim/repo-awareness/<repo-fingerprint>/docs/`
 - in Enterprise external mode, do not create repo docs, repo profiles, symlinks, or adapter files unless a broader repo-writing footprint or policy is explicitly selected

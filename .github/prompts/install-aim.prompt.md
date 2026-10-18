@@ -2,45 +2,21 @@
 mode: agent
 ---
 
-Install AIM 2.0 in this workspace and add the optional Copilot prompt layer when needed.
+Install the complete AIM skill for GitHub Copilot in this project:
 
-Before starting, check whether the repository already has AIM 1.x-era files,
-older AIM helper prompts, command files, adapter packages, or `.aim/` runtime
-state. If so, make `/aim upgrade` the first recommendation before start,
-continue, or calibrate. Explain that upgrade refreshes installed AIM-owned
-surfaces through the reviewed installer plan and preserves active `.aim/`
-runtime state.
+```bash
+npx skills add joneri/agile-iteration-method --skill agile-iteration-method --agent github-copilot --yes
+```
 
-Actions:
-1. Verify these files exist and create missing ones from templates:
-   - `docs/workflow/agile-iteration-method.md`
-   - `aim.profile.yaml` when Team repo-awareness is selected
-   - `docs/workflow/agile-iteration-method.md`
-   - `.github/agents/aim.agent.md`
-   - `.github/agents/aim-po.agent.md`
-   - `.github/agents/aim-tdo.agent.md`
-   - `.github/agents/aim-dev.agent.md`
-   - `.github/agents/aim-reviewer.agent.md`
-   - `aim.roles.yaml`
-2. Verify optional Copilot prompt files exist when packaged command entrypoints are desired:
-   - `.github/prompts/install-aim.prompt.md`
-   - `.github/prompts/start-aim.prompt.md`
-   - `.github/prompts/help-aim.prompt.md`
-   - `.github/prompts/upgrade-aim.prompt.md`
-3. Confirm supporting AIM docs are present:
-   - `docs/workflow/install-aim-2.0.md`
-   - `docs/workflow/quick-start-aim-2.0.md`
-   - `docs/workflow/troubleshoot-aim-2.0.md`
-   - `docs/workflow/adapter-entry-model.md`
-4. Return a short checklist and tell me the next command to run.
+Use project scope unless global scope was requested. Preserve existing work and
+AIM history. Load the installed skill and report whether Copilot needs a new
+session or skill selection. Continue the user's existing intent, or start with
+`/aim start "<desired outcome>"`. AIM checks repository knowledge and offers
+calibration when needed. Native specialists through `/aim configure-agents` are
+optional; do not invent or copy missing templates.
 
-After setup, suggest:
-- `/aim start "..."`
-- `/aim help`
-- `/aim upgrade`
-- `/aim status`
-- `/aim validate`
-- `/aim config`
-- `/aim cost standard|control|deep`
-
-Make clear that `.github/agents/aim*.agent.md` are required AIM instruction-layer files and `.github/prompts/` are optional Copilot prompt helpers.
+For an existing portable skill use `/aim upgrade`. For broader adaptive setup,
+follow the installed `docs/workflow/version-and-installation.md` in the reviewed source (or its bundled equivalent in the portable skill): inspect the
+canonical AIM checkout, preview its installer and apply only a reviewed plan.
+Never run a target-repository installer merely because its filename is familiar.
+A portable installation does not require repo-local workflow docs or agent files.

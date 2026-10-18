@@ -48,10 +48,18 @@ class PublicSkillTests(unittest.TestCase):
             self.assertIn(f"### {section}", commands)
         self.assertIn("authorityStatePath", dispatch)
         self.assertIn("before another state file", dispatch)
+        for command, contract in (("/aim to-backlog", "Backlog import"),
+                                  ("/aim repair-catalog", "Catalog repair")):
+            route = next(line for line in dispatch.splitlines() if command in line)
+            self.assertIn(contract, route)
+            self.assertIn(f"### {contract}", commands)
+        self.assertIn("capacity", dispatch)
+        self.assertRegex(dispatch, r"missing or ambiguous operations[\s\S]*adapter-command-contract.md")
         for role in ("po", "tdo", "dev", "reviewer"):
             relative = f"references/role-skill-{role}.md"
-            self.assertIn(relative, entry)
             self.assertIn(Path(relative), package)
+        self.assertIn("references/role-skill-<role>.md", entry)
+        self.assertIn("for the active role", entry)
 
     def _copy_repo(self, temporary: str) -> Path:
         copied = Path(temporary) / "repo"
@@ -263,8 +271,6 @@ class PublicSkillTests(unittest.TestCase):
             "/aim calibrate-repo",
             '/aim remember-repo <category> "<rule>"',
             '/aim forget-repo <category> "<rule-id>"',
-            "/aim reflect",
-            "/aim reflect-all",
             "/aim upgrade",
             "/aim mode strict|auto",
             "/aim cost standard|control|deep",
@@ -275,6 +281,9 @@ class PublicSkillTests(unittest.TestCase):
         guide = skill.split("## Complete Command Guide", 1)[1].split(
             "## Native Entry Surface", 1
         )[0]
+        for retired in ("/aim reflect", "/aim reflect-all"):
+            self.assertNotIn(retired, guide)
+            self.assertIn(retired, render_package(REPO_ROOT)[Path("references/reflection.md")].decode("utf-8"))
         for command in commands:
             with self.subTest(command=command):
                 self.assertIn(command, guide.replace("\\|", "|"))
@@ -379,6 +388,12 @@ class PublicSkillTests(unittest.TestCase):
         for path, payload in rendered.items():
             content = payload.decode("utf-8", errors="replace")
             with self.subTest(path=path):
+                if path.suffix == ".json" and path.parts[0] == "scripts":
+                    # Data contracts reject extra fields; provenance belongs in the package manifest.
+                    manifest = json.loads(rendered[Path("manifest.json")])
+                    row = next(item for item in manifest["sourceProvenance"] if item["output"] == path.as_posix())
+                    self.assertEqual(payload, (REPO_ROOT / row["source"]).read_bytes())
+                    continue
                 self.assertTrue(
                     GENERATED_NOTICE in content or compact_notice in content,
                     f"missing generated notice in {path}",

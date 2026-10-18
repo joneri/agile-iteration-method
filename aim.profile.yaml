@@ -77,6 +77,12 @@ aimRepoProfile:
         source: repository-maintainer-confirmation
         verified: true
     uiTesting:
+      - id: ui-planning-journey
+        command: python3 scripts/verify_aim_ui.py
+        source: scripts/verify_aim_ui.py
+        purpose: Drive real planning and stale-selection behavior in an isolated synthetic workspace; preserve raw browser evidence.
+        confidence: medium
+        verified: true
       - id: ui-http-boundary
         command: python3 -m unittest discover -s tests -p 'test_aim_http.py'
         source: tests/test_aim_http.py
@@ -84,6 +90,10 @@ aimRepoProfile:
         confidence: high
         verified: true
     docs:
+      - id: ui-verification
+        path: docs/product/aim-ui-verification.md
+        loading: load_when_relevant
+        when: changing or verifying the AIM UI planning journey, instance identity or stale-selection handling
       - id: aim-core
         path: docs/workflow/agile-iteration-method.md
         loading: authoritative

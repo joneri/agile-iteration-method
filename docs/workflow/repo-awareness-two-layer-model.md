@@ -1,4 +1,4 @@
-# AIM 2.0 Two-Layer Repo Awareness
+# AIM Two-Layer Repo Awareness
 
 ## Purpose
 

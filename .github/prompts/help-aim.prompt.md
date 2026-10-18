@@ -2,7 +2,7 @@
 mode: aim
 ---
 
-Show short AIM 2.0 help for this repository.
+Show short AIM help for this repository.
 
 Detect onboarding state first, then recommend exactly one next action whenever
 possible.

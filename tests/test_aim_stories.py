@@ -20,6 +20,18 @@ from aim_ui import build_board
 from aim_validator.schema_subset import unsupported_keywords
 
 
+def review_evidence(case, **changes):
+    """Synthetic separate reviewer for lifecycle fixtures, not real provenance."""
+    delivery = case.document['deliveries'][0]
+    record = dict(version=1, scopeSha256=delivery['scopeSha256'],
+                  sources=copy.deepcopy(delivery['productBindings']),
+                  implementers=[dict(id='fixture-author', session='fixture-implementation')],
+                  reviewer=dict(id='fixture-reviewer', session='fixture-review'),
+                  reviewMode='independent', findings=[])
+    record.update(changes)
+    return case.artifact('fixture-review-'+str(case.document['revision'])+'.json', json.dumps(record))
+
+
 class StoryDeliveryTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -53,9 +65,49 @@ class StoryDeliveryTests(unittest.TestCase):
         return {"path": path.relative_to(self.repo).as_posix(), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
 
     def mutate(self, command, request):
+        # Ordinary lifecycle fixtures supply the new quality contract. Negative
+        # contract tests call execute directly to avoid this synthetic setup.
+        if command == "plan" and "qualityPlan" not in request:
+            selected = [s for s in self.document['stories'] if s['id'] in request['storyIds']]
+            refs = [s['id']+'/'+ac['id'] for s in selected for ac in s['acceptanceCriteria']]
+            goal_ids = [g['id'] for g in request.get('qualityGoals', [])]
+            checks = [dict(id='QC-JOURNEY', criteria=refs, kind='journey', stage='both',
+                           workload='both fixture personas', environment='fixture host',
+                           method='synthetic lifecycle oracle', expected={'recoverable':1, 'explainable':1}, goalIds=[])]
+            if goal_ids:
+                checks.append(dict(id='QC-NUMERIC', criteria=refs, kind='behavior', stage='delivery',
+                                   workload='numeric fixture', environment='fixture host',
+                                   method='linked raw measurements', expected={}, goalIds=goal_ids))
+            request = {**request, 'qualityPlan':dict(checks=checks, numericGoals='required' if goal_ids else 'not_applicable',
+                reviewPolicy=dict(mode='independent'),
+                primaryResult=dict(checkId='QC-JOURNEY', notApplicableReason='Synthetic state-transition fixture, not a computation workload; latency behavior is covered by the delivery-quality fixture.'),
+                caseCoverage=dict(failureCases=dict(checkIds=['QC-JOURNEY']),
+                    nonDefaultModes=dict(notApplicableReason='No selectable modes in this lifecycle fixture.'),
+                    resultValidity=dict(checkIds=['QC-JOURNEY']),
+                    workloadFamilies=dict(notApplicableReason='Lifecycle fixture metrics are unrelated to runtime workloads.')),
+                rationale='Lifecycle fixture; numeric requirements come only from the test case.',
+                sharedRequirements=[dict(source='INT-ACCESS', requirement='Both personas retain usable recovery behavior', checkIds=['QC-JOURNEY'])])}
+        if command == 'validate' and self.document['deliveries'][0]['status'] == 'review':
+            # Ordinary lifecycle tests synthesize a review. Native review
+            # rejection tests use the unwrapped delivery-quality fixture.
+            request = {**request, 'evidence':[review_evidence(self), *request['evidence']]}
         result = execute(self.repo, command, request, self.token)
         self.token = result["storeSha256"]
         self.document = result["document"]
+        if command in {'approve', 'rework'}:
+            delivery = next(d for d in self.document['deliveries'] if d['id'] == request['deliveryId'])
+            if 'qualityPlan' in delivery:
+                binding = {'path':'app.py','sha256':hashlib.sha256((self.repo/'app.py').read_bytes()).hexdigest()}
+                check = delivery['qualityPlan']['checks'][0]
+                report = dict(qualityMeasurementVersion='1.0', measurements=[], qualityCheckVersion='1.0', checks=[dict(
+                    checkId=check['id'], **{k:check[k] for k in ('workload','environment','method')},
+                    observed={'recoverable':1, 'explainable':1}, productBindingsSha256=digest([binding]))])
+                evidence = self.artifact('fixture-core-'+str(self.document['revision'])+'.json', json.dumps(report))
+                data = dict(deliveryId=delivery['id'], qualityMeasurements=[evidence], bindings=[binding])
+                if 'coreVerification' in delivery:
+                    data['response']='Synthetic fixture correction: record the current implementation.'
+                self.mutate('measure', data)
+                result['document'], result['storeSha256'] = self.document, self.token
         return result
 
     def plan(self):
@@ -296,8 +348,11 @@ class StoryDeliveryTests(unittest.TestCase):
             validate_document(forged)
 
     def test_confirmed_commit_returns_snapshot_without_followup_read(self):
+        self.plan()
         original = load
         reads = []
+        committed = False
+        replace, is_file = os.replace, Path.is_file
 
         def only_precommit(*args, **kwargs):
             reads.append(True)
@@ -305,10 +360,32 @@ class StoryDeliveryTests(unittest.TestCase):
                 raise OSError("post-commit read unavailable")
             return original(*args, **kwargs)
 
-        with patch("aim_stories.load", side_effect=only_precommit):
+        def commit(*args, **kwargs):
+            nonlocal committed
+            replace(*args, **kwargs)
+            committed = True
+
+        def instruction_available(path):
+            if committed and path.name.startswith('role-skill-'):
+                raise OSError('post-commit role instructions unavailable')
+            return is_file(path)
+
+        with patch("aim_stories.load", side_effect=only_precommit), \
+                patch("aim_stories.os.replace", side_effect=commit), \
+                patch.object(Path, 'is_file', instruction_available):
             result = self.mutate("refine", {"stories": []})
         self.assertEqual(len(reads), 1)
+        self.assertTrue(committed)
         self.assertEqual(result["storeSha256"], hashlib.sha256((self.repo / FILE).read_bytes()).hexdigest())
+        before = (self.repo / FILE).read_bytes()
+        def unavailable(path):
+            if path.name.startswith('role-skill-'):
+                raise OSError('role instructions unavailable')
+            return is_file(path)
+        with patch.object(Path, 'is_file', unavailable):
+            with self.assertRaisesRegex(OSError, 'role instructions unavailable'):
+                execute(self.repo, 'refine', {'stories':[]}, self.token)
+        self.assertEqual((self.repo / FILE).read_bytes(), before)
 
     def test_block_resume_does_not_discard_original_phase(self):
         self.approve()

@@ -9,7 +9,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from aim_quality.timing import summarize_timing
+from aim_quality.timing import summarize_timing, summarize_trace
 
 
 class TimingTests(unittest.TestCase):
@@ -116,6 +116,67 @@ class TimingTests(unittest.TestCase):
             self.assertEqual(len(list(root.iterdir())), 1)
             run = subprocess.run(command + ["../outside.json"], cwd=root, capture_output=True, text=True, timeout=10)
             self.assertEqual(run.returncode, 2)
+
+
+class TraceTests(unittest.TestCase):
+    def events(self):
+        def event(second, kind, identifier, **fields):
+            return {"timestamp": f"2026-10-16T10:00:{second:02d}Z", "type": "response_item",
+                    "payload": {"type": kind, "call_id": identifier, **fields}}
+        return [event(0, "custom_tool_call", "a", input="å"),
+                event(1, "function_call", "b", arguments="{}"),
+                event(2, "custom_tool_call_output", "a", output="ok"),
+                event(3, "function_call_output", "b", output="ok")]
+
+    def payload(self, events):
+        return "\n".join(json.dumps(e) for e in events).encode()
+
+    def test_overlaps_bytes_and_budgets_do_not_invent_model_or_io_time(self):
+        report = summarize_trace(self.payload(self.events()), "a", "b",
+                                 activity="administration", max_calls=1, max_input_bytes=4)
+        self.assertEqual((report['toolCalls'], report['inputBytes'], report['outputBytes']), (2, 4, 4))
+        self.assertEqual(report['exactRepeatedOutputBytes'], 2)
+        self.assertEqual(report['toolRoundTripUnionSeconds'], 3)
+        self.assertEqual(report['elapsedSeconds'], 3)
+        self.assertEqual(report['outsideToolCallsSeconds'], 0)
+        self.assertEqual(report['exceeded'], [{'metric':'toolCalls','observed':2,'limit':1}])
+        self.assertTrue(report['needsReview'])
+        for key in ('modelSeconds','filesystemSeconds','userWaitingSeconds','fileWrites','tokens'):
+            self.assertIsNone(report[key])
+        self.assertFalse(report['activityIndependentlyVerified'])
+        self.assertEqual(report['sourceBytes'], len(self.payload(self.events())))
+
+    def test_partial_ambiguous_and_reversed_windows_fail(self):
+        events = self.events()
+        for bad in (events[:-1], events[:1]+[events[0]]+events[1:],
+                    events[:2]+[events[3],events[2]], events[1:]):
+            with self.subTest(events=bad), self.assertRaises(ValueError):
+                summarize_trace(self.payload(bad), 'a', 'b')
+        with self.assertRaises(ValueError):
+            summarize_trace(self.payload(events), 'a', 'b', max_calls=-1)
+
+    def test_public_cli_reports_budget_action_without_writes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            for entry in (ROOT/'scripts/aim_engineering.py',
+                          ROOT/'skills/agile-iteration-method/scripts/aim_engineering.py'):
+                run = subprocess.run([sys.executable, '-S', str(entry), 'trace',
+                                      '--first-call','a','--last-call','b','--max-input-bytes','3'],
+                                     input=self.payload(self.events()), capture_output=True,
+                                     cwd=directory, timeout=10)
+                self.assertEqual(run.returncode, 1, run.stderr)
+                report = json.loads(run.stdout)
+                self.assertEqual(report['budgetState'], 'exceeded')
+                self.assertIn('Preserve required checks', report['nextAction'])
+                malformed = self.events()
+                malformed[2]['payload']['call_id'] = []
+                rejected = subprocess.run([sys.executable, '-S', str(entry), 'trace',
+                                          '--first-call','a','--last-call','b'],
+                                         input=self.payload(malformed), capture_output=True,
+                                         cwd=directory, timeout=10)
+                self.assertEqual(rejected.returncode, 2)
+                self.assertIn('error', json.loads(rejected.stdout))
+                self.assertEqual(rejected.stderr, b'')
+                self.assertEqual(list(Path(directory).iterdir()), [])
 
 
 if __name__ == "__main__":

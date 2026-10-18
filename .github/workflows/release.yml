@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Existing release tag to publish, for example v2.2.0"
+        description: "Existing release tag to publish; it must match VERSION"
         required: true
         type: string
 
@@ -91,11 +91,15 @@ jobs:
           version="${{ steps.version.outputs.version }}"
           title="AIM ${version}"
           notes="Validated AIM ${version} release assets."
+          set -- --verify-tag --title "${title}" --notes "${notes}"
+          if [[ "${version}" == *-* ]]; then
+            set -- "$@" --prerelease --latest=false
+          fi
           if gh release view "${version}" >/dev/null 2>&1; then
+            if [[ "${version}" == *-* ]]; then
+              gh release edit "${version}" --prerelease --latest=false
+            fi
             gh release upload "${version}" release-assets/* --clobber
           else
-            gh release create "${version}" release-assets/* \
-              --verify-tag \
-              --title "${title}" \
-              --notes "${notes}"
+            gh release create "${version}" release-assets/* "$@"
           fi

@@ -1,7 +1,9 @@
 # Frozen M3 result: same Luna, a convincing win for AIM 3.2.
 
 Assessed 30 September 2026. These are the original M3 versions, before the M4
-follow-up. [Read the current M3/M4 case](aim-3.2-enigma-case.md).
+follow-up. The stored AIM reference version is **3.2.0**, not 3.2.1.
+[Read the historical M3/M4 case](aim-3.2-enigma-case.md) or
+[AIM's latest assessed Enigma results and limits](aim-enigma-evaluation.md).
 
 **93.5/100 with AIM. 49.8/100 without it.** In this completed Enigma comparison,
 the same GPT-6 Luna model, at high reasoning effort, worked from the same PRD.

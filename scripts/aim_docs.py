@@ -45,7 +45,7 @@ def audit(repo_root: Path) -> list[str]:
     features = _text(repo_root / "docs/product/features.md")
 
     required_version_markers = {
-        "README.md": f"v{version}",
+        "README.md": "[VERSION](VERSION)",
         "CHANGELOG.md": f"release v{version}",
         "index.html": f'"softwareVersion": "{version}"',
     }
@@ -64,7 +64,7 @@ def audit(repo_root: Path) -> list[str]:
 
     required_features = (
         "Delivery loop", "Audience-context integrity", "Control and cost", "Repository knowledge",
-        "AIM UI", "Discuss", "Reflect",
+        "AIM UI", "Discuss", "Shared learning",
         "Project specialists", "Adapters and commands",
         "Installation and upgrades", "Validation and release safety",
     )

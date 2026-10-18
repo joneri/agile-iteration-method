@@ -10,7 +10,7 @@ The front door should help a user choose the next action first, not teach the fu
 
 ## How it works
 
-AIM 4.0 detects onboarding state first, then recommends exactly one next action
+AIM detects onboarding state first, then recommends exactly one next action
 whenever possible.
 
 Use this default shape before showing commands, paths, or architecture:

@@ -1,4 +1,4 @@
-# Discover AIM 4.0
+# Discover AIM
 
 This is the public product guide for Agile Iteration Method.
 
@@ -10,15 +10,26 @@ To see User Stories from different Epics move through planning, implementation,
 review, validation and acceptance, run `/aim ui` from chat and explore [AIM
 UI Beta](aim-ui.md).
 
-For AIM's evidence-backed alternative to opaque memory consolidation, read
-[AIM Reflect](../workflow/reflection.md).
+For advice reused during planning, review and diagnosis, read
+[shared learning during delivery](../workflow/reflection.md).
 
 ## The Short Version
 
 AIM is a structured AI delivery system.
 
 You describe the outcome you want.
-PO owns Epics and product priority. TDO creates and owns Stories and criteria, then plans a coherent increment that can cross Epic boundaries. AIM implements it, reviews and validates every Story, and returns acceptance to you. The working result is an increment; a Sprint is an optional timebox.
+PO owns Epics and product priority. TDO creates and owns Stories and criteria, then plans a coherent increment that can cross Epic boundaries. AIM checks the first working core before expanding it, reviews and validates the delivered behavior, and returns acceptance to you. The working result is an increment; a Sprint is an optional timebox.
+
+Quality goals are agreed before implementation. A separate reviewer challenges
+the core with an independent example; runnable user journeys and retained raw
+results support the final decision. Project knowledge, compact checkpoints and
+relevant shared lessons help later sessions reuse work that still applies.
+
+The [latest completed Enigma evaluation](../features/aim-enigma-evaluation.md)
+scored the AIM 4.4.0-rc.11 application at 96.5/100 against a historical AIM
+3.2.0 reference at 93.5/100. That result belongs to those builds and that
+evaluation. The latest development source contains subsequent changes; it is
+not a claim of general quality or cost advantage.
 
 AIM is designed for real repositories and real delivery constraints:
 

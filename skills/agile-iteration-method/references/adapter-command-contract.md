@@ -8,7 +8,7 @@ Source: docs/workflow/adapter-command-contract.md
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 4.0 Adapter Command Contract
+# AIM Adapter Command Contract
 
 Legacy Epic/DI combined proposals follow [Combined decisions and predictable continuation](streamlined-decisions.md).
 They preserve logical gates while allowing one explicit response for direction
@@ -68,8 +68,6 @@ operation through the agent. No legacy approval or mandate gains Story authority
 | `/aim calibrate-repo` | verify and persist reusable repository knowledge using the canonical calibration flow | writes only approved profile or user-hint facts; never active state |
 | `/aim remember-repo <category> "<rule>"` | add one structured shared or personal repository rule | writes the owning profile or user-hint file; never `.aim/` |
 | `/aim forget-repo <category> "<rule-id>"` | remove one structured repository rule after showing the proposed change | writes the owning profile or user-hint file; never `.aim/` |
-| `/aim reflect` | synthesize evidence from the current AIM project into a temporary, provenance-rich knowledge-candidate report | writes only `.aim/analysis/`; never durable knowledge or active state |
-| `/aim reflect-all` | preview and synthesize selected AIM projects beneath reviewed local discovery roots | writes one temporary report in the initiating project; never modifies discovered repositories |
 | `/aim upgrade` | inspect installed AIM-owned packages, plan a reviewed refresh, and report follow-up calibration or resume actions | must not rewrite active `.aim/` state |
 | `/aim mode strict\|auto` | set execution mode for the active Epic | updates mode in `state.json`; does not approve a gate |
 | `/aim cost standard\|control\|deep` | set runtime depth for the active Epic or increment | updates cost profile in `state.json`; does not approve a gate |
@@ -85,8 +83,11 @@ unsupported or contradictory state stops without mutation.
 
 `/aim calibrate-repo`, `/aim remember-repo`, and `/aim forget-repo` follow
 `repo-awareness-calibration.md`. `/aim reflect` and
-`/aim reflect-all` follow `reflection.md`; reflection is read-only
-with respect to durable knowledge, and promotion is a separate reviewed action.
+`/aim reflect-all` are retired compatibility aliases in `reflection.md`.
+Never recommend them as a normal next step. Ordinary learning is part
+of delivery without either command. Their bounded registry views are read-only;
+an explicit unresolved knowledge question may use the targeted-audit contract.
+Durable changes follow actual existing authority and the reviewed change path.
 
 ## AIM Discuss
 

@@ -1,4 +1,4 @@
-# AIM 2.0 Repo-Awareness Calibration
+# AIM Repo-Awareness Calibration
 
 ## Purpose
 
@@ -112,8 +112,8 @@ freshness. On moves/deletions, repair affected pointers and test links; on a
 changed invariant, update or retire the claim and its discovery pointer. Keep
 unrelated verified knowledge. The checker follows only selected dependency
 closures, and returns a diagnostic instead of an unbounded scan on oversized
-profiles. Reflection should update this stable discovery path, not create a
-second active snapshot in proposals or runtime history.
+profiles. An authorized knowledge correction updates this stable discovery path;
+it does not create a second active snapshot in proposals or runtime history.
 
 ## Structured knowledge
 

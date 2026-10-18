@@ -1,6 +1,7 @@
 # Feature explanations
 
 - [AIM 4: User Stories from intent to acceptance](aim-4-user-stories.md)
+- [AIM: latest assessed Enigma results and limits](aim-enigma-evaluation.md)
 
 This folder contains support and reference explanations.
 The goal is to make future debugging, examples, comparisons, and repo-local support easier.
@@ -29,7 +30,8 @@ Current roles:
 
 | File | Role |
 | --- | --- |
-| `aim-3.2-enigma-case.md` | current frozen M4 follow-up, product results, application runtime and public evidence |
+| `aim-enigma-evaluation.md` | latest frozen Enigma assessment, retained comparison history, native delivery limits and sanitized evidence |
+| `aim-3.2-enigma-case.md` | historical frozen M4 follow-up, product results, application runtime and public evidence |
 | `aim-3.2-enigma-m3-case.md` | historical frozen M3 pair, separate scores and evidence |
 | `aim-3.1-evaluation.md` | user benefits, measured resource gains, release validation and comparison scope |
 | `engineering-reset-analysis.md` | independent Enigma comparison analysis, engineering changes and reproducible measurements |

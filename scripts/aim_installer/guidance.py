@@ -9,11 +9,16 @@ from __future__ import annotations
 from typing import Any
 
 
-_START_COMMANDS = {
-    "copilot": 'Copilot: use the project AIM skill and run /aim start "EPIC: ..."',
-    "claude": 'Claude: use the project AIM skill and run /aim start "EPIC: ..."',
-    "codex": 'Codex: use $agile-iteration-method for /aim start "EPIC: ..."',
+_START_PREFIXES = {
+    "copilot": "Copilot: use the project AIM skill and run ",
+    "claude": "Claude: use the project AIM skill and run ",
+    "codex": "Codex: use $agile-iteration-method for ",
 }
+
+
+def _first_command(plan: dict[str, Any], adapter: str) -> str:
+    return str(plan.get("adapterSkillContract", {}).get(adapter, {}).get(
+        "firstCommand", '/aim start "<desired outcome>"'))
 
 
 def _adapter_readiness(plan: dict[str, Any]) -> list[dict[str, Any]]:
@@ -50,9 +55,7 @@ def _adapter_readiness(plan: dict[str, Any]) -> list[dict[str, Any]]:
                 "ready": installed,
                 "planned": planned,
                 "reload": str(config.get("reload", "follow supplier guidance")),
-                "firstCommand": str(
-                    config.get("firstCommand", '/aim start "EPIC: ..."')
-                ),
+                "firstCommand": _first_command(plan, adapter),
                 "fallback": str(
                     config.get("explicitFallback", "state the AIM intent plainly")
                 ),
@@ -160,9 +163,9 @@ def build_guidance(plan: dict[str, Any]) -> dict[str, Any]:
                 "choose the adapters/full footprint."
             )
             continue
-        start = _START_COMMANDS.get(adapter)
-        if start:
-            steps.append("Start AIM — " + start)
+        prefix = _START_PREFIXES.get(adapter)
+        if prefix:
+            steps.append("Start AIM — " + prefix + _first_command(plan, adapter))
 
     steps.append(
         "Calibrate repo knowledge: /aim calibrate-repo  "

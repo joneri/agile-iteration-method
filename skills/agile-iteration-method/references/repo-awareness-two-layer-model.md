@@ -5,7 +5,7 @@ Regenerate with: python3 scripts/build_public_skill.py
 Source: docs/workflow/repo-awareness-two-layer-model.md
 -->
 
-# AIM 2.0 Two-Layer Repo Awareness
+# AIM Two-Layer Repo Awareness
 
 ## Purpose
 

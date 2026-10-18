@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""AIM 2.0 guided-first installer entrypoint.
+"""AIM guided-first installer entrypoint.
 
 Collects missing required input in an interactive terminal, computes a
 manifest-driven plan, and renders a compact summary by default. ``--verbose`` and
@@ -36,7 +36,7 @@ EXIT_FAILED = 3
 def _parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         prog="aim_install.py",
-        description="AIM 2.0 installer.",
+        description="AIM installer.",
     )
     parser.add_argument(
         "--target",

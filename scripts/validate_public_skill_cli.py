@@ -56,7 +56,7 @@ def _npx(cli_version: str) -> list[str]:
     return ["npx", "--yes", f"skills@{cli_version}"]
 
 
-def _validate_installed_package(path: Path) -> None:
+def _validate_installed_package(path: Path, expected_package: Path | None = None) -> None:
     manifest_path = path / "manifest.json"
     if not manifest_path.is_file():
         raise CliValidationError(f"installed manifest is missing: {manifest_path}")
@@ -74,6 +74,11 @@ def _validate_installed_package(path: Path) -> None:
             f"installed package is incomplete; missing={sorted(expected_files - actual_files)} "
             f"extra={sorted(actual_files - expected_files)}"
         )
+    if expected_package is not None:
+        for relative in sorted(expected_files):
+            source = expected_package / relative
+            if not source.is_file() or source.read_bytes() != (path / relative).read_bytes():
+                raise CliValidationError(f"installed package differs from the selected source: {relative}")
     package_text = "\n".join(
         file.read_text(encoding="utf-8", errors="replace")
         for file in path.rglob("*")
@@ -132,7 +137,8 @@ def validate(source: str, cli_version: str) -> None:
                 cwd=project,
                 env=agent_env,
             )
-            _validate_installed_package(project / relative_target)
+            _validate_installed_package(project / relative_target,
+                                        source_path.resolve() / "skills" / SKILL_NAME if source_path.exists() else None)
 
         use_root = root / "use"
         use_root.mkdir()

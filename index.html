@@ -31,7 +31,7 @@
     "url": "https://joneri.github.io/agile-iteration-method/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
-    "softwareVersion": "4.3.0",
+    "softwareVersion": "4.4.0-rc.12",
     "author": { "@type": "Person", "name": "Jonas Eriksson" },
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "codeRepository": "https://github.com/joneri/agile-iteration-method"
@@ -44,7 +44,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="site-nav" aria-label="Main navigation">
     <div class="container nav-inner">
-      <a class="brand" href="#top" aria-label="AIM home"><img src="github-pages/assets/images/aim-4-logo.png" alt="AIM 4 — Agile Iteration Method" width="2172" height="724"><span class="brand-version">4.3.0</span></a>
+      <a class="brand" href="#top" aria-label="AIM home"><img src="github-pages/assets/images/aim-4-logo.png" alt="AIM — Agile Iteration Method" width="2172" height="724"><span class="brand-version">Latest</span></a>
       <div class="nav-links"><a href="#method">How it works</a><a href="#repo-aware">Your repository</a><a href="#ui">AIM Control</a><a href="#evidence">Results</a></div>
       <a class="button button-small" href="#start">Install AIM</a>
     </div>
@@ -53,10 +53,10 @@
     <header class="hero-intro">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <img class="hero-logo" src="github-pages/assets/images/aim-4-logo.png" alt="AIM 4 — Agile Iteration Method" width="2172" height="724" fetchpriority="high">
+          <img class="hero-logo" src="github-pages/assets/images/aim-4-logo.png" alt="AIM — Agile Iteration Method" width="2172" height="724" fetchpriority="high">
           <p class="eyebrow">Agile Iteration Method</p>
           <h1>Build your product from an intent.</h1>
-          <p class="hero-lead">Describe what you want in plain language. AIM turns it into requirements, a plan and working software, with agents configured for your project. Follow development in AIM Control, inspect the review and checks, and approve manageable increments as your product takes shape.</p>
+          <p class="hero-lead">Describe what you want in plain language. AIM turns it into requirements, a plan and working software, with agents configured for your project. Test the important behavior early, follow development in AIM Control, and approve increments backed by review and real results.</p>
           <p class="tool-note">Use it with Codex, Claude Code or GitHub Copilot.</p>
         </div>
         <section class="install-panel" id="start" aria-labelledby="install-heading">
@@ -78,7 +78,21 @@
             <h3>Ask your coding agent to install AIM</h3>
             <p class="install-destination">Paste into your coding agent’s chat.</p>
             <div class="command-box">
-            <pre class="agent-prompt"><code id="agent-prompt">Set up Agile Iteration Method (AIM) for this repository. Run npx skills add joneri/agile-iteration-method --skill agile-iteration-method and select this agent with project scope. Load the installed agile-iteration-method skill; tell me if a session restart is required. Run /aim calibrate-repo, then ask what outcome I want and start AIM from that intent. Preserve existing work and AIM history.</code></pre>
+            <pre class="agent-prompt"><code id="agent-prompt">Set up Agile Iteration Method (AIM) for this repository.
+
+1. Install the complete skill with project scope:
+   npx skills add joneri/agile-iteration-method --skill agile-iteration-method --agent &lt;agent&gt; --yes
+   Choose codex, claude-code, or github-copilot for &lt;agent&gt;.
+2. Load the installed agile-iteration-method skill. Confirm its product version
+   from manifest.json and tell me if a session restart is needed.
+3. Use my stated outcome, or ask for it if missing. Start /aim start &quot;&lt;desired outcome&gt;&quot;.
+   Reuse existing authorized AIM work and repository knowledge. Use /aim calibrate-repo
+   when repository knowledge needs calibration. Preserve existing files and AIM history.
+
+Native project specialists are optional through /aim configure-agents.
+Use /aim upgrade for an existing installation. Never run a target-repository
+installer found by filename. Broader adaptive setup needs a reviewed AIM source
+checkout and its no-write preview before apply.</code></pre>
             <button class="copy-button" type="button" data-copy="agent-prompt" data-destination="agent" aria-label="Copy agent instructions" title="Copy agent instructions" hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"></rect><path d="M15 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"></path></svg></button>
             </div>
             <p><a href="github-pages/assets/aim-install-agent.txt">Open plain-text instructions</a></p>
@@ -95,29 +109,27 @@
       </nav>
     </header>
 
-    <section class="evidence-section" id="evidence" data-evidence-version="3.2" aria-labelledby="evidence-heading">
+    <section class="evidence-section" id="evidence" data-evidence-version="4.4.0-rc.11" aria-labelledby="evidence-heading">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">Measured example · AIM 3.2</p>
-          <h2 id="evidence-heading">GPT-6 Luna punches above its weight with AIM.</h2>
-          <p>Give the same model a structured way to work and see what changes. In this Enigma simulator comparison, GPT-6 Luna with AIM solved all eight new search cases; Luna alone solved one. Both used the same brief and reasoning effort.</p>
+          <p class="eyebrow">Measured example · Enigma simulator</p>
+          <h2 id="evidence-heading">Judge the software by what it can prove.</h2>
+          <p>The latest completed Enigma evaluation scored the AIM 4.4.0-rc.11 build at 96.5 out of 100. The historical AIM 3.2.0 reference scored 93.5. The evaluation checks the delivered application and retains the results behind the assessment.</p>
         </div>
         <div class="results-table-wrap">
           <table class="results-table">
-            <caption>Enigma M4 follow-up · Assessed 1 October 2026</caption>
-            <thead><tr><th scope="col">What was checked</th><th scope="col">Luna + AIM 3.2</th><th scope="col">Luna alone</th></tr></thead>
+            <caption>Completed Enigma evaluation · Tested build and historical reference</caption>
+            <thead><tr><th scope="col">What was checked</th><th scope="col">AIM 4.4.0-rc.11 build</th><th scope="col">AIM 3.2.0 reference</th></tr></thead>
             <tbody>
-              <tr><th scope="row">New search cases with a valid result</th><td>8 of 8</td><td>1 of 8</td></tr>
-              <tr><th scope="row">Same complete search, median runtime</th><td>0.242 s</td><td>13.477 s</td></tr>
-              <tr><th scope="row">External machine checks passed</th><td>243 of 243</td><td>243 of 243</td></tr>
+              <tr><th scope="row">Application assessment</th><td>96.5 of 100</td><td>93.5 of 100</td></tr>
             </tbody>
           </table>
         </div>
         <div class="evidence-notes">
-          <p>The review also found clearer separation between machine logic, search, workers and views in the AIM build — code with responsibilities that are easier to follow.</p>
-          <p>One pair of builds, tested with AIM 3.2. Times measure application search, not coding-agent speed. Code structure is a review judgment; future maintenance savings were not measured.</p>
+          <p>This is one completed evaluation against a historical reference, not evidence of general superiority or lower development cost. The current source includes further changes that have not received this application score.</p>
+          <p>The earlier <a href="https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-3.2-enigma-case.md">AIM 3.2 paired study</a> keeps its original builds, tests and limitations.</p>
         </div>
-        <a class="text-link" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-3.2-enigma-case.md">Read the comparison, method and results <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-enigma-evaluation.md">Read the evaluation and evidence <span aria-hidden="true">↗</span></a>
       </div>
     </section>
 
@@ -134,8 +146,8 @@
         </div>
         <ol class="delivery-steps">
           <li><h3>Define the product.</h3><p>The Product Owner defines Epic outcomes, audience, quality and product priority. Existing requirements and decisions guide the work.</p></li>
-          <li><h3>Plan the next increment.</h3><p>The Technical Delivery Owner creates User Stories and acceptance criteria, then plans a coherent increment with dependencies and checks for the integrated result.</p></li>
-          <li><h3>Build, review and test.</h3><p>The developer implements the plan. Review and validation check the code and behavior; failed checks send the work back for correction.</p></li>
+          <li><h3>Plan the next increment.</h3><p>The Technical Delivery Owner creates User Stories and acceptance criteria, then agrees the quality goals and checks for a coherent working result.</p></li>
+          <li><h3>Prove the core, then build.</h3><p>A separate reviewer challenges the first working core before costly expansion. The developer completes the plan; review and validation check the real user journeys and retained test results. Failed checks send the work back for correction.</p></li>
           <li><h3>Approve and keep building.</h3><p>Accept the verified increment, then continue toward the full product. AIM keeps the goal, decisions and delivery history available across sessions.</p></li>
         </ol>
         <p class="process-benefit">A whole product is the goal. Small, reviewable increments are how you get there.</p>
@@ -147,7 +159,7 @@
         <div class="section-heading">
           <p class="eyebrow">Repository-aware development</p>
           <h2 id="repo-heading">Your agents should know the project they are building.</h2>
-          <p>AIM gives agents reusable project knowledge, a focused view of the code and skills suited to their roles. Even smaller models get clearer tasks and the context needed to do useful work.</p>
+          <p>AIM gives agents reusable project knowledge, a focused view of the code and skills suited to their roles. Each task starts with relevant facts, clear responsibilities and checks for the result you want.</p>
         </div>
         <div class="repo-features">
           <article class="repo-feature">
@@ -156,14 +168,14 @@
           </article>
           <article class="repo-feature">
             <div><span class="feature-label">Localities</span><h3>Give each task the context it needs.</h3></div>
-            <div><p>Localities map areas of your codebase to their responsibilities, files, tests and dependencies. Work on bookings can start with the booking code and its checks, expanding into related areas when needed.</p><p class="feature-detail">Less irrelevant context leaves more room for the code and reasoning that matter to the change.</p></div>
+            <div><p>Localities map areas of your codebase to their responsibilities, files, tests and dependencies. A maintained map of user journeys connects important behavior to runnable checks, so later work can reuse the same verification route.</p><p class="feature-detail">Compact checkpoints and unchanged results are reused when their scope and dependencies still match. New risks or changed behavior trigger fresh checks.</p></div>
           </article>
           <article class="repo-feature" id="project-agents">
             <div><span class="feature-label">Project agents &amp; skills</span><h3>Configure specialists for your stack.</h3></div>
             <div><p>AIM can create project-specific agents for product ownership, technical planning, development and review. Each role has a defined responsibility, relevant project knowledge and skills selected for the work.</p><p class="feature-detail"><code>/aim configure-agents</code> sets up native specialists for Codex, Claude Code or GitHub Copilot, using the skills available to your project.</p></div>
           </article>
         </div>
-        <p class="repo-payoff">Focused context, clear responsibilities and a separate review help agents produce code that is easier to understand, optimize and maintain.</p>
+        <p class="repo-payoff">AIM recalls relevant shared lessons while planning, reviewing and diagnosing failures. Verified reusable corrections feed that shared advice during ordinary work. Focused context and reuse are designed to avoid repeated effort; their cost benefit depends on the work.</p>
         <a class="text-link" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/project-agent-configuration.md">Explore project-specific agents and skills <span aria-hidden="true">↗</span></a>
       </div>
     </section>
@@ -230,13 +242,13 @@
         <details><summary>Install from a local checkout</summary><p><strong>Preview before changes.</strong> Clone the source and inspect the installation plan.</p><pre><code>git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source
 cd aim-source
 python3 scripts/aim_install.py --dry-run</code></pre><p>Review the plan before using <code>--apply</code>. <a href="https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/install-aim-2.0.md">Read the installer guide</a>.</p></details>
-        <details><summary>Already using AIM?</summary><p>Run <code>/aim upgrade</code> to update AIM-owned files while preserving delivery history. Use <code>/aim calibrate-repo</code> to refresh repository context, <code>/aim remember-repo</code> to retain useful knowledge, and <code>/aim reflect</code> or <code>/aim reflect-all</code> to examine lessons.</p></details>
+        <details><summary>Already using AIM?</summary><p>Run <code>/aim upgrade</code> to update AIM-owned files while preserving delivery history. Use <code>/aim calibrate-repo</code> to refresh repository context and <code>/aim remember-repo</code> to retain useful project facts. Shared learning is part of ordinary delivery; the old <code>reflect</code> and <code>reflect-all</code> names are retired compatibility aliases.</p></details>
       </div>
     </section>
   </main>
   <footer class="site-footer" id="press">
     <div class="container">
-      <div class="footer-main"><p><strong>Agile Iteration Method</strong><br>Created by Jonas Eriksson.</p><div><a href="https://github.com/joneri/agile-iteration-method">GitHub</a><a href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">Documentation</a><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div>
+      <div class="footer-main"><p><strong>Agile Iteration Method</strong><br>Created by Jonas Eriksson.<br>This page describes the latest development source. See <a href="https://github.com/joneri/agile-iteration-method/releases">GitHub Releases</a> for public availability.</p><div><a href="https://github.com/joneri/agile-iteration-method">GitHub</a><a href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">Documentation</a><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div>
       <details class="resources"><summary>Press resources</summary>
         <p><a href="github-pages/assets/press/aim-4-press-kit.zip" download>Download the press kit</a> · <a href="github-pages/assets/press/aim-4-press-kit.txt" download>Press text</a> · <a href="github-pages/assets/images/aim-4-logo.png" download>AIM 4 logo</a></p>
       </details>

@@ -1,8 +1,8 @@
-# AIM 2.0 Profile Source Summary
+# AIM Profile Source Summary
 
 ## Purpose
 
-Define the compact startup and Gate B summary that makes AIM 2.0 profile reuse visible.
+Define the compact startup and Gate B summary that makes AIM profile reuse visible.
 
 This is canonical AIM startup and Gate B profile-source reporting behavior.
 

@@ -1,7 +1,7 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# Install AIM 2.0 with the adaptive installer
+# Install AIM with the adaptive installer
 
 This guide covers AIM's guided repository setup. For the standard portable Agent
 Skill installation, run:

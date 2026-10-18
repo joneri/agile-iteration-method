@@ -1,9 +1,9 @@
 # What AIM Is
 
-## A Delivery System, Not a Coding Assistant
+## From an idea to software you can assess
 
-Coding assistants answer prompts and generate changes.
-AIM organizes AI-assisted work into a delivery process.
+Describe the product or improvement you want. AIM organizes AI-assisted work
+into a delivery process you can follow and assess.
 
 It combines:
 
@@ -17,8 +17,8 @@ It combines:
 
 into one repeatable loop.
 
-The point is not to make AI look busy.
-The point is to produce work that remains aligned, inspectable, and ready for a meaningful decision.
+Each increment connects the goal, implementation and evidence so you can make
+a meaningful acceptance decision.
 
 ## Build What You Want
 
@@ -51,16 +51,33 @@ When work resumes, AIM uses that state before rebuilding context from scratch.
 
 AIM assumes generated work may be incomplete or wrong.
 
+Quality goals are agreed before implementation. AIM measures the first working
+core and asks a separate reviewer to challenge a material core before costly
+expansion. That early check helps expose a wrong approach while it is still
+small enough to correct.
+
 Before a Story selection is accepted:
 
 1. implementation is checked against the selected Story criteria
 2. a Reviewer looks for correctness issues, edge cases, and risk
-3. technical validation checks the delivered result
+3. technical validation checks real user journeys through the delivered entry point
 4. failed evidence sends the work back for correction
 5. a human-controlled acceptance point decides what happens next
 
 AIM does not replace tests or guarantee correctness.
 It makes review, verification, and correction normal rather than optional cleanup.
+
+Raw observations support the quality assessment, including complete-result time
+when it matters. A maintained map of important user journeys and a runnable
+verification entry help future changes repeat the right checks. Missing or
+failed evidence stays visible until corrected or resolved by the responsible
+owner.
+
+The [latest completed Enigma evaluation](../features/aim-enigma-evaluation.md)
+scored the AIM 4.4.0-rc.11 application at 96.5/100 against the historical AIM
+3.2.0 reference at 93.5/100. It is a result for those builds under that evaluation,
+not a general quality or cost guarantee. The latest development source includes
+further changes that have not received that application score.
 
 ## Repository-Aware
 
@@ -92,24 +109,21 @@ AIM separates persistent repository knowledge from active runtime context:
 
 This allows future sessions to reuse what matters without carrying the whole repository manual all the time.
 
-## Reflection Without Automatic Memory Mutation
+## Shared Learning During Delivery
 
-Completed work contains useful lessons, but delivery history is evidence rather
-than permanent truth.
+Relevant shared lessons are recalled during delivery; new verified reusable
+corrections and independently confirmed failures contribute generalized advice
+with existing proof. An unverified remedy stays proposed. No manual
+reflection command or routine report is required. These agent responsibilities
+do not guarantee that every repo or event has contributed.
 
-`/aim reflect` verifies the current project's historical lessons against current
-repository evidence and concludes with one concrete next action or an explicit
-no-action result. `/aim reflect-all` previews and analyzes selected local AIM
-projects to find project-specific, cross-project, personal, and AIM-product
-insights.
+The old `reflect` and `reflect-all` names are retired compatibility aliases for
+bounded read-only registry views. Maintained project facts stay in their own sources. A concrete stale fact,
+contradiction or missed-learning question can justify a targeted authorized audit.
+Advice is evidence to assess, not authority to change requirements or other repos.
 
-Reflect reports remain temporary. Every candidate shows provenance, confidence,
-contradictions, a proposed destination, and an explicit promotion action.
-Nothing becomes durable knowledge until a person approves the separate write.
-
-This goes beyond memory cleanup for repository work: AIM asks not only what can
-be merged, but whether it is still true, where it belongs, and who owns the
-decision to keep it.
+Advice keeps its applicability and proof so an agent can assess whether it fits
+the current problem. Sensitive project details remain at their source.
 
 ## Your Tokens Are Valuable
 
@@ -125,6 +139,11 @@ It starts with:
 It expands when evidence is missing, facts are stale, risk is higher, or the user asks for deeper work.
 
 Cost profiles let operators choose normal, narrow, or deeper runtime attention without changing AIM's ownership and gate model.
+
+Confirmed checkpoints and still-applicable results can be reused without
+repeating the same reads and checks. Existing approvals and answers stay bound
+to their original scope. These controls are designed to reduce repeated work;
+they do not promise a fixed token, time or cost reduction.
 
 ## Self-Review and Correction
 
@@ -164,7 +183,7 @@ AIM does not replace:
 
 It provides a disciplined way for AI work to operate inside those systems.
 
-## Why AIM 4.0
+## Keep the whole product in view
 
 Requirements and delivery have different jobs. User Stories make distinct needs
 visible and independently prioritizable. Epics explain the larger outcomes;

@@ -1,7 +1,7 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# Quick Start AIM 4.0
+# Quick Start AIM
 
 Use this page when AIM is installed and you want to begin real work.
 
@@ -118,6 +118,17 @@ In Strict mode, Gate B waits for approval.
 The plan binds exact Story IDs, criteria, implementation boundaries and checks.
 It need not approximate the whole Epic.
 
+Before implementation, agree the product quality goals and how the important
+behavior will be measured. Preserve the relevant original intent and Epic
+obligations alongside Story criteria. Measure the first working core; a separate
+reviewer challenges a material core before the implementation expands.
+
+Use the project's runnable verification entry and maintained map of user
+journeys. Check the delivered entry point and complete-result time when relevant.
+Keep raw results behind the assessment. Reuse them only while the affected
+behavior and dependencies still match; missing, failed or stale evidence needs
+correction or a responsible owner decision.
+
 After implementation and review, Gate E reports:
 
 - delivered behavior
@@ -141,19 +152,24 @@ a Sprint is an optional timebox.
 - `/aim calibrate-repo`
 - `/aim remember-repo <category> "<rule>"`
 - `/aim forget-repo <category> "<rule-id>"`
-- `/aim reflect`
-- `/aim reflect-all`
 - `/aim cost standard|control|deep`
 - `/aim help`
 
+Learning happens during planning, review and diagnosis. AIM recalls relevant
+shared advice and shares new verified reusable corrections with existing proof.
+No manual reflection command or routine report is needed. The old `reflect`
+and `reflect-all` names are retired compatibility aliases for read-only views.
+See [shared learning](reflection.md).
+
 ## When AIM Itself Was Updated
 
-Use this flow when the repository already had AIM 2.0, but AIM instruction files, helper prompts, or adapter packaging changed afterward.
+Use this flow when AIM instruction files, helper prompts or adapter packaging
+have changed since installation.
 
 1. Run `/aim upgrade`
-2. Run `/aim calibrate-repo`
+2. Run `/aim calibrate-repo` if repository facts may be stale
 3. Start a fresh adapter session when helper files or agent/skill packaging changed
-4. Resume with `/aim continue` if the Epic was already in progress
+4. Resume with `/aim continue` if work was already in progress
 
 Upgrade refreshes installed AIM surfaces.
 Calibration refreshes repo-awareness.

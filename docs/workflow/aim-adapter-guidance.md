@@ -51,9 +51,9 @@ Adapter layers may improve UX and discoverability, but they must preserve:
 
 If adapter guidance conflicts with canonical workflow docs or `aim.profile.yaml`, escalate instead of guessing.
 
-## AIM 2.0 distribution expectations
+## AIM distribution expectations
 
-AIM 2.0 is one product available through a portable public Agent Skill and one
+AIM is one product available through a portable public Agent Skill and one
 adaptive guided installer. Both preserve AIM core. Older Personal, Team, and
 Enterprise labels are compatibility inputs, not separate products or current
 adapter behavior models.
@@ -88,7 +88,7 @@ storage policies, but those are footprint decisions rather than product editions
 
 ### Locality-first startup
 
-When AIM 2.0 profile support exists, adapters should load context in this order:
+When AIM profile support exists, adapters should load context in this order:
 
 1. active working state
 2. reusable repo profile, preferably root `aim.profile.yaml`
@@ -153,7 +153,7 @@ Expansion reason: <none or reason>
 Cheap validation first: <command>
 ```
 
-When a repository ships `scripts/validate_aim_runtime.py`, adapters may use its `AIM 2.0 profile-source summary` output as the generated summary rather than rebuilding the summary themselves.
+When a repository ships `scripts/validate_aim_runtime.py`, adapters may use its `AIM profile-source summary` output as the generated summary rather than rebuilding the summary themselves.
 
 The profile cannot override AIM core, gate semantics, `.aim/state.json`, current repository evidence, or escalation rules.
 
@@ -191,7 +191,7 @@ Adapters should make the main profile-related cost drivers visible without exact
 - expected review depth
 - subagent policy or sequential fallback
 
-This preserves the AIM 2.0 cost story while extending it to install, startup, scanning, resume, profile refresh, and branch switching.
+These observations help diagnose context use across installation, startup, scanning, resume, profile refresh and branch switching; they do not establish a cost reduction.
 
 ## Optional adapter layers
 

@@ -696,7 +696,7 @@
               "productBindings": {
                 "type": "array",
                 "minItems": 1,
-                "maxItems": 64,
+                "maxItems": 256,
                 "items": {
                   "type": "object",
                   "required": [
@@ -722,6 +722,14 @@
                 "minLength": 1,
                 "maxLength": 2000,
                 "pattern": "\\S"
+              },
+              "qualityMeasurements": {
+                "type": "array",
+                "minItems": 0,
+                "maxItems": 32,
+                "items": {
+                  "$ref": "#/$defs/evidence"
+                }
               }
             },
             "required": [
@@ -745,7 +753,7 @@
         "productBindings": {
           "type": "array",
           "minItems": 1,
-          "maxItems": 64,
+          "maxItems": 256,
           "items": {
             "type": "object",
             "required": [
@@ -773,6 +781,36 @@
           },
           "minItems": 1,
           "maxItems": 256
+        },
+        "qualityGoals": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/qualityGoal"
+          }
+        },
+        "qualityMeasurements": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        },
+        "qualityPlan": {
+          "$ref": "#/$defs/qualityPlan"
+        },
+        "coreVerification": {
+          "$ref": "#/$defs/coreVerification"
+        },
+        "coreVerificationHistory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/coreVerification"
+          },
+          "minItems": 0,
+          "maxItems": 256
         }
       },
       "required": [
@@ -786,6 +824,438 @@
         "scopeSha256",
         "planEvidence",
         "intents"
+      ],
+      "additionalProperties": false
+    },
+    "qualityGoal": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^KPI-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "workload": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "threshold": {
+          "type": "number",
+          "description": "Finite number; enforced by the quality-goal validator."
+        },
+        "operator": {
+          "enum": [
+            "<=",
+            ">="
+          ]
+        },
+        "aggregation": {
+          "enum": [
+            "median",
+            "min",
+            "max"
+          ]
+        },
+        "minSamples": {
+          "type": "integer",
+          "description": "From 3 to 1000 inclusive; enforced by the quality-goal validator."
+        }
+      },
+      "required": [
+        "id",
+        "outcome",
+        "workload",
+        "environment",
+        "method",
+        "unit",
+        "owner",
+        "action",
+        "source",
+        "threshold",
+        "operator",
+        "aggregation",
+        "minSamples"
+      ],
+      "additionalProperties": false
+    },
+    "qualityCheck": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^QC-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+        },
+        "criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "maxItems": 16384
+        },
+        "kind": {
+          "enum": [
+            "behavior",
+            "performance",
+            "journey"
+          ]
+        },
+        "stage": {
+          "enum": [
+            "core",
+            "delivery",
+            "both"
+          ]
+        },
+        "workload": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "expected": {
+          "type": "object",
+          "description": "Concrete product observations. New performance checks require correct, complete results on the timed workload; empty historical numeric-only checks remain readable."
+        },
+        "goalIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "maxItems": 32
+        },
+        "observation": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 32,
+          "additionalProperties": {
+            "$ref": "#/$defs/rawObservationField"
+          },
+          "description": "Optional frozen extraction from fingerprinted raw JSON; covers exactly expected keys, enforced by helper."
+        }
+      },
+      "required": [
+        "id",
+        "criteria",
+        "kind",
+        "stage",
+        "workload",
+        "environment",
+        "method",
+        "expected",
+        "goalIds"
+      ],
+      "additionalProperties": false
+    },
+    "sharedQualityRequirement": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "requirement": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "checkIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "pattern": "\\S"
+          },
+          "minItems": 1,
+          "maxItems": 32
+        }
+      },
+      "required": [
+        "source",
+        "requirement",
+        "checkIds"
+      ],
+      "additionalProperties": false
+    },
+    "primaryResult": {
+      "type": "object",
+      "properties": {
+        "checkId": {
+          "type": "string",
+          "pattern": "^QC-[A-Z0-9]+(?:-[A-Z0-9]+)*$",
+          "maxLength": 100
+        },
+        "latencyGoalId": {
+          "type": "string",
+          "pattern": "^KPI-[A-Z0-9]+(?:-[A-Z0-9]+)*$",
+          "maxLength": 100
+        },
+        "notApplicableReason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        }
+      },
+      "description": "The helper requires exactly one of latencyGoalId or notApplicableReason and validates linkage/applicability. Older plans may omit primaryResult.",
+      "required": [
+        "checkId"
+      ],
+      "additionalProperties": false
+    },
+    "caseCoverageEntry": {
+      "type": "object",
+      "properties": {
+        "checkIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^QC-[A-Z0-9]+(?:-[A-Z0-9]+)*$",
+            "maxLength": 100
+          },
+          "minItems": 1,
+          "maxItems": 32
+        },
+        "notApplicableReason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        }
+      },
+      "description": "Exactly one of checkIds or a technical non-applicability reason, enforced by the helper. Checks themselves identify cases and expected observations.",
+      "additionalProperties": false
+    },
+    "caseCoverage": {
+      "type": "object",
+      "properties": {
+        "failureCases": {
+          "$ref": "#/$defs/caseCoverageEntry"
+        },
+        "nonDefaultModes": {
+          "$ref": "#/$defs/caseCoverageEntry"
+        },
+        "resultValidity": {
+          "$ref": "#/$defs/caseCoverageEntry"
+        },
+        "workloadFamilies": {
+          "$ref": "#/$defs/caseCoverageEntry"
+        }
+      },
+      "required": [
+        "failureCases",
+        "nonDefaultModes",
+        "resultValidity",
+        "workloadFamilies"
+      ],
+      "additionalProperties": false
+    },
+    "qualityPlan": {
+      "type": "object",
+      "properties": {
+        "primaryResult": {
+          "$ref": "#/$defs/primaryResult"
+        },
+        "caseCoverage": {
+          "$ref": "#/$defs/caseCoverage"
+        },
+        "reviewPolicy": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "independent",
+                "self"
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "description": "New plans require independent material review; self mode needs a concrete nonmaterial reason. Exact mode fields are enforced by the helper. Historical plans retain their approved scope.",
+          "additionalProperties": false
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/qualityCheck"
+          },
+          "minItems": 1,
+          "maxItems": 32
+        },
+        "numericGoals": {
+          "enum": [
+            "required",
+            "not_applicable"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "sharedRequirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sharedQualityRequirement"
+          },
+          "minItems": 1,
+          "maxItems": 16
+        }
+      },
+      "required": [
+        "checks",
+        "numericGoals",
+        "rationale",
+        "sharedRequirements"
+      ],
+      "additionalProperties": false
+    },
+    "coreVerification": {
+      "type": "object",
+      "properties": {
+        "productBindings": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "qualityMeasurements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "minItems": 1,
+          "maxItems": 32
+        },
+        "at": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "\\S"
+        },
+        "response": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "productBindings",
+        "qualityMeasurements",
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "rawObservationField": {
+      "type": "object",
+      "properties": {
+        "pointer": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "transform": {
+          "enum": [
+            "length"
+          ]
+        }
+      },
+      "required": [
+        "pointer"
       ],
       "additionalProperties": false
     }

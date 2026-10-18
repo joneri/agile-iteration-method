@@ -21,6 +21,10 @@ unavailable instead of silently switching to old work.
 
 ## User Stories board
 
+For a runnable browser check of planning and stale-selection behavior, use the
+[project verification recipe](aim-ui-verification.md). It creates an isolated
+synthetic workspace and preserves raw proof after cleanup.
+
 The board columns are **Backlog**, **Ready**, **In progress**, **Review**,
 **Validation**, **Acceptance** and **Done**. Draft Stories appear in Backlog;
 all other movement reflects persisted Story lifecycle transitions. Polling,

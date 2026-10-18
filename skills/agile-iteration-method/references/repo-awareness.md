@@ -5,11 +5,11 @@ Regenerate with: python3 scripts/build_public_skill.py
 Source: docs/workflow/repo-awareness.md
 -->
 
-# AIM 2.0 Repo Awareness
+# AIM Repo Awareness
 
 ## Purpose
 
-Define the canonical repo-awareness and progressive-loading model for AIM 2.0.
+Define the canonical repo-awareness and progressive-loading model for AIM.
 
 This document makes AIM independent of generic root instruction files.
 
@@ -203,14 +203,12 @@ Use:
 
 - `/aim remember-repo <category> "<rule>"`
 - `/aim forget-repo <category> "<rule-id>"`
-- `/aim reflect` to propose verified candidates from the current AIM project
-- `/aim reflect-all` to preview and synthesize selected local AIM projects
 
-Remember and forget perform persistent structured updates. Reflect commands
-write only temporary candidate reports under `.aim/analysis/`; they never
-promote findings or modify discovered repositories. See
-`reflection.md` for discovery, provenance, verification, report,
-and promotion boundaries.
+Remember and forget perform persistent structured updates. Ordinary delivery
+learning needs no reflection command. Retired compatibility aliases read the shared registry
+without source-repo scans, promotion or mandatory reports. The registry does not
+replace maintained profiles or project facts; a named knowledge gap can justify
+the smallest targeted source audit in `reflection.md`.
 See `repo-awareness-calibration.md` for readiness, confidence, categories, document loading, installer bootstrap, and summary behavior.
 
 ## Related files

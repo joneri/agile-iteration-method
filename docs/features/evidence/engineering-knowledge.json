@@ -6,7 +6,7 @@
       "claim": "Every role binds its bundled engineering instructions.",
       "document": {
         "path": "aim.roles.yaml",
-        "sha256": "9027c4804cd02f68c37e85b0ab729bb411dc0cad4a91cc0d930d1eab8a6b58b9"
+        "sha256": "cde45699dc561da2de2aaa0741865172f7203550e121d684dfcddfda78d7a7a0"
       },
       "sources": [
         {
@@ -15,19 +15,19 @@
         },
         {
           "path": "docs/workflow/role-skill-po.md",
-          "sha256": "43ba392144b9c84730bb5b3f7cda22c2bdaff6a89c5013153cb8bf8797d6bfa2"
+          "sha256": "e39e675eb0fb9e9e314a66b02cd2492802ee0032fd5cc3d8479652f4e329796c"
         },
         {
           "path": "docs/workflow/role-skill-tdo.md",
-          "sha256": "edfc333a2eec786c63897afc3219d00801afdd25f5d172d23d73e02443ee1ca0"
+          "sha256": "f286d95f33ebc75d277c45c18922b68c737041cf5ea01d923234481aae04c2d5"
         },
         {
           "path": "docs/workflow/role-skill-dev.md",
-          "sha256": "71b52df29a90663e3bf8a9f7c002886550ff1f31149c80734b4aad3d78fb080b"
+          "sha256": "ba2470ca0ce7715bfbbc29306ac25fd319f73b3f584b518a99d156d08ba5ab1a"
         },
         {
           "path": "docs/workflow/role-skill-reviewer.md",
-          "sha256": "554ef472a1e4f327bed857553f0ad5b692ed3399865760b4155d1cbcf8c8918d"
+          "sha256": "c79b4ba5c7329f7f93629361db5bb8ad848ab3e1aebe64058af424589bf05826"
         }
       ]
     },
@@ -36,7 +36,7 @@
       "claim": "The repository profile names an executable HTTP boundary regression check.",
       "document": {
         "path": "aim.profile.yaml",
-        "sha256": "457a0e9ec7eb376521e8831585813ef5c8a526a05522fbf0083f3df08ab68e2d"
+        "sha256": "5b2b9ede69ff235327143cee16abb0190565b711c1efe55719a174374e7fc50e"
       },
       "sources": [
         {

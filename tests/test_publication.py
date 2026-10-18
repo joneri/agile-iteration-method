@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import textwrap
 import shutil
 import subprocess
 import sys
@@ -19,6 +21,7 @@ from aim_publication import (  # noqa: E402
     PUBLIC_ADAPTIVE_SOURCE_COMMAND,
     PUBLIC_CAMPAIGN_IMAGE_PATH,
     PUBLIC_ORIGIN,
+    PUBLIC_EVALUATION_PATH,
     PUBLIC_PRODUCT_CAPTURES,
     PUBLIC_PRESS_KIT_PATH,
     PUBLIC_PRESS_MEMBERS,
@@ -73,7 +76,9 @@ class PublicationContractTests(unittest.TestCase):
             manifest = json.loads(
                 (output / "release-manifest.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(manifest["aimVersion"], "4.3.0")
+            self.assertEqual(manifest["aimVersion"], (REPO_ROOT / "VERSION").read_text().strip())
+            self.assertEqual({item["path"] for item in manifest["schemas"]},
+                             {p.relative_to(REPO_ROOT).as_posix() for p in (REPO_ROOT / "schemas").glob("*.schema.json")})
             self.assertEqual(manifest["runtimeContractVersion"], "2.0")
             self.assertEqual(manifest["runtimeStateSchemaVersion"], "1.0")
             self.assertIn(
@@ -146,10 +151,13 @@ class PublicationContractTests(unittest.TestCase):
             self.assertIn(f'id="{identifier}"', index)
         self.assertIn("docs/product/aim-ui.md", index)
         self.assertIn(f'src="{PUBLIC_CAMPAIGN_IMAGE_PATH}"', index)
-        self.assertIn('<span class="brand-version">4.3.0</span>', index)
+        version = (REPO_ROOT / "VERSION").read_text().strip()
+        self.assertIn('<span class="brand-version">Latest</span>', index)
+        self.assertIn(f'"softwareVersion": "{version}"', index)
         for capture in PUBLIC_PRODUCT_CAPTURES:
             self.assertIn(f'src="{capture}"', index)
-        self.assertIn('data-evidence-version="3.2"', index)
+        evidence = json.loads((REPO_ROOT / PUBLIC_EVALUATION_PATH).read_text())
+        self.assertIn(f'data-evidence-version="{evidence["latestEvaluatedVersion"]}"', index)
         self.assertNotIn("aim-ui-beta-control-room.png", index)
         self.assertNotIn("portfolio-auto-demo", index)
         self.assertNotIn("aim-ui-beta-control-room.png", readme)
@@ -157,12 +165,13 @@ class PublicationContractTests(unittest.TestCase):
             "/aim upgrade",
             "/aim calibrate-repo",
             "/aim remember-repo",
-            "/aim reflect",
-            "/aim reflect-all",
         ):
             self.assertIn(command, readme)
             self.assertIn(command, index)
             self.assertIn(command, getting_started)
+        for content in (readme, index, getting_started):
+            self.assertIn("retired compatibility aliases", collapsed(content))
+            self.assertNotIn("/aim reflect", content)
 
     def test_brand_artwork_has_release_dimensions_and_versionless_inventory(self) -> None:
         validate_source(REPO_ROOT)
@@ -237,11 +246,14 @@ class PublicationContractTests(unittest.TestCase):
                 validate_source(copied)
 
     def test_unlabelled_capture_stale_comparison_and_broken_section_link_are_rejected(self) -> None:
+        evidence = json.loads((REPO_ROOT / PUBLIC_EVALUATION_PATH).read_text())
+        evaluated = evidence["latestEvaluatedVersion"]
+        reference = evidence["referenceVersion"]
         for before, after, expected in (
             ('data-product-capture="example"', 'data-product-capture="live"', "example caption"),
             ('Actual AIM Control 4.1.0 · Desktop Kanban board with example project data.', 'Actual AIM Control 4.1.0 · Live project.', "example caption"),
-            ('data-evidence-version="3.2"', 'data-evidence-version="4.1"', "tested AIM version"),
-            ("AIM 3.2", "AIM 4.1", "tested AIM version"),
+            (f'data-evidence-version="{evaluated}"', 'data-evidence-version="unassessed"', "tested AIM version"),
+            (reference, "unattributed-reference", "tested AIM version"),
             ('href="#start"', 'href="#missing"', "broken section link"),
         ):
             with self.subTest(expected=expected), tempfile.TemporaryDirectory() as temporary:
@@ -311,16 +323,67 @@ class PublicationContractTests(unittest.TestCase):
             index = copied / "index.html"
             index.write_text(
                 index.read_text(encoding="utf-8").replace(
-                    '<span class="brand-version">4.3.0</span>',
-                    '<span class="brand-version">2.7</span>',
+                    f'"softwareVersion": "{(REPO_ROOT / "VERSION").read_text().strip()}"',
+                    '"softwareVersion": "2.7"',
                 ),
                 encoding="utf-8",
             )
 
             with self.assertRaisesRegex(
-                PublicationError, "brand-version must match VERSION"
+                PublicationError, "softwareVersion must match VERSION"
             ):
                 validate_source(copied)
+
+    def test_public_evaluation_headline_must_match_its_measured_row(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            path = copied / PUBLIC_EVALUATION_PATH
+            evidence = json.loads(path.read_text())
+            evidence["latestProductScore"] = 100
+            path.write_text(json.dumps(evidence))
+            with self.assertRaisesRegex(PublicationError, "headline score differs"):
+                validate_source(copied)
+
+    def test_evaluation_rejects_boolean_nonfinite_and_out_of_range_scores(self) -> None:
+        from aim_publication import _evaluation_contract
+        original = json.loads((REPO_ROOT / PUBLIC_EVALUATION_PATH).read_text())
+        for invalid in (True, False, float("nan"), float("inf"), -1, 101):
+            with self.subTest(score=invalid), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                path = root / PUBLIC_EVALUATION_PATH
+                path.parent.mkdir(parents=True)
+                evidence = json.loads(json.dumps(original))
+                for prefix, version_key in (("latest", "latestEvaluatedVersion"), ("reference", "referenceVersion")):
+                    evidence[prefix + "ProductScore"] = invalid
+                    next(row for row in evidence["rows"] if row["version"] == evidence[version_key])["score"] = invalid
+                path.write_text(json.dumps(evidence))
+                with self.assertRaisesRegex(PublicationError, "finite numbers"):
+                    _evaluation_contract(root)
+
+    def test_release_prerelease_flags_with_stubbed_github_cli(self) -> None:
+        workflow = (REPO_ROOT / ".github/workflows/release.yml").read_text()
+        block = workflow.split("      - name: Publish GitHub Release", 1)[1].split("run: |", 1)[1]
+        block = textwrap.dedent(block)
+        stub = '''gh() {
+          printf '%s\n' "$*" >> "$AIM_RELEASE_TEST_LOG"
+          if [[ "$1 $2" == "release view" ]]; then return "$AIM_RELEASE_TEST_EXISTS"; fi
+        }
+'''
+        for version in ("v4.4.0-rc.12", "v4.4.0"):
+            for existing in (0, 1):
+                with self.subTest(version=version, existing=existing), tempfile.TemporaryDirectory() as temporary:
+                    log = Path(temporary) / "commands.txt"
+                    env = dict(os.environ, AIM_RELEASE_TEST_LOG=str(log), AIM_RELEASE_TEST_EXISTS=str(existing))
+                    result = subprocess.run(["bash", "-c", stub + block.replace("${{ steps.version.outputs.version }}", version)],
+                                            env=env, capture_output=True, text=True)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    commands = log.read_text().splitlines()
+                    mutations = [line for line in commands if line.startswith(("release create", "release edit"))]
+                    if "-" in version:
+                        self.assertTrue(mutations)
+                        self.assertTrue(all("--prerelease" in line and "--latest=false" in line for line in mutations))
+                    else:
+                        self.assertTrue(all("--prerelease" not in line for line in commands))
 
     def test_schema_id_drift_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

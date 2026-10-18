@@ -216,7 +216,7 @@ class RepoProfileSchemaTests(unittest.TestCase):
             timeout=30,
         )
         self.assertEqual(completed.returncode, 0, completed.stdout)
-        self.assertIn("AIM 2.0 repo-profile schema contract:", completed.stdout)
+        self.assertIn("AIM repo-profile schema contract:", completed.stdout)
         self.assertIn("supported profileVersion: 0.2", completed.stdout)
         self.assertIn(
             "authority: schema=structure, validator=product rules, docs=meaning",

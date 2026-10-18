@@ -34,7 +34,7 @@ def render_compact_text(
     operation = "Apply" if plan.get("operation") == "apply" else "Preview"
 
     lines = [
-        _paint(f"AIM 2.0 installer · {operation}", "1;36", color),
+        _paint(f"AIM installer · {operation}", "1;36", color),
         f"Target    {plan['target']}",
         f"Footprint {plan['footprint']}",
         f"           {plan.get('footprintDescription', '')}",
@@ -113,7 +113,7 @@ def render_verbose_text(
 ) -> str:
     lines: list[str] = []
     operation = "apply" if plan.get("operation") == "apply" else "dry-run"
-    lines.append(f"AIM 2.0 install plan ({operation})")
+    lines.append(f"AIM install plan ({operation})")
     lines.append("=" * 32)
     lines.append(f"Manifest version : {plan['manifestVersion']}")
     if plan.get("mode") != "standard":

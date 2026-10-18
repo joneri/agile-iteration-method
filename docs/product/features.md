@@ -1,9 +1,9 @@
 # AIM feature guide
 
-This is the short map of what AIM 4.0 does. Follow the links only when you need
+This is the short map of what AIM does. Follow the links only when you need
 the operating detail.
 
-Returning from early 3.0? AIM UI combines clearer workflows with preserved work,
+The latest development source combines clearer workflows with preserved work,
 action tracking and verified recovery status. Across Codex, Claude Code and
 GitHub Copilot, AIM keeps the same command semantics and resumes saved work when
 the next tool has AIM and access to the same current repository and state.
@@ -25,6 +25,23 @@ it does not replace checking relevant code or guarantee whole-repository coverag
 See [User Stories and product backlog](../workflow/user-stories.md) and the
 [canonical AIM method](../workflow/agile-iteration-method.md).
 
+## Prove the important behavior early
+
+- Agree Story criteria and the relevant product quality goals before building.
+- Measure the first working core before expanding it. A separate reviewer
+  challenges a material core with an independent example while correction is
+  still small.
+- Check the actual delivered entry point and important user journeys, including
+  complete-result time when it matters to the product.
+- Keep raw observations behind the quality assessment. Missing, failed or stale
+  evidence calls for correction or an explicit owner decision.
+- Maintain a map from user journeys to a runnable verification entry so future
+  changes can repeat the right checks.
+- Reuse unchanged results and compact checkpoints when scope and dependencies
+  still match; recheck the affected behavior after changes or new risks.
+
+See [engineering delivery](../workflow/engineering-delivery.md).
+
 ## Audience-context integrity
 
 - Generated artifacts communicate their intended current meaning directly.
@@ -42,8 +59,12 @@ This makes AIM audience-aware from the first generated artifact. See the
   avoid separate routine Epic approvals.
 - `Auto` continues until risk, changed scope, uncertainty, or final acceptance
   requires a person.
-- `Standard`, `Cost Control`, and `Deep` change context and verification depth;
-  they never remove roles, gates, or escalation.
+- `Standard`, `Cost Control`, and `Deep` guide context and verification depth;
+  they preserve required quality, roles, gates and escalation.
+- Existing approvals, relevant answers and confirmed checkpoints are reused
+  within their exact scope. Necessary questions are grouped only when independent.
+- These controls are designed to avoid repeated work; they do not establish a
+  general speed, token or cost saving.
 
 See [cost profiles](../workflow/cost-control-mode.md).
 
@@ -108,23 +129,19 @@ See the [adapter command contract](../workflow/adapter-command-contract.md#aim-d
 
 See [repo awareness](../workflow/repo-awareness.md).
 
-## Reflect
+## Shared learning during delivery
 
-- `/aim reflect` turns completed work in the current AIM project into verified
-  knowledge candidates.
-- `/aim reflect-all` previews and synthesizes a selected set of local AIM
-  projects without changing any of them.
-- Candidates carry provenance, current-evidence verification, confidence,
-  contradictions, classification, destination, and a promotion action.
-- Each completed reflection says whether action is recommended, assigns every
-  candidate a disposition, and supplies one concrete next action or an explicit
-  no-action conclusion.
-- Reports remain temporary under `.aim/analysis/`; durable knowledge changes
-  require a separate reviewed promotion.
-- Reflect goes beyond memory cleanup for repository work by combining
-  consolidation with current-source verification and human-owned promotion.
-
-See [AIM Reflect](../workflow/reflection.md).
+- Ordinary delivery recalls relevant shared advice and contributes new verified
+  reusable corrections or independently confirmed failures with existing proof;
+  unverified remedies stay proposed. No reflection command or routine report.
+- The old `reflect` and `reflect-all` names are retired compatibility aliases
+  for bounded read-only registry views; they are not a normal learning step.
+- A named stale fact, contradiction or missing lesson can trigger the smallest
+  authorized source audit. Profiles and other maintained project facts retain
+  their own sources and reviewed write paths.
+- Registry entries preserve applicability, proof fingerprints and revision
+  history; their presence does not establish truth, complete capture or benefit.
+See [learning and targeted knowledge review](../workflow/reflection.md).
 
 ## Project specialists and skill matching
 
@@ -160,22 +177,21 @@ See [adaptive execution](../workflow/adaptive-execution.md).
 - Calibration names what was inspected; a ready locality is not a whole-repo guarantee.
 - Reused claims retain sources, scope, freshness and known contradictions.
   Matching file hashes do not certify factual truth.
-- Reflection may recommend a focused update, regression check or no action.
-  Verified lessons are promoted only within the user's authorization.
+- A targeted knowledge review may recommend a focused update, regression check
+  or no action. Verified lessons are shared only within the user's authorization.
 - Engineering guidance targets actual failure boundaries and equivalent resource
   workloads. Mixed setup, repository maintenance and delivery time remain visible.
 
-See [engineering delivery](../workflow/engineering-delivery.md) and the
-[Enigma study: better software from the same AI](../features/aim-3.2-enigma-case.md).
-The frozen M4 pair scored 93.5/100 with AIM against 62.8/100 without it. Both
-pass 243/243 external M3/M4 machine vectors; AIM finds valid candidates in 8/8
-new positive M4 search cases against 1/8, with 32/32 valid returned candidates
-against 22/23. The same complete M4 search is 55.7× faster in the AIM app
-(0.242 versus 13.477 s). The reviewed UI and code boundaries are also stronger.
-The case separates application runtime, agent elapsed time and calculated token
-cost, and links the public evidence. The [frozen M3 result](../features/aim-3.2-enigma-m3-case.md)
-remains historical; [earlier resource-efficiency results](../features/aim-3.1-evaluation.md)
-cover a separate workload and pre-3.1 candidate.
+The [latest completed Enigma evaluation](../features/aim-enigma-evaluation.md)
+scored the AIM 4.4.0-rc.11 application at **96.5/100**, against the historical
+AIM 3.2.0 reference at **93.5/100**. It retains the evaluation scope and
+sanitized evidence. This single result does not establish general superiority,
+lower development cost, or the quality of subsequent source changes.
+
+The earlier [AIM 3.2 paired study](../features/aim-3.2-enigma-case.md),
+[M3 result](../features/aim-3.2-enigma-m3-case.md) and
+[resource-efficiency results](../features/aim-3.1-evaluation.md) preserve their
+own tested versions, workloads and limitations.
 
 ## Adapters and commands
 
@@ -184,7 +200,7 @@ the same command family:
 
 `start`, `continue`, `status`, `validate`, `help`, `config`, `discuss`,
 `configure-agents`, `calibrate-repo`, `remember-repo`, `forget-repo`,
-`reflect`, `reflect-all`, `upgrade`, `mode`, `cost`, and `replan`.
+`upgrade`, `mode`, `cost`, and `replan`.
 
 If native routing is unavailable, explicit AIM intent preserves the same
 semantics. See the [adapter entry model](../workflow/adapter-entry-model.md).

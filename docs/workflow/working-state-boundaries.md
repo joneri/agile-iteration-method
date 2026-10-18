@@ -1,8 +1,8 @@
-# AIM 2.0 Working-State Boundaries
+# AIM Working-State Boundaries
 
 ## Purpose
 
-Define what AIM 2.0 working state is, where it lives, and how it differs from reusable repo profile data.
+Define what AIM working state is, where it lives, and how it differs from reusable repo profile data.
 
 This prevents AIM from mixing:
 

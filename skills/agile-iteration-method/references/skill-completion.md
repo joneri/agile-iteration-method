@@ -10,8 +10,18 @@ Source: docs/workflow/skill-completion.md
 This document specifies the preserved **legacy Epic/DI workspace protocol**.
 For AIM 4.0 Story work, use [User Stories and product backlog](user-stories.md):
 accept verified Stories with actual user authority, then evaluate each Epic for
-a separate closure decision. The legacy helpers and mandates below cannot
+a separate closure decision. Reuse current evidence and record only the new
+outcome assessment and actual decision. Do not produce another long account of
+completed implementation, tests and review. For Story work, `criteriaFrom` can
+reuse explicit coverage already present in an evidence report. See the Story
+contract; legacy workspaces retain their existing closure schema. The legacy helpers and mandates below cannot
 accept new Stories or convert historical Increments into requirements.
+
+Finish using confirmed transition results and referenced current checks. A final
+acceptance does not trigger a new full test run, method reload or handoff report.
+Check only outstanding outcome questions and changed evidence; preserve the
+separate Epic closure decision. If the agreed verification budget leaves a gap,
+state it for the owner instead of starting more experiments automatically.
 
 
 New combined proposals follow [Combined decisions and predictable continuation](streamlined-decisions.md).
@@ -29,6 +39,13 @@ the user's explicit disposition decision, which may share the presented
 Increment-acceptance response. On resume, reuse current evidence and a recorded
 valid decision; reassess only missing or changed inputs. Portfolio Auto records the same recommendation
 before its separately revalidated mandate may authorize eligible closure.
+
+Reuse still-valid journey results, counterevidence and criterion assessments
+when they already cover the Epic outcome. Check the remaining gaps; do not rerun
+checks or rewrite their narratives solely because the phase is called closure.
+Required legacy JSON bindings remain, but known metadata should be assembled
+mechanically from existing evidence. A genuinely new observation must remain
+visible and must not silently rewrite evidence bound to an earlier decision.
 
 An accepted Increment proves only that Increment. Before recommending `close`,
 PO performs a closure truth audit against the complete Epic and its declared

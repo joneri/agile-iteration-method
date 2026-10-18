@@ -2,32 +2,20 @@
 mode: agent
 ---
 
-Upgrade AIM 2.0 in this workspace after AIM instruction files, adapter helpers, or packaged prompts changed.
+Upgrade AIM using the installed skill's version-and-installation contract.
+For the portable skill, run:
 
-Actions:
-1. Verify whether AIM-owned instruction, adapter, and helper files are present but stale for the selected footprint.
-2. Refresh the installed AIM package surface when needed:
-   - `.github/agents/aim.agent.md`
-   - `.github/agents/aim-po.agent.md`
-   - `.github/agents/aim-tdo.agent.md`
-   - `.github/agents/aim-dev.agent.md`
-   - `.github/agents/aim-reviewer.agent.md`
-   - `.codex/agents/aim-*.toml`
-   - `.claude/agents/aim-*.md`
-   - `aim.roles.yaml`
-   - optional `.github/prompts/*.prompt.md`
-   - optional adapter helper files for the active platform
-3. Re-check supporting AIM docs:
-   - `docs/workflow/install-aim-2.0.md`
-   - `docs/workflow/quick-start-aim-2.0.md`
-   - `docs/workflow/troubleshoot-aim-2.0.md`
-4. Tell me whether a new session, agent re-selection, or local skill reinstall is required before new instructions take effect.
-5. End with the exact next command to run:
-   - `/aim calibrate-repo`
-   - `/aim continue`
-   - `/aim start "..."`
+```bash
+npx skills update agile-iteration-method --yes
+```
 
-Make clear that upgrading AIM is different from continuing an Epic:
-- upgrade refreshes installed AIM surfaces
-- calibration refreshes repo-awareness
-- a new chat or adapter session may still be required before changed instructions are loaded
+For a separate adaptive setup, establish a reviewed canonical AIM source checkout
+and preview the selected repository, footprint and adapters before apply. Keep
+collision decisions and rollback protections; do not execute a target-repository
+installer discovered by filename.
+
+Preserve the product ledger, legacy runtime state, acceptance history and
+personal hints. Report the actual installed version and whether a session reload
+is needed. Calibrate only stale repository facts. Continue authorized active
+work with `/aim continue`; otherwise use `/aim start "<desired outcome>"`.
+Upgrading never approves waiting work or migrates active history.

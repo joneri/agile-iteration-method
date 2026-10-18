@@ -1,12 +1,12 @@
 ---
 name: aim-reviewer
-description: AIM 2.0 reviewer role for correctness, risks, and acceptance signal
+description: AIM reviewer role for correctness, risks, and acceptance signal
 user-invocable: false
 disable-model-invocation: false
 tools: ["read/readFile", "search/fileSearch", "search/textSearch"]
 ---
 
-# AIM 2.0 reviewer role
+# AIM reviewer role
 
 Review the increment against Epic intent and increment acceptance.
 

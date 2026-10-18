@@ -1,8 +1,8 @@
-# AIM 2.0 Documentation Model
+# AIM Documentation Model
 
 ## Purpose
 
-Define the canonical documentation model and source-of-truth hierarchy for AIM 2.0.
+Define the canonical documentation model and source-of-truth hierarchy for AIM.
 
 This model makes `docs/workflow/` the central AIM-owned behavior documentation surface.
 
@@ -17,6 +17,14 @@ It separates:
 - maintainer reference
 - runtime state
 - shipped product surface
+
+## Version labels
+
+Current product guides describe AIM. `VERSION` identifies the source release;
+installation manifests, runtime contracts and schemas keep their own versions.
+Older filenames such as `install-aim-2.0.md` remain stable links to current guides.
+Dates and versions inside historical studies, migration examples and changelog
+entries identify their original scope and must not be replaced with today's release.
 
 ## Source-of-truth hierarchy
 
@@ -50,7 +58,7 @@ It separates:
 | Repo profile and footprint behavior | `docs/workflow/repo-profile-and-footprint-model.md` |
 | Repo-profile structure, schema versions, and migration process | `schemas/aim-repo-profile.schema.json`, `schemas/aim-personal-hints.schema.json`, and `docs/workflow/repo-profile-schema.md` |
 | Repo-awareness calibration and persistent memory | `docs/workflow/repo-awareness-calibration.md` |
-| Current-project and cross-project knowledge reflection | `docs/workflow/reflection.md` |
+| Ordinary shared learning and targeted knowledge review | `docs/workflow/reflection.md` |
 | Structured profile and repo operational-doc boundary | `docs/workflow/repo-awareness-two-layer-model.md` |
 | Working-state boundaries | `docs/workflow/working-state-boundaries.md` |
 | Profile-source reporting | `docs/workflow/profile-source-summary.md` |
@@ -197,7 +205,7 @@ Internal maintainer/build-memory docs:
 | `docs/workflow/modularity-context-efficiency.md` | canonical file-boundary and context-efficiency behavior |
 | `docs/workflow/install-aim-2.0.md` | canonical install guidance constrained by model docs |
 | `docs/workflow/release-publication-model.md` | canonical public artifact and release-gate model |
-| `docs/workflow/reflection.md` | canonical reflection, discovery, report, and promotion contract |
+| `docs/workflow/reflection.md` | canonical ordinary learning, retired command compatibility and targeted knowledge-audit boundaries |
 | `docs/workflow/version-and-installation.md` | canonical public Agent Skill distribution and skills.sh publication model |
 | `docs/features/` as a folder | support/reference by default; promote behavior-defining docs to `docs/workflow/` |
 | `AGENTS.md` | outside AIM architecture; remove from AIM product surfaces |

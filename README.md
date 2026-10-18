@@ -1,10 +1,13 @@
-# Agile Iteration Method (AIM) 4.3
+# Agile Iteration Method (AIM)
 
-![AIM 4.3.0 - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
-AIM is a delivery method for AI-assisted software work. Start with an intent. PO owns Epics and product priority; TDO owns Stories and plans a coherent increment. AIM builds, reviews and validates the result before user acceptance. In an earlier study, GPT-6 Luna built the same web app with and without AIM, first at initial delivery and again after the same major upgrade. AIM 3.2 scored **93.5 versus 49.8**, then **93.5 versus 62.8**, out of 100 against predefined criteria. These results do not establish a quality gain for the current revision. [See the case and public evidence](docs/features/aim-3.2-enigma-case.md).
+AIM helps your AI agent turn an idea into working software. It plans the work,
+checks the result through independent review and real product verification, and
+keeps acceptance with you. Use it with Codex, Claude Code or GitHub Copilot.
 
-Switch between Codex, Claude Code, and GitHub Copilot while keeping your project knowledge and saved AIM work. Discuss ideas with your repository before starting implementation. Each tool needs AIM and access to the same current repository and saved state.
+You describe the outcome. AIM keeps the requirements, approved work, measurements
+and remaining problems together so another session can continue from current facts.
 
 ## Install
 
@@ -16,7 +19,16 @@ Install the complete, self-contained AIM Agent Skill through the open skills eco
 npx skills add joneri/agile-iteration-method --skill agile-iteration-method
 ```
 
-This is full AIM, not AIM Lite. The package is generated from the same canonical workflow, adapter, installer, and schema sources as the adaptive AIM distribution. It does not require a separate AIM npm publication.
+Select your agent and project in the installer. Then tell the agent what you want:
+
+```text
+/aim start "Make checkout recovery clear when payment confirmation is delayed"
+```
+
+AIM discovers the relevant repository context and identifies the next useful step.
+The complete skill works without keeping this source checkout. Node.js/npm runs
+the installer; Python 3 runs AIM's local helpers. You can also copy [the short
+agent setup instructions](github-pages/assets/aim-install-agent.txt) into your agent.
 
 Target one supported agent explicitly when needed:
 
@@ -67,20 +79,7 @@ Record a durable project rule when AIM should remember it on later runs:
 /aim remember-repo habits "Keep user-facing language direct and calm."
 ```
 
-Turn completed AIM work into reviewable knowledge candidates:
-
-```text
-/aim reflect
-/aim reflect-all
-```
-
-Reflect verifies historical lessons against current repository evidence, preserves provenance and contradictions, and keeps promotion under your control. It finishes by saying whether action is recommended and gives one concrete next step—or states that nothing needs to be remembered or forgotten. `reflect-all` previews its local project inventory before analyzing the selected set and never modifies discovered repositories.
-
-Then start with an outcome, not a task list:
-
-```text
-/aim start "Make checkout recovery clear and reliable when payment confirmation is delayed"
-```
+Learning is part of ordinary delivery: AIM recalls bounded shared advice while planning, reviewing and diagnosing failures, and shares evidence-linked reusable lessons. No manual reflection command, repository inventory or mandatory report is required. The old `reflect` and `reflect-all` names are retired compatibility aliases. A concrete stale fact, contradiction or suspected missing lesson can justify a targeted authorized source audit. Maintained project knowledge keeps its own sources and reviewed change path.
 
 Use `/aim help` when you want the next useful action. The same command family also covers continue, status, validation, configuration, upgrade, memory, execution mode, cost depth, and replanning.
 
@@ -136,42 +135,43 @@ All adapters use the same AIM roles, gates, state ownership, and `/aim` command 
 
 AIM applies **audience-context integrity** to everything it generates: write the intended current meaning for the reader, and keep private conversations, rejected drafts, prompts, AI mistakes, and review feedback out of product copy, UI, code comments, and documentation. Changelogs and other intentionally historical artifacts keep the history their audience actually needs.
 
-## What is new in v4.1.0
+## What is new
 
-**One current product across every Control room view.** Delivery control, Discuss, Portfolio, AIM Data, People & agents and accepted history share the same User Stories and evidence.
+- **Quality goals guide the next action.** Plan relevant checks before implementation,
+  measure the first working core, and address failed or stale results before readiness.
+- **Review starts where mistakes are expensive.** A separate reviewer can challenge
+  an unproved core reference early and checks the integrated delivery later.
+- **Results stay tied to their source.** Retain raw evidence, original failures and
+  the actual build. Optional JSON observations derive values from that evidence.
+- **Product knowledge can be reused.** Keep a small map of user routes and a runnable
+  verification recipe where Dev and Reviewer can find and maintain it.
+- **Learning happens during ordinary work.** Recall relevant local shared lessons and
+  contribute generalized verified corrections without manual reflection reports.
+- **Continue with less repeated setup.** Reuse compact confirmed receipts, unchanged
+  evidence and relevant repository knowledge instead of routinely rereading everything.
 
-- Prepare cross-Epic delivery proposals from ready Stories with current context.
-- Preserve reading position, keyboard focus and drafts during background updates.
-- Review optional Legacy cleanup with your AI agent; delete after consent while preserving current Stories and evidence.
-- Open a simpler Control room without the obsolete Connection guide.
+These are supported method capabilities. Their practical effect still depends on
+agents using them and on the repository's verification coverage. See the [feature
+guide](docs/product/features.md) and [changelog](CHANGELOG.md).
 
-See the [Control room guide](docs/product/aim-ui.md) and [changelog](CHANGELOG.md).
+## What the Enigma results show
 
-## What is new in v4.0.0
+The latest completed product assessment scored **96.5/100**, against the historical
+reference's **93.5/100**. The simulator passed **123/123** reference vectors, all
+**9/9** positive search cases passed, and all **114/114** returned candidates were
+independently validated. This is one assisted run with GPT-6 Luna High; the actual
+tested build and every retained earlier result are identified in the [Enigma
+evaluation](docs/features/aim-enigma-evaluation.md).
 
-AIM 4.0 introduced a PO-owned product backlog, independent User Stories, cross-Epic delivery selection and evidence-backed acceptance. See the [Story contract](docs/workflow/user-stories.md). The measurements below describe the earlier AIM 3.2 study; they are not a benchmark of AIM 4.
+The product score does not establish general superiority, lower cost or completion
+of all method goals. The run missed one internal latency target and did not finish
+its native delivery. Both whole-workflow administration reduction targets remain
+unproved. The [historical paired study](docs/features/aim-3.2-enigma-case.md) remains
+available with its original evidence.
 
-**The advantage held through both tests:** at initial delivery, Luna + AIM solved **9/9 new search challenges versus 0/9** and passed **123/123 machine checks versus 1/123**. After the upgrade, it solved **8/8 versus 1/8**, while both passed **243/243 checks**. Every checked AIM result after the upgrade was valid (32/32); Luna alone returned one false match. The same complete upgraded search ran **55.7× faster** (0.242 versus 13.477 s, application runtime). [Both tests, method and evidence](docs/features/aim-3.2-enigma-case.md) · [Original test in detail](docs/features/aim-3.2-enigma-m3-case.md) · [Earlier resource-efficiency results](docs/features/aim-3.1-evaluation.md).
+## Versions and compatibility
 
-See the [AIM UI Beta guide](docs/product/aim-ui.md), or launch it with `/aim ui`.
-AIM Reflect still **goes beyond memory cleanup for repository work** through verified provenance and user-owned promotion. The preserved legacy runtime contract remains 2.0; the new product-backlog schema is 1.0. Product, runtime, installer and schema versions stay separate.
-
-## Safety
-
-- one main AIM thread owns the product backlog, legacy state and gate transitions
-- native specialists never accept work or create parallel AIM runtimes
-- existing files are collision-protected
-- installer apply is rollback-protected and idempotent
-- unavailable native delegation falls back to the same sequential role loop
-- tags, releases, deploys, and other external changes still need explicit scope
-
-## Documentation
-
-- [Engineering delivery and role skills](docs/workflow/engineering-delivery.md) · [Enigma comparison analysis and measured improvements](docs/features/engineering-reset-analysis.md)
-- [Feature guide](docs/product/features.md) · [AIM UI control room](docs/product/aim-ui.md) · [First-time journey](docs/product/getting-started.md)
-- [Platforms and project specialists](docs/product/platforms-and-adoption.md) · [Install and upgrade](docs/workflow/install-aim-2.0.md) · [Canonical AIM method](docs/workflow/agile-iteration-method.md)
-- [AIM Reflect](docs/workflow/reflection.md) · [Troubleshooting](docs/workflow/troubleshoot-aim-2.0.md) · [Release and publication](docs/workflow/release-publication-model.md) · [Public Agent Skill distribution](docs/workflow/version-and-installation.md)
-
-AIM 4.2 adds shared guidance for reusing applicable authority and prior answers, grouping necessary independent questions, and binding replies to their exact scope. The optional question helper validates presentation and replay receipts; the coordinator still verifies sources and records decisions. See [autonomous interaction](docs/workflow/autonomous-interaction.md). The synthetic pilot does not establish general speed or token savings.
-
-Current product version: **v4.3.0** — TDO-owned Stories, coherent increments and bounded autonomy. See [the change and its limitations](docs/features/aim-4-coherent-increments.md). See [CHANGELOG.md](CHANGELOG.md). Documentation is licensed under [CC BY 4.0](LICENSE).
+Marketing describes AIM's current capabilities. [VERSION](VERSION) identifies this
+source candidate; [CHANGELOG.md](CHANGELOG.md) records releases. Product versions,
+runtime contracts and schema versions are separate. Existing active work and
+accepted evidence are preserved; an upgrade does not migrate or approve them.

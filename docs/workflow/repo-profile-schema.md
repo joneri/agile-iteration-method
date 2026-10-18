@@ -1,4 +1,4 @@
-# AIM 2.0 Repo-Profile Schema
+# AIM Repo-Profile Schema
 
 ## Purpose
 

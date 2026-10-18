@@ -8,9 +8,9 @@ Source: docs/workflow/adapter-entry-model.md
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 2.0 adapter entry model
+# AIM adapter entry model
 
-This document is the canonical AIM 2.0 definition of how a user **natively starts
+This document is the canonical AIM definition of how a user **natively starts
 and uses AIM** in each adapter.
 
 AIM keeps **one canonical behavior model** and exposes it through a
@@ -32,6 +32,11 @@ A user should never have to guess whether to use a command, an agent, a prompt, 
 a helper file. Each adapter has exactly one primary skill-led front door.
 
 ## Referential closure
+
+The portable public Agent Skill includes its own package-local references for
+all supported agents and does not require copied workflow docs in the target.
+The paths below describe the separate adaptive installation and its selected
+repository footprint. Both use the same method and native Story contract.
 
 An installable adapter package is referentially closed when every canonical
 document directly required by its installed instructions is available at the
@@ -77,8 +82,6 @@ The canonical AIM command family is defined in
 - `/aim calibrate-repo`
 - `/aim remember-repo`
 - `/aim forget-repo`
-- `/aim reflect`
-- `/aim reflect-all`
 - `/aim upgrade`
 - `/aim mode`
 - `/aim cost`

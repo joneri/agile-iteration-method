@@ -123,6 +123,8 @@ aimInstallManifest:
         - scripts/aim_engineering.py
         - scripts/aim_quality/__init__.py
         - scripts/aim_quality/files.py
+        - scripts/aim_quality/goals.py
+        - scripts/aim_quality/delivery.py
         - scripts/aim_quality/skills.py
         - scripts/aim_quality/evidence.py
         - scripts/aim_quality/timing.py
@@ -131,6 +133,9 @@ aimInstallManifest:
         - scripts/aim_quality/delegation.py
         - scripts/aim_quality/review.py
         - scripts/aim_quality/knowledge.py
+        - scripts/aim_quality/patterns.py
+        - scripts/aim_quality/learning.py
+        - scripts/aim_quality/error_patterns.json
         - scripts/aim_installer/__init__.py
         - scripts/aim_installer/yaml_lite.py
         - scripts/aim_validator/__init__.py
@@ -229,6 +234,8 @@ aimInstallManifest:
     enterpriseMemory: ~/.aim/repo-awareness/<repo-fingerprint>/memory.yaml
     enterpriseMemoryDocs: ~/.aim/repo-awareness/<repo-fingerprint>/docs/
     reflectionRoots: ~/.aim/reflection-roots.yaml
+    reflectionView: shared-registry-read-only
+    reflectionDefaultWrites: forbidden
     reflectionReports: .aim/analysis/
     reflectionDurableWrites: forbidden
     initialStatus:

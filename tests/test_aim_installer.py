@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = REPO_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-from aim_installer import apply, guided, planner, render, yaml_lite  # noqa: E402
+from aim_installer import apply, guided, guidance, planner, render, yaml_lite  # noqa: E402
 from aim_installer.manifest import load_manifest  # noqa: E402
 import aim_install  # noqa: E402
 
@@ -43,6 +43,22 @@ class ManifestYamlContractTests(unittest.TestCase):
             parsed["command"],
             '/aim start "EPIC: <desired outcome>"',
         )
+
+    def test_guidance_and_readiness_use_the_same_manifest_command(self) -> None:
+        plan = {"actions": [], "mode": "standard", "footprint": "adapters", "target": "/synthetic/project",
+                "adapters": ["codex", "claude", "copilot"], "adapterSkillContract": {}}
+        for adapter in plan["adapters"]:
+            command = '/aim start "Make a delayed payment easy to recover"'
+            plan["adapterSkillContract"][adapter] = {"firstCommand": command}
+        result = guidance.build_guidance(plan)
+        self.assertTrue(all(item["firstCommand"] == command for item in result["adapterReadiness"]))
+        starts = [step for step in result["steps"] if step.startswith("Start AIM")]
+        self.assertEqual(len(starts), 3)
+        self.assertTrue(all(command in step for step in starts))
+        self.assertNotIn("EPIC:", "\n".join(result["steps"]))
+        plan["adapterSkillContract"] = {}
+        self.assertTrue(all('/aim start "<desired outcome>"' in step for step in guidance.build_guidance(plan)["steps"]
+                            if step.startswith("Start AIM")))
 
     def test_canonical_manifest_commands_are_yaml_safe_and_unchanged(self) -> None:
         manifest = load_manifest(REPO_ROOT)

@@ -1,7 +1,7 @@
 > License: CC BY 4.0 (documentation).
 > Author: Jonas Eriksson.
 
-# AIM 2.0 Product-Coherence Validation
+# AIM Product-Coherence Validation
 
 ## Purpose
 

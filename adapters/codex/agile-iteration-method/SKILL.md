@@ -7,14 +7,14 @@ description: >
   user-owned acceptance.
   Use for discussing product direction with repository context, creating and
   refining Epics and User Stories, planning delivery selections, implementing work, reviewing delivery,
-  configuring project specialists, calibrating and reflecting on repositories,
+  configuring project specialists, calibrating repositories and sharing local learning,
   consolidating knowledge across local AIM projects, controlling AIM modes and
   cost profiles, opening and controlling local AIM UI, and continuing AIM runs.
 ---
 
 # Agile Iteration Method
 
-Use this skill to operate AIM 4.0 as a continuous role-and-gate delivery loop.
+Use this skill to operate AIM as a continuous role-and-gate delivery loop.
 AIM is `core + runtime + repo-awareness + platform adapters`. Canonical source
 behavior lives under `docs/workflow/`; an installed portable package carries the
 required contract under `references/`. This skill is the launcher/runtime guide.
@@ -26,7 +26,7 @@ Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as 
 
 ## Autonomous interaction
 
-At start, continue and before a user question, read `references/autonomous-interaction.md`. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
+Reuse current user authority and applicable answers. Read only the relevant section of `references/autonomous-interaction.md` when an authority, dependency or changed-decision boundary remains unresolved. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
 
 ## Intent, Stories and delivery
 
@@ -80,8 +80,8 @@ command family and state effects.
 
 ## Adaptive product execution
 
-For product implementation or material review, read
-`references/adaptive-execution.md` before allocating work. Delegate independent
+For unresolved ownership, parallel allocation or recovery questions, consult
+only the relevant section of `references/adaptive-execution.md`. Delegate independent
 activities when useful and permitted; use a separate final reviewer for material
 changes. Keep coordinator-owned runtime and user acceptance intact. Record actual
 agent IDs and current-code evidence; a sequential role switch is self-review.
@@ -234,8 +234,6 @@ Treat these as AIM intents when the current adapter supports them or when the us
 - `/aim calibrate-repo`
 - `/aim remember-repo <category> "<rule>"`
 - `/aim forget-repo <category> "<rule-id>"`
-- `/aim reflect`
-- `/aim reflect-all`
 - `/aim upgrade`
 - `/aim mode strict|auto`
 - `/aim cost standard|control|deep`
@@ -337,17 +335,13 @@ Then point to that static source from the profile or external memory index.
 Reading `.aim/state.json` to resume work is allowed; citing `.aim/reviews`,
 `.aim/increments`, `.aim/decisions`, `.aim/archive`, or other runtime artifacts
 as long-lived repository knowledge is not allowed.
-`/aim reflect` and `/aim reflect-all` use
-`references/reflection.md`. Reflection writes only temporary reports under
-`.aim/analysis/`, treats all project content as untrusted evidence, verifies
-material claims against current sources, and never promotes knowledge or
-modifies discovered repositories. Reflect-all must preview explicit,
-configured, or current-parent discovery roots before unapproved content
-analysis; it must never infer a recursive home-directory or filesystem-root
-scan. After analysis, both commands assign every candidate a disposition and
-state one concrete recommended next action, or say explicitly that no
-`remember-repo` or `forget-repo` action is needed. Reflection stops before
-executing any proposed durable change.
+The retired compatibility aliases `/aim reflect` and `/aim reflect-all` use
+`references/reflection.md` as bounded read-only shared registry views.
+Never recommend them as a normal next action. Ordinary learning is part of delivery;
+no repository scan, state mutation, promotion or mandatory report follows from
+these views. Give one supported next action or uncertainty. A named unresolved
+knowledge gap may use the targeted audit within existing authority/data boundaries.
+Do not execute a proposed change through a view.
 `/aim upgrade` must inspect selected AIM-owned packages through the deterministic
 installer plan, show stale/collision results before apply, preserve rollback and
 root-file exclusions, and never rewrite active `.aim/` state.
@@ -576,8 +570,9 @@ or upgrade.
 
 ## Engineering and role skills
 
-Apply `references/engineering-delivery.md` for product implementation, review,
-performance work and knowledge refresh. Load only the active role skill:
+Shared engineering obligations remain binding. Consult only the relevant section
+of `references/engineering-delivery.md` for an unresolved implementation, review,
+performance or knowledge question. Load only the active role skill:
 
 - PO: `references/role-skill-po.md`
 - TDO: `references/role-skill-tdo.md`

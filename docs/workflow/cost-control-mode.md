@@ -4,8 +4,8 @@
 
 Make AIM budget-aware so users can reduce agent resource use without weakening role ownership, gate semantics, or escalation rules.
 
-This is canonical AIM cost-profile behavior.
-In AIM 2.0, cost control is part of the explicit public cost-saving promise rather than a quiet internal optimization.
+This is canonical AIM cost-profile behavior. It gives users explicit controls
+for resource use; it does not promise that any workload will be cheaper.
 
 ## How it works
 
@@ -14,7 +14,7 @@ AIM separates approval flow from runtime depth:
 - execution mode: `Strict` or `Auto`
 - cost profile: `Standard`, `Cost Control`, or `Deep`
 
-`Cost Control` keeps the AIM loop intact while spending less:
+`Cost Control` keeps the AIM loop intact with a narrower routine footprint:
 
 - compact role outputs
 - no implementation subagents by default; material final review uses a separate available reviewer under `adaptive-execution.md`
@@ -23,12 +23,20 @@ AIM separates approval flow from runtime depth:
 - validator-first runtime checks
 - concise review evidence
 - short trace artifacts for low-risk work
+- compact confirmed checkpoints without routine status rereads or copied logs
+- reuse of unchanged relevant evidence, role bindings and prior answers within scope
 - a concrete recommendation when risk needs more depth, within existing authority
 
-`Standard` also becomes cheaper in AIM 2.0 by using state-first resume and progressive context loading.
+`Standard` also uses state-first resume and progressive context loading.
 Agents read the targeted `.aim/product-backlog.json` or legacy `.aim/state.json`
 before rebuilding runtime context, then load the shortest authoritative context
 first and load deeper docs only when the task needs them.
+
+All profiles retain agreed quality goals, early measurement of the working core,
+separate material review and verification through the delivered entry point.
+Reuse current raw results when they still apply; changed dependencies or an
+unresolved risk require affected checks. A narrow footprint cannot justify
+dropping a criterion or lowering a target.
 
 For a preserved legacy Epic, select cost depth afresh on new work; never copy it from an
 `epic_complete` checkpoint. Resume preserves an incomplete Epic's persisted
@@ -50,7 +58,9 @@ named risk or failure.
 - Cost profiles are orthogonal to execution modes.
 - Concrete risk informs depth within mandate. Complexity alone changes neither
   cost profile nor product priority, and never authorizes lower quality.
-- Standard AIM should be cheaper by default, not only when Cost Control is selected.
+- Avoid repeated work in every profile. A cost benefit needs measurement of the
+  actual workload and platform; no fixed token, time or money reduction follows
+  from selecting a profile.
 - Context hogs, repeated major-doc rereads, and long low-risk markdown artifacts are budget bugs.
 
 ## Inputs/outputs

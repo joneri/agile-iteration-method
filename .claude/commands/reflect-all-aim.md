@@ -1,21 +1,17 @@
 ---
-description: Safely inventory selected local AIM projects and produce a cross-project knowledge-candidate report.
+description: Retired compatibility alias; show bounded shared advice for a cross-project question or topic overview.
 ---
 
 # AIM reflect-all
 
-Run the `/aim reflect-all` intent from
-`docs/workflow/reflection.md`, preserving
+Handle the retired `/aim reflect-all` intent from `docs/workflow/reflection.md`, preserving
 `docs/workflow/adapter-command-contract.md`.
 
-Resolve only explicit or configured discovery roots, or the current repository's
-parent fallback. Preview the cheap repository inventory and workload before
-unapproved content analysis. Never scan the home directory or filesystem root
-implicitly, never modify discovered repositories, and write only a temporary
-candidate report in the initiating repository's `.aim/analysis/`.
-After approved content analysis, assign every candidate a disposition and name
-one concrete safe next action, or state explicitly that no promotion or removal
-is needed. Do not execute the proposed durable change.
+Explain that learning now belongs to ordinary delivery and never recommend this
+retired alias as a normal next action. Use a bounded read-only shared registry view. No repository scan, state mutation,
+promotion or mandatory report. Ordinary learning already belongs to delivery.
+Give a supported next action or uncertainty. Do not execute a proposed change
+through the view. Only a named unresolved knowledge gap justifies the targeted
+audit within existing authority and data boundaries.
 
-If literal routing is unavailable, execute the same intent in ordinary
-Claude chat.
+If literal routing is unavailable, preserve the same intent in ordinary Claude chat.

@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "patterns": [
+    {
+      "id": "PIT-RESULT-IDENTITY",
+      "concerns": ["async-results", "result-handoff"],
+      "failure": "An earlier result is reopened using newly edited inputs or configuration, so the displayed candidate no longer belongs to the work that produced it.",
+      "counterexample": "Start with input A, obtain a result, edit the current input to B, then open the result from A.",
+      "control": "Keep an immutable input and configuration identity with each result, or explicitly invalidate it after edits. Check reopening an earlier result after changing the current input.",
+      "notApplicable": "No results survive input changes and the product has no delayed result, retained candidate or result-to-editor handoff.",
+      "evidence": "RC6 and RC7 product assessments exposed result-handoff identity failures. These concrete failures support this pattern; they do not establish a general benefit from the registry.",
+      "status": "reviewed",
+      "checkedDate": "2026-10-17"
+    },
+    {
+      "id": "PIT-SEARCH-WORKLOAD",
+      "concerns": ["constraint-search"],
+      "failure": "Repeated easy symbol patterns exercise similar branching and pruning, concealing the cost of other valid workload families.",
+      "counterexample": "A fast local witness passes while an independently generated valid witness with a different branching or pruning pattern fails the same completion target.",
+      "control": "Generate an independent valid witness that stresses another cost driver. Measure correct, complete results on that workload early; profile a missed target and correct the costly work without reducing the workload or target.",
+      "notApplicable": "The changed operation has no constraint search or input-dependent branching or pruning cost.",
+      "evidence": "RC7 recorded a local median completion of 4.515 seconds while six external cases reached 120-second timeouts. This contrast supports checking distinct workload families; it does not prove a general benefit from the registry.",
+      "status": "reviewed",
+      "checkedDate": "2026-10-17"
+    },
+    {
+      "id": "PIT-METHOD-ACTIVATION",
+      "concerns": ["method-evaluation"],
+      "failure": "Reading method instructions is treated as activating the method, and product results are attributed to a method run without its native runtime phases or gate evidence.",
+      "counterexample": "An evaluation reports method-guided implementation after an instruction read, but cannot identify an approved scope, a native Dev phase or the corresponding gate evidence.",
+      "control": "The coordinator checks approved scope and the native phase before Dev work, then checks actual gate evidence before method assessment. Canonical scripts/aim_evaluation_guard.py is a repository-only evaluation harness, not an installed-skill command.",
+      "notApplicable": "The activity is not assessing whether a product result was produced by an activated AIM workflow.",
+      "evidence": "RC6 evaluation exposed the gap between instruction reading and workflow activation. The canonical repository guard supplies a bounded evaluation check; this provenance does not establish a general benefit from the registry.",
+      "status": "reviewed",
+      "checkedDate": "2026-10-17"
+    }
+  ]
+}

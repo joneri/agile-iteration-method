@@ -1,8 +1,8 @@
-# AIM 2.0 Repository Surface Classification
+# AIM Repository Surface Classification
 
 ## Purpose
 
-Define the operational file-surface boundary model for AIM 2.0.
+Define the operational file-surface boundary model for AIM.
 
 This is canonical AIM file-surface and installation-boundary behavior.
 
@@ -20,7 +20,7 @@ The model lets maintainers and future installers answer, for each important file
 
 ## How it works
 
-AIM 2.0 separates repository surfaces by responsibility instead of treating every AIM-related file as installable product.
+AIM separates repository surfaces by responsibility instead of treating every AIM-related file as installable product.
 
 | Dimension | Values | Meaning |
 | --- | --- | --- |

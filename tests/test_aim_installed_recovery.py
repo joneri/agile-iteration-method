@@ -68,6 +68,16 @@ class InstalledRecoveryTests(unittest.TestCase):
             (repo / 'aim.profile.yaml').write_text(seed.shared_profile_seed())
             (repo / 'aim.roles.yaml').write_text(seed.project_roles_seed(repo))
             self.assertTrue(invoke('aim_engineering.py', 'profiles')['valid'])
+            advice = invoke('aim_engineering.py', 'pitfalls', '--concern', 'constraint-search')
+            self.assertEqual([p['id'] for p in advice['patterns']], ['PIT-SEARCH-WORKLOAD'])
+            self.assertTrue(advice['advisoryOnly'])
+            self.assertFalse(advice['benefitVerified'])
+            registry = (base / 'not-created/registry.sqlite3').resolve()
+            recalled = invoke('aim_engineering.py', 'learning', 'recall',
+                              '--text', 'old output after editing input', '--registry', str(registry))
+            self.assertFalse(recalled['available'])
+            self.assertFalse(registry.parent.exists())
+            self.assertEqual(state.read_bytes(), original_state)
 
 
 

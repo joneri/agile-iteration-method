@@ -92,7 +92,7 @@ class AdapterCommandContractTests(unittest.TestCase):
     def test_complete_adapter_command_contract_is_healthy(self) -> None:
         completed = self._validate(REPO_ROOT)
         self.assertEqual(completed.returncode, 0, completed.stdout)
-        self.assertIn("canonical command intents: 19", completed.stdout)
+        self.assertIn("canonical command intents: 17", completed.stdout)
 
     def test_discuss_is_a_first_class_read_only_cross_adapter_command(self) -> None:
         surfaces = (
@@ -260,7 +260,9 @@ class AdapterCommandContractTests(unittest.TestCase):
             REPO_ROOT / "adapters/portable/agile-iteration-method/SKILL.md"
         ).read_text(encoding="utf-8")
         self.assertNotIn("Final Epic acceptance always remains yours", portable)
-        self.assertIn("Gate E acceptance and whole-Epic closure remain separate decisions", portable)
+        self.assertIn("no automatic", portable)
+        self.assertIn("Epic closure", portable)
+        self.assertIn("PO separately judges whole-Epic outcomes", portable)
 
         for relative in (
             ".github/prompts/start-aim.prompt.md",
@@ -384,7 +386,7 @@ class AdapterCommandContractTests(unittest.TestCase):
 
     def test_status_reports_current_product_release_separately_from_runtime(self) -> None:
         version = (REPO_ROOT / "VERSION").read_text(encoding="utf-8").strip()
-        self.assertEqual(version, "4.3.0")
+        self.assertEqual(version, json.loads((REPO_ROOT / "skills/agile-iteration-method/manifest.json").read_text())["productVersion"])
 
         status_surfaces = {
             "canonical": REPO_ROOT / "docs/workflow/adapter-command-contract.md",
@@ -478,10 +480,12 @@ class AdapterCommandContractTests(unittest.TestCase):
             copied = self._copy_repo(temporary)
             portable = copied / "adapters/portable/agile-iteration-method/SKILL.md"
             content = portable.read_text(encoding="utf-8")
+            before = "On first use show current position, recommended next action"
+            self.assertIn(before, content, "The negative-case mutation must match current instructions")
             portable.write_text(
                 content.replace(
-                    "recommend exactly one next action",
-                    "show the available AIM commands",
+                    before,
+                    "On first use show the available AIM commands",
                     1,
                 ),
                 encoding="utf-8",

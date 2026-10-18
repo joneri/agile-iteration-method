@@ -69,6 +69,8 @@ UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_engineering.py"),
     Path("scripts/aim_quality/__init__.py"),
     Path("scripts/aim_quality/files.py"),
+    Path("scripts/aim_quality/goals.py"),
+    Path("scripts/aim_quality/delivery.py"),
     Path("scripts/aim_quality/skills.py"),
     Path("scripts/aim_quality/evidence.py"),
     Path("scripts/aim_quality/timing.py"),
@@ -77,6 +79,9 @@ UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_quality/delegation.py"),
     Path("scripts/aim_quality/review.py"),
     Path("scripts/aim_quality/knowledge.py"),
+    Path("scripts/aim_quality/patterns.py"),
+    Path("scripts/aim_quality/learning.py"),
+    Path("scripts/aim_quality/error_patterns.json"),
     Path("scripts/aim_installer/__init__.py"),
     Path("scripts/aim_installer/yaml_lite.py"),
     Path("scripts/aim_validator/__init__.py"),
@@ -337,6 +342,10 @@ def _render_install_manifest(root: Path) -> str:
 def _render_ui_payload(root: Path, source: Path) -> bytes:
     content = (root / source).read_text(encoding="utf-8")
     notice = f"{GENERATED_NOTICE}\nSource: {source.as_posix()}"
+    if source.suffix == ".json":
+        # JSON cannot carry a comment notice; manifest provenance identifies it.
+        json.loads(content)
+        return content.encode("utf-8")
     if source.suffix == ".py":
         header = (
             f"# {GENERATED_NOTICE.replace(chr(10), ' ')}\n"

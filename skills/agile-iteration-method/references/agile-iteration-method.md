@@ -13,7 +13,7 @@ Source: docs/workflow/agile-iteration-method.md
 
 ## Version
 
-This document describes the **AIM 4.0** product method. Product releases, the
+This document describes the current **AIM** product method. Product releases, the
 product-backlog schema and the preserved legacy runtime contract are separate
 versions.
 
@@ -24,7 +24,7 @@ needs through planning, implementation, independent review, validation and
 human-owned acceptance. Requirements remain visible before, during and after
 implementation.
 
-## Requirements and delivery in AIM 4.0
+## Requirements and delivery
 
 Read [User Stories and product backlog](user-stories.md) for new intent-led work.
 The model is **Intent → Epics → User Stories → delivery selection → increment**.
@@ -1206,7 +1206,7 @@ Any additional contract drift retains the existing fail-closed behavior.
 
 ## Gate B checklist: Is this a real Done Increment?
 
-For AIM 4.0, evaluate the proposed **Story selection and delivery plan**:
+For intent-led AIM work, evaluate the proposed **Story selection and delivery plan**:
 
 - Are all selected Story IDs stable, ready and linked to their own Epic?
 - Does each Story identify a user, need, value and testable acceptance criteria?

@@ -17,7 +17,7 @@ The following rules apply only to an explicitly addressed existing Epic
 workspace, `EPIC:` start or legacy `PORTFOLIO` run.
 
 
-Start AIM 2.0 in this repository.
+Resume the preserved legacy AIM runtime in this repository.
 
 Before reading major docs, check `.aim/state.json`.
 If an incomplete Epic exists, resume that checkpoint instead of rebuilding context or starting over.

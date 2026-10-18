@@ -1,6 +1,6 @@
 ---
 name: aim
-description: Run the complete AIM command family and orchestrate project-specific PO, TDO, Dev, and Reviewer subagents. Use for /aim intents, repository-aware product discussion, AIM UI lifecycle, intents, Epics, User Stories, deliveries, gates, repo calibration, reflection, agent configuration, upgrades, and AIM validation.
+description: Run the complete AIM command family and orchestrate project-specific PO, TDO, Dev, and Reviewer subagents. Use for /aim intents, repository-aware product discussion, AIM UI lifecycle, intents, Epics, User Stories, deliveries, gates, repo calibration, shared learning, agent configuration, upgrades, and AIM validation.
 ---
 
 # AIM 4 for Claude Code
@@ -18,7 +18,7 @@ Follow:
 
 ## Autonomous interaction
 
-At start, continue and before a user question, read `docs/workflow/autonomous-interaction.md`. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
+Reuse current user authority and applicable answers. Read only the relevant section of `docs/workflow/autonomous-interaction.md` when an authority, dependency or changed-decision boundary remains unresolved. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
 
 ## Intent and User Stories (AIM 4)
 
@@ -89,8 +89,6 @@ Recognize and execute the equivalent intent for:
 - `/aim calibrate-repo`
 - `/aim remember-repo`
 - `/aim forget-repo`
-- `/aim reflect`
-- `/aim reflect-all`
 - `/aim upgrade`
 - `/aim mode`
 - `/aim cost`
@@ -179,12 +177,13 @@ non-canonical. Require the state SHA-256 binding and existing contained evidence
 files, including the aggregate evidence-set SHA-256, structured black-box and
 negative-test records, and a separate matching closure-authority decision.
 
-Reflect commands follow `docs/workflow/reflection.md`. They write temporary
-candidate reports only, never durable knowledge or discovered repositories.
-Reflect-all previews reviewed local discovery roots and the project inventory
-before unapproved content analysis. Completed analysis assigns candidate
-dispositions and ends with one concrete safe next action or an explicit
-no-action conclusion; it never executes the proposed durable change.
+Ordinary learning uses shared registry hooks during delivery. The retired
+compatibility aliases `/aim reflect` and `/aim reflect-all` follow
+`docs/workflow/reflection.md` as bounded read-only registry views: no repository scan, state mutation,
+promotion or mandatory report. Never recommend these retired aliases as a normal next action.
+State a supported next action or uncertainty.
+Use a targeted audit only for a named unresolved knowledge gap, within existing
+authority and data boundaries. Do not execute a proposed change through the view.
 
 ## Bootstrap
 
@@ -254,8 +253,9 @@ unsupported versions.
 
 ## Engineering and role skills
 
-Apply `docs/workflow/engineering-delivery.md` for product implementation, review,
-performance work and knowledge refresh. Load only the active role skill:
+Shared engineering obligations remain binding. Consult only the relevant section
+of `docs/workflow/engineering-delivery.md` for an unresolved implementation, review,
+performance or knowledge question. Load only the active role skill:
 
 - PO: `docs/workflow/role-skill-po.md`
 - TDO: `docs/workflow/role-skill-tdo.md`

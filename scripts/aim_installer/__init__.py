@@ -1,4 +1,4 @@
-"""AIM 2.0 installer package.
+"""AIM installer package.
 
 Guided-first UX over a manifest-driven engine that plans and applies a repo-safe
 AIM install: compact or detailed preview, JSON automation, per-file collision

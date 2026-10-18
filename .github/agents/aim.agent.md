@@ -1,6 +1,6 @@
 ---
 name: aim
-description: AIM 2.0 orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO with Gate A/B/E approvals
+description: AIM orchestrator for PO -> TDO -> Dev -> Reviewer -> TDO -> PO with Gate A/B/E approvals
 tools:
   [
     "agent",
@@ -36,7 +36,7 @@ handoffs:
     send: true
 ---
 
-# AIM 2.0 orchestrator (Copilot layer)
+# AIM orchestrator (Copilot layer)
 
 This file is an optional Copilot UX layer for AIM.
 Core method semantics come from `docs/workflow/agile-iteration-method.md`.
@@ -44,7 +44,7 @@ This packaging exposes the current AIM product surface and preserves supported l
 
 ## Autonomous interaction
 
-At start, continue and before a user question, read `docs/workflow/autonomous-interaction.md`. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
+Reuse current user authority and applicable answers. Read only the relevant section of `docs/workflow/autonomous-interaction.md` when an authority, dependency or changed-decision boundary remains unresolved. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
 
 ## Intent and User Stories (AIM 4)
 
@@ -182,8 +182,6 @@ If instructions conflict, escalate.
 - `/aim calibrate-repo` - cheaply inspect, verify, and persist repository knowledge
 - `/aim remember-repo <category> "<rule>"` - persist a structured shared or personal repository rule
 - `/aim forget-repo <category> "<rule-id>"` - remove a structured repository rule
-- `/aim reflect` - verify current-project delivery evidence and propose durable knowledge candidates
-- `/aim reflect-all` - preview and synthesize an approved set of local AIM projects
 - `/aim upgrade` - inspect and refresh selected AIM-owned packages through a reviewed installer plan
 - `/aim replan` - legacy Epic/DI only: return to Gate B planning
 - `/aim commit-mode optional|required` - set commit policy
@@ -204,16 +202,13 @@ for a short entry, create or update a static memory document in the selected
 durable store, then reference that static source from the profile or external
 memory index.
 
-Reflect and reflect-all behavior must follow `docs/workflow/reflection.md`.
-Reflection writes only temporary reports under `.aim/analysis/`; it never
-changes durable knowledge, active state, or discovered repositories.
-Reflect-all resolves only explicit or configured roots, or the current
-repository's parent fallback, and previews the inventory before unapproved
-content analysis. It must never infer a recursive home-directory or
-filesystem-root scan. After analysis, assign every candidate a disposition and
-present one concrete recommended next action, or state explicitly that no
-`remember-repo` or `forget-repo` action is needed. Do not execute the proposed
-promotion during reflection.
+Ordinary learning uses shared registry hooks during delivery. The retired
+compatibility aliases `/aim reflect` and `/aim reflect-all` follow
+`docs/workflow/reflection.md` as bounded read-only registry views: no repository scan, state mutation,
+promotion or mandatory report. Never recommend these retired aliases as a normal next action.
+State a supported next action or uncertainty.
+Use a targeted audit only for a named unresolved knowledge gap, within existing
+authority and data boundaries. Do not execute a proposed change through the view.
 
 ## Core constraints
 

@@ -26,8 +26,10 @@ SUPPORTED_SCHEMA_KEYWORDS = {
     "items",
     "maxItems",
     "maxLength",
+    "maxProperties",
     "minItems",
     "minLength",
+    "minProperties",
     "pattern",
     "properties",
     "required",
@@ -131,6 +133,12 @@ def _validate_node(
         return
 
     if isinstance(instance, dict):
+        minimum = schema.get("minProperties")
+        if minimum is not None and len(instance) < minimum:
+            issues.append(SchemaIssue(path, f"must contain at least {minimum} properties"))
+        maximum = schema.get("maxProperties")
+        if maximum is not None and len(instance) > maximum:
+            issues.append(SchemaIssue(path, f"must contain at most {maximum} properties"))
         required = schema.get("required", [])
         for key in required:
             if key not in instance:

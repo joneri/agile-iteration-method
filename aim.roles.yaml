@@ -43,6 +43,10 @@ aimProjectRoles:
         - id: aim-dev-engineering
           source: bundled
           status: available
+        - id: aim-ui-product-verification
+          source: project
+          status: available
+          path: docs/product/aim-ui-verification.md
       mission: Implement exactly the approved User Story selection with repo-native practices.
       expertise:
         - Python standard-library tooling and unittest
@@ -53,6 +57,10 @@ aimProjectRoles:
         - id: aim-reviewer-engineering
           source: bundled
           status: available
+        - id: aim-ui-product-verification
+          source: project
+          status: available
+          path: docs/product/aim-ui-verification.md
       mission: Independently verify correctness, risk, regression coverage, and acceptance evidence.
       expertise:
         - Cross-adapter contract drift and clean-room package closure

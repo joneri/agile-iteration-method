@@ -34,24 +34,21 @@ AIM gives AI-assisted development a clear delivery shape:
 The result is less wandering, less repeated context, and a visible path from an
 idea to software that can be demonstrated and judged.
 
-## AIM Reflect
+## Shared learning during delivery
 
-Completed delivery history contains useful lessons, but history is evidence—not
-automatic truth.
+During delivery AIM recalls relevant shared advice and contributes a new verified
+reusable correction or independently confirmed reusable failure with existing
+proof. An unverified remedy stays explicitly proposed. This needs no manual reflection command
+or new routine report. Agent-performed hooks do not guarantee complete automatic
+capture from every repo; missing entries are unknown coverage.
 
-- `/aim reflect` finds reusable knowledge in the current AIM project.
-- `/aim reflect-all` previews selected local AIM projects and finds
-  project-specific, cross-project, personal, and AIM-product insights.
-
-Every candidate carries provenance, current-source verification, confidence,
-contradictions, a proposed durable destination, and an explicit promotion
-action. Reports stay temporary under `.aim/analysis/`; reflection never changes
-profiles, docs, source, active state, or another repository.
-
-Agent-memory systems such as Anthropic Dreams consolidate accumulated memories
-and session history. **AIM Reflect goes beyond memory cleanup for repository
-work**: it asks whether a lesson is still true in current code, where it belongs,
-which projects support it, and who approved keeping it.
+The old `reflect` and `reflect-all` names are retired compatibility aliases for
+bounded read-only registry views. They are not a normal learning step and do not
+scan repos or promote knowledge. Profiles,
+architecture facts and useful successful patterns remain in their maintained
+project sources. Ask for a targeted audit when a concrete stale fact,
+contradiction or suspected missing lesson cannot be settled by the registry.
+Its source scope and stopping point stay bounded by the actual mandate.
 
 ## How AIM Delivers Software
 
@@ -187,8 +184,6 @@ state transitions through the platform's native skill route.
 | --- | --- | --- | --- |
 | `/aim remember-repo <category> "<rule>"` | A stable project fact should guide later runs. | Stores a structured shared or personal rule in the correct durable knowledge layer. | Future planning reuses the rule when relevant. |
 | `/aim forget-repo <category> "<rule-id>"` | A remembered rule is obsolete or incorrect. | Removes the identified rule without rewriting active runtime evidence. | Later runs stop treating that rule as repository truth. |
-| `/aim reflect` | Completed AIM work may contain reusable knowledge. | Verifies current-project evidence, writes a temporary candidate report, and concludes whether action is recommended. | Follow the one concrete recommended action, or stop when AIM says no action is needed. |
-| `/aim reflect-all` | Several selected local AIM projects may reveal shared lessons. | Previews safe discovery scope, synthesizes the approved project set, and concludes with an operator-ready next action. | Follow the named promotion path only after reviewing it; discovered projects remain unchanged. |
 
 ### Configure and maintain AIM
 

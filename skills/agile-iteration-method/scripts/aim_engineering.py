@@ -1,29 +1,93 @@
 #!/usr/bin/env python3
 # GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py
 # Source: scripts/aim_engineering.py
-"""Inspect role-skill candidates and knowledge freshness without running AIM."""
+"""Inspect engineering evidence and share bounded, generalized local learning."""
 
 from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 from aim_quality.evidence import check_claims
 from aim_quality.files import fingerprint, read_evidence
 from aim_quality.skills import suggest_skills
-from aim_quality.timing import summarize_timing
+from aim_quality.timing import summarize_timing, summarize_trace, TRACE_LIMIT, TRACE_ACTIVITIES
 from aim_quality.profiles import check_profiles
 from aim_quality.localities import check_localities
 from aim_quality.delegation import check_delegation
 from aim_quality.review import check_review
 from aim_quality.knowledge import check_knowledge_use
+from aim_quality.patterns import lookup as lookup_pitfalls
+
+
+def _unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("Duplicate JSON key in lesson")
+        result[key] = value
+    return result
+
+
+def _learning(args):
+    # Optional capability: unavailable SQLite must not break other commands.
+    try:
+        import sqlite3
+        from aim_quality import learning
+    except ImportError as exc:
+        raise ValueError("Shared learning requires Python SQLite with FTS5; local delivery evidence is unchanged") from exc
+
+    registry = args.registry or learning.default_registry()
+    try:
+        if args.learning_action == "init":
+            return learning.initialize(registry)
+        if args.learning_action == "recall":
+            return learning.recall(registry, args.text, args.phase, args.technology)
+        if args.learning_action == "history":
+            return learning.history(registry, args.lesson_id)
+        evidence = {"path": args.evidence, "sha256": args.evidence_sha256}
+        if args.learning_action == "withdraw":
+            return learning.withdraw(registry, args.repo, args.lesson_id,
+                                     args.expected_revision, args.reason, evidence)
+        raw = sys.stdin.buffer.read(32769)
+        if len(raw) > 32768:
+            raise ValueError("Lesson input exceeds 32768 bytes")
+        try:
+            lesson = json.loads(raw, object_pairs_hook=_unique_object)
+        except RecursionError as exc:
+            raise ValueError("Lesson input exceeds its nesting limit") from exc
+        return learning.share(registry, args.repo, lesson, evidence,
+                              lesson_id=args.lesson_id, expected_revision=args.expected_revision)
+    except sqlite3.Error as exc:
+        # A sharing failure never changes the result of an earlier local check.
+        raise ValueError("Shared learning registry unavailable; local delivery evidence is unchanged") from exc
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     commands = parser.add_subparsers(dest="command", required=True)
+    learning = commands.add_parser("learning", help="Recall or explicitly share generalized lessons across local projects")
+    actions = learning.add_subparsers(dest="learning_action", required=True)
+    for name in ("init", "recall", "share", "withdraw", "history"):
+        action = actions.add_parser(name)
+        action.add_argument("--registry", type=Path, help="Override the shared local registry")
+        if name == "recall":
+            action.add_argument("--text", default="", help="Sanitized task, symptom or technical question")
+            action.add_argument("--phase", choices=("planning", "implementation", "review", "diagnosis"), default="planning")
+            action.add_argument("--technology", action="append", default=[])
+        if name in ("share", "withdraw"):
+            action.add_argument("--evidence", required=True, help="Existing proof, relative to --repo")
+            action.add_argument("--evidence-sha256", required=True)
+            action.add_argument("--expected-revision", type=int, required=name == "withdraw")
+        if name in ("share", "withdraw", "history"):
+            action.add_argument("--lesson-id", required=name != "share")
+        if name == "withdraw":
+            action.add_argument("--reason", required=True)
+    pitfalls = commands.add_parser("pitfalls", help="Look up bounded engineering advice for explicit concern tags")
+    pitfalls.add_argument("--concern", action="append", required=True)
     skills = commands.add_parser("skills", help="Propose skills without installing them")
     skills.add_argument("--requirements", action="append", default=None)
     profiles = commands.add_parser("profiles", help="Validate project profiles and reachable role skills")
@@ -43,11 +107,21 @@ def main() -> int:
     check.add_argument("evidence")
     timing = commands.add_parser("timing", help="Separate recorded work and repository-improvement time")
     timing.add_argument("record")
+    trace = commands.add_parser("trace", help="Summarize an explicit Codex JSONL window from stdin; never writes or executes trace content")
+    trace.add_argument("--first-call", required=True)
+    trace.add_argument("--last-call", required=True)
+    trace.add_argument("--activity", choices=TRACE_ACTIVITIES, default="mixed")
+    trace.add_argument("--max-calls", type=int)
+    trace.add_argument("--max-input-bytes", type=int)
     snapshot = commands.add_parser("fingerprint", help="Print file fingerprints; does not certify facts")
     snapshot.add_argument("files", nargs="+")
     args = parser.parse_args()
     try:
-        if args.command == "skills":
+        if args.command == "learning":
+            result = _learning(args)
+        elif args.command == "pitfalls":
+            result = lookup_pitfalls(args.concern)
+        elif args.command == "skills":
             result = suggest_skills(args.repo, args.requirements)
         elif args.command == "profiles":
             result = check_profiles(args.repo, args.only)
@@ -65,6 +139,10 @@ def main() -> int:
             result = check_claims(args.repo, json.loads(read_evidence(args.repo, args.evidence)))
         elif args.command == "timing":
             result = summarize_timing(json.loads(read_evidence(args.repo, args.record)))
+        elif args.command == "trace":
+            result = summarize_trace(sys.stdin.buffer.read(TRACE_LIMIT + 1), args.first_call,
+                                     args.last_call, activity=args.activity,
+                                     max_calls=args.max_calls, max_input_bytes=args.max_input_bytes)
         else:
             result = {"files": [fingerprint(args.repo, path) for path in args.files],
                       "semanticTruthVerified": False}

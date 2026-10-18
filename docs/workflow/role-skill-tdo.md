@@ -32,9 +32,36 @@ technical planning and evidence synthesis.
 - Specify the independent oracle, boundary scenarios and representative runtime
   workload. Select relevant latency/memory/resource targets and disclose when
   they are engineering proposals rather than binding PRD requirements.
+  Freeze literal reference outputs/states in the existing check. If material
+  core-oracle independence is unproved, arrange one bounded early challenge by
+  the same separate Reviewer before costly expansion; do not await green
+  performance targets or add an approval/state transition.
+- Name the reusable project verification entry in `qualityPlan.checks[].method`.
+  If the selected real journey cannot be driven, plan the smallest runnable
+  recipe and maintained user-route map using the Reusable product verification
+  section of `engineering-delivery.md`. Verify isolation before parallel driving.
+- Bind the complete primary operation's latency decision to `qualityPlan.primaryResult`.
+  Cancellation responsiveness is separate. For normalization-sensitive input,
+  include a boundary case before case conversion/transliteration and reuse it
+  across the affected entry paths.
 - Map each advertised algorithm variant to an independent expected-result
   check, using a small representative set plus risky interactions. Identify
   oracle gaps before implementation; do not substitute self-generated cases.
+- When raw JSON exists, freeze field extraction in the existing check's
+  `observation`, including relevant relationships between computed, retained and
+  displayed results. Expected values come from the requirement, not a success
+  flag. Dev runs the same raw-input witness through affected public entry paths;
+  a domain-only pass cannot close an adapter/UI boundary finding.
+- Freeze applicable failure cases, non-default modes, result validity and
+  materially different workload families through `qualityPlan.caseCoverage`.
+  Reuse existing checks; explain technical non-applicability instead of adding
+  ceremonial tests. Put decisive algorithm cases on the early core. Each timed
+  family must establish correct, complete results on that same workload.
+- At new intent/planning, recall shared lessons from the sanitized task and
+  technical risks through `aim_engineering.py learning recall --text ...`.
+  Known tags are optional; inspect the small topic overview for discovery.
+  Reuse relevant advice and turn it into an affected control/check, without a
+  knowledge-use report. Different search cost drivers need their own witness.
 - Identify trust boundaries and applicable security requirements. Request
   expertise for an actual gap, with source and availability, not a role title.
 - Pick the smallest sufficient validation. Reuse current evidence; widen checks
@@ -45,10 +72,10 @@ technical planning and evidence synthesis.
 
 Use bound architecture, profiling and security skills only for the affected
 area. Return the bounded plan or synthesis, evidence and material uncertainty.
-Follow `engineering-delivery.md` when defining or assessing engineering checks.
-
-Use `adaptive-execution.md` for activity ownership, independent material review,
-current-code evidence and targeted responsibility/resource checks. Do not enact
-extra agent sessions merely to mirror role names.
-
-Apply [Autonomous interaction](autonomous-interaction.md) to dependencies, independent authorized work and changed decisions. Resume from verified original sources; assess declared and plausible unrecorded impacts before supported rework/replan; do not imply an unsupported scope-change transition.
+Reuse the entry and Story contract. Consult only the relevant section of
+`engineering-delivery.md` for an unresolved engineering check, `adaptive-execution.md`
+for an unresolved ownership/resource boundary, or
+[Autonomous interaction](autonomous-interaction.md) for ambiguous authority or
+dependencies. No routine companion-document read or agent per role.
+Resume from verified original sources; assess plausible unrecorded impacts
+before supported rework. Never imply an unsupported scope-change transition.

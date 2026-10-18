@@ -53,11 +53,28 @@ class ShippedStoryJourneyTests(unittest.TestCase):
             planned = invoke("plan", {
                 "id": "DI-001", "title": "Recover a purchase", "goal": "Buyer and agent recover together",
                 "storyIds": ["US-FIND", "US-RETRY"],
+                "qualityPlan": {
+                    "reviewPolicy": {"mode":"independent"},
+                    "checks": [{"id":"QC-RECOVERY", "kind":"journey", "stage":"both",
+                        "criteria":["US-FIND/AC-1","US-RETRY/AC-1"],
+                        "workload":"interrupted purchase recovery for buyer and agent",
+                        "environment":"fixture host", "method":"native service recovery",
+                        "expected":{"buyerCanRetry":True,"agentCanFindOrder":True}, "goalIds":[]}],
+                    "primaryResult":{"checkId":"QC-RECOVERY", "notApplicableReason":"This fixture verifies package identity and board projection; runtime latency is outside its scope."},
+                    "caseCoverage":{
+                        "failureCases":{"checkIds":["QC-RECOVERY"]},
+                        "nonDefaultModes":{"notApplicableReason":"No selectable modes in this service fixture."},
+                        "resultValidity":{"checkIds":["QC-RECOVERY"]},
+                        "workloadFamilies":{"notApplicableReason":"This fixture has no timed workloads."}},
+                    "numericGoals":"not_applicable", "rationale":"Package identity fixture with a shared recovery journey.",
+                    "sharedRequirements":[{"source":"INT-SERVICE", "requirement":"Buyer and agent recover interrupted purchases", "checkIds":["QC-RECOVERY"]}]},
                 "planEvidence": [{"path": ".aim/plan.md", "sha256": hashlib.sha256(plan.read_bytes()).hexdigest()}]},
                 imported["storeSha256"])
             self.assertEqual([s["id"] for s in planned["document"]["deliveries"][0]["stories"]],
                              ["US-FIND", "US-RETRY"])
             self.assertEqual(planned["nextStep"][0]["operation"], "approve")
+            self.assertEqual(Path(planned["nextStep"][0]["instructions"]),
+                             PACKAGE / "references/role-skill-tdo.md")
             snapshot = (repo / ".aim/product-backlog.json").read_bytes()
             code = "import json,sys; from pathlib import Path; sys.path.insert(0,sys.argv[1]); from aim_ui import build_board; print(json.dumps(build_board(Path(sys.argv[2]))))"
             result = subprocess.run([sys.executable, "-c", code, str(PACKAGE / "scripts"), str(repo)],

@@ -19,6 +19,14 @@ Choose this path for common skill discovery, installation, and updates across
 Codex, GitHub Copilot, Claude Code, and other compatible agents. The package is
 generated from canonical AIM sources and is full AIM, not AIM Lite.
 
+Run it in your project's terminal, choose the agent you use and the installation
+scope, then reload the agent session if needed. Load the installed AIM skill and
+run `/aim calibrate-repo`; describe your goal with `/aim start "<desired outcome>"`.
+You can give these same instructions to your coding agent. The public command
+installs the public source; this guide also describes later development changes.
+See [GitHub Releases](https://github.com/joneri/agile-iteration-method/releases)
+for public release availability.
+
 Use the adaptive installer when the repository also needs a reviewed footprint,
 adapter selection, initial `aim.roles.yaml`, and supplier-native project
 specialists. Clone and inspect its public source before running a no-write
@@ -53,6 +61,10 @@ validation, and boundaries. It is readable, editable, and supplier-neutral.
 | GitHub Copilot | project `.github/skills/aim/` | `.github/agents/aim-*.agent.md` |
 | Claude | project `.claude/skills/aim/` | `.claude/agents/aim-*.md` |
 
+The table shows the adaptive installer's native locations. Public skills-CLI
+installations use the selected agent and scope; project specialists can be
+configured afterward.
+
 The standard install inherits supplier model defaults. Users and organizations
 can refine models, tools, skills, MCP servers, permissions, and hooks in the
 native files supported by their supplier. The skill owns workflow routing; the
@@ -69,9 +81,14 @@ not silently overwrite hand-written native configuration. Use
 ## What Stays Shared
 
 - PO, TDO, Dev, and Reviewer keep their canonical responsibilities.
-- One Done Increment is active at a time.
-- The main AIM thread alone owns `.aim/state.json` and gate transitions.
+- One coherent Story selection is delivered at a time.
+- The main AIM thread alone owns the product backlog and gate transitions.
+  Preserved legacy work uses its original `.aim/state.json` checkpoint.
 - Review happens before acceptance.
+- Quality goals, early core review, raw observations and runnable user-journey
+  verification apply across adapters.
+- Relevant shared advice is recalled during ordinary work; the old reflection
+  aliases are compatibility views.
 - Unavailable native delegation falls back to the sequential AIM loop.
 
 ## What May Differ

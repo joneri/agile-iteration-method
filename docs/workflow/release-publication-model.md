@@ -79,6 +79,13 @@ artificially inflated.
 existing `v*` tag. It must depend on the reusable release-readiness workflow
 before packaging or uploading assets.
 
+Tags containing a prerelease suffix are marked as GitHub prereleases and are
+not promoted to Latest, including when their assets are refreshed. The product
+name in sales copy remains AIM; technical manifests retain the exact release.
+
+Public evaluation metadata identifies the build actually assessed, independently
+of `VERSION`. A newer source candidate never inherits that build's result.
+
 The release workflow publishes:
 
 - `aim-pages-<version>.tar.gz`, the validated Pages artifact

@@ -1,7 +1,7 @@
 """Read-only review freshness, coverage and declared-provenance boundary.
 
 API: check_review(root, document, changed_paths, *, require_independent=True,
-                  allowed_exceptions=()) -> JSON-serializable report.
+                  allowed_exceptions=(), read_reference=None) -> JSON-serializable report.
 Malformed evidence or caller policy raises ValueError. A well-shaped review
 that fails a boundary returns eligible=False and diagnostics; no commands run.
 
@@ -37,6 +37,9 @@ eligible means these bounded checks pass, not that code is correct. Provenance
 is supplied data, never authenticated identity or verified session isolation.
 Freshness describes the bytes read during this call, not an atomic repository
 snapshot; callers must rerun after changes and supply the complete changed set.
+An optional invocation-local read_reference(root, {path, sha256}) returns
+(payload_or_none, fresh_bool), allowing a containing boundary to reuse its safe
+source reads. Absence checks still use the descriptor-based reader below.
 """
 
 from __future__ import annotations
@@ -108,10 +111,13 @@ def _absent(root: Path, relative: str) -> bool:
 
 
 def check_review(root: Path, document: dict, changed_paths: list[str], *,
-                 require_independent: bool = True, allowed_exceptions=()) -> dict:
+                 require_independent: bool = True, allowed_exceptions=(),
+                 read_reference=None) -> dict:
     """Validate bounded evidence, then compare each source using the safe reader."""
     if type(require_independent) is not bool:
         raise ValueError("require_independent must be a boolean")
+    if read_reference is not None and not callable(read_reference):
+        raise ValueError("read_reference must be callable")
     if (not isinstance(allowed_exceptions, (list, tuple))
             or any(not isinstance(kind, str) or kind not in ("trivial", "unavailable")
                    for kind in allowed_exceptions)
@@ -177,8 +183,15 @@ def check_review(root: Path, document: dict, changed_paths: list[str], *,
     stale = []
     for path, expected in sources.items():
         try:
-            matches = (_absent(root, path) if expected is None
-                       else fingerprint(root, path)["sha256"] == expected)
+            if expected is None:
+                matches = _absent(root, path)
+            elif read_reference is None:
+                matches = fingerprint(root, path)["sha256"] == expected
+            else:
+                result = read_reference(root, {"path": path, "sha256": expected})
+                if not isinstance(result, tuple) or len(result) != 2 or type(result[1]) is not bool:
+                    raise ValueError("read_reference must return (payload_or_none, fresh_bool)")
+                matches = result[1]
         except (OSError, ValueError):
             stale.append(path)
             diagnostics.append(f"Source is missing or unsafe: {path}")

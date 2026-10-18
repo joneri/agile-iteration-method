@@ -1,5 +1,5 @@
 {
-  "description": "Plan and deliver repository-aware AI-assisted software work through Agile Iteration Method using intent discovery, PO-owned Epics, TDO-owned User Stories, cross-Epic delivery planning, explicit gates, review, validation, and user-owned acceptance. Use for discussing product direction with repository context, creating and refining Epics and User Stories, planning delivery selections, implementing work, reviewing delivery, configuring project specialists, calibrating and reflecting on repositories, consolidating knowledge across local AIM projects, controlling AIM modes and cost profiles, opening and controlling local AIM UI, and continuing AIM runs.",
+  "description": "Plan and deliver repository-aware AI-assisted software work through Agile Iteration Method using intent discovery, PO-owned Epics, TDO-owned User Stories, cross-Epic delivery planning, explicit gates, review, validation, and user-owned acceptance. Use for discussing product direction with repository context, creating and refining Epics and User Stories, planning delivery selections, implementing work, reviewing delivery, configuring project specialists, calibrating repositories and sharing local learning, consolidating knowledge across local AIM projects, controlling AIM modes and cost profiles, opening and controlling local AIM UI, and continuing AIM runs.",
   "files": [
     "SKILL.md",
     "aim-ui/app.js",
@@ -57,10 +57,15 @@
     "scripts/aim_portfolio_run.py",
     "scripts/aim_quality/__init__.py",
     "scripts/aim_quality/delegation.py",
+    "scripts/aim_quality/delivery.py",
+    "scripts/aim_quality/error_patterns.json",
     "scripts/aim_quality/evidence.py",
     "scripts/aim_quality/files.py",
+    "scripts/aim_quality/goals.py",
     "scripts/aim_quality/knowledge.py",
+    "scripts/aim_quality/learning.py",
     "scripts/aim_quality/localities.py",
+    "scripts/aim_quality/patterns.py",
     "scripts/aim_quality/profiles.py",
     "scripts/aim_quality/review.py",
     "scripts/aim_quality/skills.py",
@@ -91,7 +96,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.3.0",
+  "productVersion": "4.4.0-rc.12",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -104,12 +109,12 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "bb3432615924a5f28d9a6153fd40ffdd5b3ac8a2d5ecc26d0ea1b0fcb95dbd8e"
+      "sourceSha256": "a1a89afbc3051d3c79ec844fa5138bf8c0528280daa537df71104e8da607ee6e"
     },
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "83298b7e8ca365c5e90b81ba1f31f2eafeacc669bdfb5749ea812ae1dde230c5"
+      "sourceSha256": "fb53402c324f1a03d665a6097e0d2fc226fca229ce1b6309cd2308a17e3e68a3"
     },
     {
       "output": "references/autonomous-interaction.md",
@@ -134,62 +139,62 @@
     {
       "output": "references/engineering-delivery.md",
       "source": "docs/workflow/engineering-delivery.md",
-      "sourceSha256": "6501f1ca71d4c98ec188e1ba047923d1caf9fc2656da2d7b2c8badf2abb0ccd3"
+      "sourceSha256": "3de78416649f73836aa7ab15df890134beb6c62f36c8c4d22029d90ae1b0a8c9"
     },
     {
       "output": "references/role-skill-po.md",
       "source": "docs/workflow/role-skill-po.md",
-      "sourceSha256": "43ba392144b9c84730bb5b3f7cda22c2bdaff6a89c5013153cb8bf8797d6bfa2"
+      "sourceSha256": "e39e675eb0fb9e9e314a66b02cd2492802ee0032fd5cc3d8479652f4e329796c"
     },
     {
       "output": "references/role-skill-tdo.md",
       "source": "docs/workflow/role-skill-tdo.md",
-      "sourceSha256": "edfc333a2eec786c63897afc3219d00801afdd25f5d172d23d73e02443ee1ca0"
+      "sourceSha256": "f286d95f33ebc75d277c45c18922b68c737041cf5ea01d923234481aae04c2d5"
     },
     {
       "output": "references/role-skill-dev.md",
       "source": "docs/workflow/role-skill-dev.md",
-      "sourceSha256": "71b52df29a90663e3bf8a9f7c002886550ff1f31149c80734b4aad3d78fb080b"
+      "sourceSha256": "ba2470ca0ce7715bfbbc29306ac25fd319f73b3f584b518a99d156d08ba5ab1a"
     },
     {
       "output": "references/role-skill-reviewer.md",
       "source": "docs/workflow/role-skill-reviewer.md",
-      "sourceSha256": "554ef472a1e4f327bed857553f0ad5b692ed3399865760b4155d1cbcf8c8918d"
+      "sourceSha256": "c79b4ba5c7329f7f93629361db5bb8ad848ab3e1aebe64058af424589bf05826"
     },
     {
       "output": "references/skill-user-guide.md",
       "source": "docs/workflow/skill-user-guide.md",
-      "sourceSha256": "b9222ac77178b8b244ac6993839a54a249a8112214f3a92e638fafa6b0ac01a6"
+      "sourceSha256": "a9c80d4a139533ce843848ead2d6cf92fb9798f51efb545b1fc344ccb17059c8"
     },
     {
       "output": "references/skill-command-runtime.md",
       "source": "docs/workflow/skill-command-runtime.md",
-      "sourceSha256": "fecf366a4d30bc672d7cb3f7283fae20f3b2207b51227916b5ed1c828b4d9aab"
+      "sourceSha256": "95096e019cea0f047f78a061d31293bcc1b4456177bd9cc3eaad254b4abdf4cb"
     },
     {
       "output": "references/skill-completion.md",
       "source": "docs/workflow/skill-completion.md",
-      "sourceSha256": "cde4c7088b128601c63dc9e108e0bba798ee339f0dd3b00595b855008203d9bf"
+      "sourceSha256": "0fd1e650b2ef2fd973cdf06dd6054132edf79f1049a04b29f95c75455a074e75"
     },
     {
       "output": "references/agile-iteration-method.md",
       "source": "docs/workflow/agile-iteration-method.md",
-      "sourceSha256": "867ad6bf966e0bc052cf18d58bd1bc79b3a94b2f0a1781ead17d836a09484fcf"
+      "sourceSha256": "0fcbdbf7084c95edbe3635fe18721e645376cdf6bfb02c48e260ad1c335eb6f6"
     },
     {
       "output": "references/adapter-command-contract.md",
       "source": "docs/workflow/adapter-command-contract.md",
-      "sourceSha256": "31181a3456a96c0cb1f1e8636fc44ac3a38d0361401479b73e92c14a7d11925a"
+      "sourceSha256": "8a8ba659c44cb9da1eb345620b2b3d838ecbf810ee67296dadbc76fa07c4ab32"
     },
     {
       "output": "references/adapter-entry-model.md",
       "source": "docs/workflow/adapter-entry-model.md",
-      "sourceSha256": "dcf59bd4df55bd18ea7c908b413519bc05b194210eca984a7ab6837c0371e0a2"
+      "sourceSha256": "ba6f78ac8cc6aa9e5b3e544c1c92083c5e72221c22f23e3a2289f6dcef02c09b"
     },
     {
       "output": "references/adapter-skill-bootstrap.md",
       "source": "docs/workflow/adapter-skill-bootstrap.md",
-      "sourceSha256": "f265e1e22503b9768d92b6b9c7032db4052874298966a80477a33753a2d38ed9"
+      "sourceSha256": "f65a4b8e315b67c165863b6f4be00d84e69f8c613026675434e8245668401e00"
     },
     {
       "output": "references/project-agent-configuration.md",
@@ -199,7 +204,7 @@
     {
       "output": "references/reflection.md",
       "source": "docs/workflow/reflection.md",
-      "sourceSha256": "7db81348ce6a7352df6c7b80331dd337e0737941280dca608a867c73dc8c2b2e"
+      "sourceSha256": "fab73d729a7f8af3d326f104ae1d941f5ecadaac9ffce768ccac099649e5db95"
     },
     {
       "output": "references/operating-modes.md",
@@ -209,7 +214,7 @@
     {
       "output": "references/product-coherence-validation.md",
       "source": "docs/workflow/product-coherence-validation.md",
-      "sourceSha256": "ddd12308cc223c820b33bed847997695ae9ea94e3df7e237515a8f479539bd79"
+      "sourceSha256": "c3eb6e3b93ddf8ce0cd762252dbc87f87a8a674a36a5e1342d9e0da7af7bcf06"
     },
     {
       "output": "references/epic-closure-truth-audit.md",
@@ -219,17 +224,17 @@
     {
       "output": "references/repo-awareness-calibration.md",
       "source": "docs/workflow/repo-awareness-calibration.md",
-      "sourceSha256": "e72a9d35144a833fc98f09eb1a692ec28b265eca460efdff8efbb4bd7de5fcd9"
+      "sourceSha256": "47ed761b4d752124febbbb5e46ff8a8d00ec5c908c7f81f082ee62b3a10945bf"
     },
     {
       "output": "references/repo-awareness-two-layer-model.md",
       "source": "docs/workflow/repo-awareness-two-layer-model.md",
-      "sourceSha256": "530db2ef71e4d746fe59ba6a0506a70be536c238fc2a27a73e06045023e8895b"
+      "sourceSha256": "24618091c212bf8e3768c506142be29ced4d03e283dd5536be3b63a347df6b9c"
     },
     {
       "output": "references/repo-awareness.md",
       "source": "docs/workflow/repo-awareness.md",
-      "sourceSha256": "8277d33908b8a7aa65f20bae6ef2daf5eea910e066ef9a8bd7249027b02dee54"
+      "sourceSha256": "51d12ea1db358f91989c4af8b9b31313edebc1a55124dfc27fec724e9582d51d"
     },
     {
       "output": "references/version-and-installation.md",
@@ -264,12 +269,12 @@
     {
       "output": "references/schemas/aim-product-backlog.schema.json",
       "source": "schemas/aim-product-backlog.schema.json",
-      "sourceSha256": "1ff7841314912ae23a6f6f2ef1b712462ece4d66b2b2282764550175b8f4ef36"
+      "sourceSha256": "f91a5b1037941615ee86596035730b2cc2526a1bcb2b083fa72b3d6ea20ba3cf"
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
       "source": "install/aim-install-manifest.yaml",
-      "sourceSha256": "18af00cdcf3b237985a79efb434bd63f2cb94f75721891751287bf76841dc0f4"
+      "sourceSha256": "14298ebcb4072c6e34656668514b364aad441a7cd303e986ef1259e546584ae1"
     },
     {
       "output": "references/LICENSE-DOCS",
@@ -279,22 +284,22 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "1e5302003691b6fdc7bddc0736eef7ce3adc870e97afdfcfb497dde2a78ed545"
+      "sourceSha256": "0be6901db53d4935ba14b4f151b0cb2dec6bd364738a758dc9e7cabaf286e096"
     },
     {
       "output": "references/version-and-installation.md",
       "source": "scripts/aim_publication.py",
-      "sourceSha256": "393f0b2838f8bee4343f3ecde4e4f9616e4314d316fcfd009c28a837c514777c"
+      "sourceSha256": "a67b54c642fff8e428e213dd8e384334142e1e8fd9008a8a8d9b038ff855f507"
     },
     {
       "output": "manifest.json",
       "source": "scripts/build_public_skill.py",
-      "sourceSha256": "fa4e26aa743420d91e2aed35fe79eefe17f8f6b0506e07ba4eeccbc17d0ed051"
+      "sourceSha256": "5582938b93ced64d3590d927c143a0f957af4a453be0b68692c831fa2a641852"
     },
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "f4c300db0f411d04df3b28ca04594af6975ad1c0708ad7c841eee1d64e7fabfa"
+      "sourceSha256": "43cd32b828ac03d3a7ea90d221cebd8ca6f0b1c61a5eeec90d7a510b2ae19550"
     },
     {
       "output": "scripts/aim_interaction.py",
@@ -309,7 +314,7 @@
     {
       "output": "scripts/aim_engineering.py",
       "source": "scripts/aim_engineering.py",
-      "sourceSha256": "7bd1cc16a0811a07414f1be48e9d4cedc8e908d8329584083979a09d83efa929"
+      "sourceSha256": "e54b639c7adeff780bc6d41f0f1ecae5a35e99cdf0c57f8b398ab90bc887abf5"
     },
     {
       "output": "scripts/aim_quality/__init__.py",
@@ -320,6 +325,16 @@
       "output": "scripts/aim_quality/files.py",
       "source": "scripts/aim_quality/files.py",
       "sourceSha256": "45a7023bc7acf0a9695bc94cfd94c3a0143b5cc3aab74f8c17ae2f710192f664"
+    },
+    {
+      "output": "scripts/aim_quality/goals.py",
+      "source": "scripts/aim_quality/goals.py",
+      "sourceSha256": "4bfb32b6e7a573a972485f525f405113f5b779cd9710f42cc8b5b33dbd13d91b"
+    },
+    {
+      "output": "scripts/aim_quality/delivery.py",
+      "source": "scripts/aim_quality/delivery.py",
+      "sourceSha256": "4e461853b27b6d90ee4d00f123bf6576c51d01ae6aa5ec33a55d089a86c95e4f"
     },
     {
       "output": "scripts/aim_quality/skills.py",
@@ -334,7 +349,7 @@
     {
       "output": "scripts/aim_quality/timing.py",
       "source": "scripts/aim_quality/timing.py",
-      "sourceSha256": "c4e73dda8c3fe5c0f80a793ba8052653aedff89169ce53928a401e0173e0c47d"
+      "sourceSha256": "09f698459afc19ee494588ceea063671a2aa589ce453bbfe6a3c7962e41f4b14"
     },
     {
       "output": "scripts/aim_quality/profiles.py",
@@ -354,7 +369,7 @@
     {
       "output": "scripts/aim_quality/review.py",
       "source": "scripts/aim_quality/review.py",
-      "sourceSha256": "0e3e4bb172b55105186b5dcad60b9c2ea8246d322c8950245e181628aa3c3f21"
+      "sourceSha256": "aa067a711be130c90386365eb35b1ac73781bf1baa63b25d8edd686cfff9d0b5"
     },
     {
       "output": "scripts/aim_quality/knowledge.py",
@@ -362,9 +377,24 @@
       "sourceSha256": "4d458c9295dadedc3ad797d7e20a87991c94c82ddb370481410c0e48e721ef84"
     },
     {
+      "output": "scripts/aim_quality/patterns.py",
+      "source": "scripts/aim_quality/patterns.py",
+      "sourceSha256": "9156d682ffc4f656e321d69350f683651a02b19007b99baf465fc6bf4835a891"
+    },
+    {
+      "output": "scripts/aim_quality/learning.py",
+      "source": "scripts/aim_quality/learning.py",
+      "sourceSha256": "a06681e420d905081e052275ad08bcca7ec046a89793d182b626a525b042188f"
+    },
+    {
+      "output": "scripts/aim_quality/error_patterns.json",
+      "source": "scripts/aim_quality/error_patterns.json",
+      "sourceSha256": "48ad9fb761a7c42f6f588ee8aedd91027332e029996ad831f606a94b14d95b47"
+    },
+    {
       "output": "scripts/aim_installer/__init__.py",
       "source": "scripts/aim_installer/__init__.py",
-      "sourceSha256": "f28ba3a90601e4456e0d92d16ab7d6cc04a615940a8d4e4eb4215fb2a2e9cb76"
+      "sourceSha256": "a0f17244b7cd1ecd0ff511446e89874986bc2ef4eba8209fcf5a9c5d7649482a"
     },
     {
       "output": "scripts/aim_installer/yaml_lite.py",
@@ -379,7 +409,7 @@
     {
       "output": "scripts/aim_validator/schema_subset.py",
       "source": "scripts/aim_validator/schema_subset.py",
-      "sourceSha256": "b2633f3dec4659d9fe60e5873d20364debfa7a68289d4f9c550deb6ed1c2cf9e"
+      "sourceSha256": "2ee50b14cdf6236e9ebedc5a1802c16650dafdf28d4870eeaa1add33d1090972"
     },
     {
       "output": "scripts/aim_validator/profile_contract.py",

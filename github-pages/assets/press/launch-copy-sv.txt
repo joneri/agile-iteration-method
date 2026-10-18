@@ -1,18 +1,21 @@
-AIM 4.2
-Behåll riktningen. För arbetet framåt.
+AIM
+Från idé till en produkt du kan granska.
 
-Förslag till lanseringstext · AIM 4.2 · 12 oktober 2026.
+Förslag till lanseringstext · Aktuell utvecklingsversion · 18 oktober 2026.
 
-AIM 4.2 ger AI-assisterad utveckling gemensamma regler för att fortsätta godkänt arbete mellan sessioner. Agenten kontrollerar vilka beslut och svar som fortfarande gäller för det aktuella uppdraget. Nödvändiga frågor visar ett rekommenderat alternativ först. Frågor som beror på andra svar väntar tills förutsättningarna är klara.
+Beskriv programvaran du vill ha med vanliga ord. AIM gör målet till User Stories och en sammanhängande plan, med agenter anpassade till ditt projekt. Följ utvecklingen i AIM Control, granska resultat och kontroller och acceptera den fungerande leveransen.
 
-En valfri hjälpfunktion kontrollerar att svar hör till rätt fråga och avvisar inaktuella eller motstridiga svarskvitton. Den lagrar inga beslut. Samordnaren verifierar fortfarande källor och dokumenterar beslut; användaren accepterar leveransen.
+AIM fastställer kvalitetsmål före implementation. En separat granskare utmanar den första fungerande kärnan innan arbetet byggs ut. Verkliga användarflöden och sparade råresultat ger underlag för slutbedömningen. En underhållen verifieringsväg hjälper kommande ändringar att återanvända rätt kontroller.
 
-Grunden är fortsatt människornas behov: Product Owner identifierar Epics och User Stories, en leverans kan samla Stories från olika Epics och oberoende granskning och validering knyter resultatet till acceptanskriterierna. AIM UI visar hur Stories rör sig genom processen.
+Projektkunskap, kompakta kontrollpunkter och relevanta gemensamma lärdomar hjälper agenterna att återanvända arbete som fortfarande gäller. Lärande ingår i den vanliga leveransen utan ett separat reflektionssteg. Product Owner äger Epic-mål och prioritet; Technical Delivery Owner äger Stories, kriterier och increment. Du accepterar resultatet.
 
-För Codex, GitHub Copilot och Claude Code. AIM UI är fortsatt Beta. Ingen datamigrering krävs; uppdatera installerad skill och starta om sessionen. De syntetiska testerna ger inget stöd för generella löften om tids- eller tokenbesparingar.
+Den senaste slutförda Enigma-utvärderingen gav applikationen byggd med AIM 4.4.0-rc.11 96,5 av 100, jämfört med 93,5 för den historiska AIM 3.2.0-referensen. Resultatet gäller dessa byggen och denna utvärdering; det visar inte generell överlägsenhet eller lägre kostnad. Den aktuella utvecklingsversionen innehåller senare ändringar och granskas fortfarande.
+
+För Codex, GitHub Copilot och Claude Code. AIM UI är fortsatt Beta. Det publika skill-kommandot installerar den publika källan; se GitHub Releases för tillgängliga releaser.
 
 Utforska: https://github.com/joneri/agile-iteration-method
+Utvärdering: https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-enigma-evaluation.md
 Installera: npx skills add joneri/agile-iteration-method --skill agile-iteration-method
 
 KORT UTKAST FÖR SOCIALA MEDIER
-AIM 4.2 ger gemensamma regler för att fortsätta godkänt arbete, återanvända relevanta svar och ställa nödvändiga frågor tydligt. Från intention till granskade User Stories, med acceptansen hos dig. https://joneri.github.io/agile-iteration-method/
+Beskriv din produkt. AIM ordnar planen, utmanar kärnan tidigt och kopplar verkliga kontroller till ditt acceptansbeslut. Återanvänd projektkunskap och gemensamma lärdomar när produkten växer. För Codex, Claude Code och GitHub Copilot. https://joneri.github.io/agile-iteration-method/

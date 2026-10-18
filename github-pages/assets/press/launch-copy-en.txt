@@ -1,18 +1,21 @@
-AIM 4.2
-Keep the intent. Carry the work forward.
+AIM
+Build your product from an intent.
 
-Suggested announcement copy · AIM 4.2 · 12 October 2026.
+Suggested announcement copy · Current development source · 18 October 2026.
 
-AIM 4.2 gives AI-assisted development a shared contract for continuing authorized work across sessions. Agents check which decisions and answers still apply to the current assignment. Necessary questions present a recommended option first, while dependent questions wait for the answers they need.
+Describe the software you want in plain language. AIM turns that goal into User Stories and a coherent plan, with agents configured for your project. Follow development in AIM Control, inspect the review and checks, and accept the working result.
 
-An optional stateless helper checks that replies belong to the right question and rejects stale or conflicting receipts. The coordinator still verifies sources and records decisions. User acceptance remains explicit.
+AIM agrees quality goals before implementation. A separate reviewer challenges the first working core before costly expansion. Real user journeys and retained raw results support the final assessment. A maintained verification route helps later changes repeat the right checks.
 
-The foundation stays focused on people: a Product Owner discovers Epics and User Stories, deliveries can combine Stories from different Epics, and independent review and validation connect the result to acceptance criteria. AIM UI shows Stories moving through that process.
+Repository knowledge, compact checkpoints and relevant shared lessons help agents reuse work that still applies. Learning is part of ordinary delivery, without a manual reflection step. The Product Owner owns Epic outcomes and priority; the Technical Delivery Owner owns Stories, criteria and the increment. Acceptance stays with you.
 
-Available for Codex, GitHub Copilot and Claude Code. AIM UI remains Beta. No data migration is required; update the installed skill and reload its session. No general speed or token-saving benefit is claimed from the synthetic tests.
+The latest completed Enigma evaluation scored the AIM 4.4.0-rc.11 application at 96.5/100 against a historical AIM 3.2.0 reference at 93.5/100. That result belongs to those builds and that evaluation; it does not establish general superiority or lower cost. The current development source includes later changes and remains under review.
+
+For Codex, GitHub Copilot and Claude Code. AIM UI remains Beta. The public skill command installs the public source; see GitHub Releases for available releases.
 
 Explore: https://github.com/joneri/agile-iteration-method
+Evaluation: https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-enigma-evaluation.md
 Install: npx skills add joneri/agile-iteration-method --skill agile-iteration-method
 
 SHORT SOCIAL DRAFT
-AIM 4.2 brings shared guidance for continuing authorized work, reusing applicable answers and asking necessary questions clearly. From intent to reviewed User Stories, with acceptance in your hands. https://joneri.github.io/agile-iteration-method/
+Describe your product. AIM organizes the plan, challenges the core early and connects real checks to your acceptance decision. Reuse project knowledge and shared lessons as the product grows. For Codex, Claude Code and GitHub Copilot. https://joneri.github.io/agile-iteration-method/

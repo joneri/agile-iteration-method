@@ -1,5 +1,9 @@
 # Better software. From the same AI.
 
+This is the historical AIM 3.2 M3/M4 pair. The original M3 reference identifies
+**3.2.0**, not 3.2.1. See [AIM's latest assessed Enigma results and limits](aim-enigma-evaluation.md)
+for later frozen assessments; the results below remain unchanged.
+
 We asked GPT-6 Luna to build the same web app twice: once with AIM 3.2 and
 once without. The app had to simulate historic Enigma cipher machines and
 find settings that decode a message. We tested both products, then gave them

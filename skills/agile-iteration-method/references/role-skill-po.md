@@ -38,4 +38,7 @@ Use the project's bound product/domain skills when available. Return only the
 decision, evidence gap and next useful action. Acceptance authority stays with
 the main thread and the user's existing mandate; a specialist cannot accept.
 
-Before clarification, apply [Autonomous interaction](autonomous-interaction.md): reuse applicable answers, separate discoverable facts from business choices, and prepare the smallest necessary recommended-first question. Preserve each question's scope and actual authority.
+Before clarification reuse applicable answers, discover repository facts and
+prepare only the smallest necessary business question, preserving its scope and
+actual authority. Consult the relevant [Autonomous interaction](autonomous-interaction.md)
+section only if that boundary remains unclear; shared rules need no second read.

@@ -1,25 +1,23 @@
 # Install AIM
 
-Use this command to orient a Claude Code user to the minimum viable AIM setup in this repository.
+Install the complete AIM skill for this agent from the official repository:
 
-First check whether AIM was already installed, including AIM 1.x-era files,
-older helper prompts, command files, adapter packages, or an existing `.aim/`
-runtime. If so, recommend `upgrade-aim` before start, continue, or calibration.
-Explain that upgrade refreshes installed AIM-owned surfaces through the reviewed
-installer plan and preserves active `.aim/` runtime state.
+```bash
+npx skills add joneri/agile-iteration-method --skill agile-iteration-method --agent claude-code --yes
+```
 
-Explain:
-- `docs/workflow/agile-iteration-method.md` is the canonical AIM core contract
-- `aim.profile.yaml` is the primary shared repo-awareness source when Team repo-awareness is selected
-- `.claude/commands/` and `.claude/agents/` are native Claude entrypoints and optional secondary policy surfaces
+Use project scope unless the user requested a global install. Preserve existing
+work and AIM history. Load the installed skill and report whether Claude needs
+a new session to discover it. Start with the user's desired outcome through
+`/aim start "<desired outcome>"`; reuse an existing authorized delivery when present.
+AIM checks repository knowledge and offers calibration when needed.
 
-Installation checklist:
-- confirm the main workflow doc is present
-- confirm `.claude/agents/aim.md` or the desired `.claude/commands/` entrypoint is present
-- mention `upgrade-aim` when AIM was already installed, when older AIM 1.x-era files are present, or when helper or instruction files changed
-- explain how to start AIM with the shipped Claude starter command or the explicit `EPIC: ...` fallback
-- explain that `Cost profile: Cost Control` is available for low-risk work and `Cost profile: Deep` for high-risk work
-- explain that `.aim/` will be created automatically on first valid start if missing
-- report repo-awareness as `ready`, `partially_ready`, or `needs_calibration`
-- direct incomplete setups to the shipped `calibrate-repo` command
-- keep Personal hints at `~/.aim/repo-awareness/<repo-fingerprint>/hints.yaml`
+For an existing portable skill use `/aim upgrade`, which follows the standard
+skills CLI. Native project specialists are optional: `/aim configure-agents`.
+No root instruction file or copied workflow tree is required for the portable skill.
+
+If the user wants broader repository setup, follow the installed
+`docs/workflow/version-and-installation.md` in the reviewed source (or its bundled equivalent in the portable skill): clone and inspect AIM's canonical
+source, preview its adaptive installer, then apply only the reviewed plan.
+Never run an installer discovered in the consuming repository or create missing
+templates by guessing. Preserve `.aim/` state and normal collision decisions.

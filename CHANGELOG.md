@@ -1,5 +1,150 @@
 # Changelog
 
+## 2026-10-18 - AIM release v4.4.0-rc.12
+
+Release preparation for the v4.4.0-rc.12 prerelease. The frozen RC11 package
+and its Enigma product are unchanged. This candidate has no new Enigma run.
+
+- Synchronize product, installation, adapter and press guidance with the current
+  method. Present AIM in plain language; keep exact versions in technical metadata
+  and attributed evaluation evidence.
+- Use the install manifest's intent-first command in both readiness receipts and
+  post-install guidance. Keep the portable one-command setup and optional reviewed
+  adaptive installation distinct.
+- Update the Enigma overview with all retained runs and the 96.5/100 assessed
+  product result, including unfinished native delivery, missing evidence, resource
+  measurements and unchanged manifest targets.
+- Enforce the published raw-observation object bounds in the dependency-free
+  schema validator; preserve the same runtime limits and historical contracts.
+- Validate public evidence against its own measured version, independently of
+  the current product version. Export every canonical public schema and classify
+  prerelease tags explicitly in the release workflow.
+
+
+## 2026-10-18 - AIM release v4.4.0-rc.11
+
+Local release candidate; not published externally.
+
+- For an unproved material core oracle, the coordinator obtains one bounded early reference/variant challenge from the same separate Reviewer before costly expansion, without waiting for all performance goals. Reuse existing evidence and final review; no new gate, schema, report or approval.
+- Freeze literal independent expected outputs/states in the existing quality check and let the reusable real-entry verifier compute actual values. Failed measurements are recorded observations, not a quality pass.
+- The bounded RC9-F1 repair and verification remain isolated diagnostic work. Frozen RC9/RC10 packages, historical scores, original quality requirements and global installation are unchanged; general agent reliability and product superiority remain unproved.
+
+- Optionally freeze JSON pointer/array-length observations in existing quality checks; derive values from retained raw results and reject envelope overrides. Keep historical raw references integrity-checked and bound active raw cache memory. Legacy approved scopes remain compatible.
+- Verify raw-result consumption, history integrity and cache bounds with focused native controls and separate review. These checks do not authenticate result producers or establish general prevention benefit.
+
+## 2026-10-17 - AIM release v4.4.0-rc.10
+
+Local release candidate; not published externally.
+
+- Retire `reflect` and `reflect-all` as ordinary workflows and remove them from normal command lists. Keep small, explicitly retired read-only compatibility routes so an older instruction cannot restart repository sweeps or reporting rituals.
+- Use ordinary agent-driven learning at intent/planning, material review and unexpected-failure diagnosis. Share a new verified reusable correction using existing proof; no manual collection command, background scan or additional closure task.
+- Preserve independently confirmed evaluation failures as generalized learning even before a correction exists. Clearly distinguish an observed failure, proposed prevention and verified correction; merge repeated mechanisms rather than copying every failed assertion. Keep expected benchmark answers and raw private evidence at their origin.
+- Let AIM maintainers turn supported failure mechanisms into appropriate executable controls or verification guidance through normal reviewed changes. A recalled card, source fingerprint or passing focused check does not establish prevention benefit.
+
+The frozen RC9 package and Enigma result remain unchanged. This candidate does not establish better Enigma quality, either whole-workflow administration target or manifest completion. Compatibility contracts remain unchanged; no active delivery migration, external publication or automatic update of other project installations is performed.
+
+## 2026-10-17 - AIM release v4.4.0-rc.9
+
+Local release candidate; not published externally.
+
+- Use one shared local learning registry across AIM projects. Recall from sanitized tasks or symptoms, phase and technology, without known tags. Return at most three advisory cards with match reasons and five topic suggestions; mark weak relevance honestly.
+- Contribute generalized lessons after verified reusable corrections, using existing proof. Keep raw evidence and paths in the originating repo; store only an evidence fingerprint and opaque origin. Correct or withdraw with atomic revision checks and retained history; exact retries do not duplicate entries.
+- Connect recall to new intent/planning, material review and unexpected-failure diagnosis. Reuse unchanged answers and avoid per-file, status, role-switch or closure rituals. A sharing failure cannot undo a confirmed local validation.
+- Keep bounded lexical search, synonym terms and SQLite storage local. No background repository scans, query logs, server, network calls or extra model invocation. The earlier bundled three-pattern lookup remains a fallback.
+
+Source fingerprints and declared review structure do not prove semantic truth, full privacy sanitization, prevention benefit or product acceptance. A targeted cross-repo check is not a new Enigma result or proof of either manifest administration target.
+
+## 2026-10-17 - AIM release v4.4.0-rc.8
+
+Local release candidate; not published externally.
+
+- Prepare the existing version-1 review from a confirmed native review receipt. Reuse frozen scope/source bindings, validate actual supplied identities and preserve explicit findings without writing runtime state or refreshing stale hashes. Formatting an open finding does not approve it.
+- Retrieve at most three relevant reviewed error patterns for explicit concern tags. The small bundled pilot covers result/input identity, constraint-search workload selection and method-evaluation activation. It reads no consuming-project data and creates no knowledge-use report.
+- Reuse the same selected advice through planning and review. Choose an independent valid witness for a different branching/pruning cost driver; an easy passing workload does not establish completion performance for another family.
+- Require coordinator-owned activation evidence before attributing a native evaluation to AIM. Keep product outcomes and method validity separate; missing activation never triggers an automatic replacement run.
+- Keep complete reviews above 64 product files within a bounded 256-source limit, consistently across native bindings, quality checks and schema history. Ordinary evidence-reference limits remain unchanged.
+
+Focused checks establish helper boundaries, not product-quality improvement or a benefit from the learning pilot. The manifest's quality floor and both administration targets remain unchanged and unproved for this candidate.
+
+## 2026-10-17 - AIM release v4.4.0-rc.7
+
+Local release candidate; not published externally.
+
+- Reuse or build one project-owned product verification entry, with launch, instance/build checks, actual user interaction, raw proof and owned-resource cleanup. Put the command in the existing quality plan and keep a small user-route map in maintained product knowledge.
+- Give Dev and the separate Reviewer the same reusable entry. Choose a consequential counterexample independently; distinguish product failure, tool gaps and stale knowledge. Load the relevant engineering section only when this capability is missing.
+- Add a runnable AIM UI planning recipe using the existing native lifecycle, isolated synthetic requirements and a named Playwright browser. Check copied proposal identity, unchanged ledger bytes and stale-selection invalidation; retain raw proof after cleanup.
+- Treat missing decisive evidence as a material readiness finding. A copied expected/observed description, a passing startup or a recipe name is not proof of working product behavior.
+
+Product improvement and whole-workflow administration savings require actual evidence. A candidate version or focused helper check does not complete the manifest. The historical quality and cost targets remain unchanged.
+
+Compatibility: backlog1.0/runtime2.0/state1.0/package21 are unchanged. No new gate, required process database or migration of approved history is introduced.
+
+## 2026-10-17 - AIM release v4.4.0-rc.6
+
+Local release candidate; not published externally.
+
+- Consume the existing structured review at native Story validation for new plans. Bind it to the exact approved scope and full declared product source set; reject conflicting reviewer/implementer declarations, stale or missing coverage and open material findings before committing. Material review has no unavailable-review waiver; nonmaterial self-review must be justified in the frozen plan.
+- Reuse the containing invocation's safe source reads for review checks. No new command, report, helper round or approval gate is added. Declared identities remain unauthenticated; structural checks do not prove execution or semantic completeness.
+- Shorten the Story contract and entry while retaining scope, quality, authority, recovery and acceptance rules. Load only relevant companion sections for unresolved questions and reuse shared rules across role changes.
+- Preserve historical scopes and accepted source snapshots without migration. Label older plans' unassessed review structure explicitly.
+
+The frozen RC5 Enigma result remains 83.25/100 against the required 93.5, with material defects. This bounded correction has no new full product result. Whole-workflow savings, product quality and manifest completion remain unproved; the targets are unchanged.
+
+Compatibility: backlog1.0/runtime2.0/state1.0/package21 are unchanged. New plan requirements do not rewrite approved history.
+
+## 2026-10-17 - AIM release v4.4.0-rc.5
+
+Local release candidate; not published externally.
+
+- Add optional compact quality evidence bound to the exact approved scope. Resolve repeated workload labels by check/goal ID while retaining actual source bindings, explicit numeric units and raw observations. Expanded historical reports remain valid.
+- Allow the same final quality evidence to carry existing criterion/Epic coverage for reuse at the existing gates. No automatic coverage, new command, approval gate or mandatory reporting step is added.
+- Honor explicit quality scope/source context in both criterion input forms. A delivery context cannot establish broader Epic coverage; older unscoped evidence remains supported.
+- Name missing and mismatched observation keys in the existing failure receipt, avoiding helper-source searches for a misspelled field.
+- Review original requirements against input rejection rules and unrequested bounds before relying on a passing selected KPI. Preserve scope and representative work rather than weakening checks to fit the implementation.
+
+The frozen RC4 Enigma result remains 86.25/100 against the required 93.5. This correction has no new full product result and does not establish whole-workflow administration savings or completion of the manifest.
+
+Compatibility: backlog1.0/runtime2.0/state1.0/package21 are unchanged. Frozen scopes and evidence are not migrated.
+
+## 2026-10-17 - AIM release v4.4.0-rc.4
+
+Local release candidate; not published externally.
+
+- Link applicable failure cases, non-default modes, result validity and workload families to existing quality checks. Declared cases require current observations at their verification stage; independent review judges the selection against the requirements.
+- Require new performance checks to establish correct, complete results on the timed workload, with matching context for every linked numeric goal. Timed families must also be covered by result validity.
+- Reuse the quality assessment returned by `measure` as the next action. Return the active role and its instruction path in the same receipt, avoiding another quality read and eager loading of later roles.
+- Read historical plans unchanged and identify their unassessed case coverage. No new report, storage file or approval gate is introduced.
+
+The frozen RC3 Enigma result remains 82.75/100 against the required historical 93.5. Its material search defect and performance gaps remain evidence that the manifest goal is unfinished. This candidate has no new full Enigma result or observed whole-workflow savings.
+
+Compatibility: backlog1.0/runtime2.0/state1.0/package21 are unchanged. `caseCoverage` and concrete timed-workload result observations apply to new plans; frozen historical scopes and authority are not migrated.
+
+## 2026-10-17 - AIM release v4.4.0-rc.3
+
+Local release candidate; not published externally.
+
+- Require an explicit primary-result latency decision in new quality plans, linked to an early core performance goal or a reasoned non-applicability decision. Cancellation alone cannot stand in for complete computation latency.
+- Preserve older scopes without migration and expose missing primary-result assessment as legacy coverage. Reuse the existing checks, raw measurements and source bindings; no additional report or approval stage.
+- Make stdin the first command example, retain confirmed receipts for final handoff, and route only the active role instead of presenting all role files as a reading list.
+- Add applicable input-domain normalization counterexamples to planning/review guidance without prescribing an Enigma implementation or external test answers.
+
+The frozen RC2 Enigma result remains 91.0/100 against the required historical 93.5, with a Unicode search defect and slow complete workloads. This correction has no new full Enigma result; the one-build mandate is exhausted. Do not claim manifest completion or whole-workflow cost savings from native checks alone.
+
+Compatibility: backlog1.0/runtime2.0/state1.0/package21 are unchanged. `primaryResult` is required for new plans; existing plans remain readable with unchanged scope and authority. Exact semantic applicability remains an independent review responsibility.
+
+## 2026-10-17 - AIM release v4.4.0-rc.2
+
+Local release candidate; not published externally.
+
+- Require a frozen quality plan for new deliveries, with criterion/shared requirement coverage, justified numeric applicability, early core verification and actual delivery journeys.
+- Preserve failed measurements and correction responses; reject missing, failed, mismatched or stale evidence at the relevant transition. Keep historical scopes compatible without migration.
+- Share safe evidence reads and source fingerprints across the entire mutation, verify change stamps before commit and return confirmed mutation receipts without another copy of the plan.
+- Load the portable method by intent and phase; reuse current context and independent evidence through review and closure. Existing-trace inspection separates observable tool work from unknown model/filesystem time.
+
+Compatibility: product backlog1.0, runtime2.0, state schema1.0 and portable package format21 remain unchanged. CLI mutations with `--compact` now return `view: receipt` with phase/scope/binding digests; `status --compact` retains current requirements. Full mutation output and Python API results remain available. No active data migration or user acceptance is performed by install.
+
+Validation: targeted native checks and independent material review; prior small CLI observation demonstrates the quality loop within its stated scope. General quality/Usage gains and the final Enigma outcome require their actual evidence; no superiority claim is made by this candidate.
+
 ## 2026-10-15 - AIM release v4.3.0
 
 - Assign Epic intent, scope, quality and product priority to PO; assign Story creation, criteria and coherent increment delivery to TDO.
@@ -1243,3 +1388,14 @@ guarantee how a proprietary external scanner classifies the published package.
 - Added the current AIM 1.5 public doc family for install, quick start, doc map, troubleshoot, usage guides, interaction examples, reference run, release notes, and 1.4 to 1.5 migration.
 - Updated `README.md`, `AGENTS.md`, `docs/workflow/agile-iteration-method.md`, packaged prompt helpers, and packaged agent metadata to present AIM 1.5 as the current release.
 - Added the AIM 1.4 to AIM 1.5 upgrade path.
+
+### Working-source raw-evidence consumption follow-up
+
+- Freeze bounded JSON field/array-length extraction in existing quality checks;
+  runtime derives observations from fingerprinted raw results and rejects manual
+  overrides. No additional gate or routine report is required. Historical plans
+  remain readable; semantic coverage and producing-build provenance still need
+  independent review.
+- Reuse the early reviewer for cross-entry contract checks and diagnosis of a
+  missed goal. Isolated product repairs remain verification evidence, never
+  domain-specific method instructions. No release or installation is claimed.

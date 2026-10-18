@@ -19,7 +19,12 @@ SCHEMA_RELATIVE_PATHS = (
     "schemas/aim-personal-hints.schema.json",
     "schemas/aim-runtime-state.schema.json",
     "schemas/aim-portfolio-run.schema.json",
+    "schemas/aim-project-roles.schema.json",
+    "schemas/aim-portfolio-control.schema.json",
+    "schemas/aim-ui-backlog.schema.json",
+    "schemas/aim-ui-portfolio.schema.json",
 )
+PUBLIC_EVALUATION_PATH = "docs/features/evidence/2026-10-18-enigma-comparison/comparison.json"
 ROOT_PUBLIC_FILES = (
     "VERSION",
     "googlea5ce5061b9ad1e90.html",
@@ -30,6 +35,7 @@ ROOT_PUBLIC_FILES = (
     "sitemap.xml",
     "AIM_OG.png",
     "LICENSE",
+    PUBLIC_EVALUATION_PATH,
 )
 PUBLIC_DIRECTORIES = ("github-pages/assets",)
 PUBLIC_BRAND_IMAGE_PATHS = (
@@ -127,6 +133,26 @@ class _Homepage(HTMLParser):
             self.evidence_depth -= 1
 
 
+def _evaluation_contract(root: Path) -> dict[str, Any]:
+    try:
+        evidence = json.loads(_read_text(root / PUBLIC_EVALUATION_PATH))
+        rows = evidence["rows"]
+        for prefix in ("latest", "reference"):
+            version_key = "latestEvaluatedVersion" if prefix == "latest" else "referenceVersion"
+            matches = [row for row in rows if row["version"] == evidence[version_key]]
+            if len(matches) != 1:
+                raise ValueError("an attributed scored row is required")
+            score, headline = matches[0]["score"], evidence[prefix + "ProductScore"]
+            if not all(type(value) in (int, float) and 0 <= value <= 100
+                       for value in (score, headline)):
+                raise ValueError("product scores must be finite numbers from 0 to 100")
+            if headline != score:
+                raise ValueError("headline score differs from its attributed row")
+        return evidence
+    except (KeyError, TypeError, ValueError) as exc:
+        raise PublicationError(f"{PUBLIC_EVALUATION_PATH}: invalid evaluation attribution: {exc}") from exc
+
+
 def _homepage_contract(root: Path) -> None:
     index = _read_text(root / "index.html")
     page = _Homepage()
@@ -144,8 +170,17 @@ def _homepage_contract(root: Path) -> None:
                            for image in capture["images"])
                    for capture in page.captures):
             raise PublicationError(f"index.html: product capture needs alt text and an example caption: {path}")
-    if page.evidence_version != "3.2" or "AIM 3.2" not in page.evidence_text:
+    evidence = _evaluation_contract(root)
+    if (page.evidence_version != evidence["latestEvaluatedVersion"]
+            or evidence["latestEvaluatedVersion"] not in page.evidence_text
+            or evidence["referenceVersion"] not in page.evidence_text):
         raise PublicationError("index.html: comparison must identify the tested AIM version")
+    for key in ("latestProductScore", "referenceProductScore"):
+        if f'{evidence[key]:g} of 100' not in page.evidence_text:
+            raise PublicationError("index.html: displayed assessment score differs from public evidence")
+    version = product_version(root)
+    if f'"softwareVersion": "{version}"' not in index:
+        raise PublicationError(f"index.html: softwareVersion must match VERSION ({version})")
     for href in page.links:
         if href.startswith("#") and href[1:] not in page.ids:
             raise PublicationError(f"index.html: broken section link: {href}")
@@ -250,10 +285,10 @@ def validate_source(repo_root: Path) -> None:
                 "versionless source"
             )
     index = _read_text(repo_root / "index.html")
-    expected_badge = f'<span class="brand-version">{product_version}</span>'
+    expected_badge = '<span class="brand-version">Latest</span>'
     if expected_badge not in index:
         raise PublicationError(
-            f"index.html: brand-version must match VERSION ({product_version})"
+            "index.html: brand-version must present the current AIM brand"
         )
     _homepage_contract(repo_root)
     _press_contract(repo_root)
@@ -275,9 +310,9 @@ def validate_source(repo_root: Path) -> None:
             "brand image inventory must keep product versions outside artwork"
         )
     readme = _read_text(repo_root / "README.md")
-    if f"![AIM {product_version} - Agile Iteration Method]" not in readme:
+    if "![AIM - Agile Iteration Method]" not in readme:
         raise PublicationError(
-            f"README.md: hero artwork alt text must match VERSION ({product_version})"
+            "README.md: hero artwork alt text must use the AIM brand"
         )
     index = _read_text(repo_root / "index.html")
     install_script_path = repo_root / "install.sh"
@@ -320,13 +355,13 @@ def validate_source(repo_root: Path) -> None:
             index,
             "/aim remember-repo",
         ),
-        "index.html reflect command": (
+        "index.html ordinary shared learning": (
             index,
-            "/aim reflect",
+            "Shared learning is part of ordinary delivery",
         ),
-        "index.html reflect-all command": (
+        "index.html retired command compatibility": (
             index,
-            "/aim reflect-all",
+            "retired compatibility aliases",
         ),
         "index.html AIM UI section": (
             index,

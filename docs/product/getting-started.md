@@ -12,7 +12,7 @@ AIM has two maintained installation paths. Both deliver the complete AIM
 method; the public Agent Skill is full AIM, not AIM Lite and is generated from the same
 canonical sources as the adaptive installation.
 
-### Public Agent Skill
+### Recommended: one command
 
 Use the standard skills CLI when you want a portable, self-contained AIM skill
 for Codex, GitHub Copilot, Claude Code, or another compatible agent:
@@ -21,6 +21,16 @@ for Codex, GitHub Copilot, Claude Code, or another compatible agent:
 npx skills add joneri/agile-iteration-method \
   --skill agile-iteration-method
 ```
+
+Select your agent and project. Then describe your desired result:
+
+```text
+/aim start "Make checkout recovery clear when payment confirmation is delayed"
+```
+
+For an agent doing the setup, copy the [short installation instructions](../../github-pages/assets/aim-install-agent.txt).
+Node.js/npm runs the installer; Python 3 runs AIM's local helpers. Reopen the
+agent session if it does not discover the newly installed skill.
 
 The installed skill contains the full role loop, gates, operating modes,
 repository calibration, project-agent configuration, scope escalation, and
@@ -39,7 +49,7 @@ project-specific native specialists from `aim.roles.yaml`.
 See [Public Agent Skill distribution](../workflow/version-and-installation.md)
 for agent-specific commands, versioning, generation, and publication details.
 
-### Adaptive Installer
+### Optional: guided repository setup
 
 Use the adaptive installer when you want AIM to inspect a target repository,
 offer one or more native adapters, seed project-specific role configuration,
@@ -78,7 +88,7 @@ compatibility inputs only.
 
 Already have AIM 1.x or older AIM helper files in the target repository?
 Run `/aim upgrade` before continuing.
-Upgrade refreshes installed AIM-owned surfaces through the reviewed installer plan and keeps active `.aim/` runtime state intact.
+A portable skill upgrade uses the standard skills CLI. A separate adaptive setup uses its reviewed installer plan. Both preserve active AIM state and accepted history.
 
 For automation, pass installer flags directly, such as `--target
 /path/to/repo`, `--non-interactive`, or `--format json`.
@@ -140,27 +150,16 @@ AIM maps the request into structured repo-awareness, shows the proposed change,
 and stores stable shared facts in `aim.profile.yaml` or personal preferences in
 user-level hints. It should not store reusable project knowledge in `.aim/`.
 
-## 4. Reflect on Completed Work
+## 4. Reuse Learning During Work
 
-When the repository already has completed AIM history, ask it to propose
-knowledge worth keeping:
-
-```text
-/aim reflect
-```
-
-To compare selected local AIM projects:
-
-```text
-/aim reflect-all
-```
-
-Reflect-all previews discovery roots, repositories, exclusions, and workload
-before reading unapproved project content. Both commands create temporary
-candidate reports. Their completion response tells you whether anything needs
-attention and gives one concrete `remember-repo`, `forget-repo`, reviewed edit,
-or Epic path. When no durable change is justified, Reflect says that no action
-is needed. You still decide whether to run or approve the proposed action.
+AIM recalls relevant shared advice during planning, material review and failure
+diagnosis. It shares new verified reusable corrections and independently
+confirmed failures with existing proof; an unverified remedy stays proposed.
+No manual reflection command or routine report is required. The old `reflect`
+and `reflect-all` names are retired compatibility aliases for read-only views.
+If a named stale fact,
+contradiction or missing lesson remains unresolved, request a targeted audit
+with a concrete scope; existing project facts and write authority stay intact.
 
 ## 5. Start with intent
 

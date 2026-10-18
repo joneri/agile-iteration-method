@@ -8,6 +8,11 @@ API pair are complete. See the [first-pair results](paired-pilot-results.md),
 AIM as the product under test. It does not use AIM to manage the improvement
 work in this repository.
 
+The [latest retained Enigma assessment and comparison history](aim-enigma-evaluation.md)
+now include the frozen 4.4.0-rc.11 result: 96.5/100 externally, with unfinished
+native delivery. The pilot rules below retain their historical scope. Later
+source revisions are not new Enigma results.
+
 ## First pilot
 
 Use the original Enigma PRD unchanged, SHA-256
@@ -129,6 +134,43 @@ instruction changes require a new package snapshot and explicit attribution.
 
 ## Reproducibility and evidence handling
 
+For native Story evaluations, package instructions alone do not establish AIM
+activation. The coordinator releases planning first and withholds implementation
+until `scripts/aim_evaluation_guard.py --checkpoint activation` confirms the
+approved delivery in the isolated product repo. Supply `--repo`, `--delivery`,
+`--scope-sha256` and the frozen `--protocol-sha256`. Retain its compact output as
+`aimActivation` in the existing coordinator run record before continuing the same
+builder. Do not create retrospective activation evidence or count an extra build.
+
+Before scoring a submission, run the same guard with `--checkpoint submission`
+and `--activation-record <coordinator-run.json>`. It verifies the current native
+phase, approval, scope, quality contract, source bindings and applicable review
+evidence. Failed or interrupted attempts use `--outcome failed|interrupted`;
+their actual failed/unmeasured quality observations remain visible. A negative
+product result does not invalidate an otherwise observed AIM attempt. No Gate E
+acceptance is fabricated for evaluation. The guard is read-only and emits no
+routine product artifact; a nonzero result stops method attribution, not evidence
+preservation, and never automatically launches a replacement run.
+
+Report product score separately from `aimMethodValidity: valid|invalid|unknown`.
+Missing native activation is invalid; missing contemporaneous coordinator proof
+is unknown. Preserve both failures and resource use. A valid runtime check does
+not prove semantic PRD coverage, authenticated agent independence or causal
+method benefit; retain the independent source/trace assessment and package/PRD
+hash checks. Historical runs are not retroactively certified by this new guard.
+
+For future native Story evaluations, preflight must also identify the maintained
+verification map: the public entry routes, obligations, reusable commands,
+expected observations and known coverage gaps. During the same bounded build,
+retain evidence that the builder and separate reviewer actually used those
+routes and reused the maintained verification recipe, with missing or failed
+observations visible. A map's existence or a claim that it was read is not reuse
+proof. These are method-readiness obligations under the prospective delivery
+contract; report them separately from the unchanged external product rubric.
+Do not penalize historical scores retroactively or create another Enigma run
+to satisfy this addition. Keep hidden fixtures, expected benchmark answers and
+assessor implementation outside runtime instructions and shared learning.
+
 The prepared local pilot contains two prompts, two untouched PRD files, the
 frozen AIM package, assessor inputs and a manifest of all initial file hashes.
 The run location is recorded in the task, not hard-coded into product tooling.
@@ -140,3 +182,23 @@ original four Enigma projects and their locked comparison reports.
 See [the engineering analysis](engineering-reset-analysis.md) for the prior
 evidence, implemented changes and distinction between tool microbenchmarks and
 agent/product outcomes.
+
+## Learning from assessed failures
+
+After an independent assessment, reuse its existing evidence to share each new
+generalizable failure mechanism through Shared local learning in
+`docs/workflow/engineering-delivery.md`. Group assertions with the same cause;
+reuse or revise an existing card rather than creating a reflection report or a
+second copy. Distinguish a verified observation from a proposed remedy and an
+actually verified correction. An incomplete or invalid method attempt remains
+visible; capture activation, recovery and evidence-integrity failures as well as
+product defects. No automatic replacement run or extra test campaign follows.
+
+Carry transferable engineering lessons into later planning and review, with
+applicability and a decisive check. Do not disclose locked vectors, expected
+benchmark answers or assessor implementation through the registry. Preserve
+independent oracle checks and unchanged historical outcomes. Later runs using
+prior failure lessons are learning-enabled follow-ups, not unseen tasks or
+controlled evidence of general superiority. Measure recurrence on comparable
+opportunities in existing assessments; more cards or a higher single score do
+not establish a lower error rate or causal benefit.
