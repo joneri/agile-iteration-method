@@ -2,15 +2,16 @@ AIM — PRESS KIT
 AIM 4.6 · 18 October 2026.
 
 POSITIONING
-Build your product from an intent.
+Turn your intent into a complete product.
 
 ONE SENTENCE
-AIM turns a plain-language goal into a plan and working software, with project-specific agents, early quality checks and evidence you can inspect before acceptance.
+AIM completes the agreed product with Ship by default, offers Loop for recurring owner feedback, and makes the work, dependencies and evidence visible in AIM UI.
 
 SHORT DESCRIPTION
-Agile Iteration Method (AIM) is an open-source method and tooling for AI-assisted software development. Describe the result you want. The Product Owner owns Epic outcomes and product priority; the Technical Delivery Owner owns User Stories, criteria and a coherent delivery plan. Developers build the result, a separate reviewer challenges it, and validation connects the delivered behavior to your acceptance decision. AIM UI shows Story cards and a living delivery graph, keeping user needs, dependencies and evidence in view.
+Agile Iteration Method (AIM) is an open-source method and tooling for AI-assisted software development. Describe the result you want. Ship takes the agreed product through planning, implementation, independent review and real verification before final acceptance. Choose Loop when recurring owner feedback should shape the next useful Done Increment. AIM UI is the local control room for Stories, the selected delivery, dependencies and evidence. Graph engineering connects responsibilities, prerequisites and proof; the Graph view makes those recorded relationships visible.
 
 CURRENT CAPABILITIES
+- Open AIM UI with /aim ui to inspect User Stories, the selected delivery, Graph, review evidence and recorded progress alongside your coding agent. The UI remains Beta; copying a handoff does not start agents or grant approval.
 - Ship is the default: complete the agreed product before final acceptance. Choose Loop for useful Done Increments with recurring owner feedback.
 - Use Graph engineering to connect ownership, dependencies, delivery and independent proof. An agent owner can give feedback and decide in Strict Loop only under an explicit human mandate and its permitted delivery decisions.
 - Use AIM Graph to see delivery dependencies, current activity proof and blockers. Copy bounded assignments with role skills and file responsibility. Changed inputs identify the affected work and evidence that need correction.

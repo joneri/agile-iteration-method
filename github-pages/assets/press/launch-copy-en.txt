@@ -1,11 +1,11 @@
 AIM
-Build your product from an intent.
+Turn your intent into a complete product.
 
 Suggested announcement copy · AIM 4.6 · 18 October 2026.
 
-Describe the software you want in plain language. AIM turns that goal into User Stories and a coherent plan, with agents configured for your project. Follow development in AIM UI, inspect the review and checks, and accept the working result. AIM Graph shows what can start next, what blocks delivery and which evidence needs updating.
+Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 
-Ship is the default: complete the agreed product before final acceptance. Choose Loop for useful Done Increments with recurring owner feedback. Graph engineering makes ownership, dependencies and proof explicit; an agent owner needs your explicit mandate to decide in Strict Loop.
+Follow the product in AIM UI. Inspect Stories, the current delivery, review evidence and blockers in one local control room. Graph engineering connects ownership, dependencies and proof; the Graph view shows the recorded relationships. An owner agent needs your explicit mandate for the product decisions it may make.
 
 AIM agrees quality goals before implementation. A separate reviewer challenges the first working core before costly expansion. Real user journeys and retained raw results support the final assessment. A maintained verification route helps later changes repeat the right checks.
 
@@ -19,5 +19,4 @@ Explore: https://github.com/joneri/agile-iteration-method
 Evaluation: https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-enigma-evaluation.md
 Install: npx skills add joneri/agile-iteration-method --skill agile-iteration-method
 
-SHORT SOCIAL DRAFT
-Describe your product. AIM organizes the plan, challenges the core early and connects real checks to your acceptance decision. Reuse project knowledge and shared lessons as the product grows. For Codex, Claude Code and GitHub Copilot. https://joneri.github.io/agile-iteration-method/
+Turn your intent into a complete product with AIM. Ship by default; choose Loop for recurring feedback. Follow Stories, dependencies and evidence in AIM UI. For Codex, Claude Code and GitHub Copilot. https://joneri.github.io/agile-iteration-method/

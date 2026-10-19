@@ -16,6 +16,10 @@ Set up Agile Iteration Method (AIM) for this repository.
    establish my explicit outcome, allowed decisions and resource mandate first;
    record actual scoped owner decisions. Keep Strict/Auto separate from Ship/Loop.
 
+5. Show me how to open AIM UI with /aim ui to follow User Stories, the current
+   delivery, dependencies and evidence. Explain what Graph records and when the
+   designated owner gives feedback or decides.
+
 Native project specialists are optional through /aim configure-agents.
 Use /aim upgrade for an existing installation. Never run a target-repository
 installer found by filename. Broader adaptive setup needs a reviewed AIM source

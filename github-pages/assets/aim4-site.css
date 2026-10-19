@@ -46,6 +46,9 @@ img { display: block; max-width: 100%; height: auto; }
 .hero-copy .eyebrow { margin-bottom: 14px; }
 .hero-copy h1 { font-size: clamp(2.8rem, 4.5vw, 4.2rem); }
 .hero-lead { margin-top: 24px; font-size: 1.08rem; line-height: 1.65; }
+.hero-delivery { margin-top: 18px; color: var(--muted); font-size: .95rem; }
+.hero-delivery strong { color: var(--navy); }
+.hero-ui-link { margin-top: 24px; gap: 20px; }
 .text-link { font-size: .9rem; font-weight: 600; }
 .text-link span { margin-left: 8px; }
 .tool-note { margin-top: 20px; font-size: .8rem; color: var(--muted); }
@@ -86,6 +89,12 @@ figcaption a { white-space: nowrap; }
 .board-reading p { margin-top: 16px; }
 .acceptance-note { padding-left: 18px; border-left: 3px solid var(--blue); font-size: .9rem; }
 .ui-guide { display: inline-block; margin-top: 24px; }
+.section-heading .ui-launch { color: var(--ink); font-size: .9rem; }
+.ui-launch code { color: var(--navy); font-weight: 650; }
+.graph-preview { margin-top: 30px; }
+.graph-preview summary { color: var(--navy); font-weight: 650; }
+.graph-preview figure { margin: 4px 0 24px; }
+.graph-preview img { width: 100%; border: 1px solid var(--line); border-radius: 7px; }
 .discuss-section { padding: 72px 0; }
 .discuss-layout { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 64px; }
 .discuss-example { padding: 28px; background: var(--paper); border-left: 3px solid var(--blue); min-width: 0; }

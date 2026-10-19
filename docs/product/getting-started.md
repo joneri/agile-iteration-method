@@ -1,10 +1,16 @@
 # Your First AIM Journey
 
-This path takes a new user from an intent to accepted User Stories. You do not
-need to supply an Epic or read the full method first. PO discovers outcomes and
-product priority; TDO owns Stories, criteria and the increment. Chat and terminal agents are
-complete paths without AIM UI. Continue resumes authorized work; it does not
-approve a waiting decision. See [User Stories](../workflow/user-stories.md).
+Start with the product you want. **Ship** is the default: complete the agreed
+result before final acceptance. Choose **Loop** for useful Done Increments with
+recurring owner feedback. You do not need to supply a backlog or read the full
+method first.
+
+Open **AIM UI** with `/aim ui` to follow Stories, the current delivery and its
+evidence. The **Graph** view shows recorded dependencies, blockers and bounded
+next assignments. Graph engineering makes ownership and prerequisites explicit;
+it does not grant agents permission to decide. Chat and terminal remain complete
+paths. Continue resumes authorized work and never approves a waiting decision.
+See [User Stories](../workflow/user-stories.md) and [AIM UI](aim-ui.md).
 
 ## 1. Install AIM
 

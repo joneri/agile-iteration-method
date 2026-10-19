@@ -2,12 +2,13 @@
 
 ![AIM - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
 
-AIM helps your AI agent turn an idea into working software. It plans the work,
-checks the result through independent review and real product verification, and
-keeps acceptance with you. Use it with Codex, Claude Code or GitHub Copilot.
+AIM turns your intent into a complete, verified product. **Ship is the default**;
+choose **Loop** for useful Done Increments with recurring owner feedback.
+Use it with Codex, Claude Code or GitHub Copilot.
 
-You describe the outcome. AIM keeps the requirements, approved work, measurements
-and remaining problems together so another session can continue from current facts.
+Follow the product in **AIM UI**: inspect Stories, dependencies, blockers and evidence.
+**Graph engineering** connects ownership, work and proof; the UI's Graph view makes
+those recorded dependencies visible. Decisions stay with the designated owner.
 
 ## Install
 

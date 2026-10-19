@@ -1,11 +1,11 @@
 AIM
-Från idé till en produkt du kan granska.
+Från din idé till en komplett produkt.
 
 Förslag till lanseringstext · AIM 4.6 · 18 oktober 2026.
 
-Beskriv programvaran du vill ha med vanliga ord. AIM gör målet till User Stories och en sammanhängande plan, med agenter anpassade till ditt projekt. Följ utvecklingen i AIM UI, granska resultat och kontroller och acceptera den fungerande leveransen. AIM Graph visar vad som kan börja härnäst, vad som blockerar leveransen och vilka bevis som behöver uppdateras.
+Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 
-Ship är standard: leverera hela den överenskomna produkten före slutacceptans. Välj Loop för användbara Done Increments med återkommande ägarfeedback. Graph engineering tydliggör ansvar, beroenden och bevis; en ägaragent behöver ditt uttryckliga mandat för att fatta beslut i Strict Loop.
+Följ produkten i AIM UI. Granska Stories, den aktuella leveransen, granskningsbevis och hinder i en lokal kontrollvy. Graph engineering knyter ihop ansvar, beroenden och bevis; Graph-vyn visar de registrerade sambanden. En ägaragent behöver ditt uttryckliga mandat för de produktbeslut den får fatta.
 
 AIM fastställer kvalitetsmål före implementation. En separat granskare utmanar den första fungerande kärnan innan arbetet byggs ut. Verkliga användarflöden och sparade råresultat ger underlag för slutbedömningen. En underhållen verifieringsväg hjälper kommande ändringar att återanvända rätt kontroller.
 
@@ -19,5 +19,4 @@ Utforska: https://github.com/joneri/agile-iteration-method
 Utvärdering: https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-enigma-evaluation.md
 Installera: npx skills add joneri/agile-iteration-method --skill agile-iteration-method
 
-KORT UTKAST FÖR SOCIALA MEDIER
-Beskriv din produkt. AIM ordnar planen, utmanar kärnan tidigt och kopplar verkliga kontroller till ditt acceptansbeslut. Återanvänd projektkunskap och gemensamma lärdomar när produkten växer. För Codex, Claude Code och GitHub Copilot. https://joneri.github.io/agile-iteration-method/
+Från din idé till en komplett produkt med AIM. Ship som standard; välj Loop för återkommande feedback. Följ Stories, beroenden och bevis i AIM UI. För Codex, Claude Code och GitHub Copilot. https://joneri.github.io/agile-iteration-method/

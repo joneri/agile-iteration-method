@@ -55,3 +55,11 @@ browser capture of the whole board element at twice CSS pixel density
 (4088 × 2150). No generated UI, annotations, retouching or private workspace
 content is used. The Delivery control and narrow Acceptance-column images from
 the earlier draft are no longer publication assets.
+
+- `aim-ui-graph.png`: actual AIM UI 4.6.0 Graph view, captured on 19 October
+  2026 by `python3 scripts/verify_aim_graph.py`. The isolated synthetic idea-wall
+  fixture records a completed contract and two ready dependent activities while
+  review waits. The inspector exposes file responsibility and assignment copying.
+  This is the unedited `progress.png` browser capture (1410 × 1282), with no
+  private project data, generated interface, retouching or claim of live activity.
+  The website labels it as synthetic example data and a recorded snapshot.
