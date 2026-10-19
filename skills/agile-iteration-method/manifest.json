@@ -99,7 +99,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.6.1",
+  "productVersion": "4.7.0",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -112,12 +112,12 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "e71dc951ce2524509b399d62bc862677dff04cc0c3a697258d25c6af29492dcd"
+      "sourceSha256": "d456ec22d472e8fe07bca464aa7c4f7e51d94a5c5a6b3e7a29cf323af8f751ba"
     },
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "2e40463213a04fb82feba8268671743923925ea5424f2feb20f1d457efbb9855"
+      "sourceSha256": "20beba9bd33ad5f7ae5b432780c39c2491cd407fa7ce4f8b9e227147da587327"
     },
     {
       "output": "references/autonomous-interaction.md",
@@ -167,12 +167,12 @@
     {
       "output": "references/skill-user-guide.md",
       "source": "docs/workflow/skill-user-guide.md",
-      "sourceSha256": "3d0a614af152b1dfa54b9d099168cf6b98df7af2b086b38e45249249206a318b"
+      "sourceSha256": "bf561168abb4ed5cd86cf9a663b733fc530af20abe6b7646638fca51c1a9af73"
     },
     {
       "output": "references/skill-command-runtime.md",
       "source": "docs/workflow/skill-command-runtime.md",
-      "sourceSha256": "680616b9535e37a1a882344deee1c5521c8112397b88034623152f2ef9ca1620"
+      "sourceSha256": "9f258364097d70957348206d2a10f7282e745b44edd0193deb4886a950fdefc7"
     },
     {
       "output": "references/skill-completion.md",
@@ -187,7 +187,7 @@
     {
       "output": "references/adapter-command-contract.md",
       "source": "docs/workflow/adapter-command-contract.md",
-      "sourceSha256": "92610fb7c41cffb4bc1fc9dea8e43037818887a33222b0f5fe8cd9545bbeedb4"
+      "sourceSha256": "037caee5b4c1b27e0af287bb8ad04f3081dec06beddfc9f36c06187fe27b5e89"
     },
     {
       "output": "references/adapter-entry-model.md",
@@ -197,12 +197,12 @@
     {
       "output": "references/adapter-skill-bootstrap.md",
       "source": "docs/workflow/adapter-skill-bootstrap.md",
-      "sourceSha256": "56274507d62f3066b016f7df1214972e3c3965e54a22e5decd04cc1dea3cf936"
+      "sourceSha256": "d8a58be3418f4d853e9325db33843c89561e68a79ada56d547304205dcf31874"
     },
     {
       "output": "references/project-agent-configuration.md",
       "source": "docs/workflow/project-agent-configuration.md",
-      "sourceSha256": "9a5dbb0f4f956da2db4bdc285e54a068de8ecd22d8a30616116489e50c10b7ca"
+      "sourceSha256": "9b4801544f27ddd8b4c0c57e0b879ccff3b039f2392c8586e11d363fd38622ee"
     },
     {
       "output": "references/reflection.md",
@@ -227,7 +227,7 @@
     {
       "output": "references/repo-awareness-calibration.md",
       "source": "docs/workflow/repo-awareness-calibration.md",
-      "sourceSha256": "47ed761b4d752124febbbb5e46ff8a8d00ec5c908c7f81f082ee62b3a10945bf"
+      "sourceSha256": "34fc4a131301c7cb210fa646262e2cdc02a2546e8ebc0216024841d7d9edcd33"
     },
     {
       "output": "references/repo-awareness-two-layer-model.md",
@@ -287,7 +287,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "16550af6f97b1dd87e9eae5809ab0345f4edd82cf28cc8fb08e8091d397455f3"
+      "sourceSha256": "ef3193df6d68bc7ef70fda62056eba15f0ef668fc9c21b487ae7fd56a562bfd6"
     },
     {
       "output": "references/version-and-installation.md",

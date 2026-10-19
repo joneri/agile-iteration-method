@@ -59,8 +59,9 @@ Enterprise labels are compatibility inputs, not separate products or current
 adapter behavior models.
 
 The public skill is the normal portable entry point. Its onboarding guidance
-must not pretend that repository configuration already exists: users calibrate,
-then configure project specialists when wanted, before starting the first Epic.
+must not pretend that repository configuration already exists: after the user
+supplies an intent, the same start calibrates missing repo knowledge and
+configures missing project specialists and available skills before Epic framing.
 The adaptive installer may seed those files in one reviewed setup flow.
 
 Adapters should treat these as separate concerns:

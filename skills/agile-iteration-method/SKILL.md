@@ -63,7 +63,7 @@ while version, assignment and relevant sources remain unchanged.
 
 | Intent | Load and act |
 | --- | --- |
-| New intent or Story continuation | Relevant sections of `references/user-stories.md`; trusted `scripts/aim_stories.py` |
+| New intent or Story continuation | Relevant sections of `references/user-stories.md`; for a new intent, its startup preparation in `references/skill-command-runtime.md`; trusted `scripts/aim_stories.py` |
 | `/aim discuss` | Discuss in `references/skill-command-runtime.md`; read-only, no promotion |
 | `AIM_ACTION_ENVELOPE` | Targeted action envelopes there before any state read; resolve exact `authorityStatePath` before another state file, no fallback |
 | Explicit legacy `EPIC:` or resume | Start and resume plus Shared startup boundaries there |
@@ -94,6 +94,17 @@ never override current evidence or method. Read directly affected files and shor
 authoritative docs; use broader repository docs for a concrete uncertainty.
 No full workflow scan at handoff.
 
+When the user has supplied a new intent, start it directly. As part of that
+start, calibrate missing or stale repo knowledge and configure missing or stale
+project agents and actual skill bindings using the intent as initial context.
+For an empty repo, mark inferred facts and capabilities provisional, then refine
+them as the stack takes shape. Do not ask the user to run either command first.
+Reuse current profiles, preserve native overrides, and report unresolved gaps.
+Follow the existing write footprint and actual host capabilities; intentionally
+absent repo profiles/native files are not missing setup in protected or
+portable-only use. The runtime reference defines the applicable checks and
+fallbacks. Later `/aim calibrate-repo` and `/aim configure-agents` remain available.
+
 For Stories use `.aim/product-backlog.json` through the trusted helper.
 `status --compact` restores active requirements/digests/next step once on
 startup/resume or an unknown outcome. Mutations take stdin and `--compact`
@@ -108,7 +119,7 @@ that confirmed scope/phase receipt to Dev; reading roles alone is not activation
 of the delivery gates. Reuse the receipt instead of another status round.
 
 Use `/aim help` for the next useful action. On first use show current position, recommended next action, reason and next
-step. Route Installed but not calibrated to `/aim calibrate-repo`, Ready for new work
+step. Without a supplied intent, route Installed but not calibrated to `/aim calibrate-repo`, Ready for new work
 to `/aim start "<outcome>"`, existing intent to Story selection/refinement and
 approved work to its exact continuation. An empty repo is normal; authorized Auto
 work starts with provisional skills without an onboarding round-trip. A bounded

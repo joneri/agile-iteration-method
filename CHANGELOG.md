@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-10-19 - AIM release v4.7.0
+
+Start project preparation from the supplied intent in the same agent-led flow.
+AIM reuses relevant current context, calibrates missing or stale repository
+knowledge, then configures applicable project agents and available role skills
+before continuing with Epics and Stories.
+
+- Empty projects start with explicitly provisional facts and bundled role skills;
+  capabilities are verified as the stack and code take shape.
+- Current profiles and unaffected roles are reused. Existing write footprints,
+  user overrides, protected files and frozen delivery authority remain binding.
+  Intentionally absent external/portable project files do not trigger setup.
+- Report actual skill availability and host reload requirements. Missing native
+  configuration never waives independent material review.
+- Keep `/aim calibrate-repo` and `/aim configure-agents` available for explicit
+  refreshes afterward. Status, Discuss, Graph and ordinary continuation keep
+  their existing semantics.
+- Align native and portable entries, current onboarding guides, website setup,
+  agent instructions and press material. Ship remains the default; Loop, Graph
+  engineering and AIM UI retain their released behavior.
+
+This is agent-orchestrated preparation, not a standalone automatic CLI command.
+Validation covers startup boundaries, independent agent-performed fixtures,
+package/official CLI checks, browser copy and responsive layout, the full test
+suite and ordinary release/publication gates. Runtime and schema versions remain
+unchanged. No new application score or general speed benefit is claimed.
+
 ## 2026-10-19 - AIM release v4.6.1
 
 Align current guidance, generated packages and public communication with Ship,

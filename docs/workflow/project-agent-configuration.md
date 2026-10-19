@@ -81,6 +81,21 @@ native files after showing collisions or user edits. Native files remain thin
 loaders: never copy transient implementation status, technology lists or commands
 into them. This avoids conflicting snapshots when the profile changes.
 
+A new intent-led start invokes this configuration flow automatically after its
+repo-awareness check when `aim.roles.yaml`, selected native specialists or
+their role-skill bindings are absent, invalid or stale for the intent. The same
+start then continues to PO Epic framing. Reuse current configuration; do not
+regenerate it merely because another Epic is created. Automatic configuration
+still preserves hand-written overrides, collision checks and the existing write
+footprint. Native files and `aim.roles.yaml` are required only where that
+footprint includes them. Otherwise reuse permitted external/session context and
+actual bundled instructions; intentionally absent repo files are not a setup
+failure. Report host reload requirements separately from written definitions.
+The root `profiles` checker covers only applicable repo profiles; use its
+`--only` selector when appropriate. If an adapter or
+skill is unavailable, continue with available bundled role skills and report
+the specific gap rather than claiming the specialist is ready.
+
 For an empty project, use the supplied goal/requirements/PRD to propose provisional
 capabilities during startup; do not demand a separate calibration interview for
 facts that cannot exist yet. Verify and refine after choosing the stack. The

@@ -26,10 +26,8 @@ Select your agent and project in the installer. Then tell the agent what you wan
 /aim start "Make checkout recovery clear when payment confirmation is delayed"
 ```
 
-AIM discovers the relevant repository context and identifies the next useful step.
-The complete skill works without keeping this source checkout. Node.js/npm runs
-the installer; Python 3 runs AIM's local helpers. You can also copy [the short
-agent setup instructions](github-pages/assets/aim-install-agent.txt) into your agent.
+The complete skill works without this source checkout. Node.js/npm runs installation;
+Python 3 runs local helpers. You can also copy [the agent setup instructions](github-pages/assets/aim-install-agent.txt).
 
 Target one supported agent explicitly when needed:
 
@@ -68,11 +66,14 @@ Already using AIM? Run:
 
 ## Start
 
-First verify the repository knowledge AIM will reuse:
+Give AIM the desired outcome:
 
 ```text
-/aim calibrate-repo
+/aim start "<desired outcome>"
 ```
+
+Within that start, AIM prepares applicable missing or stale knowledge, agents and available skills within the existing write footprint.
+Empty repos use provisional knowledge and bundled skills; use `/aim calibrate-repo` or `/aim configure-agents` for a later refresh.
 
 Record a durable project rule when AIM should remember it on later runs:
 

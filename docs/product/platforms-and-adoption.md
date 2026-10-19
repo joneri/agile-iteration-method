@@ -21,10 +21,12 @@ generated from canonical AIM sources and is full AIM, not AIM Lite.
 
 Run it in your project's terminal, choose the agent you use and the installation
 scope, then reload the agent session if needed. Load the installed AIM skill and
-run `/aim calibrate-repo`; describe your goal with `/aim start "<desired outcome>"`.
+describe your goal with `/aim start "<desired outcome>"`. AIM calibrates missing
+repository knowledge and configures missing specialists and available skills
+within that start; `/aim calibrate-repo` remains available for later refreshes.
 You can give these same instructions to your coding agent. The public command
-installs the complete public skill. AIM 4.6.1 is available as an ordinary release;
-see [GitHub Releases](https://github.com/joneri/agile-iteration-method/releases/tag/v4.6.1)
+installs the complete public skill. AIM 4.7.0 is available as an ordinary release;
+see [GitHub Releases](https://github.com/joneri/agile-iteration-method/releases/tag/v4.7.0)
 for its versioned assets.
 
 Use the adaptive installer when the repository also needs a reviewed footprint,
@@ -62,8 +64,8 @@ validation, and boundaries. It is readable, editable, and supplier-neutral.
 | Claude | project `.claude/skills/aim/` | `.claude/agents/aim-*.md` |
 
 The table shows the adaptive installer's native locations. Public skills-CLI
-installations use the selected agent and scope; project specialists can be
-configured afterward.
+installations use the selected agent and scope; AIM configures missing project
+specialists when an intent starts.
 
 The standard install inherits supplier model defaults. Users and organizations
 can refine models, tools, skills, MCP servers, permissions, and hooks in the
@@ -73,10 +75,10 @@ configuration.
 
 ## Configure or Refresh
 
-Run `/aim configure-agents`. AIM reads `aim.roles.yaml`, `aim.profile.yaml`, and
-freshness-triggered project evidence, then shows a reviewed update plan. It does
-not silently overwrite hand-written native configuration. Use
-`/aim calibrate-repo` first when repository facts are still unverified.
+For a separate refresh, run `/aim configure-agents`. AIM reads `aim.roles.yaml`,
+`aim.profile.yaml`, and freshness-triggered project evidence, then shows a
+reviewed update plan. It does not silently overwrite hand-written native
+configuration. A new intent start runs needed calibration before agent setup.
 
 ## What Stays Shared
 

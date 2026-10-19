@@ -91,24 +91,19 @@ should be installed. If AIM is already installed, update it with:
 npx skills update agile-iteration-method --yes
 ```
 
-### 2. Calibrate the repository
-
-Let AIM identify the technologies, commands, documentation, and risk areas it
-may safely reuse:
-
-```text
-/aim calibrate-repo
-```
-
-Calibration is reviewable repository knowledge, not permission to change code.
-
-### 3. Start with an outcome
+### 2. Start with an outcome
 
 Describe the result you want, or supply an existing detailed requirement:
 
 ```text
 /aim start "Make checkout recovery clear and reliable when payment confirmation is delayed"
 ```
+
+Within that start, AIM calibrates missing or stale repository knowledge and
+configures missing or stale project agents and their actual skill bindings.
+An empty repository starts from provisional facts and bundled role skills,
+which AIM refines as the project takes shape. Use `/aim calibrate-repo` or
+`/aim configure-agents` separately when you want a later refresh.
 
 PO owns Epics; TDO creates and owns Stories. AIM presents the relevant direction and
 first Story selection together for approval.
@@ -143,10 +138,10 @@ state transitions through the platform's native skill route.
 
 | Command | Use when | What it does | What happens next |
 | --- | --- | --- | --- |
-| `/aim start "<desired outcome>"` | You have a new desired outcome. | PO owns Epics and priority; TDO owns Stories and plans a coherent increment. | Review relevant direction and the selected Story plan. |
+| `/aim start "<desired outcome>"` | You have a new desired outcome. | AIM prepares missing repository knowledge, agents and skills from the intent; PO owns Epics and priority; TDO owns Stories and plans a coherent increment. | Review relevant direction and the selected Story plan. |
 | `/aim start "PORTFOLIO" mode:auto` | You want AIM to finish the visible Backlog sequentially. | Previews one immutable snapshot and asks for one bounded Portfolio mandate. | After approval, AIM runs included Epics through the full loop and pauses only on escalation. |
 | `/aim continue` | An AIM run already exists. | Reads the durable checkpoint and continues from the current role and gate. | AIM performs the next automatic step or presents the next decision. |
-| `Start working according to AIM` | You want to begin but prefer plain language. | Maps the request to AIM startup without changing method semantics. | AIM detects whether to calibrate, start, or resume. |
+| `Start working according to AIM` | You want to begin but prefer plain language. | Maps the request to AIM startup without changing method semantics. | AIM asks for the outcome if missing, or prepares the repo and starts from the supplied intent. |
 
 ### Find the right next action
 
@@ -186,7 +181,7 @@ state transitions through the platform's native skill route.
 | Command | Use when | What it does | What happens next |
 | --- | --- | --- | --- |
 | `/aim validate` | State looks stale, contradictory, or release readiness matters. | Checks runtime structure, state alignment, repository context, ownership rules, and product coherence. | Continue when healthy, repair recoverable issues, or stop on blocked and contradictory results. |
-| `/aim calibrate-repo` | AIM has not learned this repository or its knowledge may be stale. | Verifies the stack, commands, documentation, localities, and risk zones using cheap evidence first. | Review the reusable profile, then start or continue the Epic. |
+| `/aim calibrate-repo` | You want a separate repository-knowledge refresh. | Verifies the stack, commands, documentation, localities, and risk zones using cheap evidence first. | Review the reusable profile, then start or continue work. |
 
 ### Remember repository knowledge
 
@@ -199,7 +194,7 @@ state transitions through the platform's native skill route.
 
 | Command | Use when | What it does | What happens next |
 | --- | --- | --- | --- |
-| `Install AIM` | AIM is not yet available in the active platform. | Routes to the supported installation guidance and identifies the correct skill location. | Reload the platform when required, then calibrate the repository. |
+| `Install AIM` | AIM is not yet available in the active platform. | Routes to the supported installation guidance and identifies the correct skill location. | Reload the platform when required, then start from the desired outcome. |
 | `/aim upgrade` | The installed skill or adaptive distribution may be outdated. | Uses the standard skills update path or presents a reviewed adaptive-installer plan. | Validate the updated package before resuming active work. |
 | `/aim configure-agents` | Native project specialists should match the current stack. | Reviews or refreshes PO, TDO, Dev, and Reviewer configuration from `aim.roles.yaml`. | Selected adapters receive collision-safe specialist updates; active state is unchanged. |
 

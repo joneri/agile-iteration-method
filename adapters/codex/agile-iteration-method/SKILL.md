@@ -48,6 +48,11 @@ Reuse current user authority and applicable answers. Read only the relevant sect
 
 For new work, load `references/user-stories.md` before startup. `/aim start
 "<desired outcome>"` and equivalent natural language preserve the user's intent.
+After receiving that intent, perform the conditional calibration and
+agent/skill preparation in `references/skill-command-runtime.md` as part of
+the same start. Use provisional facts and bundled role skills in an empty repo;
+reuse current profiles and preserve native overrides. Do not make the user run
+`/aim calibrate-repo` or `/aim configure-agents` as separate prerequisites.
 PO owns Epic outcomes and product priority. TDO creates and owns User Stories,
 their criteria and a coherent increment, selecting ready Stories that can span
 Epics when they contribute to the same delivery goal. Stories are the moving board cards. The working result is
@@ -126,7 +131,7 @@ After that: <one short sentence>.
 
 State routing:
 
-1. Installed but not calibrated: recommend `/aim calibrate-repo`.
+1. Installed but not calibrated, with no supplied intent: recommend `/aim calibrate-repo`.
 2. Ready for new work: recommend `/aim start "<desired outcome>"`.
 3. Intent or Stories exist: refine the Stories and prepare the first delivery selection.
 4. Approved work exists: recommend `/aim continue` for its exact checkpoint.

@@ -3,6 +3,10 @@
 ## New intent-first work
 
 Use `/aim start "<desired outcome>"` and load `docs/workflow/user-stories.md`.
+After receiving the intent, perform conditional calibration and agent/skill
+configuration in `docs/workflow/skill-command-runtime.md` within the same
+start. Use provisional facts and bundled role skills in an empty repo; reuse
+current profiles and preserve native overrides.
 PO identifies and owns Epics and product priority; TDO creates and owns Stories,
 their criteria and a coherent delivery selection that may span Epics. Use trusted `scripts/aim_stories.py`
 for `.aim/product-backlog.json`. Resolve an existing Story delivery before

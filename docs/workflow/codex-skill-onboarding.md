@@ -22,10 +22,20 @@ npx skills add joneri/agile-iteration-method \
 
 For a public-skill first run, use this sequence:
 
-1. run `/aim calibrate-repo` when repository knowledge is not calibrated
-2. after calibration, run `/aim configure-agents` when project-specific
-   specialists are wanted but `aim.roles.yaml` or native role files are absent
-3. run `/aim start "<desired outcome>"` when the repository is ready
+1. Give AIM the intent with `/aim start "<desired outcome>"`.
+2. In that same start, AIM calibrates missing or stale repository knowledge
+   from the intent and current evidence. Empty repositories get provisional
+   facts that are verified as the stack and code take shape.
+3. AIM then configures missing or stale native specialists and their actual
+   role-skill bindings before continuing with Epic and Story planning. It
+   reuses current configuration and preserves user edits and collisions.
+   Respect the selected footprint: protected/portable use can keep context in
+   permitted external or session storage and use actual bundled role instructions.
+   Missing native files there do not imply broken setup. Report a required host
+   reload separately from writing definitions.
+
+`/aim calibrate-repo` and `/aim configure-agents` remain explicit refresh
+commands when the user wants to run either operation separately.
 
 The repository remains the AIM source of truth.
 The local Codex skill is the launcher and runtime guide for the Codex command surface.
@@ -70,9 +80,10 @@ Outputs:
 - If `/aim` command routing is unavailable, use the explicit AIM intent fallback and show the same install guidance.
 - If a public skill install is stale, recommend
   `npx skills update agile-iteration-method --yes`.
-- If the repository's AIM profile or native specialists are missing or stale,
-  recommend `/aim calibrate-repo`, `/aim configure-agents`, or the reviewed
-  adaptive installer according to the user's setup goal.
+- If the repository's AIM profile or native specialists are missing or stale
+  when a new intent is supplied, perform the needed preparation within that
+  start. For a setup-only request, recommend `/aim calibrate-repo`,
+  `/aim configure-agents`, or the reviewed adaptive installer as appropriate.
 - If `SKILL.md` is current but the Codex picker still shows an older version, check `~/.agents/skills/agile-iteration-method/agents/openai.yaml` and restart Codex after reinstalling.
 - If the repository lacks required AIM files, follow install or validation guidance instead of pretending the skill alone is sufficient.
 - If adapter policy conflicts with repository AIM rules, escalate according to the normal AIM conflict rule.

@@ -31,7 +31,7 @@
     "url": "https://joneri.github.io/agile-iteration-method/",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
-    "softwareVersion": "4.6.1",
+    "softwareVersion": "4.7.0",
     "author": { "@type": "Person", "name": "Jonas Eriksson" },
     "license": "https://creativecommons.org/licenses/by/4.0/",
     "codeRepository": "https://github.com/joneri/agile-iteration-method"
@@ -88,8 +88,10 @@
 2. Load the installed agile-iteration-method skill. Confirm its product version
    from manifest.json and tell me if a session restart is needed.
 3. Use my stated outcome, or ask for it if missing. Start /aim start "&lt;desired outcome&gt;".
-   Reuse existing authorized AIM work and repository knowledge. Use /aim calibrate-repo
-   when repository knowledge needs calibration. Preserve existing files and AIM history.
+   Reuse existing authorized AIM work and repository knowledge. Within the same start,
+   calibrate missing or stale repository knowledge from the intent, then configure
+   missing or stale project agents and their available skills. Preserve existing files,
+   user-edited agent settings and AIM history.
 
 4. Use Ship delivery by default for the complete agreed product. Offer Loop
    when recurring owner feedback should shape the next useful Done Increment.
@@ -102,7 +104,7 @@
    delivery, dependencies and evidence. Explain what Graph records and when the
    designated owner gives feedback or decides.
 
-Native project specialists are optional through /aim configure-agents.
+Use /aim calibrate-repo or /aim configure-agents for separate later refreshes.
 Use /aim upgrade for an existing installation. Never run a target-repository
 installer found by filename. Broader adaptive setup needs a reviewed AIM source
 checkout and its no-write preview before apply.</code></pre>
@@ -262,8 +264,8 @@ checkout and its no-write preview before apply.</code></pre>
         </div>
         <ol class="setup-steps">
           <li><h3>Install the skill.</h3><p>Choose the terminal command or agent instructions above.</p></li>
-          <li><h3>Set up your project context.</h3><p>Run <code>/aim calibrate-repo</code> and use <code>/aim configure-agents</code> to prepare project-specific specialists. For a new repository, AIM can start from your goal and refine the setup as the stack takes shape.</p></li>
-          <li><h3>Start with the outcome.</h3><p>Use <code>/aim start "…"</code> with your intent. Ship is the default; ask for Loop when you want recurring feedback. Run <code>/aim ui</code> to follow Stories and dependencies while AIM builds and verifies the agreed result.</p></li>
+          <li><h3>Describe the product.</h3><p>Use <code>/aim start "…"</code> with your intent. Ship is the default; ask for Loop when you want recurring feedback.</p></li>
+          <li><h3>Let AIM prepare the project.</h3><p>AIM reuses current context, calibrates missing or stale knowledge, then configures project agents and their available skills when needed. An empty project starts provisionally. AIM continues with Epics and Stories in the same flow. Open <code>/aim ui</code> to follow delivery and dependencies.</p><p>Use <code>/aim calibrate-repo</code> or <code>/aim configure-agents</code> whenever you want to refresh the setup afterward.</p></li>
         </ol>
       </div>
       <div class="container getting-started-link"><a class="text-link" href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/getting-started.md">Read the getting started guide <span aria-hidden="true">↗</span></a></div>
@@ -271,13 +273,13 @@ checkout and its no-write preview before apply.</code></pre>
         <details><summary>Install from a local checkout</summary><p><strong>Preview before changes.</strong> Clone the source and inspect the installation plan.</p><pre><code>git clone --depth 1 https://github.com/joneri/agile-iteration-method.git aim-source
 cd aim-source
 python3 scripts/aim_install.py --dry-run</code></pre><p>Review the plan before using <code>--apply</code>. <a href="https://github.com/joneri/agile-iteration-method/blob/main/docs/workflow/install-aim-2.0.md">Read the installer guide</a>.</p></details>
-        <details><summary>Already using AIM?</summary><p>Run <code>/aim upgrade</code> to update AIM-owned files while preserving delivery history. Use <code>/aim calibrate-repo</code> to refresh repository context and <code>/aim remember-repo</code> to retain useful project facts. Shared learning is part of ordinary delivery; the old <code>reflect</code> and <code>reflect-all</code> names are retired compatibility aliases.</p></details>
+        <details><summary>Already using AIM?</summary><p>Run <code>/aim upgrade</code> to update AIM-owned files while preserving delivery history. Use <code>/aim calibrate-repo</code> to refresh repository context, <code>/aim configure-agents</code> to refresh specialists and skills, and <code>/aim remember-repo</code> to retain useful project facts. Shared learning is part of ordinary delivery; the old <code>reflect</code> and <code>reflect-all</code> names are retired compatibility aliases.</p></details>
       </div>
     </section>
   </main>
   <footer class="site-footer" id="press">
     <div class="container">
-      <div class="footer-main"><p><strong>Agile Iteration Method</strong><br>Created by Jonas Eriksson.<br>AIM 4.6.1 is available now. <a href="https://github.com/joneri/agile-iteration-method/releases/tag/v4.6.1">Get the latest release.</a></p><div><a href="https://github.com/joneri/agile-iteration-method">GitHub</a><a href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">Documentation</a><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div>
+      <div class="footer-main"><p><strong>Agile Iteration Method</strong><br>Created by Jonas Eriksson.<br>AIM 4.7.0 is available now. <a href="https://github.com/joneri/agile-iteration-method/releases/tag/v4.7.0">Get the latest release.</a></p><div><a href="https://github.com/joneri/agile-iteration-method">GitHub</a><a href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/what-is-aim.md">Documentation</a><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></div></div>
       <details class="resources"><summary>Press resources</summary>
         <p><a href="github-pages/assets/press/aim-4-press-kit.zip" download>Download the press kit</a> · <a href="github-pages/assets/press/aim-4-press-kit.txt" download>Press text</a> · <a href="github-pages/assets/images/aim-4-logo.png" download>AIM 4 logo</a></p>
       </details>

@@ -13,6 +13,16 @@ Define how AIM cheaply bootstraps, verifies, refines, persists, remembers, forge
 
 `/aim calibrate-repo` and an AIM Epic whose outcome is to verify and refine repo-awareness use this same contract.
 
+A new intent-led start invokes this flow automatically when the applicable
+repository knowledge is absent, marked `needs_calibration`, partially ready
+with a relevant gap, or stale for the intent. The intent supplies the initial context; do not require a separate
+calibration command or stop the start after calibration.
+Use the existing authorized knowledge store and footprint. Portable-only,
+local or external use must not create shared repository profiles or symlinks.
+When no durable store is permitted, keep intent-derived context provisional in
+the session and disclose that limit. Explicit `/aim calibrate-repo` remains
+available for later refreshes.
+
 For a new empty project, calibration can be completed provisionally during
 startup from the supplied requirements, goal, Epic or PRD. Do not block on an
 interview about nonexistent code. Seed every role's bundled engineering skill,

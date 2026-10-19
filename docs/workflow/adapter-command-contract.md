@@ -37,7 +37,15 @@ requests such as "Use AIM in Strict Loop; act as my product owner within this
 mandate" select this behavior without inventing a new slash command.
 
 New `/aim start "<desired outcome>"` and equivalent natural-language requests
-follow [User Stories and product backlog](user-stories.md). PO preserves intent,
+follow [User Stories and product backlog](user-stories.md). Once the intent is
+known, the same start conditionally runs repository calibration and project
+agent/skill configuration as specified in
+[Command runtime](skill-command-runtime.md); missing setup is not a separate
+prerequisite. Apply only the existing write footprint and actual host
+capabilities. Intentionally absent external/portable repo files do not trigger
+setup; read-only commands and ordinary continuation do not start preparation.
+Explicit `/aim calibrate-repo` and `/aim configure-agents` remain available for
+later refreshes. PO preserves intent,
 owns Epics and product priority. TDO creates and owns Stories and their criteria
 and selects ready Stories for a coherent increment, potentially across Epics. Use the trusted
 `scripts/aim_stories.py` helper for the product ledger and evidence transitions.
@@ -658,9 +666,11 @@ advanced help or the current blocker requires that detail.
 
 When recommending `/aim start`, adapters should include at least one realistic
 intent example rather than a placeholder alone. When the repository lacks reusable
-knowledge, the preferred first action is `/aim calibrate-repo`; when repo
-awareness is ready and no active delivery needs continuation, the preferred
-first action is `/aim start "<desired outcome>"`.
+knowledge and no intent has been supplied, the preferred first action is
+`/aim calibrate-repo`. When an intent has been supplied, start from that intent
+and perform needed calibration and agent/skill configuration within the start.
+When repo-awareness is ready and no active delivery needs continuation, the
+preferred first action is `/aim start "<desired outcome>"`.
 
 ## Upgrade contract
 

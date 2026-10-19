@@ -26,7 +26,7 @@ Onboarding states:
 
 | State | Meaning | Recommended next action |
 | --- | --- | --- |
-| 1. Installed but not calibrated | AIM files are present, but reusable repo knowledge is missing or stale. | `/aim calibrate-repo` |
+| 1. Installed but not calibrated, no intent supplied | AIM files are present, but reusable repo knowledge is missing or stale. | `/aim calibrate-repo` |
 | 2. Ready for new work | No active delivery requires continuation. | `/aim start "<desired outcome>"` |
 | 3. Intent or Stories await planning | PO owns Epics; TDO creates and refines Stories. | Review the relevant direction and first Story selection |
 | 4. Delivery approved | AIM has an approved selection and can continue its checkpoint. | `/aim continue` |
@@ -35,6 +35,10 @@ Onboarding states:
 AIM may still route to install, upgrade, validate, or deeper help when the state
 requires it or the user asks, but those are not replacements for state-first
 guidance.
+When a new intent is supplied, begin `/aim start` and perform missing
+calibration and agent/skill configuration within that same start, even if the
+repository is not yet calibrated. Do not turn preparation into a separate
+onboarding round-trip.
 
 Detailed method concepts, adapter differences, runtime contracts, and reference material stay available behind the document map and workflow docs.
 

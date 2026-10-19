@@ -37,6 +37,42 @@ def read_contract_surface(relative: str) -> str:
 
 
 class AdapterCommandContractTests(unittest.TestCase):
+    def test_new_intent_prepares_repository_agents_and_skills_in_same_start(self) -> None:
+        runtime = (REPO_ROOT / "docs/workflow/skill-command-runtime.md").read_text(encoding="utf-8")
+        start = runtime[runtime.index("### Intent-led start and Story continuation"):runtime.index("### Start and resume")]
+        self.assertLess(start.index("/aim calibrate-repo"), start.index("/aim configure-agents"))
+        self.assertIn("before PO frames Epics", start)
+        self.assertIn("same start", start)
+        self.assertIn("role-skill bindings", start)
+
+        entrypoints = (
+            "adapters/portable/agile-iteration-method/SKILL.md",
+            "adapters/codex/agile-iteration-method/SKILL.md",
+            ".claude/skills/aim/SKILL.md",
+            ".github/skills/aim/SKILL.md",
+            ".github/agents/aim.agent.md",
+            ".claude/commands/start-aim.md",
+            ".github/prompts/start-aim.prompt.md",
+        )
+        for relative in entrypoints:
+            with self.subTest(entrypoint=relative):
+                content = (REPO_ROOT / relative).read_text(encoding="utf-8").lower()
+                self.assertIn("skill-command-runtime.md", content)
+                self.assertIn("calibrat", content)
+                self.assertIn("skill", content)
+
+    def test_startup_preparation_preserves_storage_host_and_readonly_boundaries(self) -> None:
+        runtime = (REPO_ROOT / "docs/workflow/skill-command-runtime.md").read_text()
+        start = " ".join(runtime.split("### Intent-led start and Story continuation", 1)[1].split("### Start and resume", 1)[0].split())
+        for rule in ("intentionally absent", "must not trigger repeated generation",
+                     "--only repo", "--only roles", "absent root profiles",
+                     "written native definition", "loaded by the host",
+                     "never waives independent material review",
+                     "do not invoke preparation", "not a new standalone CLI command"):
+            with self.subTest(rule=rule):
+                self.assertIn(rule, start)
+        self.assertLess(start.index("storage/write footprint"), start.index("1. Check"))
+
     def test_reviewed_catalog_repair_is_shared_and_package_owned(self) -> None:
         surfaces = (
             "docs/workflow/adapter-command-contract.md",

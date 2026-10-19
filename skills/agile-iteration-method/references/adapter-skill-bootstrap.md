@@ -29,6 +29,13 @@ The shared architecture is skill-led:
 `agile-iteration-method.md` remains AIM core. Skills apply that
 contract; they do not redefine it.
 
+For a supplied new intent, follow the conditional preparation in
+[Command runtime](skill-command-runtime.md#intent-led-start-and-story-continuation):
+calibrate applicable missing/stale knowledge, configure applicable role skills,
+then continue Epics and Stories in the same flow. Preserve footprint and host
+availability; intentionally absent protected-repo files do not trigger setup.
+Explicit calibration/configuration remain available for later refreshes.
+
 ## Native skill surfaces
 
 | Adapter | AIM skill | Explicit use | Reload behavior |

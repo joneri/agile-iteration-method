@@ -138,6 +138,17 @@ See [AIM UI Beta](aim-ui.md).
 
 See the [adapter command contract](../workflow/adapter-command-contract.md#aim-discuss).
 
+## Startup preparation
+
+Give AIM the intent with `/aim start`. In that same agent-led flow, AIM reuses
+current project context, calibrates missing or stale knowledge, then configures
+missing or stale project agents and available role skills before Epics and
+Stories. Empty projects start with explicitly provisional facts and bundled
+skills. Existing footprints, overrides and actual authority remain binding.
+
+Use `/aim calibrate-repo` or `/aim configure-agents` for separate later refreshes.
+See [intent startup preparation](../workflow/skill-command-runtime.md#intent-led-start-and-story-continuation).
+
 ## Repository knowledge
 
 - `/aim calibrate-repo` verifies commands, technologies, important areas, and risk.

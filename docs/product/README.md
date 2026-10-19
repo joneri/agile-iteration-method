@@ -72,9 +72,9 @@ Follow the [First-time journey](getting-started.md).
 It takes you through:
 
 1. choosing the portable public Agent Skill or adaptive installer
-2. repository calibration
-3. opening AIM UI from chat
-4. intent discovery, Epics and User Stories
+2. describing the desired product intent
+3. automatic preparation of missing or stale knowledge and role skills
+4. Epics, User Stories and AIM UI
 5. the first prioritized delivery selection
 6. Story acceptance and separate Epic closure
 

@@ -40,6 +40,11 @@ Reuse current user authority and applicable answers. Read only the relevant sect
 
 For new `/aim start "<intent>"` and equivalent natural-language work, load
 `docs/workflow/user-stories.md` before the legacy workspace rules below.
+After receiving that intent, perform the conditional calibration and
+agent/skill preparation in `docs/workflow/skill-command-runtime.md` as part
+of the same start. Use provisional facts and bundled role skills in an empty
+repo; reuse current profiles and preserve native overrides. Do not make the
+user run `/aim calibrate-repo` or `/aim configure-agents` separately first.
 PO owns Epic outcomes and product priority. TDO owns Story formulation, criteria
 and a coherent increment, with an explicit selection that may span Epics.
 Use trusted packaged `scripts/aim_stories.py` for the versioned

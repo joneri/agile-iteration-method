@@ -21,6 +21,11 @@ Start from a natural-language intent or `/aim start "<desired outcome>"`. Preser
 actors, outcomes, constraints, non-goals and uncertainty. A ready Story has a
 stable `US-*` ID, `epicId`, title, persona, need, benefit, observable acceptance
 criteria with stable `AC-*` IDs, and PO priority (smaller positive numbers first).
+
+After receiving a new intent, run the intent startup preparation in
+[Command runtime](skill-command-runtime.md) before PO frames Epics or TDO plans
+Stories. The intent itself is enough to begin preparation in an empty repository;
+the user does not have to run separate calibration or agent-configuration commands.
 Expose relevant dependencies, failure behavior and risks in the plan. Story size
 serves coherent value and verification; there is no count target, independent
 deployment requirement, mandatory Story Points, complexity score or time estimate.

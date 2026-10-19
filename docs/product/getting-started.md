@@ -49,8 +49,9 @@ Update it through the standard CLI:
 npx skills update agile-iteration-method --yes
 ```
 
-After installation, `/aim configure-agents` can still generate or refresh
-project-specific native specialists from `aim.roles.yaml`.
+When you give AIM an intent, it configures missing or stale project-specific
+specialists and their available skills within the same start. Use
+`/aim configure-agents` later to refresh them separately.
 
 See [Public Agent Skill distribution](../workflow/version-and-installation.md)
 for agent-specific commands, versioning, generation, and publication details.
@@ -100,31 +101,28 @@ For automation, pass installer flags directly, such as `--target
 /path/to/repo`, `--non-interactive`, or `--format json`.
 For preview only, use `--dry-run`.
 
-## 2. Calibrate the Repository
+## 2. Start with intent
 
-Run:
-
-```text
-/aim calibrate-repo
-```
-
-Calibration starts with cheap, obvious repository evidence.
-It identifies likely technologies, commands, important folders, validation paths, and documents that should load only when needed.
-
-Review uncertain or trust-sensitive facts before they become reusable repository knowledge.
-
-The installer also seeds `aim.roles.yaml` from cheap observable evidence. After
-calibration, inspect or improve the role specialists:
+Describe the problem or desired result:
 
 ```text
-/aim configure-agents
+/aim start "Make checkout recovery clear for customers and help support staff resolve delayed payment confirmations"
 ```
 
-AIM shows proposed changes before refreshing Codex, Claude, or Copilot native
-agent files. You can also edit `aim.roles.yaml` or the supplier-native files
-manually.
+AIM calibrates missing or stale repository knowledge within that start. It
+checks technologies, commands, important folders, validation paths and relevant
+documents. In an empty repository it begins with provisional facts from the
+intent and verifies them as the stack takes shape.
 
-If your platform does not expose slash commands, ask AIM to verify and refine repo awareness for the repository.
+The same start configures missing or stale project specialists and their actual
+skill bindings. Bundled role skills are available from the outset. AIM reuses
+current configuration, shows proposed changes, and preserves user edits and
+collisions. Use `/aim calibrate-repo` and `/aim configure-agents` for separate
+refreshes later.
+
+If your platform does not expose slash commands, describe the same outcome in
+natural language. Review uncertain or trust-sensitive facts before they become
+reusable repository knowledge.
 
 ## Choose delivery and ownership
 
@@ -166,9 +164,14 @@ Existing Roadmap, Portfolio and Epic/Increment runs remain available as legacy
 work. Their original commands and approvals remain valid for those records;
 they do not become User Stories automatically.
 
+Preparation respects existing storage and agent overrides. Protected projects
+can use permitted external/session context and bundled role instructions without
+repo-local agent files. Missing or unavailable skills are reported explicitly;
+creating a native definition does not mean the host has loaded it.
+
 ## 3. Remember Important Project Context
 
-After calibration, teach AIM durable facts that should guide future work.
+After the initial start, teach AIM durable facts that should guide future work.
 Good memory candidates are short product facts, tone rules, project constraints,
 team habits, validation expectations, or areas that deserve special care.
 
@@ -193,13 +196,7 @@ If a named stale fact,
 contradiction or missing lesson remains unresolved, request a targeted audit
 with a concrete scope; existing project facts and write authority stay intact.
 
-## 5. Start with intent
-
-Describe the problem or desired result:
-
-```text
-/aim start "Make checkout recovery clear for customers and help support staff resolve delayed payment confirmations"
-```
+## 5. Refine Epics and Stories
 
 PO identifies the relevant Epics; TDO creates Stories for those different users. A
 customer may need a reliable payment status; a support specialist may need a

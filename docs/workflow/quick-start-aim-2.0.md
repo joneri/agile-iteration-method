@@ -22,15 +22,18 @@ It starts or reopens the current repo's UI and returns a clickable loopback
 URL. `/aim ui start /path/to/repo` targets another repository. A repo without
 `.aim` opens an onboarding view without initializing runtime state.
 
-## 1. Check Repository Readiness
+## 1. Start from the desired outcome
 
 Run:
 
 ```text
-/aim calibrate-repo
+/aim start "<desired outcome>"
 ```
 
-Calibration verifies the smallest useful set of repository facts:
+AIM calibrates missing or stale repository knowledge as part of this start.
+For an empty repository it uses the intent to record provisional facts, then
+verifies them as implementation takes shape. Calibration checks the smallest
+useful set of repository facts:
 
 - technologies and package tooling
 - likely validation commands
@@ -42,12 +45,12 @@ Shared knowledge belongs in `aim.profile.yaml`.
 Personal hints belong in user-level storage.
 Active work state belongs in `.aim/`.
 
-If slash commands are unavailable, ask AIM to verify and refine repository awareness.
+If slash commands are unavailable, describe the outcome in natural language;
+AIM performs the same preparation.
 
-## 2. Start with intent
+## 2. Add durable context when needed
 
-Before starting work, remember important product context when it should
-guide future work:
+For later runs, remember important product context when it should guide work:
 
 ```text
 /aim remember-repo habits "Product context: This app helps people find new homes for cats. User-facing language should be nuanced, calm, and empathetic toward both the cats and future owners."
@@ -57,13 +60,7 @@ Use this for durable facts, tone, constraints, team habits, and validation
 expectations. AIM should show the proposed structured change before storing
 shared repository knowledge.
 
-Use a desired outcome:
-
-```text
-/aim start "<desired user outcome>"
-```
-
-Or use explicit intent:
+You can also start with explicit mode and cost choices:
 
 ```text
 Start AIM from this intent: <desired user outcome>
@@ -193,7 +190,9 @@ They are related, but not the same action.
 
 The adaptive standard setup creates native AIM role files for the selected
 adapters and a shared `aim.roles.yaml` profile. A portable public-skill install
-does not claim those project files already exist. After calibration, run:
+does not claim those project files already exist. When a new intent is supplied,
+AIM configures missing or stale role files and skill bindings during the same
+start. To refresh them separately later, run:
 
 ```text
 /aim configure-agents
@@ -212,3 +211,7 @@ migration inputs only; see [Operating modes](operating-modes.md).
 - [Troubleshooting](troubleshoot-aim-2.0.md)
 - [Platform entrypoints](adapter-entry-model.md)
 - [Canonical AIM workflow](agile-iteration-method.md)
+
+For the startup storage, host capability and idempotence boundaries, follow
+[intent preparation](skill-command-runtime.md#intent-led-start-and-story-continuation).
+Use `/aim calibrate-repo` or `/aim configure-agents` for later explicit refreshes.

@@ -127,7 +127,59 @@ selecting the next increment. Ship completes the agreed result before final
 owner acceptance, with internal review and correction throughout.
 
 New plain-intent `/aim start "<desired outcome>"` and natural-language starts
-follow `user-stories.md`. PO owns Epics and product priority;
+follow `user-stories.md`. Once the intent is known, the main AIM thread performs
+this preparation as part of the same start, before PO frames Epics or TDO plans
+Stories:
+
+Resolve the existing storage/write footprint and selected adapter first. A new
+intent authorizes necessary preparation within that policy, never a broader
+footprint, a skill download, or a package/host permission change. Distinguish a
+missing required file from a file intentionally absent in portable-only,
+`profile`, `local` or `external` use. Preserve the existing authorized knowledge
+store. With no permitted persistent store, use explicitly provisional session
+context; do not create a repository profile, role file, native agent or symlink.
+
+1. Check the applicable repo-awareness source and its declared calibration
+   status, scope and freshness. If it is missing, `needs_calibration`,
+   `partially_ready` with a relevant knowledge gap, or stale for this intent,
+   perform `/aim calibrate-repo` using
+   `repo-awareness-calibration.md`. Reuse current, relevant verified facts.
+   In an empty repo, derive provisional knowledge from the intent and mark
+   unverified facts as such; verify affected facts after the stack and code exist.
+2. Check applicable role configuration and actual available role-skill bindings.
+   Where the footprint permits them, inspect `aim.roles.yaml` and the selected
+   adapter's native PO, TDO, Dev and Reviewer files. If a required part is absent,
+   invalid or stale, perform `/aim configure-agents` using
+   `project-agent-configuration.md`. Bind each role's bundled engineering skill
+   and only relevant project skills with available instructions. Keep inferred
+   capabilities provisional. For portable-only, `profile`, `local` or `external`
+   use that does not include native project files, reuse permitted external or
+   session configuration and bundled role instructions; their absent repo files
+   are not incomplete setup and must not trigger repeated generation.
+   Validate applicable repository profiles through the trusted
+   `aim_engineering.py profiles` consumer: `--only repo` or `--only roles` when
+   only that profile is in scope, the default only when both are in scope.
+   This helper does not validate external/session configuration by reading
+   absent root profiles; report the actual checks and remaining limitations.
+3. Continue the same start with the prepared context. Do not turn these
+   preparation steps into a separate user onboarding round-trip. Preserve
+   configured overrides and collision safeguards. If a protected collision,
+   unsupported adapter or unavailable skill prevents full configuration,
+   report the exact limitation and continue with bundled role skills where
+   valid; do not claim the missing capability is ready.
+   Distinguish a written native definition from one loaded by the host. If a
+   reload is needed, report it and use actual available bundled instructions
+   within the mandate. Missing native setup never waives independent material
+   review, creates acceptance authority or changes frozen delivery scope.
+
+This preparation is conditional and idempotent: a new Epic alone does not cause
+full recalibration or regeneration of current roles and skills. Explicit
+`/aim calibrate-repo` and `/aim configure-agents` remain available for later
+refreshes. Resume an existing delivery without this new-intent preparation;
+only refresh a relevant changed fact or binding within that delivery's mandate.
+Help, status, Discuss, Graph, UI observation and validation remain read-only and
+do not invoke preparation. This is an agent-led startup sequence, not a new
+standalone CLI command. PO owns Epics and product priority;
 TDO owns Stories, criteria and a coherent increment, potentially across Epics. The trusted
 `scripts/aim_stories.py` owns mechanical product-ledger transitions; the main
 thread owns reasoning, actual authority and acceptance. Read status, bind the
