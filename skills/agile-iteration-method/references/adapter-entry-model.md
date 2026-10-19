@@ -71,6 +71,7 @@ The canonical AIM command family is defined in
 - `/aim start`
 - `/aim continue`
 - `/aim status`
+- `/aim graph`
 - `/aim validate`
 - `/aim help`
 - `/aim config`

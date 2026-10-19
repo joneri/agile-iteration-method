@@ -71,7 +71,8 @@ Stable repo-awareness must never use a path under `.aim/`.
 
 For startup, resume, and questions about active AIM work, when both exist:
 
-1. read active `.aim/state.json`
+1. follow [runtime source routing](adapter-command-contract.md#runtime-source-routing)
+   to resolve native Story state or the exact legacy workspace when relevant
 2. read Enterprise external memory when Enterprise external mode is active
 3. read `aim.profile.yaml` as the shared repository baseline when present
 4. apply compatible Personal profile hints
@@ -104,8 +105,8 @@ Adapter-specific surfaces are optional and secondary:
 | Adapter | Native entrypoint | Optional policy/helpers |
 | --- | --- | --- |
 | Codex | installed AIM skill or explicit AIM intent | `adapters/codex/agile-iteration-method/` |
-| GitHub Copilot | `.github/agents/aim*.agent.md` | `.github/prompts/` |
-| Claude | `.claude/agents/aim.md` or `.claude/commands/` | other `.claude/` helpers |
+| GitHub Copilot | `.github/skills/aim/SKILL.md` | `.github/agents/`, `.github/prompts/` |
+| Claude | `.claude/skills/aim/SKILL.md` | `.claude/agents/`, legacy `.claude/commands/` |
 
 Adapter surfaces:
 
@@ -140,7 +141,8 @@ when the conflict remains material.
 
 Load the smallest useful context in this order:
 
-1. `.aim/state.json` when an AIM run exists
+1. the relevant native ledger or exact legacy workspace, resolved through
+   [runtime source routing](adapter-command-contract.md#runtime-source-routing)
 2. Enterprise external memory when Enterprise external mode is active
 3. `aim.profile.yaml` when present
 4. compatible Personal profile hints when present

@@ -60,7 +60,9 @@ A delivery can cross Epic boundaries;
 its Story selection and approval scope remain explicit. The contextual handoff
 names the product ledger, observed digest and delivery identity. The receiving
 AIM task reloads and checks the current scope before making changes. Plan approval
-and final acceptance remain user decisions. Current Story controls use reviewed
+and final acceptance remain decisions of the actual designated owner under
+explicit human authority; accepted history identifies the actor who decided.
+Current Story controls use reviewed
 chat handoffs; direct legacy Start/Approve dispatch does not apply to them.
 
 Accepted delivery history preserves the selection and its acceptance evidence.

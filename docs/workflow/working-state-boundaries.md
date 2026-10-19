@@ -28,7 +28,21 @@ The user should not need to commit active AIM state just to use AIM personally.
 
 Working state is the temporary, resumable state for active AIM work.
 
-The canonical `.aim/state.json` uses the public Draft 2020-12 runtime-state
+Native Story work uses `.aim/product-backlog.json` through the trusted Story
+helper. Follow [runtime source routing](adapter-command-contract.md#runtime-source-routing)
+before selecting state. The ledger preserves requirements, frozen delivery
+selections, policy, proof and actual owner decisions. Ship is the default for new
+work; explicit Loop retains recurring Done Increment feedback. Read-only UI and
+Graph project recorded evidence without advancing it. Native Epic closure uses
+its separate human-owned ledger transition.
+
+The remaining lifecycle and `state.json` field descriptions in this document
+apply to **legacy Epic/Increment workspaces**. They do not redirect native Story
+work, prescribe native ledger fields or authorize migration.
+
+## Legacy Epic/Increment working state
+
+The canonical legacy `state.json` uses the public Draft 2020-12 runtime-state
 schema and declares `stateSchemaVersion: "1.0"`. Project extension fields are
 allowed, but canonical fields retain their meaning and ownership.
 

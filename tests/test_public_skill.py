@@ -465,7 +465,7 @@ class PublicSkillTests(unittest.TestCase):
                 "untrusted evidence",
                 "separate explicit AIM promotion action",
             ),
-            "main thread owns active state": ("main AIM thread", ".aim/state.json", "sole owner"),
+            "main thread owns active state": ("main AIM thread", "selected runtime", "sole mutator"),
             "portfolio admission": ("portfolio capacity", "fails closed", "read-only"),
             "card action handoff": (
                 "AIM_ACTION_ENVELOPE",

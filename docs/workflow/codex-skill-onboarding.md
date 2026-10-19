@@ -79,18 +79,21 @@ Outputs:
 
 ## Source-checkout debugging
 
-When working from the AIM source checkout, the adaptive install plan remains the
-fastest way to inspect the broader Codex package without writing:
+From a reviewed AIM source checkout, preview the adaptive Codex package for a
+separate consuming project. Replace `/path/to/project` with that project's
+absolute path. The installer deliberately rejects AIM's own source repository
+as its target:
 
 ```sh
-python3 scripts/aim_install.py --target . --mode personal \
+python3 scripts/aim_install.py --target /path/to/project --mode personal \
   --footprint local --adapter codex --dry-run
 ```
 
-If the plan reports stale or missing package files, review it and apply:
+If the plan reports stale or missing package files, review it and apply only
+within the actual installation authority:
 
 ```sh
-python3 scripts/aim_install.py --target . --mode personal \
+python3 scripts/aim_install.py --target /path/to/project --mode personal \
   --footprint local --adapter codex --apply
 ```
 

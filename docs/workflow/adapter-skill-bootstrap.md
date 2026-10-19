@@ -11,7 +11,8 @@ depending on `AGENTS.md`, `CLAUDE.md`, or another generic root instruction file.
 The shared architecture is skill-led:
 
 1. a supplier-native AIM skill recognizes an `/aim <intent>` request
-2. the main AIM thread reads `.aim/state.json` when it exists
+2. the main AIM thread follows [runtime source routing](adapter-command-contract.md#runtime-source-routing)
+   to select the native Story ledger or exact legacy workspace when needed
 3. it reads `aim.profile.yaml`, then `aim.roles.yaml`
 4. it loads only the canonical AIM and repository evidence needed by the active
    state, command, role, and risk
@@ -39,6 +40,7 @@ Every AIM skill must resolve:
 - `/aim start`
 - `/aim continue`
 - `/aim status`
+- `/aim graph`
 - `/aim validate`
 - `/aim help`
 - `/aim config`
@@ -69,8 +71,9 @@ files:
 - Copilot: `.github/agents/aim-*.agent.md`
 
 The skill delegates bounded work at the relevant stage. Only the main AIM thread
-may update `.aim/state.json`, advance gates, escalate scope, synthesize the
-result, or accept an increment or Epic.
+may mutate the selected runtime, advance gates, or record actual owner decisions.
+Specialists supply evidence; they never grant themselves approval or acceptance
+authority. Native Epic closure remains human-owned.
 
 ## Discovery and failure behavior
 

@@ -8,9 +8,9 @@ Source: docs/workflow/streamlined-decisions.md
 # Combined decisions and predictable continuation
 
 This document specifies the preserved **legacy Epic/DI workspace protocol**.
-For AIM 4.0 Story work, use [User Stories and product backlog](user-stories.md):
-accept verified Stories with actual user authority, then evaluate each Epic for
-a separate closure decision. The legacy helpers and mandates below cannot
+For native Story work, use [User Stories and product backlog](user-stories.md):
+the human or explicitly delegated delivery owner accepts verified Stories within
+the actual mandate, then each Epic receives a separate human closure decision. The legacy helpers and mandates below cannot
 accept new Stories or convert historical Increments into requirements.
 
 

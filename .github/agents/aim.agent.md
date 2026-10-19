@@ -187,6 +187,7 @@ If instructions conflict, escalate.
 - `/aim start "PORTFOLIO" mode:auto` - approve one immutable Backlog snapshot and run its Epics sequentially
 - `/aim continue` - continue based on current gate
 - `/aim status` - show current state
+- `/aim graph` - inspect native delivery dependencies and bounded assignments read-only
 - `/aim help` - show the thin front door: start, continue, validate, and the next command
 - `/aim validate` - run or explain AIM runtime integrity checks
 - `/aim config` - show effective runtime configuration and key repo-aware policy

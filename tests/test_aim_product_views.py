@@ -67,8 +67,28 @@ class ProductViewTests(unittest.TestCase):
         detail = self.evaluate(f"productDeliveryDetail({json.dumps(delivery)})")
         self.assertEqual(detail["phase"], "acceptance")
         self.assertEqual(detail["acceptance"], "Not accepted · blocked")
-        delivery.update(status="accepted", acceptance={"path": "user-acceptance.md"})
+        delivery.update(status="accepted", acceptance={"kind": "user", "path": "user-acceptance.md"})
         self.assertEqual(self.evaluate(f"productDeliveryDetail({json.dumps(delivery)}).acceptance"), "Accepted by user")
+
+    def test_acceptance_actor_comes_from_decision_not_delegated_policy(self):
+        delivery = self.delivery("accepted")
+        delivery["deliveryPolicy"] = {"mode": "loop", "owner": {"kind": "agent", "id": "owner-A", "session": "owner-session", "decisions": ["approve", "accept"]}}
+        for receipt, expected in (({"kind": "agent"}, "Accepted by delegated agent owner"),
+                                  ({"kind": "user"}, "Accepted by user"),
+                                  ({"path": "unattributed.json"}, "Accepted delivery")):
+            with self.subTest(receipt=receipt):
+                delivery["acceptance"] = receipt
+                self.assertEqual(self.evaluate(f"productDeliveryDetail({json.dumps(delivery)}).acceptance"), expected)
+        delivery.update(status="acceptance")
+        del delivery["acceptance"]
+        self.assertEqual(self.evaluate(f"productDeliveryDetail({json.dumps(delivery)}).acceptance"), "Awaiting delegated agent owner acceptance")
+        self.assertEqual(self.evaluate(f"productCheckpoint({json.dumps(delivery)})"), "Gate E · delegated owner acceptance pending")
+        self.assertNotIn("acceptance", delivery)
+        delivery["deliveryPolicy"]["owner"]["decisions"] = ["approve"]
+        self.assertEqual(self.evaluate(f"productDeliveryDetail({json.dumps(delivery)}).acceptance"), "Awaiting user acceptance")
+        self.assertEqual(self.evaluate(f"productCheckpoint({json.dumps(delivery)})"), "Gate E · user acceptance pending")
+        delivery.update(status="blocked", blockedFrom="acceptance")
+        self.assertEqual(self.evaluate(f"productCheckpoint({json.dumps(delivery)})"), "Gate E · user acceptance pending")
 
     def test_cleanup_offer_handoff_does_not_authorize_deletion(self):
         functions = source_function("legacyCleanupPrompt(", "renderLegacyCleanup(")
@@ -119,7 +139,8 @@ renderLegacyCleanup({legacyCleanup:{legacyDetected:false}});
         self.assertIn(SCOPE, prompt)
         self.assertIn(HASH, prompt)
         self.assertIn("does not approve a plan", prompt)
-        self.assertIn("user-owned plan approval and final acceptance", prompt)
+        self.assertIn("designated owner's plan approval and final acceptance", prompt)
+        self.assertIn("existing human authority and any explicit scoped delegation", prompt)
 
     def test_changed_or_invalid_store_clears_stale_selection(self):
         board = self.board()

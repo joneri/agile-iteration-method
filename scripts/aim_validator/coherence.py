@@ -32,6 +32,10 @@ CANONICAL_COMMANDS = (
     "/aim start",
     "/aim continue",
     "/aim status",
+    "/aim graph",
+    "/aim ui",
+    "/aim to-backlog",
+    "/aim repair-catalog",
     "/aim validate",
     "/aim help",
     "/aim config",
@@ -40,8 +44,6 @@ CANONICAL_COMMANDS = (
     "/aim calibrate-repo",
     "/aim remember-repo",
     "/aim forget-repo",
-    "/aim reflect",
-    "/aim reflect-all",
     "/aim upgrade",
     "/aim mode",
     "/aim cost",
@@ -306,7 +308,8 @@ def _adapter_claim_findings(repo_root: Path) -> list[dict[str, Any]]:
         "Codex": _read(
             repo_root, "adapters/codex/agile-iteration-method/SKILL.md"
         ),
-        "GitHub Copilot": _read(repo_root, ".github/agents/aim.agent.md"),
+        "GitHub Copilot": _read(repo_root, ".github/skills/aim/SKILL.md"),
+        "Claude": _read(repo_root, ".claude/skills/aim/SKILL.md"),
     }
     for adapter, content in surfaces.items():
         missing = [command for command in CANONICAL_COMMANDS if command not in content]
@@ -323,28 +326,7 @@ def _adapter_claim_findings(repo_root: Path) -> list[dict[str, Any]]:
                 )
             )
 
-    claude_dir = repo_root / ".claude/commands"
-    claude_content = "\n".join(
-        path.read_text(encoding="utf-8", errors="replace")
-        for path in sorted(claude_dir.glob("*.md"))
-    ) if claude_dir.is_dir() else ""
-    missing_claude = [
-        command for command in CANONICAL_COMMANDS if command not in claude_content
-    ]
-    if missing_claude:
-        findings.append(
-            make_finding(
-                "contradictory",
-                "public native-support claim ↔ Claude",
-                "Claude is publicly supported but its command package lacks intents: "
-                + ", ".join(missing_claude),
-                "Restore native command files or narrow the public native-support claim.",
-                tier="Product coherence",
-                category="Contradiction",
-                release_impact="fail",
-            )
-        )
-
+    surfaces["GitHub Copilot"] = _read(repo_root, ".github/agents/aim.agent.md")
     if "/aim upgrade" in public_claims:
         upgrade_surfaces = {
             "canonical contract": _read(

@@ -92,7 +92,7 @@ class AdapterCommandContractTests(unittest.TestCase):
     def test_complete_adapter_command_contract_is_healthy(self) -> None:
         completed = self._validate(REPO_ROOT)
         self.assertEqual(completed.returncode, 0, completed.stdout)
-        self.assertIn("canonical command intents: 17", completed.stdout)
+        self.assertIn("canonical command intents: 19", completed.stdout)
 
     def test_discuss_is_a_first_class_read_only_cross_adapter_command(self) -> None:
         surfaces = (
@@ -414,8 +414,8 @@ class AdapterCommandContractTests(unittest.TestCase):
             (copied / ".claude/commands/status-aim.md").unlink()
             completed = self._validate(copied)
 
-        self.assertEqual(completed.returncode, 3)
-        self.assertIn("Result: contradictory", completed.stdout)
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn("Result: blocked", completed.stdout)
         self.assertIn("Release readiness: FAIL", completed.stdout)
         self.assertIn(
             "Claude legacy compatibility command is missing for /aim status",
@@ -428,8 +428,8 @@ class AdapterCommandContractTests(unittest.TestCase):
             (copied / ".github/skills/aim/SKILL.md").unlink()
             completed = self._validate(copied)
 
-        self.assertEqual(completed.returncode, 2)
-        self.assertIn("Result: blocked", completed.stdout)
+        self.assertEqual(completed.returncode, 3)
+        self.assertIn("Result: contradictory", completed.stdout)
         self.assertIn("onboarding adapter surface is missing", completed.stdout)
 
     def test_stale_adapter_version_is_blocked(self) -> None:
@@ -682,6 +682,19 @@ class AdapterCommandContractTests(unittest.TestCase):
             "Epic closure remains a separate explicit",
         ):
             self.assertIn(marker, contract)
+
+
+    def test_current_native_graph_route_cannot_be_hidden_by_legacy_commands(self) -> None:
+        sys.path.insert(0, str(REPO_ROOT / "scripts"))
+        from aim_validator.coherence import _adapter_claim_findings
+        for native in ("adapters/codex/agile-iteration-method/SKILL.md",
+                       ".claude/skills/aim/SKILL.md", ".github/skills/aim/SKILL.md"):
+            with self.subTest(native=native), tempfile.TemporaryDirectory() as temporary:
+                copied = self._copy_repo(temporary)
+                path = copied / native
+                path.write_text(path.read_text().replace("/aim graph", "/aim removed-graph"))
+                findings = _adapter_claim_findings(copied)
+                self.assertTrue(any("/aim graph" in finding["rule"] for finding in findings))
 
 
 if __name__ == "__main__":

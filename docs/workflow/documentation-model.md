@@ -50,6 +50,9 @@ entries identify their original scope and must not be replaced with today's rele
 | --- | --- |
 | AIM core behavior | `docs/workflow/agile-iteration-method.md` |
 | Role order, gates, Done Increment discipline, escalation, ownership | `docs/workflow/agile-iteration-method.md` |
+| Native requirements, Ship/Loop policy and delegated delivery ownership | `docs/workflow/user-stories.md` |
+| Graph engineering, dependencies and bounded assignment | `docs/workflow/adaptive-execution.md` |
+| Runtime source routing | `docs/workflow/adapter-command-contract.md` |
 | Operating modes | `docs/workflow/operating-modes.md` |
 | File-surface and installation boundary model | `docs/workflow/repository-surface-classification.md` |
 | Documentation source-of-truth model | `docs/workflow/documentation-model.md` |

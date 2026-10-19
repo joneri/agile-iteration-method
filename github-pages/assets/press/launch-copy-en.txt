@@ -1,7 +1,7 @@
 AIM
 Turn your intent into a complete product.
 
-Suggested announcement copy · AIM 4.6 · 18 October 2026.
+Suggested announcement copy · AIM 4.6.1 · 19 October 2026.
 
 Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 

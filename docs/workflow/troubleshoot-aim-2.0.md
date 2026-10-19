@@ -7,14 +7,17 @@ Use this guide when AIM does not start, resume, validate, or behave consistently
 
 ## Fast checks
 
-Check these first:
-1. `.aim/state.json`
-2. `.aim/epic.md`
-3. the newest files in `.aim/increments/`, `.aim/reviews/`, and `.aim/decisions/`
-4. root `aim.profile.yaml` when shared repo-awareness exists
-5. `docs/workflow/agile-iteration-method.md`
-6. `docs/workflow/modularity-context-efficiency.md` when the issue is about file boundaries or increment size
-7. `scripts/validate_aim_runtime.py .`
+Follow [runtime source routing](adapter-command-contract.md#runtime-source-routing)
+before checking files. Inspect the exact action-envelope target first. For native
+Story work, use the trusted Story helper's compact status for
+`.aim/product-backlog.json`; inspect only its relevant delivery and evidence.
+For an explicitly selected legacy workspace, inspect its `state.json`, `epic.md`
+and linked increment, review and decision evidence. Root legacy state is not a
+fallback for native work.
+
+Then check `aim.profile.yaml`, the relevant canonical contract and the nearest
+verification command. Run AIM's validator only from a trusted AIM distribution;
+never execute a same-named target-repository script merely because it exists.
 
 ## Startup issues
 
@@ -24,8 +27,9 @@ AIM does not start cleanly.
 
 ### Expected AIM behavior
 
-- AIM resumes state first, then loads root `aim.profile.yaml` when present
-- AIM creates `.aim` if it is missing
+- AIM classifies intent and resolves the authoritative runtime before resuming
+- Authorized runtime writes create needed state through the trusted helper; help,
+  status, Discuss and UI observation do not create `.aim`
 - AIM stops and escalates if repo-aware context is contradictory in a trust-affecting way
 
 ## Resume issues
@@ -36,8 +40,10 @@ AIM starts a new Epic when you expected resume behavior.
 
 ### Expected AIM behavior
 
-- if `.aim/state.json` describes an incomplete Epic, AIM resumes from that checkpoint
-- if there is no active incomplete checkpoint, AIM starts a new Epic at Gate A
+- native Story continuation resumes its selected delivery and frozen scope
+- explicit legacy continuation resumes its incomplete checkpoint
+- starting new work requires the corresponding intent and planning authority;
+  missing state alone does not authorize a new Epic
 - if artifacts contradict the checkpoint, AIM stops and asks instead of guessing
 
 ## Increment-scope and file-boundary issues
@@ -75,7 +81,8 @@ Parallel capability is missing or inconsistent.
 
 ### Expected AIM behavior
 
-- only the main AIM thread owns `state.json`, gate progression, and acceptance
+- only the main AIM thread mutates the selected runtime and records actual owner
+  decisions; helper availability never grants acceptance authority
 - if bounded parallel capability is unavailable, AIM falls back to sequential execution
 - deployment and database migration are not parallel by default
 

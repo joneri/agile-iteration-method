@@ -1256,10 +1256,12 @@ solely because it affects a label, one file or one user perspective.
 
 AIM prefers one shared conceptual flow across platforms:
 
-1. detect repo root
-2. detect or create `.aim`
-3. read `.aim/state.json` first when it exists
-4. resume the active checkpoint or start a new Epic
+1. detect repo root and classify the requested intent
+2. follow [runtime source routing](adapter-command-contract.md#runtime-source-routing)
+3. resolve the native Story ledger or the exact requested legacy workspace;
+   action envelopes retain their named authority path without fallback
+4. resume the selected work or plan authorized new intent; create runtime only
+   through the corresponding authorized helper transition
 5. load only the repo-aware context needed for the current state, command, and risk
 6. resolve execution mode, cost profile, and platform capability limits
 7. enter the AIM role sequence
@@ -1300,9 +1302,9 @@ In Codex, AIM runs through the installed AIM skill or explicit AIM intent plus t
   - controlled parallelism depends on whether the runtime actually exposes bounded subagent capability
   - some capabilities can be exposed through Codex-specific MCP integrations
 - `.aim` behavior:
-  - if `.aim` does not exist when AIM starts or resumes, AIM-in-Codex must create it automatically before entering the role loop
+  - AIM-in-Codex creates needed runtime only through an authorized native or legacy transition; read-only operations do not create `.aim`
   - this is AIM runtime behavior exposed through the Codex adapter, not a built-in Codex app guarantee outside AIM
-  - if `.aim/state.json` contains an incomplete Epic, AIM-in-Codex must resume that Epic rather than silently starting a new one
+  - for explicitly selected legacy work, AIM-in-Codex resumes its incomplete checkpoint; older root state never redirects native Story work
 - fallback:
   - if bounded subagents are unavailable, AIM runs sequentially in one main thread
   - if an adapter-specific tool is unavailable, the runtime falls back to the shared contract instead of inventing different gate semantics
@@ -1326,9 +1328,9 @@ or explicit AIM intent. Legacy `.claude/commands/` remain compatibility entrypoi
   - `.claude/agents/` may provide bounded helper agents for assigned implementation, analysis, discovery, verification, or option generation
   - helper agents must remain subordinate to the shared runtime contract and repo-aware policy
 - `.aim` behavior:
-  - if `.aim` does not exist when AIM starts or resumes, AIM-in-Claude-Code must create it automatically before entering the role loop
+  - AIM-in-Claude-Code creates needed runtime only through an authorized native or legacy transition; read-only operations do not create `.aim`
   - this is AIM runtime behavior exposed through the Claude Code adapter, not a built-in Claude Code guarantee outside AIM
-  - if `.aim/state.json` contains an incomplete Epic, AIM-in-Claude-Code must resume that Epic rather than silently starting a new one
+  - for explicitly selected legacy work, AIM-in-Claude-Code resumes its incomplete checkpoint; older root state never redirects native Story work
 - fallback:
   - if a Claude helper command or helper agent is missing, the repo must fall back to the documented explicit AIM start without changing method semantics
   - if bounded helper capability is unavailable, AIM runs sequentially in one main thread

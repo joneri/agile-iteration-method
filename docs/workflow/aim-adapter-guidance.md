@@ -119,7 +119,8 @@ aim.profile.yaml
 
 On `/aim start`, `/aim continue`, `/aim status`, `/aim validate`, `/aim calibrate-repo`, or equivalent adapter entrypoints:
 
-1. read `.aim/state.json` first when it exists
+1. follow [runtime source routing](adapter-command-contract.md#runtime-source-routing):
+   select the Story ledger or exact legacy workspace; read runtime only when relevant
 2. read root `aim.profile.yaml` as the shared repo-awareness baseline when it exists
 3. apply compatible user-local profile hints when they exist
 4. use profile facts to select directly affected areas, nearest commands, short authoritative docs, and avoid-by-default context

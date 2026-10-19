@@ -52,7 +52,9 @@ Compares claims with evidence:
 A direct disagreement between authoritative claims and generated behavior is a
 `Contradiction`, not a warning.
 
-For completed Epics, product coherence also checks claim strength against the
+Native Story closure uses the product ledger and its `closure-preview` /
+`close-epic` contract. The following artifact and `epic_complete` checks describe
+legacy Epic workspaces. For those completed Epics, product coherence checks claim strength against the
 declared outcome class and closure evidence. A POC, mock, or internal contract
 test alone cannot support a Product or Pilot completion claim. Representative
 user-journey verification may be performed by the implementing agent, including
@@ -115,8 +117,10 @@ The CLI exit codes remain compatible with the existing result classes.
 
 ## Required simulations
 
-The validator generates representative default plans with all supported
-adapters:
+The validator generates the standard adaptive install plan with all supported
+adapters and explicit storage/sharing policy. It also tests these preserved
+legacy compatibility inputs; they are not product editions or the default
+onboarding choices:
 
 | Mode | Expected default evidence |
 | --- | --- |
@@ -131,8 +135,9 @@ satisfy this tier.
 
 Native-support coherence requires:
 
-- all 13 canonical command intents in Codex and Copilot surfaces
-- native Claude command coverage
+- required command intents in native skill surfaces, including `/aim graph`,
+  `/aim ui`, `/aim to-backlog` and `/aim repair-catalog`
+- native Claude skill coverage and correctly scoped legacy compatibility commands
 - explicit fallback behavior
 - actionable `/aim upgrade` behavior
 - no AIM 1.x state examples in AIM 2.0 adapter surfaces

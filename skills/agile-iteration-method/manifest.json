@@ -99,7 +99,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.6.0",
+  "productVersion": "4.6.1",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -132,7 +132,7 @@
     {
       "output": "references/streamlined-decisions.md",
       "source": "docs/workflow/streamlined-decisions.md",
-      "sourceSha256": "51d8acb69c528a9989a10ed3fea87d8dd442919d6271968f29c05c74fb262b44"
+      "sourceSha256": "68237a9ed2f4f21538538b0eb6b25f158ed919d56254ae6ffb12a9a90d5714ab"
     },
     {
       "output": "references/adaptive-execution.md",
@@ -182,27 +182,27 @@
     {
       "output": "references/agile-iteration-method.md",
       "source": "docs/workflow/agile-iteration-method.md",
-      "sourceSha256": "a9915b36cc2ea66f7ea8b0710de0a45799dafb95acace6b3eddba13102f007e1"
+      "sourceSha256": "cf71451b5dc96ac1e607aadf611d3a29711849e320e8eb703336db52644e3dcb"
     },
     {
       "output": "references/adapter-command-contract.md",
       "source": "docs/workflow/adapter-command-contract.md",
-      "sourceSha256": "74ebe5b83b160f322e9d1e8828eef21b7087138a12173ba4ee57e8113d16b941"
+      "sourceSha256": "92610fb7c41cffb4bc1fc9dea8e43037818887a33222b0f5fe8cd9545bbeedb4"
     },
     {
       "output": "references/adapter-entry-model.md",
       "source": "docs/workflow/adapter-entry-model.md",
-      "sourceSha256": "ba6f78ac8cc6aa9e5b3e544c1c92083c5e72221c22f23e3a2289f6dcef02c09b"
+      "sourceSha256": "aa3718a5734241435845c45884da8cab9006bcece60ad525c485f0989b5423f2"
     },
     {
       "output": "references/adapter-skill-bootstrap.md",
       "source": "docs/workflow/adapter-skill-bootstrap.md",
-      "sourceSha256": "f65a4b8e315b67c165863b6f4be00d84e69f8c613026675434e8245668401e00"
+      "sourceSha256": "56274507d62f3066b016f7df1214972e3c3965e54a22e5decd04cc1dea3cf936"
     },
     {
       "output": "references/project-agent-configuration.md",
       "source": "docs/workflow/project-agent-configuration.md",
-      "sourceSha256": "c3edc9d45ec1d0aac26d5fa25a718feef9382f034804c2e1031c7843781b5cc1"
+      "sourceSha256": "9a5dbb0f4f956da2db4bdc285e54a068de8ecd22d8a30616116489e50c10b7ca"
     },
     {
       "output": "references/reflection.md",
@@ -217,12 +217,12 @@
     {
       "output": "references/product-coherence-validation.md",
       "source": "docs/workflow/product-coherence-validation.md",
-      "sourceSha256": "c3eb6e3b93ddf8ce0cd762252dbc87f87a8a674a36a5e1342d9e0da7af7bcf06"
+      "sourceSha256": "c3adf11126ebc8d53b53c7f19589bd0ed4791a71a91de27888de26c59b96d4c2"
     },
     {
       "output": "references/epic-closure-truth-audit.md",
       "source": "docs/workflow/epic-closure-truth-audit.md",
-      "sourceSha256": "3af081c3f18eb0ecd625c65abb3b53b1317eac5c9ce4cff1086c93a393b421e1"
+      "sourceSha256": "f68ae6585cb5c9fa092064d177b96d823d1bb86405a2c7c4ac995297e443bfb2"
     },
     {
       "output": "references/repo-awareness-calibration.md",
@@ -237,12 +237,12 @@
     {
       "output": "references/repo-awareness.md",
       "source": "docs/workflow/repo-awareness.md",
-      "sourceSha256": "51d12ea1db358f91989c4af8b9b31313edebc1a55124dfc27fec724e9582d51d"
+      "sourceSha256": "987bc53e4c1caaae306a42b18ce0cc02da11749aaa0c2455c87f55490a56bafb"
     },
     {
       "output": "references/version-and-installation.md",
       "source": "docs/workflow/version-and-installation.md",
-      "sourceSha256": "23cec609c54f306c293a9a2cee9e6b46f0b717661753a1679ffd6f96d5495633"
+      "sourceSha256": "126b8b0476857e8e8bfa2ccb2c571f8ccebf7d1fe5d4c70cf391d028b202bb20"
     },
     {
       "output": "references/schemas/aim-repo-profile.schema.json",
@@ -287,7 +287,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "656cd3a27fe3b73475a1fc9becaf4a4d06d25b482904d8dab14429787a23657d"
+      "sourceSha256": "16550af6f97b1dd87e9eae5809ab0345f4edd82cf28cc8fb08e8091d397455f3"
     },
     {
       "output": "references/version-and-installation.md",
@@ -527,7 +527,7 @@
     {
       "output": "aim-ui/product-views.js",
       "source": "aim-ui/product-views.js",
-      "sourceSha256": "699ee40f725674adea9e532e5426b79817e2adc34d46c2525189eb34adbdbde7"
+      "sourceSha256": "7353f17154c39a9712b88adcf3ad6ac1ab1b91f7bf3a470ee0e50faac3925e0f"
     },
     {
       "output": "aim-ui/graph-views.js",

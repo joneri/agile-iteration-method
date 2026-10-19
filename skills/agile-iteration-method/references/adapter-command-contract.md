@@ -62,6 +62,28 @@ Epic/DI work. `/aim to-backlog` continues to import that legacy planning catalog
 it is not a Story importer. New Story refinement uses the product-ledger `import`
 operation through the agent. No legacy approval or mandate gains Story authority.
 
+## Runtime source routing
+
+Classify the requested intent before reading runtime state:
+
+- An `AIM_ACTION_ENVELOPE` names the exact `authorityStatePath`. Resolve that
+  contained path first; never fall back to another workspace.
+- New intent and native Story continuation use `.aim/product-backlog.json`
+  through the trusted `scripts/aim_stories.py` helper. Recover a compact status
+  receipt once when needed; retain its confirmed scope and revision for mutations.
+- Explicit legacy Epic/Portfolio work uses its named authoritative workspace and
+  original protocol. An older root `.aim/state.json` does not redirect new Story
+  work. If continuation has no identifiable target, resolve it before progressing.
+- Help, repository-fact discussion and configuration load runtime only when the
+  requested operation needs it. Read-only commands never create `.aim`.
+
+Only the main AIM thread mutates the selected runtime through supported
+transitions. Preserve frozen delivery policy, actual authority and accepted
+history. No implicit migration or authority transfer is allowed. Strict/Auto and
+cost depth remain independent of Ship/Loop. Native Stories have no helper for
+rewriting a frozen delivery's mode, cost or policy: report that limit and retain
+its existing mandate. A session preference cannot amend that approved scope.
+
 ## Required command family
 
 | Command | Intent | State effect |
@@ -70,7 +92,7 @@ operation through the agent. No legacy approval or mandate gains Story authority
 | `/aim start "EPIC: ..."` | explicit legacy Epic start or resume | uses a trusted transaction to publish a dedicated registered workspace, bootstrapping the catalog when no runtime exists |
 | `/aim start "PORTFOLIO" mode:auto` | preview the ordered AIM UI Backlog and request one bounded Portfolio mandate | after explicit mandate approval, may create `.aim/portfolio-run.json` and sequentially coordinate included canonical Epic workspaces |
 | `/aim continue` | resume from the persisted role, gate, increment, mode, and cost profile | advances state only when the current AIM transition allows it |
-| `/aim status` | report the AIM product release from the trusted package's `VERSION` or `manifest.json` `productVersion`, separately from the runtime contract in `.aim/state.json` `aimVersion`, then Epic, increment, role, mode, cost profile, gate, adapter, and next action | read-only |
+| `/aim status` | report the trusted package product release from `VERSION` or manifest `productVersion`, separately from the selected runtime contract (`aimVersion` in legacy state); show native Story/delivery status, policy and next action, or the explicitly selected legacy checkpoint | read-only |
 | `/aim graph` | use the trusted Story helper's `graph` command to explain the current delivery's dependencies, recorded work, stale evidence and next possible assignments; preserve the existing mandate and gates | read-only |
 | `/aim validate` | run or explain Structural, Behavioral, Product coherence, and Release readiness checks | read-only |
 | `/aim help` | show the thin front door and the next useful command | read-only |
@@ -84,18 +106,18 @@ operation through the agent. No legacy approval or mandate gains Story authority
 | `/aim remember-repo <category> "<rule>"` | add one structured shared or personal repository rule | writes the owning profile or user-hint file; never `.aim/` |
 | `/aim forget-repo <category> "<rule-id>"` | remove one structured repository rule after showing the proposed change | writes the owning profile or user-hint file; never `.aim/` |
 | `/aim upgrade` | inspect installed AIM-owned packages, plan a reviewed refresh, and report follow-up calibration or resume actions | must not rewrite active `.aim/` state |
-| `/aim mode strict\|auto` | set execution mode for the active Epic | updates mode in `state.json`; does not approve a gate |
-| `/aim cost standard\|control\|deep` | set runtime depth for the active Epic or increment | updates cost profile in `state.json`; does not approve a gate |
+| `/aim mode strict\|auto` | select execution mode within the current mandate; legacy Epic mode changes use its selected workspace | never approves a gate or rewrites a frozen native delivery policy |
+| `/aim cost standard\|control\|deep` | select runtime depth within resource authority; legacy changes use the selected workspace | never changes scope, model or agent count, approves a gate, or rewrites frozen native policy |
+| `/aim replan` | legacy Epic/DI only: return the active, unaccepted increment to Gate B planning with the reason preserved | updates that legacy checkpoint; never rewrites accepted history. Story deliveries have no approved-scope replan transition; use the blocked-commitment guidance in `user-stories.md`. |
 
-Startup reads and classifies the versioned runtime state before selecting cost.
+Startup follows [runtime source routing](#runtime-source-routing) before selecting cost.
+The following persisted cost-profile rules apply to legacy Epic workspaces.
 Incomplete state resumes its persisted cost profile. A genuinely new Epic makes
 a fresh explicit/policy/default choice and never inherits a completed Epic's
 profile. Gate B may change depth only within applicable resource authority and
 when the visible decision and persisted state agree. Complexity alone never
 changes cost profile, model, product priority or agent count. Supported legacy state is normalized read-only;
 unsupported or contradictory state stops without mutation.
-| `/aim replan` | legacy Epic/DI only: return the active, unaccepted increment to Gate B planning with the reason preserved | updates that legacy checkpoint; never rewrites accepted history. Story deliveries have no approved-scope replan transition; use the blocked-commitment guidance in `user-stories.md`. |
-
 `/aim calibrate-repo`, `/aim remember-repo`, and `/aim forget-repo` follow
 `repo-awareness-calibration.md`. `/aim reflect` and
 `/aim reflect-all` are retired compatibility aliases in `reflection.md`.
@@ -117,8 +139,9 @@ It first classifies the evidence the question needs. A bounded question about a
 file or current code path starts with narrow filename or symbol discovery and
 inspection of the matched source; it does not require a runtime-state read or a
 full profile read. A question about an active Epic, Gate, decision, or delivery
-history reads the applicable `.aim/state.json` first when present, then selects
-bounded decision and accepted-delivery evidence. Product-direction, architecture,
+history resolves its native ledger or exact legacy workspace through
+[runtime source routing](#runtime-source-routing), then selects bounded decision
+and accepted-delivery evidence. Product-direction, architecture,
 and tradeoff questions select relevant profile, code, documentation, and AIM
 method context as needed. The profile guides locality but does not replace
 source discovery or verification.

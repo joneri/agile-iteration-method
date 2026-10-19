@@ -15,13 +15,29 @@ Source: docs/workflow/epic-closure-truth-audit.md
 Prevent an accepted Increment, successful POC, green internal checks, or user
 approval from being misreported as a completed Product Epic.
 
-Gate E accepts one Increment. Epic closure is a different transition and must
-be supported by a contained JSON truth audit. AIM should create more coherent
-Done Increments whenever the Epic outcome is not fully proven.
+Gate E accepts a delivery selection. Epic closure is a separate transition
+requiring proof of the whole declared outcome. Unmet criteria remain open.
+
+## Native Story Epic closure
+
+Follow [runtime source routing](adapter-command-contract.md#runtime-source-routing)
+and [User Stories](user-stories.md) for current work. The product ledger owns
+Epic `outcomeClass`, criterion identities, Story requirements and accepted
+deliveries; a separate `epic.md` is not required. The trusted
+`scripts/aim_stories.py closure-preview` checks whole-Epic criteria and accepted
+Story coverage. `close-epic` binds the current store and closure scope, criterion
+evidence and actual human authority. Delegated delivery acceptance does not
+grant Epic closure authority. Failed or partial proof leaves the Epic open.
+
+## Legacy Epic/Increment closure
+
+The `epic.md`, contained JSON truth-audit artifact and legacy helper protocol
+below apply only to explicitly selected legacy workspaces. They cannot close a
+native Story Epic or upgrade historical evidence.
 
 ## Outcome classes
 
-Every new Epic declares exactly one field in `epic.md`:
+Every new legacy Epic declares exactly one field in `epic.md`:
 
 ```text
 Outcome class: Product

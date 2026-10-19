@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-10-19 - AIM release v4.6.1
+
+Align current guidance, generated packages and public communication with Ship,
+Loop, Graph engineering and AIM UI. Ship remains the default; Loop preserves
+Done Increments with recurring owner feedback.
+
+- Attribute accepted deliveries in AIM UI to the actual recorded actor, including
+  delegated agent decisions and human overrides. Pending decisions name the
+  designated owner without granting authority.
+- Route current Stories, exact action envelopes and legacy Epic workspaces to
+  their own authoritative state across core, adapters and troubleshooting.
+- Document native Epic closure, valid independent-review fallback and installation
+  into a separate consuming project. Retain the original legacy protocols.
+- Correct the feature map's default Increment view and legacy control boundaries;
+  include Graph in the complete native command family.
+- Align native adapter Graph routing and the validator's current command inventory;
+  keep retired Reflect aliases in compatibility checks.
+- Add regression checks for current release claims, feature/command coverage,
+  source routing and the rejected self-install recipe.
+
+Validation includes native policy and UI regressions, actual browser journeys,
+independent review, the full test suite, isolated official skills CLI installs
+and release/publication gates. Runtime/schema/package-format versions and frozen
+historical evidence retain their original identities. No new application score
+or general product-quality or efficiency claim is made; AIM UI remains Beta.
+
 ## 2026-10-18 - AIM release v4.6.0
 
 Ship is the default for new work: complete the agreed product before final

@@ -15,7 +15,15 @@ For advice reused during planning, review and diagnosis, read
 
 ## The Short Version
 
-AIM is a structured AI delivery system.
+AIM is a structured AI delivery system. **Ship** is the default: finish the
+complete agreed product before final acceptance. Choose **Loop** for useful
+Done Increments with recurring owner feedback. Both use the same engineering,
+review and verification discipline.
+
+Use **Graph engineering** to connect the goal, dependencies, assignments and
+proof. **AIM UI** is the local control room: follow the current Increment,
+explore User Stories and inspect Graph. An explicitly delegated agent owner can
+provide feedback within a human-approved mandate; Epic closure remains human-owned.
 
 You describe the outcome you want.
 PO owns Epics and product priority. TDO creates and owns Stories and criteria, then plans a coherent increment that can cross Epic boundaries. AIM checks the first working core before expanding it, reviews and validates the delivered behavior, and returns acceptance to you. The working result is an increment; a Sprint is an optional timebox.

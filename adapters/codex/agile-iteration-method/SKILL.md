@@ -239,6 +239,7 @@ Treat these as AIM intents when the current adapter supports them or when the us
 - `/aim start "PORTFOLIO" mode:auto`
 - `/aim continue`
 - `/aim status`
+- `/aim graph`
 - `/aim validate`
 - `/aim help`
 - `/aim config`
@@ -601,3 +602,11 @@ provisional candidates from the supplied goal, requirements, Epic or PRD;
 bootstrap verification is part of startup, not a prerequisite interview.
 Keep native agents as thin loaders of current facts. Do not duplicate temporary
 feature status in their instructions. The engineering checks add no new gate.
+
+## AIM Graph
+
+For `/aim graph`, follow `references/adaptive-execution.md` and the trusted
+package-owned Story helper's `graph` command. Explain current dependencies,
+recorded activity, stale proof and bounded next assignments. The command is
+read-only: it starts no agents, creates no runtime, and grants no decision
+or acceptance authority. Existing scope and owner mandate remain binding.

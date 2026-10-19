@@ -155,8 +155,8 @@ Do not add fashionable tools or broad prompts without repository evidence.
 
 `/aim configure-agents` must:
 
-1. read `.aim/state.json` only for active-run safety; never store configuration
-   there
+1. follow [runtime source routing](adapter-command-contract.md#runtime-source-routing)
+   and read the relevant runtime only for active-run safety; never store configuration there
 2. read `aim.roles.yaml`, then `aim.profile.yaml`
 3. inspect only freshness-triggered project evidence
 4. show proposed role-profile and native-file changes
@@ -164,9 +164,16 @@ Do not add fashionable tools or broad prompts without repository evidence.
 6. update all selected suppliers from the same role intent
 7. validate native file presence and main-thread ownership language
 
-If native agents are unavailable, AIM reports the limitation and retains required
-checks in the main thread. Label review as self-review and record the unavailable
-exception under `adaptive-execution.md`; do not claim equivalent independence.
+If native agents are unavailable, report the limitation and retain required
+checks. Seek another permitted independent reviewer for material work. Native
+Story review policies support independent review, or self-review with a frozen
+`self` policy and matching `trivial` exception for genuinely nonmaterial work.
+They do not admit an unavailable-review exception. The lower-level review checker
+can describe `reviewMode: unavailable` with a matching `unavailable` exception
+only when its caller explicitly allows it; that records a capability limit and
+never establishes independence. Never combine self-review with an unavailable
+exception or waive required independence because a specialist is missing.
+See [adaptive execution](adaptive-execution.md).
 
 ## Migration
 

@@ -61,14 +61,18 @@ The package preserves:
 - TDO Done Increment ownership and technical validation
 - Dev implementation and independent Reviewer examination
 - Gates A, B, and E plus reported Gates C and D
-- Strict and Auto execution modes
+- Ship by default, or explicit Loop with recurring owner feedback
+- human or explicitly delegated agent delivery ownership; separate human Epic closure
+- Graph engineering and the local Increment, User Stories and Graph views
+- Strict and Auto execution modes, independent of delivery style
 - Standard, Cost Control, and Deep runtime-depth profiles
 - repository calibration and durable repo-awareness boundaries
 - project-specific role configuration through `aim.roles.yaml`
 - explicit scope escalation
-- one main AIM thread as the sole owner of `.aim/state.json` and gates
-- sequential fallback with unchanged semantics when native specialists are
-  unavailable
+- one main AIM thread as the sole mutator of the selected runtime and recorder
+  of actual owner decisions
+- sequential execution when parallel capability is unavailable, without waiving
+  an independent-review requirement
 
 An active target repository may optionally provide `aim.profile.yaml`,
 `aim.roles.yaml`, supplier-native specialists, and `.aim/` runtime state. Their

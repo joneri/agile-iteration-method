@@ -61,8 +61,9 @@ This makes AIM audience-aware from the first generated artifact. See the
 
 - `Strict` asks the designated owner for plan approval and delivery acceptance; combined proposals
   avoid separate routine Epic approvals.
-- `Auto` continues until risk, changed scope, uncertainty, or final acceptance
-  requires a person.
+- `Auto` continues within the actual mandate; changed scope, uncertainty and
+  reserved decisions return to the designated owner. Strict/Auto controls
+  approval behavior independently of Ship/Loop delivery style.
 - `Standard`, `Cost Control`, and `Deep` guide context and verification depth;
   they preserve required quality, roles, gates and escalation.
 - Existing approvals, relevant answers and confirmed checkpoints are reused
@@ -82,7 +83,7 @@ assignment when prerequisites, ownership and capacity permit it.
 AIM records activity attempts in its existing ledger. Failed or stale inputs
 identify the affected work; obsolete attempts cannot unlock dependants. Without
 an execution plan, Graph shows the recorded native delivery checkpoints. The
-host runs agents and native review, validation and user acceptance still apply.
+host runs agents; native review, validation and actual owner acceptance still apply.
 See [AIM Graph](../workflow/adaptive-execution.md#aim-graph).
 
 ## AIM UI
@@ -95,27 +96,28 @@ See [AIM Graph](../workflow/adaptive-execution.md#aim-graph).
 - The User Stories board projects the product backlog into moving Story cards,
   each retaining its Epic, user perspective, priority and criteria.
 - Existing Epic workspaces and Increment history remain in the legacy delivery surface.
-- The Story board is the primary surface. Legacy delivery flow, portfolio
-  summaries, People and agents and Closed Increment history stay available.
+- Increment is the default view of the selected delivery, its proof and next
+  checkpoint. User Stories shows the full requirements board; Graph exposes
+  dependencies and bounded assignments. Planning uses ready Story selection.
 - The header identifies the exact AIM product release captured when the local
   server started, separately from repository runtime-contract versions.
-- Connected Codex control shows whether eligible Start and Approve actions can
-  continue in the authoritative task; View-only mode explains setup and keeps a
-  reviewed handoff available.
-- The Portfolio view teaches the ordered calibration, Discuss, explicit
-  Roadmap promotion, review, Portfolio Auto, and mandate journey with a
-  state-aware next command.
-- The main AIM chat owns portfolio capacity, focus, backlog planning, activation,
-  Gates, and runtime state.
+- Current Story controls produce reviewed chat handoffs. The main AIM chat
+  mutates runtime and records actual decisions; viewing never grants authority.
+- The legacy delivery surface retains Portfolio summaries, People and agents,
+  Closed Increment history and eligible connected Codex Start/Approve dispatch.
+  View-only mode retains reviewed handoffs.
+- Legacy Portfolio/Roadmap controls retain their separate calibration, Discuss,
+  explicit promotion and bounded mandate journey; they do not plan or approve
+  native Story deliveries.
 - Every Story retains its Epic identity and individual acceptance evidence.
   Legacy cards keep their canonical role and bounded helper-agent details.
 - Card movement reflects persisted lifecycle evidence. Polling, filtering and
   viewing never advance a Story or accept work.
 - Polling stays visually quiet and only genuine workflow movement is animated.
-- When connected, eligible Activate and Approve actions dispatch exact,
-  freshness-checked intents to the same Codex task. Change and free-form paths
-  remain reviewed handoffs; decision buttons appear only after AIM publishes a
-  ready handoff.
+- In the legacy surface, connected eligible Activate and Approve actions
+  dispatch exact, freshness-checked intents to the same Codex task. Change and
+  free-form paths remain reviewed handoffs; buttons require a published ready
+  handoff.
 - Existing single-Epic state remains compatible without migration.
 
 See [AIM UI Beta](aim-ui.md).
@@ -219,8 +221,8 @@ own tested versions, workloads and limitations.
 Codex, Claude Code, and GitHub Copilot each receive a native AIM skill. All map
 the same command family:
 
-`start`, `continue`, `status`, `validate`, `help`, `config`, `discuss`,
-`configure-agents`, `calibrate-repo`, `remember-repo`, `forget-repo`,
+`start`, `continue`, `status`, `graph`, `validate`, `help`, `config`, `discuss`,
+`ui`, `to-backlog`, `repair-catalog`, `configure-agents`, `calibrate-repo`, `remember-repo`, `forget-repo`,
 `upgrade`, `mode`, `cost`, and `replan`.
 
 If native routing is unavailable, explicit AIM intent preserves the same

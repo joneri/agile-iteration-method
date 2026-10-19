@@ -84,3 +84,46 @@ class DocumentationAuditTests(unittest.TestCase):
         self.assertTrue(any("installation-path marker" in error for error in errors))
         self.assertTrue(any("internal installer jargon" in error for error in errors))
         self.assertTrue(any("plain-language setup benefit" in error for error in errors))
+
+    def test_current_release_claims_do_not_inherit_historical_version(self) -> None:
+        version = (ROOT / "VERSION").read_text().strip()
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy(temporary)
+            press = copied / "github-pages/assets/press/aim-4-press-kit.txt"
+            press.write_text(press.read_text().replace(f"Release version: {version}", "Release version: 2.1.0"))
+            errors = audit(copied)
+        self.assertTrue(any("stale current release claim" in error for error in errors))
+        self.assertFalse(any("CHANGELOG.md" in error for error in errors))
+
+    def test_source_routing_and_self_install_drift_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy(temporary)
+            guide = copied / "docs/workflow/troubleshoot-aim-2.0.md"
+            guide.write_text(guide.read_text().replace("adapter-command-contract.md#runtime-source-routing", "adapter-command-contract.md"))
+            onboarding = copied / "docs/workflow/codex-skill-onboarding.md"
+            onboarding.write_text(onboarding.read_text() + "\nFrom AIM source: python3 scripts/aim_install.py --target . --dry-run\n")
+            errors = audit(copied)
+        self.assertTrue(any("runtime source routing" in error for error in errors))
+        self.assertTrue(any("cannot install into itself" in error for error in errors))
+
+    def test_missing_current_features_and_native_command_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy(temporary)
+            overview = copied / "docs/product/what-is-aim.md"
+            overview.write_text(overview.read_text().replace("Loop", "Iterations"))
+            entry = copied / "docs/workflow/adapter-entry-model.md"
+            entry.write_text(entry.read_text().replace("`/aim graph`", "`/aim diagram`"))
+            errors = audit(copied)
+        self.assertTrue(any("missing current delivery feature 'Loop'" in error for error in errors))
+        self.assertTrue(any("incomplete command family; missing graph" in error for error in errors))
+
+    def test_missing_current_surfaces_report_drift_without_crashing(self) -> None:
+        for relative in ("docs/workflow/adapter-skill-bootstrap.md",
+                         "docs/workflow/adapter-entry-model.md",
+                         "docs/product/what-is-aim.md",
+                         "github-pages/assets/press/launch-copy-en.txt"):
+            with self.subTest(relative=relative), tempfile.TemporaryDirectory() as temporary:
+                copied = self._copy(temporary)
+                (copied / relative).unlink()
+                errors = audit(copied)
+                self.assertTrue(any(relative in error and "cannot read required surface" in error for error in errors))

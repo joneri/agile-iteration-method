@@ -18,7 +18,7 @@ from aim_docs import audit as audit_documentation
 from aim_quality.skills import role_skill_issues
 from aim_quality.profiles import read_repo_profile
 from build_public_skill import PublicSkillError, validate_committed_package
-from aim_validator.coherence import evaluate_product_coherence
+from aim_validator.coherence import CANONICAL_COMMANDS, evaluate_product_coherence
 from aim_validator.profile_contract import (
     PERSONAL_HINTS_SCHEMA_PATH,
     REPO_PROFILE_SCHEMA_PATH,
@@ -362,25 +362,9 @@ AIM_PORTFOLIO_CONTROL_PATH = ".aim/portfolio-control.json"
 AIM_PORTFOLIO_RUN_SCHEMA_PATH = "schemas/aim-portfolio-run.schema.json"
 AIM_PORTFOLIO_RUN_PATH = ".aim/portfolio-run.json"
 
-CANONICAL_AIM_COMMANDS = [
-    "/aim start",
-    "/aim continue",
-    "/aim status",
-    "/aim validate",
-    "/aim help",
-    "/aim config",
-    "/aim discuss",
-    "/aim to-backlog",
-    "/aim repair-catalog",
-    "/aim configure-agents",
-    "/aim calibrate-repo",
-    "/aim remember-repo",
-    "/aim forget-repo",
-    "/aim upgrade",
-    "/aim mode",
-    "/aim cost",
-    "/aim replan",
-]
+# One command inventory for the runtime and cross-surface coherence checks.
+CANONICAL_AIM_COMMANDS = list(CANONICAL_COMMANDS)
+
 
 CLAUDE_COMMAND_SURFACES = {
     "/aim start": ".claude/commands/start-aim.md",

@@ -3,9 +3,12 @@
 Map this command to `/aim cost standard|control|deep` from
 `docs/workflow/adapter-command-contract.md`.
 
-Validate the requested profile, update `costProfile` for the active Epic or
-increment, and preserve all gate and approval semantics. Escalate depth when
-risk requires it. Gate B may also de-escalate depth when the visible rationale
+Follow [runtime source routing](../../docs/workflow/adapter-command-contract.md#runtime-source-routing)
+before selecting state. Validate the requested profile against actual
+resource authority. Native Stories have no frozen-delivery cost-mutation helper;
+retain the approved mandate and report that limit. For explicitly selected
+legacy work, update only its active Epic or increment `costProfile` and preserve
+all gates. Complexity alone never authorizes greater cost, models or agent count. Gate B may also de-escalate depth when the visible rationale
 and persisted `costProfile` agree. Resume preserves an incomplete Epic's
 profile; a new Epic never inherits an `epic_complete` profile. Cost profile
 does not select or imply model/reasoning effort.

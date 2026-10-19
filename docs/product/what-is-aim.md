@@ -20,6 +20,18 @@ into one repeatable loop.
 Each increment connects the goal, implementation and evidence so you can make
 a meaningful acceptance decision.
 
+## Ship or Loop
+
+**Ship** is the default: AIM completes the agreed product before final owner
+acceptance. **Loop** delivers useful Done Increments for recurring feedback
+from a human or an explicitly delegated agent owner. Strict/Auto controls
+approval behavior separately; neither mode grants authority by itself.
+
+**Graph engineering** connects outcome ownership, delivery dependencies,
+verification and feedback. In **AIM UI**, follow the current Increment, inspect
+User Stories and open Graph for recorded activities and bounded assignments.
+The host runs agents; AIM preserves scope, proof and the actual decision owner.
+
 ## Build What You Want
 
 AIM is not tied to a language, framework, platform, or repository type.
@@ -62,7 +74,8 @@ Before a Story selection is accepted:
 2. a Reviewer looks for correctness issues, edge cases, and risk
 3. technical validation checks real user journeys through the delivered entry point
 4. failed evidence sends the work back for correction
-5. a human-controlled acceptance point decides what happens next
+5. the human or explicitly delegated delivery owner decides acceptance; whole-Epic
+   closure remains a separate human decision
 
 AIM does not replace tests or guarantee correctness.
 It makes review, verification, and correction normal rather than optional cleanup.
