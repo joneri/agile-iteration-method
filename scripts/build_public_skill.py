@@ -64,6 +64,7 @@ INSTALL_MANIFEST_SOURCE = Path("install/aim-install-manifest.yaml")
 DOCUMENTATION_LICENSE_SOURCE = Path("docs/LICENSE-DOCS")
 UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_stories.py"),
+    Path("scripts/aim_observations.py"),
     Path("scripts/aim_interaction.py"),
     Path("scripts/aim_http.py"),
     Path("scripts/aim_engineering.py"),

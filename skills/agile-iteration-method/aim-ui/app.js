@@ -11,7 +11,8 @@ const state = {
   boardSignature: null,
   timer: null,
   filter: "all",
-  view: "board",
+  view: "stories",
+  storyHistory: false,
   workspace: "product",
   productSelection: [],
   productStoreHash: null,
@@ -709,16 +710,34 @@ function renderCard(increment, epic, index, existingCard = null) {
 }
 
 // The requirements projection is independent of legacy delivery runtime state.
-function storyViewModel(board, filter = "all") {
+function storyViewModel(board, filter = "all", history = false) {
   const source = board.storyBoard;
-  const available = source?.version === 1 && source.valid === true;
-  const epics = available ? source.epics || [] : [];
-  const selected = epics.some((epic) => epic.id === filter) ? filter : "all";
-  const stories = available ? (source.stories || []).filter(
-    (story) => selected === "all" || story.epicId === selected,
-  ).slice().sort((a, b) => a.priority - b.priority || a.id.localeCompare(b.id)) : [];
+  const available = source?.version === 1 && (source.valid === true || source.structuralValid === true || source.observations?.entries?.length > 0);
+  const allStories = available ? source.stories || [] : [];
+  const scoped = allStories.filter(story => Boolean(story.historical) === history);
+  const epics = available ? (source.epics || []).filter(epic => scoped.some(story => story.epicId === epic.id)) : [];
+  const selected = epics.some(epic => epic.id === filter) ? filter : "all";
+  const stories = scoped.filter(story => selected === "all" || story.epicId === selected)
+    .map(story => ({...story, column: ["validation", "acceptance"].includes(story.column) ? "review" : story.column}))
+    .sort((a, b) => a.priority - b.priority || a.id.localeCompare(b.id));
   return { available, configured: source?.configured === true, epics, selected, stories,
-    columns: available ? source.columns || [] : [] };
+    historyCount: allStories.filter(story => story.historical).length,
+    columns: available ? [{id:"backlog",label:"Backlog"},{id:"ready",label:"Ready"},
+      {id:"in_progress",label:"In progress"},{id:"review",label:"Review"},{id:"done",label:"Done"}] : [] };
+}
+
+function storyStageLabel(story) {
+  if (story.historicalBlocked) return "Superseded · blocked";
+  if (story.historical) return story.status === "done" ? "Done" : `Recorded: ${["acceptance", "validation"].includes(story.column) ? "Review" : statusLabel(story.column)}`;
+  if (story.waitingForOwner || story.status === "acceptance") return "Waiting for you";
+  return ({backlog:"Needs refinement", ready:"Ready to start", in_progress:"Agent working",review:"Under review",done:"Done"})[story.column] || "Backlog";
+}
+
+function storyPrerequisiteText(story, stories) {
+  return [...(story.dependsOn || []).map(id => {
+    const dependency = stories.find(item => item.id === id);
+    return `${dependency?.status === "done" ? "Complete" : "Needs"}: ${dependency?.title || id}`;
+  }), ...(story.prerequisites || []).map(item => `${item.resolved ? "Received" : item.blocking === false ? "Later input (can start)" : "Needs"}: ${item.text}`)];
 }
 
 function storyPrompt(story, operation, board = null) {
@@ -739,26 +758,34 @@ function renderStoryCard(story, epic, index, existingCard) {
   card.style.setProperty("--epic-accent", accentFor(index));
   card.replaceChildren();
   const top = el("div", "story-topline");
-  top.append(el("span", "story-id", story.id), el("span", "story-priority", `Priority ${story.priority}`));
-  const context = el("p", "story-epic", `${epic.id} · ${epic.title}`);
+  top.append(el("span", "story-id", story.id), el("span", "story-priority", storyStageLabel(story)));
+  const context = el("p", "story-epic", epic.title);
   const needs = el("dl", "story-needs");
   addFact(needs, "As", story.persona);
   addFact(needs, "I need", story.need);
   addFact(needs, "So that", story.benefit);
   card.append(top, el("h3", "story-card-title", story.title), context);
-  if (story.attention) {
-    const blocker = el("p", "attention story-blocker", `Blocked: ${story.attention}`);
+  if (story.sourceStale) card.append(el("p", "story-source-stale", "Update pending · showing last recorded state"));
+  const prerequisites = storyPrerequisiteText(story, state.board?.storyBoard?.stories || []);
+  if (prerequisites.length) card.append(el("p", "story-prerequisites", prerequisites.join(" · ")));
+  if (story.attention && !story.historical) {
+    const blocker = el("p", "attention story-blocker", `${story.observationId ? "" : "Blocked: "}${story.attention}`);
     blocker.setAttribute("role", "status");
     blocker.setAttribute("aria-live", "polite");
     card.append(blocker);
   }
-  card.append(needs);
+
   const criteria = el("details", "story-criteria");
   criteria.open = wasOpen;
   const count = story.acceptanceCriteria.length;
-  const summary = el("summary", "", `${count} acceptance ${count === 1 ? "criterion" : "criteria"}`);
+  const summary = el("summary", "", `Story details · ${count} criteria`);
   summary.dataset.storyControl = "criteria";
-  criteria.append(summary);
+  criteria.append(summary, needs);
+  if (story.historyReason) criteria.append(el("p", "", story.historyReason));
+  if (story.historical) criteria.append(el("p", "", `Recorded stage: ${statusLabel(story.status)}`));
+  if (story.historical && story.attention) criteria.append(el("p", "", story.attention));
+  if (story.sourceNote) criteria.append(el("p", "product-boundary", story.sourceNote));
+  if (story.readOnly && !story.observationId) criteria.append(el("p", "product-boundary", "Recorded state retained. Current evidence needs verification before further delivery actions."));
   const criteriaList = el("ul");
   story.acceptanceCriteria.forEach((criterion) => {
     const item = el("li");
@@ -767,18 +794,7 @@ function renderStoryCard(story, epic, index, existingCard) {
   });
   criteria.append(criteriaList);
   card.append(criteria);
-  if (story.deliveryIds?.length) {
-    const deliveries = el("nav", "story-deliveries");
-    deliveries.setAttribute("aria-label", `Deliveries for ${story.id}`);
-    story.deliveryIds.forEach((id) => {
-      const button = el("button", "story-action", `Inspect ${id}`);
-      button.type = "button";
-      button.dataset.storyControl = `delivery-${id}`;
-      button.addEventListener("click", () => navigateProductDelivery(id));
-      deliveries.append(button);
-    });
-    card.append(deliveries);
-  }
+  if (story.deliveryIds?.length) criteria.append(el("p", "story-deliveries", `Delivery records: ${story.deliveryIds.join(", ")}`));
   if (story.evidence?.length) {
     const links = el("nav", "evidence-links");
     links.setAttribute("aria-label", `Evidence for ${story.id}`);
@@ -794,7 +810,7 @@ function renderStoryCard(story, epic, index, existingCard) {
       link.rel = "noopener noreferrer";
       links.append(link);
     });
-    card.append(links);
+    criteria.append(links);
   }
   const actions = el("div", "story-actions");
   const feedback = el("p", "action-feedback");
@@ -806,20 +822,21 @@ function renderStoryCard(story, epic, index, existingCard) {
   storyActions.forEach(([operation, label]) => {
     const button = el("button", "story-action", label);
     button.type = "button";
+    button.disabled = story.readOnly === true;
     button.dataset.storyControl = operation;
     button.addEventListener("click", () => copyText(storyPrompt(story, operation, state.board), feedback));
     actions.append(button);
   });
-  card.append(actions, feedback);
+  if (!story.readOnly) criteria.append(actions, feedback);
   return card;
 }
 
 function renderStories(board) {
-  const model = storyViewModel(board, state.storyFilter);
+  const model = storyViewModel(board, state.storyFilter, state.storyHistory);
   state.storyFilter = model.selected;
   const filters = $("story-filters");
   filters.replaceChildren();
-  [{ id: "all", title: "All Epics" }, ...model.epics].forEach((epic) => {
+  [{ id: "all", title: state.storyHistory ? "All historical Epics" : "All Epics" }, ...model.epics].forEach((epic) => {
     const button = el("button", "epic-filter", epic.title);
     button.type = "button";
     button.dataset.storyEpic = epic.id;
@@ -828,14 +845,26 @@ function renderStories(board) {
     button.addEventListener("click", () => { state.storyFilter = epic.id; render(state.board); });
     filters.append(button);
   });
+  const history = $("story-history");
+  history.hidden = !model.historyCount;
+  history.textContent = state.storyHistory ? "← Current work" : `History · ${model.historyCount} Stories`;
+  history.setAttribute("aria-pressed", String(state.storyHistory));
+  history.onclick = () => { state.storyHistory = !state.storyHistory; state.storyFilter = "all"; render(state.board); };
+  $("story-title").textContent = state.storyHistory ? "History" : "Work and Done";
   $("story-summary").textContent = model.available
-    ? `${model.stories.length} User Stories · ${model.epics.length} Epics · ordered by product priority`
+    ? `${model.stories.length} User Stories · ${model.epics.length} ${model.epics.length === 1 ? "Epic" : "Epics"} · ordered by product priority`
     : "Start with the change you want to make.";
   const note = $("story-board-note");
-  note.hidden = model.available && model.stories.length > 0;
-  note.textContent = !model.available && model.configured
-    ? "The requirements board cannot be read safely. Ask AIM chat to repair the requirements catalog. Repair the ledger before using increment actions."
-    : "Describe your intent in AIM chat. PO owns Epics and product priority; TDO owns Stories, criteria and the increment. Inspect the shared commitment in Increment.";
+  note.hidden = !state.storyHistory && model.available && model.stories.length > 0;
+  note.textContent = state.storyHistory
+    ? "Earlier attempts only — current work and accepted Done cards are on the live board. Columns show recorded stages. Use ← Current work to return."
+    : model.configured ? "No Stories in this view. Your existing records are preserved." : "Describe what you want to build in AIM chat. Your Stories will appear here.";
+  const diagnostics = $("story-record-issues");
+  diagnostics.replaceChildren();
+  const source = board.storyBoard || {};
+  [...(source.issues || []), ...(source.observations?.issues || [])].forEach(issue => diagnostics.append(el("p", "", issue)));
+  if (source.valid === false) diagnostics.prepend(el("p", "", "Historical native evidence needs verification. Recorded stages remain visible; native delivery actions are disabled."));
+  diagnostics.append(el("p", "", "History preserves previous delivery reports and original decisions. Moving work to history does not mark it accepted."));
   const container = $("story-board");
   const scrollLeft = container.scrollLeft;
   const previousCards = new Map(Array.from(container.querySelectorAll("[data-story-id]"),
@@ -843,13 +872,14 @@ function renderStories(board) {
   const columns = new Map(Array.from(container.children, (column) => [column.dataset.column, column]));
   const moved = [];
   const desired = new Set();
-  model.columns.forEach((column) => {
+  const visibleColumns = model.columns;
+  visibleColumns.forEach((column) => {
     const section = columns.get(column.id) || el("section", "story-column");
     section.dataset.column = column.id;
     desired.add(column.id);
     const stories = model.stories.filter((story) => story.column === column.id);
     const heading = el("header", "story-column-heading");
-    heading.append(el("h2", "", column.label), el("span", "column-count", stories.length));
+    heading.append(el("h2", "", state.storyHistory && column.id !== "done" ? `Recorded: ${column.label}` : column.label), el("span", "column-count", stories.length));
     const stack = el("div", "story-stack");
     stories.forEach((story) => {
       const epicIndex = model.epics.findIndex((epic) => epic.id === story.epicId);
@@ -864,7 +894,13 @@ function renderStories(board) {
     container.append(section);
   });
   columns.forEach((column, id) => { if (!desired.has(id)) column.remove(); });
-  container.scrollLeft = scrollLeft;
+  const scopeKey = `${state.storyHistory}:${model.selected}`;
+  if (container.aimScopeKey !== scopeKey) {
+    container.aimScopeKey = scopeKey;
+    // A narrow initial view must show actual work, rather than only empty lanes.
+    const first = Array.from(container.children).find(column => column.querySelector("[data-story-id]"));
+    container.scrollLeft = first ? first.offsetLeft - container.firstElementChild.offsetLeft : 0;
+  } else container.scrollLeft = scrollLeft;
   animateCardHandoffs(moved);
 }
 
@@ -1474,8 +1510,7 @@ function renderView(board, epics) {
   if (productPanel) renderProductWorkspace(board);
   if (showingClosed) renderClosed(board, epics);
   if (showingStories) {
-    renderStories(productModel.available ? board : { ...board,
-      storyBoard: { ...board.storyBoard, valid: false, configured: productModel.configured } });
+    renderStories(board);
   }
   if (showingBoard) {
     renderKanban(board, epics);
@@ -1589,11 +1624,11 @@ function updateHeartbeat(board) {
   const activeCount = board.epics?.filter((epic) => epic.active).length || 0;
   $("last-refresh").textContent = `Updated ${formatTime(board.generatedAt)}`;
   if (state.workspace === "product") {
-    const model = productViewModel(board);
+    const model = storyViewModel(board);
     const label = model.available
       ? `Board updated · ${model.stories.length} User Stories`
       : model.configured ? "Requirements need attention" : "Ready for your intent";
-    setConnection(board.health === "degraded" || (model.configured && !model.available) ? "error" : "live", label);
+    setConnection(model.configured && !model.available ? "error" : "live", label);
     return;
   }
   setConnection(
@@ -1610,9 +1645,9 @@ function legacyCleanupPrompt() {
 
 function renderLegacyCleanup(board) {
   const detected = Boolean(board.legacyCleanup?.legacyDetected);
-  $("legacy-cleanup").hidden = !detected;
+  $("legacy-cleanup").hidden = !detected || state.workspace === "product";
   document.querySelector('[data-workspace="legacy"]').hidden = !detected;
-  if (!detected && state.workspace === "legacy") state.workspace = "product";
+  if (!detected && state.workspace === "legacy") { state.workspace = "product"; state.view = "stories"; }
   $("copy-legacy-cleanup").onclick = () => copyText(legacyCleanupPrompt(), $("legacy-cleanup-feedback"));
   $("open-legacy-cleanup").onclick = () => productOpenInCodex(legacyCleanupPrompt(), $("legacy-cleanup-feedback"));
 }
@@ -1632,6 +1667,10 @@ function render(board, { preserveViewport = false } = {}) {
   document.querySelectorAll("[data-workspace]").forEach((button) => {
     button.setAttribute("aria-pressed", String(button.dataset.workspace === state.workspace));
   });
+  document.querySelectorAll(".section-tab").forEach(button => {
+    button.hidden = product && !["stories", "graph"].includes(button.dataset.view);
+  });
+  document.querySelector('[data-view="stories"]').textContent = "Board";
   $("workspace-description").textContent = product
     ? "Current product" : "Legacy · Epic runtime and historical Increments";
   $("history-tab-label").textContent = product ? "Accepted increments" : "Closed Increments";
@@ -1670,6 +1709,7 @@ function render(board, { preserveViewport = false } = {}) {
 
 function switchWorkspace(workspace) {
   state.workspace = workspace;
+  if (workspace === "product") state.view = "stories";
   if (workspace === "legacy" && ["stories", "graph"].includes(state.view)) state.view = "board";
   if (state.board) render(state.board);
 }

@@ -30,7 +30,7 @@ function readyProductStories(model) {
   if (!model.available || model.context.activeDeliveryId) return [];
   const reserved = new Set(model.deliveries.filter((item) => !["accepted", "cancelled"].includes(item.status))
     .flatMap((item) => item.stories.map((story) => story.id)));
-  return model.stories.filter((story) => story.status === "ready" && !reserved.has(story.id))
+  return model.stories.filter((story) => !story.observationId && story.status === "ready" && !reserved.has(story.id))
     .slice().sort((a, b) => a.priority - b.priority || a.id.localeCompare(b.id));
 }
 
@@ -67,7 +67,7 @@ function productHandoffPrompt(board, request) {
         : "Review the current delivery checkpoint and its evidence, and explain the next required action and decision. This request does not approve a plan, accept work, or authorize a runtime transition.";
   } else if (request.kind === "story") {
     const story = model.stories.find((item) => item.id === request.storyId);
-    if (!story) return "";
+    if (!story || story.readOnly || story.observationId) return "";
     Object.assign(metadata, { storyId: story.id, epicId: story.epicId, status: story.status });
     metadata.deliveries = model.deliveries.filter((delivery) => delivery.stories.some((item) => item.id === story.id))
       .map((delivery) => ({ id: delivery.id, status: delivery.status, scopeSha256: delivery.scopeSha256,
@@ -427,7 +427,7 @@ function renderProductWorkspace(board) {
   const content = $("product-content");
   const openDetails = new Set(Array.from(content.querySelectorAll("details[open][data-product-detail]"), (item) => item.dataset.productDetail));
   content.replaceChildren();
-  const names = { board: ["Increment", ""], graph: ["AIM Graph", ""], portfolio: ["Plan increment", ""],
+  const names = { board: ["Increment", ""], graph: ["Story dependencies", "What needs to happen before each Story can move forward."], portfolio: ["Plan increment", ""],
     people: ["Roles", ""], closed: ["Accepted increments", ""],
     data: ["Delivery data", "Product evidence is unavailable until the ledger is valid."] };
   const [title, summary] = names[state.view] || ["Current product", ""];
@@ -437,13 +437,43 @@ function renderProductWorkspace(board) {
   $("product-view-summary").hidden = !summary;
   $("product-notice").hidden = !state.productNotice;
   $("product-notice").textContent = state.productNotice;
+  if (state.view === "graph") { renderCurrentGraph(board, model, content); return; }
+  const observations = board.storyBoard?.observations;
+  if (state.view === "board" && observations?.entries?.length) {
+    const current = observations.entries.find((entry) => entry.id === observations.currentId);
+    content.append(el("p", "eyebrow", "Observed exception delivery · read only"),
+      el("h2", "", current.title), el("p", "", current.graph.goal),
+      el("p", "attention", current.reportedState.replaceAll("_", " ") + " · " + current.decisionBoundary),
+      el("p", "product-boundary", "These attributed observations do not change native Stories, gate decisions or acceptance history."));
+    if (current.stale) content.append(el("p", "attention", "Source changed since import. Refresh this observation before relying on its reported state."));
+    content.append(productEvidenceLinks(current.graph.activities[0].evidence.map((ref) => ({...ref, label:"Source"})), current.id));
+    const summary = el("ul", "product-criteria");
+    current.stories.forEach((story) => summary.append(el("li", "", `${story.id} · ${story.title} · ${story.acceptanceCriteria.length} criteria`)));
+    content.append(summary);
+  }
+  if (observations?.issues?.length) observations.issues.forEach((issue) => content.append(el("p", "attention", issue)));
   if (!model.available) {
     content.append(el("p", "product-empty", model.configured
-      ? "The product ledger is unavailable or inconsistent. Ask AIM chat to repair it before planning or continuing a delivery."
+      ? board.storyBoard?.structuralValid
+        ? "Native evidence is stale. Recorded requirements and exception observations remain readable; native delivery actions are disabled."
+        : "The product ledger is unavailable or inconsistent. Ask AIM chat to repair it before planning or continuing a delivery."
       : "Start with your intent in AIM chat. Product Epics, Stories and deliveries will appear here."));
     const issues = el("ul", "product-issues");
     model.issues.forEach((issue) => issues.append(el("li", "", issue)));
     content.append(issues);
+    if (board.storyBoard?.structuralValid && ["board", "closed"].includes(state.view)) {
+      const history = el("div", "product-history");
+      (board.storyBoard.deliveries || []).forEach((delivery) => {
+        const card = el("article", "product-history-card");
+        card.append(el("p", "eyebrow", `${delivery.id} · recorded ${delivery.status}`),
+          el("h2", "", delivery.title || delivery.goal),
+          el("p", "product-boundary", "Historical native record; current evidence is unverified. No delivery action is available."));
+        const stories = el("ul");
+        delivery.stories.forEach((story) => stories.append(el("li", "", `${story.id} · ${story.title}`)));
+        card.append(stories); history.append(card);
+      });
+      content.append(history);
+    }
     if (state.view === "graph" && board.storyBoard?.executionGraph?.nativeEvidenceValid === false) {
       renderCurrentGraph(board, model, content);
     }

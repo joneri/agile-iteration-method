@@ -1409,6 +1409,14 @@
           "pattern": "\\S",
           "type": "string"
         },
+        "dependsOn": {
+          "items": {
+            "maxLength": 100,
+            "type": "string"
+          },
+          "maxItems": 64,
+          "type": "array"
+        },
         "epicId": {
           "maxLength": 100,
           "pattern": "^EPIC-[A-Z0-9]+(?:-[A-Z0-9]+)*$",
@@ -1438,6 +1446,42 @@
           "minLength": 1,
           "pattern": "\\S",
           "type": "string"
+        },
+        "prerequisites": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "blocking": {
+                "type": "boolean"
+              },
+              "id": {
+                "maxLength": 100,
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "input",
+                  "owner_assessment"
+                ]
+              },
+              "resolved": {
+                "type": "boolean"
+              },
+              "text": {
+                "maxLength": 4000,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "text",
+              "resolved"
+            ],
+            "type": "object"
+          },
+          "maxItems": 32,
+          "type": "array"
         },
         "priority": {
           "type": "integer"
@@ -1495,6 +1539,14 @@
           "pattern": "\\S",
           "type": "string"
         },
+        "dependsOn": {
+          "items": {
+            "maxLength": 100,
+            "type": "string"
+          },
+          "maxItems": 64,
+          "type": "array"
+        },
         "epicId": {
           "maxLength": 100,
           "pattern": "^EPIC-[A-Z0-9]+(?:-[A-Z0-9]+)*$",
@@ -1516,6 +1568,42 @@
           "minLength": 1,
           "pattern": "\\S",
           "type": "string"
+        },
+        "prerequisites": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "blocking": {
+                "type": "boolean"
+              },
+              "id": {
+                "maxLength": 100,
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "input",
+                  "owner_assessment"
+                ]
+              },
+              "resolved": {
+                "type": "boolean"
+              },
+              "text": {
+                "maxLength": 4000,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "text",
+              "resolved"
+            ],
+            "type": "object"
+          },
+          "maxItems": 32,
+          "type": "array"
         },
         "revision": {
           "type": "integer"

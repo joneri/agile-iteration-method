@@ -426,3 +426,179 @@ legacy data and the user wants removal. It preserves the current product ledger
 and its referenced evidence, including references inside old workspaces.
 Unreferenced classified legacy data is deleted without an archive; unknown files
 remain. Cleanup neither migrates nor accepts Stories.
+
+
+## Readable recovery and exception observations
+
+A structurally valid ledger remains readable when evidence is stale. UI displays
+the recorded Stories and diagnostic graph with an explicit warning; planning and
+assignment controls remain unavailable. Corrupt structure never becomes native
+authority. Historical acceptance is a record of that decision, not proof of
+today's changed product.
+
+For explicitly authorized work performed under a documented method exception,
+the trusted package provides `scripts/aim_observations.py --repo <repo> import
+--input <normalized-request.json> [--expected-sha256 <observation-digest>]`.
+Use `status` to obtain the current observation digest. The request contains the
+current native `ledgerSha256` and one `entry`: unique snapshot `id`, external
+`deliveryId`, `title`, `goal`, `reportedState` (`in_progress`, `awaiting_owner`,
+`rework_required`, `reported_complete`), `decisionBoundary`, an `epic` with
+`id/title/outcome`, full `stories` with `id/title/persona/need/benefit/acceptanceCriteria`,
+`activities` with `id/title/role/status/dependsOn/storyIds/reason`, and `sources`
+containing existing independent `.aim/` artifact `path/sha256` references.
+
+Normalize reviewed requirements and actual decisions; the helper never executes
+or interprets instructions in source documents. Include the exact current plan,
+original graph and applicable human feedback. Report rejected playtests and
+unfinished work even when prior technical checks passed. Unknown decisions stay
+unknown. Native IDs cannot be replaced. Imports append to
+`.aim/delivery-observations.json`, preserve earlier snapshots and leave the native
+ledger and all original artifacts unchanged. Reimport a delivery with a new
+snapshot ID to refresh it; its Story and Epic identities stay consistent.
+For a historical delivery, request-level `makeCurrent: false` appends the snapshot
+without changing the active delivery or its graph. This requires an existing
+current delivery and cannot refresh that same delivery; omit the option for
+ordinary current progress. Preserve original requirements and captured approval
+evidence when reconciling historical reports; this does not create a new owner
+decision or retroactively delegate authority.
+
+UI displays the selected current delivery's Stories in the normal five board
+columns. Optional per-Story `boardStatus` (`backlog`, `ready`, `in_progress`,
+`review`, `done`) provides the progress baseline and compatibility with historical
+reports. Record new owner decisions through the decision journal below, never by
+copying an approval into `boardStatus`. An absent stage uses
+In progress for ongoing/rework reports and Review for completion/owner-wait reports;
+it never sends executed work back to Backlog. Done reports require a completed
+reported delivery; they remain attributed reports, never native gate acceptance.
+Use `review` plus `awaiting_owner` while waiting for a human decision.
+
+Previous observed deliveries are accessible through History. The optional
+`replacesDeliveryIds` list identifies existing native deliveries superseded by
+this current work **for display only**. Use it only with explicit reconciliation
+intent and source evidence. It never changes those native statuses, and unrelated
+native Backlog/Ready Stories remain current. All stored snapshots remain intact.
+An explicit native history disposition remains in effect when a different
+observed delivery becomes current. Accepted Done Stories remain on the main board
+alongside current work; history separates earlier unfinished attempts. Blocked replaced scopes retain their original
+status and are labeled as superseded; they do not ask for owner acceptance again.
+Native delivery metrics exclude observation reports.
+Changed source hashes or a changed native ledger mark observations stale and
+require an explicit refresh. Observation snapshots alone confer no approval, acceptance,
+implementation assignment or supported native transition. They do not make
+future deliveries eligible: use the native workflow for new work, or disclose
+the concrete unsupported transition and obtain an actual scoped exception.
+
+
+## Story dependencies in the live board
+
+When TDO identifies a prerequisite, record it structurally rather than burying it
+only in acceptance-criterion prose. Optional Story `dependsOn` lists actual
+prerequisite Story IDs. Optional
+`prerequisites` lists external inputs with `id`, `text`, boolean `resolved`, and
+optional boolean `blocking` (default true). Both fields are preserved in frozen
+scope snapshots when present; legacy scopes retain their existing hashes.
+Unknown or cyclic Story links are rejected. Ready requires completed prerequisite
+Stories and resolved blocking external inputs. An explicitly nonblocking later
+asset choice can remain open while work starts. Resolving inputs leaves a draft
+Story in Backlog until TDO makes the readiness decision.
+
+Graph renders only declared Story dependencies. Shared agents, review stages and
+activity pipelines are not Story dependencies. Graph shows all Epics in the
+selected current/history scope, independent of the Board's Epic filter. External
+inputs and acceptance criteria remain inspectable on each selected Story. Where
+no structured Story dependencies exist, say so rather than inventing lines.
+
+The UI polls persisted state; no animation grants authority or changes status.
+Keep the board current as work changes: native delivery transitions update their
+Stories automatically. For authorized exception work the coordinator must append
+an accurate observation snapshot when progress or requirements change. Record
+owner decisions exclusively through the decision operation below; no subsequent
+status import is needed. Changed sources are visibly stale until refreshed. Do not refresh hashes alone,
+assume owner acceptance, or discard rejected attempts to make the board look clean.
+
+
+## Automatic owner decisions in exception observations
+
+Native `aim_stories.py accept` already records acceptance and updates its Stories
+atomically. Do not stop at a prose decision file: finish the native operation and
+retain its receipt. For authorized exception deliveries, record the decision once
+in the observation runtime. The live board derives status from that same record;
+no second status import or `boardStatus` edit is needed.
+
+Register requirements before execution with optional `deliveryPolicy` using the
+same human/explicit-agent owner contract as native deliveries. Omission freezes
+human ownership; it cannot later become agent ownership through a refreshed
+snapshot. Agent policy requires the actual contained mandate. The host still
+corroborates the human instruction and actual agent identity. Existing historical
+reports and original native records stay unchanged.
+
+Get exact current context for the named Stories:
+
+```sh
+python3 scripts/aim_observations.py decision-context --repo . --input selection.json
+```
+
+`selection.json` contains `deliveryId` and a nonempty distinct `storyIds` list.
+The response contains the current observation `storeSha256` and selected
+requirements `scopeSha256`. Then register the actual assessment:
+
+```sh
+python3 scripts/aim_observations.py decision --repo . --input owner-decision-request.json --expected-sha256 <storeSha256>
+```
+
+The request has `id` (stable unique decision ID), `deliveryId`, `storyIds`,
+`scopeSha256`, `decision` (`approved` or `changes_requested`), `reason`, current
+assessment `evidence` (`path/sha256` references), and `authority`. Human authority
+has `kind: user`, the captured actual decision's `path/sha256`, and the same
+`scopeSha256`. Agent authority adds actual `id/session`; its separate decision
+artifact must be exact bounded JSON with `ownerDecisionVersion: 1`,
+`deliveryId`, `operation: accept`, `scopeSha256`, `id`, `session`, matching
+`decision`, and `reason`. The accept mandate covers the owner assessment's
+approve/request-changes disposition; it does not grant author/reviewer authority.
+Native delegated decision evidence retains its existing approved-only contract.
+
+The helper verifies selection, owner identity/mandate, scope and proof before one
+atomic journal append. It leaves requirement snapshots, current delivery selection
+and native ledger unchanged. At the next ordinary UI poll, approved named Stories
+become Done; requested changes move only the affected Stories to In progress.
+Unselected Stories retain their own state. Neither role names, technical completion
+nor Auto mode is an owner decision. Partial scope changes require explicit owner
+assessment and a new exact requirement scope; old decisions cannot approve new
+criteria. A decision covering multiple Stories binds the selection together.
+
+Use prerequisite `kind: owner_assessment` for the pending owner test. Its displayed
+resolution follows the recorded decision; ordinary external inputs use `kind:
+input` (default) and are not automatically resolved. Do not manually clear an
+owner-test flag after recording acceptance. A progress-only snapshot refresh
+cannot undo a matching decision. Changed selected requirements require a new
+assessment even if a producer copies an old Done value. A decision on a historical
+delivery never changes which delivery is current.
+
+Keep the request and confirmed receipt. After an uncertain response, retry the
+same decision ID and exact payload with the original context: an existing commit
+is acknowledged without duplicating or reapplying it. Same ID with different
+payload, stale CAS, changed scope, missing delegation or changed proof reject
+without a partial write. Decisions append to the existing local store, bounded
+to 256 records and its size limit. Old snapshots remain intact. Edited/missing
+decision evidence leaves the recorded stage readable with an explicit verification
+warning, not new native authority or assignments. Browser polling stays read only.
+
+Publish current implementation/review progress before requesting the owner test.
+Record the resulting owner assessment through the decision command before any
+separate narrative/graph update; the journal itself is the owner-stage source of
+truth. Do not maintain a second H/Done state that first invalidates the registered
+snapshot. Stale registered sources or a changed native-ledger binding reject new
+decisions; publish the actual changed work with its evidence before assessing it.
+This is ordinary progress publication, not a second card-status operation after
+acceptance. Existing exception registrations without an agent policy remain
+human-owned; historical delegated receipts stay visible, but they do not silently
+retrofit a new delegated runtime policy. Register new delegated work with its
+actual mandate from its first snapshot.
+
+Final `owner_assessment` is a completion decision, not a blocker for Ready.
+Ordinary unresolved required inputs and prerequisite Stories still block starting.
+Native accepted receipts resolve the displayed owner-assessment input while
+preserving frozen prerequisite bytes. After requested changes, publication of
+corrected work in Review/awaiting_owner restores waiting for a new assessment;
+the earlier changes-requested decision stays in history. Approval requires a new
+actual decision. A routine progress refresh cannot undo an approved decision.

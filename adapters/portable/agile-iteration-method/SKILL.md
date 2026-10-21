@@ -200,7 +200,14 @@ Retain shared rules; do not preload future roles, reread an assessment already
 returned or invent expertise when a capability is missing.
 
 Gate A establishes direction/requirements; Gate B approves exact selection/plan;
-Gate E requires actual user or explicitly delegated owner acceptance of proven Stories. Report C (implementation)
+Gate E requires actual user or explicitly delegated owner acceptance of proven Stories.
+Record the actual owner's decision in the canonical runtime before reporting it
+as recorded: native Stories use `aim_stories.py accept` (or supported rework);
+authorized exception observations use `aim_observations.py decision-context`
+then `decision` from `references/user-stories.md`. The decision receipt and board
+projection are one operation; never maintain a second Done/waiting status or
+write only a narrative decision file. A delegated owner counts only within its
+frozen mandate; human reservations and exact scope changes remain binding. Report C (implementation)
 and D (review) without routine stops; D never requests approval. Auto permits
 bounded authorized work, never invented acceptance. Keep the entire increment
 commitment across sessions and verify every selected criterion plus the integrated

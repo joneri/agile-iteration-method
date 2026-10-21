@@ -1,5 +1,41 @@
 # Changelog
 
+## 2026-10-21 - AIM release v4.7.1
+
+Record human and explicitly delegated owner decisions once in the exception
+runtime. An atomic scoped decision journal drives Story status through ordinary
+UI polling; no separate status edit/import follows acceptance or requested changes.
+Preserve owner mandates, selected criteria, idempotent retries and historical
+receipts. Progress refreshes cannot undo matching decisions or accept new scope.
+
+Restore the live User Story board as the AIM UI entry point. Primary navigation
+is Board and Graph. Preserve Backlog and Ready; consolidate technical checkpoints
+under Review with an explicit Waiting for you label. Expand cards for criteria,
+source evidence and retained decisions. Persisted card movements animate without
+repeating on unchanged polling; reduced-motion and keyboard focus are preserved.
+
+Graph now explains Stories and explicit prerequisite Story links, with external
+inputs in the inspector. Add optional structured dependencies and external inputs
+to the requirements contract, including readiness validation and frozen scope
+binding without changing existing scope hashes.
+
+Keep structurally valid Stories readable when evidence is stale; disable native
+delivery actions and retain diagnostics in details. Import authorized exception
+work as attributed, source-bound snapshots without rewriting native gates.
+Explicit current/history scoping keeps earlier attempts accessible without
+crowding the active board or inventing acceptance. Historical imports can retain
+the current selection; previously retired native scopes stay historical when
+another delivery becomes current. Superseded blocked scopes remain labeled,
+with accepted corrections recorded separately against their actual evidence.
+
+ParaClones verifies the consuming-project correction: accepted Mac, vertical,
+game-feel and QoL-correction work appears as Done in History; blocked replaced
+scope, rejected playtests and pending assessments retain their actual decisions.
+The original native ledger and pinned method package remain unchanged.
+AIWebSite is the reference: three Ready Stories and five Backlog Stories.
+Accepted Done cards remain beside current work on the main board. History isolates
+superseded, rejected and earlier unfinished attempts without changing their records.
+
 ## 2026-10-19 - AIM release v4.7.0
 
 Start project preparation from the supplied intent in the same agent-led flow.

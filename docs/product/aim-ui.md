@@ -6,18 +6,16 @@
 > bounded write endpoint can only dispatch an exact reviewed action to the
 > already-bound authoritative Codex task.
 
-AIM UI is a local browser control room for requirements and delivery evidence.
-It opens on **Increment**, showing the coherent delivery selected from
-`.aim/product-backlog.json`: goal, selected Stories, checkpoint, criterion
-evidence and user acceptance. The **User Stories** tab retains the requirements
-board, with Epic context and product priority on each card.
+AIM UI is a live Story board. It opens on **Board**; the only other primary
+view is **Graph**, which explains the same Stories and their recorded dependencies.
+Agent work moves cards through the board when the persisted Story state changes.
+History is an explicit Board/Graph toggle, rather than another workflow tab.
 
-All current-product views share the validated product ledger: **Increment**, **Graph**,
-**User Stories**, **Discuss**, **Plan increment**, **Delivery data**, **Roles**
-and **Accepted increments**. An explicit workspace selector opens retained **legacy workspaces** and
-their original controls. Existing records are never automatically migrated,
-relabelled or counted as Story acceptance. A broken product ledger stays visibly
-unavailable instead of silently switching to old work.
+Increment commitments and their gates remain part of AIM's delivery model.
+They are supporting evidence in Story details, not the main UI navigation.
+The former Increment, Discuss, Plan increment, Delivery data, Roles and Accepted
+increments panels are no longer primary views. Legacy workspace controls are
+available under Workspace details. Nothing is deleted by hiding a view.
 
 ## User Stories board
 
@@ -25,13 +23,15 @@ For a runnable browser check of planning and stale-selection behavior, use the
 [project verification recipe](aim-ui-verification.md). It creates an isolated
 synthetic workspace and preserves raw proof after cleanup.
 
-The board columns are **Backlog**, **Ready**, **In progress**, **Review**,
-**Validation**, **Acceptance** and **Done**. Draft Stories appear in Backlog;
-all other movement reflects persisted Story lifecycle transitions. Polling,
+The board columns are **Backlog**, **Ready**, **In progress**, **Review** and **Done**. Draft Stories appear in Backlog;
+all other movement reflects persisted Story lifecycle transitions. Native validation
+and acceptance checkpoints share Review; acceptance displays **Waiting for you**.
+Only the native accepted transition reaches Done. Backlog and Ready remain visible
+even when empty. Satisfied prerequisites never automatically move draft work to Ready. Polling,
 filtering and opening a card cannot approve work or mutate the backlog.
 
-Cards show Story ID, priority, title, Epic, persona, need and benefit. Expand a
-card to inspect acceptance criterion IDs and text; delivery references and
+Cards show title, Epic and progress. Expand Story details to inspect the persona,
+need, benefit, acceptance criterion IDs and text; delivery references and
 contained evidence links preserve traceability. Filter by Epic or keep All Epics
 to compare needs across outcomes. Stories are ordered by priority within each
 column. A delivery selection can contain Stories from different Epics.
@@ -39,7 +39,7 @@ column. A delivery selection can contain Stories from different Epics.
 **Copy start intent** prepares an intent-led `/aim start` prompt. Contextual
 Story actions prepare a discussion about refinement or planning; accepted Stories
 lead to a follow-up user need rather than rewriting their accepted requirements.
-Delivery references open the corresponding selection and evidence. Copying a
+Delivery references and evidence remain in Story details. Copying a
 prompt never changes runtime state. Actual changes go through the main AIM thread
 and the [Story lifecycle](../workflow/user-stories.md).
 
@@ -49,74 +49,45 @@ ledger shows a diagnostic instead of guessed or stale Story cards. Refresh
 preserves card identity, expanded criteria and keyboard focus. Actual phase
 changes can animate; reduced-motion preferences are respected.
 
-## Follow the current increment
+## Follow Story dependencies in Graph
 
-Increment shows the selected Stories, their Epic context, delivery goal,
-checkpoint, blocker and supporting evidence. Plan approval and final acceptance
-are shown separately. Criteria with recorded evidence are not a completion or
-pass rate. Stories keep their recorded scope order; TDO chooses execution order
-from dependencies rather than simply following PO-owned product priority.
-A delivery can cross Epic boundaries;
-its Story selection and approval scope remain explicit. The contextual handoff
-names the product ledger, observed digest and delivery identity. The receiving
-AIM task reloads and checks the current scope before making changes. Plan approval
-and final acceptance remain decisions of the actual designated owner under
-explicit human authority; accepted history identifies the actor who decided.
-Current Story controls use reviewed
-chat handoffs; direct legacy Start/Approve dispatch does not apply to them.
+Graph uses the same current/history scope as Board and shows all Epics, including
+when the Board was filtered to one Epic. A node is a User Story; a line connects
+an explicitly recorded prerequisite Story to the Story that depends on it.
+Select a node for its user need, external inputs and expandable criteria/evidence.
+Shared authors or sequential review activities never create Story dependency lines.
+Where no structured links exist, the UI states that instead of inventing edges.
 
-Accepted delivery history preserves the selection and its acceptance evidence.
-Done Stories and accepted deliveries do not imply that their Epics are closed.
+Optional `dependsOn` and `prerequisites` are described in the
+[Story contract](../workflow/user-stories.md#story-dependencies-in-the-live-board).
+A later nonblocking asset choice is labelled separately from a start blocker.
+Graph explains state; it cannot approve readiness, implementation or acceptance.
+The native activity DAG and receipts remain supporting execution data governed by
+[AIM Graph's execution contract](../workflow/adaptive-execution.md#aim-graph).
+They are not the primary UI graph.
 
-## Follow dependencies in Graph
+## Decisions move cards automatically
 
-Open **Graph** to see the current increment's outcome and the path through its
-activities. Select an activity to inspect its user need, prerequisites, file
-responsibility, skills to resolve and existing raw proof. Text labels identify
-ready, waiting, recorded running, failed and stale work; lines show dependencies.
-Keyboard selection, the open inspector and focus survive normal polling. On a
-phone the same work appears as a vertical sequence with explicit prerequisites.
+The native acceptance operation updates native Stories in the same commit.
+Exception deliveries use the trusted observation decision operation, with actual
+human or frozen delegated-owner authority and current named requirements. The
+board polls that journal and moves affected cards; no separate Done import is
+required. Requested changes return affected cards to In progress while other
+Stories retain their state. A historical decision never steals the current view.
+See the [owner decision contract](../workflow/user-stories.md#automatic-owner-decisions-in-exception-observations).
 
-**Copy next assignment** includes the observed ledger and scope, bounded work
-and inputs. A stale or failed activity can offer **Copy corrective assignment**
-when prerequisites and capacity permit a new attempt. Review and send it through
-the existing AIM session. Copying, selecting or refreshing never starts agents
-or changes the ledger. Recorded session IDs describe receipts, not live presence.
+## Current work and retained history
 
-Editing a bound source or proof changes the affected activity to **Needs new
-evidence** and prevents dependants from being offered as ready. The graph is
-derived from the existing ledger and files; it creates no separate status file.
-Deliveries without an execution plan show their recorded native checkpoints.
-An invalid ledger remains unavailable. See [AIM Graph's execution contract](../workflow/adaptive-execution.md#aim-graph).
-
-Verify this route with `python3 scripts/verify_aim_graph.py`. It launches an
-identified native instance on a disposable synthetic delivery, drives the real
-Graph controls, records progress, changes an input and observes stale proof.
-Raw observations, desktop/mobile screenshots and a browser trace are preserved.
-
-## Plan across Epics
-
-Plan increment groups the current Stories by their Epic outcomes. Select ready Stories
-across those groups to prepare a delivery-planning proposal. The proposal carries
-the exact selected identities and observed ledger digest. It is not approval of a
-plan. An active delivery prevents another selection; a changed ledger clears
-obsolete selection so it cannot be reused silently. Legacy Portfolio Auto and its
-capacity policy appear only in the legacy workspace scope.
-
-## Understand outcomes and responsibility
-
-Delivery data counts the current ledger's Stories, accepted deliveries and open/closed
-Epics. Its acceptance timeline links to recorded evidence. Throughput includes
-only valid explicit acceptance timestamps; unavailable or future timestamps are
-excluded and explained. Current delivery records do not store approval timestamps,
-so AIM UI does not invent approval-to-acceptance duration. Development effort,
-agent usage and elapsed delivery time are different measurements.
-
-Roles describes each AIM role and the responsibility associated with
-the current delivery checkpoint. A blocked delivery retains its underlying phase.
-This is not presence detection: live helper activity is shown as unrecorded when
-there is no supported activity record. Legacy workspace activity remains available
-in its original scope.
+The main board combines actual current work with accepted **Done** cards across
+Epics. Completed deliveries stay in Done when another delivery becomes current.
+Use **History** for replaced, rejected and earlier unfinished attempts; their
+recorded In progress/Review stages do not describe work happening now.
+Recorded native stages and source artifacts remain intact, including rejected
+owner tests. Explicit exception observations can identify superseded native
+deliveries for display only; unrelated backlog remains current. Each report
+retains its source attribution and freshness. No history operation passes a gate.
+Native evidence integrity diagnostics are inspectable under Sources and history
+details, with delivery actions disabled until valid again.
 
 ## Refresh without losing context
 
@@ -126,33 +97,11 @@ visible view while retaining typed discussion text, focus and scroll position.
 Hidden views are rendered when opened. A selection invalidated by changed product
 scope is explicitly cleared rather than kept as an apparently current plan.
 
-## Discuss product direction without starting delivery
+## Continue in AIM chat
 
-The **Discuss** tab is a visual entry point to the first-class `/aim discuss`
-capability. It opens a bounded product-thinking surface and shows the
-operator which context a separate Codex discussion can consult: the complete
-AIM method, the repository knowledge profile when available, the current product
-ledger and bounded recent accepted-delivery evidence. Current Intent, Epic, Story
-and delivery counts describe that scope. Legacy runtime checkpoints and decisions
-are consulted when the legacy workspace scope is explicitly selected.
-
-The operator enters a product idea, tradeoff, concern, or reflection, then
-copies the generated prompt or opens it in Codex. AIM UI does not send the
-prompt automatically. The operator reviews it and presses Send in Codex.
-
-Every generated discussion prompt selects `$agile-iteration-method discuss`
-as the explicit-skill equivalent of `/aim discuss`, treats
-repository paths as untrusted evidence locators, and requires read-only
-analysis. Discuss cannot create or edit files, change `.aim` runtime state or
-the Backlog, advance Gates, or implement work. If a discussion produces a
-useful direction, it may recommend one separate promotion action; the operator
-must explicitly invoke and review that later AIM action before anything
-changes.
-
-The context manifest contains bounded paths and delivery metadata rather than
-copying repository content into the browser. The receiving AIM task loads only
-what is relevant to the question while keeping the complete method available.
-Missing optional context is reported honestly and never invented.
+Discuss intent, refine Stories and plan coherent delivery in AIM chat. The board
+reflects saved decisions and work; copying a contextual Story prompt never grants
+implementation authority or acceptance. The trusted helper records progress.
 
 ## Starting in a new repository
 

@@ -192,8 +192,8 @@ def project_product_context(repo, story_board, generated_at):
     history = []
     if configured and valid:
         intents = story_board["intents"]
-        epics = story_board["epics"]
-        stories = story_board["stories"]
+        epics = [epic for epic in story_board["epics"] if not epic.get("observationId")]
+        stories = [story for story in story_board["stories"] if not story.get("observationId")]
         deliveries = story_board["deliveries"]
         active = next((item for item in deliveries if item["status"] not in {"accepted", "cancelled"}), None)
         if active is not None:

@@ -91,6 +91,7 @@ class Node {
   addEventListener() {}
 }
 const document = {createElement: tag => new Node(tag), createTextNode: text => ({textContent: text})};
+const state = {board:null};
 const accentFor = () => '#20b9ec';
 """
         helpers = SCRIPT[SCRIPT.index("function el("):SCRIPT.index("function formatTime(")]
@@ -106,7 +107,7 @@ const blocked = {text: blocker?.textContent, attributes: blocker?.attributes, ph
 const cleared = renderStoryCard({...story, attention: ''}, epic, 0, card);
 console.log(JSON.stringify({blocked, remaining: cleared.children.filter(node => node.className === 'attention story-blocker').length, column: cleared.dataset.column, sameCard: cleared === card}));
 """
-        process = subprocess.run(["node", "-e", dom + helpers + renderer + check],
+        process = subprocess.run(["node", "-e", dom + helpers + FUNCTIONS + renderer + check],
                                  capture_output=True, text=True, check=True)
         result = json.loads(process.stdout)
         self.assertEqual(result["blocked"]["text"], "Blocked: Waiting for <access> & approval")

@@ -34,6 +34,7 @@ function graphNodeStatus(node) {
 }
 
 function graphStatusLabel(node) {
+  if (node.kind === "observation") return {completed:"Reported complete", running:"Reported in progress", pending:"Waiting", blocked:"Reported blocked", failed:"Reported failure", stale:"Source changed"}[node.status] || "Observed";
   if (node.kind === "lifecycle") return { running: "Current checkpoint", completed: "Recorded checkpoint" }[node.status] || GRAPH_STATES[graphNodeStatus(node)];
   if (node.status === "stale" && !node.attempt) return "Waiting for updated input";
   return GRAPH_STATES[graphNodeStatus(node)];
@@ -70,7 +71,7 @@ function renderGraphInspector(graph, node, container) {
     container.append(el("p", "graph-reason", "Prerequisites are ready. Current worker capacity or file ownership prevents starting this activity."));
   }
   if (node.evidence?.length) container.append(productEvidenceLinks(
-    node.evidence.map((ref) => ({ ...ref, label: "Activity proof" })), graph.deliveryId));
+    node.evidence.map((ref) => ({ ...ref, label: node.kind === "observation" ? "Attributed source" : "Activity proof" })), graph.deliveryId));
   if (graphAssignmentPrompt(graph, node)) {
     const prompt = el("details", "product-prompt");
     prompt.dataset.productDetail = `graph-${node.id}`;
@@ -89,6 +90,12 @@ function renderGraphInspector(graph, node, container) {
   }
 }
 
+function selectedExecutionGraph(board) {
+  const source = board.storyBoard;
+  const graphs = [source?.executionGraph, ...(source?.observationGraphs || []), source?.nativeExecutionGraph].filter(Boolean);
+  return graphs.find((graph) => graph.deliveryId === state.graphDeliverySelection) || source?.executionGraph;
+}
+
 function drawGraphEdges() {
   const canvas = document.getElementById("graph-canvas");
   const svg = document.getElementById("graph-edges");
@@ -100,7 +107,7 @@ function drawGraphEdges() {
   svg.setAttribute("viewBox", `0 0 ${canvas.clientWidth} ${canvas.clientHeight}`);
   svg.setAttribute("width", canvas.clientWidth);
   svg.setAttribute("height", canvas.clientHeight);
-  const graph = state.board?.storyBoard?.executionGraph;
+  const graph = canvas.aimStoryGraph || selectedExecutionGraph(state.board);
   const nodes = Array.from(canvas.querySelectorAll("[data-graph-node]"));
   (graph?.edges || []).forEach((edge) => {
     const from = nodes.find((item) => item.dataset.graphNode === edge.from);
@@ -117,8 +124,81 @@ function drawGraphEdges() {
   });
 }
 
-function renderCurrentGraph(board, model, content) {
-  const graph = board.storyBoard?.executionGraph;
+function renderCurrentGraph(board, _model, content) {
+  const model = storyViewModel(board, "all", state.storyHistory);
+  // Keep active work discoverable while retaining accepted prerequisite nodes.
+  model.stories.sort((a, b) => Number(a.column === "done") - Number(b.column === "done"));
+  const all = board.storyBoard?.stories || [];
+  const toolbar = el("div", "story-graph-toolbar");
+  if (model.historyCount) {
+    const history = el("button", "story-action", state.storyHistory ? "← Current work" : `History · ${model.historyCount} Stories`);
+    history.id = "graph-history";
+    history.type = "button";
+    history.addEventListener("click", () => {state.storyHistory = !state.storyHistory;state.storyFilter="all";render(state.board);});
+    toolbar.append(history);
+  }
+  toolbar.append(el("p", "", state.storyHistory ? "Previous work · original decisions preserved" : `${model.stories.length} Stories · select a card to understand its prerequisites`));
+  content.append(toolbar);
+  if (!model.available || !model.stories.length) {content.append(el("p", "product-empty", "No Stories in this view yet."));return;}
+  const graph = {edges: model.stories.flatMap(story => (story.dependsOn || []).map(id => ({from:id,to:story.id})))};
+  const layout = el("div", "graph-layout");
+  const map = el("section", "graph-map");
+  map.setAttribute("aria-label", "Story dependency graph");
+  map.append(el("p", "graph-map-hint", graph.edges.length ? "A line connects a prerequisite Story to the Story that needs it." : "No Story-to-Story dependencies recorded. External inputs and acceptance criteria appear in Story details."));
+  const scroll = el("div", "graph-scroll");scroll.id="graph-scroll";scroll.tabIndex=0;
+  const canvas = el("div", "graph-canvas");canvas.id="graph-canvas";canvas.aimStoryGraph=graph;
+  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.id="graph-edges";svg.setAttribute("aria-hidden","true");canvas.append(svg);
+  if (!model.stories.some(story => story.id === state.graphSelection)) state.graphSelection=model.stories[0].id;
+  const layers=new Map();
+  function level(story, seen=new Set()) {
+    if (seen.has(story.id)) return 0;
+    return Math.min(31,Math.max(0,...(story.dependsOn || []).map(id => {
+      const dependency=model.stories.find(item=>item.id===id);
+      return dependency ? 1+level(dependency,new Set([...seen,story.id])) : 0;
+    })));
+  }
+  model.stories.forEach(story=>{const depth=level(story);if(!layers.has(depth))layers.set(depth,[]);layers.get(depth).push(story);});
+  [...layers].sort((a,b)=>a[0]-b[0]).forEach(([depth, stories])=>{
+    const column=el("div","graph-layer");column.append(el("span","graph-layer-label",depth ? "After prerequisite Stories" : "Stories"));
+    stories.forEach(story=>{
+      const button=el("button","graph-node");button.type="button";button.id=`graph-story-${story.id}`;button.dataset.graphNode=story.id;button.dataset.graphStory=story.id;
+      button.dataset.status=({ready:"ready",in_progress:"running",done:"completed",review:"pending"})[story.column]||"pending";
+      button.setAttribute("aria-pressed",String(story.id===state.graphSelection));
+      button.append(el("span","graph-node-kind",model.epics.find(epic=>epic.id===story.epicId)?.title||story.epicId),el("strong","",story.title),el("span","graph-node-status",storyStageLabel(story)));
+      button.addEventListener("click",()=>{state.graphSelection=story.id;render(state.board,{preserveViewport:true});});column.append(button);
+    });canvas.append(column);
+  });
+  scroll.append(canvas);map.append(scroll);
+  const inspector=el("aside","graph-inspector");inspector.id="graph-inspector";inspector.setAttribute("aria-label","Selected Story");
+  const story=model.stories.find(item=>item.id===state.graphSelection);
+  inspector.append(el("p","graph-node-kind",storyStageLabel(story)),el("h2","",story.title),el("p","",`As ${story.persona}, I need ${story.need}, so that ${story.benefit}.`));
+  const inputs=storyPrerequisiteText(story,all);
+  inspector.append(el("h3","","Prerequisites"));
+  if (!inputs.length) inspector.append(el("p","",story.column==="ready" ? "Ready to start. No blocking prerequisites recorded." : "No structured prerequisites recorded. Check the acceptance criteria before changing readiness."));
+  const list=el("ul");inputs.forEach(text=>list.append(el("li","",text)));inspector.append(list);
+  const detail=renderStoryCard(story,model.epics.find(epic=>epic.id===story.epicId)||{id:story.epicId,title:story.epicId},0,null);
+  detail.querySelector("details").open=false;
+  inspector.append(detail);layout.append(inspector,map);content.append(layout);
+  requestAnimationFrame(drawGraphEdges);
+}
+
+function renderActivityGraph(board, model, content) {
+  const graph = selectedExecutionGraph(board);
+  const graphs = [...new Map([board.storyBoard?.executionGraph,
+    ...(board.storyBoard?.observationGraphs || []), board.storyBoard?.nativeExecutionGraph]
+    .filter(Boolean).map((item) => [item.deliveryId, item])).values()];
+  if (graphs.length > 1) {
+    const label = el("label", "", "Inspect delivery graph");
+    label.htmlFor = "graph-delivery-select";
+    const select = el("select", ""); select.id = "graph-delivery-select";
+    graphs.forEach((item) => {
+      const option = el("option", "", `${item.deliveryId} · ${item.source === "observation" ? "observed" : "native history"}`);
+      option.value = item.deliveryId; select.append(option);
+    });
+    select.value = graph.deliveryId;
+    select.addEventListener("change", () => { state.graphDeliverySelection = select.value; state.graphSelection = null; render(state.board); });
+    content.append(label, select);
+  }
   if (!graph?.available || !Array.isArray(graph.activities)) {
     content.append(el("p", "product-empty", graph?.summary ? graphSummaryText(graph) : "Plan a delivery in AIM chat to see its outcome, dependencies and evidence here."));
     return;
@@ -195,7 +275,9 @@ function renderCurrentGraph(board, model, content) {
   inspector.setAttribute("aria-label", "Selected activity");
   renderGraphInspector(graph, graph.activities.find((item) => item.id === state.graphSelection), inspector);
   layout.append(map, inspector);
-  content.append(layout, el("p", "product-boundary", "Activity receipts describe recorded work. Review, validation and your acceptance remain separate delivery decisions."));
+  content.append(layout, el("p", "product-boundary", graph.source === "observation"
+    ? "Observed statuses are attributed reports. Native delivery history stays unchanged; review, validation and owner acceptance remain separate."
+    : "Activity receipts describe recorded work. Review, validation and your acceptance remain separate delivery decisions."));
   requestAnimationFrame(drawGraphEdges);
 }
 

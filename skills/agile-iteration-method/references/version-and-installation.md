@@ -7,7 +7,7 @@ Source: docs/workflow/version-and-installation.md
 
 ## Resolved package metadata
 
-- AIM product release: `4.7.0`
+- AIM product release: `4.7.1`
 - Runtime contract: `2.0`
 - Runtime-state schema: `1.0`
 - Installer manifest: `1.0`
@@ -81,7 +81,7 @@ The package preserves:
 - Gates A, B, and E plus reported Gates C and D
 - Ship by default, or explicit Loop with recurring owner feedback
 - human or explicitly delegated agent delivery ownership; separate human Epic closure
-- Graph engineering and the local Increment, User Stories and Graph views
+- Graph engineering and the local Story Board and dependency Graph views
 - Strict and Auto execution modes, independent of delivery style
 - Standard, Cost Control, and Deep runtime-depth profiles
 - repository calibration and durable repo-awareness boundaries

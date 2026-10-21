@@ -117,9 +117,36 @@ def _empty():
             "intents": [], "epics": [], "stories": [], "deliveries": []}
 
 
+def validate_story_dependencies(stories, observation=False):
+    """Explicit Story links and external inputs; neither creates a readiness decision."""
+    by_id = {s['id']: s for s in stories}
+    visited = set()
+    def visit(sid, active):
+        require(sid in by_id and sid not in active, "Unknown or cyclic Story dependency.")
+        if sid in visited: return
+        story = by_id[sid]
+        deps = story.get('dependsOn', [])
+        require(isinstance(deps, list) and len(deps) <= 64 and all(isinstance(i, str) for i in deps)
+                and len(set(deps)) == len(deps), "Invalid Story dependency list.")
+        for dep in deps: visit(dep, active | {sid})
+        inputs = story.get('prerequisites', [])
+        require(isinstance(inputs, list) and len(inputs) <= 32, "Invalid external prerequisites.")
+        for item in inputs:
+            fields(item, ('id', 'text', 'resolved'), ('blocking', 'kind'))
+            require(item.get('kind', 'input') in {'input', 'owner_assessment'}, 'Invalid prerequisite kind.')
+            text(item['id'], 'Prerequisite identity', 100); text(item['text'], 'Prerequisite', 4000)
+            require(type(item['resolved']) is bool and type(item.get('blocking', True)) is bool, "Invalid prerequisite state.")
+        require(len({i['id'] for i in inputs}) == len(inputs), "Duplicate prerequisite.")
+        if story.get('status', story.get('boardStatus')) == 'ready':
+            require(all(by_id[d].get('status', by_id[d].get('boardStatus')) == 'done' for d in deps)
+                    and all(i['resolved'] or i.get('kind') == 'owner_assessment' or not i.get('blocking', True) for i in inputs), "Ready Story has unresolved prerequisites.")
+        visited.add(sid)
+    for sid in by_id: visit(sid, set())
+
+
 def _story_snapshot(story):
     return {key: copy.deepcopy(story[key]) for key in
-            ("id", "epicId", "title", "persona", "need", "benefit", "acceptanceCriteria", "revision")}
+            ("id", "epicId", "title", "persona", "need", "benefit", "acceptanceCriteria", "revision", "dependsOn", "prerequisites") if key in story}
 
 
 def _epic_snapshot(epic):
@@ -530,6 +557,7 @@ def validate_document(document):
         require(epic["intentId"] in intents, "Epic references an unknown Intent.")
         criteria(epic["acceptanceCriteria"])
         criteria(epic["originalAcceptanceCriteria"])
+    validate_story_dependencies(list(stories.values()))
     for story in stories.values():
         require(story["priority"] >= 1, "Story priority must be positive.")
         require(story["epicId"] in epics, "Story references an unknown Epic.")
@@ -925,7 +953,7 @@ def _import(document, request):
     definitions = {
         "intents": (("id", "statement"), ()),
         "epics": (("id", "intentId", "title", "outcome", "acceptanceCriteria"), ("outcomeClass", "nonGoals")),
-        "stories": (("id", "epicId", "title", "persona", "need", "benefit", "acceptanceCriteria", "priority", "status"), ()),
+        "stories": (("id", "epicId", "title", "persona", "need", "benefit", "acceptanceCriteria", "priority", "status"), ("dependsOn", "prerequisites")),
     }
     for collection in definitions:
         incoming = request.get(collection, [])
@@ -935,6 +963,8 @@ def _import(document, request):
             fields(raw, *definitions[collection])
             seen.append(raw["id"])
             current = next((item for item in document[collection] if item["id"] == raw["id"]), None)
+            if collection == "stories" and current:
+                raw = {**{key: copy.deepcopy(current[key]) for key in ("dependsOn", "prerequisites") if key in current}, **raw}
             if collection == "epics":
                 raw = {**raw,
                        "outcomeClass": raw.get("outcomeClass", current["outcomeClass"] if current else "Product"),
@@ -1285,6 +1315,7 @@ def compact_result(result, *, receipt=False, delivery_id=None):
 def project_story_board(repo):
     result = {"version": 1, "configured": (Path(repo) / FILE).exists(), "valid": True,
               "columns": [{"id": key, "label": label} for key, label in COLUMNS],
+              "structuralValid": False,
               "intents": [], "epics": [], "stories": [], "deliveries": [], "issues": []}
     try:
         cache = _EvidenceCache([])
@@ -1298,6 +1329,7 @@ def project_story_board(repo):
         # dependency that needs correction. Structural corruption stays closed.
         try:
             document, store_hash = load(repo, check_evidence=False)
+            result.update(structuralValid=True, storeSha256=store_hash)
             result["executionGraph"] = project_graph(repo, document, store_hash)
             result["executionGraph"].update(readyIds=[], retryIds=[], recommendedIds=[], nativeEvidenceValid=False)
             for activity in result["executionGraph"]["activities"]:
@@ -1307,11 +1339,17 @@ def project_story_board(repo):
                 state: sum(a["status"] == state for a in result["executionGraph"]["activities"])
                 for state in result["executionGraph"]["summary"]}
             result["executionGraph"]["blockers"].append({"status": "blocked", "reason": str(exc)})
+            return _project_readable_stories(repo, result, document)
         except (OSError, ValueError, KeyError, TypeError):
-            pass
-        return result
+            return _project_observations(repo, result)
+    result["structuralValid"] = True
     result.update(intents=document["intents"], epics=document["epics"], deliveries=document["deliveries"], storeSha256=store_hash)
     result["executionGraph"] = graph
+    return _project_readable_stories(repo, result, document)
+
+
+def _project_readable_stories(repo, result, document):
+    result.update(intents=document["intents"], epics=document["epics"], deliveries=document["deliveries"])
     for story in sorted(document["stories"], key=lambda item: (item["priority"], item["id"])):
         related = [delivery for delivery in document["deliveries"] if delivery["status"] != "cancelled"
                    and any(item["id"] == story["id"] for item in delivery["stories"])]
@@ -1322,9 +1360,48 @@ def project_story_board(repo):
                     evidence.extend({"label": record["criterionId"], "path": ref["path"],
                                      "url": "/api/evidence?path=" + quote(ref["path"], safe="")}
                                     for ref in record["evidence"])
-        result["stories"].append({**story, "column": "backlog" if story["status"] == "draft" else story["status"],
+        # The accepted native receipt resolves final owner assessment in the read
+        # model without rewriting frozen prerequisite bytes or treating input as received.
+        projected = copy.deepcopy(story)
+        if story['status'] == 'done':
+            for item in projected.get('prerequisites', []):
+                if item.get('kind') == 'owner_assessment': item['resolved'] = True
+        result["stories"].append({**projected, "column": "backlog" if story["status"] == "draft" else story["status"],
+                                  "readOnly": not result["valid"],
                                   "deliveryIds": [item["id"] for item in related], "evidence": evidence,
                                   "attention": next((item["reason"] for item in related if item["status"] == "blocked"), None)})
+    return _project_observations(repo, result)
+
+
+def _project_observations(repo, result):
+    from aim_observations import project
+    observed = project(repo, result)
+    result["observations"] = observed
+    if observed["entries"]:
+        current = next(entry for entry in observed["entries"] if entry["id"] == observed["currentId"])
+        # An explicitly retired native scope stays historical when another
+        # delivery becomes current. Changing focus must not resurrect old work.
+        replaces = {delivery_id for entry in observed['entries']
+                    for delivery_id in entry.get('replacesDeliveryIds', [])}
+        for story in result['stories']:
+            if story['status'] != 'done' and replaces.intersection(story.get('deliveryIds', [])):
+                story['historical'] = True
+                story['historyReason'] = 'Previous delivery record; retained with its original status and evidence.'
+                if story.get('attention'):
+                    story['historyReason'] = ('Superseded historical scope; its original blocked delivery and '
+                                              'unaccepted requirements are retained. Any accepted correction '
+                                              'is recorded separately.')
+                    story['historicalBlocked'] = True
+        result["nativeExecutionGraph"] = result.get("executionGraph")
+        result["observationGraphs"] = [entry["graph"] for entry in observed["entries"]]
+        result["executionGraph"] = next(entry["graph"] for entry in observed["entries"]
+                                        if entry["id"] == observed["currentId"])
+        for entry in observed["entries"]:
+            result["epics"].append(entry["epic"])
+            for story in entry['stories']:
+                story['historical'] = entry['id'] != observed['currentId'] and story['column'] != 'done'
+                if story['historical']: story['historyReason'] = 'Previous work; original report and decisions retained.'
+            result["stories"].extend(entry["stories"])
     return result
 
 

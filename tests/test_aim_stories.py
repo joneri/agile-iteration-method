@@ -139,6 +139,45 @@ class StoryDeliveryTests(unittest.TestCase):
             self.mutate(command, request)
         self.assertEqual(before, (self.repo / FILE).read_bytes())
 
+    def test_final_owner_assessment_does_not_block_ready_and_native_acceptance_resolves_it(self):
+        story = copy.deepcopy(self.request['stories'][0])
+        story['prerequisites'] = [dict(id='OWNER',text='Owner assesses delivered recovery',resolved=False,kind='owner_assessment'),
+                                  dict(id='LATER',text='Optional later wording',resolved=False,blocking=False)]
+        self.mutate('refine',dict(stories=[story]))
+        self.assertEqual(self.document['stories'][0]['status'],'ready')
+        self.accept()
+        stored=copy.deepcopy(self.document['stories'][0]['prerequisites'])
+        projected=next(s for s in project_story_board(self.repo)['stories'] if s['id']==story['id'])
+        self.assertTrue(projected['prerequisites'][0]['resolved'])
+        self.assertFalse(projected['prerequisites'][1]['resolved'])
+        self.assertFalse(stored[0]['resolved'])
+        self.assertEqual(self.document['stories'][0]['prerequisites'],stored)
+
+    def test_explicit_prerequisites_prevent_false_ready_and_preserve_draft_decision(self):
+        story = copy.deepcopy(self.request['stories'][2])
+        story['dependsOn'] = ['US-BUYER']
+        story['prerequisites'] = [dict(id='COPY', text='Owner supplies wording', resolved=False)]
+        self.mutate('refine', dict(stories=[story]))
+        self.unchanged_failure('refine', dict(stories=[{**story, 'status':'ready'}]), 'unresolved prerequisites')
+        self.accept()
+        story['prerequisites'][0]['resolved'] = True
+        self.mutate('refine', dict(stories=[story]))
+        self.assertEqual(self.document['stories'][2]['status'], 'draft')
+        self.mutate('refine', dict(stories=[{**story,'status':'ready'}]))
+        # Omission in an unrelated refinement cannot silently erase prerequisites.
+        omitted = {k:v for k,v in story.items() if k not in {'dependsOn','prerequisites'}}
+        self.mutate('refine', dict(stories=[{**omitted,'status':'ready','title':'Clearer wording'}]))
+        self.assertEqual(self.document['stories'][2]['dependsOn'], ['US-BUYER'])
+        self.assertTrue(self.document['stories'][2]['prerequisites'][0]['resolved'])
+
+    def test_story_dependency_cycles_unknowns_and_external_blocking_are_checked(self):
+        story = copy.deepcopy(self.request['stories'][2])
+        for deps in [['US-MISSING'], ['US-LATER'], ['US-BUYER','US-BUYER']]:
+            self.unchanged_failure('refine', dict(stories=[{**story,'dependsOn':deps}]), 'dependency|Dependency')
+        story['prerequisites'] = [dict(id='ASSET',text='Final image approval comes later',resolved=False,blocking=False)]
+        self.mutate('refine', dict(stories=[{**story,'status':'ready'}]))
+        self.assertEqual(self.document['stories'][2]['status'],'ready')
+
     def test_complete_mixed_epic_loop_and_independent_epic_closure(self):
         original_state = b'{"epicId":"LEGACY","unknown":"keep exactly"}\n'
         (self.repo / ".aim/state.json").write_bytes(original_state)
@@ -203,7 +242,9 @@ class StoryDeliveryTests(unittest.TestCase):
         self.unchanged_failure("accept", {"deliveryId": "DI-1", "authority": self.authority(scope)}, "Evidence changed")
         board = project_story_board(self.repo)
         self.assertFalse(board["valid"])
-        self.assertEqual(board["stories"], [])
+        self.assertTrue(board["structuralValid"])
+        self.assertEqual(len(board["stories"]), 3)
+        self.assertTrue(all(story["readOnly"] for story in board["stories"]))
         self.mutate("rework", {"deliveryId": "DI-1", "reason": "Validation regression"})
         delivery = self.document["deliveries"][0]
         self.assertEqual(delivery["status"], "in_progress")

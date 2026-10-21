@@ -59,13 +59,14 @@ Source: aim-ui/index.html
     </section>
 
     <section id="control-room" hidden>
-      <div class="workspace-switch" aria-label="Choose AIM workspace">
+      <details class="workspace-advanced"><summary>Workspace details</summary><div class="workspace-switch" aria-label="Choose AIM workspace">
         <div><p class="eyebrow">Workspace</p><strong id="workspace-description">Current product</strong></div>
         <div class="workspace-options">
           <button type="button" data-workspace="product" aria-pressed="true">Current product</button>
           <button type="button" data-workspace="legacy" aria-pressed="false">Legacy workspaces</button>
         </div>
       </div>
+      </details>
       <aside id="legacy-cleanup" class="legacy-cleanup" aria-labelledby="legacy-cleanup-title" hidden>
         <div><strong id="legacy-cleanup-title">Remove older workspace data?</strong>
           <p>Ask your AI agent to review older workspaces for removal while preserving current User Stories and their evidence.</p></div>
@@ -76,14 +77,14 @@ Source: aim-ui/index.html
         <p id="legacy-cleanup-feedback" role="status" aria-live="polite"></p>
       </aside>
       <nav class="section-tabs" aria-label="AIM UI views">
-        <button class="section-tab" type="button" data-view="stories" aria-pressed="false">User Stories</button>
-        <button class="section-tab" type="button" data-view="board" aria-pressed="true">Increment</button>
+        <button class="section-tab" type="button" data-view="stories" aria-pressed="true">Board</button>
+        <button class="section-tab" type="button" data-view="board" aria-pressed="false" hidden>Increment</button>
         <button class="section-tab" type="button" data-view="graph" aria-pressed="false">Graph</button>
-        <button class="section-tab" type="button" data-view="discuss" aria-pressed="false">Discuss</button>
-        <button class="section-tab" type="button" data-view="portfolio" aria-pressed="false">Plan increment</button>
-        <button class="section-tab" type="button" data-view="data" aria-pressed="false">Delivery data</button>
-        <button class="section-tab" type="button" data-view="people" aria-pressed="false">Roles</button>
-        <button class="section-tab" type="button" data-view="closed" aria-pressed="false"><span id="history-tab-label">Accepted increments</span> <span id="closed-count">0</span></button>
+        <button class="section-tab" type="button" data-view="discuss" aria-pressed="false" hidden>Discuss</button>
+        <button class="section-tab" type="button" data-view="portfolio" aria-pressed="false" hidden>Plan increment</button>
+        <button class="section-tab" type="button" data-view="data" aria-pressed="false" hidden>Delivery data</button>
+        <button class="section-tab" type="button" data-view="people" aria-pressed="false" hidden>Roles</button>
+        <button class="section-tab" type="button" data-view="closed" aria-pressed="false" hidden><span id="history-tab-label">Accepted increments</span> <span id="closed-count">0</span></button>
       </nav>
 
       <section class="product-workspace" id="product-workspace" aria-labelledby="product-view-title" hidden>
@@ -253,6 +254,7 @@ Source: aim-ui/index.html
             <p id="story-summary">Start with the change you want to make.</p>
           </div>
           <div class="story-entry">
+            <button class="story-action" id="story-history" type="button" hidden>History</button>
             <button class="primary-action" id="copy-story-start" type="button">Copy start intent</button>
             <p class="action-feedback" id="story-start-feedback" role="status" aria-live="polite"></p>
           </div>
@@ -260,7 +262,8 @@ Source: aim-ui/index.html
         <div class="epic-filters story-filters" id="story-filters" aria-label="Filter User Stories by Epic"></div>
         <div class="story-board-note" id="story-board-note" role="status"></div>
         <div class="story-board" id="story-board" aria-label="User Story progress across Epics"></div>
-        <p class="story-boundary">Refine Stories and plan increments in AIM chat.</p>
+        <details id="story-records" class="story-records"><summary>Sources and history details</summary><div id="story-record-issues"></div></details>
+        <p class="story-boundary">Backlog: needs refinement · Ready: work can start · Cards move as agents record progress.</p>
       </section>
 
       <section class="workflow" id="workflow-panel" aria-labelledby="workflow-title" hidden>

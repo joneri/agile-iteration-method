@@ -36,16 +36,13 @@ delivery with remaining commitments and a recommendation; preserve its scope.
 Rework corrects implementation under that scope, and cancel applies only to an
 unapproved plan. Do not bypass these boundaries by editing the ledger directly.
 
-AIM UI opens on the coherent increment, displaying its title and goal, selected
-Stories, criterion evidence and next action. Plan approval and user acceptance
-are separate facts. Recorded evidence counts do not imply completion, passing
-checks or acceptance. Frozen scope order is preserved; TDO still chooses the
-actual execution order. Epic criteria are inspectable separately, without
-claiming Story evidence proves whole-Epic closure. No runtime migration is needed.
-Planning cannot replace an active commitment or suggest cancelling approved
-scope. Role cards describe responsibility, not agent presence. Current and legacy
-navigation retain their distinct meanings. Prompt buttons remain discussions,
-not direct approval or acceptance controls.
+AIM UI opens on the live Story board, with Board and Graph as its primary views.
+Delivery commitments, criterion evidence, plan approval and user acceptance stay
+separate facts in the underlying model and supporting details. Native checkpoints
+for validation and acceptance share the Review column; Waiting for you identifies
+owner assessment. Recorded proof alone never means Done. The graph explains
+explicit Story dependencies and external inputs. History retains old decisions;
+there is no runtime migration or fabricated acceptance.
 
 Focused UI tests exercise emitted instructions, evidence keyed by both Story and
 criterion, preserved scope order, rework evidence removal, blocked acceptance and

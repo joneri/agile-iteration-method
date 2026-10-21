@@ -50,8 +50,8 @@ a { color: inherit; }
 .graph-delivery-id { color: var(--muted); font: .72rem var(--mono); margin: 0 0 8px; }
 .graph-outcome h2 { font: 800 clamp(1.3rem,2.5vw,2rem)/1.15 var(--display); margin: 0 0 10px; }
 .graph-outcome p:last-child { margin: 0; color: var(--muted); }
-.graph-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(260px,320px); gap: 24px; align-items: start; }
-.graph-map { min-width: 0; border: 1px solid var(--line); background: rgba(248,251,253,.8); }
+.graph-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(260px,320px); grid-template-areas: "map inspector"; gap: 24px; align-items: start; }
+.graph-map { grid-area: map; min-width: 0; border: 1px solid var(--line); background: rgba(248,251,253,.8); }
 .graph-map-hint { margin: 0; padding: 14px 20px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .78rem; }
 .graph-scroll { overflow: auto; max-height: 76vh; }
 .graph-canvas { position: relative; display: flex; gap: 56px; width: max-content; min-width: 100%; padding: 24px; }
@@ -73,7 +73,7 @@ a { color: inherit; }
 #graph-edges { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 #graph-edges path { stroke: #8da7b9; stroke-width: 1.5; fill: none; }
 #graph-edges path.is-selected { stroke: #087aa5; stroke-width: 2.5; }
-.graph-inspector { min-width: 0; padding: 22px; border-top: 4px solid var(--cyan); background: var(--white); box-shadow: var(--shadow); }
+.graph-inspector { grid-area: inspector; min-width: 0; padding: 22px; border-top: 4px solid var(--cyan); background: var(--white); box-shadow: var(--shadow); }
 .graph-inspector h2 { margin: 10px 0; font: 800 1.45rem/1.15 var(--display); overflow-wrap: anywhere; }
 .graph-reason { font-size: .83rem; color: var(--muted); white-space: pre-wrap; }
 .graph-facts { margin: 20px 0; }
@@ -83,7 +83,7 @@ a { color: inherit; }
 .graph-inspector .product-prompt pre { max-height: 320px; }
 .graph-inspector .primary-action { width: 100%; margin-top: 12px; }
 .graph-blockers { padding: 14px 22px 14px 38px; margin: 0 0 24px; background: #fff4dc; border-left: 4px solid #ad740d; font-size: .82rem; overflow-wrap: anywhere; }
-@media (max-width: 1100px) { .graph-layout { grid-template-columns: minmax(0,1fr); } .graph-inspector { max-width: 700px; } }
+@media (max-width: 1100px) { .graph-layout { grid-template-columns: minmax(0,1fr); grid-template-areas: "inspector" "map"; } .graph-inspector { max-width: 700px; } }
 @media (max-width: 600px) {
   .graph-canvas { flex-direction: column; gap: 20px; width: 100%; padding: 16px; }
   .graph-layer { width: 100%; flex-basis: auto; gap: 12px; }
@@ -959,3 +959,24 @@ main { padding: clamp(22px, 4vw, 58px); }
 .product-role h2 { margin-top: 0; }
 .product-role p { line-height: 1.6; }
 .product-delivery h2, .product-scope-stories h4, .product-role h2 { overflow-wrap: anywhere; }
+
+/* The live Story board is the product surface; internal delivery phases stay in details. */
+.story-column { flex: 1 0 240px; }
+.story-card-title { font-size: 1.1rem; line-height: 1.2; margin: 10px 0; }
+.story-epic { margin-bottom: 14px; font-family: var(--body); }
+.story-id { font-size: .58rem; }
+.story-priority { text-align: right; font-family: var(--body); }
+.story-source-stale { color: var(--muted); font-size: .75rem; }
+.story-prerequisites { padding-left: 9px; border-left: 3px solid var(--amber); font-size: .78rem; }
+.story-column[data-column="ready"] .story-column-heading { border-top-color: var(--lime); }
+.story-column[data-column="review"] .story-column-heading { border-top-color: var(--amber); }
+.story-graph-toolbar { display:flex; gap:16px; align-items:center; margin-bottom:20px; }
+.graph-inspector .story-card { margin-top:20px; box-shadow:none; }
+.story-entry { display:flex; gap:8px; align-items:center; flex-wrap:wrap; max-width:440px; }
+
+.workspace-advanced { margin-bottom:16px; font-size:.75rem; color:var(--muted); }
+.workspace-advanced > summary, .story-records > summary { cursor:pointer; padding:8px 0; }
+.story-records { margin:10px 0; max-width:850px; color:var(--muted); font-size:.75rem; }
+.story-records p { overflow-wrap:anywhere; }
+
+.graph-inspector .story-card > .story-topline, .graph-inspector .story-card > h3, .graph-inspector .story-card > .story-epic, .graph-inspector .story-card > .story-prerequisites { display:none; }

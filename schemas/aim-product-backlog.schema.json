@@ -310,6 +310,50 @@
         },
         "revision": {
           "type": "integer"
+        },
+        "dependsOn": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "prerequisites": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "text",
+              "resolved"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "resolved": {
+                "type": "boolean"
+              },
+              "blocking": {
+                "type": "boolean"
+              },
+              "kind": {
+                "enum": [
+                  "input",
+                  "owner_assessment"
+                ]
+              }
+            }
+          }
         }
       },
       "required": [
@@ -528,6 +572,50 @@
             "acceptance",
             "done"
           ]
+        },
+        "dependsOn": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "prerequisites": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "text",
+              "resolved"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "resolved": {
+                "type": "boolean"
+              },
+              "blocking": {
+                "type": "boolean"
+              },
+              "kind": {
+                "enum": [
+                  "input",
+                  "owner_assessment"
+                ]
+              }
+            }
+          }
         }
       },
       "required": [
