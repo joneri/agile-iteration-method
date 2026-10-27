@@ -66,6 +66,55 @@
           "pattern": "\\S",
           "type": "string"
         },
+        "reassessment": {
+          "additionalProperties": false,
+          "properties": {
+            "alternatives": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            "boundary": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            "contextSha256": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "decision": {
+              "enum": [
+                "continue_bounded",
+                "owner_decision",
+                "independent_work"
+              ]
+            },
+            "resources": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            "userOutcome": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            }
+          },
+          "required": [
+            "contextSha256",
+            "decision",
+            "userOutcome",
+            "resources",
+            "alternatives",
+            "boundary"
+          ],
+          "type": "object"
+        },
         "scopeSha256": {
           "pattern": "^[0-9a-f]{64}$",
           "type": "string"
@@ -369,6 +418,10 @@
           "minItems": 0,
           "type": "array"
         },
+        "correctionContextSha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
         "createdAt": {
           "maxLength": 64,
           "minLength": 1,
@@ -499,6 +552,10 @@
                 "maxLength": 2000,
                 "minLength": 1,
                 "pattern": "\\S",
+                "type": "string"
+              },
+              "correctionContextSha256": {
+                "pattern": "^[a-f0-9]{64}$",
                 "type": "string"
               },
               "criterionEvidence": {
@@ -1409,6 +1466,43 @@
           "pattern": "\\S",
           "type": "string"
         },
+        "corrects": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "criterionIds": {
+                "items": {
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "maxItems": 64,
+                "minItems": 1,
+                "type": "array"
+              },
+              "deliveryId": {
+                "maxLength": 100,
+                "type": "string"
+              },
+              "scopeSha256": {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              },
+              "storyId": {
+                "maxLength": 100,
+                "type": "string"
+              }
+            },
+            "required": [
+              "deliveryId",
+              "storyId",
+              "criterionIds",
+              "scopeSha256"
+            ],
+            "type": "object"
+          },
+          "maxItems": 32,
+          "type": "array"
+        },
         "dependsOn": {
           "items": {
             "maxLength": 100,
@@ -1538,6 +1632,43 @@
           "minLength": 1,
           "pattern": "\\S",
           "type": "string"
+        },
+        "corrects": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "criterionIds": {
+                "items": {
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "maxItems": 64,
+                "minItems": 1,
+                "type": "array"
+              },
+              "deliveryId": {
+                "maxLength": 100,
+                "type": "string"
+              },
+              "scopeSha256": {
+                "pattern": "^[a-f0-9]{64}$",
+                "type": "string"
+              },
+              "storyId": {
+                "maxLength": 100,
+                "type": "string"
+              }
+            },
+            "required": [
+              "deliveryId",
+              "storyId",
+              "criterionIds",
+              "scopeSha256"
+            ],
+            "type": "object"
+          },
+          "maxItems": 32,
+          "type": "array"
         },
         "dependsOn": {
           "items": {

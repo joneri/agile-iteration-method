@@ -724,6 +724,7 @@ function storyStageLabel(story) {
   if (story.historicalBlocked) return "Superseded · blocked";
   if (story.historical) return story.status === "done" ? "Done" : `Recorded: ${["acceptance", "validation"].includes(story.column) ? "Review" : statusLabel(story.column)}`;
   if (story.waitingForOwner || story.status === "acceptance") return "Waiting for you";
+  if (story.ownerDecisionState === "changes_requested") return "Changes requested";
   return ({backlog:"Needs refinement", ready:"Ready to start", in_progress:"Agent working",review:"Under review",done:"Done"})[story.column] || "Backlog";
 }
 
@@ -760,6 +761,8 @@ function renderStoryCard(story, epic, index, existingCard) {
   addFact(needs, "So that", story.benefit);
   card.append(top, el("h3", "story-card-title", story.title), context);
   if (story.sourceStale) card.append(el("p", "story-source-stale", "Update pending · showing last recorded state"));
+  if (story.correctionLinkWarning) card.append(el("p", "story-source-stale", story.correctionLinkWarning));
+  if (story.correctionReady) card.append(el("p", "story-prerequisites", "Correction ready · revalidate and resubmit this original obligation for its owner decision."));
   const prerequisites = storyPrerequisiteText(story, state.board?.storyBoard?.stories || []);
   if (prerequisites.length) card.append(el("p", "story-prerequisites", prerequisites.join(" · ")));
   if (story.attention && !story.historical) {
@@ -778,6 +781,10 @@ function renderStoryCard(story, epic, index, existingCard) {
   if (story.historyReason) criteria.append(el("p", "", story.historyReason));
   if (story.historical) criteria.append(el("p", "", `Recorded stage: ${statusLabel(story.status)}`));
   if (story.historical && story.attention) criteria.append(el("p", "", story.attention));
+  if (story.previousDelivery) criteria.append(el("p", "product-boundary", `From delivery ${(story.deliveryIds || []).join(", ")}.`));
+  if (story.replacementDeliveryIds?.length) criteria.append(el("p", "product-boundary", `Related replacement report: ${story.replacementDeliveryIds.join(", ")}. This original obligation is still open.`));
+  (story.corrects || []).forEach(link => criteria.append(el("p", "product-boundary", `Corrects ${link.storyId} in ${link.deliveryId} · ${link.criterionIds.join(", ")}. This link does not accept the original work.`)));
+  (story.corrections || []).forEach(link => criteria.append(el("p", "product-boundary", `Correction ${link.storyId} in ${link.deliveryIds.join(", ")} · ${link.criterionIds.join(", ")} · ${link.ready ? "ready for original assessment" : "verification pending"}.`)));
   if (story.sourceNote) criteria.append(el("p", "product-boundary", story.sourceNote));
   if (story.readOnly && !story.observationId) criteria.append(el("p", "product-boundary", "Recorded state retained. Current evidence needs verification before further delivery actions."));
   const criteriaList = el("ul");
@@ -810,6 +817,24 @@ function renderStoryCard(story, epic, index, existingCard) {
   const feedback = el("p", "action-feedback");
   feedback.setAttribute("role", "status");
   feedback.setAttribute("aria-live", "polite");
+  if (story.ownerHandoff && story.status !== "done") {
+    const handoff = story.ownerHandoff;
+    const label = story.corrects?.length
+      ? (handoff.ready ? "Copy correction owner decision request" : "Copy correction delivery review")
+      : (handoff.ready ? "Copy final owner decision request" : "Copy original delivery review");
+    const decision = el("button", "story-action", label);
+    decision.type = "button";
+    decision.dataset.storyControl = "owner-context";
+    decision.addEventListener("click", () => copyText(handoff.prompt, feedback));
+    actions.append(decision);
+  }
+  (story.originalOwnerHandoffs || []).forEach(handoff => {
+    const decision = el("button", "story-action", `${handoff.ready ? "Copy original owner decision request" : "Copy original delivery review"} · ${handoff.deliveryId}`);
+    decision.type = "button";
+    decision.dataset.storyControl = "original-owner-context";
+    decision.addEventListener("click", () => copyText(handoff.prompt, feedback));
+    actions.append(decision);
+  });
   const storyActions = story.status === "done"
     ? [["follow-up", "Copy new-need proposal"]]
     : [["refine", "Copy refinement discussion"]];
@@ -821,7 +846,7 @@ function renderStoryCard(story, epic, index, existingCard) {
     button.addEventListener("click", () => copyText(storyPrompt(story, operation, state.board), feedback));
     actions.append(button);
   });
-  if (!story.readOnly) criteria.append(actions, feedback);
+  if (!story.readOnly || story.ownerHandoff || story.originalOwnerHandoffs?.length) criteria.append(actions, feedback);
   return card;
 }
 

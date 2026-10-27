@@ -332,6 +332,105 @@ def _bounded(result, collection):
     return result
 
 
+def triage(record, limit=3):
+    """Project recorded causal assessments; never infer causes or read origins."""
+    _require(isinstance(record, dict) and len(_json(record).encode()) <= 2_000_000,
+             "Triage record must be a bounded object.")
+    _require(type(limit) is int and 1 <= limit <= 100, "Triage limit must be 1–100.")
+    rows = record.get('reviewedLessons', record.get('lessonAssessments'))
+    _require(isinstance(rows, list) and len(rows) <= 10000, "Triage requires bounded recorded lessons.")
+    known = {'existing_correction_no_new_failure', 'historical_case_covered_by_existing_correction',
+             'caught_before_readiness', 'related_to_existing_open_issue', 'method_cause_unknown',
+             'method_cause_excluded', 'confirmed_method_defect', 'missing_method_control',
+             'missing_method_activation', 'incorrect_or_late_application'}
+    def trace(value):
+        return isinstance(value, list) and bool(value) and all(
+            isinstance(ref, dict) and isinstance(ref.get('path'), str) and bool(ref['path'].strip())
+            and isinstance(ref.get('sha256'), str) and re.fullmatch(r'[a-f0-9]{64}', ref['sha256'])
+            for ref in value)
+    lessons, ids, counts = [], set(), {}
+    for row in rows:
+        _require(isinstance(row, dict), "Invalid triage lesson.")
+        ident = _identifier(row.get('lessonId'))
+        _require(ident not in ids, "Duplicate triage lesson identity."); ids.add(ident)
+        assessment = row.get('methodCausalAssessment', row.get('methodAssessment', {}))
+        _require(isinstance(assessment, dict), "Invalid method causal assessment.")
+        state, basis = assessment.get('state'), assessment.get('basis')
+        _require(state is None or isinstance(state, str), 'Invalid causal state.')
+        valid = state in known and isinstance(basis, str) and bool(basis.strip())
+        # An explicit causal exclusion/confirmation needs its own trace, not a
+        # product-fix label or a generic advice-card fingerprint.
+        if state in {'method_cause_excluded', 'confirmed_method_defect', 'missing_method_control',
+                     'missing_method_activation', 'incorrect_or_late_application'}:
+
+            valid = valid and trace(assessment.get('evidence'))
+        if state == 'caught_before_readiness':
+            refs = assessment.get('evidence', row.get('evidence', []))
+            historical_refs = record.get('existingProofReferences', [])
+            _require(isinstance(historical_refs, list) and len(historical_refs) <= 10000,
+                     'Invalid retained proof references.')
+            if not trace(refs):
+                refs = [r for r in historical_refs if isinstance(r, dict)
+                        and r.get('sha256') == row.get('lessonEvidenceSha256')]
+            valid = valid and trace(refs)
+        if not valid:
+            state, basis = 'method_cause_unknown', 'No supported recorded causal conclusion; product disposition is separate.'
+        _text(basis, 4000, 'Causal basis')
+        previous = row.get('previousClassification', {})
+        _require(isinstance(previous, dict), 'Invalid previous product classification.')
+        disposition = row.get('productDisposition', previous.get('status', row.get('status')))
+        remedy = row.get('productCorrectionOrProposal')
+        _require(remedy is None or isinstance(remedy, str) and len(remedy) <= 4000, 'Invalid product remedy.')
+        _require(len(_json(disposition).encode()) <= 4000, 'Product disposition exceeds triage output bound.')
+        item = dict(lessonId=ident, productDisposition=disposition,
+                    productRemedy=remedy,
+                    methodCause=dict(state='related_to_recorded_issue' if state == 'related_to_existing_open_issue' else state, basis=basis),
+                    recordedAssessmentState=assessment.get('state'))
+        if 'missingEvidence' in assessment:
+            missing = assessment['missingEvidence']
+            _require(isinstance(missing, list) and len(missing) <= 16
+                     and all(isinstance(v, str) and len(v) <= 2000 for v in missing), 'Invalid missing-evidence notes.')
+            item['methodCause']['missingEvidence'] = missing
+        lessons.append(item); counts[state] = counts.get(state, 0) + 1
+    queue = record.get('queue', [])
+    _require(isinstance(queue, list) and len(queue) <= 1024, 'Invalid method repair queue.')
+    opened, queue_ids = [], set()
+    for issue in queue:
+        _require(isinstance(issue, dict), 'Invalid method queue item.')
+        ident = _identifier(issue.get('id'))
+        _require(ident not in queue_ids, 'Duplicate method issue identity.'); queue_ids.add(ident)
+        if issue.get('status') != 'open_current_method_defect': continue
+        criteria = issue.get('acceptanceCriteria')
+        _require(isinstance(issue.get('problem'), str) and bool(issue['problem'].strip())
+                 and isinstance(criteria, list) and bool(criteria)
+                 and all(isinstance(c, dict) and isinstance(c.get('text'), str) and bool(c['text'].strip()) for c in criteria)
+                 and trace(issue.get('evidence')), 'Recorded open method defect lacks problem, applicable criteria or evidence trace.')
+        opened.append(dict(id=ident, status=issue['status']))
+    metadata = record.get('observedLessonMetadata', {})
+    _require(isinstance(metadata, dict), 'Invalid lesson metadata snapshot.')
+    cards = metadata.get('cards', [])
+    _require(isinstance(cards, list) and len(cards) <= 10000, 'Invalid lesson metadata cards.')
+    _require(all(isinstance(c, dict) for c in cards), 'Invalid metadata card.')
+    metadata_ids = [_identifier(c.get('id')) for c in cards]
+    _require(len(metadata_ids) == len(set(metadata_ids)), 'Duplicate metadata card identity.')
+    unassessed = set(metadata_ids) - ids
+    summary = dict(recordedLessons=len(lessons), methodStates=counts,
+                   unknownMethodCauses=counts.get('method_cause_unknown', 0),
+                   knownCorrections=sum(counts.get(k, 0) for k in ('existing_correction_no_new_failure', 'historical_case_covered_by_existing_correction')),
+                   caughtBeforeReadiness=counts.get('caught_before_readiness', 0),
+                   relatedCases=counts.get('related_to_existing_open_issue', 0),
+                   assessedExclusions=counts.get('method_cause_excluded', 0),
+                   recordedMethodFindings=sum(counts.get(k, 0) for k in ('confirmed_method_defect', 'missing_method_control', 'missing_method_activation', 'incorrect_or_late_application')),
+                   recordedOpenMethodDefects=len(opened), unassessedAdvice=len(unassessed))
+    ordered = sorted(lessons, key=lambda item: item['methodCause']['state'] != 'method_cause_unknown')
+    result = dict(summary=summary, lessons=ordered[:limit], openMethodDefects=opened[:limit],
+                  unassessedAdviceIds=sorted(unassessed)[:limit],
+                  truncated=len(lessons)>limit or len(opened)>limit or len(unassessed)>limit,
+                  readOnly=True, referencesFollowed=False, recurrenceAssessed=False,
+                  interpretation='Recorded classifications only, not fresh causal proof, independent incident counts, acceptance or permission. Unknown questions are not repair-queue entries.')
+    return _bounded(result, 'lessons')
+
+
 def recall(path, text="", phase="planning", technologies=()):
     _require(isinstance(text, str) and len(text) <= MAX_QUERY, "Recall text exceeds its input limit.")
     _require(phase in PHASES, "Unknown recall phase.")

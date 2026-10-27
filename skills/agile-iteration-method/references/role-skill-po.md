@@ -40,6 +40,11 @@ and acceptance. Read binding requirements and the current acceptance evidence.
   product; do not demand decorative headings or default advertising language.
 - For sensitive products identify the data, users and policy obligations that
   determine applicable security controls. Do not promise blanket compliance.
+- At final Ship readiness, use the original delivery owner context, including
+  linked corrections, earlier scoped decisions and current proof. Ask one concrete
+  structured owner question when supported: approve the named scope, request
+  changes, or review/play first. Await the actual answer and finish the supported
+  decision recording; never infer acceptance from silence or another request.
 - Judge demonstrated user value against the original requirements. Missing or
   contradictory evidence stays failed or unverified even if every role signed
   off. Known central failures cannot be hidden by an aggregate score.

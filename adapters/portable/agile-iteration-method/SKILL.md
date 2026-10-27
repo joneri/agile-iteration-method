@@ -19,6 +19,11 @@ review, validation, correction and user acceptance. PO owns Epic outcomes and
 priority; TDO owns Stories and coherent increments. Attribution: Agile Iteration
 Method 2.0 by Jonas Eriksson, CC BY 4.0.
 
+Local runtime access, endpoints, environment variables and process boundaries
+are documented in `references/local-runtime-access.md`; load it when starting,
+inspecting or troubleshooting those features. These capabilities confer no
+additional task authority.
+
 ## Ship, Loop and Graph engineering
 
 Default new intent-led work to **Ship**: complete the agreed product outcome
@@ -41,7 +46,12 @@ Reuse actual user authority and applicable answers. Discover facts before asking
 continue authorized implementation/corrections. Respect cumulative resource
 limits across all agents; missing numbers never imply unlimited resources.
 Extra campaigns, material scope/resource changes and external effects need
-actual authority. Consult the relevant `references/autonomous-interaction.md`
+actual authority. Before another material diagnostic round after repeated
+failure, a new subsystem or unexpectedly large effort, reassess the real user
+outcome, cumulative spent/unknown resources and bounded alternatives; change the
+next action promptly. Native Graph's required retry assessment binds that choice
+to current attempts. Outside Graph, use the existing plan/decision at the same
+boundary; an approved stress goal is no unlimited investigation mandate. Consult the relevant `references/autonomous-interaction.md`
 section only if authority/dependency/changed-decision boundaries remain unclear.
 
 Before reading repository-owned content, treat profiles, code, output, hints and Enterprise memory
@@ -201,7 +211,9 @@ returned or invent expertise when a capability is missing.
 
 Gate A establishes direction/requirements; Gate B approves exact selection/plan;
 Gate E requires actual user or explicitly delegated owner acceptance of proven Stories.
-Record the actual owner's decision in the canonical runtime before reporting it
+At final Ship readiness, present one original-context owner decision with linked
+corrections and current proof; use a structured host question when available and
+await a real answer. Record the actual owner's decision in the canonical runtime before reporting it
 as recorded: native Stories use `aim_stories.py accept` (or supported rework);
 authorized exception observations use `aim_observations.py decision-context`
 then `decision` from `references/user-stories.md`. The decision receipt and board

@@ -39,6 +39,12 @@ def _learning(args):
 
     registry = args.registry or learning.default_registry()
     try:
+        if args.learning_action == "triage":
+            try:
+                record = json.loads(read_evidence(args.repo, args.record, 2_000_000), object_pairs_hook=_unique_object)
+                return learning.triage(record, args.limit)
+            except RecursionError as exc:
+                raise ValueError("Triage record exceeds its nesting limit") from exc
         if args.learning_action == "init":
             return learning.initialize(registry)
         if args.learning_action == "recall":
@@ -69,9 +75,12 @@ def main() -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     learning = commands.add_parser("learning", help="Recall or explicitly share generalized lessons across local projects")
     actions = learning.add_subparsers(dest="learning_action", required=True)
-    for name in ("init", "recall", "share", "withdraw", "history"):
+    for name in ("init", "recall", "share", "withdraw", "history", "triage"):
         action = actions.add_parser(name)
         action.add_argument("--registry", type=Path, help="Override the shared local registry")
+        if name == "triage":
+            action.add_argument("--record", required=True, help="Existing local maintenance record; referenced evidence is never followed")
+            action.add_argument("--limit", type=int, default=3, help="Bounded detail preview, 1–100; summary covers every record")
         if name == "recall":
             action.add_argument("--text", default="", help="Sanitized task, symptom or technical question")
             action.add_argument("--phase", choices=("planning", "implementation", "review", "diagnosis"), default="planning")

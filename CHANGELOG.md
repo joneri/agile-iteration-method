@@ -1,5 +1,47 @@
 # Changelog
 
+## 2026-10-27 - AIM release v4.7.3
+
+Complete Story continuity across original and corrective deliveries. Unfinished
+native and observed obligations stay on the main board across focus changes;
+actual acceptance, requested changes and original delivery identity remain visible.
+
+- Optional requirement-bound `corrects` links connect corrective Stories to
+  original delivery/Story/criteria without creating execution dependencies.
+- Revalidate and explicitly resubmit the original scope after a correction.
+  Copy one original-delivery owner request containing all original Stories,
+  linked proof, earlier decisions and approve/change/review-first choices.
+- Bind incoming correction context to native acceptance and new observed owner
+  decisions. Changed proof or requirements requires fresh context; accepting a
+  correction never accepts the original or unrelated Stories.
+- Preserve historical snapshots, accepted scopes and older no-link digests.
+  Explicit native correction links tolerate native progress/unrelated ledger
+  changes only while their complete frozen original scopes and source proof
+  remain current. Ordinary observations retain their existing ledger binding.
+- Keep approved-scope cancellation/replacement unsupported and visible as a
+  tooling limitation. Display relations never retire an original obligation.
+- Move detailed local runtime access documentation behind a short skill link.
+
+Diagnostic work stays connected to the agreed user outcome and cumulative
+resources, including work inside an ongoing assignment and outside Graph.
+
+- After two failed attempts on an activity, native Graph requires a current
+  bounded reassessment before another retry. Independent ready work can continue.
+- Bind reassessment to attempt history, current prerequisite receipts and
+  recorded failed work. Reject stale answers; preserve original quality targets.
+- Trigger coordinator reassessment at actual Codex, Claude Code and Copilot
+  entries and in the Dev role when diagnosis repeats or materially expands.
+
+Method-learning follow-up now separates product disposition from method cause.
+The read-only `aim_engineering.py learning triage --record <existing-record>`
+consumer reports unknown causes, recorded current method defects and unassessed
+advice separately. Missing causal evidence never becomes an automatic exclusion
+or repair task. Retained corrections and valid pre-readiness detections stay
+closed; referenced private origins are not followed.
+
+Existing installations require an explicit upgrade. No automatic migration,
+consuming-project mutation or historical ledger rewrite is performed.
+
 ## 2026-10-21 - AIM release v4.7.1
 
 Record human and explicitly delegated owner decisions once in the exception

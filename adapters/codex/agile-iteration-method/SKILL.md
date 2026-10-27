@@ -42,6 +42,8 @@ section when the actual handoff needs detail.
 
 ## Autonomous interaction
 
+Before another material diagnostic round during an ongoing assignment, reassess the actual user outcome, cumulative spent or unknown resources across agents/experiments, remaining uncertainty and bounded alternatives when failures repeat, diagnosis enters a new subsystem, or effort materially exceeds expectation. This applies even within an approved plan and without Graph or a failed activity receipt. Read only Reassess diagnosis before it takes over delivery in `references/autonomous-interaction.md` at that trigger. Change the next authorized action and report the consequence promptly; retain failed results and frozen quality. Use the existing plan/decision surface, not routine reports. An agent/session change cannot reset effort or confer budget. A first justified bounded correction needs no new owner question; a resource/scope/quality tradeoff requires actual authority.
+
 Reuse current user authority and applicable answers. Read only the relevant section of `references/autonomous-interaction.md` when an authority, dependency or changed-decision boundary remains unresolved. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.
 
 ## Intent, Stories and delivery

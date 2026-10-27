@@ -127,6 +127,8 @@ def validate_story_dependencies(stories, observation=False):
         require(sid in by_id and sid not in active, "Unknown or cyclic Story dependency.")
         if sid in visited: return
         story = by_id[sid]
+        from aim_story_links import validate_shape
+        validate_shape(story)
         deps = story.get('dependsOn', [])
         require(isinstance(deps, list) and len(deps) <= 64 and all(isinstance(i, str) for i in deps)
                 and len(set(deps)) == len(deps), "Invalid Story dependency list.")
@@ -148,7 +150,7 @@ def validate_story_dependencies(stories, observation=False):
 
 def _story_snapshot(story):
     return {key: copy.deepcopy(story[key]) for key in
-            ("id", "epicId", "title", "persona", "need", "benefit", "acceptanceCriteria", "revision", "dependsOn", "prerequisites") if key in story}
+            ("id", "epicId", "title", "persona", "need", "benefit", "acceptanceCriteria", "revision", "dependsOn", "prerequisites", "corrects") if key in story}
 
 
 def _epic_snapshot(epic):
@@ -173,7 +175,7 @@ def _acceptance_scope(delivery):
               ("scopeSha256", "approval", "productBindings", "reviewEvidence", "validationEvidence", "criterionEvidence")}
     if "qualityMeasurements" in delivery:
         result["qualityMeasurements"] = delivery["qualityMeasurements"]
-    for key in ("coreVerification", "coreVerificationHistory"):
+    for key in ("coreVerification", "coreVerificationHistory", "correctionContextSha256"):
         if key in delivery:
             result[key] = delivery[key]
     return result
@@ -955,7 +957,7 @@ def _import(document, request):
     definitions = {
         "intents": (("id", "statement"), ()),
         "epics": (("id", "intentId", "title", "outcome", "acceptanceCriteria"), ("outcomeClass", "nonGoals")),
-        "stories": (("id", "epicId", "title", "persona", "need", "benefit", "acceptanceCriteria", "priority", "status"), ("dependsOn", "prerequisites")),
+        "stories": (("id", "epicId", "title", "persona", "need", "benefit", "acceptanceCriteria", "priority", "status"), ("dependsOn", "prerequisites", "corrects")),
     }
     for collection in definitions:
         incoming = request.get(collection, [])
@@ -966,7 +968,7 @@ def _import(document, request):
             seen.append(raw["id"])
             current = next((item for item in document[collection] if item["id"] == raw["id"]), None)
             if collection == "stories" and current:
-                raw = {**{key: copy.deepcopy(current[key]) for key in ("dependsOn", "prerequisites") if key in current}, **raw}
+                raw = {**{key: copy.deepcopy(current[key]) for key in ("dependsOn", "prerequisites", "corrects") if key in current}, **raw}
             if collection == "epics":
                 raw = {**raw,
                        "outcomeClass": raw.get("outcomeClass", current["outcomeClass"] if current else "Product"),
@@ -1150,10 +1152,20 @@ def _change(repo, document, command, request, *, cache=None):
                     "Rework before replacing recorded measurements; retain earlier results in history.")
             delivery["qualityMeasurements"] = refs
         _require_quality(repo, delivery, cache=cache)
+        from aim_story_links import incoming_context, corrections_ready
+        incoming = incoming_context(repo, delivery['id'], [s['id'] for s in delivery['stories']])
+        if incoming:
+            require(corrections_ready(repo, delivery['id']), 'Linked corrections need current reviewed proof before original acceptance.')
+            delivery['correctionContextSha256'] = digest(incoming)
         delivery["acceptanceSha256"] = digest(_acceptance_scope(delivery))
         delivery["status"] = "acceptance"
     elif command == "accept":
         require(status == "acceptance", "Gate E acceptance requires reviewed, validated delivery evidence.")
+        from aim_story_links import incoming_context, corrections_ready
+        incoming = incoming_context(repo, delivery['id'], [s['id'] for s in delivery['stories']])
+        require(delivery.get('correctionContextSha256') == (digest(incoming) if incoming else None),
+                'Original correction context changed; rework and revalidate before a fresh owner decision.')
+        require(not incoming or corrections_ready(repo, delivery['id']), 'Linked corrections are not ready for original acceptance.')
         delivery["acceptance"] = _authority(repo, request["authority"], delivery["acceptanceSha256"], cache=cache,
                                            delivery=delivery, operation="accept")
         delivery.update(status="accepted", acceptedAt=now())
@@ -1167,7 +1179,7 @@ def _change(repo, document, command, request, *, cache=None):
         if status == "blocked":
             record["blockedReason"] = delivery.pop("reason")
             delivery.pop("blockedFrom")
-        for key in ("productBindings", "reviewEvidence", "validationEvidence", "criterionEvidence", "qualityMeasurements", "acceptanceSha256"):
+        for key in ("productBindings", "reviewEvidence", "validationEvidence", "criterionEvidence", "qualityMeasurements", "acceptanceSha256", "correctionContextSha256"):
             if key in delivery:
                 record[key] = delivery.pop(key)
         delivery.setdefault("reworkHistory", []).append(record)
@@ -1207,6 +1219,17 @@ def execute(repo, command, request, expected_sha256=None):
         candidate["revision"] += 1
         candidate["updatedAt"] = now()
         validate_document(candidate)
+        from aim_story_links import validate_links
+        changed_links = [story for story in candidate['stories'] if story.get('corrects') and
+                         ((command in {'plan', 'approve', 'review', 'acceptance', 'accept'} and
+                           any(story['id'] in [item['id'] for item in delivery['stories']]
+                               for delivery in candidate['deliveries'] if delivery['id'] == request.get('deliveryId', request.get('id'))
+                               and delivery['status'] != 'cancelled')) or
+                          next((s.get('corrects') for s in document['stories'] if s['id'] == story['id']), None) != story['corrects'])]
+        if changed_links:
+            from aim_observations import load as load_observations
+            observed, _ = load_observations(repo)
+            validate_links(changed_links, candidate, observed)
         verify_evidence(repo, candidate, cache=cache)
         # Derive the response before commit. A later evidence read failure must
         # never make a confirmed write look like a rejected operation.
@@ -1218,6 +1241,12 @@ def execute(repo, command, request, expected_sha256=None):
             result["executionGraph"] = project_graph(repo, candidate, result["storeSha256"], request["deliveryId"],
                                                      check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
         _finish_verification(repo, cache)
+        if command in {'acceptance', 'accept'}:
+            from aim_story_links import incoming_context
+            delivery = _by_id(candidate, 'deliveries', request['deliveryId'])
+            incoming = incoming_context(repo, delivery['id'], [s['id'] for s in delivery['stories']])
+            require(delivery.get('correctionContextSha256') == (digest(incoming) if incoming else None),
+                    'Correction context changed before the original decision commit.')
         descriptor, temporary = tempfile.mkstemp(prefix=".product-backlog-", dir=aim)
         try:
             with os.fdopen(descriptor, "wb") as stream:
@@ -1370,6 +1399,9 @@ def _project_readable_stories(repo, result, document):
                 if item.get('kind') == 'owner_assessment': item['resolved'] = True
         result["stories"].append({**projected, "column": "backlog" if story["status"] == "draft" else story["status"],
                                   "readOnly": not result["valid"],
+                                  "waitingForOwner": story['status'] == 'acceptance',
+                                  "ownerDecisionState": 'awaiting_owner' if story['status'] == 'acceptance' else
+                                                        'approved' if story['status'] == 'done' else None,
                                   "deliveryIds": [item["id"] for item in related], "evidence": evidence,
                                   "attention": next((item["reason"] for item in related if item["status"] == "blocked"), None)})
     return _project_observations(repo, result)
@@ -1381,19 +1413,14 @@ def _project_observations(repo, result):
     result["observations"] = observed
     if observed["entries"]:
         current = next(entry for entry in observed["entries"] if entry["id"] == observed["currentId"])
-        # An explicitly retired native scope stays historical when another
-        # delivery becomes current. Changing focus must not resurrect old work.
-        replaces = {delivery_id for entry in observed['entries']
-                    for delivery_id in entry.get('replacesDeliveryIds', [])}
+        # A focus/display replacement is not an owner disposition. Keep every
+        # unfinished obligation visible; the old scope, status and decisions stay
+        # intact until a supported actual disposition exists.
         for story in result['stories']:
-            if story['status'] != 'done' and replaces.intersection(story.get('deliveryIds', [])):
-                story['historical'] = True
-                story['historyReason'] = 'Previous delivery record; retained with its original status and evidence.'
-                if story.get('attention'):
-                    story['historyReason'] = ('Superseded historical scope; its original blocked delivery and '
-                                              'unaccepted requirements are retained. Any accepted correction '
-                                              'is recorded separately.')
-                    story['historicalBlocked'] = True
+            replacements = [entry['graph']['deliveryId'] for entry in observed['entries']
+                            if set(story.get('deliveryIds', [])).intersection(entry.get('replacesDeliveryIds', []))]
+            if replacements and story['status'] != 'done':
+                story['replacementDeliveryIds'] = replacements
         result["nativeExecutionGraph"] = result.get("executionGraph")
         result["observationGraphs"] = [entry["graph"] for entry in observed["entries"]]
         result["executionGraph"] = next(entry["graph"] for entry in observed["entries"]
@@ -1401,10 +1428,11 @@ def _project_observations(repo, result):
         for entry in observed["entries"]:
             result["epics"].append(entry["epic"])
             for story in entry['stories']:
-                story['historical'] = entry['id'] != observed['currentId'] and story['column'] != 'done'
-                if story['historical']: story['historyReason'] = 'Previous work; original report and decisions retained.'
+                story['historical'] = False
+                story['previousDelivery'] = entry['id'] != observed['currentId']
             result["stories"].extend(entry["stories"])
-    return result
+    from aim_story_links import annotate_board
+    return annotate_board(repo, result)
 
 
 def main(argv=None):

@@ -83,6 +83,36 @@ def validate_execution_plan(plan, stories, repo=None):
     return assessed
 
 
+def _retry_context(delivery, activity_id, records=None):
+    """A completed correction ends the failure streak; session changes do not."""
+    history = delivery.get('activityReceipts', []) if records is None else records
+    attempts = [r for r in history if r['activityId'] == activity_id]
+    task = next(a for a in delivery['executionPlan']['activities'] if a['id'] == activity_id)
+    latest = {r['activityId']: r for r in history}
+    prerequisites = {ident: latest.get(ident) for ident in task['dependsOn']}
+    failures = 0
+    for record in attempts:
+        if record['status'] == 'completed':
+            failures = 0
+        elif record['status'] == 'failed':
+            failures += 1
+    return dict(required=failures >= 2, failures=failures,
+                contextSha256=_digest(dict(scopeSha256=delivery['scopeSha256'],
+                                          activityId=activity_id, attempts=attempts,
+                                          prerequisites=prerequisites,
+                                          failedWork=[r for r in history if r['status'] == 'failed'])))
+
+
+def _validate_reassessment(value, context):
+    _fields(value, ('contextSha256', 'decision', 'userOutcome', 'resources', 'alternatives', 'boundary'))
+    _require(value['contextSha256'] == context['contextSha256'],
+             'Diagnostic reassessment context changed; use current attempts and cumulative consequences.')
+    _require(value['decision'] in {'continue_bounded', 'owner_decision', 'independent_work'},
+             'Invalid diagnostic reassessment decision.')
+    for key in ('userOutcome', 'resources', 'alternatives', 'boundary'):
+        _text(value[key], 'Reassessment ' + key, 2000)
+
+
 def validate_activity_receipts(delivery):
     records = delivery.get("activityReceipts", [])
     _require("executionPlan" in delivery or not records, "Activity receipts require an execution plan.")
@@ -91,8 +121,13 @@ def validate_activity_receipts(delivery):
     tasks = {a["id"]: a for a in delivery["executionPlan"]["activities"]}
     counters = {}
     latest = {}
-    for record in records:
+    for index, record in enumerate(records):
         identifier = record["activityId"]
+        if 'reassessment' in record:
+            _require(index > 0, 'Reassessment requires prior activity history.')
+            _validate_reassessment(record['reassessment'], _retry_context(delivery, identifier, records[:index]))
+            _require(record['reassessment']['decision'] == 'continue_bounded',
+                     'Only a bounded continuation can have an activity attempt.')
         _require(identifier in tasks, "Receipt refers to an unknown activity.")
         counters[identifier] = counters.get(identifier, 0) + 1
         _require(record["attempt"] == counters[identifier] <= MAX_ATTEMPTS,
@@ -215,7 +250,15 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
                           storyIds=task["storyIds"], paths=task["paths"], dependsOn=task["dependsOn"],
                           stories=copy.deepcopy(selected_stories), checks=copy.deepcopy(checks),
                           boundary="Work only in these approved paths; record actual session, attempt and proof. Activity completion does not advance native gates.")
+        retry = _retry_context(delivery, identifier)
+        reassessment_required = status in {'failed', 'stale'} and retry['required']
+        if reassessment_required:
+            reason += ' Repeated diagnosis requires benefit/cumulative-resource reassessment before another attempt.'
+            assignment['diagnosticReassessment'] = dict(contextSha256=retry['contextSha256'],
+                instruction='Relate this technical goal to the approved user outcome; assess cumulative spent/unknown resources across sessions, uncertainty, alternatives and one bounded next action. Preserve quality and actual authority. Use an existing owner/block decision if a tradeoff needs it; independent ready work can continue.')
         value = {**copy.deepcopy(task), "skills": task.get("skills", []), "status": status,
+                 "reassessmentRequired": reassessment_required,
+                 "retryContextSha256": retry['contextSha256'], "diagnosticFailures": retry['failures'],
                  "reason": reason, "evidence": copy.deepcopy(receipt.get("evidence", [])) if receipt else [],
                  "session": receipt["session"] if receipt else None,
                  "attempt": receipt["attempt"] if receipt else None,
@@ -229,6 +272,7 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
     result["readyIds"] = [a["id"] for a in result["activities"] if a["status"] == "ready"]
     result["retryIds"] = [a["id"] for a in result["activities"]
                           if approved and a["status"] in {"failed", "stale"}
+                          and not a['reassessmentRequired']
                           and receipts.get(a["id"], {}).get("attempt", 0) < MAX_ATTEMPTS
                           and all(nodes[dep]["status"] == "completed" for dep in a["dependsOn"])]
     # A stale running receipt may still own files. It continues to consume a
@@ -270,7 +314,7 @@ def _lifecycle(result, delivery):
 
 def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at, check_reference=None):
     _fields(request, ("deliveryId", "activityId", "status", "session"),
-            ("attempt", "sourcePaths", "evidence", "reason"))
+            ("attempt", "sourcePaths", "evidence", "reason", "reassessment"))
     _require(delivery["status"] == "in_progress" and delivery.get("approval", {}).get("scopeSha256") == delivery["scopeSha256"],
              "Activity changes require an approved delivery in progress.")
     _require("executionPlan" in delivery, "Delivery has no approved execution plan.")
@@ -295,13 +339,23 @@ def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at,
         _require(len(running) < (plan["maxWorkers"] if plan["delegationAllowed"] else 1), "Activity worker capacity is exhausted.")
         tasks = {a["id"]: a for a in plan["activities"]}
         _require(not any(_conflict(task, tasks[other]) for other in running), "Activity ownership overlaps running work.")
+        retry = _retry_context(delivery, task['id'])
+        if retry['required'] or 'reassessment' in request:
+            _require(previous is not None and 'reassessment' in request,
+                     'Repeated diagnostic failure requires a current benefit/resource reassessment before retry.')
+            _validate_reassessment(request['reassessment'], retry)
+            _require(request['reassessment']['decision'] == 'continue_bounded',
+                     'Use an actual owner decision or independent work; this assessment does not authorize another retry.')
         attempt = previous["attempt"] + 1 if previous else 1
         _require(attempt <= MAX_ATTEMPTS, "Activity attempt history is full; retain evidence and plan a new delivery.")
         records.append(dict(activityId=task["id"], session=request["session"], attempt=attempt,
                             status="running", at=at, updatedAt=at, scopeSha256=delivery["scopeSha256"],
                             dependencies=[dict(activityId=dep, attempt=latest[dep]["attempt"],
                                                receiptSha256=_digest(latest[dep])) for dep in task["dependsOn"]]))
+        if 'reassessment' in request:
+            records[-1]['reassessment'] = copy.deepcopy(request['reassessment'])
         return
+    _require('reassessment' not in request, 'Reassessment belongs to the new attempt, not its outcome.')
     _require(previous is not None and previous["status"] == "running", "Activity has no running attempt.")
     _require(type(request.get("attempt")) is int and request["attempt"] == previous["attempt"]
              and request["session"] == previous["session"], "Activity session or attempt is stale.")

@@ -231,3 +231,33 @@ Choose checks from the change's failure modes, not a universal report template:
 Write the finding and its consequence, or state what was checked with no finding.
 A separate agent and a successful helper check are mechanisms, not proof that the
 result beats ordinary engineering. Product behavior and successor work decide.
+
+## Repeated diagnostic failure in native Graph
+
+A first bounded correction may retry normally. After two failed attempts on one
+activity, Graph leaves the failures visible but omits that retry from automatic
+recommendations. Independent ready work remains available. A session change
+cannot reset the count; a completed correction ends the failure streak. This is
+an observable repeated-failure trigger, not a universal time budget. The
+coordinator must also reassess earlier material expansion inside a running task
+or an exception workflow as required by `autonomous-interaction.md`.
+
+The existing `activity` start request may include `reassessment` when retrying:
+
+```json
+{"contextSha256":"<activity retryContextSha256>","decision":"continue_bounded",
+ "userOutcome":"How this technical goal protects the approved user result",
+ "resources":"Cumulative work across attempts/agents; unknown stays unknown",
+ "alternatives":"Bounded correction, independent work, or actual owner choice",
+ "boundary":"One justified next attempt within existing authority; stop condition"}
+```
+
+The helper stores this on the new activity receipt, without another report file,
+checks the exact attempt context and rejects replay after that context changes.
+Only `continue_bounded` can start a retry; `owner_decision` or `independent_work`
+means use the existing block/owner mechanism or perform that independent work.
+The assessment is a coordinator declaration, not new scope, budget, quality waiver
+or acceptance. Preserve failed attempts and the original frozen targets. Existing
+historical receipts remain readable; this guard applies to new starts rather than
+rewriting old approvals or requiring retrospective forms. A passing control-path
+check does not prove reduced overall cost or universal prevention.

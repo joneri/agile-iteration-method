@@ -354,6 +354,43 @@
               }
             }
           }
+        },
+        "corrects": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "deliveryId",
+              "storyId",
+              "criterionIds",
+              "scopeSha256"
+            ],
+            "properties": {
+              "deliveryId": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "storyId": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "criterionIds": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 64,
+                "items": {
+                  "type": "string",
+                  "maxLength": 100
+                }
+              },
+              "scopeSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
         }
       },
       "required": [
@@ -616,6 +653,43 @@
               }
             }
           }
+        },
+        "corrects": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "deliveryId",
+              "storyId",
+              "criterionIds",
+              "scopeSha256"
+            ],
+            "properties": {
+              "deliveryId": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "storyId": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "criterionIds": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 64,
+                "items": {
+                  "type": "string",
+                  "maxLength": 100
+                }
+              },
+              "scopeSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            }
+          }
         }
       },
       "required": [
@@ -834,6 +908,10 @@
                 "items": {
                   "$ref": "#/$defs/evidence"
                 }
+              },
+              "correctionContextSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
               }
             },
             "required": [
@@ -929,6 +1007,10 @@
         },
         "deliveryPolicy": {
           "$ref": "#/$defs/deliveryPolicy"
+        },
+        "correctionContextSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
         }
       },
       "required": [
@@ -1475,7 +1557,7 @@
         },
         "maxWorkers": {
           "type": "integer",
-          "description": "1\u20138; enforced by delegation validator."
+          "description": "1–8; enforced by delegation validator."
         },
         "parallelBenefit": {
           "type": "string",
@@ -1541,7 +1623,7 @@
         },
         "attempt": {
           "type": "integer",
-          "description": "Sequential attempts 1\u20138 per activity; enforced by helper."
+          "description": "Sequential attempts 1–8 per activity; enforced by helper."
         },
         "status": {
           "enum": [
@@ -1612,6 +1694,55 @@
           "minLength": 1,
           "maxLength": 2000,
           "pattern": "\\S"
+        },
+        "reassessment": {
+          "type": "object",
+          "properties": {
+            "contextSha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "decision": {
+              "enum": [
+                "continue_bounded",
+                "owner_decision",
+                "independent_work"
+              ]
+            },
+            "userOutcome": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000,
+              "pattern": "\\S"
+            },
+            "resources": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000,
+              "pattern": "\\S"
+            },
+            "alternatives": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000,
+              "pattern": "\\S"
+            },
+            "boundary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "contextSha256",
+            "decision",
+            "userOutcome",
+            "resources",
+            "alternatives",
+            "boundary"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [

@@ -24,6 +24,7 @@ SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
 PUBLIC_DESCRIPTION_NAME = "agile-iteration-method"
 REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
     (Path("docs/workflow/user-stories.md"), Path("user-stories.md")),
+    (Path("docs/workflow/local-runtime-access.md"), Path("local-runtime-access.md")),
     (Path("docs/workflow/autonomous-interaction.md"), Path("autonomous-interaction.md")),
     (Path("examples/user-stories/example-user-story.md"), Path("example-user-story.md")),
     (Path("docs/workflow/streamlined-decisions.md"), Path("streamlined-decisions.md")),
@@ -65,6 +66,7 @@ DOCUMENTATION_LICENSE_SOURCE = Path("docs/LICENSE-DOCS")
 UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_stories.py"),
     Path("scripts/aim_observations.py"),
+    Path("scripts/aim_story_links.py"),
     Path("scripts/aim_interaction.py"),
     Path("scripts/aim_http.py"),
     Path("scripts/aim_engineering.py"),

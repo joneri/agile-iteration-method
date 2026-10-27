@@ -30,6 +30,43 @@ class AutomaticDecisionTests(unittest.TestCase):
 
     def board(self):return {s['id']:s for s in project_story_board(self.repo)['stories']}
 
+    def test_focus_change_keeps_pending_and_rejected_obligations_in_ordinary_work(self):
+        request, sha = self.request_for(decision='changes_requested')
+        receipt = obs.record_decision(self.repo, request, sha)
+        prior, _ = obs.load(self.repo)
+        original_entries = copy.deepcopy(prior['entries'])
+        original_decisions = copy.deepcopy(prior['decisions'])
+        q = copy.deepcopy(self.request)
+        q['entry'].update(id='new-delivery', deliveryId='NEXT-DELIVERY')
+        q['entry']['epic']['id'] = 'EPIC-NEXT'
+        for i, story in enumerate(q['entry']['stories']):
+            story['id'] = 'US-NEXT-' + str(i)
+        for activity in q['entry']['activities']:
+            activity['storyIds'] = [s['id'] for s in q['entry']['stories']]
+        obs.import_entry(self.repo, q, receipt['storeSha256'])
+        cards = self.board()
+        for sid in ['US-OBS', 'US-OBS-SECOND']:
+            self.assertFalse(cards[sid].get('historical', False), sid)
+            self.assertTrue(cards[sid]['previousDelivery'])
+            self.assertEqual(cards[sid]['deliveryIds'], ['LOOP-EXCEPTION'])
+        self.assertEqual(cards['US-OBS']['ownerDecisionState'], 'changes_requested')
+        self.assertEqual(cards['US-OBS']['column'], 'in_progress')
+        self.assertFalse(cards['US-OBS']['waitingForOwner'])
+        self.assertEqual(cards['US-OBS-SECOND']['ownerDecisionState'], 'awaiting_owner')
+        self.assertTrue(cards['US-OBS-SECOND']['waitingForOwner'])
+        after, _ = obs.load(self.repo)
+        self.assertEqual(after['entries'][:-1], original_entries)
+        self.assertEqual(after['decisions'], original_decisions)
+        self.assertEqual((self.repo / obs.LEDGER).read_bytes(), self.original)
+        # Genuine scoped owner acceptance remains possible after focus changes;
+        # it changes only the named Story and leaves the new delivery current.
+        accepted, sha = self.request_for(ids=['US-OBS-SECOND'], ident='later-owner')
+        obs.record_decision(self.repo, accepted, sha)
+        cards = self.board()
+        self.assertEqual(cards['US-OBS-SECOND']['column'], 'done')
+        self.assertEqual(cards['US-OBS']['column'], 'in_progress')
+        self.assertEqual(obs.load(self.repo)[0]['currentId'], 'new-delivery')
+
     def test_human_decision_drives_only_named_card_without_import_or_status_edit(self):
         request,sha=self.request_for();before,_=obs.load(self.repo)
         receipt=obs.record_decision(self.repo,request,sha);after,_=obs.load(self.repo)

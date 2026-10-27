@@ -65,6 +65,33 @@ decisions; routine choices need no separate form, checklist or gate. Where
 practical, check explicit measurable limits with available tooling; good-intent
 statements or self-rated risk scores do not prove compliance.
 
+## Reassess diagnosis before it takes over delivery
+
+An approved technical check can still become disproportionate. Before launching
+another material diagnostic round after repeated failures, a move into a new
+subsystem or substantially greater effort than expected, the coordinator relates
+the technical goal to the actual user outcome and original requirement. Account
+for work already spent across sessions/agents, remaining uncertainty and the
+bounded alternatives. Unknown time/cost stays unknown; it is not zero or spare
+budget. Do this even when the next experiment remains inside approved scope.
+
+Change the next action: one justified bounded correction, independent authorized
+work, a safe route that preserves all obligations, or a concrete owner choice
+when resource/scope/quality authority must change. Report the consequence promptly;
+do not wait for the user to discover the stalled delivery. A proposed stress
+workload is not the product outcome. Retain its failed results and thresholds;
+never quietly omit supported-use correctness or lower a target to pass.
+
+Use the existing plan, activity receipt or decision surface, without per-action
+reports. Native Graph stops automatically recommending a retry after two failed
+attempts on an activity and requires a current assessment before starting another.
+A completed correction ends that failure streak; switching agents/sessions does
+not. Its receipt records the outcome, cumulative resources, alternatives and next
+bound, tied to actual attempt history. This guard cannot observe work never
+reported inside a running attempt, authenticate a self-declared budget or waive
+owner authority. The coordinator applies this same reassessment boundary during
+such work and explicit exception workflows, before delegating/launching expansion.
+
 ## Bind authority to the assignment and chronology
 
 An approval applies to its concrete assignment or delivery, authorized action and

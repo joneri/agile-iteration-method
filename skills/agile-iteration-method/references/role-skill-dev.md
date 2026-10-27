@@ -54,6 +54,7 @@ Skill id: `aim-dev-engineering`. Bundled with AIM; applies to implementation.
 - Profile before optimizing. Reduce repeated work and allocation, bound input
   and caches, and measure equivalent workloads plus relevant resource use.
   Faster incorrect or truncated work is not an optimization.
+- During an ongoing task, surface repeated failures, a new diagnostic subsystem or unexpectedly expanding effort to the coordinator before launching another material round, even when the plan already allows the technical check and no Graph receipt failed. Relate it to the user outcome and cumulative work across agents/experiments; identify a bounded next action within current authority. Reuse the existing plan/decision and preserve failed quality. Read only the diagnosis-reassessment section of `autonomous-interaction.md` at this trigger; do not wait for a role handoff or routine status round.
 - When diagnosing an unexpected failure or missed goal, recall shared learning
   from the actual sanitized symptom; reuse an unchanged relevant answer. After
   a new verified reusable fix or independently confirmed reusable failure, share

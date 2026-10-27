@@ -76,7 +76,7 @@ def validate_entry(repo, entry, verify=True):
     require(isinstance(entry['stories'], list) and 1 <= len(entry['stories']) <= 64, 'Observation requires bounded Stories.')
     ids = set()
     for s in entry['stories']:
-        fields(s, ('id', 'title', 'persona', 'need', 'benefit', 'acceptanceCriteria'), ('boardStatus', 'dependsOn', 'prerequisites'))
+        fields(s, ('id', 'title', 'persona', 'need', 'benefit', 'acceptanceCriteria'), ('boardStatus', 'dependsOn', 'prerequisites', 'corrects'))
         require(s.get('boardStatus', 'backlog') in {'backlog','ready','in_progress','review','done'}, 'Invalid reported Story stage.')
         require(s.get('boardStatus') != 'done' or entry['reportedState'] == 'reported_complete', 'Done requires a reported completed delivery.')
         require(isinstance(s.get('dependsOn', []), list) and all(isinstance(i, str) for i in s.get('dependsOn', [])), 'Invalid Story dependencies.')
@@ -183,6 +183,8 @@ def import_entry(repo, request, expected_sha256=None):
         if make_current:
             data['currentId'] = entry['id']
         _stable_scopes(data['entries'])
+        from aim_story_links import validate_links
+        validate_links(entry['stories'], native, data)
         raw = (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode()
         require(len(raw) <= LIMIT and len(data['entries']) <= 32, 'Observation history limit reached.')
         # Validate the aggregate before writing, without touching the original ledger.
@@ -235,14 +237,26 @@ def selected_scope(entry, story_ids):
                        stories=scope, deliveryPolicy=normalize_policy(entry.get('deliveryPolicy', DEFAULT_POLICY))))
 
 
+def decision_scope(entry, story_ids, correction_context=None):
+    requirements = selected_scope(entry, story_ids)
+    return digest(dict(requirementsScopeSha256=requirements, correctionContextSha256=correction_context)) if correction_context else requirements
+
+
 def decision_context(repo, request):
     fields(request, ('deliveryId', 'storyIds'))
     data, sha = load(repo)
     require(data is not None, 'Register the delivery requirements before its owner decision.')
     entry = next((r['entry'] for r in reversed(data['entries']) if r['entry']['deliveryId'] == request['deliveryId']), None)
     require(entry is not None, 'Unknown observation delivery.')
+    context = _correction_context(repo, entry['deliveryId'], request['storyIds'])
     return dict(storeSha256=sha, deliveryId=entry['deliveryId'], storyIds=request['storyIds'],
-                scopeSha256=selected_scope(entry, request['storyIds']))
+                scopeSha256=decision_scope(entry, request['storyIds'], context.get('correctionContextSha256')), **context)
+
+
+def _correction_context(repo, delivery_id, story_ids):
+    from aim_story_links import incoming_context, digest
+    incoming = incoming_context(repo, delivery_id, story_ids)
+    return dict(corrections=incoming, correctionContextSha256=digest(incoming)) if incoming else {}
 
 
 def _decision_authority(repo, request, entry, verify=True):
@@ -272,12 +286,14 @@ def _decision_authority(repo, request, entry, verify=True):
 
 
 def validate_decision(repo, request, entry, verify=True):
-    fields(request, ('id','deliveryId','storyIds','scopeSha256','decision','authority','reason','evidence'))
+    fields(request, ('id','deliveryId','storyIds','scopeSha256','decision','authority','reason','evidence'), ('correctionContextSha256',))
     identifier(request['id']); identifier(request['deliveryId']); text(request['reason'])
     require(request['deliveryId'] == entry['deliveryId'], 'Decision delivery mismatch.')
     require(request['decision'] in {'approved','changes_requested'}, 'Owner decision must approve or request changes.')
-    require(request['scopeSha256'] == selected_scope(entry, request['storyIds']), 'Decision refers to changed requirements or owner policy.')
+    require(request['scopeSha256'] == decision_scope(entry, request['storyIds'], request.get('correctionContextSha256')), 'Decision refers to changed requirements or owner policy.')
     _decision_authority(repo, request, entry, verify)
+    if 'correctionContextSha256' in request:
+        require(isinstance(request['correctionContextSha256'], str) and re.fullmatch('[a-f0-9]{64}', request['correctionContextSha256']), 'Invalid correction decision context.')
     refs = request['evidence']
     require(isinstance(refs, list) and 1 <= len(refs) <= 32, 'Supply bounded current assessment evidence.')
     require(len({r['path'] for r in refs}) == len(refs), 'Duplicate decision evidence.')
@@ -305,7 +321,7 @@ def record_decision(repo, request, expected_sha256=None):
     with runtime_lock(path):
         data, before = load(repo)
         require(data is not None, 'Register delivery requirements first.')
-        fields(request, ('id','deliveryId','storyIds','scopeSha256','decision','authority','reason','evidence'))
+        fields(request, ('id','deliveryId','storyIds','scopeSha256','decision','authority','reason','evidence'), ('correctionContextSha256',))
         previous = next((r for r in data.get('decisions', []) if r['request']['id'] == request['id']), None)
         if previous:
             require(previous['requestSha256'] == digest(request), 'Decision identity already has a different payload.')
@@ -317,8 +333,16 @@ def record_decision(repo, request, expected_sha256=None):
         require(record is not None, 'Unknown observation delivery.')
         entry = record['entry']
         validate_entry(repo, entry)
-        require(fingerprint(repo, LEDGER) == record['ledgerSha256'], 'Native ledger changed since requirement publication.')
+        require(native_binding_current(repo, record), 'Native ledger changed since requirement publication.')
         validate_decision(repo, request, entry)
+        context = _correction_context(repo, entry['deliveryId'], request['storyIds'])
+        require(request.get('correctionContextSha256') == context.get('correctionContextSha256'),
+                'Correction context changed or was not reviewed; reload the original decision context.')
+        if context and request['decision'] == 'approved':
+            from aim_stories import project_story_board
+            selected = [s for s in project_story_board(repo)['stories'] if s['id'] in request['storyIds']]
+            require(all((s.get('waitingForOwner') or s['status'] == 'done') and not s.get('sourceStale')
+                        and all(c['ready'] for c in s.get('corrections', [])) for s in selected), 'Resubmit and verify the complete original scope before final acceptance.')
         data.setdefault('decisions', []).append(dict(request=copy.deepcopy(request), snapshotId=entry['id'],
             requestSha256=digest(request), recordedAt=datetime.now(timezone.utc).isoformat()))
         data['revision'] += 1
@@ -327,7 +351,8 @@ def record_decision(repo, request, expected_sha256=None):
         validate_decisions(repo, data)
         validate_decision(repo, request, entry)  # Fresh proof immediately before the single commit.
         validate_entry(repo, entry)
-        require(fingerprint(repo, LEDGER) == record['ledgerSha256'], 'Native ledger changed during decision recording.')
+        require(native_binding_current(repo, record), 'Native ledger changed during decision recording.')
+        require(context == _correction_context(repo, entry['deliveryId'], request['storyIds']), 'Correction context changed during decision recording.')
         _write_store(path, raw)
     return dict(storeSha256=hashlib.sha256(raw).hexdigest(), decisionId=request['id'], alreadyRecorded=False,
                 currentId=data['currentId'], nativeLedgerChanged=False)
@@ -340,7 +365,7 @@ def _apply_decisions(repo, data, entry, stories):
         request = record['request']
         if request['deliveryId'] != entry['deliveryId']: continue
         # Old decisions never promote changed requirements, even if a producer copies old Done.
-        matches = request['scopeSha256'] == selected_scope(entry, request['storyIds'])
+        matches = request['scopeSha256'] == decision_scope(entry, request['storyIds'], request.get('correctionContextSha256'))
         for story in stories:
             if story['id'] not in request['storyIds']: continue
             snapshot_note, snapshot_stale, snapshot_evidence, snapshot_stage = snapshots[story['id']]
@@ -372,6 +397,26 @@ def _apply_decisions(repo, data, entry, stories):
 
 
 
+def native_binding_current(repo, record, native=None):
+    if fingerprint(repo, LEDGER) == record['ledgerSha256']:
+        return True
+    # Explicit native correction targets bind immutable requirements separately
+    # from native phase transitions. Every Story must carry that narrower binding.
+    if native is None:
+        from aim_stories import load as load_native
+        native, _ = load_native(repo, check_evidence=False)
+    entry = record['entry']
+    native_ids = {d['id'] for d in native.get('deliveries', [])}
+    if not all(any(link['deliveryId'] in native_ids for link in story.get('corrects', [])) for story in entry['stories']):
+        return False
+    from aim_story_links import validate_links
+    try:
+        validate_links(entry['stories'], native, None)
+    except ValueError:
+        return False
+    return True
+
+
 def project(repo, native):
     result = dict(entries=[], currentId=None, issues=[])
     try:
@@ -389,12 +434,13 @@ def project(repo, native):
             issues = []
             try:
                 validate_entry(repo, e)
-                require(fingerprint(repo, LEDGER) == record['ledgerSha256'], 'Native ledger changed since observation import.')
+                require(native_binding_current(repo, record, native), 'Native ledger changed since observation import.')
             except (ValueError, OSError) as exc: issues.append(str(exc))
             stale = bool(issues)
+            native_advanced = not stale and fingerprint(repo, LEDGER) != record['ledgerSha256']
             label = 'Observed exception work · ' + ('source changed; refresh required' if stale else e['reportedState'].replace('_', ' '))
             stories = [{**s, 'epicId': e['epic']['id'], 'priority': 1000 + n, 'status': s.get('boardStatus', 'review' if e['reportedState'] in {'awaiting_owner', 'reported_complete'} else 'in_progress'), 'column': s.get('boardStatus', 'review' if e['reportedState'] in {'awaiting_owner', 'reported_complete'} else 'in_progress'),
-                        'observationId': e['id'], 'readOnly': True, 'deliveryIds': [], 'evidence': [],
+                        'observationId': e['id'], 'readOnly': True, 'deliveryIds': [e['deliveryId']], 'evidence': [],
                         'attention': label + '. ' + e['decisionBoundary']} for n,s in enumerate(e['stories'])]
             graph = dict(available=True, configured=True, source='observation', nativeEvidenceValid=False,
                 deliveryId=e['deliveryId'], title=e['title'], goal=e['goal'], stories=stories,
@@ -406,13 +452,19 @@ def project(repo, native):
             for story in stories:
                 story['sourceNote'] = label + '. ' + e['decisionBoundary']
                 story['sourceStale'] = stale
+                if native_advanced:
+                    story['sourceNote'] += ' Native delivery progressed; linked original requirement bindings remain current.'
                 story['waitingForOwner'] = e['reportedState'] == 'awaiting_owner' and story['column'] == 'review'
                 story['evidence'] = [{**ref, 'label': 'Source'} for ref in e['sources']]
                 story['attention'] = ''
             _apply_decisions(repo, data, e, stories)
+            for story in stories:
+                story['ownerDecisionState'] = ('awaiting_owner' if story['waitingForOwner'] else
+                                               'approved' if story['column'] == 'done' and story.get('decisionId') else
+                                               'changes_requested' if story.get('decisionId') and story['column'] == 'in_progress' else None)
             result['entries'].append(dict(id=e['id'], title=e['title'], reportedState=e['reportedState'],
                 decisionBoundary=e['decisionBoundary'], stale=stale, importedAt=record['importedAt'],
-                replacesDeliveryIds=e.get('replacesDeliveryIds', []), epic={**e['epic'], 'observationId': e['id']}, stories=stories, graph=graph))
+                deliveryPolicy=e.get('deliveryPolicy', dict(mode='ship', owner=dict(kind='human'))), replacesDeliveryIds=e.get('replacesDeliveryIds', []), epic={**e['epic'], 'observationId': e['id']}, stories=stories, graph=graph))
     except (ValueError, OSError, KeyError, TypeError) as exc:
         result.update(entries=[], currentId=None, issues=[str(exc)])
     return result

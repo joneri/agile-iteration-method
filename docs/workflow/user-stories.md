@@ -462,8 +462,9 @@ ordinary current progress. Preserve original requirements and captured approval
 evidence when reconciling historical reports; this does not create a new owner
 decision or retroactively delegate authority.
 
-UI displays the selected current delivery's Stories in the normal five board
-columns. Optional per-Story `boardStatus` (`backlog`, `ready`, `in_progress`,
+UI displays unfinished Stories from all deliveries, together with accepted Done
+Stories, in the normal five board columns. Changing the current delivery selects
+its graph; it does not dispose of another delivery's open obligations. Optional per-Story `boardStatus` (`backlog`, `ready`, `in_progress`,
 `review`, `done`) provides the progress baseline and compatibility with historical
 reports. Record new owner decisions through the decision journal below, never by
 copying an approval into `boardStatus`. An absent stage uses
@@ -472,15 +473,18 @@ it never sends executed work back to Backlog. Done reports require a completed
 reported delivery; they remain attributed reports, never native gate acceptance.
 Use `review` plus `awaiting_owner` while waiting for a human decision.
 
-Previous observed deliveries are accessible through History. The optional
-`replacesDeliveryIds` list identifies existing native deliveries superseded by
-this current work **for display only**. Use it only with explicit reconciliation
-intent and source evidence. It never changes those native statuses, and unrelated
-native Backlog/Ready Stories remain current. All stored snapshots remain intact.
-An explicit native history disposition remains in effect when a different
-observed delivery becomes current. Accepted Done Stories remain on the main board
-alongside current work; history separates earlier unfinished attempts. Blocked replaced scopes retain their original
-status and are labeled as superseded; they do not ask for owner acceptance again.
+Prior snapshots remain in the observation journal. An unfinished Story from a
+previous delivery stays in ordinary work with its original delivery identity,
+actual stage and owner-decision state. `awaiting_owner` remains Waiting for you;
+a matching changes-requested decision remains Changes requested until corrected
+work is resubmitted. Neither switching focus nor technical completion creates Done.
+
+The optional `replacesDeliveryIds` list relates existing native deliveries to an
+observed replacement report **for display only**. Use it only with explicit
+reconciliation intent and source evidence. It does not dispose of the original
+obligations, change native statuses, or grant acceptance; unfinished native work
+remains visible. This display relation is not a supported scope replacement or a
+correction-to-original Story link. All stored snapshots and decisions stay intact.
 Native delivery metrics exclude observation reports.
 Changed source hashes or a changed native ledger mark observations stale and
 require an explicit refresh. Observation snapshots alone confer no approval, acceptance,
@@ -488,6 +492,78 @@ implementation assignment or supported native transition. They do not make
 future deliveries eligible: use the native workflow for new work, or disclose
 the concrete unsupported transition and obtain an actual scoped exception.
 
+
+## Original obligations and corrective deliveries
+
+Prefer native `rework` under the same frozen Story identities for corrections to
+an active native commitment. When an authorized corrective delivery needs distinct
+Stories, optional Story `corrects` records provenance without adding `dependsOn`:
+
+```json
+{"corrects":[{"deliveryId":"ORIGINAL-DELIVERY","storyId":"US-ORIGINAL","criterionIds":["AC-1"],"scopeSha256":"<original requirement scope>"}]}
+```
+
+Native and exception-observation Stories use the same link contract. Obtain the
+exact target binding through the trusted helper before importing/refining the
+correction; the original must already exist in a recorded delivery:
+
+```sh
+python3 scripts/aim_story_links.py link-context --repo . --delivery-id ORIGINAL-DELIVERY --story-id US-ORIGINAL --criterion-id AC-1
+python3 scripts/aim_story_links.py owner-context --repo . --delivery-id ORIGINAL-DELIVERY
+```
+
+Links bind original requirements and selected criteria, not transient progress.
+Unknown targets, changed requirements, duplicate/self links and cyclic provenance
+reject. New links enter the correction's frozen scope; old records without links
+keep their existing hashes. Accepted historical links remain historical when a
+later requirement changes; they do not block unrelated deliveries.
+
+The Board exposes original and corrective Stories together, their actual stages,
+linked criteria and proof. A ready/accepted correction leaves a rejected original
+in Changes requested with an explicit original-resubmission instruction. It does
+not turn original work into Done or create a prerequisite cycle. Partial correction
+coverage never proves the remaining original criteria. Revalidate the **whole
+original requirement scope**, including its unchanged criteria and siblings.
+
+For native work use the original delivery's supported rework/review/validation/
+acceptance sequence. Stale native evidence still blocks acceptance. For an
+exception observation, explicitly refresh the original delivery with its same
+Story identities, full original criteria and current original/correction proof,
+using `awaiting_owner` for the technically verified scope. Retain the old rejected
+snapshot and decisions. Only then can its owner assess the original obligation.
+Linked correction readiness and current proof must also verify. Native
+acceptance freezes incoming correction context into its acceptance digest; new
+or changed correction proof requires original rework/revalidation and a fresh
+owner scope. Exception corrections whose every Story explicitly binds a native
+original use those full frozen native requirement scopes independently of native
+progress or unrelated ledger changes. Their source bytes still verify; the UI
+explains native progress. Unlinked observations retain full-ledger staleness. `decision-context`
+returns `corrections` and `correctionContextSha256` when relevant; include that
+fingerprint in the **original** decision request. A changed correction requires
+fresh context. The original scoped decision changes only its named Stories; it
+never accepts the correction or siblings implicitly. Historical decisions retain
+their captured context and prior acceptance.
+
+An unfinished original leaves ordinary work only through an existing supported
+actual acceptance. `replacesDeliveryIds`, correction links, changed focus and
+technical completion cannot dispose of it. Approved-scope cancellation/replacement
+is still unsupported; preserve/block the original commitment and disclose that
+limitation instead of inventing a ledger transition. A `corrects` link is neither
+scope replacement authority nor execution/acceptance authority.
+
+At final Ship readiness, present **one** scoped original-delivery owner question,
+using the host's structured question tool when available: approve the named
+scope, request changes, or review/play first. `owner-context` provides the original
+Stories, earlier scoped decisions, linked corrections, current evidence and
+limits, independently of current board focus. Its `ready` flag requires the
+original's actual ready phase, current evidence and ready linked corrections;
+read-only context alone is not proof of technical readiness. Preserve already
+accepted scope and clarify exactly which remaining Stories the decision covers.
+Do not ask at each implementation step or Story. Await a real answer, recheck
+context and record it through native `accept`/`rework` or the observation decision
+journal, then retain the confirmed receipt. Silence, a preselection, technical
+checks and an unrelated new request never supply acceptance. `review_first`
+keeps acceptance pending and offers the actual review/play path.
 
 ## Story dependencies in the live board
 

@@ -40,6 +40,12 @@ technical planning and evidence synthesis.
   where needed. A complexity label does not authorize more agents, cost, reduced
   ambition or changed product priority. Assess cumulative resource consequences
   across all agents before a material deviation from the mandate.
+- Before repeated or materially expanding diagnosis, relate the technical target
+  to the usable product outcome, account for cumulative work/unknown cost and
+  select a bounded next action. An already approved experiment still needs this
+  reassessment when its expected value changes. Follow the native Graph retry
+  assessment when present; use existing plan/decision evidence elsewhere. Do not
+  let a stress proxy replace product priority or quietly relax failed quality.
 - Choose stable responsibility boundaries: domain, state/job lifecycle, I/O and
   presentation when they differ. State who owns each input and output snapshot.
 - Specify the independent oracle, boundary scenarios and representative runtime

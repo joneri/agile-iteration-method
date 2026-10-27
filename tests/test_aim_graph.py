@@ -81,6 +81,65 @@ class GraphTests(unittest.TestCase):
         self.assertEqual(self.graph()["recommendedIds"], ["B", "C"])
         self.assertEqual(self.document["deliveries"][0]["status"], "in_progress")
 
+    def test_repeated_diagnosis_reassesses_before_retry_without_blocking_independent_work(self):
+        self.plan_graph()
+        self.start('A'); self.finish('A', 'contract.py')
+        self.start('B')
+        self.mutate('activity', dict(deliveryId='DI-1', activityId='B', status='failed',
+                    session='session-B', attempt=1, reason='First real diagnostic failure.'))
+        # A bounded first correction can continue without a new question/form.
+        self.assertEqual(self.start('B', 'second-session'), 2)
+        self.mutate('activity', dict(deliveryId='DI-1', activityId='B', status='failed',
+                    session='second-session', attempt=2, reason='Second failure; investigation expanded.'))
+        graph = self.graph()
+        self.assertEqual(graph['recommendedIds'], ['C'])
+        task = next(a for a in graph['activities'] if a['id'] == 'B')
+        self.assertTrue(task['reassessmentRequired'])
+        self.assertEqual(task['diagnosticFailures'], 2)
+        self.unchanged_failure('activity', dict(deliveryId='DI-1', activityId='B',
+                              status='running', session='third-session'), 'reassessment')
+        decision = dict(contextSha256=task['retryContextSha256'], decision='continue_bounded',
+                        userOutcome='Restore the approved buyer recovery journey; stress remains a technical constraint, not the user outcome.',
+                        resources='Two failed attempts across two sessions; elapsed cost unavailable, not zero. Original resource mandate remains binding.',
+                        alternatives='Complete independent storage work now; then one isolated UI correction, or block for an actual owner scope choice.',
+                        boundary='One next attempt within the existing mandate and frozen quality; stop on failure and reassess before expanding.')
+        self.start('C'); self.finish('C', 'storage.py')
+        request = dict(deliveryId='DI-1', activityId='B', status='running', session='third-session', reassessment=decision)
+        owner_choice = copy.deepcopy(request); owner_choice['reassessment']['decision'] = 'owner_decision'
+        self.unchanged_failure('activity', owner_choice, 'owner decision|independent work')
+        self.mutate('activity', request)
+        self.assertEqual(self.document['deliveries'][0]['activityReceipts'][-1]['reassessment'], decision)
+        self.mutate('activity', dict(deliveryId='DI-1', activityId='B', status='failed',
+                    session='third-session', attempt=3, reason='Third failure retained unchanged.'))
+        self.unchanged_failure('activity', request, 'context')
+        self.assertEqual(len([r for r in self.document['deliveries'][0]['activityReceipts']
+                              if r['activityId']=='B' and r['status']=='failed']), 3)
+        self.assertEqual(self.document['deliveries'][0]['status'], 'in_progress')
+
+    def test_prerequisite_rework_invalidates_retry_assessment_without_rewriting_history(self):
+        self.plan_graph(); self.start('A'); self.finish('A', 'contract.py')
+        for attempt in (1, 2):
+            self.start('B')
+            self.mutate('activity', dict(deliveryId='DI-1', activityId='B', status='failed',
+                        session='session-B', attempt=attempt, reason='Recorded diagnostic failure.'))
+        task = next(a for a in self.graph()['activities'] if a['id']=='B')
+        assessment = dict(contextSha256=task['retryContextSha256'], decision='continue_bounded',
+                          userOutcome='Keep the approved recovery outcome and quality.', resources='Two failed attempts; elapsed cost unknown.',
+                          alternatives='Independent storage work or an actual owner decision.', boundary='One bounded retry with contract A attempt1 unchanged.')
+        (self.repo/'contract.py').write_text('contract v2')
+        self.start('A', 'revised-contract'); self.finish('A', 'contract.py', 2, 'revised-contract')
+        q=dict(deliveryId='DI-1', activityId='B', status='running', session='new-B', reassessment=assessment)
+        self.unchanged_failure('activity', q, 'context')
+        task = next(a for a in self.graph()['activities'] if a['id']=='B')
+        assessment.update(contextSha256=task['retryContextSha256'], boundary='One bounded retry using the current A attempt2; stop on failure.')
+        self.mutate('activity', q); self.finish('B', 'ui.py', 3, 'new-B')
+        # Later prerequisite progress does not invalidate the recorded historical
+        # assessment: it is checked against the actual prefix at its own start.
+        (self.repo/'contract.py').write_text('contract v3')
+        self.start('A', 'later-contract'); self.finish('A', 'contract.py', 3, 'later-contract')
+        self.assertEqual(self.start('B', 'after-success'), 4)
+        self.assertFalse(next(a for a in self.graph()['activities'] if a['id']=='B')['reassessmentRequired'])
+
     def test_running_descendant_fenced_by_dependency_receipt_and_binding(self):
         self.plan_graph()
         self.start("A"); self.finish("A", "contract.py")

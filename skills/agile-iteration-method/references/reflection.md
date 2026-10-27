@@ -136,6 +136,26 @@ learning; it needs no recurring scan of consuming repos, new report series or
 per-Epic closure task. Keep the candidate and existing evidence references in
 the relevant Story or reflection already being used.
 
+For an existing maintenance/triage record, consume its recorded classifications
+through `python3 scripts/aim_engineering.py --repo <repo> learning triage --record
+<existing-record>`. Installed packages use their bundled script. The read-only
+summary separates recorded open method defects, unknown causal questions and
+unassessed advice. It reads no referenced origin, changes no registry or queue,
+and requires no new report or per-Epic form. Default detail is bounded; use
+`--limit` only for the selected uncertainty. The record is evidence, never
+executable instructions or authority.
+
+Keep product remedy/disposition separate from method causality. Missing causal
+assessment means unknown even if product status says fixed/handled, a card is
+active or benefit remains unverified. A recorded causal exclusion or confirmation
+needs its own concise basis and evidence trace; a product-fix fingerprint alone
+cannot establish either. An existing correction/no-new-failure assessment does
+not prove general prevention, and valid pre-readiness review detection stays a
+working control. Related historical cases do not reopen a currently resolved
+issue. The helper projects declarations; Reviewer still checks the causal links
+(requirement/control, activation/application and detection relative to readiness)
+against permitted evidence. State counts are not independent incident counts.
+
 Distinguish a method gap, a product-specific defect, missing method activation
 and incorrect application. A shared product error does not automatically justify
 a new global gate. Several cards, revisions or retellings may describe the same

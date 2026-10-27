@@ -20,11 +20,20 @@ Authority and independent review records in the fixture are synthetic; they gran
 no real project acceptance. Raw CLI logs, screenshots, trace and final ledger
 are retained. UI process cleanup is identity-bound.
 
-Also inspect the real consumers read only: AIWebSite must retain 8 Stories
-(3 Ready, 5 Backlog). ParaClones must show its actual current work and the 16
-accepted Done cards together on the main board, with replaced, rejected and
-earlier unfinished attempts in History. Verify original ledger bytes and pinned method
-hashes, including rejected owner feedback, before claiming the cleanup complete.
+For changes to unfinished-work visibility, use the bounded isolated projection
+and owner-decision checks first:
+
+```sh
+python3 -m unittest discover -s tests -p 'test_aim_observations.py'
+python3 -m unittest discover -s tests -p 'test_aim_observation_decisions.py'
+```
+
+They retain native and observation bytes while changing delivery focus, preserve
+unfinished obligations and waiting/changes-requested states, reject invalid owner
+authority, and allow a real scoped decision without accepting unrelated Stories.
+Keep earlier snapshots in the journal. A display-only replacement report cannot
+move unfinished work to History. Use synthetic projects for this check; do not
+rewrite consuming-project ledgers or manufacture decisions to clean up the board.
 
 For owner decisions, run the complete recording-to-browser journey separately:
 
@@ -38,3 +47,17 @@ focus, reload and identical uncertain retry. No subsequent snapshot import or
 Story status edit is allowed. It retains the journal, requests/receipts, trace,
 raw CLI output and screenshots; authority is explicitly synthetic. An unconfirmed
 UI stop fails verification and preserves its owned recovery workspace.
+
+For correction-to-original continuity, run:
+
+```sh
+python3 -m unittest discover -s tests -p 'test_aim_story_links.py'
+python3 scripts/verify_aim_story_continuity.py --output output/playwright/story-continuity-proof
+```
+
+The isolated journey rejects an original, publishes a linked correction, keeps
+both visible across focus changes, explicitly resubmits original proof, copies
+the whole original owner request, then records one actual synthetic scoped
+original decision. It checks the sibling and correction remain unaccepted,
+reload persistence and the distinction between link provenance and dependencies.
+The fixture decisions grant no real acceptance.

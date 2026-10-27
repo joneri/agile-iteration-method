@@ -244,3 +244,99 @@ class LearningTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CausalTriageTests(unittest.TestCase):
+    def row(self, state=None, disposition='product_fixed', **assessment):
+        row = dict(lessonId='LRN-CASE', productDisposition=disposition,
+                   status='handled_product_example', openCurrentAIMDefect=False,
+                   state='active', benefitVerified=False)
+        if state is not None:
+            row['methodCausalAssessment'] = dict(state=state, basis='Recorded requirement/control/readiness assessment.', **assessment)
+        return row
+
+    def test_product_fixed_without_causal_assessment_remains_unknown_and_read_only(self):
+        record = dict(reviewedLessons=[self.row()], queue=[], summary={'unknownMethodCauses':0})
+        before = copy.deepcopy(record)
+        with patch.object(learning, 'read_evidence', side_effect=AssertionError('No private origin reads')):
+            result = learning.triage(record)
+        self.assertEqual(result['summary']['unknownMethodCauses'], 1)
+        self.assertEqual(result['summary']['recordedOpenMethodDefects'], 0)
+        self.assertEqual(result['lessons'][0]['productDisposition'], 'product_fixed')
+        self.assertEqual(record, before)
+        self.assertFalse(result['referencesFollowed'])
+        self.assertFalse(result['recurrenceAssessed'])
+
+    def test_assessed_exclusion_requires_own_trace_not_product_fix_fingerprint(self):
+        row = self.row('method_cause_excluded')
+        row['evidence'] = [{'path':'/unavailable/private-product-proof','sha256':'a'*64}]
+        self.assertEqual(learning.triage({'reviewedLessons':[row]})['summary']['unknownMethodCauses'],1)
+        row['methodCausalAssessment']['evidence'] = [{'path':'.aim/permitted-causal-proof.json','sha256':'b'*64}]
+        result = learning.triage({'reviewedLessons':[row]})
+        self.assertEqual(result['summary']['assessedExclusions'],1)
+        self.assertEqual(result['summary']['recordedOpenMethodDefects'],0)
+
+    def test_known_corrections_and_review_detection_do_not_reopen_from_advice_flags(self):
+        states=['existing_correction_no_new_failure','historical_case_covered_by_existing_correction',
+                'caught_before_readiness','related_to_existing_open_issue']
+        rows=[dict(self.row(state),lessonId='LRN-'+str(n)) for n,state in enumerate(states)]
+        rows[2]['evidence']=[{'path':'.aim/pre-readiness-review.json','sha256':'c'*64}]
+        result=learning.triage({'reviewedLessons':rows},limit=10)
+        self.assertEqual(result['summary']['knownCorrections'],2)
+        self.assertEqual(result['summary']['caughtBeforeReadiness'],1)
+        self.assertEqual(result['summary']['relatedCases'],1)
+        self.assertEqual(result['summary']['unknownMethodCauses'],0)
+        self.assertEqual(result['openMethodDefects'],[])
+        self.assertEqual(result['lessons'][-1]['methodCause']['state'],'related_to_recorded_issue')
+
+    def test_method_mechanisms_require_recorded_causal_trace_and_do_not_self_queue(self):
+        states=['missing_method_control','missing_method_activation','incorrect_or_late_application']
+        for state in states:
+            row=self.row(state)
+            self.assertEqual(learning.triage({'reviewedLessons':[row]})['summary']['unknownMethodCauses'],1)
+            row['methodCausalAssessment']['evidence']=[{'path':'.aim/causal-trace.json','sha256':'a'*64}]
+            result=learning.triage({'reviewedLessons':[row]})
+            self.assertEqual(result['lessons'][0]['methodCause']['state'],state)
+            self.assertEqual(result['summary']['recordedMethodFindings'],1)
+            self.assertEqual(result['summary']['recordedOpenMethodDefects'],0)
+        self.assertEqual(learning.triage({'reviewedLessons':[self.row('caught_before_readiness')]})['summary']['unknownMethodCauses'],1)
+
+    def test_recorded_current_defects_are_separate_from_unknown_product_cases(self):
+        issue=lambda n: dict(id='AIM-'+str(n),status='open_current_method_defect',problem='Concrete current AIM failure',
+                            acceptanceCriteria=[{'id':'AC-1','text':'Applicable method requirement'}],
+                            evidence=[{'path':'.aim/retained-proof.json','sha256':'a'*64}])
+        record={'reviewedLessons':[self.row()], 'queue':[issue(1),issue(2)]}
+        result=learning.triage(record)
+        self.assertEqual(result['summary']['recordedOpenMethodDefects'],2)
+        self.assertEqual(result['summary']['unknownMethodCauses'],1)
+        record['queue'][0]['status']='resolved_source_candidate_not_released'
+        self.assertEqual(learning.triage(record)['summary']['recordedOpenMethodDefects'],1)
+        record['queue'][1]['evidence']=[]
+        with self.assertRaisesRegex(ValueError,'evidence trace'):learning.triage(record)
+
+    def test_missing_and_invalid_assessments_do_not_clear_or_inflate_incidents(self):
+        row=self.row('invented_exclusion');record={'reviewedLessons':[row],
+            'observedLessonMetadata':{'cards':[{'id':'LRN-CASE'},{'id':'LRN-NEW'}]}}
+        result=learning.triage(record)
+        self.assertEqual(result['summary']['unknownMethodCauses'],1)
+        self.assertEqual(result['summary']['unassessedAdvice'],1)
+        record['reviewedLessons'].append(copy.deepcopy(row))
+        with self.assertRaisesRegex(ValueError,'Duplicate'):learning.triage(record)
+        with self.assertRaises(ValueError):learning.triage({'reviewedLessons':[self.row([])]})
+
+    def test_cli_reads_only_selected_record_and_reports_unknown_without_error(self):
+        import subprocess
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);(root/'.aim').mkdir();record=root/'.aim/triage.json'
+            record.write_text(json.dumps({'reviewedLessons':[self.row()]}))
+            before=record.read_bytes()
+            proc=subprocess.run([sys.executable,str(ROOT/'scripts/aim_engineering.py'),'--repo',str(root),
+                'learning','triage','--record','.aim/triage.json'],capture_output=True,text=True)
+            self.assertEqual(proc.returncode,0,proc.stdout+proc.stderr)
+            self.assertEqual(json.loads(proc.stdout)['summary']['unknownMethodCauses'],1)
+            self.assertEqual(record.read_bytes(),before)
+            self.assertEqual(sorted(p.name for p in root.iterdir()),['.aim'])
+            record.write_text('{"reviewedLessons":[],"reviewedLessons":[]}')
+            proc=subprocess.run([sys.executable,str(ROOT/'scripts/aim_engineering.py'),'--repo',str(root),
+                'learning','triage','--record','.aim/triage.json'],capture_output=True,text=True)
+            self.assertEqual(proc.returncode,2)

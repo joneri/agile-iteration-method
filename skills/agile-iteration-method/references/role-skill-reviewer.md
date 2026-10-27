@@ -93,6 +93,13 @@ Skill id: `aim-reviewer-engineering`. Bundled with AIM; applies to review.
   Distinguish a verified control from an untested compliance claim.
 - Assess a real follow-up change: can a successor locate and change one
   responsibility safely? Check source formatting, coupling and duplicated logic.
+- For AIM method-learning maintenance, consume the existing selected triage
+  record with `aim_engineering.py learning triage --record ...`. Check product
+  remedy and method cause independently; missing causal linkage remains unknown,
+  not excluded or automatically repair-queued. Verify any recorded causal
+  exclusion/confirmation against its permitted trace, retaining actual corrected
+  controls and pre-readiness detections. Counts/advice flags cannot prove
+  recurrence or authorize private-origin discovery; no new per-Epic report.
 - Cross-check durable documentation and native loaders against current code.
   Hash freshness helps find drift; it does not establish semantic correctness.
   Check old absence claims when capabilities change and distinguish historical

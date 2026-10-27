@@ -71,15 +71,15 @@ class ObservationTests(unittest.TestCase):
         self.assertFalse(past['historical'])
         self.assertEqual(past['column'], 'done')
         self.assertEqual(board['executionGraph']['deliveryId'], 'LOOP-EXCEPTION')
-        # Both a historical append and a later current delivery must retain the
-        # prior explicit history disposition of native work.
+        # Neither a historical append nor later focus change disposes of the
+        # unfinished native obligation named by a display-only replacement.
         request = copy.deepcopy(request)
         request.pop('makeCurrent')
         request['entry']['id'] = 'past-now-current'
         import_entry(self.repo, request, receipt['storeSha256'])
         board = project_story_board(self.repo)
         native = {s['id']: s for s in board['stories'] if not s.get('observationId')}
-        self.assertTrue(native['US-BUYER']['historical'])
+        self.assertFalse(native['US-BUYER'].get('historical', False))
         self.assertFalse(native['US-LATER'].get('historical', False))
         self.assertEqual((self.repo/'.aim/product-backlog.json').read_bytes(), native_before)
 
@@ -100,7 +100,7 @@ class ObservationTests(unittest.TestCase):
                 import_entry(self.repo, request, first['storeSha256'])
         self.assertEqual((self.repo/FILE).read_bytes(), before)
 
-    def test_main_board_combines_actual_work_and_accepted_done_without_old_attempts(self):
+    def test_main_board_keeps_open_obligations_and_accepted_done_across_deliveries(self):
         self.fixture.accept()
         self.request['ledgerSha256'] = aim_observations.fingerprint(self.repo, aim_observations.LEDGER)
         original_native = (self.repo/'.aim/product-backlog.json').read_bytes()
@@ -126,11 +126,11 @@ class ObservationTests(unittest.TestCase):
         live = {s['id']: s['column'] for s in board['stories'] if not s.get('historical')}
         archive = {s['id'] for s in board['stories'] if s.get('historical')}
         self.assertEqual(live, {'US-BUYER': 'done', 'US-AGENT': 'done', 'US-LATER': 'backlog',
-                                'US-OBS': 'done', 'US-NEW': 'in_progress'})
-        self.assertEqual(archive, {'US-REJECTED'})
+                                'US-OBS': 'done', 'US-NEW': 'in_progress', 'US-REJECTED': 'in_progress'})
+        self.assertEqual(archive, set())
         self.assertEqual((self.repo/'.aim/product-backlog.json').read_bytes(), original_native)
 
-    def test_explicit_history_scope_preserves_unrelated_backlog_and_original_receipts(self):
+    def test_display_replacement_preserves_open_native_work_and_original_receipts(self):
         self.fixture.approve()
         self.request['ledgerSha256'] = aim_observations.fingerprint(self.repo, aim_observations.LEDGER)
         self.entry['replacesDeliveryIds'] = ['DI-1']
@@ -139,7 +139,7 @@ class ObservationTests(unittest.TestCase):
         imported = import_entry(self.repo, self.request)
         board = project_story_board(self.repo)
         native = {story['id']:story for story in board['stories'] if not story.get('observationId')}
-        self.assertTrue(native['US-BUYER']['historical'])
+        self.assertFalse(native['US-BUYER'].get('historical', False))
         self.assertEqual(native['US-BUYER']['status'], 'in_progress')
         self.assertFalse(native['US-LATER'].get('historical', False))
         self.assertEqual(native['US-LATER']['column'], 'backlog')
