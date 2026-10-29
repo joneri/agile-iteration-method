@@ -75,16 +75,16 @@ See [cost profiles](../workflow/cost-control-mode.md).
 
 ## AIM Graph
 
-Use `/aim graph` or **Graph** in AIM UI to see the delivery goal, selected
-Stories, dependencies and current proof. Inspect an activity to understand its
-inputs, role skills, file responsibility and what to return. Copy a bounded
-assignment when prerequisites, ownership and capacity permit it.
+Use `/aim graph` to inspect the approved activity graph, recorded attempts,
+current proof and bounded next assignments. Without an execution plan it shows
+native lifecycle checkpoints. Failed or stale inputs identify affected work;
+obsolete attempts cannot unlock dependants.
 
-AIM records activity attempts in its existing ledger. Failed or stale inputs
-identify the affected work; obsolete attempts cannot unlock dependants. Without
-an execution plan, Graph shows the recorded native delivery checkpoints. The
-host runs agents; native review, validation and actual owner acceptance still apply.
-See [AIM Graph](../workflow/adaptive-execution.md#aim-graph).
+AIM UI's **Graph** tab shows Story dependencies. Select a Story to inspect its
+user need, criteria, evidence and external inputs. It complements the command's
+execution view; it does not display the same activity graph or launch agents.
+The host runs agents; native review, validation and actual owner acceptance
+still apply. See [AIM Graph](../workflow/adaptive-execution.md#aim-graph).
 
 ## AIM UI
 

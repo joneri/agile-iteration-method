@@ -103,7 +103,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.7.5",
+  "productVersion": "4.7.6",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -151,7 +151,7 @@
     {
       "output": "references/adaptive-execution.md",
       "source": "docs/workflow/adaptive-execution.md",
-      "sourceSha256": "832d18415a594a64804d0400ac2e4f354e1c290329871f8029edab107aa22b37"
+      "sourceSha256": "740e64a3c66cddbfd702d08160840d80efb8ef1f223e460b40e56a87536bafa3"
     },
     {
       "output": "references/engineering-delivery.md",
@@ -181,7 +181,7 @@
     {
       "output": "references/skill-user-guide.md",
       "source": "docs/workflow/skill-user-guide.md",
-      "sourceSha256": "bf561168abb4ed5cd86cf9a663b733fc530af20abe6b7646638fca51c1a9af73"
+      "sourceSha256": "87f627acbe8803aaa3960e581a05af31b137949c2ecd1d93dde6884010ade632"
     },
     {
       "output": "references/skill-command-runtime.md",
@@ -301,12 +301,12 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "4b5ff92f05f806a4668f7528069e8e0eb14cbe416de71bdc9fdc1fa6e1737bd6"
+      "sourceSha256": "8152d681881c5d573b01fe1e8ec39ba960747616753a4b6352846680e20fc753"
     },
     {
       "output": "references/version-and-installation.md",
       "source": "scripts/aim_publication.py",
-      "sourceSha256": "24b4c301a3b5e967fa5a0f809ad819a0a34aa9c03a2a6010d3808d63279dde73"
+      "sourceSha256": "60d4394c3c26db9252b6314f7fdf5155801dc969e7aefe5c37878089b431aa86"
     },
     {
       "output": "manifest.json",

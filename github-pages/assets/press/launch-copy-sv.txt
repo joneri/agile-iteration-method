@@ -1,9 +1,9 @@
 AIM
 Från din idé till en komplett produkt.
 
-Förslag till lanseringstext · AIM 4.7.5 · 29 oktober 2026.
+Förslag till lanseringstext · AIM 4.7.6 · 29 oktober 2026.
 
-AIM 4.7.5 uppdaterar hemsidans förhandsvisningar och ikonmetadata till AIM 4:s aktuella visuella identitet. Publiceringskontroller håller bilder och metadata samstämmiga. Externa tjänster kan behöva läsa om cachelagrade sidor innan deras förhandsvisningar ändras.
+AIM 4.7.6 uppdaterar hemsidans Board- och Graph-bilder med verifierade skärmbilder av det aktuella gränssnittet. Vägledningen skiljer nu Story-beroenden i AIM UI från körningsvyn som /aim graph ger. Båda bilderna är märkta som syntetiska exempel; kommandots och gränssnittets beteende är oförändrat.
 
 Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 

@@ -22,7 +22,7 @@ The approved source SHA-256 is
 The versionless AIM brand artwork is the selected existing source image and is
 copied without generation, retouching, recompression, or other transformation.
 
-Keep only selected current publication assets here. Retired campaign artwork,
+Keep current publication assets and explicitly identified historical captures here. Retired campaign artwork,
 the earlier conceptual UI illustration and the Portfolio Auto demonstration
 remain recoverable from Git history; they are not current website resources.
 
@@ -36,33 +36,34 @@ English and Swedish launch drafts, product facts, usage notes and the
 documentation licence. It is a reviewable press package, not a record of
 publication. No vector master is included.
 
-## AIM UI product capture
+## Current AIM UI product captures
 
-- `aim-control-board.png`: the actual AIM UI 4.1.0 User Stories Kanban
-  board, captured at a 2160-pixel desktop browser width. All seven columns are
-  visible: Backlog, Ready, In progress, Review, Validation, Acceptance and Done.
-  The board contains six example booking Stories. Finding and booking are Done,
-  cancellation awaits acceptance, rescheduling/calendar are Ready and reminders
-  are in Backlog. The three active-work columns are empty at this checkpoint.
+- `aim-ui-story-board.png`: unedited `ready.png` (1280 × 1243). Five columns,
+  three synthetic order-recovery Stories: Backlog1, Ready2. The Recover an
+  order card is expanded to show its criteria.
+- `aim-ui-story-dependencies.png`: unedited `dependencies.png` (1280 × 848).
+  Three Story nodes and one explicit prerequisite, Recover an order → Retain
+  a draft. The selected draft inspector includes an unresolved owner input.
 
-Captured with Chromium/Playwright on 12 October 2026 from this repository's
-`aim-ui/` served by `scripts/aim_ui.py`. The isolated `booking-example` fixture
-uses the installed Story helper to create synthetic requirements, plan authority,
-review and acceptance records. Done cards illustrate state in the example;
-they do not assert real user acceptance or a completed customer product.
-The website explicitly labels the image as example data. The PNG is an unedited
-browser capture of the whole board element at twice CSS pixel density
-(4088 × 2150). No generated UI, annotations, retouching or private workspace
-content is used. The Delivery control and narrow Acceptance-column images from
-the earlier draft are no longer publication assets.
+Captured 29 October 2026 from actual AIM UI 4.7.5 by the existing
+`python3 scripts/verify_aim_graph.py --output output/playwright/current-graph-audit`
+journey, using an isolated synthetic fixture and a real browser. The entry
+verifies the current Story board and Graph, persisted lifecycle, owner waiting,
+reload, mobile and reduced motion. These two images are different checkpoints
+of the same run; they do not claim real customer work or owner acceptance.
+No generated interface, retouching or private workspace data is used. The
+website labels the examples and actual capture version/date explicitly. The
+4.7.6 documentation correction does not change the captured UI behavior.
 
-- `aim-ui-graph.png`: actual AIM UI 4.6.0 Graph view, captured on 19 October
-  2026 by `python3 scripts/verify_aim_graph.py`. The isolated synthetic idea-wall
-  fixture records a completed contract and two ready dependent activities while
-  review waits. The inspector exposes file responsibility and assignment copying.
-  This is the unedited `progress.png` browser capture (1410 × 1282), with no
-  private project data, generated interface, retouching or claim of live activity.
-  The website labels it as synthetic example data and a recorded snapshot.
+### Historical captures retained for existing URLs
+
+The following images are no longer selected by the homepage or publication
+capture contract. The 4.1.0 board has seven columns; the 4.6.0 graph shows the
+former activity view. They remain byte-identical to preserve historical URLs
+and can also be recovered from Git commit `c847794`:
+
+- `aim-control-board.png`: SHA-256 `650a7bcbe890abb9f3f219723d6c6f35957fa95126e0aba9c9fe6b14a0cbec1a`.
+- `aim-ui-graph.png`: SHA-256 `7afaaec182d9217fe006cb260eedff8da81c3804c027634234cada750b302dcb`.
 
 ## Current link preview and icon
 

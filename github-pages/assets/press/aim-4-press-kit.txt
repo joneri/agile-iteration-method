@@ -1,5 +1,5 @@
 AIM — PRESS KIT
-AIM 4.7.5 · 29 October 2026.
+AIM 4.7.6 · 29 October 2026.
 
 POSITIONING
 Turn your intent into a complete product.
@@ -8,7 +8,7 @@ ONE SENTENCE
 AIM completes the agreed product with Ship by default, offers Loop for recurring owner feedback, and makes the work, dependencies and evidence visible in AIM UI.
 
 SHORT DESCRIPTION
-Agile Iteration Method (AIM) is an open-source method and tooling for AI-assisted software development. Describe the result you want. Ship takes the agreed product through planning, implementation, independent review and real verification before final acceptance. Choose Loop when recurring owner feedback should shape the next useful Done Increment. AIM UI is the local control room for Stories, the selected delivery, dependencies and evidence. Graph engineering connects responsibilities, prerequisites and proof; the Graph view makes those recorded relationships visible.
+Agile Iteration Method (AIM) is an open-source method and tooling for AI-assisted software development. Describe the result you want. Ship takes the agreed product through planning, implementation, independent review and real verification before final acceptance. Choose Loop when recurring owner feedback should shape the next useful Done Increment. AIM UI is the local control room for Stories, the selected delivery, dependencies and evidence. Graph engineering connects responsibilities, prerequisites and proof. AIM UI Graph shows Story dependencies, evidence and external inputs; /aim graph provides the approved execution view.
 
 CURRENT CAPABILITIES
 - Discover tools when needed, use supported native processing for large MCP/tool responses, and retain sources, counterevidence, partial errors and approvals. Small calls stay direct; bounded ordinary calls provide the fallback. Actual token and cost savings depend on the task and host.
@@ -18,7 +18,7 @@ CURRENT CAPABILITIES
 - Open AIM UI with /aim ui to inspect User Stories, the selected delivery, Graph, review evidence and recorded progress alongside your coding agent. The UI remains Beta; copying a handoff does not start agents or grant approval.
 - Ship is the default: complete the agreed product before final acceptance. Choose Loop for useful Done Increments with recurring owner feedback.
 - Use Graph engineering to connect ownership, dependencies, delivery and independent proof. An agent owner can give feedback and decide in Strict Loop only under an explicit human mandate and its permitted delivery decisions.
-- Use AIM Graph to see delivery dependencies, current activity proof and blockers. Copy bounded assignments with role skills and file responsibility. Changed inputs identify the affected work and evidence that need correction.
+- Use /aim graph to inspect delivery activities or native checkpoints, current proof, blockers and bounded assignments. AIM UI Graph shows Story dependencies and external inputs. Changed activity inputs identify work and evidence that need correction.
 - Agree quality goals before implementation and test the first working core before building around it. A separate reviewer challenges a material core with an independent example.
 - Verify the real user journeys through the delivered application. Keep raw observations behind the assessment, including complete-result time when it matters.
 - Maintain a map of important user journeys and a runnable verification route so later changes can reuse the right checks.
@@ -36,7 +36,7 @@ Choose the agent and installation scope, reload the session if needed, load the 
 
 FACTS
 Name: Agile Iteration Method (AIM)
-Release version: 4.7.5
+Release version: 4.7.6
 Runtime contract: 2.0; backlog, state and installer schemas: 1.0
 Platforms: Codex, GitHub Copilot and Claude Code
 AIM UI: Beta; local control room
@@ -49,7 +49,7 @@ Public releases: https://github.com/joneri/agile-iteration-method/releases
 EVIDENCE AND AVAILABILITY
 The retained Enigma M3 results compare GPT-6 Luna with AIM, scoring 96.5/100 in the latest assessment, with GPT-6 Luna without AIM at 49.8/100. Both used high reasoning effort, the same brief and the same scoring weights. The earlier AIM result was 93.5/100. The Luna-only run is from 30 September 2026; the latest assessed AIM delivery is from 18 October. Delivery conditions differ: this is a historical comparison, not a fresh paired experiment or proof of general superiority or lower development cost. The latest version of AIM includes later changes outside this application score; the assessed native delivery remained unfinished. Exact frozen versions, scope and sanitized evidence: https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-enigma-evaluation.md. Original with-and-without-AIM comparison: https://github.com/joneri/agile-iteration-method/blob/main/docs/features/aim-3.2-enigma-m3-case.md.
 
-The earlier AIM 3.2 paired study retains its original test conditions and evidence. AIM 4.7.5 is available as the current ordinary release. Install the complete skill with the command above or view the release at https://github.com/joneri/agile-iteration-method/releases/tag/v4.7.5.
+The earlier AIM 3.2 paired study retains its original test conditions and evidence. AIM 4.7.6 is available as the current ordinary release. Install the complete skill with the command above or view the release at https://github.com/joneri/agile-iteration-method/releases/tag/v4.7.6.
 
 LOGO
 The supplied aim-4-logo.png is the established AIM campaign lockup: the golden/blue folded A identity, navy AIM lettering and a blue/cyan ribbon numeral 4 on a transparent background. Use on white or pale backgrounds. Preserve proportions, colours and the full lockup. Leave at least the height of the AIM capital letters as clear space. Check legibility at the intended size; do not use the entire wordmark as a tiny favicon. The versionless canonical repository artwork remains separate.

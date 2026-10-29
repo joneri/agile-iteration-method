@@ -60,7 +60,8 @@ PUBLIC_CAMPAIGN_IMAGE_SHA256 = (
 )
 PUBLIC_SITE_ASSETS = ("github-pages/assets/aim4-site.css", "github-pages/assets/aim4-site.js")
 PUBLIC_PRODUCT_CAPTURES = (
-    "github-pages/assets/images/aim-control-board.png",
+    "github-pages/assets/images/aim-ui-story-board.png",
+    "github-pages/assets/images/aim-ui-story-dependencies.png",
 )
 PUBLIC_AGENT_INSTRUCTIONS_PATH = "github-pages/assets/aim-install-agent.txt"
 PUBLIC_PRESS_KIT_PATH = "github-pages/assets/press/aim-4-press-kit.zip"

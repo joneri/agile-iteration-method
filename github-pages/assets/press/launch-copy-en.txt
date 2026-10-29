@@ -1,9 +1,9 @@
 AIM
 Turn your intent into a complete product.
 
-Suggested announcement copy · AIM 4.7.5 · 29 October 2026.
+Suggested announcement copy · AIM 4.7.6 · 29 October 2026.
 
-AIM 4.7.5 updates website previews and icon metadata to the current AIM 4 identity. Sources and publication checks keep images and metadata aligned. External services may need to recrawl cached pages before their previews change.
+AIM 4.7.6 refreshes the website’s Board and Graph screenshots with verified captures of the current interface. Guidance now distinguishes Story dependencies in AIM UI from the execution view returned by /aim graph. Both images are labelled synthetic examples; command and UI behavior remain unchanged.
 
 Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 

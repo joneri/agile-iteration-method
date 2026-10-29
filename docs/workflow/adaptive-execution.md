@@ -92,10 +92,13 @@ work and remaining commitments; it cannot turn partial delivery into completion.
 ## AIM Graph
 
 Use `/aim graph` to answer what can start and what blocks the current delivery.
-The trusted Story helper's `graph` command is read-only. AIM UI's **Graph** tab
-shows the same outcome, selected Stories, dependencies, activity receipts and
-proof freshness. Without an execution plan it shows the native checkpoints,
-without inventing implementation tasks or agent presence.
+The trusted Story helper's `graph` command is read-only: it projects the approved
+activity graph and its attempts, proof freshness and bounded next assignments.
+Without an execution plan it shows native lifecycle checkpoints. AIM UI's
+**Graph** tab instead shows Stories and their explicit dependencies; select a
+Story to inspect its user need, criteria, evidence and external inputs. These
+are complementary views, not the same visualization. Neither invents agent
+presence or grants permission to start work.
 
 When meaningful dependencies or parallel ownership justify it, TDO includes an
 optional `executionPlan` in the existing `plan` request, before approval. It uses

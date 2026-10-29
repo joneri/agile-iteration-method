@@ -234,7 +234,8 @@ class PublicationContractTests(unittest.TestCase):
         self.assertIn("Brand artwork version policy: versionless", inventory)
         self.assertIn("contain no product version", inventory)
         self.assertIn("aim-4-logo.png", inventory)
-        self.assertIn("aim-control-board.png", inventory)
+        self.assertIn("aim-ui-story-board.png", inventory)
+        self.assertIn("aim-ui-story-dependencies.png", inventory)
 
     def test_changed_aim_4_campaign_artwork_blocks_publication(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -304,7 +305,7 @@ class PublicationContractTests(unittest.TestCase):
         reference = evidence["referenceVersion"]
         for before, after, expected in (
             ('data-product-capture="example"', 'data-product-capture="live"', "example caption"),
-            ('Actual AIM UI 4.1.0 · Desktop Kanban board with example project data.', 'Actual AIM UI 4.1.0 · Live project.', "example caption"),
+            ('Actual AIM UI 4.7.5 · Board with synthetic example data, captured 29 October 2026. Five columns show the current recorded Story state.', 'Actual AIM UI 4.1.0 · Live project.', "example caption"),
             (f'data-evidence-version="{evaluated}"', 'data-evidence-version="unassessed"', "tested AIM version"),
             (reference, "unattributed-reference", "tested AIM version"),
             ('href="#start"', 'href="#missing"', "broken section link"),
@@ -325,6 +326,13 @@ class PublicationContractTests(unittest.TestCase):
             (output / PUBLIC_PRODUCT_CAPTURES[0]).unlink()
             with self.assertRaisesRegex(PublicationError, "AIM UI capture is missing"):
                 validate_artifact(output)
+
+    def test_missing_graph_capture_blocks_source_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            (copied / "github-pages/assets/images/aim-ui-story-dependencies.png").unlink()
+            with self.assertRaisesRegex(PublicationError, "AIM UI capture is missing"):
+                validate_source(copied)
 
     def test_product_capture_requires_accessible_description(self) -> None:
         import re

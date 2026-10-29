@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-10-29 - AIM release v4.7.6
+
+Show the current AIM UI accurately on the website and in Graph guidance.
+
+- Replace the selected Board and Graph screenshots with unedited, verified
+  captures of the five-column Story board and Story dependency view. Use new
+  asset URLs, accurate dimensions, accessible descriptions and explicit synthetic
+  example captions with the actual capture version (4.7.5), date and checkpoints.
+- Clarify that `/aim graph` projects approved activities or native lifecycle
+  checkpoints, while AIM UI Graph presents Story dependencies and external inputs.
+- Require both current screenshots in the existing publication gate; retain
+  former images byte-identical as historical URLs and preserve study evidence.
+- Regenerate the public skill from canonical guidance and refresh release metadata.
+
+Command and UI behavior, gates, authority boundaries and runtime/package formats
+remain unchanged. No project migration is required.
+
 ## 2026-10-29 - AIM release v4.7.5
 
 Make website link previews match the current AIM 4 identity.
