@@ -151,7 +151,7 @@
     {
       "output": "references/adaptive-execution.md",
       "source": "docs/workflow/adaptive-execution.md",
-      "sourceSha256": "740e64a3c66cddbfd702d08160840d80efb8ef1f223e460b40e56a87536bafa3"
+      "sourceSha256": "0f662738d0d1c9238bd675f2f3f5fe6da96df2f2e8312067f77a538d204fd160"
     },
     {
       "output": "references/engineering-delivery.md",
@@ -181,7 +181,7 @@
     {
       "output": "references/skill-user-guide.md",
       "source": "docs/workflow/skill-user-guide.md",
-      "sourceSha256": "87f627acbe8803aaa3960e581a05af31b137949c2ecd1d93dde6884010ade632"
+      "sourceSha256": "59f8572fb2bf92897d60b79965e700a634fda0c66104909f5d833b5edcdb8ce0"
     },
     {
       "output": "references/skill-command-runtime.md",
@@ -201,7 +201,7 @@
     {
       "output": "references/adapter-command-contract.md",
       "source": "docs/workflow/adapter-command-contract.md",
-      "sourceSha256": "037caee5b4c1b27e0af287bb8ad04f3081dec06beddfc9f36c06187fe27b5e89"
+      "sourceSha256": "db6bd40469c8357ad6ee769a867c9b0614e1b329f6322ec7bd05123bbfb69e54"
     },
     {
       "output": "references/adapter-entry-model.md",

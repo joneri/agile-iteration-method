@@ -75,9 +75,10 @@ See [cost profiles](../workflow/cost-control-mode.md).
 
 ## AIM Graph
 
-Use `/aim graph` to inspect the approved activity graph, recorded attempts,
-current proof and bounded next assignments. Without an execution plan it shows
-native lifecycle checkpoints. Failed or stale inputs identify affected work;
+Use `/aim graph` to inspect the selected recorded execution view, activity attempts,
+current proof and bounded next assignments. For native deliveries without an
+execution plan it shows lifecycle checkpoints. Imported observations remain attributed evidence,
+not native approval or acceptance. Failed or stale inputs identify affected work;
 obsolete attempts cannot unlock dependants.
 
 AIM UI's **Graph** tab shows Story dependencies. Select a Story to inspect its

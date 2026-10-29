@@ -94,7 +94,7 @@ its existing mandate. A session preference cannot amend that approved scope.
 | `/aim start "PORTFOLIO" mode:auto` | preview the ordered AIM UI Backlog and request one bounded Portfolio mandate | after explicit mandate approval, may create `.aim/portfolio-run.json` and sequentially coordinate included canonical Epic workspaces |
 | `/aim continue` | resume from the persisted role, gate, increment, mode, and cost profile | advances state only when the current AIM transition allows it |
 | `/aim status` | report the trusted package product release from `VERSION` or manifest `productVersion`, separately from the selected runtime contract (`aimVersion` in legacy state); show native Story/delivery status, policy and next action, or the explicitly selected legacy checkpoint | read-only |
-| `/aim graph` | use the trusted Story helper's `graph` command to explain the current delivery's dependencies, recorded work, stale evidence and next possible assignments; preserve the existing mandate and gates | read-only |
+| `/aim graph` | use the trusted Story helper's `graph` command; name the selected delivery/source, draw only recorded edges, expose stale/observed evidence and conflicting labels, and separate recommendations from facts; follow AIM Graph reporting in `adaptive-execution.md`; preserve the existing mandate and gates | read-only |
 | `/aim validate` | run or explain Structural, Behavioral, Product coherence, and Release readiness checks | read-only |
 | `/aim help` | show the thin front door and the next useful command | read-only |
 | `/aim config` | show effective mode, cost, profile, ownership, validation, and adapter fallback configuration | read-only |

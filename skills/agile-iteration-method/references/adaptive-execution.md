@@ -99,13 +99,35 @@ work and remaining commitments; it cannot turn partial delivery into completion.
 ## AIM Graph
 
 Use `/aim graph` to answer what can start and what blocks the current delivery.
-The trusted Story helper's `graph` command is read-only: it projects the approved
-activity graph and its attempts, proof freshness and bounded next assignments.
-Without an execution plan it shows native lifecycle checkpoints. AIM UI's
+The trusted Story helper's `graph` command is read-only: it projects the selected
+recorded execution view, including activity attempts, proof freshness and bounded
+next assignments. Native plans can be unapproved; imported observations do not
+constitute native delivery evidence or acceptance.
+
+For native deliveries without an execution plan it shows lifecycle checkpoints.
+AIM UI's
 **Graph** tab instead shows Stories and their explicit dependencies; select a
 Story to inspect its user need, criteria, evidence and external inputs. These
 are complementary views, not the same visualization. Neither invents agent
 presence or grants permission to start work.
+
+When explaining the command result:
+
+- Name the selected delivery and source; preserve observation, stale-source and
+  evidence-validity limits. Do not imply a project-wide dependency assessment.
+- Draw factual arrows only from returned `edges`. No edges means no recorded
+  dependencies in that view, not no blockers or permission to work in parallel.
+  Do not turn the order of work, completion or owner checkpoints into extra edges.
+- Label proposed sequencing and next steps separately as recommendations. They
+  neither change the recorded graph nor extend the current mandate.
+- Surface conflicting titles, goals or criteria as unresolved source inconsistency.
+  Preserve their identity and wording; do not silently relabel nodes or choose a
+  supposedly verified scope without corroborating the relevant source evidence.
+
+For example: “Selected delivery: backend repair; source: observation. No recorded
+edges. Its Story title concerns show layout, which conflicts with the delivery
+goal. Suggested next step: reconcile the source records.” This is not a factual
+project-wide graph or confirmation that deployment/acceptance occurred.
 
 When meaningful dependencies or parallel ownership justify it, TDO includes an
 optional `executionPlan` in the existing `plan` request, before approval. It uses

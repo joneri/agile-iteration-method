@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import subprocess
 import unittest
 from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -41,6 +42,45 @@ class ObservationTests(unittest.TestCase):
         before=(self.repo/FILE).read_bytes()
         project_story_board(self.repo)
         self.assertEqual(before,(self.repo/FILE).read_bytes())
+
+    def test_graph_command_preserves_empty_edges_and_conflicting_observed_labels(self):
+        # A security delivery accidentally inherited show labels. The read model
+        # must expose the contradiction instead of inventing dependencies or scope.
+        self.entry.update(title='Repair backend dependencies',
+                          goal='Remove audited dependency vulnerabilities',
+                          reportedState='awaiting_owner',
+                          decisionBoundary='Reported deployed; actual owner acceptance remains pending.')
+        story = self.entry['stories'][0]
+        story.update(title='Find the right show', need='See show artwork',
+                     benefit='Navigate the show list', acceptanceCriteria=[dict(
+                         id='AC-1', text='Reviewed security updates pass local and production checks.')])
+        self.entry['activities'] = [dict(
+            id='SHOWS-DELIVERY', title='Implement the shared show list', role='dev',
+            status='completed', dependsOn=[], storyIds=['US-OBS'],
+            reason='Copied label conflicts with the security delivery goal.')]
+        import_entry(self.repo, self.request)
+        paths = [self.repo / '.aim/product-backlog.json', self.repo / FILE]
+        before = [path.read_bytes() for path in paths]
+        completed = subprocess.run([
+            sys.executable, str(fixtures.ROOT / 'scripts/aim_stories.py'),
+            '--repo', str(self.repo), '--compact', 'graph',
+        ], capture_output=True, text=True)
+        self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+        graph = json.loads(completed.stdout)
+        self.assertEqual(graph['deliveryId'], 'LOOP-EXCEPTION')
+        self.assertEqual(graph['title'], 'Repair backend dependencies')
+        self.assertEqual(graph['goal'], 'Remove audited dependency vulnerabilities')
+        self.assertEqual(graph['source'], 'observation')
+        self.assertFalse(graph['nativeEvidenceValid'])
+        self.assertEqual(graph['edges'], [])
+        self.assertEqual(graph['readyIds'], [])
+        self.assertEqual(graph['recommendedIds'], [])
+        self.assertEqual([s['id'] for s in graph['stories']], ['US-OBS'])
+        self.assertEqual(graph['stories'][0]['title'], 'Find the right show')
+        self.assertEqual(graph['stories'][0]['acceptanceCriteria'], story['acceptanceCriteria'])
+        self.assertEqual(graph['activities'][0]['title'], 'Implement the shared show list')
+        self.assertIn('actual owner acceptance remains pending', graph['summary'])
+        self.assertEqual([path.read_bytes() for path in paths], before)
 
     def test_historical_import_preserves_active_delivery_and_prior_records(self):
         self.fixture.approve()
