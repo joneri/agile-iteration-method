@@ -1,6 +1,6 @@
 # GitHub Pages Image Assets
 
-Source images intended for the AIM website published from the `gh-pages` branch.
+Source images intended for the AIM website published through the validated GitHub Pages artifact.
 
 - `aim-2-hero-dark.png`: canonical dark, versionless AIM logo and website hero
   artwork
@@ -9,8 +9,8 @@ Source images intended for the AIM website published from the `gh-pages` branch.
   transparent background; 2172 × 724 RGBA PNG. Use on
   white or pale backgrounds. This versioned campaign asset is separate from
   the canonical versionless brand artwork.
-- `AIM_OG.png` at the repository root: byte-identical versionless Open Graph
-  artwork
+- `AIM_OG.png` at the repository root: retained byte-identical versionless
+  brand artwork; current preview metadata uses the separate AIM 4 card below
 
 Brand artwork version policy: versionless. The two brand-image files above must
 remain byte-identical and contain no product version. The exact current release
@@ -63,3 +63,19 @@ the earlier draft are no longer publication assets.
   This is the unedited `progress.png` browser capture (1410 × 1282), with no
   private project data, generated interface, retouching or claim of live activity.
   The website labels it as synthetic example data and a recorded snapshot.
+
+## Current link preview and icon
+
+- `aim-4-preview.png`: current 1200×630 Open Graph/Twitter/structured-data
+  preview, composed from the unchanged approved AIM 4 logo and current product
+  copy on white. The new URL separates it from the older cached artwork.
+- `aim-icon.png`: square 192×192 browser/apple icon using the existing A mark.
+  Its stable URL supports future recrawling. Google chooses one favicon per
+  hostname; repository subpaths are not independent favicon sites.
+
+Source composition: `scripts/assets/aim-preview.html`. Serve the repository
+locally, open that file with Playwright at CSS pixel scale and screenshot
+`#card` and `#icon` into the paths above. No new AI image, logo redesign or
+retouching of the protected source artwork is involved. Rendered2026-10-29
+with Edge/Playwright; the PNGs are reviewed publication assets, not dynamically
+generated per request. External page/image caches may require a recrawl.

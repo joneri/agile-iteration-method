@@ -52,6 +52,8 @@ PUBLIC_BRAND_IMAGE_SHA256 = (
 )
 VERSIONLESS_BRAND_ARTWORK_MARKER = "Brand artwork version policy: versionless"
 PUBLIC_CAMPAIGN_IMAGE_PATH = "github-pages/assets/images/aim-4-logo.png"
+PUBLIC_PREVIEW_IMAGE_PATH = "github-pages/assets/images/aim-4-preview.png"
+PUBLIC_ICON_PATH = "github-pages/assets/images/aim-icon.png"
 PUBLIC_CAMPAIGN_IMAGE_SIZE = (2172, 724)
 PUBLIC_CAMPAIGN_IMAGE_SHA256 = (
     "5e1cd88bed8e78b5dfe08238b24c9006d1dac9a85fcd56779c30eef6c97ff3d7"
@@ -96,9 +98,23 @@ class _Homepage(HTMLParser):
         self.evidence_version: str | None = None
         self.evidence_text = ""
         self.evidence_depth = 0
+        self.metadata: dict[str, list[str | None]] = {}
+        self.icons: dict[str, list[str | None]] = {}
+        self.schema_text = ""
+        self.in_schema = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attributes = dict(attrs)
+        if tag == "meta":
+            key = attributes.get("property") or attributes.get("name")
+            if key:
+                self.metadata.setdefault(key, []).append(attributes.get("content"))
+        if tag == "link":
+            for rel in attributes.get("rel", "").lower().split():
+                if rel in {"icon", "apple-touch-icon"}:
+                    self.icons.setdefault(rel, []).append(attributes.get("href"))
+        if tag == "script" and attributes.get("type") == "application/ld+json":
+            self.in_schema = True
         if attributes.get("id"):
             self.ids.add(attributes["id"])
         if attributes.get("id") == "evidence":
@@ -123,12 +139,16 @@ class _Homepage(HTMLParser):
             self.current_capture["images"].append(attributes)
 
     def handle_data(self, data: str) -> None:
+        if self.in_schema:
+            self.schema_text += data
         if self.in_caption and self.current_capture is not None:
             self.current_capture["caption"] += data
         if self.evidence_depth:
             self.evidence_text += data
 
     def handle_endtag(self, tag: str) -> None:
+        if tag == "script":
+            self.in_schema = False
         if tag == "figure":
             self.current_capture = None
         if tag == "figcaption":
@@ -247,6 +267,36 @@ def _png_dimensions(path: Path) -> tuple[int, int]:
     return struct.unpack(">II", header[16:24])
 
 
+def _preview_contract(root: Path) -> None:
+    """Current metadata must point to packaged, correctly sized preview assets."""
+    page = _Homepage()
+    page.feed(_read_text(root / "index.html"))
+    image = PUBLIC_ORIGIN + PUBLIC_PREVIEW_IMAGE_PATH
+    expected = {"og:image": image, "twitter:image": image,
+                "og:image:type": "image/png", "og:image:width": "1200",
+                "og:image:height": "630"}
+    for name, value in expected.items():
+        if page.metadata.get(name) != [value]:
+            raise PublicationError(f"index.html: preview metadata {name} must be {value}")
+    for name in ("og:image:alt", "twitter:image:alt"):
+        values = page.metadata.get(name, [])
+        if len(values) != 1 or not values[0] or not values[0].strip():
+            raise PublicationError(f"index.html: preview metadata {name} needs alt text")
+    try:
+        schema = json.loads(page.schema_text)
+    except (ValueError, TypeError) as exc:
+        raise PublicationError("index.html: preview structured data must be valid JSON") from exc
+    if not isinstance(schema, dict) or schema.get("image") != image:
+        raise PublicationError("index.html: preview structured image must match Open Graph")
+    for rel in ("icon", "apple-touch-icon"):
+        if page.icons.get(rel) != [PUBLIC_ICON_PATH]:
+            raise PublicationError(f"index.html: preview {rel} must use the current square icon")
+    if _png_dimensions(root / PUBLIC_PREVIEW_IMAGE_PATH) != (1200, 630):
+        raise PublicationError("preview image must be 1200x630")
+    if _png_dimensions(root / PUBLIC_ICON_PATH) != (192, 192):
+        raise PublicationError("preview icon must be square 192x192")
+
+
 def _schema_contract(repo_root: Path, relative_path: str) -> dict[str, Any]:
     path = repo_root / relative_path
     try:
@@ -308,6 +358,7 @@ def validate_source(repo_root: Path) -> None:
             "index.html: brand-version must present the current AIM brand"
         )
     _homepage_contract(repo_root)
+    _preview_contract(repo_root)
     _press_contract(repo_root)
     campaign_image = repo_root / PUBLIC_CAMPAIGN_IMAGE_PATH
     if _png_dimensions(campaign_image) != PUBLIC_CAMPAIGN_IMAGE_SIZE:
@@ -568,6 +619,7 @@ def validate_artifact(output_root: Path) -> None:
                 "versionless source"
             )
     _homepage_contract(output_root)
+    _preview_contract(output_root)
     _press_contract(output_root, artifact=True)
     campaign_image = output_root / PUBLIC_CAMPAIGN_IMAGE_PATH
     if _png_dimensions(campaign_image) != PUBLIC_CAMPAIGN_IMAGE_SIZE:

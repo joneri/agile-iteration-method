@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-10-29 - AIM release v4.7.5
+
+Make website link previews match the current AIM 4 identity.
+
+- Publish a 1200×630 preview card and 192×192 icon composed from the unchanged
+  approved AIM 4 logo and current product copy. Preserve protected older artwork.
+- Point Open Graph, Twitter cards, structured image metadata, browser/apple
+  icons and the README image at current assets. A new preview URL separates
+  the card from the older image cache; icon URL remains stable.
+- Update the sitemap to the actual content-modification date.
+- Validate preview metadata, packaged image dimensions and duplicate icon
+  declarations in both source and assembled artifacts, including HTML rel casing.
+
+Google and other consumers choose when to recrawl cached page/image metadata.
+Google uses one favicon per hostname, not an independent icon per repository
+subpath. This correction does not guarantee an immediate preview/search change.
+Runtime, schemas and package format remain compatible; no project migration.
+
 ## 2026-10-29 - AIM release v4.7.4
 
 Use the host platform’s tool capabilities proportionately, including MCP, while

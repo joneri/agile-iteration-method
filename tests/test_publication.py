@@ -37,6 +37,59 @@ from aim_publication import (  # noqa: E402
 
 
 class PublicationContractTests(unittest.TestCase):
+    def test_stale_preview_references_are_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            path = copied / "index.html"
+            original = path.read_text()
+            current = PUBLIC_ORIGIN + "github-pages/assets/images/aim-4-preview.png"
+            for marker in ('property="og:image"', 'name="twitter:image"'):
+                with self.subTest(marker=marker):
+                    path.write_text(original.replace(marker + ' content="' + current,
+                                                     marker + ' content="' + PUBLIC_ORIGIN + 'AIM_OG.png'))
+                    with self.assertRaisesRegex(PublicationError, "preview metadata"):
+                        validate_source(copied)
+            path.write_text(original.replace('"image": "' + current,
+                                             '"image": "' + PUBLIC_ORIGIN + 'AIM_OG.png'))
+            with self.assertRaisesRegex(PublicationError, "preview structured image"):
+                validate_source(copied)
+
+    def test_missing_preview_and_nonsquare_icon_are_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            preview = copied / "github-pages/assets/images/aim-4-preview.png"
+            data = preview.read_bytes()
+            preview.unlink()
+            with self.assertRaisesRegex(PublicationError, "publication image is missing"):
+                validate_source(copied)
+            preview.write_bytes(data)
+            (copied / "github-pages/assets/images/aim-icon.png").write_bytes(
+                (copied / "AIM_OG.png").read_bytes())
+            with self.assertRaisesRegex(PublicationError, "icon must be square"):
+                validate_source(copied)
+
+    def test_mixed_case_duplicate_icon_cannot_hide_stale_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            page = copied / "index.html"
+            original = page.read_text()
+            for rel in ("ICON", "IcOn", "APPLE-TOUCH-ICON"):
+                page.write_text(original.replace("</head>",
+                    '<link rel="' + rel + '" href="github-pages/assets/images/aim-2-hero-dark.png"></head>'))
+                with self.subTest(rel=rel), self.assertRaisesRegex(PublicationError, "current square icon"):
+                    validate_source(copied)
+
+    def test_assembled_artifact_cannot_revert_to_legacy_preview(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "site"
+            build_artifact(REPO_ROOT, output)
+            page = output / "index.html"
+            page.write_text(page.read_text().replace(
+                'property="og:image" content="' + PUBLIC_ORIGIN + 'github-pages/assets/images/aim-4-preview.png',
+                'property="og:image" content="' + PUBLIC_ORIGIN + 'AIM_OG.png'))
+            with self.assertRaisesRegex(PublicationError, "preview metadata"):
+                validate_artifact(output)
+
     def _copy_repo(self, temporary: str) -> Path:
         copied = Path(temporary) / "repo"
         shutil.copytree(

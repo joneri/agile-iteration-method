@@ -25,8 +25,8 @@ describe your goal with `/aim start "<desired outcome>"`. AIM calibrates missing
 repository knowledge and configures missing specialists and available skills
 within that start; `/aim calibrate-repo` remains available for later refreshes.
 You can give these same instructions to your coding agent. The public command
-installs the complete public skill. AIM 4.7.4 is available as an ordinary release;
-see [GitHub Releases](https://github.com/joneri/agile-iteration-method/releases/tag/v4.7.4)
+installs the complete public skill. AIM 4.7.5 is available as an ordinary release;
+see [GitHub Releases](https://github.com/joneri/agile-iteration-method/releases/tag/v4.7.5)
 for its versioned assets.
 
 Use the adaptive installer when the repository also needs a reviewed footprint,

@@ -1,6 +1,6 @@
 # Agile Iteration Method (AIM)
 
-![AIM - Agile Iteration Method](github-pages/assets/images/aim-2-hero-dark.png)
+![AIM - Agile Iteration Method](github-pages/assets/images/aim-4-preview.png)
 
 AIM turns your intent into a complete, verified product. **Ship is the default**;
 choose **Loop** for useful Done Increments with recurring owner feedback.

@@ -1,9 +1,9 @@
 AIM
 Turn your intent into a complete product.
 
-Suggested announcement copy · AIM 4.7.4 · 29 October 2026.
+Suggested announcement copy · AIM 4.7.5 · 29 October 2026.
 
-AIM 4.7.4 keeps tool context focused. It discovers tools when needed and uses supported native processing to filter large MCP/tool responses before they enter model context. Sources, contrary findings, partial errors and approvals remain intact. Small calls stay direct; bounded ordinary calls provide the fallback. Actual token and cost savings depend on the work and platform.
+AIM 4.7.5 updates website previews and icon metadata to the current AIM 4 identity. Sources and publication checks keep images and metadata aligned. External services may need to recrawl cached pages before their previews change.
 
 Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 

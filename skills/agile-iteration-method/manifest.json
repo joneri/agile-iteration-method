@@ -103,7 +103,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.7.4",
+  "productVersion": "4.7.5",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -301,12 +301,12 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "ee5e84c23391fa9abca7772a043dd3a1bbe941ddae6c088b79aa675e5a01517e"
+      "sourceSha256": "4b5ff92f05f806a4668f7528069e8e0eb14cbe416de71bdc9fdc1fa6e1737bd6"
     },
     {
       "output": "references/version-and-installation.md",
       "source": "scripts/aim_publication.py",
-      "sourceSha256": "0d9653b2bc3dee45423b8ac43364aee9be11844bf5bf671c0efb796299d5b883"
+      "sourceSha256": "24b4c301a3b5e967fa5a0f809ad819a0a34aa9c03a2a6010d3808d63279dde73"
     },
     {
       "output": "manifest.json",
