@@ -1,9 +1,9 @@
 AIM
 Från din idé till en komplett produkt.
 
-Förslag till lanseringstext · AIM 4.7.3 · 27 oktober 2026.
+Förslag till lanseringstext · AIM 4.7.4 · 29 oktober 2026.
 
-AIM 4.7.3 håller oavslutade Stories kopplade till sina korrigeringar och ursprungliga ägarbeslut. Felsökning omprövas mot användarnytta och samlad insats. I lärdomsuppföljningen hålls okända metodorsaker isär från verifierade produktfixar.
+AIM 4.7.4 håller verktygskontexten fokuserad. Verktyg upptäcks vid behov och stora MCP- och verktygssvar filtreras före modellkontexten när värdplattformen stöder det. Källor, motbevis, partiella fel och godkännanden bevaras. Små anrop hålls enkla; avgränsade vanliga anrop fungerar som fallback. Faktisk token- och kostnadsbesparing beror på uppgiften och plattformen.
 
 Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 

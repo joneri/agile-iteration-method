@@ -31,6 +31,15 @@ from aim_installer.yaml_lite import loads as load_yaml  # noqa: E402
 
 
 class PublicSkillTests(unittest.TestCase):
+    def test_tool_guidance_is_packaged_and_loaded_only_when_needed(self) -> None:
+        package = render_package(REPO_ROOT)
+        entry = package[Path("SKILL.md")].decode()
+        guide = package[Path("references/tool-efficiency.md")].decode()
+        self.assertIn("For large results or routing uncertainty", entry)
+        self.assertIn("references/tool-efficiency.md", entry)
+        self.assertNotIn("## Dated host distinctions", entry)
+        self.assertIn((REPO_ROOT / "docs/workflow/tool-efficiency.md").read_text(), guide)
+
     def test_entrypoint_routes_optional_guide_without_preloading_it(self) -> None:
         package = render_package(REPO_ROOT)
         entry = package[Path("SKILL.md")].decode("utf-8")

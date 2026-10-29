@@ -41,6 +41,12 @@ entry-model doc owns which surface is the user-facing front door.
 
 ## Canonical boundary
 
+Use the host's exposed discovery and execution proportionately. Reuse unchanged
+capability knowledge, discover only needed tools and limit results at source.
+For large results, routing uncertainty or evidence risks, load
+[Proportionate tool use](tool-efficiency.md). Native search/programmatic handling
+and bounded ordinary fallback preserve the same evidence and authority rules.
+
 Adapter layers may improve UX and discoverability, but they must preserve:
 - `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
 - hard-gate meaning at Gate A, Gate B, and Gate E

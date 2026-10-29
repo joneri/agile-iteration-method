@@ -41,6 +41,7 @@
     "references/skill-completion.md",
     "references/skill-user-guide.md",
     "references/streamlined-decisions.md",
+    "references/tool-efficiency.md",
     "references/user-stories.md",
     "references/version-and-installation.md",
     "scripts/aim_actions.py",
@@ -102,7 +103,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.7.3",
+  "productVersion": "4.7.4",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -115,7 +116,12 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "07029efdbc6da70c7a29c44d6707c7e217f6ede24468907b6a05690cc21bd300"
+      "sourceSha256": "6e9f9a71e262f00ac5c96cbfe6833960a57e2479b749e8274371dd291d0199ac"
+    },
+    {
+      "output": "references/tool-efficiency.md",
+      "source": "docs/workflow/tool-efficiency.md",
+      "sourceSha256": "59eef183b927083c6b18b0ae630180a7cb0242a56d0f0db30dc40c0f8915e018"
     },
     {
       "output": "references/user-stories.md",
@@ -295,7 +301,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "8b9c33867b4f318d739acf13d552c549280395fdd6e65ce5eb9c3291778c8354"
+      "sourceSha256": "ee5e84c23391fa9abca7772a043dd3a1bbe941ddae6c088b79aa675e5a01517e"
     },
     {
       "output": "references/version-and-installation.md",
@@ -305,7 +311,7 @@
     {
       "output": "manifest.json",
       "source": "scripts/build_public_skill.py",
-      "sourceSha256": "23ac1a5fdf997332a968d52106969129972e88016b627343c9e1ebb96cee9fc6"
+      "sourceSha256": "e9cbf2d4c2e70d5a53ea441401ffe08cbf9ac0b911a4a5220f59b26a0ad0ff9b"
     },
     {
       "output": "scripts/aim_stories.py",

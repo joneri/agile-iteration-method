@@ -95,6 +95,14 @@ works on Codex, Claude Code and GitHub Copilot; Codex also accepts
 `source-only/...` is provenance, never an executable path or a reason to fetch
 another tree. Contracts are bundled locally.
 
+## Proportionate tools
+
+Use exposed native discovery for needed tools and source-side result limits.
+Reuse unchanged capability knowledge. For large results or routing uncertainty,
+load `references/tool-efficiency.md`: use supported programmatic filtering
+with inspectable evidence, partial errors and safe ordering, or bounded ordinary
+fallback. Keep small calls direct; code grants no extra authority.
+
 ## Thin Front Door
 
 Find the repo root. Read `aim.profile.yaml` before broader discovery. Reuse

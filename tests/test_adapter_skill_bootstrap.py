@@ -138,6 +138,9 @@ class AdapterSkillBootstrapTests(unittest.TestCase):
         destinations = {action["destination"] for action in plan["actions"]}
         self.assertIn(".claude/skills/aim/SKILL.md", destinations)
         self.assertIn(".github/skills/aim/SKILL.md", destinations)
+        self.assertIn("docs/workflow/tool-efficiency.md", destinations)
+        self.assertTrue(any(path.endswith("/.agents/skills/agile-iteration-method/references/tool-efficiency.md")
+                            for path in destinations))
         self.assertTrue(any(path.endswith("/.agents/skills/agile-iteration-method/SKILL.md") for path in destinations))
         self.assertEqual({"codex", "claude", "copilot"}, {item["adapter"] for item in plan["skillReadiness"]})
         self.assertTrue(all(item["classification"] == "create" for item in plan["skillReadiness"]))

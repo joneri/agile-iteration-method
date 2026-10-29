@@ -17,6 +17,8 @@ AIM uses these controls to address common sources of unnecessary resource use:
 - one approved coherent Story selection at a time
 - explicit `Cost Control`, `Standard`, and `Deep` runtime depth
 - progressive context loading instead of full-method rereads
+- proportionate host-supported discovery and result processing; load
+  [tool guidance](tool-efficiency.md) for large catalogs/results or routing uncertainty
 - compact confirmed checkpoints instead of repeated status reads and copied logs
 - reuse of unchanged relevant results, role bindings and prior answers within their exact scope
 - validator-first and evidence-first checks where possible

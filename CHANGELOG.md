@@ -1,5 +1,32 @@
 # Changelog
 
+## 2026-10-29 - AIM release v4.7.4
+
+Use the host platform’s tool capabilities proportionately, including MCP, while
+preserving evidence, correctness and user control.
+
+- Discover only needed tools through native search or the exposed equivalent;
+  reuse session capability knowledge until a relevant change or failure.
+- Prefer source-side filters and bounded results. Use supported native
+  programmatic processing for large predictable responses; keep small calls
+  direct and fall back to ordinary bounded calls when support is absent.
+- Preserve sources, counterevidence, partial failures, omissions and inspectable
+  raw evidence. Keep dependencies, approvals, write order and unknown-effect
+  recovery intact; code grants no additional authority.
+- Keep start instructions short and load detailed tool guidance only when needed.
+- Regenerate the public skill and promote the capability on the website and
+  in the press package with explicit host-dependent availability.
+
+Validation: 826 native tests, independent review and a bounded real MCP witness.
+The native selected result was 707 bytes versus 38,013 raw-result bytes from the
+same retained response. This is result-payload evidence, not a whole-run token,
+time or subscription saving. Fallback and effect cases are isolated examples;
+provider-wide compliance is unproved. Tokens and usage cost remain unknown.
+
+Compatibility: runtime, backlog/state/installer schemas and public package
+format remain unchanged. Existing installations need an explicit skill update;
+no automatic migration or active-project state rewrite is performed.
+
 ## 2026-10-27 - AIM release v4.7.3
 
 Complete Story continuity across original and corrective deliveries. Unfinished

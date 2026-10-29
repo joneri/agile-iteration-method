@@ -23,6 +23,7 @@ PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
 PUBLIC_DESCRIPTION_NAME = "agile-iteration-method"
 REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
+    (Path("docs/workflow/tool-efficiency.md"), Path("tool-efficiency.md")),
     (Path("docs/workflow/user-stories.md"), Path("user-stories.md")),
     (Path("docs/workflow/local-runtime-access.md"), Path("local-runtime-access.md")),
     (Path("docs/workflow/autonomous-interaction.md"), Path("autonomous-interaction.md")),

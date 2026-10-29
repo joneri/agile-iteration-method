@@ -1,0 +1,53 @@
+{
+  "source": "https://developers.openai.com/api/docs/guides/tools-programmatic-tool-calling",
+  "preservedItems": [
+    "routing-caveat",
+    "deferred-tool-prerequisite",
+    "approval-boundary",
+    "evidence-requirements"
+  ],
+  "projection": {
+    "status": "complete",
+    "source": "https://developers.openai.com/api/docs/guides/tools-programmatic-tool-calling",
+    "preservedItems": [
+      "routing-caveat",
+      "deferred-tool-prerequisite",
+      "approval-boundary",
+      "evidence-requirements"
+    ],
+    "requirements": {
+      "smallCalls": "direct",
+      "largePredictableResults": "programmatic when supported and smaller structured output is possible",
+      "deferredTools": "load before program",
+      "approvals": "remain in force",
+      "citationsAndArtifacts": "direct unless required native evidence is preserved and validated"
+    },
+    "omitted": {
+      "codeExamples": true,
+      "otherSections": true,
+      "reason": "Unneeded for the four frozen obligations; full raw response retained"
+    },
+    "raw": ".aim/analysis/tool-efficiency/native-mcp-raw.json"
+  },
+  "rawResultBytes": 38013,
+  "returnedResultBytes": 707,
+  "returnedBytesLessThanRaw": true,
+  "baseline": "replayed identical raw response; no second provider call",
+  "outerProgramCalls": 2,
+  "nestedMcpFetchCalls": 1,
+  "nestedRetentionCalls": 1,
+  "modelSteps": null,
+  "tokens": null,
+  "usageCost": null,
+  "subscriptionSavings": null,
+  "fullOperationMilliseconds": null,
+  "overhead": "Program code and raw-retention arguments are extra; no whole-run token/cost saving established.",
+  "failures": [
+    {
+      "stage": "first host program after fetch",
+      "error": "TextEncoder is not defined",
+      "recovery": "Reused retained native raw response; no refetch or effect replay"
+    }
+  ],
+  "rawSha256": "1849049c212ecdb06665b36b6026c0644cbc111b19b41ef6292bdf3956ec37a2"
+}
