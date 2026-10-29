@@ -1,9 +1,9 @@
 AIM
 Från din idé till en komplett produkt.
 
-Förslag till lanseringstext · AIM 4.7.6 · 29 oktober 2026.
+Förslag till lanseringstext · AIM 4.7.7 · 29 oktober 2026.
 
-AIM 4.7.6 uppdaterar hemsidans Board- och Graph-bilder med verifierade skärmbilder av det aktuella gränssnittet. Vägledningen skiljer nu Story-beroenden i AIM UI från körningsvyn som /aim graph ger. Båda bilderna är märkta som syntetiska exempel; kommandots och gränssnittets beteende är oförändrat.
+AIM 4.7.7 förtydligar rapporteringen från /aim graph. Instruktionerna kräver att agenten anger vald leverans och källa, använder enbart registrerade beroenden som faktapilar, skiljer rekommendationer från fakta och visar observationsunderlag och motstridiga rubriker. Ett avgränsat regressionstest via det faktiska kommandot bevarar källuppgifterna; generell modelföljsamhet är inte bevisad.
 
 Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 

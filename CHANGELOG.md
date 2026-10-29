@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-10-29 - AIM release v4.7.7
+
+Keep `/aim graph` explanations bound to the selected recorded evidence.
+
+- Name the selected delivery and source. Draw factual arrows only from returned
+  edges; empty edges do not prove independence, absence of blockers or authority.
+- Keep proposed sequencing and next steps separate as recommendations. Expose
+  observations, stale sources and conflicting labels without silently relabelling
+  nodes or presenting observed work as native acceptance.
+- Clarify that native plans may be unapproved and that lifecycle fallback applies
+  specifically to native deliveries without an execution plan.
+- Add an actual-command regression for a selected observation with no edges and
+  copied unrelated labels; retain exact scope, source limitations and ledger bytes.
+- Regenerate the public skill and align ordinary release metadata and press copy.
+
+Verification covers bounded data preservation, package routing and reporting
+contracts; universal future model adherence is unproved. Runtime projection, UI,
+roles, gates, authority boundaries and schemas remain unchanged. No migration.
+
 ## 2026-10-29 - AIM release v4.7.6
 
 Show the current AIM UI accurately on the website and in Graph guidance.
