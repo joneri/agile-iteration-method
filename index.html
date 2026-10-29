@@ -209,7 +209,101 @@ checkout and its no-write preview before apply.</code></pre>
           </article>
           <article class="repo-feature" id="graph-engineering">
             <div><span class="feature-label">Graph engineering</span><h3>Connect ownership, work and proof.</h3></div>
-            <div><p>Make it clear who owns the outcome, what depends on what, and which evidence or feedback unlocks the next step. Your agent can coordinate AIM delivery while a separate reviewer checks the implementation. In Strict Loop, an explicitly delegated owner agent can assess each increment and give feedback.</p><p class="feature-detail">Graph engineering is the working approach. The Graph view in AIM UI makes recorded dependencies, activity evidence and blockers visible. Copying an assignment prepares the next handoff; it does not start agents.</p></div>
+            <div><p>Make it clear who owns the outcome, what depends on what, and which evidence or feedback unlocks the next step. Your agent can coordinate AIM delivery while a separate reviewer checks the implementation. In Strict Loop, an explicitly delegated owner agent can assess each increment and give feedback.</p><p class="feature-detail">Graph engineering is the working approach. The Graph view in AIM UI makes recorded dependencies, activity evidence and blockers visible. Copying an assignment prepares the next handoff; it does not start agents.</p>
+              <p class="feature-detail">Talk to one delivery coordinator. Give it the outcome and boundaries; let it organize the work and bring the evidence back to you.</p>
+              <pre class="graph-start-example"><code>Use AIM in Ship / Strict as my delivery coordinator.
+Deliver [user outcome] through a small dependency graph,
+available agents and independent review.
+I retain scope decisions and final product acceptance.</code></pre>
+              <details class="orchestration-prompt">
+                <summary>Copy an orchestration prompt</summary>
+                <p>Fill in the outcome, success criteria and resource limits, then paste the prompt into your coding agent’s chat.</p>
+                <pre id="orchestration-prompt" tabindex="0" aria-label="Full orchestration prompt"><code>Act as my AIM delivery coordinator and primary point of contact.
+Use Agile Iteration Method to deliver this outcome:
+
+[Describe the benefit users should receive and the context in which
+they need it.]
+
+Success means:
+- [A concrete, observable outcome.]
+- [An important quality requirement.]
+- [A constraint that must be respected.]
+
+Coordinate delivery through Graph engineering:
+
+1. Establish the relevant facts.
+   Inspect the existing implementation and applicable project guidance.
+   Reuse verified knowledge and available project skills. Identify
+   consequential uncertainties, real dependencies and missing capabilities
+   before proposing the delivery plan.
+
+2. Build the smallest useful delivery graph.
+   Connect activities to AIM Stories, acceptance criteria and user value.
+   Define each activity&#x27;s result, required inputs, prerequisites,
+   responsible agent, write boundaries and verification.
+   Keep simple work simple; an activity does not require its own agent.
+
+3. Allocate work proportionately.
+   Keep cohesive implementation with one responsible author. Delegate
+   bounded investigations and independent review when useful.
+   Parallelize implementation only when interfaces are settled and
+   ownership is disjoint. Shared configuration, generated output and
+   integration boundaries must each have one writer.
+
+4. Give clear assignments and follow them through.
+   Each delegated assignment must be understandable on its own:
+   objective, relevant evidence, permitted files, dependencies,
+   verification requirements and expected return.
+   Tell agents that others share the codebase and that they must preserve
+   others&#x27; work. Track assignments through completion, integrate their
+   results and resolve defects. You remain accountable for the whole
+   delivery and its evidence.
+
+5. Let evidence determine the next action.
+   Verify the first working core before costly expansion. When an input
+   or dependency changes, identify and reverify affected results.
+   Preserve failures, counterevidence and unresolved uncertainty.
+   Reassess repeated failures against the user outcome and remaining
+   budget before continuing.
+
+6. Review and verify the complete outcome.
+   Use a separate reviewer for material changes. A role switch within
+   the implementing agent is self-review.
+   Validate the integrated user journey against every agreed success
+   criterion, retaining the evidence needed to inspect the result.
+   Report unavailable independent review as an unresolved requirement.
+
+Authority and resources:
+- Delivery style: Ship. Execution mode: Strict.
+- Follow AIM&#x27;s existing roles and approval gates. You alone maintain
+  this delivery&#x27;s AIM runtime state.
+- Maximum concurrent agents: [N], including you.
+- Total resource limit across all agents: [limit and accounting basis].
+- You may choose models and reasoning levels actually exposed by the
+  host within [approved model pool/policy] and the resource limit.
+  Make choices proportionate to task risk and required evidence.
+  Where controls are unavailable, inherit configured defaults.
+- Distinguish observed resource use from estimates and unknown values.
+  If a required limit cannot be monitored, disclose that before
+  committing to the allocation.
+- Publication, deployment and external messages require my explicit
+  authorization.
+- I retain scope and budget decisions and final product acceptance.
+
+Start with a concise, repository-grounded understanding of the outcome,
+the important uncertainties and dependencies, and your proposed work
+allocation and model policy.
+
+Obtain the decisions AIM requires, then continue within the approved
+mandate without adding routine approval stops. Keep updates focused on
+meaningful progress, verified findings, blockers and decisions that
+require my involvement.</code></pre>
+                <div class="prompt-actions">
+                  <button class="button button-small" type="button" data-copy="orchestration-prompt" data-destination="agent" data-feedback="orchestration-feedback" hidden>Copy prompt</button>
+                  <p id="orchestration-feedback" class="copy-feedback" role="status" aria-live="polite"></p>
+                </div>
+              </details>
+            </div>
           </article>
           <article class="repo-feature" id="project-agents">
             <div><span class="feature-label">Project agents &amp; skills</span><h3>Configure specialists for your stack.</h3></div>

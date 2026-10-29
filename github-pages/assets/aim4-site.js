@@ -2,11 +2,12 @@
 
 const installTabs = Array.from(document.querySelectorAll('.install-tabs [role="tab"]'));
 const feedback = document.getElementById("copy-feedback");
-// A tab change or newer copy request makes an outstanding clipboard result stale.
+// New copy requests supersede older ones; install tab changes affect only install feedback.
 let copyRevision = 0;
+let installTabRevision = 0;
 
 function selectInstallTab(selected) {
-  copyRevision += 1;
+  installTabRevision += 1;
   installTabs.forEach((tab) => {
     const active = tab === selected;
     tab.setAttribute("aria-selected", String(active));
@@ -41,22 +42,26 @@ document.querySelectorAll("[data-copy]").forEach((button) => {
   button.addEventListener("click", async () => {
     const revision = ++copyRevision;
     const command = document.getElementById(button.dataset.copy);
+    const currentFeedback = document.getElementById(button.dataset.feedback || "copy-feedback");
+    const tabRevision = installTabRevision;
+    const isCurrent = () => revision === copyRevision
+      && (currentFeedback !== feedback || tabRevision === installTabRevision);
     const destination = button.dataset.destination === "agent"
       ? "your coding agent’s chat" : "your project’s terminal";
-    feedback.textContent = "";
+    currentFeedback.textContent = "";
     try {
       await navigator.clipboard.writeText(command.textContent);
-      if (revision === copyRevision) {
-        feedback.textContent = `Copied. Paste into ${destination}.`;
+      if (isCurrent()) {
+        currentFeedback.textContent = `Copied. Paste into ${destination}.`;
       }
     } catch (_error) {
-      if (revision !== copyRevision) return;
+      if (!isCurrent()) return;
       const range = document.createRange();
       range.selectNodeContents(command);
       const selection = window.getSelection();
       selection.removeAllRanges();
       selection.addRange(range);
-      feedback.textContent = "Text selected. Use your keyboard or browser menu to copy it.";
+      currentFeedback.textContent = "Text selected. Use your keyboard or browser menu to copy it.";
     }
   });
 });

@@ -153,6 +153,11 @@ details { border-top: 1px solid var(--line); }
 summary { padding: 18px 0; cursor: pointer; font-size: .9rem; }
 details > p { max-width: 800px; margin-bottom: 20px; font-size: .85rem; }
 .installation-details pre { max-width: 800px; }
+.graph-start-example { margin-top: 18px; }
+.orchestration-prompt { margin-top: 18px; }
+.orchestration-prompt pre { max-height: 420px; overflow: auto; margin-bottom: 14px; }
+.prompt-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.prompt-actions .copy-feedback { margin: 0; flex: 1 1 220px; }
 .site-footer { background: var(--paper); border-top: 1px solid var(--line); padding: 40px 0; font-size: .8rem; }
 .footer-main { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
 .footer-main > div { display: flex; flex-wrap: wrap; gap: 24px; }
