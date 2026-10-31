@@ -36,13 +36,14 @@ Core constraints:
 - preserve canonical role order:
   - `PO -> TDO -> Dev -> Reviewer -> TDO -> PO`
 - preserve `.aim` as the official AIM runtime workspace
-- preserve `.aim/state.json` as the authoritative runtime checkpoint
+- preserve `.aim/state.json` as the authoritative runtime checkpoint for explicit legacy work; new Story deliveries use `.aim/product-backlog.json`
 - require canonical `stateSchemaVersion: "1.0"`, normalize supported legacy
   state read-only, and never let a helper persist compatibility output
 - preserve an incomplete Epic's cost profile; select cost afresh for a new Epic
   and keep model/reasoning effort independent
 - do not redefine gates, ownership, or acceptance semantics
 - load other workflow docs only when their behavior area is relevant
+- route new delivery plans through `docs/workflow/native-orchestration.md`; preserve frozen legacy plans, actual session activation and original campaign history
 - use `docs/workflow/repo-awareness-calibration.md` for calibrate, remember, and forget intents
 - treat `/aim reflect` and `/aim reflect-all` as retired compatibility aliases in
   `docs/workflow/reflection.md`: bounded read-only shared registry views only;

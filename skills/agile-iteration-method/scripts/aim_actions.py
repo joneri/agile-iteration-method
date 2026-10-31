@@ -176,6 +176,13 @@ def validate_action_envelope(value: Any) -> None:
 
     if not isinstance(value, dict):
         raise AimActionError("Action envelope must be an object.")
+    if value.get('actionVersion') == 'native-1':
+        from aim_codex_bridge import validate_native_envelope
+        try:
+            validate_native_envelope(value)
+        except ValueError as exc:
+            raise AimActionError(str(exc)) from exc
+        return
     allowed = {
         "actionVersion", "action", "epicId", "candidateId", "incrementId",
         "gate", "expectedStatus", "expectedUpdatedAt", "backlogUpdatedAt",

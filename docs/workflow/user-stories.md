@@ -678,3 +678,15 @@ preserving frozen prerequisite bytes. After requested changes, publication of
 corrected work in Review/awaiting_owner restores waiting for a new assessment;
 the earlier changes-requested decision stays in history. Approval requires a new
 actual decision. A routine progress refresh cannot undo an approved decision.
+
+## Native orchestration campaigns
+
+New graph-led plans may freeze `executionPlan.orchestration` using
+[Native orchestration](native-orchestration.md). Its original Intent IDs bind
+activities to durable campaigns in this same product ledger. The `orchestrate`
+operation records scoped activation, proof-linked observations and consequential
+continuation decisions through the normal compare-and-swap transaction. Activity
+starts and the supported Codex bridge consult those records. Neither a new
+delivery nor a restarted coordinator resets earlier effort. Plans without this
+optional contract and historical accepted deliveries retain their original
+semantics. No automatic migration or second parent ledger is required.

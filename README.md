@@ -3,12 +3,12 @@
 ![AIM - Agile Iteration Method](github-pages/assets/images/aim-4-preview.png)
 
 AIM turns your intent into a complete, verified product. **Ship is the default**;
-choose **Loop** for useful Done Increments with recurring owner feedback.
-Use it with Codex, Claude Code or GitHub Copilot.
+choose **Loop** for useful Done Increments with recurring owner feedback. Use it with Codex, Claude Code or GitHub Copilot.
 
 Follow the product in **AIM UI**: inspect Stories, dependencies, blockers and evidence.
-**Graph engineering** connects ownership, work and proof; the UI's Graph view makes
-those recorded dependencies visible. Decisions stay with the designated owner.
+**AIM 4.8 Native Graph engineering** builds a small work graph or validates your
+own. Durable orchestration connects original goals, proof and continuation
+decisions across sessions. Decisions stay with the designated owner.
 
 ## Install
 
@@ -96,6 +96,8 @@ Use **Graph engineering** to let your agent coordinate outcome ownership, delive
 Use AIM in Strict Loop. Act as my product owner and delegate delivery. Assess verified increments within [outcome, allowed decisions and resource limit].
 ```
 
+Start with your goal; AIM chooses a small default graph or validates your own. Native orchestration binds actual sessions and retains campaign progress across restarts. See [the Native contract and supported enforcement paths](docs/workflow/native-orchestration.md). Existing approved plans retain their behavior.
+
 Agent-owner decisions require explicit human delegation; existing work keeps its frozen policy. See [delivery and owner contracts](docs/workflow/user-stories.md).
 
 ## From intent to accepted User Stories
@@ -155,16 +157,12 @@ AIM applies **audience-context integrity** to everything it generates: write the
 
 ## What is new
 
-- **Quality goals guide the next action.** Plan relevant checks before implementation, measure the first working core, and address failed or stale results before readiness.
-- **Review starts where mistakes are expensive.** A separate reviewer can challenge an unproved core reference early and checks the integrated delivery later.
-- **Results stay tied to their source.** Retain raw evidence, original failures and the actual build. Optional JSON observations derive values from that evidence.
-- **Product knowledge can be reused.** Keep a small map of user routes and a runnable verification recipe where Dev and Reviewer can find and maintain it.
-- **Learning happens during ordinary work.** Recall relevant local shared lessons and contribute generalized verified corrections without manual reflection reports.
-- **Continue with less repeated setup.** Reuse compact confirmed receipts, unchanged evidence and relevant repository knowledge instead of routinely rereading everything. AIM 4.7.4 adds [focused tool use](docs/workflow/tool-efficiency.md): discover tools when needed and filter large MCP results before model context, with evidence and approvals intact. Native support and actual savings depend on the host and task.
+- **Native Graph engineering.** Choose a small default or supply a graph. Bind actual coordinating sessions and retain original campaign progress, priorities and recoverable source checkpoints across restarts.
+- **Quality and independent review.** Measure the first working core, challenge material assumptions with a separate reviewer, and verify integrated user journeys with source-bound raw proof.
+- **Reusable project knowledge.** Keep user-route maps and verification recipes, recall shared lessons and share verified reusable corrections during ordinary delivery. Reuse compact receipts and unchanged evidence.
+- **Focused tools.** [Discover tools when needed and filter large MCP results](docs/workflow/tool-efficiency.md), keeping sources, counterevidence and permissions intact. Native support and actual savings depend on the host and task.
 
-These are supported method capabilities. Their practical effect still depends on
-agents using them and on the repository's verification coverage. See the [feature
-guide](docs/product/features.md) and [changelog](CHANGELOG.md).
+These capabilities depend on agents using them and the project's verification coverage. See the [feature guide](docs/product/features.md) and [changelog](CHANGELOG.md).
 
 ## What the Enigma results show
 

@@ -27,6 +27,12 @@ outcome before final owner acceptance. **Loop** is an explicit choice for useful
 Done Increments and recurring owner feedback. Keep delivery style independent
 of Strict/Auto and cost depth, and preserve existing frozen deliveries.
 
+For new delivery plans, all adapters default to [Native orchestration](native-orchestration.md):
+built-in or preserved custom outcome graphs, explicit session activation and
+ledger-backed continuation checks. Use the trusted packaged helper and its
+confirmed receipts before actual host dispatch. Host tools still launch agents;
+portable instructions cannot intercept arbitrary out-of-band calls.
+
 Recommend **Graph engineering** when explaining agent-led work: ask the current
 agent to coordinate outcome ownership, delivery dependencies, verification and
 owner feedback. In **Strict Loop**, a human or explicitly delegated agent owner

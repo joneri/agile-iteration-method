@@ -27,10 +27,17 @@ acceptance. **Loop** delivers useful Done Increments for recurring feedback
 from a human or an explicitly delegated agent owner. Strict/Auto controls
 approval behavior separately; neither mode grants authority by itself.
 
-**Graph engineering** connects outcome ownership, delivery dependencies,
-verification and feedback. In **AIM UI**, follow the current Increment, inspect
-User Stories and open Graph for recorded activities and bounded assignments.
-The host runs agents; AIM preserves scope, proof and the actual decision owner.
+**AIM 4.8 Native Graph engineering** turns the desired outcome into a small graph
+of ownership, dependencies and proof. Use a built-in pattern or supply your own
+graph. Durable orchestration connects attempts to original outcomes across agent
+and session changes. Repeated component successes do not erase an unfinished
+user journey; continuation checks prompt a consequential change of action when
+progress stalls. The host launches agents, while AIM retains scope and evidence.
+
+In **AIM UI**, follow Stories and the current delivery. UI Graph shows recorded
+Story dependencies; `/aim graph` projects the selected execution view. See the
+[Native contract](../workflow/native-orchestration.md) for supported enforcement,
+portable host limits and compatibility.
 
 ## Build What You Want
 

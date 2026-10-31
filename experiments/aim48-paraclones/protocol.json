@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "status": "preparing_unpublished_candidates",
+  "question": "Does AIM's native graph engineering and orchestration produce a stronger three-level ParaClones result than AIM using Superpowers for all graph/orchestration decisions?",
+  "baseAimVersion": "4.7.7",
+  "candidateVersions": {
+    "native": "4.8.0-native.1",
+    "sp": "4.8.0-sp.1"
+  },
+  "model": "gpt-6-luna",
+  "reasoningEffort": "max",
+  "buildBudget": {
+    "totalSeconds": 1500,
+    "secondsPerCandidate": 750,
+    "kind": "elapsed wall time, including each arm's coordination, workers, reviews, builds and fixes",
+    "preparationAndIndependentScoringOutsideClock": true
+  },
+  "maxConcurrentAgentsPerCandidate": 3,
+  "sourcePolicy": "Copy the same current working source, including relevant untracked native files. Exclude user profiles, old runtime decisions, old benchmark answers and build caches. Hash before/after and compare both product copies. Keep ordinary ParaClones unchanged.",
+  "sharedMethod": "AIM owns product intent, requirements, quality evidence, authority and acceptance semantics. Only graph design, work decomposition, assignments, worker/reviewer orchestration, correction routing and continuation differ. Do not route the SP arm through native executionPlan/activity or native campaign guard.",
+  "upstreamPolicy": "Freeze Superpowers commit and MIT license; include unmodified source and declared user-required overrides. No global installation.",
+  "brief": {
+    "product": "Three new native-playable ParaClones levels in the supplied native-probe Swift/AppKit/SpriteKit application. The isolated candidate campaign may replace its three room slots; original source remains preserved outside the experiment. Preserve existing player movement, jump feel, fixed-tick recording/replay, accessible controls and save integrity. Use fresh repository-local test profiles only.",
+    "levels": [
+      {
+        "id": "embers",
+        "title": "Glodens vag",
+        "capabilities": [
+          "fire",
+          "water"
+        ],
+        "need": "An understandable puzzle where fire removes marked wooden obstruction and water makes a burning passage safe. Both changes must be real game state used by the solution, visible to the player, and coherent when recorded clones replay. Metal must not burn. Safe retry after wrong use is required."
+      },
+      {
+        "id": "relay",
+        "title": "En hjalpande hand",
+        "capabilities": [
+          "plank"
+        ],
+        "need": "A distinct vertical cooperation puzzle: a plank-carrying recorded clone provides actual above-head support so another reaches a useful route. At least one meaningful recorded helper must be needed; author chooses geometry and progression. Make the capability's purpose readable."
+      },
+      {
+        "id": "borrowed-time",
+        "title": "Lanad tid",
+        "capabilities": [
+          "time_plus_five"
+        ],
+        "need": "A larger route whose solution meaningfully needs an active-clone time pickup adding five seconds to the current shared attempt, with a visible room cap. A mere permanently increased room timer is insufficient. Reset restores base time/pickup; old short and new longer recordings replay deterministically. Author chooses geometry and progression."
+      }
+    ],
+    "capabilityRules": {
+      "fire": "One consumable charge affects marked wood, never metal; explicit intact/burned states are enough, no fluid/fire simulation required.",
+      "water": "One charge makes a defined burning zone safe during the attempt. Range/use must allow the carrier to extinguish without mandatory death.",
+      "plank": "Above-head one-way actor support, carried until death/reset, recorded helpers use shared physics.",
+      "time_plus_five": "Only active clone collects; once per pickup per attempt; +300 simulation ticks at 60Hz, shared clock, visible cap; retry starts at base time and restores the pickup. Do not silently truncate long recorded inputs."
+    },
+    "delivery": "Runnable native app/package, three playable levels, concise controls and solution hints, source-bound verification including full normal input journeys and independent counterexamples where feasible. A headless state test is not native GUI proof. No new engine, standalone browser replacement or external publishing.",
+    "authorFreedom": "Choose exact layout, assets reused from baseline, narrative, implementation, task graph and verification within the frozen requirements. All necessary capability implementation counts inside the build clock. No hidden shared implementation before the clock."
+  },
+  "scoring": {
+    "perLevelMaximum": 100,
+    "totalMaximum": 300,
+    "categories": {
+      "playability_and_cooperation": 30,
+      "level_design": 25,
+      "clarity_and_onboarding": 20,
+      "stability_replay_regressions": 15,
+      "visual_narrative_coherence": 10
+    },
+    "rules": [
+      "Freeze rubric and evidence requirements before either arm starts.",
+      "Score only sources/products frozen at cutoff. No external correction round.",
+      "Missing level scores zero; report complete delivery eligibility separately from numeric ranking.",
+      "Unplayable or unsolvable level cannot be described as passing regardless of appearance; report category evidence and failure explicitly.",
+      "Independent assessor sees anonymous product copies without method traces first; randomize presentation. Blinding may be imperfect if products identify their method; disclose this.",
+      "Author scripts/self-reports are leads, not proof. Inspect actual running product and independent replay/negative cases.",
+      "Unknown GUI access, unobserved performance and unavailable token/cost data remain unknown; do not invent scores or costs.",
+      "One three-level pair is a pilot, not proof of general superiority; small differences are uncertain."
+    ],
+    "anchors": {
+      "playability_and_cooperation": [
+        {
+          "maximum": 10,
+          "criterion": "Normal player input can enter and complete this level; zero if no functional level/valid route is demonstrated."
+        },
+        {
+          "maximum": 10,
+          "criterion": "Required capability changes the world/clock/support and is meaningfully necessary in the observed intended route; partial credit for functioning subset."
+        },
+        {
+          "maximum": 10,
+          "criterion": "Recorded helper cooperation works in actual shared physics; the solution is not a scripted win, history-only flag or author-only state injection."
+        }
+      ],
+      "level_design": [
+        {
+          "maximum": 10,
+          "criterion": "Distinct puzzle idea with purposeful capability use, beyond a reskin of an unchanged original room."
+        },
+        {
+          "maximum": 10,
+          "criterion": "Readable causal solution chain with interesting sequencing/clone role decisions."
+        },
+        {
+          "maximum": 5,
+          "criterion": "Useful progression, pacing and room geometry without excessive repeated setup."
+        }
+      ],
+      "clarity_and_onboarding": [
+        {
+          "maximum": 10,
+          "criterion": "Player can discover controls and capability interaction without reading developer reports."
+        },
+        {
+          "maximum": 5,
+          "criterion": "Hindrances, pickups and capability/world state changes are legible in running native presentation."
+        },
+        {
+          "maximum": 5,
+          "criterion": "Success, failure and recovery direction are clear to player."
+        }
+      ],
+      "stability_replay_regressions": [
+        {
+          "maximum": 5,
+          "criterion": "Deterministic replay and relevant recorded capability/short-long tape counterexample verified."
+        },
+        {
+          "maximum": 5,
+          "criterion": "Wrong order/consumption/death/retry/reset restores the stated world/capability/clock coherently."
+        },
+        {
+          "maximum": 5,
+          "criterion": "Relevant movement/input/save invariants remain valid and changed content uses honest current provenance."
+        }
+      ],
+      "visual_narrative_coherence": [
+        {
+          "maximum": 5,
+          "criterion": "Consistent readable presentation using baseline art or coherent additions."
+        },
+        {
+          "maximum": 5,
+          "criterion": "Distinct level theme/story is expressed through visible gameplay and scene, not just labels."
+        }
+      ]
+    },
+    "anchorRule": "For each subcriterion award 0 for absent/contradicted evidence, half for a clearly observed partial result, full for demonstrated result. Mark unavailable observations explicitly. No code-only assertion earns a live-playability pass. Freeze and report evidence and fractions; do not change anchors after seeing products."
+  },
+  "publication": "No release, push, tag, Pages deployment, global skill install or change to the ordinary consumer is authorized by this experiment.",
+  "ownerAuthority": "Jonas explicitly replaced the former JA-gated release mandate with two candidate builds and this comparison; confirmed 25 minutes total for level builds, 12m30 per candidate. No separate final product acceptance is inferred.",
+  "sharedBuildTooling": "A separately named build-experiment.sh and source-only experimental package manifest are supplied equally to both arms. Historical build.sh and its old acceptance hash checks stay intact; no old acceptance is forged. No gameplay/capability implementation is supplied before timing."
+}

@@ -96,6 +96,14 @@ increment against its outcome and all selected criteria. There is no full role
 and acceptance cycle per Story. A session boundary preserves decisions, completed
 work and remaining commitments; it cannot turn partial delivery into completion.
 
+## AIM 4.8 Native orchestration
+
+For a new delivery plan, default to [Native orchestration](native-orchestration.md)
+to construct the graph and execution plan, activate coordinating sessions and
+retain outcome campaigns in the product ledger. That contract adds durable
+continuation checks to the activity model below. Existing plans without the
+Native contract retain their original behavior; they are not silently upgraded.
+
 ## AIM Graph
 
 Use `/aim graph` to answer what can start and what blocks the current delivery.

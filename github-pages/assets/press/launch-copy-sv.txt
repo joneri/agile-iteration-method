@@ -1,9 +1,9 @@
 AIM
 Från din idé till en komplett produkt.
 
-Förslag till lanseringstext · AIM 4.7.7 · 29 oktober 2026.
+Förslag till lanseringstext · AIM 4.8.0 · 31 oktober 2026.
 
-AIM 4.7.7 förtydligar rapporteringen från /aim graph. Instruktionerna kräver att agenten anger vald leverans och källa, använder enbart registrerade beroenden som faktapilar, skiljer rekommendationer från fakta och visar observationsunderlag och motstridiga rubriker. Ett avgränsat regressionstest via det faktiska kommandot bevarar källuppgifterna; generell modelföljsamhet är inte bevisad.
+AIM 4.8 Native gör ett mål till en arbetsgraf kopplad till resultat, eller bevarar användarens egen graf. Aktivering binder faktiska koordinatorer till uppdraget, och kampanjhistoriken behåller försök, användbara baslinjer och okända resurser över sessionsbyten. Runtime kontrollerar nästa konkreta handling när framstegen stannar. Tidigare godkända planer behåller sina kontrakt. Releasen gör inga generella anspråk på överlägsenhet eller uppmätta tokenbesparingar.
 
 Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 

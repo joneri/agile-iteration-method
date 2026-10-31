@@ -17,12 +17,13 @@ from aim_installer.yaml_lite import YamlLiteError, loads as load_yaml
 from aim_publication import release_manifest
 
 
-PUBLIC_SKILL_PACKAGE_VERSION = 21
+PUBLIC_SKILL_PACKAGE_VERSION = 22
 OFFICIAL_SKILLS_CLI_VERSION = "1.5.17"
 PACKAGE_RELATIVE_PATH = Path("skills/agile-iteration-method")
 SKILL_SOURCE = Path("adapters/portable/agile-iteration-method/SKILL.md")
 PUBLIC_DESCRIPTION_NAME = "agile-iteration-method"
 REFERENCE_SOURCES: tuple[tuple[Path, Path], ...] = (
+    (Path("docs/workflow/native-orchestration.md"), Path("native-orchestration.md")),
     (Path("docs/workflow/tool-efficiency.md"), Path("tool-efficiency.md")),
     (Path("docs/workflow/user-stories.md"), Path("user-stories.md")),
     (Path("docs/workflow/local-runtime-access.md"), Path("local-runtime-access.md")),
@@ -83,6 +84,9 @@ UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_quality/localities.py"),
     Path("scripts/aim_quality/delegation.py"),
     Path("scripts/aim_quality/graph.py"),
+    Path("scripts/aim_quality/orchestration.py"),
+    Path("scripts/aim_quality/orchestration_runtime.py"),
+    Path("scripts/aim_orchestrate.py"),
     Path("scripts/aim_quality/review.py"),
     Path("scripts/aim_quality/knowledge.py"),
     Path("scripts/aim_quality/patterns.py"),
