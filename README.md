@@ -157,16 +157,12 @@ AIM applies **audience-context integrity** to everything it generates: write the
 
 ## What is new
 
-- **Quality goals guide the next action.** Plan relevant checks before implementation, measure the first working core, and address failed or stale results before readiness.
-- **Review starts where mistakes are expensive.** A separate reviewer can challenge an unproved core reference early and checks the integrated delivery later.
-- **Results stay tied to their source.** Retain raw evidence, original failures and the actual build. Optional JSON observations derive values from that evidence.
-- **Product knowledge can be reused.** Keep a small map of user routes and a runnable verification recipe where Dev and Reviewer can find and maintain it.
-- **Learning happens during ordinary work.** Recall relevant local shared lessons and contribute generalized verified corrections without manual reflection reports.
-- **Continue with less repeated setup.** Reuse compact confirmed receipts, unchanged evidence and relevant repository knowledge instead of routinely rereading everything. AIM 4.7.4 adds [focused tool use](docs/workflow/tool-efficiency.md): discover tools when needed and filter large MCP results before model context, with evidence and approvals intact. Native support and actual savings depend on the host and task.
+- **Native Graph engineering.** Choose a small default or supply a graph. Bind actual coordinating sessions and retain original campaign progress, priorities and recoverable source checkpoints across restarts.
+- **Quality and independent review.** Measure the first working core, challenge material assumptions with a separate reviewer, and verify integrated user journeys with source-bound raw proof.
+- **Reusable project knowledge.** Keep user-route maps and verification recipes, recall shared lessons and share verified reusable corrections during ordinary delivery. Reuse compact receipts and unchanged evidence.
+- **Focused tools.** [Discover tools when needed and filter large MCP results](docs/workflow/tool-efficiency.md), keeping sources, counterevidence and permissions intact. Native support and actual savings depend on the host and task.
 
-These are supported method capabilities. Their practical effect still depends on
-agents using them and on the repository's verification coverage. See the [feature
-guide](docs/product/features.md) and [changelog](CHANGELOG.md).
+These capabilities depend on agents using them and the project's verification coverage. See the [feature guide](docs/product/features.md) and [changelog](CHANGELOG.md).
 
 ## What the Enigma results show
 
