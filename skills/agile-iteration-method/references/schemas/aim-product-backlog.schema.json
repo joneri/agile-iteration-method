@@ -52,6 +52,10 @@
           "minItems": 0,
           "type": "array"
         },
+        "dispatchId": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
         "evidence": {
           "items": {
             "$ref": "#/$defs/evidence"
@@ -467,6 +471,17 @@
           },
           "maxItems": 256,
           "minItems": 1,
+          "type": "array"
+        },
+        "orchestrationActivation": {
+          "description": "Scope-bound actual dispatcher activation evidence; never grants owner authority.",
+          "type": "object"
+        },
+        "orchestrationActivationHistory": {
+          "items": {
+            "type": "object"
+          },
+          "maxItems": 128,
           "type": "array"
         },
         "planEvidence": {
@@ -1074,6 +1089,10 @@
         "maxWorkers": {
           "description": "1\u20138; enforced by delegation validator.",
           "type": "integer"
+        },
+        "orchestration": {
+          "description": "Frozen Native graph with explicit origin, outcomes and node contracts; helper validates full DAG and ownership.",
+          "type": "object"
         },
         "parallelBenefit": {
           "maxLength": 2000,
@@ -1787,6 +1806,10 @@
       "maxItems": 256,
       "minItems": 0,
       "type": "array"
+    },
+    "orchestration": {
+      "description": "Native campaign history, semantically validated by orchestration_runtime; optional for historical ledgers.",
+      "type": "object"
     },
     "productBacklogVersion": {
       "const": "1.0"

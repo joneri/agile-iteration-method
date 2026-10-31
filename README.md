@@ -3,12 +3,12 @@
 ![AIM - Agile Iteration Method](github-pages/assets/images/aim-4-preview.png)
 
 AIM turns your intent into a complete, verified product. **Ship is the default**;
-choose **Loop** for useful Done Increments with recurring owner feedback.
-Use it with Codex, Claude Code or GitHub Copilot.
+choose **Loop** for useful Done Increments with recurring owner feedback. Use it with Codex, Claude Code or GitHub Copilot.
 
 Follow the product in **AIM UI**: inspect Stories, dependencies, blockers and evidence.
-**Graph engineering** connects ownership, work and proof; the UI's Graph view makes
-those recorded dependencies visible. Decisions stay with the designated owner.
+**AIM 4.8 Native Graph engineering** builds a small work graph or validates your
+own. Durable orchestration connects original goals, proof and continuation
+decisions across sessions. Decisions stay with the designated owner.
 
 ## Install
 
@@ -95,6 +95,8 @@ Use **Graph engineering** to let your agent coordinate outcome ownership, delive
 ```text
 Use AIM in Strict Loop. Act as my product owner and delegate delivery. Assess verified increments within [outcome, allowed decisions and resource limit].
 ```
+
+Start with your goal; AIM chooses a small default graph or validates your own. Native orchestration binds actual sessions and retains campaign progress across restarts. See [the Native contract and supported enforcement paths](docs/workflow/native-orchestration.md). Existing approved plans retain their behavior.
 
 Agent-owner decisions require explicit human delegation; existing work keeps its frozen policy. See [delivery and owner contracts](docs/workflow/user-stories.md).
 

@@ -203,8 +203,55 @@ class AppServerClient:
         return message
 
 
+def validate_native_envelope(envelope):
+    from aim_quality.orchestration import _fields, _need, _text
+    _fields(envelope, ('actionVersion', 'action', 'authorityStatePath', 'expectedStoreSha256',
+                      'deliveryId', 'activityId', 'scopeSha256', 'coordinatorSession', 'session', 'actionKey'),
+            label='Native activity envelope')
+    _need(envelope['actionVersion'] == 'native-1' and envelope['action'] == 'native_activity', 'Unsupported Native action.')
+    _need(envelope['authorityStatePath'] == '.aim/product-backlog.json', 'Native action requires its exact canonical ledger path.')
+    for key in ('expectedStoreSha256', 'scopeSha256'):
+        value = envelope[key]
+        _need(isinstance(value, str) and len(value) == 64 and all(c in '0123456789abcdef' for c in value), 'Invalid Native digest.')
+    for key in ('deliveryId', 'activityId', 'coordinatorSession', 'session', 'actionKey'):
+        _text(envelope[key], key, 128)
+
+
+def native_activity_request(envelope):
+    return dict(deliveryId=envelope['deliveryId'], activityId=envelope['activityId'], status='running',
+                session=envelope['session'], coordinatorSession=envelope['coordinatorSession'], actionKey=envelope['actionKey'])
+
+
+def native_action_prompt(envelope):
+    validate_native_envelope(envelope)
+    return ('Use the installed AIM Native contract. The bridge has started the exact approved activity in the sole ledger. '
+            'Read its current assignment and receipt, preserve original requirements and authority, then perform the bounded work. '
+            'Record completed/failed using aim_stories.py activity with this exact actual session and attempt; attach real source/proof bindings. '
+            'A finished turn is not completion or acceptance. Do not restart this activity or expand its scope. '
+            + json.dumps(envelope, ensure_ascii=False, sort_keys=True))
+
+
 def capture_action_target(repo_root: Path, envelope: dict[str, Any]) -> dict[str, Any]:
     """Bind verification to the exact enabled action, before sending anything."""
+    if envelope.get('actionVersion') == 'native-1':
+        try:
+            validate_native_envelope(envelope)
+            from aim_stories import load
+            from aim_quality.files import read_evidence
+            from aim_quality.orchestration_runtime import check_activity, native_graph
+            document, token = load(repo_root)
+            if token != envelope['expectedStoreSha256']:
+                raise ValueError('Native action ledger changed; obtain a current assignment.')
+            delivery = next((d for d in document['deliveries'] if d['id'] == envelope['deliveryId']), None)
+            if delivery is None or native_graph(delivery) is None or delivery['scopeSha256'] != envelope['scopeSha256']:
+                raise ValueError('Native action scope changed.')
+            def check(ref):
+                if hashlib.sha256(read_evidence(repo_root, ref['path'])).hexdigest() != ref['sha256']:
+                    raise ValueError('Native evidence changed.')
+            check_activity(document, delivery, native_activity_request(envelope), check_reference=check)
+            return dict(native=True, deliveryId=delivery['id'], activityId=envelope['activityId'], scopeSha256=delivery['scopeSha256'])
+        except (ValueError, OSError) as exc:
+            raise CodexBridgeError(str(exc)) from exc
     from aim_ui import build_board
 
     for epic in build_board(repo_root)["epics"]:
@@ -236,6 +283,22 @@ def verify_action_result(repo_root: Path, operation: dict[str, Any]) -> dict[str
     if not operation.get("dispatchAttempted"):
         return None
     try:
+        if envelope.get('actionVersion') == 'native-1':
+            validate_native_envelope(envelope)
+            from aim_stories import load
+            document, store_hash = load(repo_root)
+            delivery = next((d for d in document['deliveries'] if d['id'] == envelope['deliveryId']), None)
+            if delivery is None or delivery['scopeSha256'] != envelope['scopeSha256']:
+                return None
+            receipt = next((r for r in reversed(delivery.get('activityReceipts', []))
+                            if r['activityId'] == envelope['activityId']), None)
+            from aim_quality.graph import project_graph
+            graph = project_graph(repo_root, document, store_hash, envelope['deliveryId'])
+            current = next(a for a in graph['activities'] if a['id'] == envelope['activityId'])
+            if (receipt and current['status'] == 'completed' and receipt['status'] == 'completed' and receipt['session'] == envelope['session']
+                    and receipt['attempt'] == operation.get('nativeAttempt') and receipt.get('dispatchId') == operation['id']):
+                return dict(verified=True, message='The bound Native activity has current source and proof receipts; gates remain separate.')
+            return None
         validate_action_envelope(envelope)
         board = build_board(repo_root)
         matches = [epic for epic in board["epics"] if epic["id"] == envelope["epicId"]
@@ -538,6 +601,14 @@ class DispatchManager:
         self._update(operation_id, status="completed", result=result, message=result["message"])
         return True
 
+    def _native_reservation(self, operation):
+        if operation.get('envelope', {}).get('actionVersion') != 'native-1':
+            return None
+        from aim_stories import load
+        document, _ = load(self.repo_root, check_evidence=False)
+        return next((r for d in document['deliveries'] for r in d.get('activityReceipts', [])
+                     if r.get('dispatchId') == operation['id']), None)
+
     def _observe(self, operation_id: str) -> None:
         """Read-only recovery: never resume or submit a turn from this path."""
         try:
@@ -547,6 +618,11 @@ class DispatchManager:
                     and isinstance(operation.get("envelope"), dict)
                     and isinstance(operation.get("verificationTarget"), dict)
                     and not operation.get("dispatchAttempted")):
+                reservation = self._native_reservation(operation)
+                if reservation:
+                    self._update(operation_id, status='unverified', retryable=False,
+                        message='A Native activity receipt was reserved before dispatch was confirmed. Reconcile its exact session/attempt, then record failed if it never ran; it will not be resent automatically.')
+                    return
                 self._update(operation_id, status="rejected", retryable=True,
                              message="The action was not started. You can start it from the board.")
                 return
@@ -629,7 +705,18 @@ class DispatchManager:
                 client.request("thread/resume", {"threadId": self.thread_id})
                 with self.lock:
                     operation = self._read_ledger()["operations"][operation_id]
-                capture_action_target(self.repo_root, operation["envelope"])
+                envelope = operation['envelope']
+                capture_action_target(self.repo_root, envelope)
+                if envelope.get('actionVersion') == 'native-1':
+                    if envelope['session'] != self.thread_id or envelope['coordinatorSession'] != self.thread_id:
+                        raise CodexBridgeError('Native dispatch must use the actual bound, activated coordinator/worker thread.')
+                    from aim_stories import execute
+                    request = native_activity_request(envelope)
+                    request['dispatchId'] = operation_id
+                    started_receipt = execute(self.repo_root, 'activity', request, envelope['expectedStoreSha256'])
+                    delivery = next(d for d in started_receipt['document']['deliveries'] if d['id'] == envelope['deliveryId'])
+                    self._update(operation_id, nativeAttempt=delivery['activityReceipts'][-1]['attempt'],
+                                 nativeStoreSha256=started_receipt['storeSha256'])
                 self._update(
                     operation_id, status="starting", dispatchAttempted=True,
                     message="Starting the requested action in Codex…",
@@ -709,11 +796,16 @@ class DispatchManager:
                     return
         except Exception as exc:  # fail closed at the background boundary
             message = str(exc) if isinstance(exc, CodexBridgeError) else "Background dispatch failed."
+            with self.lock:
+                saved_operation = self._read_ledger()['operations'][operation_id]
+            reservation = self._native_reservation(saved_operation)
+            reserved = reservation is not None
             self._update(
                 operation_id,
-                status="unknown" if turn_started else "rejected",
-                message=("Contact interrupted. AIM will check the saved result without sending the action again." if turn_started else message),
-                retryable=not turn_started,
+                status="unknown" if turn_started else "unverified" if reserved else "rejected",
+                message=("Contact interrupted. AIM will check the saved result without sending the action again." if turn_started else
+                         "A Native activity receipt was reserved; reconcile its exact session/attempt and record failed if dispatch never ran. It will not be resent automatically." if reserved else message),
+                retryable=not turn_started and not reserved,
             )
         finally:
             with self.lock:

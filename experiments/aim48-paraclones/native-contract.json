@@ -1,0 +1,28 @@
+{
+  "purpose": "Input shapes for the experimental pure Native helper. Keep actual records in existing evidence facilities. Examples are shapes, not prebuilt product decisions.",
+  "defaultCommand": "python3 method/scripts/aim_orchestrate.py default --input <your-input.json>",
+  "defaultInput": {
+    "pattern": "cohesive_delivery",
+    "outcomes": [{"id": "your-stable-outcome-id", "requirement": "Your actual frozen product requirement", "paths": ["native-probe"]}],
+    "coordinator": {"session": "actual-host-session-id", "capability": {"id": "aim-native-orchestration", "version": "1"}, "permittedDecisions": ["continue_bounded", "independent_work", "change_baseline", "request_owner_choice", "reprioritize"]},
+    "policy": {"delegationAllowed": true, "maxWorkers": 2, "checkpointAttemptBudget": 3, "parallelBenefit": "Use actual independent review or genuinely disjoint source questions; no parallelism inferred from this example."}
+  },
+  "patterns": ["cohesive_delivery", "maintenance_repair", "independent_branches", "bounded_investigation"],
+  "assessmentCommand": "python3 method/scripts/aim_orchestrate.py assess --input <actual-campaign-history.json>",
+  "assessmentInput": {
+    "version": 1,
+    "outcomeId": "your-stable-outcome-id",
+    "attemptBudget": 3,
+    "noProgressLimit": 2,
+    "waitingOriginalGoals": ["your-stable-outcome-id", "another-original-goal"],
+    "independentReady": [],
+    "observations": [
+      {"outcomeId": "your-stable-outcome-id", "kind": "baseline", "session": "actual-host-session-id", "attempt": 0, "baselineId": "actual-baseline-id", "comparisonKey": "same-real-journey-and-inputs", "metric": "completed-original-outcomes", "direction": "higher", "value": 0, "usable": true},
+      {"outcomeId": "your-stable-outcome-id", "kind": "activity", "session": "actual-host-session-id", "attempt": 1, "resourceDelta": {"elapsedSeconds": null, "tokens": null}}
+    ]
+  },
+  "observationKinds": ["baseline", "integrated_progress", "component_pass", "activity", "heartbeat", "falsifier", "crash", "freeze"],
+  "falsifierAdditionalField": "informationGain: true or false; must describe an actual discriminating observation in linked evidence, not a hope",
+  "integratedProgressFields": "baselineId, comparisonKey, metric, direction, value, plus actual source-bound independent/journey evidence elsewhere; declaration does not prove truth",
+  "policy": "Choose actual task-proportional bounds. Never fabricate observations or declare a numeric improvement without actual proof. Recommendations grant no authority and do not launch an agent."
+}

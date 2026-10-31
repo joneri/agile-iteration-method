@@ -48,6 +48,10 @@
       },
       "minItems": 0,
       "maxItems": 256
+    },
+    "orchestration": {
+      "type": "object",
+      "description": "Native campaign history, semantically validated by orchestration_runtime; optional for historical ledgers."
     }
   },
   "required": [
@@ -1011,6 +1015,17 @@
         "correctionContextSha256": {
           "type": "string",
           "pattern": "^[a-f0-9]{64}$"
+        },
+        "orchestrationActivation": {
+          "type": "object",
+          "description": "Scope-bound actual dispatcher activation evidence; never grants owner authority."
+        },
+        "orchestrationActivationHistory": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "maxItems": 128
         }
       },
       "required": [
@@ -1557,7 +1572,7 @@
         },
         "maxWorkers": {
           "type": "integer",
-          "description": "1–8; enforced by delegation validator."
+          "description": "1\u20138; enforced by delegation validator."
         },
         "parallelBenefit": {
           "type": "string",
@@ -1572,6 +1587,10 @@
           },
           "minItems": 1,
           "maxItems": 32
+        },
+        "orchestration": {
+          "type": "object",
+          "description": "Frozen Native graph with explicit origin, outcomes and node contracts; helper validates full DAG and ownership."
         }
       },
       "required": [
@@ -1623,7 +1642,7 @@
         },
         "attempt": {
           "type": "integer",
-          "description": "Sequential attempts 1–8 per activity; enforced by helper."
+          "description": "Sequential attempts 1\u20138 per activity; enforced by helper."
         },
         "status": {
           "enum": [
@@ -1743,6 +1762,10 @@
             "boundary"
           ],
           "additionalProperties": false
+        },
+        "dispatchId": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
         }
       },
       "required": [

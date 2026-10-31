@@ -91,3 +91,13 @@ for an unresolved ownership/resource boundary, or
 dependencies. No routine companion-document read or agent per role.
 Resume from verified original sources; assess plausible unrecorded impacts
 before supported rework. Never imply an unsupported scope-change transition.
+
+## Native graph planning
+
+For new graph-led deliveries, use [Native orchestration](native-orchestration.md).
+Choose a small default graph from the actual outcome and ownership boundaries,
+or validate and preserve the supplied graph. Generate the execution plan from
+the graph rather than maintaining a separate task graph by hand. Retain original
+Intent identities, waiting goals, usable baselines and cumulative resource
+limits across deliveries. Activation records the actual coordinator/dispatcher
+sessions; it does not prove expertise or grant owner acceptance.

@@ -67,6 +67,17 @@ scope or turn automatic execution into automatic product acceptance.
 
 ## Coherent delivery and bounded autonomy
 
+For new delivery plans, default to [Native orchestration](native-orchestration.md) connects
+original outcomes to executable activities, their ownership and proof contracts.
+Choose a small default or validate a supplied graph before approval. Activate
+the actual coordinating sessions against that scope. The delivery coordinator
+remains the sole writer of its product ledger; upstream agents return decisions
+and observations without creating a second product backlog. Persist campaign
+progress, waiting original goals and observed or unknown resources across node,
+session and delivery changes. A continuation assessment must change the next
+action when further repetition has no demonstrated value. Existing accepted
+requirements, explicit budgets and human decision authority remain binding.
+
 The delivery run is the work toward the selected increment, not an agent session
 or context window. All committed Stories must be implemented, integrated and
 verified. Session endings, partial checks or closed Stories cannot make an

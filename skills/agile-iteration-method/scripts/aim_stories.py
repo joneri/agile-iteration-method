@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
-from aim_quality.files import read_evidence
+from aim_quality.files import read_evidence, MAX_BYTES as EVIDENCE_MAX_BYTES
 from aim_quality.goals import validate_goals, assess as assess_goals, _sha
 from aim_quality.delivery import validate_plan, assess_checks, stages
 from aim_quality.delivery_policy import (DEFAULT_POLICY, normalize_policy, parse_owner_decision,
@@ -43,7 +43,7 @@ COLUMNS = (("backlog", "Backlog"), ("ready", "Ready"),
            ("done", "Done"))
 PHASES = {"planned", "in_progress", "review", "validation", "acceptance", "accepted", "cancelled", "blocked"}
 COMMANDS = ("import", "refine", "plan", "approve", "review", "validate", "acceptance",
-            "accept", "measure", "rework", "cancel", "block", "unblock", "close-epic", "activity")
+            "accept", "measure", "rework", "cancel", "block", "unblock", "close-epic", "activity", "orchestrate")
 
 
 class StoryError(ValueError):
@@ -414,6 +414,63 @@ def _authority(repo, value, scope, *, cache=None, delivery=None, operation=None)
     return copy.deepcopy(value)
 
 
+def _orchestration_checkpoint(repo, sources, source_commit=None):
+    """Retain only explicit scoped source bytes; no workspace backup or execution."""
+    import base64
+    if source_commit is not None:
+        require(isinstance(source_commit, str) and re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}', source_commit), 'sourceCommit must be an exact existing Git commit SHA.')
+        import subprocess
+        def git(*args):
+            try:
+                result = subprocess.run(['git', '-C', str(repo), *args], capture_output=True, timeout=10)
+            except subprocess.TimeoutExpired as exc:
+                raise StoryError('Source checkpoint Git operation timed out; the ledger was not changed.') from exc
+            require(result.returncode == 0, 'Source checkpoint Git commit or selected blob is unavailable.')
+            return result.stdout
+        resolved = git('rev-parse', '--verify', source_commit + '^{commit}').decode().strip()
+        require(resolved == source_commit, 'Source checkpoint must identify the exact commit.')
+        for ref in sources:
+            object_id = source_commit + ':' + ref['path']
+            try:
+                size = int(git('cat-file', '-s', object_id).decode('ascii').strip())
+            except (ValueError, UnicodeError) as exc:
+                raise StoryError('Source checkpoint Git blob size is invalid.') from exc
+            require(0 <= size <= EVIDENCE_MAX_BYTES,
+                    'Source checkpoint Git blob exceeds the product-source evidence size limit.')
+            payload = git('cat-file', 'blob', object_id)
+            require(len(payload) == size, 'Source checkpoint Git blob changed while reading.')
+            require(hashlib.sha256(payload).hexdigest() == ref['sha256'], 'Source checkpoint Git bytes differ from the declared baseline.')
+        return dict(kind='git', commit=source_commit, files=copy.deepcopy(sources))
+    files = []
+    total = 0
+    for ref in sources:
+        payload = read_evidence(repo, ref['path'])
+        require(hashlib.sha256(payload).hexdigest() == ref['sha256'], 'Source changed during baseline checkpoint.')
+        total += len(payload)
+        require(total <= 262144, 'Inline usable baseline checkpoint is limited to 256 KiB of explicitly named sources; narrow the scope or retain a version externally before activating it.')
+        files.append(dict(path=ref['path'], sha256=ref['sha256'], contentBase64=base64.b64encode(payload).decode('ascii')))
+    return dict(kind='inline', files=files)
+
+
+def _orchestration_authority(repo, authority, request, delivery, *, cache=None):
+    value = _authority(repo, authority, delivery['scopeSha256'], cache=cache)
+    payload = read_evidence(repo, value['path'], 16384)
+    require(hashlib.sha256(payload).hexdigest() == value['sha256'], 'Owner decision changed while reading.')
+    try:
+        decision = json.loads(payload)
+    except (ValueError, UnicodeError) as exc:
+        raise StoryError('Owner orchestration decision must be a scoped JSON record.') from exc
+    expected = dict(orchestrationDecisionVersion=1, operation='orchestration_decision',
+                    scopeSha256=delivery['scopeSha256'])
+    for key in ('outcomeId', 'contextSha256', 'decision', 'actionKey', 'coordinatorSession'):
+        expected[key] = request[key]
+    for key in ('priority', 'targetOutcomeId'):
+        if key in request:
+            expected[key] = request[key]
+    require(decision == expected, 'Owner decision must bind this exact campaign context, changed action, priority and coordinator.')
+    return value
+
+
 def _owner_decision_evidence(repo, value, delivery, operation, *, cache=None):
     decisions = cache.owner_decisions if cache is not None else {}
     key = (value["path"], value["sha256"])
@@ -567,6 +624,8 @@ def validate_document(document):
         require(story["epicId"] in epics, "Story references an unknown Epic.")
         criteria(story["acceptanceCriteria"])
         criteria(story["originalAcceptanceCriteria"])
+    from aim_quality.orchestration_runtime import validate_native_document
+    validate_native_document(document)
     ownership = {}
     accepted = {}
     require(sum(item["status"] not in {"accepted", "cancelled"} for item in document["deliveries"]) <= 1,
@@ -717,6 +776,18 @@ def verify_evidence(repo, document, *, cache=None):
             _require_review(repo, delivery, cache=cache)
         if effective == "acceptance" and (delivery.get("qualityGoals") or delivery.get("qualityPlan")):
             _require_quality(repo, delivery, cache=cache)
+    from aim_quality.orchestration_runtime import campaigns
+    for campaign in campaigns(document):
+        for record in campaign['observations'] + campaign['decisions']:
+            _refs(repo, record['evidence'], cache=cache)
+            if 'authority' in record:
+                _ref(repo, {k: record['authority'][k] for k in ('path', 'sha256')}, cache=cache)
+    for delivery in document['deliveries']:
+        activations = delivery.get('orchestrationActivationHistory', []) + ([delivery['orchestrationActivation']] if 'orchestrationActivation' in delivery else [])
+        for activation in activations:
+            _refs(repo, activation['evidence'], cache=cache)
+            for actor in activation['dispatchers']:
+                _refs(repo, actor['evidence'], cache=cache)
     for epic in document["epics"]:
         if "closure" in epic:
             record = epic["closure"]
@@ -1073,14 +1144,31 @@ def _change(repo, document, command, request, *, cache=None):
         authority = _authority(repo, request["authority"], digest(_closure_scope(document, epic, evidence)), cache=cache)
         epic.update(status="closed", closure={"criteria": evidence, "authority": authority, "closedAt": now()})
         return
+    if command == "orchestrate":
+        from aim_quality.orchestration_runtime import change_orchestration
+        delivery = _by_id(document, "deliveries", request.get("deliveryId"))
+        change_orchestration(document, delivery, request,
+            bind_sources=lambda paths: _source_bindings(repo, paths, cache=cache),
+            bind_evidence=lambda refs: _refs(repo, refs, cache=cache),
+            bind_authority=lambda authority, decision: _orchestration_authority(repo, authority, decision, delivery, cache=cache),
+            check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache), at=now(),
+            read_reference=lambda ref: read_evidence(repo, _ref(repo, ref, cache=cache)["path"]),
+            retain_sources=lambda refs, commit: _orchestration_checkpoint(repo, refs, commit))
+        return
     if command == "activity":
         require(isinstance(request, dict) and "deliveryId" in request, "Activity request requires a delivery ID.")
         delivery = _by_id(document, "deliveries", request["deliveryId"])
         try:
+            from aim_quality.orchestration_runtime import check_activity, record_start
+            if request.get("status") == "running":
+                check_activity(document, delivery, request,
+                               check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
             change_activity(repo, delivery, request,
                             bind_sources=lambda paths: _source_bindings(repo, paths, cache=cache),
                             bind_evidence=lambda refs: _refs(repo, refs, cache=cache), at=now(),
-                            check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
+                            check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache), document=document)
+            if request.get("status") == "running":
+                record_start(document, delivery, request, delivery["activityReceipts"][-1])
         except ValueError as exc:
             raise StoryError(str(exc)) from exc
         return
@@ -1237,7 +1325,7 @@ def execute(repo, command, request, expected_sha256=None):
         payload = (json.dumps(candidate, ensure_ascii=False, indent=2) + "\n").encode()
         require(len(payload) <= MAX_BYTES, "Product backlog exceeds the bounded store size.")
         result = status_result(candidate, hashlib.sha256(payload).hexdigest(), quality=quality)
-        if command == "activity":
+        if command in {"activity", "orchestrate"}:
             result["executionGraph"] = project_graph(repo, candidate, result["storeSha256"], request["deliveryId"],
                                                      check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
         _finish_verification(repo, cache)
@@ -1292,7 +1380,9 @@ def status_result(document, store_hash, *, quality=None):
                                "instructions": str(BUNDLE_ROOT / relative)})
     if not next_steps:
         next_steps.append({"operation": "plan" if any(item["status"] == "ready" for item in document["stories"]) else "refine"})
+    from aim_quality.orchestration_runtime import summary
     return {"storeSha256": store_hash, "document": document, "nextStep": next_steps,
+            **({"orchestration": summary(document)} if "orchestration" in document else {}),
             **({"quality": quality} if quality is not None else {})}
 
 
@@ -1322,7 +1412,8 @@ def compact_result(result, *, receipt=False, delivery_id=None):
         confirmed["deliveries"] = deliveries
         return {"view": "receipt", "storeSha256": result["storeSha256"], "document": confirmed,
                 "nextStep": result["nextStep"], **({"quality": result["quality"]} if "quality" in result else {}),
-                **({"executionGraph": result["executionGraph"]} if "executionGraph" in result else {})}
+                **({"executionGraph": result["executionGraph"]} if "executionGraph" in result else {}),
+                **({"orchestration": result["orchestration"]} if "orchestration" in result else {})}
     active = [d for d in document["deliveries"] if d["status"] not in {"accepted", "cancelled"}]
     selected = {s["id"] for d in active for s in d["stories"]}
     visible = ([s for s in document["stories"] if s["id"] in selected] if active else

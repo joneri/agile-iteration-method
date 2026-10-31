@@ -2663,10 +2663,14 @@ class AimUiHandler(BaseHTTPRequestHandler):
             envelope = body.get("envelope")
             if not isinstance(envelope, dict):
                 raise AimUiError("Action envelope is required.")
-            action = self._eligible_action(envelope)
-            operation = self.server.dispatch_manager.dispatch(
-                envelope, action_prompt(envelope)
-            )
+            if envelope.get('actionVersion') == 'native-1':
+                from aim_codex_bridge import capture_action_target, native_action_prompt
+                capture_action_target(self.server.repo_root, envelope)
+                prompt = native_action_prompt(envelope)
+            else:
+                self._eligible_action(envelope)
+                prompt = action_prompt(envelope)
+            operation = self.server.dispatch_manager.dispatch(envelope, prompt)
         except (AimUiError, CodexBridgeError) as exc:
             self._json(HTTPStatus.CONFLICT, {"error": str(exc)})
             return

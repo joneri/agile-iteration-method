@@ -1,5 +1,33 @@
 # Changelog
 
+## 2026-10-31 - AIM release v4.8.0
+
+Connect original outcomes to executable work graphs and durable continuation.
+
+- Construct cohesive delivery, maintenance repair, independent branch or bounded
+  investigation graphs, or validate a supplied graph without rewriting its origin.
+  Generate the executable activity plan from outcome-to-Story bindings.
+- Activate actual coordinator and upstream dispatcher sessions against the frozen
+  scope. Retain original outcome campaigns in the same product ledger across
+  deliveries, activities, techniques and restarts.
+- Preserve usable baselines, integrated progress, failures, waiting original goals
+  and observed/unknown resources. Component passes and heartbeats do not reset
+  stagnation; a baseline rename cannot launder regression into improvement.
+- Check consequential continuation choices at supported Native activity and
+  Codex bridge dispatch boundaries, preserving ordinary dependency and freshness
+  fences. Allow bounded new diagnostic information without unlimited retries.
+- Package the helpers and progressive contract for Codex, Claude Code and Copilot;
+  explain default/custom graphs, independent review and actual host limits.
+
+Compatibility: Native orchestration is an explicit optional frozen plan contract.
+Existing plans, accepted evidence, legacy workspaces and approval authority are
+not migrated. Upgrade does not modify consumer projects automatically. CLI
+session/capability declarations are not authentication. Portable instructions
+cannot intercept out-of-band host calls. The level-building comparison informed
+the owner's selection; no general Superpowers superiority or subscription/token
+savings are claimed.
+
+
 ## 2026-10-29 - AIM release v4.7.7
 
 Keep `/aim graph` explanations bound to the selected recorded evidence.

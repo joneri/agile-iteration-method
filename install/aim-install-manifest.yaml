@@ -133,6 +133,9 @@ aimInstallManifest:
         - scripts/aim_quality/localities.py
         - scripts/aim_quality/delegation.py
         - scripts/aim_quality/graph.py
+        - scripts/aim_quality/orchestration.py
+        - scripts/aim_quality/orchestration_runtime.py
+        - scripts/aim_orchestrate.py
         - scripts/aim_quality/review.py
         - scripts/aim_quality/knowledge.py
         - scripts/aim_quality/patterns.py

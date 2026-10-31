@@ -45,10 +45,10 @@ def _digest(value):
 
 def validate_execution_plan(plan, stories, repo=None):
     """Require the same bounded ownership DAG plus explicit product assignments."""
-    _fields(plan, ("version", "delegationAllowed", "maxWorkers", "activities"), ("parallelBenefit",))
+    _fields(plan, ("version", "delegationAllowed", "maxWorkers", "activities"), ("parallelBenefit", "orchestration"))
     if "parallelBenefit" in plan:
         _text(plan["parallelBenefit"], "Parallel benefit", 2000)
-    assessed = check_delegation(plan)
+    assessed = check_delegation({k: v for k, v in plan.items() if k != "orchestration"})
     _require(assessed["valid"], "Execution plan has incomplete review dependencies.")
     selected = {s["id"] for s in stories}
     for item in plan["activities"]:
@@ -251,7 +251,7 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
                           stories=copy.deepcopy(selected_stories), checks=copy.deepcopy(checks),
                           boundary="Work only in these approved paths; record actual session, attempt and proof. Activity completion does not advance native gates.")
         retry = _retry_context(delivery, identifier)
-        reassessment_required = status in {'failed', 'stale'} and retry['required']
+        reassessment_required = status in {'failed', 'stale'} and retry['required'] and 'orchestration' not in plan
         if reassessment_required:
             reason += ' Repeated diagnosis requires benefit/cumulative-resource reassessment before another attempt.'
             assignment['diagnosticReassessment'] = dict(contextSha256=retry['contextSha256'],
@@ -288,6 +288,43 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
     result["recommendedIds"] = chosen
     result["blockers"] = [{"activityId": a["id"], "status": a["status"], "reason": a["reason"]}
                           for a in result["activities"] if a["status"] in {"failed", "blocked", "stale"}]
+    if 'orchestration' in plan:
+        from .orchestration_runtime import (summary, check_activity, campaign_for, assessment)
+        result['orchestration'] = summary(document, delivery)
+        contract = plan['orchestration']
+        activation = delivery.get('orchestrationActivation')
+        actor = activation['coordinatorSession'] if activation else None
+        def check_native_ref(ref):
+            if check_reference:
+                check_reference(ref)
+            elif hashlib.sha256(read_evidence(Path(repo), ref['path'])).hexdigest() != ref['sha256']:
+                raise ValueError('Native source/evidence changed.')
+        for item in result['activities']:
+            native = next(n for n in contract['nodes'] if n['id'] == item['id'])
+            item['assignment']['nativeContract'] = dict(origin=copy.deepcopy(contract['origin']),
+                outcomeIds=copy.deepcopy(native['outcomeIds']), inputs=copy.deepcopy(native['inputs']),
+                outputs=copy.deepcopy(native['outputs']), proofExpectations=copy.deepcopy(native['proofExpectations']))
+            item['assignment']['coordinatorSession'] = actor
+            item['assignment']['ownerPriority'] = copy.deepcopy(document.get('orchestration', {}).get('ownerPriority', []))
+            item['assignment']['campaigns'] = [assessment(campaign_for(document, outcome), check_native_ref, owner_priority=document.get('orchestration', {}).get('ownerPriority', []))
+                for outcome in native['outcomeIds'] if campaign_for(document, outcome) is not None]
+            decisions = [campaign_for(document, outcome)['decisions'][-1] for outcome in native['outcomeIds']
+                         if campaign_for(document, outcome) is not None and campaign_for(document, outcome)['decisions']]
+            key = decisions[-1]['actionKey'] if decisions else 'next-bounded-action'
+            item['assignment']['actionKey'] = key
+            try:
+                check_activity(document, delivery, dict(activityId=item['id'], coordinatorSession=actor, actionKey=key),
+                               check_reference=check_native_ref)
+                item['nativeStartAllowed'] = True
+            except (ValueError, OSError) as exc:
+                item['nativeStartAllowed'] = False
+                item['nativeBlocker'] = str(exc)
+                if item['status'] == 'ready':
+                    item.update(status='blocked', reason=str(exc))
+                result['blockers'].append(dict(activityId=item['id'], status='blocked', reason=str(exc)))
+        allowed = {a['id'] for a in result['activities'] if a['nativeStartAllowed']}
+        for key in ('readyIds', 'retryIds', 'recommendedIds'):
+            result[key] = [identifier for identifier in result[key] if identifier in allowed]
     result["summary"] = {state: sum(a["status"] == state for a in result["activities"]) for state in STATES}
     return result
 
@@ -312,9 +349,9 @@ def _lifecycle(result, delivery):
     return result
 
 
-def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at, check_reference=None):
+def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at, check_reference=None, document=None):
     _fields(request, ("deliveryId", "activityId", "status", "session"),
-            ("attempt", "sourcePaths", "evidence", "reason", "reassessment"))
+            ("attempt", "sourcePaths", "evidence", "reason", "reassessment", "coordinatorSession", "actionKey", "dispatchId"))
     _require(delivery["status"] == "in_progress" and delivery.get("approval", {}).get("scopeSha256") == delivery["scopeSha256"],
              "Activity changes require an approved delivery in progress.")
     _require("executionPlan" in delivery, "Delivery has no approved execution plan.")
@@ -322,7 +359,7 @@ def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at,
     _require(request["status"] in {"running", "completed", "failed"}, "Activity status must be running, completed or failed.")
     task = next((a for a in delivery["executionPlan"]["activities"] if a["id"] == request["activityId"]), None)
     _require(task is not None, "Unknown activity ID.")
-    graph = project_graph(repo, {"deliveries": [delivery]}, None, check_reference=check_reference)
+    graph = project_graph(repo, document if document is not None else {"deliveries": [delivery]}, None, check_reference=check_reference)
     state = next(a for a in graph["activities"] if a["id"] == task["id"])
     records = delivery.setdefault("activityReceipts", [])
     latest = {r["activityId"]: r for r in records}
@@ -340,7 +377,7 @@ def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at,
         tasks = {a["id"]: a for a in plan["activities"]}
         _require(not any(_conflict(task, tasks[other]) for other in running), "Activity ownership overlaps running work.")
         retry = _retry_context(delivery, task['id'])
-        if retry['required'] or 'reassessment' in request:
+        if (retry['required'] and 'orchestration' not in delivery['executionPlan']) or 'reassessment' in request:
             _require(previous is not None and 'reassessment' in request,
                      'Repeated diagnostic failure requires a current benefit/resource reassessment before retry.')
             _validate_reassessment(request['reassessment'], retry)
@@ -352,6 +389,9 @@ def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at,
                             status="running", at=at, updatedAt=at, scopeSha256=delivery["scopeSha256"],
                             dependencies=[dict(activityId=dep, attempt=latest[dep]["attempt"],
                                                receiptSha256=_digest(latest[dep])) for dep in task["dependsOn"]]))
+        if 'dispatchId' in request:
+            _require(isinstance(request['dispatchId'], str) and re.fullmatch(r'[0-9a-f]{64}', request['dispatchId']), 'Invalid dispatch identity.')
+            records[-1]['dispatchId'] = request['dispatchId']
         if 'reassessment' in request:
             records[-1]['reassessment'] = copy.deepcopy(request['reassessment'])
         return

@@ -18,6 +18,13 @@ Follow:
 
 ## Ship, Loop and Graph engineering
 
+Default new delivery plans to **AIM 4.8 Native**. Small work uses a small graph;
+no extra agent is implied. Before planning or dispatch, load
+`docs/workflow/native-orchestration.md`: select a built-in outcome graph or
+preserve the user's graph, activate actual coordinators and dispatchers, and
+apply ledger-backed continuation checks before host tools. Keep original campaign
+history across sessions and deliveries. Existing frozen plans retain their contract.
+
 Default new intent-led work to **Ship**: complete the agreed product outcome
 before final owner acceptance. Explicit **Loop** uses useful Done Increments
 and actual owner feedback to select the next work. Keep delivery style separate

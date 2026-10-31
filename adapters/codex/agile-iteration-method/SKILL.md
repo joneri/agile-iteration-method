@@ -26,6 +26,15 @@ Attribution: based on Agile Iteration Method 2.0 by Jonas Eriksson, licensed as 
 
 ## Ship, Loop and Graph engineering
 
+Default new delivery plans to **AIM 4.8 Native**. Small work uses a small graph;
+no extra agent is implied. Before planning or dispatch,
+load `references/native-orchestration.md`: choose the smallest useful built-in graph or
+preserve the user's graph, bind it to original outcomes and activate the actual
+coordinator and upstream dispatchers. Keep campaign history in the same product
+ledger across sessions and deliveries. Apply its consequential next action at
+each supported dispatch boundary; component passes and heartbeats cannot reset
+stagnation. Existing frozen plans keep their original contract.
+
 Default new intent-led work to **Ship**: complete the agreed product outcome
 before final owner acceptance. Explicit **Loop** uses useful Done Increments
 and actual owner feedback to select the next work. Keep delivery style separate
