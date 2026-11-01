@@ -48,7 +48,7 @@ jobs:
       - name: Validate official skills CLI discovery and installations
         run: python3 scripts/validate_public_skill_cli.py --source .
 
-      - name: Audit documentation and website
+      - name: Audit documentation, website and AIM School release review
         run: python3 scripts/audit_documentation.py .
 
       - name: Check engineering knowledge evidence freshness

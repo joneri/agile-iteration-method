@@ -1,0 +1,83 @@
+{
+  "guidanceReviewVersion": 1,
+  "productVersion": "4.8.3",
+  "reviewedOn": "2026-11-01",
+  "pages": [
+    {
+      "path": "index.html",
+      "sha256": "7a13884626448b8165b3e273950ff1aaabf194b9e0949244b9d25420e8568a0c"
+    },
+    {
+      "path": "school.html",
+      "sha256": "0c67d85e2023fc92956efaec33a47c60e4a775612302edc4085ee00ec1a5b42d"
+    }
+  ],
+  "sources": [
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "fe4f6b70d00c760af95cdd90a9e689c4cf7a55ca492c910407107ad78d7b212d"
+    },
+    {
+      "path": "adapters/portable/agile-iteration-method/SKILL.md",
+      "sha256": "fe73b12bd6120ce313c8a8eeeecda9ac65c046bf555e5ca19ca5b82fd9554060"
+    },
+    {
+      "path": "docs/workflow/user-stories.md",
+      "sha256": "f976ebdae161ef6965d0a2fb27619a849f94520847f5dcafd3f21d2c8d88863d"
+    },
+    {
+      "path": "docs/workflow/native-orchestration.md",
+      "sha256": "0045cbe51b05b30d55661ea6c9f1434370a744e2148e15d2d0274e21f6c8cf79"
+    },
+    {
+      "path": "docs/workflow/skill-command-runtime.md",
+      "sha256": "9f258364097d70957348206d2a10f7282e745b44edd0193deb4886a950fdefc7"
+    },
+    {
+      "path": "docs/workflow/adapter-command-contract.md",
+      "sha256": "2b673570ba8bd92b622f5507cc322754e70cbb76d968444f748fe555488bc6a0"
+    },
+    {
+      "path": "docs/workflow/version-and-installation.md",
+      "sha256": "9d1e5826c549c2683a685f2d76c8f782e2aec623c6d625cd3b43316494e8656b"
+    },
+    {
+      "path": "docs/workflow/cost-control-mode.md",
+      "sha256": "5741194486d965ea05df27bfd6d44d6ab8f644794b2c773be060b220b93bcba2"
+    },
+    {
+      "path": "docs/features/aim-enigma-evaluation.md",
+      "sha256": "78fdb4fd6712ae8d562920f35add67bb6155148450b8da46599ad5ceb4395405"
+    }
+  ],
+  "assessments": {
+    "installationAndStart": {
+      "conclusion": "current",
+      "summary": "The homepage installation/start sections and school quick start use the complete public agile-iteration-method skill through the standard skills CLI. Intent-led starts conditionally prepare missing or stale project knowledge and role instructions in the same start, including provisional empty repositories. Natural-language fallback, session reload when needed, separate later refreshes and reviewed adaptive installation remain consistent with the installation and command contracts; upgrades preserve existing delivery history."
+    },
+    "deliveryModes": {
+      "conclusion": "current",
+      "summary": "Homepage Ship/Loop guidance and school quick start/decision lesson keep delivery style separate from approval mode and cost depth. Ship is the new-work default; Loop uses actual owner feedback on useful increments. The school explicitly selects Ship/Auto for its example and separately delegates bounded plan approval. Strict remains the unselected default. Auto alone grants neither acceptance nor a resource increase, and existing approved policies remain preserved."
+    },
+    "orchestration": {
+      "conclusion": "current",
+      "summary": "Homepage Graph guidance and school work-planning lesson describe Native graphs derived from outcomes, explicit dependencies and assignments, and a small graph without an automatic agent per activity. The school setup names the main product owner/orchestrator, delegated delivery coordinator and separate reviewer. Actual host launch/message capabilities remain required; copied assignments and graph projections alone do not launch agents. Current rework rules retain the same approved scope and campaign history rather than resetting the delivery."
+    },
+    "delegatedDecisions": {
+      "conclusion": "current",
+      "summary": "The school setup delegates plan approval and routine implementation choices only within scope/resources confirmed before implementation, reserving scope changes, resource increases, publication and final acceptance. The decisions lesson distinguishes approve, accept and separately capped orchestrate authority; a role or Auto setting does not create those permissions. Homepage internal-escalation wording requires an explicitly delegated owner. Actual owner decisions, human reservations and separate Epic closure remain consistent with the owner/Native contracts."
+    },
+    "resourceUse": {
+      "conclusion": "current",
+      "summary": "School resource guidance includes planning, implementation, delegated work, review and corrections, retains unavailable usage as unknown, and distinguishes work-start caps from tokens, elapsed time, subscription allowance and money. Cost Control narrows context/narration while retaining quality and independent material review. Homepage focused-tool and knowledge-reuse claims qualify savings by actual task/platform. Neither a session, rework nor a model/profile label renews cumulative resources or establishes a fixed saving."
+    },
+    "verificationAndAcceptance": {
+      "conclusion": "current",
+      "summary": "Homepage method guidance and the school testing lesson preserve early core checks, a separate reviewer, integrated user journeys and evidence matching the actual delivered version. The Pocket Board example checks persistence, invalid input, keyboard behavior and phone layout. Corrections retain the agreed criteria, and acceptance stays with the human unless explicitly delegated for that decision. Continue and upgrade do not approve pending decisions or transfer historical acceptance to a new build."
+    },
+    "modelsAndEvidence": {
+      "conclusion": "updated",
+      "summary": "The homepage evidence section now visibly dates the retained AIM assessment to 18 October 2026 and Luna-only baseline to 30 September 2026, preserves their scores and linked exact test-build provenance, and explains the differing conditions, unfinished Native delivery and lack of a new paired experiment or general quality/cost conclusion. Later releases do not inherit measured performance. Existing AIM UI 4.7.5 captures remain dated 29 October 2026. The school Sol/Luna recipe remains an optional creator experience, conditional on actual host/account controls, without current pricing or guaranteed-savings claims."
+    }
+  }
+}

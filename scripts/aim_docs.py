@@ -228,4 +228,10 @@ def audit(repo_root: Path) -> list[str]:
     errors.extend(f"school.html: {error}" for error in school_parser.errors)
     if school_parser.stack:
         errors.append("school.html: unclosed structural tags: " + ", ".join(school_parser.stack))
+    from aim_guidance import GuidanceError, validate_guidance
+
+    try:
+        validate_guidance(repo_root)
+    except GuidanceError as exc:
+        errors.append(str(exc))
     return errors

@@ -12,6 +12,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import unquote, urlsplit
 
+from aim_guidance import GuidanceError, validate_guidance
+
 
 PUBLIC_ORIGIN = "https://joneri.github.io/agile-iteration-method/"
 SCHEMA_RELATIVE_PATHS = (
@@ -209,7 +211,6 @@ class _SchoolPage(_Homepage):
             self.assets.add(attributes["src"])
             if not attributes.get("alt", "").strip():
                 raise PublicationError("school.html: an image needs descriptive alt text")
-
 
 def validate_school(root: Path) -> None:
     """Check the school in source and the exact published artifact.
@@ -534,6 +535,14 @@ def validate_source(repo_root: Path) -> None:
     for label, (content, marker) in required_public_markers.items():
         if marker not in content:
             raise PublicationError(f"{label} does not match {PUBLIC_ORIGIN}")
+    _guidance_contract(repo_root, source=True)
+
+
+def _guidance_contract(root: Path, *, source: bool) -> None:
+    try:
+        validate_guidance(root, source=source)
+    except GuidanceError as exc:
+        raise PublicationError(str(exc)) from exc
 
 
 def product_version(root: Path) -> str:
@@ -719,3 +728,4 @@ def validate_artifact(output_root: Path) -> None:
         raise PublicationError(
             f"{RELEASE_MANIFEST_PATH}: content differs from canonical release manifest"
         )
+    _guidance_contract(output_root, source=False)
