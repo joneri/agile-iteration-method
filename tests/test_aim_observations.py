@@ -29,6 +29,66 @@ class ObservationTests(unittest.TestCase):
                         dict(id='owner',title='Human playtest',role='human',status='blocked',dependsOn=['core'],storyIds=['US-OBS'],reason='Human rejected prior game feel')],sources=[self.source])
         self.request=dict(ledgerSha256=hashlib.sha256(self.original).hexdigest(),entry=self.entry)
 
+    def _seed_history(self, count):
+        import_entry(self.repo, self.request)
+        data, _ = load(self.repo)
+        first = data['entries'][0]
+        data['entries'] = []
+        for index in range(count):
+            record = copy.deepcopy(first)
+            record['entry']['id'] = f'snapshot-{index + 1}'
+            data['entries'].append(record)
+        data.update(revision=count, currentId=f'snapshot-{count}')
+        (self.repo / FILE).write_text(json.dumps(data, indent=2) + '\n')
+        return data
+
+    def test_existing_128_snapshot_history_is_readable_without_rewriting(self):
+        expected = self._seed_history(128)
+        before = (self.repo / FILE).read_bytes()
+        saved, _ = load(self.repo)
+        self.assertEqual(saved, expected)
+        self.assertTrue(project_story_board(self.repo)['valid'])
+        self.assertEqual((self.repo / FILE).read_bytes(), before)
+        self.assertEqual((self.repo / '.aim/product-backlog.json').read_bytes(), self.original)
+        # A late invalid snapshot must still be checked beyond the old boundary.
+        saved['entries'][-1]['entry']['id'] = 'snapshot-1'
+        (self.repo / FILE).write_text(json.dumps(saved))
+        with self.assertRaisesRegex(ValueError, 'Duplicate snapshot'):
+            load(self.repo)
+
+    def test_history_append_reaches_128_then_rejects_without_losing_records(self):
+        original = self._seed_history(127)
+        _, token = load(self.repo)
+        request = copy.deepcopy(self.request)
+        request['entry']['id'] = 'snapshot-128'
+        receipt = import_entry(self.repo, request, token)
+        saved, _ = load(self.repo)
+        self.assertEqual(saved['entries'][:-1], original['entries'])
+        self.assertEqual(len(saved['entries']), 128)
+        before = (self.repo / FILE).read_bytes()
+        request['entry']['id'] = 'snapshot-129'
+        with self.assertRaisesRegex(ValueError, 'history limit'):
+            import_entry(self.repo, request, receipt['storeSha256'])
+        self.assertEqual((self.repo / FILE).read_bytes(), before)
+        self.assertEqual((self.repo / '.aim/product-backlog.json').read_bytes(), self.original)
+        saved['entries'].append(copy.deepcopy(saved['entries'][-1]))
+        saved['entries'][-1]['entry']['id'] = 'snapshot-129'
+        (self.repo / FILE).write_text(json.dumps(saved))
+        with self.assertRaisesRegex(ValueError, 'Bounded observation history'):
+            load(self.repo)
+
+    def test_history_byte_limit_still_rejects_append_atomically(self):
+        self._seed_history(33)
+        _, token = load(self.repo)
+        before = (self.repo / FILE).read_bytes()
+        request = copy.deepcopy(self.request)
+        request['entry']['id'] = 'snapshot-34'
+        with patch.object(aim_observations, 'LIMIT', len(before) + 1):
+            with self.assertRaisesRegex(ValueError, 'history limit'):
+                import_entry(self.repo, request, token)
+        self.assertEqual((self.repo / FILE).read_bytes(), before)
+        self.assertEqual((self.repo / '.aim/product-backlog.json').read_bytes(), self.original)
+
     def test_actual_import_projects_read_only_stories_graph_and_preserves_ledger(self):
         r=import_entry(self.repo,self.request)
         b=project_story_board(self.repo)
