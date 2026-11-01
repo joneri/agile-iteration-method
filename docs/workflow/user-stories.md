@@ -510,6 +510,74 @@ future deliveries eligible: use the native workflow for new work, or disclose
 the concrete unsupported transition and obtain an actual scoped exception.
 
 
+## Present-authorized reconciliation of undelivered Native work
+
+Use `aim_stories.py reconciliation-context` followed by `reconcile` only for
+existing ready Native Stories that were actually implemented, independently
+reviewed and human approved **without an original delivery**. This is a new
+explicit human-authorized reconciliation now. It does not claim that original
+activation, approval, activity, review or validation gates happened. Ordinary
+new work uses the normal delivery lifecycle. A blocked delivery is not bypassed:
+no selected Story may belong to any existing delivery, even an unapproved or
+cancelled plan. Corrective Stories use their existing supported workflow.
+
+The context request has `id` (`REC-*`), exact ordered `storyIds`, `originalPlan`
+(path/SHA reference to the actual frozen plan), separate `reviewEvidence` and
+`packageEvidence` arrays, `acceptanceEvidence`, `authorizationEvidence`,
+`sourcePaths`, `acceptanceMapping` (Story ID to actual approved product-scope ID),
+`deviation`, nonempty `limitations`, and actual `implementers` (`id/session`).
+Evidence references use contained paths and SHA-256; the original plan may live
+outside `.aim/`. Preserve build identity uncertainty and the actual missing
+activation in the deviation. `reconciliation-context` is read-only and returns
+`storeSha256`, the complete original requirement/proof context and its
+`scopeSha256`. Original requirements include prior status and original criteria.
+
+The present authorization is immutable contained JSON with
+`kind: actual_user_authorization_for_present_reconciliation`, the exact
+`storyIds`, the actual `originalMessage`, and `priorActualProductApproval`
+pointing to `acceptanceEvidence.path`. The earlier product approval JSON has
+`kind: actual_human_product_feedback` (or existing
+`actual_human_playtest_feedback`), `decision: approved`, the actual
+`originalMessage`, and `scope` matching the mapping exactly. These are host
+transcriptions of real evidence; never manufacture the human's answer or infer
+a former method exception from the new instruction.
+
+Submit `reconcile` under the confirmed `--expected-sha256` with:
+
+- `context`: the original context **request**, without generated snapshots;
+- `scopeSha256`: the returned complete context digest;
+- `decisionEvidence`: a separate JSON reference containing
+  `reconciliationDecisionVersion: 1`, `operation: reconcile`, the same `id`,
+  `scopeSha256`, exact `storyIds`, `kind: user`, `decision: accepted`, the same
+  `authorizationEvidence` / `acceptanceEvidence` references and a concrete
+  `reason` attributing the actual present human instruction;
+- `reviewRecord`: separate structured independent review JSON: normal
+  `version: 1`, exact `scopeSha256`, `sources` from returned `sourceBindings`,
+  actual `implementers`, distinct actual `reviewer` (`id/session`),
+  `reviewMode: independent`, and `findings`. Add `reconciliationId`, identical
+  `reviewEvidence` / `packageEvidence`, and `criterionAssessment` mapping every
+  original Story ID and criterion ID to its concrete assessment. Normalizing an
+  existing independent report does not create a new review: retain its actual
+  identities, evidence and limitations and label the normalization honestly.
+
+The helper checks current sources, evidence, original scope, explicit current
+human authority, independent review, exact criterion coverage and unresolved
+prerequisites before one atomic write. The typed `reconciliations` journal in
+`.aim/product-backlog.json` and the original cards' Done statuses share that
+write and returned `reconciliation` receipt. No observation duplicate or fake
+historical delivery is created. Other deliveries, campaign/resources, requirement
+revisions and original artifacts are untouched. An identical request under the
+current CAS returns its original journal receipt without changing revision or
+timestamp; stale CAS and changed reuse of its ID reject. Accepted source hashes
+remain historical when later work changes sources. The decision/evidence
+artifacts remain immutable. Epic closure remains a separate actual owner
+operation, with the journal disposition in its closure scope.
+
+These declarations bind scope and provenance, not authenticated identities or
+proof of semantic truth. The host retains the actual human answer and reviewer
+provenance. Unsupported or insufficient evidence stays blocked; no broad
+migration, owner delegation or resource renewal is implied.
+
 ## Original obligations and corrective deliveries
 
 Prefer native `rework` under the same frozen Story identities for corrections to

@@ -52,6 +52,14 @@
     "orchestration": {
       "type": "object",
       "description": "Native campaign history, semantically validated by orchestration_runtime; optional for historical ledgers."
+    },
+    "reconciliations": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "type": "object"
+      },
+      "description": "Explicit present-authorized acceptance journal for existing undelivered Native Stories. Exact scope, authority, independent review and historical associations are enforced by the Story helper; never retroactive delivery gates."
     }
   },
   "required": [

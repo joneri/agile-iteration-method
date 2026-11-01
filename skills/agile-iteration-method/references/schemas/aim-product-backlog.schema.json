@@ -1828,6 +1828,14 @@
     "productBacklogVersion": {
       "const": "1.0"
     },
+    "reconciliations": {
+      "description": "Explicit present-authorized acceptance journal for existing undelivered Native Stories. Exact scope, authority, independent review and historical associations are enforced by the Story helper; never retroactive delivery gates.",
+      "items": {
+        "type": "object"
+      },
+      "maxItems": 256,
+      "type": "array"
+    },
     "revision": {
       "type": "integer"
     },
