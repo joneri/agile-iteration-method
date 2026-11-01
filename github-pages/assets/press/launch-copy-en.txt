@@ -1,9 +1,9 @@
 AIM
 Turn your intent into a complete product.
 
-Suggested announcement copy · AIM 4.8.1 · 1 November 2026.
+Suggested announcement copy · AIM 4.8.2 · 1 November 2026.
 
-AIM 4.8.1 Native fixes outcome-scoped evidence for cohesive activities and accepts concurrent results without losing their original identities. Delayed reports preserve newer failures and consumed effort. Imported observation history supports up to 128 snapshots while retaining the existing byte limit and atomic writes.
+AIM 4.8.2 Native routes internal escalations to your explicitly delegated owner, so you do not have to relay routine process questions. Scoped agent answers preserve cumulative resource limits across goals and restarts. This release also fixes Native delivery completion and retains the observation improvements from 4.8.1.
 
 Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 

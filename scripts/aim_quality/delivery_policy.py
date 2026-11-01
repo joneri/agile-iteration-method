@@ -11,7 +11,7 @@ import re
 
 
 DEFAULT_POLICY = {"mode": "ship", "owner": {"kind": "human"}}
-OWNER_DECISIONS = {"approve", "accept"}
+OWNER_DECISIONS = {"approve", "accept", "orchestrate"}
 
 
 def _require(condition, message):
@@ -38,7 +38,7 @@ def normalize_policy(value):
     if owner.get("kind") == "human":
         _fields(owner, ("kind",))
     else:
-        _fields(owner, ("kind", "id", "session", "mandate", "decisions"))
+        _fields(owner, ("kind", "id", "session", "mandate", "decisions"), ("maxAdditionalAttempts",))
         _require(owner["kind"] == "agent", "Delivery owner must be human or agent.")
         _require(_identity(owner["id"]) and _identity(owner["session"]),
                  "Agent owner requires its actual non-empty id and session.")
@@ -50,10 +50,17 @@ def normalize_policy(value):
                  and re.fullmatch(r"[0-9a-f]{64}", mandate["sha256"]) is not None,
                  "Agent owner mandate requires a SHA-256 fingerprint.")
         decisions = owner["decisions"]
-        _require(isinstance(decisions, list) and 1 <= len(decisions) <= 2
+        _require(isinstance(decisions, list) and 1 <= len(decisions) <= 3
                  and all(isinstance(item, str) and item in OWNER_DECISIONS for item in decisions)
                  and len(set(decisions)) == len(decisions),
-                 "Delegate only explicit approve and/or accept decisions.")
+                 "Delegate only explicit approve, accept or orchestrate decisions.")
+        if "orchestrate" in decisions:
+            _require(type(owner.get("maxAdditionalAttempts")) is int
+                     and 1 <= owner["maxAdditionalAttempts"] <= 128,
+                     "Resource delegation requires a bounded maxAdditionalAttempts.")
+        else:
+            _require("maxAdditionalAttempts" not in owner,
+                     "Resource allowance requires explicit orchestrate delegation.")
     return {"mode": value["mode"], "owner": copy.deepcopy(owner)}
 
 

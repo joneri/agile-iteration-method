@@ -451,7 +451,15 @@ def _orchestration_checkpoint(repo, sources, source_commit=None):
 
 
 def _orchestration_authority(repo, authority, request, delivery, *, cache=None):
-    value = _authority(repo, authority, delivery['scopeSha256'], cache=cache)
+    if authority.get('kind') == 'agent':
+        fields(authority, ('kind', 'path', 'sha256', 'scopeSha256', 'id', 'session'))
+        _owner_authority(authority, delivery, 'orchestrate')
+        require(authority['scopeSha256'] == delivery['scopeSha256'], 'Authority refers to a stale or different scope.')
+        _ref(repo, delivery['deliveryPolicy']['owner']['mandate'], cache=cache)
+        _ref(repo, {k: authority[k] for k in ('path', 'sha256')}, cache=cache)
+        value = copy.deepcopy(authority)
+    else:
+        value = _authority(repo, authority, delivery['scopeSha256'], cache=cache)
     payload = read_evidence(repo, value['path'], 16384)
     require(hashlib.sha256(payload).hexdigest() == value['sha256'], 'Owner decision changed while reading.')
     try:
@@ -462,9 +470,11 @@ def _orchestration_authority(repo, authority, request, delivery, *, cache=None):
                     scopeSha256=delivery['scopeSha256'])
     for key in ('outcomeId', 'contextSha256', 'decision', 'actionKey', 'coordinatorSession'):
         expected[key] = request[key]
-    for key in ('priority', 'targetOutcomeId'):
+    for key in ('priority', 'targetOutcomeId', 'additionalAttempts'):
         if key in request:
             expected[key] = request[key]
+    if value['kind'] == 'agent':
+        expected.update(id=value['id'], session=value['session'])
     require(decision == expected, 'Owner decision must bind this exact campaign context, changed action, priority and coordinator.')
     return value
 
@@ -771,7 +781,7 @@ def verify_evidence(repo, document, *, cache=None):
             _refs(repo, item["evidence"], cache=cache)
         effective = delivery.get("blockedFrom", delivery["status"])
         if effective in {"validation", "acceptance"}:
-            _require_review(repo, delivery, cache=cache)
+            _require_review(repo, delivery, cache=cache, document=document)
         if effective == "acceptance" and (delivery.get("qualityGoals") or delivery.get("qualityPlan")):
             _require_quality(repo, delivery, cache=cache)
     from aim_quality.orchestration_runtime import campaigns
@@ -796,18 +806,18 @@ def verify_evidence(repo, document, *, cache=None):
     _finish_verification(repo, cache)
 
 
-def _require_activity_completion(repo, delivery, *, cache=None):
+def _require_activity_completion(repo, delivery, *, cache=None, document=None):
     if "executionPlan" not in delivery:
         return
-    graph = project_graph(repo, {"deliveries": [delivery]}, None,
+    graph = project_graph(repo, document if document is not None else {"deliveries": [delivery]}, None,
                           check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
     require(all(a["status"] == "completed" for a in graph["activities"]),
             "Delivery has unresolved or stale execution activities; finish or rework before review.")
 
 
-def _require_review(repo, delivery, *, cache):
+def _require_review(repo, delivery, *, cache, document=None):
     """Consume the existing review record at the native validation boundary."""
-    _require_activity_completion(repo, delivery, cache=cache)
+    _require_activity_completion(repo, delivery, cache=cache, document=document)
     policy = delivery.get("qualityPlan", {}).get("reviewPolicy")
     if policy is None:
         return  # Preserve historical approved scope; do not assert current coverage.
@@ -1187,7 +1197,7 @@ def _change(repo, document, command, request, *, cache=None):
         delivery["status"] = "in_progress"
     elif command == "review":
         require(status == "in_progress", "Review requires implementation in progress.")
-        _require_activity_completion(repo, delivery, cache=cache)
+        _require_activity_completion(repo, delivery, cache=cache, document=document)
         _require_core(repo, delivery, cache=cache)
         _one_input(request, "bindings", "sourcePaths")
         delivery["productBindings"] = (_source_bindings(repo, request["sourcePaths"], cache=cache) if "sourcePaths" in request

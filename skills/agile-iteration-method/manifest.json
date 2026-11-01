@@ -107,7 +107,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.8.1",
+  "productVersion": "4.8.2",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -120,12 +120,12 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "2e16d1bcc6f5e6fafbaba2bcaeea3da9e6586f3804cf3ef4daf16a95c3043acd"
+      "sourceSha256": "fe73b12bd6120ce313c8a8eeeecda9ac65c046bf555e5ca19ca5b82fd9554060"
     },
     {
       "output": "references/native-orchestration.md",
       "source": "docs/workflow/native-orchestration.md",
-      "sourceSha256": "29e918f876ac7032b832e54cc603d4df0247e69ae9342b4f9a40e1286be605c1"
+      "sourceSha256": "e4ad4821ff576c5fe55d62337a7d22162168f6d7d5263d9cf73ced3f88ff7032"
     },
     {
       "output": "references/tool-efficiency.md",
@@ -135,7 +135,7 @@
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "5576b9c1ef83d93ab0fe490ff204888d7da611aa9c92d760aac2015311613927"
+      "sourceSha256": "2a6c832946259d42194e79e7378ade80ec69fba4de20fe316471f6c8bcd156d2"
     },
     {
       "output": "references/local-runtime-access.md",
@@ -145,7 +145,7 @@
     {
       "output": "references/autonomous-interaction.md",
       "source": "docs/workflow/autonomous-interaction.md",
-      "sourceSha256": "fefa2ace8df8d3176a20f408b546651196dc83b7b97d8f7d431fb70ab4ac1e49"
+      "sourceSha256": "04ed35ee360ae849ba67ec00b40b25226dd6e6bc57e7154de56683d8253f3d3c"
     },
     {
       "output": "references/example-user-story.md",
@@ -295,7 +295,7 @@
     {
       "output": "references/schemas/aim-product-backlog.schema.json",
       "source": "schemas/aim-product-backlog.schema.json",
-      "sourceSha256": "1cb278b362ecd567b8578654a7174e52fd0458d0d666bd4283c94f2e850b55be"
+      "sourceSha256": "80584bd3101734154090f9b5102a3f76b56b6e4232569193e7656b8197284c00"
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
@@ -310,7 +310,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "446b9ff40300e993b0d4f9d437080d725228176b8ef4b7b8fc71e2a5b8acf4ea"
+      "sourceSha256": "633f30f1ff536b249a6b9316b07a1fcec53bb597dcc16a037bf01d3d64ddf399"
     },
     {
       "output": "references/version-and-installation.md",
@@ -325,7 +325,7 @@
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "0c784604c27959ce8245206ee2d8087f1ff81308c31e0fb5ece684a8a8d4040d"
+      "sourceSha256": "9ef2686731e1deb9a60e14beafaa4cd162ba0693004a973fa8df0302504491eb"
     },
     {
       "output": "scripts/aim_observations.py",
@@ -375,7 +375,7 @@
     {
       "output": "scripts/aim_quality/delivery_policy.py",
       "source": "scripts/aim_quality/delivery_policy.py",
-      "sourceSha256": "9b5d7ce9d4baf6cbdd2758db8d3f81ae22cfa914209ce2eb974bb0924f123ed8"
+      "sourceSha256": "c783df6f6a2f00eb840707c19dd3497bca09c3d399d0f64767224117439dd7b3"
     },
     {
       "output": "scripts/aim_quality/skills.py",
@@ -420,7 +420,7 @@
     {
       "output": "scripts/aim_quality/orchestration_runtime.py",
       "source": "scripts/aim_quality/orchestration_runtime.py",
-      "sourceSha256": "4e439e5b03373358b0aa5e112922a780770674805df87235ad2f399b1ace80ba"
+      "sourceSha256": "e104658e4e82d8f3518f2bf4e615b66f9b61c07df037f5044b81b7d15dfb719d"
     },
     {
       "output": "scripts/aim_orchestrate.py",

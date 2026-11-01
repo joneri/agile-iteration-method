@@ -54,6 +54,13 @@ section when the actual handoff needs detail.
 Reuse actual user authority and applicable answers. Discover facts before asking;
 continue authorized implementation/corrections. Respect cumulative resource
 limits across all agents; missing numbers never imply unlimited resources.
+Before a human-facing internal process question, route it to the actual delegated
+owner under its explicit mandate. Use Native `pendingDecisions` and the host's
+authorized message/wait/status path; the parent receives or retrieves the request
+and returns an attributed answer. A projected route is not delivered. Apply the
+internal escalation contract in `references/native-orchestration.md`; outside
+Native use the existing owner/decision surface. Escalate outside-mandate choices
+through the owner without inventing a human answer or resource renewal.
 Extra campaigns, material scope/resource changes and external effects need
 actual authority. Before another material diagnostic round after repeated
 failure, a new subsystem or unexpectedly large effort, reassess the real user

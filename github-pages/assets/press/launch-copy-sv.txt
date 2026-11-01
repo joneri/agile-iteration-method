@@ -1,9 +1,9 @@
 AIM
 Från din idé till en komplett produkt.
 
-Förslag till lanseringstext · AIM 4.8.1 · 1 november 2026.
+Förslag till lanseringstext · AIM 4.8.2 · 1 november 2026.
 
-AIM 4.8.1 Native rättar bevisbindningen för aktiviteter som omfattar flera utfall och tar emot samtidiga resultat med deras ursprungliga identiteter bevarade. Sena rapporter behåller nyare fel och förbrukad arbetsinsats. Observationshistoriken stöder upp till 128 poster med bibehållen bytegräns och atomiska skrivningar.
+AIM 4.8.2 Native skickar interna eskaleringar till din uttryckligen delegerade ägare, så att du slipper vara mellanhand för rutinmässiga processfrågor. Agentens svar binds till mandatet och resursgränserna gäller över mål och återupptagningar. Releasen rättar även färdigkontrollen för Native-leveranser och behåller observationsförbättringarna från 4.8.1.
 
 Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 

@@ -59,6 +59,15 @@ fallback. Keep small calls direct; code grants no extra authority.
 
 ## Autonomous interaction
 
+Before a human-facing internal process question, resolve the actual delegated
+owner and scope. Use Native `pendingDecisions` plus the authorized host message
+path to its recipient session and return the attributed response to the bound
+coordinator. The parent waits for or retrieves assigned children's escalations;
+it does not leave the human to relay them. Read Route internal escalations in
+`references/native-orchestration.md` at this boundary. A route is not a delivered
+message, and delegation never silently renews resources or grants acceptance.
+Outside Native use the existing owner/decision surface and the same handoff.
+
 Before another material diagnostic round during an ongoing assignment, reassess the actual user outcome, cumulative spent or unknown resources across agents/experiments, remaining uncertainty and bounded alternatives when failures repeat, diagnosis enters a new subsystem, or effort materially exceeds expectation. This applies even within an approved plan and without Graph or a failed activity receipt. Read only Reassess diagnosis before it takes over delivery in `references/autonomous-interaction.md` at that trigger. Change the next authorized action and report the consequence promptly; retain failed results and frozen quality. Use the existing plan/decision surface, not routine reports. An agent/session change cannot reset effort or confer budget. A first justified bounded correction needs no new owner question; a resource/scope/quality tradeoff requires actual authority.
 
 Reuse current user authority and applicable answers. Read only the relevant section of `references/autonomous-interaction.md` when an authority, dependency or changed-decision boundary remains unresolved. Reuse applicable answers and authority, investigate discoverable facts and continue independent authorized work. Use permitted native question controls with the recommendation first; preserve batch/revision meaning and unresolved answers. Discuss stays read-only. This grants no new gate or acceptance authority.

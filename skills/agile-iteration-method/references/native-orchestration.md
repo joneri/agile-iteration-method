@@ -218,15 +218,68 @@ concrete action key, reason and evidence. Reusing stale context or the same
 exhausted action cannot silently buy another round.
 
 An exhausted checkpoint or changed owner priority requires a current scoped
-user decision, not a recycled plan approval. `status` returns an
+owner decision, not a recycled plan approval. `status` returns an
 `ownerDecisionContext` template. Fill its `decision` and `actionKey` from the
 actual owner response, add `priority` when applicable, and retain that exact
 JSON record as authority evidence. Include `targetOutcomeId` when the decision
 request names one. It binds operation, delivery scope, outcome,
 current campaign/shared-priority context and coordinating session. The `decide` request supplies
-that authority reference with `kind: "user"` and the same scope. Structural
+that authority reference with `kind: "user"` and the same scope for a human answer. Structural
 validation does not authenticate the human response; the host must preserve its
 provenance. Never generate an owner's answer from the template yourself.
+
+### Route internal escalations to the actual owner
+
+Freeze the actual delegated owner in `deliveryPolicy`, with the human mandate,
+identity and session described in [User Stories](user-stories.md). An agent with
+only `approve` or `accept` permission cannot renew resources. Bounded resource
+delegation additionally names `orchestrate` in `owner.decisions` and a positive
+`owner.maxAdditionalAttempts`. The human mandate must actually authorize that
+allowance; the fields do not create authority. Its allowance is cumulative across
+all campaigns and deliveries sharing that mandate in the ledger. Human resource
+limits outside this ledger remain binding too.
+
+At an exhausted checkpoint, Native `status` exposes `pendingDecisions`: a stable
+request ID, current decision context, intended recipient, coordinator response
+destination, remaining delegated attempts and `requiresHumanDecision`. A delegated
+owner remains the recipient when it must bring a concrete outside-mandate choice
+to the human. A human-owned plan retains a human recipient. Missing or stale
+delegation must never be inferred from an upstream role label.
+
+The delivery coordinator sends that bounded context to the named owner through
+an available, actually authorized host message tool. Do this before opening a
+human-facing process question. Retain the returned host message receipt; the
+projection's `delivered: false` does not mean that a message has been sent. The
+upstream owner watches the actual child task through the host's wait/status
+capabilities, retrieves a pending decision when needed, and returns the scoped
+answer to `responseDestination`. Before a handoff or ending a coordination turn,
+check assigned children for unresolved escalations. Do not report that work is
+advancing while an unhandled owner decision blocks it. Reconcile an uncertain
+send before retrying; reuse the unchanged request ID instead of opening another
+question. No new polling service or decision database is needed.
+
+If the requested choice exceeds the delegation, the owner brings the human the
+additional work, cost/unknown cost and consequence in ordinary language. Retain
+the block until the actual necessary answer exists. If the host cannot deliver
+or expose internal messages, report that concrete capability gap; do not claim
+automatic notification or silently substitute a human process question.
+
+For an authorized delegated renewal, fill the returned context from the actual
+owner's response with `id`, `session` and positive `additionalAttempts`. Keep the
+exact JSON as answer evidence and supply `authority.kind: "agent"`, the same
+identity/session, current scope and its evidence reference to `decide`. Include
+`additionalAttempts` in that request. The helper checks the frozen permission,
+fresh mandate, upstream activation, current campaign context and remaining
+allowance. Only `continue_bounded` or `change_baseline` is delegated by this
+permission. Priority changes still require actual human authority.
+
+The grant permits exactly its stated number of further work starts. Progress,
+component passes, session changes and new deliveries cannot replenish that grant
+or erase prior attempts/resources. Replayed or wrong-owner answers reject. A
+human renewal can also specify `additionalAttempts`; existing human renewals
+without that field retain their frozen checkpoint behavior. Resource delegation
+does not grant product acceptance or Epic closure. Existing frozen plans are
+not rewritten: establish new delegation in an appropriately approved new plan.
 
 A new falsifying result may justify a bounded follow-up on difficult work. It
 must change the next test and be consumed by that follow-up, rather than excuse

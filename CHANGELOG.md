@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-11-01 - AIM release v4.8.2
+
+Route internal escalations to the explicitly delegated owner and consume its bounded answer.
+
+- Expose the pending recipient, response destination and current decision context.
+  Coordinators send or retrieve the internal request through the host and retain
+  the attributed answer, keeping the human out of routine process relays.
+- Add explicit bounded resource delegation alongside the existing owner identity
+  and mandate. Count additional attempts across outcomes and deliveries; progress,
+  resumed sessions and new activities cannot replenish a finite resource grant.
+- Reject wrong-owner, stale, replayed and outside-mandate answers. Keep resource
+  decisions separate from delivery acceptance and actual human authority.
+- Pass the full Native ledger into completion checks at review and validation,
+  allowing a fully evidenced Native delivery to finish its normal gate chain.
+- Retain all 4.8.1 outcome-scoped/concurrent observation and history corrections.
+  Existing frozen plans and consuming-project state remain unchanged by upgrade.
+
+Verification: focused isolated ledger regressions, an actual bounded inter-agent
+request/answer exchange, independent review and current package/release checks.
+Host messaging must actually deliver or retrieve the request; projected routing
+alone is not a delivery receipt.
+
 ## 2026-11-01 - AIM release v4.8.1
 
 Correct Native outcome observations and retain bounded observation history.

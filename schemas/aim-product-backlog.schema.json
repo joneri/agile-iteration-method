@@ -1809,18 +1809,24 @@
           "items": {
             "enum": [
               "approve",
-              "accept"
+              "accept",
+              "orchestrate"
             ]
           },
           "minItems": 1,
-          "maxItems": 2
+          "maxItems": 3
+        },
+        "maxAdditionalAttempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
         }
       },
       "required": [
         "kind"
       ],
       "additionalProperties": false,
-      "description": "Human owner, or actual agent id/session with immutable human mandate and explicit approve/accept delegation. Conditional fields and uniqueness are enforced by the native helper."
+      "description": "Human owner, or actual agent identity/session with immutable human mandate and explicit delegated operations. Resource renewal additionally requires a cumulative maxAdditionalAttempts cap; the native helper enforces conditional fields."
     },
     "deliveryPolicy": {
       "type": "object",

@@ -709,16 +709,17 @@
     },
     "deliveryOwner": {
       "additionalProperties": false,
-      "description": "Human owner, or actual agent id/session with immutable human mandate and explicit approve/accept delegation. Conditional fields and uniqueness are enforced by the native helper.",
+      "description": "Human owner, or actual agent identity/session with immutable human mandate and explicit delegated operations. Resource renewal additionally requires a cumulative maxAdditionalAttempts cap; the native helper enforces conditional fields.",
       "properties": {
         "decisions": {
           "items": {
             "enum": [
               "approve",
-              "accept"
+              "accept",
+              "orchestrate"
             ]
           },
-          "maxItems": 2,
+          "maxItems": 3,
           "minItems": 1,
           "type": "array"
         },
@@ -736,6 +737,11 @@
         },
         "mandate": {
           "$ref": "#/$defs/evidence"
+        },
+        "maxAdditionalAttempts": {
+          "maximum": 128,
+          "minimum": 1,
+          "type": "integer"
         },
         "session": {
           "maxLength": 240,

@@ -82,6 +82,12 @@ def campaign_for(document, outcome):
     return next((c for c in campaigns(document) if c['outcomeId'] == outcome), None)
 
 
+def _delegated_grants(document, owner):
+    # One human resource mandate is shared across its outcomes and deliveries.
+    return sum(d.get('additionalAttempts', 0) for c in campaigns(document) for d in c['decisions']
+               if d.get('delegation', {}).get('sha256') == owner['mandate']['sha256'])
+
+
 def _decision_context(campaign, owner_priority):
     return digest(dict(campaign={k: v for k, v in campaign.items() if k != 'decisions'}, ownerPriority=owner_priority))
 
@@ -128,14 +134,23 @@ def assessment(campaign, check_reference=None, *, owner_priority=None):
     # entire original chronology, highwater and resources remain in assessment.
     used = result['attemptsSinceImprovement']
     start = campaign.get('checkpointStart', 0)
+    budget = campaign.get('checkpointBudget', result['attemptBudget'])
     if start and result['totalAttempts'] >= start:
         remaining_used = max(0, result['totalAttempts'] - start)
-        if remaining_used < result['attemptBudget'] and result['budgetExhausted']:
+        if remaining_used < budget and result['budgetExhausted']:
             result['budgetExhausted'] = False
             result['attemptsUsed'] = remaining_used
             result['recommendation'].update(action='change_diagnostic_action',
                 targetOutcomeId=campaign['outcomeId'],
                 why='A scoped owner decision opened a bounded checkpoint; retained history still requires the changed action.')
+        # A scoped renewal is a resource allowance, not a stagnation heuristic.
+        # Even genuine progress cannot replenish the owner's finite grant.
+        if 'checkpointBudget' in campaign:
+            result.update(attemptBudget=budget, attemptsUsed=remaining_used,
+                          budgetExhausted=remaining_used >= budget)
+            if result['budgetExhausted']:
+                result['recommendation'].update(action='request_owner_choice', targetOutcomeId=campaign['outcomeId'],
+                    why='The explicitly granted additional attempts are exhausted; retained progress cannot renew resources.')
     if campaign.get('ownerChoicePending'):
         result['recommendation'].update(action='request_owner_choice', targetOutcomeId=campaign['outcomeId'],
             why='The recorded actual owner choice remains pending; preserve it before resuming this work.')
@@ -152,7 +167,10 @@ def validate_native_document(document):
         _need(isinstance(state['campaigns'], list) and len(state['campaigns']) <= 256, 'Bounded campaigns required.')
         ids = []
         for c in state['campaigns']:
-            _fields(c, ('outcomeId', 'campaign', 'attempts', 'observations', 'decisions'), ('checkpointStart', 'ownerChoicePending', 'nextActionKey'), 'Stored campaign')
+            _fields(c, ('outcomeId', 'campaign', 'attempts', 'observations', 'decisions'), ('checkpointStart', 'checkpointBudget', 'ownerChoicePending', 'nextActionKey'), 'Stored campaign')
+            if 'checkpointBudget' in c:
+                _need(type(c['checkpointBudget']) is int and 1 <= c['checkpointBudget'] <= 128,
+                      'Invalid bounded checkpoint allowance.')
             _need(c['outcomeId'] in {i['id'] for i in document['intents']}, 'Unknown original campaign Intent.')
             _need(type(c.get('ownerChoicePending', False)) is bool, 'Invalid owner choice pending state.')
             if 'nextActionKey' in c:
@@ -200,8 +218,17 @@ def validate_native_document(document):
                     _need(actual_sources == expected_sources, 'Checkpoint must retain every explicitly bound baseline source.')
                 _need(record['observation'] in c['campaign']['observations'], 'Stored observation lost chronology binding.')
             for decision in c['decisions']:
-                _fields(decision, ('decision', 'actionKey', 'reason', 'contextSha256', 'evidence', 'at'), ('authority', 'priority', 'targetOutcomeId'), 'Campaign decision')
+                _fields(decision, ('decision', 'actionKey', 'reason', 'contextSha256', 'evidence', 'at'), ('authority', 'priority', 'targetOutcomeId', 'additionalAttempts', 'delegation', 'deliveryId'), 'Campaign decision')
                 _need(decision['decision'] in DECISIONS, 'Unknown orchestration decision.')
+                if 'additionalAttempts' in decision:
+                    _need(type(decision['additionalAttempts']) is int and 1 <= decision['additionalAttempts'] <= 128,
+                          'Invalid recorded additional-attempt allowance.')
+                if 'delegation' in decision:
+                    from .delivery_policy import validate_authority_binding
+                    source = next((d for d in document['deliveries'] if d['id'] == decision.get('deliveryId')), None)
+                    _need(source is not None and 'additionalAttempts' in decision, 'Delegated renewal lost its delivery or allowance.')
+                    validate_authority_binding(decision.get('authority', {}), source.get('deliveryPolicy'), 'orchestrate')
+                    _need(decision['delegation'] == source['deliveryPolicy']['owner']['mandate'], 'Recorded delegation differs from frozen mandate.')
         _need(len(ids) == len(set(ids)), 'Duplicate original campaign.')
     for delivery in document['deliveries']:
         validate_native_plan(delivery)
@@ -423,7 +450,7 @@ def change_orchestration(document, delivery, request, *, bind_evidence, bind_sou
         return
     _need(action == 'decide', 'Unknown Native orchestration action.')
     _fields(request, common + ('outcomeId', 'contextSha256', 'decision', 'actionKey', 'reason', 'evidence'),
-            ('authority', 'priority', 'targetOutcomeId'), 'Decision request')
+            ('authority', 'priority', 'targetOutcomeId', 'additionalAttempts'), 'Decision request')
     result = assessment(c, owner_priority=document.get('orchestration', {}).get('ownerPriority', []))
     _need(request['contextSha256'] == result['contextSha256'], 'Campaign changed; use current assessment context.')
     _need(request['decision'] in graph['coordinator']['permittedDecisions'], 'Decision exceeds frozen coordinator authority.')
@@ -437,11 +464,37 @@ def change_orchestration(document, delivery, request, *, bind_evidence, bind_sou
         decision['targetOutcomeId'] = request['targetOutcomeId']
     decision.update(contextSha256=_decision_context(c, document.get('orchestration', {}).get('ownerPriority', [])), evidence=bind_evidence(request['evidence']), at=at)
     if result['budgetExhausted'] or c.get('ownerChoicePending') or request['decision'] == 'reprioritize':
-        _need('authority' in request and request['authority'].get('kind') == 'user', 'A scoped actual owner decision is required to change budget or priority.')
+        _need('authority' in request, 'A scoped actual owner decision is required to change budget or priority.')
+        authority = request['authority']
+        if authority.get('kind') == 'agent':
+            from .delivery_policy import validate_authority_binding
+            validate_authority_binding(authority, delivery.get('deliveryPolicy'), 'orchestrate')
+            owner = delivery['deliveryPolicy']['owner']
+            _need(request['decision'] in {'continue_bounded', 'change_baseline'} and result['budgetExhausted'],
+                  'Delegated resource renewal cannot change priority or other owner authority.')
+            _need(owner['session'] in {a['session'] for a in delivery['orchestrationActivation']['dispatchers']},
+                  'Activate the actual delegated owner among upstream dispatchers.')
+            allowance = request.get('additionalAttempts')
+            granted = _delegated_grants(document, owner)
+            _need(type(allowance) is int and 1 <= allowance <= owner['maxAdditionalAttempts'] - granted,
+                  'Additional attempts exceed the remaining delegated resource allowance; obtain the actual human decision.')
+            decision.update(delegation=copy.deepcopy(owner['mandate']), deliveryId=delivery['id'])
+        else:
+            _need(authority.get('kind') == 'user', 'A scoped actual owner decision is required to change budget or priority.')
+        if 'additionalAttempts' in request:
+            _need(result['budgetExhausted'] and type(request['additionalAttempts']) is int
+                  and 1 <= request['additionalAttempts'] <= 128, 'Additional attempts require an exhausted bounded checkpoint.')
+            decision['additionalAttempts'] = request['additionalAttempts']
         decision['authority'] = bind_authority(request['authority'], request)
         c['ownerChoicePending'] = False
         if result['budgetExhausted']:
             c['checkpointStart'] = result['totalAttempts']
+            if 'additionalAttempts' in request:
+                c['checkpointBudget'] = request['additionalAttempts']
+            else:
+                c.pop('checkpointBudget', None)  # Existing explicit human renewal contract.
+    else:
+        _need('additionalAttempts' not in request, 'Resource renewal requires an actual owner decision.')
     if 'priority' in request:
         _need(request['decision'] == 'reprioritize' and isinstance(request['priority'], list)
               and set(request['priority']) <= set(c['campaign']['waitingOriginalGoals']), 'Priority must retain original waiting goals.')
@@ -455,9 +508,29 @@ def change_orchestration(document, delivery, request, *, bind_evidence, bind_sou
     c['decisions'].append(decision)
 
 
+def _decision_route(document, delivery, campaign, result):
+    """Project a pending handoff; the host must actually send/retrieve and answer it."""
+    owner = delivery.get('deliveryPolicy', {}).get('owner', {'kind': 'human'})
+    coordinator = delivery['orchestrationActivation']['coordinatorSession']
+    delegated = owner['kind'] == 'agent'
+    granted = _delegated_grants(document, owner) if delegated else 0
+    remaining = max(0, owner.get('maxAdditionalAttempts', 0) - granted)
+    allowed = delegated and 'orchestrate' in owner['decisions'] and remaining > 0 and result['budgetExhausted']
+    route = dict(deliveryId=delivery['id'], outcomeId=campaign['outcomeId'],
+                 recipient=({k: owner[k] for k in ('kind', 'id', 'session')} if delegated else {'kind': 'human'}),
+                 responseDestination=coordinator, context=copy.deepcopy(result['ownerDecisionContext']),
+                 requiresHumanDecision=not allowed, remainingDelegatedAttempts=remaining,
+                 delivered=False, authorityGranted=False)
+    if allowed:
+        route['context'].update(id=owner['id'], session=owner['session'], additionalAttempts=None)
+    route['requestId'] = digest(route)
+    return route
+
+
 def summary(document, delivery=None):
     relevant = {o['id'] for o in native_graph(delivery)['outcomes']} if delivery and native_graph(delivery) else None
     items = []
+    pending = []
     for c in campaigns(document):
         if relevant is not None and c['outcomeId'] not in relevant:
             continue
@@ -473,8 +546,10 @@ def summary(document, delivery=None):
             item['ownerDecisionContext'] = dict(orchestrationDecisionVersion=1, operation='orchestration_decision',
                 scopeSha256=current['scopeSha256'], outcomeId=c['outcomeId'], contextSha256=item['contextSha256'],
                 coordinatorSession=current['orchestrationActivation']['coordinatorSession'], decision=None, actionKey=None)
+            if item['recommendation']['action'] == 'request_owner_choice':
+                pending.append(_decision_route(document, current, c, item))
         items.append(item)
-    return dict(version=1, campaigns=items,
+    return dict(version=1, campaigns=items, pendingDecisions=pending,
                 waitingOriginalGoals=waiting_goals(document),
                 ownerPriority=copy.deepcopy(document.get('orchestration', {}).get('ownerPriority', [])),
                 authorityGranted=False, identityAuthenticated=False,

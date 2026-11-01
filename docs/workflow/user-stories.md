@@ -110,6 +110,16 @@ implementer cannot write a fabricated owner answer. Agent delegation covers
 only the listed delivery decisions, never separate Epic closure. Ordinary
 human authority stays supported. See [adaptive execution](adaptive-execution.md).
 
+Native internal resource decisions use the same frozen owner identity and human
+mandate, with separate explicit `orchestrate` permission and
+`maxAdditionalAttempts` (a positive cumulative cap). For example, an owner with
+`decisions: ["orchestrate"]` and `maxAdditionalAttempts: 2` can grant at most two
+additional work attempts under that mandate across its ledger campaigns; it has
+no `approve` or `accept` permission. The actual mandate must cover these choices.
+See [internal escalation routing](native-orchestration.md#route-internal-escalations-to-the-actual-owner)
+for the pending recipient, host handoff, exact answer and response destination.
+Never reinterpret an acceptance-only delegation as resource authority.
+
 ## Coherent delivery and gates
 
 TDO selects by PO priority, dependencies and capacity, naming the exact Stories,
