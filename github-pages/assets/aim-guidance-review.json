@@ -5,17 +5,17 @@
   "pages": [
     {
       "path": "index.html",
-      "sha256": "06c5e04a9cdcec779a016d9fc1a01c678bd621c4fee969561a7aa48540d429aa"
+      "sha256": "d37ba8a9f17bbe22e6d5c825ff7dada7edebe66650f106a434c50f8c153200d8"
     },
     {
       "path": "school.html",
-      "sha256": "2af741478357466cb55fc2a9baa263e2a18e743fab8ade0fb594eb02d01ff19d"
+      "sha256": "847ff497cd3388f07f66c80f9947a0c6d785b8b196b60981ea7495a03ece5172"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "011783ad6face115dc844a9aef28e750b6c665e771947f44d5a849d6075d8c33"
+      "sha256": "9d92f157ae5d91f4d24b6a2eddad9bab43a08fbf9b8afcdc469d53bb594c9a76"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
@@ -53,7 +53,7 @@
   "assessments": {
     "installationAndStart": {
       "conclusion": "updated",
-      "summary": "Homepage and platform guidance explicitly identify 4.8.5 as a local unpublished patch and label its tag as a planned target. Public installation commands still resolve published GitHub source; local global installation uses the validated source package through the same skills CLI. School startup/calibration remains current, and upgrade does not mutate active project runtime. No public availability or GitHub release is claimed."
+      "summary": "Reviewed public AIM 4.8.5 installation, upgrade and School empty/existing-repository paths. Standard skills CLI retrieves the complete GitHub package; project start calibrates missing/stale repository knowledge and configures role skills without treating global installation as project setup. Existing-repository guide remains read-only until a supplied intent, preserves user files and accepted history, and routes approved-scope changes to the explicit human disposition contract. Public release follows the reviewed source/tag/Actions gates; no automatic project-ledger mutation."
     },
     "deliveryModes": {
       "conclusion": "current",
@@ -61,7 +61,7 @@
     },
     "orchestration": {
       "conclusion": "current",
-      "summary": "Homepage Native graph descriptions and School planning lesson preserve outcome/dependency/proof ownership, cohesive implementation and a genuinely separate reviewer. Host tools actually launch/message agents; assignments and UI Graph do not. Current installed entry requires read-only dispatch-check plus the same exact CAS activity start before normal host dispatch. Beginner guidance does not replace approved/activated delivery with a ready card or diagram; its linked Native contract explains those checks and arbitrary-host interception limits."
+      "summary": "Homepage Native graph descriptions and School planning lesson preserve outcome/dependency/proof ownership, cohesive implementation and a genuinely separate reviewer. Host tools actually launch/message agents; assignments and UI Graph do not. Current installed entry requires read-only dispatch-check plus the same exact CAS activity start before normal host dispatch. Beginner guidance does not replace approved/activated delivery with a ready card or diagram; its linked Native contract explains those checks and arbitrary-host interception limits. The Graph engineering illustration is a conceptual bridge-building scene; the concise introduction retains independent review and designated-owner feedback. Expanded details preserve Native defaults, graph choices, durable attempts/results, delegated decision/resource limits and host-launch boundaries."
     },
     "delegatedDecisions": {
       "conclusion": "updated",
@@ -77,7 +77,7 @@
     },
     "modelsAndEvidence": {
       "conclusion": "current",
-      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.5 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is optional creator experience, conditional on actual host/account controls, with no current price, universal savings or model-availability guarantee."
+      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.4 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is optional creator experience, conditional on actual host/account controls, with no current price, universal savings or model-availability guarantee."
     }
   }
 }

@@ -80,6 +80,18 @@ img { display: block; max-width: 100%; height: auto; }
 .feature-label { display: block; margin-bottom: 10px; color: var(--blue); font: .8rem var(--mono); }
 .repo-feature h3 { max-width: 360px; font-family: var(--display); font-size: 1.8rem; font-weight: 600; }
 .feature-detail { margin-top: 14px; color: var(--muted); font-size: .85rem; }
+.graph-feature { padding: 48px 0; border-top: 1px solid var(--line); }
+.graph-feature-intro { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 48px; align-items: center; }
+.graph-feature-copy h3 { max-width: 420px; font: 600 clamp(2rem, 3.5vw, 3rem)/1.15 var(--display); letter-spacing: -.015em; }
+.graph-feature-copy p { margin-top: 20px; }
+.graph-feature-lead { font-size: 1.12rem; }
+.graph-feature-copy > p:not(.graph-feature-lead) { color: var(--muted); font-size: .95rem; }
+.graph-feature-copy .text-link { display: inline-block; margin-top: 24px; }
+.graph-feature-illustration { min-width: 0; }
+.graph-feature-illustration img { width: 100%; border-radius: 7px; }
+.graph-feature-details { margin-top: 32px; }
+.graph-feature-details > details > p { max-width: 850px; color: var(--muted); }
+.graph-feature-details .graph-start-example { margin: 0 0 20px; max-width: 850px; }
 .repo-payoff { max-width: 850px; margin: 6px 0 20px; padding-left: 22px; border-left: 3px solid var(--blue); font-size: 1.15rem; }
 .product-section { background: var(--paper); padding: 64px 0 72px; border-block: 1px solid var(--line); }
 .section-heading { max-width: 750px; }
@@ -187,6 +199,8 @@ details > p { max-width: 800px; margin-bottom: 20px; font-size: .85rem; }
   .hero-logo { width: 240px; margin-bottom: 18px; }
   .capability-links { flex-wrap: wrap; justify-content: flex-start; gap: 14px 28px; margin-top: 30px; }
   .start-layout, .repo-feature, .discuss-layout { grid-template-columns: 1fr; gap: 22px; }
+  .graph-feature-intro { grid-template-columns: 1fr; gap: 28px; }
+  .graph-feature-copy h3 { max-width: none; }
 }
 @media (max-width: 600px) {
   .school-callout-inner { grid-template-columns: 52px minmax(0, 1fr); column-gap: 18px; row-gap: 12px; }
@@ -213,6 +227,11 @@ details > p { max-width: 800px; margin-bottom: 20px; font-size: .85rem; }
   .process-benefit { font-size: 1rem; }
   .repo-feature { padding-block: 26px; gap: 16px; }
   .repo-feature h3 { font-size: 1.7rem; }
+  .graph-feature { padding-block: 32px; }
+  .graph-feature-copy h3 { font-size: 2.2rem; }
+  .graph-feature-copy p { margin-top: 16px; }
+  .graph-feature-lead { font-size: 1.05rem; }
+  .graph-feature-details { margin-top: 24px; }
   .repo-payoff { font-size: 1.05rem; }
   .product-overview { margin-top: 26px; }
   .board-reading { grid-template-columns: 1fr; gap: 26px; margin-top: 28px; }

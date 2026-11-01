@@ -29,6 +29,8 @@ Select your agent and project in the installer. Then tell the agent what you wan
 The complete skill works without this source checkout. Node.js/npm runs installation;
 Python 3 runs local helpers. You can also copy [the agent setup instructions](github-pages/assets/aim-install-agent.txt).
 
+**Existing codebase?** See [Use AIM in an existing repository](docs/product/existing-repositories.md) for automatic calibration, project-specific PO/TDO/Dev/Reviewer skills and delivery.
+
 Target one supported agent explicitly when needed:
 
 ```bash

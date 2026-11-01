@@ -19,7 +19,9 @@ Let the human owner retire obsolete approved work without losing its history.
 
 Verification: focused lifecycle, authority, CLI, board/graph and actual next
 Native dispatch regressions; complete repository/package validation and separate
-review. Global installation uses the validated local source, not a published tag.
+review. Distributed through the standard public Agent Skill and the v4.8.5
+GitHub release; existing project ledgers remain unchanged until an actual owner
+uses the supported disposition.
 
 ## 2026-11-01 - AIM release v4.8.4
 
