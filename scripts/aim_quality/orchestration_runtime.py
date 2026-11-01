@@ -8,6 +8,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+from .binding_relocation import effective_bindings
 from .orchestration import (validate_graph, assess_campaign, _fields, _need, _text,
                             _validate_observation, _id, DECISIONS)
 
@@ -112,7 +113,7 @@ def _check_receipt_dependencies(delivery, receipt, check_reference, checked=None
         identity = (current['activityId'], current['attempt'])
         if identity not in checked:
             checked.add(identity)
-            for ref in current['sourceBindings'] + current['evidence']:
+            for ref in effective_bindings(delivery, current) + current['evidence']:
                 check_reference(ref)
             _check_receipt_dependencies(delivery, current, check_reference, checked)
 
@@ -283,7 +284,7 @@ def pending_priority(document, check_reference):
             complete = receipt is not None and receipt['status'] == 'completed'
             if complete:
                 try:
-                    for ref in receipt['sourceBindings'] + receipt['evidence']:
+                    for ref in effective_bindings(delivery, receipt) + receipt['evidence']:
                         check_reference(ref)
                 except (ValueError, OSError):
                     complete = False

@@ -1,9 +1,9 @@
 AIM
 Från din idé till en komplett produkt.
 
-Förslag till lanseringstext · AIM 4.8.5 · 1 november 2026.
+Förslag till lanseringstext · AIM 4.8.6 · 1 november 2026.
 
-AIM 4.8.5 låter den mänskliga ägaren avbryta eller ersätta en föråldrad godkänd leverans, även blockerad. Gamla krav, beslut, bevis och arbetsförsök sparas som historik. En ersättning börjar som en egen ännu inte godkänd plan; avbrottet räknas inte som acceptans och förnyar inga resurser. Native kan gå vidare med nästa auktoriserade leverans utan att den gamla prioriteringen ligger kvar och blockerar.
+AIM 4.8.6 kan flytta verifierade indata från en tidig läsaktivitet till identiska, bevarade baslinjekopior utan nya utvecklingsförsök. Ursprungligt granskningskvitto, beroenden, försök och resurshistorik behålls. Utvecklaren kan avsluta samma försök; slutgranskning och kontroller av den aktuella produkten kräver fortfarande aktuella bevis. Stödet för ägarens avbrott och ersättning från 4.8.5 finns kvar.
 
 Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 

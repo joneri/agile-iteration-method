@@ -1,5 +1,31 @@
 # Changelog
 
+## 2026-11-01 - AIM release v4.8.6
+
+Preserve verified historical read inputs without restarting completed work.
+
+- Add `relocate-bindings` for the latest completed read activity in the current
+  implementation generation. Verify identical saved source bytes, original
+  receipt identity, fresh actual proof, current CAS and activated Native coordinator.
+- Append exact source-to-baseline mappings with reason, evidence and time. Keep
+  original receipts, dependency digests, scope, phase, work attempts and all
+  campaign/resource history. An already-running downstream attempt can complete
+  as the same attempt, including at an exhausted work budget.
+- Resolve baseline locations consistently in Graph and Native dependency/priority
+  checks. Rework retains old mappings without applying them to another receipt
+  or generation. Identical current-CAS retry performs no extra write; unsafe or
+  changed destinations reject atomically and later corruption becomes stale.
+- Keep write outputs, final review, product bindings, quality measurements and
+  progress observations on their actual current proof. Historical relocation
+  neither grants new work nor renews resources. Bind early read inputs to saved
+  baselines before planned writes, as documented in the installed role guidance.
+
+Verification: positive/negative helper and real CLI regressions, same-running-
+attempt completion with unchanged exhausted resources, later-generation and
+current-product counterexamples, independent review and the complete release gate.
+Existing project state is not automatically rewritten; new optional relocation
+records require the new helper. No general performance or cost claim.
+
 ## 2026-11-01 - AIM release v4.8.5
 
 Let the human owner retire obsolete approved work without losing its history.

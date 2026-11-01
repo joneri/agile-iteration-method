@@ -1,33 +1,33 @@
 {
   "guidanceReviewVersion": 1,
-  "productVersion": "4.8.5",
+  "productVersion": "4.8.6",
   "reviewedOn": "2026-11-01",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "d37ba8a9f17bbe22e6d5c825ff7dada7edebe66650f106a434c50f8c153200d8"
+      "sha256": "3cd666283d5989cff9fbf49f98ba69133268269e2cefbc64a39b7bd82943b553"
     },
     {
       "path": "school.html",
-      "sha256": "847ff497cd3388f07f66c80f9947a0c6d785b8b196b60981ea7495a03ece5172"
+      "sha256": "a3f7c44b2d8cc512868c8b3d7f7a94e46a8e1f5c07c48a8e2ea5cc24118fe5eb"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "9d92f157ae5d91f4d24b6a2eddad9bab43a08fbf9b8afcdc469d53bb594c9a76"
+      "sha256": "003e27c88dc6ddcd73821ffd725e6b8ab0677d0f2f2d461c27f7c3e04a3452e9"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sha256": "4c1c6244e9b7b126f75a777e6a3027a041b4298c5e0d0ea611fb8cb799510359"
+      "sha256": "09eee0a81fc4208d3ab2c0562f6c76b028c8a629091442fd62f6f3c9bcf98d3c"
     },
     {
       "path": "docs/workflow/user-stories.md",
-      "sha256": "f3e6eed02d60066663cea88feb3e06966f8daa6bc8ac9d6194044be7821f9db3"
+      "sha256": "74b2097be2d178a4b7c367be6f75cde1ffe4cce6a4f584bacbd545036e5d725e"
     },
     {
       "path": "docs/workflow/native-orchestration.md",
-      "sha256": "0c8db8fed0bfa643178e7bd21e1b1d05392d24a27de33e85477a0823aef0d797"
+      "sha256": "57f3eb9ae3028d1d3b18bcc8e7b30d0955795664953b048a6058a320065f118d"
     },
     {
       "path": "docs/workflow/skill-command-runtime.md",
@@ -53,15 +53,15 @@
   "assessments": {
     "installationAndStart": {
       "conclusion": "updated",
-      "summary": "Reviewed public AIM 4.8.5 installation, upgrade and School empty/existing-repository paths. Standard skills CLI retrieves the complete GitHub package; project start calibrates missing/stale repository knowledge and configures role skills without treating global installation as project setup. Existing-repository guide remains read-only until a supplied intent, preserves user files and accepted history, and routes approved-scope changes to the explicit human disposition contract. Public release follows the reviewed source/tag/Actions gates; no automatic project-ledger mutation."
+      "summary": "Reviewed public AIM 4.8.6 installation, upgrade and School empty/existing-repository paths. Standard skills CLI retrieves the complete GitHub package; project start calibrates missing/stale repository knowledge and configures role skills without treating global installation as project setup. Existing-repository guide remains read-only until a supplied intent, preserves user files and accepted history, and routes approved-scope changes to the explicit human disposition contract. Public release follows the reviewed source/tag/Actions gates; no automatic project-ledger mutation."
     },
     "deliveryModes": {
       "conclusion": "current",
       "summary": "Homepage and School consistently default new work to Ship, reserve Loop for actual feedback on useful increments, and separate delivery style from Strict/Auto and cost depth. School explicitly chooses Ship/Auto and grants bounded plan approval only after confirming scope/resources. This is an explicit example mandate, not an unselected default or invented acceptance. Existing frozen deliveries retain their original policy."
     },
     "orchestration": {
-      "conclusion": "current",
-      "summary": "Homepage Native graph descriptions and School planning lesson preserve outcome/dependency/proof ownership, cohesive implementation and a genuinely separate reviewer. Host tools actually launch/message agents; assignments and UI Graph do not. Current installed entry requires read-only dispatch-check plus the same exact CAS activity start before normal host dispatch. Beginner guidance does not replace approved/activated delivery with a ready card or diagram; its linked Native contract explains those checks and arbitrary-host interception limits. The Graph engineering illustration is a conceptual bridge-building scene; the concise introduction retains independent review and designated-owner feedback. Expanded details preserve Native defaults, graph choices, durable attempts/results, delegated decision/resource limits and host-launch boundaries."
+      "conclusion": "updated",
+      "summary": "Homepage and School preserve outcome/dependency/proof ownership, cohesive implementation and separate review. The linked Native contract now distinguishes preserved early read inputs from later current product outputs. Its relocate-bindings command verifies identical original bytes and appends location history without changing receipts/dependency digests or activity starts. Supported actual dispatch-check and recorded starts still precede host work. No alias can authorize a new attempt or stand in for current final product proof."
     },
     "delegatedDecisions": {
       "conclusion": "updated",
@@ -69,15 +69,15 @@
     },
     "resourceUse": {
       "conclusion": "updated",
-      "summary": "School counts planning, implementation, review, integration and correction resources and distinguishes attempts/tokens/time/money. Cancellation/replacement retains campaign observations, negative results, attempts and exhausted allowances. Only the obsolete Intent priority is removed from current dispatch ordering, with before/after recorded; unrelated priority remains. A new plan or session grants no resource renewal. Cost Control still requires quality and independent review."
+      "summary": "School still accounts for planning, authoring, review, corrections and integration with known/unknown tokens/time/money. Identical historical input-location relocation creates no activity start and does not alter campaign attempts, observed history or exhausted allowance. Actual administrative cost remains accounted when known. A new work attempt still needs existing resources/authority; owner cancellation/replacement remains non-renewing. No universal cost-saving measurement is claimed."
     },
     "verificationAndAcceptance": {
       "conclusion": "updated",
-      "summary": "Ordinary homepage/School flow preserves early proof, separate review, delivered-version journeys and actual final owner acceptance. The linked Story contract adds human cancellation/replacement as terminal non-acceptance, retaining the old frozen delivery and proof. Released cards return to draft; a replacement needs new Gate A/B. UI distinguishes approved cancellation from unapproved plan cancellation. Existing scoped Native acceptance reconciliation remains separate; no Epic closure or performance gain follows from disposition."
+      "summary": "Early baseline/challenge inputs are preserved before planned writes; final review and measurements assess the actual current product. Verified same-byte input relocation is an append-only reference correction, not a new assessment or acceptance. Write/final-review/product/measurement/progress bindings cannot be replaced with historical aliases. Changed baseline proof still becomes stale; later generations cannot inherit old aliases. Actual human/delegated final acceptance, independent review and separate Epic closure remain."
     },
     "modelsAndEvidence": {
       "conclusion": "current",
-      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.5 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is optional creator experience, conditional on actual host/account controls, with no current price, universal savings or model-availability guarantee."
+      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.6 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is optional creator experience, conditional on actual host/account controls, with no current price, universal savings or model-availability guarantee."
     }
   }
 }

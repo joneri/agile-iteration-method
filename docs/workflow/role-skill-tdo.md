@@ -18,6 +18,10 @@ technical planning and evidence synthesis.
   work within existing resources and mandate, verify parts early and integrate
   promptly. Own integrated review, validation and evidence; a full role cycle
   per Story is unnecessary. Preserve remaining work when genuinely blocked.
+- Bind early read/challenge inputs to preserved baselines before planned writes.
+  For an existing same-byte input-location repair, use `relocate-bindings` from
+  `native-orchestration.md`; keep current output/review proof fresh and retain
+  original attempts, dependencies and resource history.
 - Preserve selected criteria and agreed outcomes for independent review; never
   rewrite them to fit the implementation. Explicit replanning retains original
   commitments, decisions, reasons, remaining needs and historical acceptance.

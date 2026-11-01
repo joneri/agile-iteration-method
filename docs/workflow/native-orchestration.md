@@ -403,3 +403,71 @@ history. Reconcile every raw running worker first. Retire the old outcome's
 current dispatch priority explicitly; record before/after priority without
 deleting its original campaign or granting more attempts. A replacement is a
 new unapproved plan. Cancellation is terminal history, never Gate E acceptance.
+
+## Historical input bindings and identical baseline copies
+
+Bind early read/challenge inputs to preserved baselines before the approved
+writer changes the live files. An early input assessment and the final review
+of the delivered product have different freshness obligations. Planned writes
+must not force an already-running implementation attempt to restart merely
+because its early input receipt still points to a live path.
+
+For an existing completed **read** activity, use trusted `aim_stories.py
+relocate-bindings --expected-sha256 <current-store-digest> --compact` with:
+
+```json
+{
+  "deliveryId": "DI-ACTIVE",
+  "activityId": "early-layout-challenge",
+  "attempt": 1,
+  "receiptSha256": "<SHA-256 of the exact original completed receipt>",
+  "coordinatorSession": "<actual activated coordinator session>",
+  "mappings": [{
+    "from": {"path": "src/Game.swift", "sha256": "<original reviewed SHA-256>"},
+    "to": {"path": ".aim/baselines/before-edit/Game.swift", "sha256": "<same original SHA-256>"}
+  }],
+  "reason": "Preserve the reviewed original input after the approved live edit.",
+  "evidence": [{"path": ".aim/analysis/early-layout-review.md", "sha256": "<existing proof SHA-256>"}]
+}
+```
+
+The receipt fingerprint uses the helper's canonical JSON digest (sorted keys,
+UTF-8, no insignificant spaces), as used by dependency `receiptSha256`.
+Use the actual last confirmed store digest and an existing reviewed receipt;
+never reconstruct a past activity or change its original fields. Reuse relevant
+existing `.aim/` evidence; no extra agent, report or owner gate is required.
+
+The coordinator may relocate only the latest completed read in the current
+rework generation, during approved implementation or its preserved block.
+Native requires the currently activated coordinator. The helper verifies each
+contained, regular, non-symlink destination against the exact original source
+hash, and verifies unchanged original read proof. The old live path may already
+have changed or disappeared. A destination may be outside the original read
+node's paths: this grants only evidence reading, never new write ownership.
+
+The operation appends `bindingRelocations` with original receipt/scope/generation,
+exact mappings, coordinator, reason, evidence and time. It changes no original
+receipt, dependency digest, approval, phase/block, activity attempt, campaign or
+resource record. Graph and Native dependency/priority checks resolve the saved
+locations while retaining the original receipt identity and visible source refs.
+An already-running downstream attempt can then complete as that same attempt.
+The operation works at an exhausted work checkpoint, but cannot authorize a
+new work attempt or renew resources. Preserve actual administrative cost in the
+existing resource accounting when known; never invent zero tokens/time.
+
+Multiple mappings commit atomically. Changed bytes, unsafe paths, wrong actor,
+superseded attempts, stale CAS or changed proof reject without a partial update.
+An identical retry with the current CAS returns its existing record without
+changing revision/time. A later move can relocate an already saved location to
+another identical copy; obsolete prior locations remain history. Current saved
+bytes are still checked, and become stale if modified. Old journal entries
+survive normal rework/new attempts but never apply to a different receipt or
+generation.
+
+This is not a new review assessment or a way to make historical output current.
+Write outputs, final-review activities, `productBindings`, measurements and
+product-progress observations cannot be relocated by this operation. Changed
+current product/proof still requires the normal fresh review and quality path.
+Accepted and cancelled deliveries cannot receive new relocations. If content
+or meaning changed, use actual new work/review; do not manufacture equal hashes
+or reset the campaign.
