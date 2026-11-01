@@ -10,6 +10,7 @@ import zipfile
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote, urlsplit
 
 
 PUBLIC_ORIGIN = "https://joneri.github.io/agile-iteration-method/"
@@ -33,6 +34,7 @@ ROOT_PUBLIC_FILES = (
     "googlea5ce5061b9ad1e90.html",
     "install/aim-install-manifest.yaml",
     "index.html",
+    "school.html",
     "install.sh",
     "robots.txt",
     "sitemap.xml",
@@ -64,6 +66,11 @@ PUBLIC_PRODUCT_CAPTURES = (
     "github-pages/assets/images/aim-ui-story-dependencies.png",
 )
 PUBLIC_AGENT_INSTRUCTIONS_PATH = "github-pages/assets/aim-install-agent.txt"
+PUBLIC_SCHOOL_ASSETS = (
+    "github-pages/assets/aim-school.css",
+    "github-pages/assets/aim-school.js",
+    "github-pages/assets/images/professor-aim.png",
+)
 PUBLIC_PRESS_KIT_PATH = "github-pages/assets/press/aim-4-press-kit.zip"
 PUBLIC_PRESS_TEXT_PATH = "github-pages/assets/press/aim-4-press-kit.txt"
 PUBLIC_PRESS_MEMBERS = {
@@ -176,6 +183,72 @@ def _evaluation_contract(root: Path) -> dict[str, Any]:
         return evidence
     except (KeyError, TypeError, ValueError) as exc:
         raise PublicationError(f"{PUBLIC_EVALUATION_PATH}: invalid evaluation attribution: {exc}") from exc
+
+
+class _SchoolPage(_Homepage):
+    def __init__(self) -> None:
+        super().__init__()
+        self.version: str | None = None
+        self.lesson_count = 0
+        self.duplicate_ids: set[str] = set()
+        self.copy_targets: set[str] = set()
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attributes = dict(attrs)
+        identifier = attributes.get("id")
+        if identifier and identifier in self.ids:
+            self.duplicate_ids.add(identifier)
+        super().handle_starttag(tag, attrs)
+        if tag == "body":
+            self.version = attributes.get("data-aim-version")
+        if "data-lesson" in attributes:
+            self.lesson_count += 1
+        if attributes.get("data-school-copy"):
+            self.copy_targets.add(attributes["data-school-copy"])
+        if tag == "img" and attributes.get("src"):
+            self.assets.add(attributes["src"])
+            if not attributes.get("alt", "").strip():
+                raise PublicationError("school.html: an image needs descriptive alt text")
+
+
+def validate_school(root: Path) -> None:
+    """Check the school in source and the exact published artifact.
+
+    The explicit release marker forces a content review on a release bump;
+    changing the version alone does not establish factual or editorial quality.
+    """
+    source = _read_text(root / "school.html")
+    page = _SchoolPage()
+    page.feed(source)
+    page.close()
+    if page.version != product_version(root):
+        raise PublicationError("school.html: review guidance for the current VERSION before publication")
+    required_ids = {"quick-start", "install", "lessons", *(f"lesson-{i}" for i in range(1, 7))}
+    if not required_ids <= page.ids or page.lesson_count != 6:
+        raise PublicationError("school.html: quick start and six lessons are required")
+    if page.duplicate_ids or not page.copy_targets <= page.ids:
+        raise PublicationError("school.html: duplicate IDs or missing copy targets")
+    if not set(PUBLIC_SCHOOL_ASSETS) <= page.assets:
+        raise PublicationError("school.html: required school assets are not referenced")
+    for target in page.links | page.assets:
+        parsed = urlsplit(target)
+        if parsed.scheme or parsed.netloc:
+            continue
+        relative = unquote(parsed.path)
+        destination = (root / relative).resolve() if relative else root / "school.html"
+        if not destination.is_relative_to(root.resolve()) or not destination.is_file():
+            raise PublicationError(f"school.html: missing local destination: {target}")
+        if parsed.fragment:
+            linked = page
+            if relative and destination != (root / "school.html").resolve():
+                linked = _Homepage()
+                linked.feed(_read_text(destination))
+            if unquote(parsed.fragment) not in linked.ids:
+                raise PublicationError(f"school.html: broken section link: {target}")
+    homepage = _Homepage()
+    homepage.feed(_read_text(root / "index.html"))
+    if "school.html" not in homepage.links:
+        raise PublicationError("index.html: AIM School needs a discoverable entry link")
 
 
 def _homepage_contract(root: Path) -> None:
@@ -359,6 +432,7 @@ def validate_source(repo_root: Path) -> None:
             "index.html: brand-version must present the current AIM brand"
         )
     _homepage_contract(repo_root)
+    validate_school(repo_root)
     _preview_contract(repo_root)
     _press_contract(repo_root)
     campaign_image = repo_root / PUBLIC_CAMPAIGN_IMAGE_PATH
@@ -620,6 +694,7 @@ def validate_artifact(output_root: Path) -> None:
                 "versionless source"
             )
     _homepage_contract(output_root)
+    validate_school(output_root)
     _preview_contract(output_root)
     _press_contract(output_root, artifact=True)
     campaign_image = output_root / PUBLIC_CAMPAIGN_IMAGE_PATH

@@ -5,6 +5,8 @@ result before final acceptance. Choose **Loop** for useful Done Increments with
 recurring owner feedback. You do not need to supply a backlog or read the full
 method first.
 
+Prefer a guided example? [AIM School](https://joneri.github.io/agile-iteration-method/school.html) starts with a short prompt and follows Pocket Board through six lessons with Professor AIM. It covers model allocation, delegated decisions, resource limits and verification.
+
 Open **AIM UI** with `/aim ui` to follow Stories, the current delivery and its
 evidence. The **Graph** view shows recorded dependencies, blockers and bounded
 next assignments. Graph engineering makes ownership and prerequisites explicit;
@@ -132,7 +134,7 @@ Choose **Loop** to receive useful Done Increments and give feedback before the
 next selection. Delivery style is separate from Strict/Auto approvals and cost
 depth. Existing deliveries keep their original policies.
 
-Use **Graph engineering** when asking your agent to coordinate the work: name
+New delivery plans use **Native Graph engineering** by default. A short intent is enough to begin; AIM chooses the smallest useful graph. When asking your agent to coordinate other agents, name
 who owns the outcome, who delivers, their dependencies and the required evidence.
 The agent you are speaking with can act as product owner under an explicit
 mandate, while an AIM delivery coordinator executes and an independent reviewer

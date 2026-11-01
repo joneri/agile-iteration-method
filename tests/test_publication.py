@@ -37,6 +37,49 @@ from aim_publication import (  # noqa: E402
 
 
 class PublicationContractTests(unittest.TestCase):
+    def test_school_is_shipped_with_working_local_destinations(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "site"
+            build_artifact(REPO_ROOT, output)
+            self.assertTrue((output / "school.html").is_file())
+            for relative in ("aim-school.css", "aim-school.js", "images/professor-aim.png"):
+                self.assertTrue((output / "github-pages/assets" / relative).is_file())
+            validate_artifact(output)
+
+    def test_school_release_drift_blocks_source_and_packaged_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            page = copied / "school.html"
+            current = (copied / "VERSION").read_text().strip()
+            page.write_text(page.read_text().replace(
+                f'data-aim-version="{current}"', 'data-aim-version="0.0.0"'))
+            with self.assertRaisesRegex(PublicationError, "review guidance"):
+                validate_source(copied)
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "site"
+            build_artifact(REPO_ROOT, output)
+            page = output / "school.html"
+            page.write_text(page.read_text().replace('data-aim-version="', 'data-aim-version="old-'))
+            with self.assertRaisesRegex(PublicationError, "review guidance"):
+                validate_artifact(output)
+
+    def test_school_missing_assets_and_broken_navigation_block_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy_repo(temporary)
+            image = copied / "github-pages/assets/images/professor-aim.png"
+            image_bytes = image.read_bytes()
+            image.unlink()
+            with self.assertRaisesRegex(PublicationError, "missing local destination"):
+                validate_source(copied)
+            image.write_bytes(image_bytes)
+            page = copied / "school.html"
+            original = page.read_text()
+            for replacement in ('href="#missing-lesson"', 'href="index.html#missing-section"'):
+                page.write_text(original.replace('href="#lesson-1"', replacement, 1))
+                with self.subTest(replacement=replacement):
+                    with self.assertRaisesRegex(PublicationError, "broken section link"):
+                        validate_source(copied)
+
     def test_stale_preview_references_are_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             copied = self._copy_repo(temporary)

@@ -98,7 +98,7 @@ Use AIM in Strict Loop. Act as my product owner and delegate delivery. Assess ve
 
 Start with your goal; AIM chooses a small default graph or validates your own. Native orchestration binds actual sessions and retains campaign progress across restarts. See [the Native contract and supported enforcement paths](docs/workflow/native-orchestration.md). Existing approved plans retain their behavior.
 
-Agent-owner decisions require explicit human delegation; existing work keeps its frozen policy. See [delivery and owner contracts](docs/workflow/user-stories.md).
+Learn the short start and six practical lessons with [Professor AIM in AIM School](https://joneri.github.io/agile-iteration-method/school.html). Agent-owner decisions require explicit human delegation; existing work keeps its frozen policy. See [delivery and owner contracts](docs/workflow/user-stories.md).
 
 ## From intent to accepted User Stories
 

@@ -1,0 +1,9 @@
+Professor AIM — original AIM School character
+Generated: 2026-11-01
+Tool: built-in image_gen; transparent_background=true
+Use: educational cartoon illustration, not a real agent identity or capability.
+Web export: proportionately resized from 1024 x 1536 to 512 x 768 with macOS
+sips, preserving transparency. No compositing or character retouching.
+
+Exact generation prompt:
+Create one original character illustration for an educational software website: Professor AIM, a friendly cartoon AI agent who teaches careful planning and practical engineering. Full body three-quarter view, standing with a compact open notebook in one hand and raising the other index finger to explain a useful idea. A small rounded square robot head, warm expressive eyes in a dark blue faceplate, subtle round professor glasses, a navy academic jacket with cobalt-blue details, pale blue shirt and a small golden-yellow bow tie. Charming, confident, approachable adult teacher, suitable for professional developers as well as beginners. Contemporary hand-drawn 2D editorial cartoon with crisp dark navy outlines, flat colors, a little soft shading, strong clean silhouette and clear readable features at small sizes. Color harmony: navy #06142d, cobalt #0867e8, pale blue #e9f3ff, golden yellow #f2c75c, white. No words, letters, labels, logos, speech bubbles, graphs or scene. One single complete character, no duplicates or inset images. Generous transparent empty space around the subject, genuinely transparent background. Portrait composition.

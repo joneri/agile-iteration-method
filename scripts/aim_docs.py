@@ -216,4 +216,16 @@ def audit(repo_root: Path) -> list[str]:
     errors.extend(f"index.html: {error}" for error in parser.errors)
     if parser.stack:
         errors.append("index.html: unclosed structural tags: " + ", ".join(parser.stack))
+    from aim_publication import PublicationError, validate_school
+
+    try:
+        validate_school(repo_root)
+    except (PublicationError, OSError) as exc:
+        errors.append(str(exc))
+    school_parser = StructureParser()
+    school_parser.feed(read(repo_root / "school.html"))
+    school_parser.close()
+    errors.extend(f"school.html: {error}" for error in school_parser.errors)
+    if school_parser.stack:
+        errors.append("school.html: unclosed structural tags: " + ", ".join(school_parser.stack))
     return errors

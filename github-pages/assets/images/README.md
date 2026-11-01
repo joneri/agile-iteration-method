@@ -2,6 +2,15 @@
 
 Source images intended for the AIM website published through the validated GitHub Pages artifact.
 
+## AIM School
+
+`professor-aim.png` is an original cartoon robot teacher generated with the
+built-in image generation tool on 1 November 2026. The transparent PNG was
+exported proportionately at 512 × 768 for the website. Its exact prompt and
+export details are in [professor-aim-prompt.txt](professor-aim-prompt.txt).
+Professor AIM illustrates the lessons and fact boxes; the character is not a
+live agent, model endorsement or verification claim.
+
 - `aim-2-hero-dark.png`: canonical dark, versionless AIM logo and website hero
   artwork
 - `aim-4-logo.png`: AIM 4.0 campaign lockup, the original golden/blue A identity with

@@ -67,7 +67,9 @@ You will learn:
 
 ### I want to start using AIM
 
-Follow the [First-time journey](getting-started.md).
+Start with [AIM School and Professor AIM](https://joneri.github.io/agile-iteration-method/school.html): a short guide and six practical lessons follow one task-board example from an empty repository to a verified result.
+
+For full installation choices and operating details, follow the [First-time journey](getting-started.md).
 
 It takes you through:
 
