@@ -135,6 +135,9 @@ def incoming_context(repo, delivery_id, story_ids):
     records = catalog(native, observations)
     links = []
     for (source_delivery, sid), (delivery, story) in records.items():
+        # Retired work remains a provenance target, not current correction proof.
+        if delivery.get('status') == 'cancelled':
+            continue
         for link in story.get('corrects', []):
             if link['deliveryId'] != delivery_id or link['storyId'] not in story_ids:
                 continue
@@ -169,11 +172,16 @@ def annotate_board(repo, board):
                     goal=e['graph']['goal'], epic=e['epic'], stories=e['stories'], deliveryPolicy=e.get('deliveryPolicy', DEFAULT_POLICY)))
                 for e in entries]}
     records = catalog(native, observed)
+    retired = {sid for (_, sid), (delivery, _) in records.items() if delivery.get('status') == 'cancelled'}
+    current = {sid for (_, sid), (delivery, _) in records.items() if delivery.get('status') != 'cancelled'}
+    retired_only = retired - current
     cards = {s['id']: s for s in board['stories']}
     board['ownerHandoffs'] = []
     for source in board['stories']:
         source['corrections'] = []
     for source in board['stories']:
+        if source['id'] in retired_only:
+            continue
         for link in source.get('corrects', []):
             original = cards.get(link['storyId'])
             try:

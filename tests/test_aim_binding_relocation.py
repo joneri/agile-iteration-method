@@ -168,6 +168,21 @@ class BindingRelocationTests(unittest.TestCase):
         self.mutate("relocate-bindings",request);self.snapshot.unlink()
         load(self.repo)
         self.assertEqual(self.graph()["activities"][0]["status"],"completed")
+        before=(self.repo/FILE).read_bytes()
+        original=copy.deepcopy(self.original)
+        result=self.mutate("relocate-bindings",first)
+        self.assertTrue(result["idempotent"])
+        self.assertEqual(before,(self.repo/FILE).read_bytes())
+        self.assertEqual(self.document["deliveries"][0]["activityReceipts"][0],original)
+        for ref in (first["evidence"][0], original["evidence"][0]):
+            proof=self.repo/ref["path"];saved=proof.read_bytes()
+            proof.write_text("Changed actual proof")
+            self.reject("relocate-bindings",first,"Evidence changed")
+            proof.write_bytes(saved)
+        second.write_text("Corrupted effective baseline")
+        self.reject("relocate-bindings",first,"Evidence changed")
+        second.unlink()
+        self.reject("relocate-bindings",first,"Cannot safely read")
 
     def refresh_core(self):
         d=self.document["deliveries"][0];check=d["qualityPlan"]["checks"][0]

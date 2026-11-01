@@ -103,6 +103,7 @@ UI_PROTOCOL_VERSION = "1.3"
 PAYLOAD_FILES = (
     "scripts/aim_ui_control.py",
     "scripts/aim_ui.py",
+    "scripts/aim_backlog.py",
     "scripts/aim_http.py",
     "scripts/aim_recovery.py",
     "scripts/aim_codex_bridge.py",

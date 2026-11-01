@@ -1,9 +1,9 @@
 AIM
 Turn your intent into a complete product.
 
-Suggested announcement copy · AIM 4.8.6 · 1 November 2026.
+Suggested announcement copy · AIM 4.8.7 · 1 November 2026.
 
-AIM 4.8.6 can relocate an early read activity's verified inputs to identical preserved baseline copies without restarting development. It retains the original review receipt, dependencies, attempts and resource history. The running author can finish the same attempt; final review and current-product quality checks still require current proof. Owner cancellation and replacement from 4.8.5 remain available.
+AIM 4.8.7 fixes four retry and freshness defects: chained baseline moves can be retried after obsolete copies are removed; retired corrections no longer block original owner decisions; repeated backlog imports preserve implicit priorities; and helper-only updates replace stale UI backends. Original delivery and activity history remains intact.
 
 Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 

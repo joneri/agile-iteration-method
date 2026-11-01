@@ -247,6 +247,12 @@ class AimUiControlTests(unittest.TestCase):
         self.assertTrue(json.loads(stopped.stdout)["stopped"])
 
     def test_payload_change_reports_stale_and_replaces_verified_pid(self) -> None:
+        self.check_payload_change("aim-ui/app.js", "\n// upgraded payload fixture\n")
+
+    def test_backlog_dependency_change_replaces_stale_backend_without_version_change(self) -> None:
+        self.check_payload_change("scripts/aim_backlog.py", "\n# upgraded backend fixture\n")
+
+    def check_payload_change(self, relative: str, change: str) -> None:
         payload = self.root / "payload"
         shutil.copytree(REPO_ROOT / "scripts", payload / "scripts")
         shutil.copytree(REPO_ROOT / "aim-ui", payload / "aim-ui")
@@ -272,9 +278,9 @@ class AimUiControlTests(unittest.TestCase):
         self.assertTrue(original["compatible"])
         self.assertEqual(len(original["payloadFingerprint"]), 64)
         try:
-            app = payload / "aim-ui/app.js"
+            app = payload / relative
             app.write_text(
-                app.read_text(encoding="utf-8") + "\n// upgraded payload fixture\n",
+                app.read_text(encoding="utf-8") + change,
                 encoding="utf-8",
             )
             status = subprocess.run(

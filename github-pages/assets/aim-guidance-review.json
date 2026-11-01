@@ -1,21 +1,21 @@
 {
   "guidanceReviewVersion": 1,
-  "productVersion": "4.8.6",
+  "productVersion": "4.8.7",
   "reviewedOn": "2026-11-01",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "3cd666283d5989cff9fbf49f98ba69133268269e2cefbc64a39b7bd82943b553"
+      "sha256": "17e28f4fefe46d34d8cf4cf38fb5b3f76b21ccc9ee12a38004dceb942fd677b2"
     },
     {
       "path": "school.html",
-      "sha256": "a3f7c44b2d8cc512868c8b3d7f7a94e46a8e1f5c07c48a8e2ea5cc24118fe5eb"
+      "sha256": "826adbbe0873decc119efbdfbc5f4f76c8cbdea31dadcd51316f0c1c0898cad4"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "003e27c88dc6ddcd73821ffd725e6b8ab0677d0f2f2d461c27f7c3e04a3452e9"
+      "sha256": "21d0c3df3f626de309b32f7233773ec854aa956ebe168a12db0ba838a7af9e76"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
@@ -53,7 +53,7 @@
   "assessments": {
     "installationAndStart": {
       "conclusion": "updated",
-      "summary": "Reviewed public AIM 4.8.6 installation, upgrade and School empty/existing-repository paths. Standard skills CLI retrieves the complete GitHub package; project start calibrates missing/stale repository knowledge and configures role skills without treating global installation as project setup. Existing-repository guide remains read-only until a supplied intent, preserves user files and accepted history, and routes approved-scope changes to the explicit human disposition contract. Public release follows the reviewed source/tag/Actions gates; no automatic project-ledger mutation."
+      "summary": "Reviewed public AIM 4.8.7 installation, upgrade and School empty/existing-repository paths. Standard skills CLI retrieves the complete GitHub package; project start calibrates missing/stale repository knowledge and configures role skills without treating global installation as project setup. Existing-repository guide remains read-only until a supplied intent, preserves user files and accepted history, and routes approved-scope changes to the explicit human disposition contract. Public release follows the reviewed source/tag/Actions gates; no automatic project-ledger mutation. Helper-only backlog changes now invalidate both UI payload fingerprints; actual process replacement is covered without changing VERSION."
     },
     "deliveryModes": {
       "conclusion": "current",
@@ -61,11 +61,11 @@
     },
     "orchestration": {
       "conclusion": "updated",
-      "summary": "Homepage and School preserve outcome/dependency/proof ownership, cohesive implementation and separate review. The linked Native contract now distinguishes preserved early read inputs from later current product outputs. Its relocate-bindings command verifies identical original bytes and appends location history without changing receipts/dependency digests or activity starts. Supported actual dispatch-check and recorded starts still precede host work. No alias can authorize a new attempt or stand in for current final product proof."
+      "summary": "Homepage and School preserve outcome/dependency/proof ownership, cohesive implementation and separate review. The linked Native contract now distinguishes preserved early read inputs from later current product outputs. Its relocate-bindings command verifies identical original bytes and appends location history without changing receipts/dependency digests or activity starts. Supported actual dispatch-check and recorded starts still precede host work. No alias can authorize a new attempt or stand in for current final product proof. Chained identical-byte retries use effective current destinations while retaining obsolete locations only as history; current bytes and actual proof remain required."
     },
     "delegatedDecisions": {
       "conclusion": "updated",
-      "summary": "Homepage escalation and School delegation preserve explicit scope, resources and owner acceptance boundaries. The linked Story contract now permits only an actual present human to cancel or replace approved unaccepted work through a scoped typed decision. Existing approve/accept/orchestrate delegation and Auto cannot authorize this changed commitment. Each replacement is a separately unapproved plan; no past gate or final acceptance is invented."
+      "summary": "Homepage escalation and School delegation preserve explicit scope, resources and owner acceptance boundaries. The linked Story contract now permits only an actual present human to cancel or replace approved unaccepted work through a scoped typed decision. Existing approve/accept/orchestrate delegation and Auto cannot authorize this changed commitment. Each replacement is a separately unapproved plan; no past gate or final acceptance is invented. Cancelled/replaced corrections remain provenance targets but no longer contribute outgoing current proof/readiness obligations; a new active correction retains normal checks."
     },
     "resourceUse": {
       "conclusion": "updated",
@@ -77,7 +77,7 @@
     },
     "modelsAndEvidence": {
       "conclusion": "current",
-      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.6 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is optional creator experience, conditional on actual host/account controls, with no current price, universal savings or model-availability guarantee."
+      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.7 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is optional creator experience, conditional on actual host/account controls, with no current price, universal savings or model-availability guarantee."
     }
   }
 }

@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-11-01 - AIM release v4.8.7
+
+Correct four reported P2 defects in retries, retired corrections and UI freshness.
+
+- Verify current effective baseline locations when replaying an earlier recorded
+  relocation after chained moves. Deleted obsolete copies no longer break an
+  identical current-CAS retry; original receipts/history stay unchanged and
+  changed effective bytes or actual proof still reject without writes.
+- Retain cancelled/replaced deliveries as provenance targets while excluding
+  their outgoing corrections from current owner-decision proof and readiness.
+  A Story reused in a new active correction still requires fresh current proof.
+- Default an omitted planning-candidate priority only on insertion. Retrying a
+  sourced candidate alone or in another batch order preserves priority, creation
+  time and unchanged backlog bytes; explicit reprioritization remains supported.
+- Include the backlog runtime helper in both UI payload fingerprints, so a
+  helper-only update detects and replaces an old backend without a version bump.
+
+Verification: all four new regressions fail on the previous implementation;
+focused positive/negative helper and real UI-process tests, independent review,
+full repository tests, public skill installation and release validation. No
+consuming-project ledger is automatically rewritten.
+
 ## 2026-11-01 - AIM release v4.8.6
 
 Preserve verified historical read inputs without restarting completed work.
