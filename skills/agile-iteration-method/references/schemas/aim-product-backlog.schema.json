@@ -119,6 +119,10 @@
           ],
           "type": "object"
         },
+        "reworkRevision": {
+          "description": "Work round at this attempt start; missing means the historical pre-marker round.",
+          "type": "integer"
+        },
         "scopeSha256": {
           "pattern": "^[0-9a-f]{64}$",
           "type": "string"
@@ -400,6 +404,10 @@
           "minItems": 0,
           "type": "array"
         },
+        "activityReworkRevision": {
+          "description": "Opt-in current rework history index, set only by supported rework; validated against retained history.",
+          "type": "integer"
+        },
         "approval": {
           "$ref": "#/$defs/authority"
         },
@@ -585,7 +593,8 @@
                 "enum": [
                   "review",
                   "validation",
-                  "acceptance"
+                  "acceptance",
+                  "in_progress"
                 ]
               },
               "productBindings": {

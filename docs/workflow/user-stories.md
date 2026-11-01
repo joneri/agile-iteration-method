@@ -223,6 +223,13 @@ Have the actual instruction, preserve its scope and record it truthfully; never
 invent approval evidence. Existing legacy Portfolio mandates do not authorize
 new Story work.
 
+For execution-plan corrections, rework marks a new activity round without
+discarding receipts, changing the approved scope or renewing resources. See
+[continuation after rework](native-orchestration.md#continue-the-same-delivery-after-rework)
+for the bounded explicit recovery of older stuck rounds. Reading an old ledger
+alone does not migrate it. New work, current independent review and real owner
+acceptance are still required; manual feedback is not a fabricated gate receipt.
+
 ## Frozen quality plan
 
 Every new plan declares applicability in `qualityPlan`: `checks`,

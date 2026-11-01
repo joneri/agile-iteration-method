@@ -107,7 +107,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.8.2",
+  "productVersion": "4.8.3",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -125,7 +125,7 @@
     {
       "output": "references/native-orchestration.md",
       "source": "docs/workflow/native-orchestration.md",
-      "sourceSha256": "e4ad4821ff576c5fe55d62337a7d22162168f6d7d5263d9cf73ced3f88ff7032"
+      "sourceSha256": "0045cbe51b05b30d55661ea6c9f1434370a744e2148e15d2d0274e21f6c8cf79"
     },
     {
       "output": "references/tool-efficiency.md",
@@ -135,7 +135,7 @@
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "2a6c832946259d42194e79e7378ade80ec69fba4de20fe316471f6c8bcd156d2"
+      "sourceSha256": "f976ebdae161ef6965d0a2fb27619a849f94520847f5dcafd3f21d2c8d88863d"
     },
     {
       "output": "references/local-runtime-access.md",
@@ -295,7 +295,7 @@
     {
       "output": "references/schemas/aim-product-backlog.schema.json",
       "source": "schemas/aim-product-backlog.schema.json",
-      "sourceSha256": "79350c33f2d00ad82c2c03ee2e6c6c3fad886215d4d02e84c3f43b4d3bed5d6d"
+      "sourceSha256": "ab18ef3eda178363f6f6d916208c1cef5c4b4a35cb9dbe9c68a2edef292f478b"
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
@@ -310,7 +310,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "633f30f1ff536b249a6b9316b07a1fcec53bb597dcc16a037bf01d3d64ddf399"
+      "sourceSha256": "00454f29247de581cee62dc867a330c6fcdab32b36dccb02881779512425558b"
     },
     {
       "output": "references/version-and-installation.md",
@@ -325,7 +325,7 @@
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "9ef2686731e1deb9a60e14beafaa4cd162ba0693004a973fa8df0302504491eb"
+      "sourceSha256": "797a9d7dff53cbd0726677726039c7b42ea35ee31b56416439bdb6fd7f64e5d0"
     },
     {
       "output": "scripts/aim_observations.py",
@@ -410,7 +410,7 @@
     {
       "output": "scripts/aim_quality/graph.py",
       "source": "scripts/aim_quality/graph.py",
-      "sourceSha256": "7a14eb9fef9f191e0f8f51725fddaa856eb36836221388264666999296c8f2e3"
+      "sourceSha256": "3d2957cb97daa05196f391244ea4f4f79d67451414b213e830a3fa9b8e01cd2f"
     },
     {
       "output": "scripts/aim_quality/orchestration.py",

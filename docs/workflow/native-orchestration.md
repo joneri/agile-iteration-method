@@ -335,6 +335,35 @@ or lifecycle fallback. AIM UI Graph shows Story dependencies, not a new live
 agent scheduler. Copying an assignment does not launch work. Neither graph view
 proves product correctness, speedup, token savings or owner acceptance.
 
+## Continue the same delivery after rework
+
+A requested correction keeps the approved delivery and its original commitment.
+Supported `rework` retains earlier activity receipts and campaign history, but
+marks a new work round. The old completions remain historical; they cannot satisfy
+the new implementation or its dependent review. Start a fresh bounded activity
+before editing its source, then record current proof, independent review,
+validation and the actual owner decision through the normal gates.
+
+Rework never changes the frozen scope, owner mandate, attempt counters or resource
+allowance. An exhausted campaign still needs its real scoped owner decision before
+another work start. A late old worker result cannot finish the new round. Resolve
+actual running workers before rework; a stale graph label does not mean a worker
+has stopped. The one-active-delivery rule remains in force.
+
+Reading or upgrading an older marker-free ledger does not rewrite or invalidate
+it automatically. If an older supported rework is already stuck in `in_progress`
+(including `blocked` from that phase), an explicit `rework` with a recovery reason
+may reopen that same correction only when there is prior rework history, no new
+round marker and no latest running activity. It appends truthful recovery history
+and preserves the earlier rejection and block reason. It does not invent another
+human rejection, accept a result or grant resources. Ordinary initial work and a
+repeated recovery of an already marked round do not qualify for this exception.
+
+The runtime binds new receipts to `activityReworkRevision` / `reworkRevision`.
+These are lifecycle fences, not new plan identities or a second history store.
+Manual candidates and human feedback stay attached to their actual source/build:
+do not manufacture past Native starts or copy acceptance onto a newer build.
+
 ## Compatibility
 
 New Native plans explicitly opt into `executionPlan.orchestration`. Existing

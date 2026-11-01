@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-11-01 - AIM release v4.8.3
+
+Continue the same Native delivery after a requested correction without a deadlock.
+
+- Start a fresh activity before editing code after supported rework. Preserve
+  earlier receipts as history and require current implementation and review proof.
+- Provide explicit recovery for older stuck deliveries with recorded rework;
+  refuse recovery while any actual activity is running. Existing histories keep
+  their original interpretation until supported rework is explicitly requested.
+- Preserve the approved scope, owner mandate, cumulative resource campaigns and
+  acceptance gates. A new correction round cannot renew an exhausted work budget.
+- Retain all 4.8.2 delegated escalation and Native completion corrections.
+  Regenerate the public skill and align current release and press metadata.
+
+Verification: reproduce the original failure in installed AIM 4.8.2, four focused
+regressions, sixteen affected compatibility/schema checks, independent review
+and actual rework in this delivery. Existing product projects remain untouched;
+no Enigma campaign or baseline matrix was run.
+
 ## 2026-11-01 - AIM release v4.8.2
 
 Route internal escalations to the explicitly delegated owner and consume its bounded answer.

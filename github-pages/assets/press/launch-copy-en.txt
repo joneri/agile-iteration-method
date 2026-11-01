@@ -1,9 +1,9 @@
 AIM
 Turn your intent into a complete product.
 
-Suggested announcement copy · AIM 4.8.2 · 1 November 2026.
+Suggested announcement copy · AIM 4.8.3 · 1 November 2026.
 
-AIM 4.8.2 Native routes internal escalations to your explicitly delegated owner, so you do not have to relay routine process questions. Scoped agent answers preserve cumulative resource limits across goals and restarts. This release also fixes Native delivery completion and retains the observation improvements from 4.8.1.
+AIM 4.8.3 Native lets the same delivery continue after a correction is requested. Agents can start a fresh activity before editing code, keep earlier results as history and obtain current review evidence. Older stuck deliveries have an explicit recovery route that protects running work. Delegated escalations, cumulative resource limits and owner acceptance keep their existing boundaries.
 
 Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 

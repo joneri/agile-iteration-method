@@ -112,6 +112,12 @@ def _validate_reassessment(value, context):
 
 
 def validate_activity_receipts(delivery):
+    revision = delivery.get('activityReworkRevision', 0)
+    _require(type(revision) is int and 0 <= revision <= len(delivery.get('reworkHistory', [])),
+             'Invalid activity rework revision.')
+    if 'activityReworkRevision' in delivery:
+        _require(revision > 0 and revision == len(delivery.get('reworkHistory', [])),
+                 'Activity rework revision must name the current rework history.')
     records = delivery.get("activityReceipts", [])
     _require("executionPlan" in delivery or not records, "Activity receipts require an execution plan.")
     if not records:
@@ -121,6 +127,9 @@ def validate_activity_receipts(delivery):
     latest = {}
     for index, record in enumerate(records):
         identifier = record["activityId"]
+        generation = record.get('reworkRevision', 0)
+        _require(type(generation) is int and 0 <= generation <= revision,
+                 'Activity receipt has an invalid rework revision.')
         if 'reassessment' in record:
             _require(index > 0, 'Reassessment requires prior activity history.')
             _validate_reassessment(record['reassessment'], _retry_context(delivery, identifier, records[:index]))
@@ -138,6 +147,7 @@ def validate_activity_receipts(delivery):
         for dep in deps:
             prior = latest.get(dep["activityId"])
             _require(prior is not None and prior["status"] == "completed"
+                     and prior.get('reworkRevision', 0) == generation
                      and prior["attempt"] == dep["attempt"] and _digest(prior) == dep["receiptSha256"],
                      "Activity dependency snapshot was not a completed receipt at start.")
         if record["status"] == "completed":
@@ -219,6 +229,7 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
         status, reason = "pending", "Waiting for prerequisite activities."
         obsolete = any(dep["status"] == "stale" for dep in dependencies)
         if receipt:
+            obsolete = obsolete or receipt.get('reworkRevision', 0) != delivery.get('activityReworkRevision', 0)
             snapshot = {d["activityId"]: d for d in receipt["dependencies"]}
             changed = any(dep not in receipts or snapshot[dep]["attempt"] != receipts[dep]["attempt"]
                           or snapshot[dep]["receiptSha256"] != _digest(receipts[dep])
@@ -230,6 +241,8 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
             status, reason = receipt["status"], receipt.get("reason", "Recorded activity receipt.")
         if obsolete:
             status, reason = "stale", "Source, proof or prerequisite receipt changed; a new attempt is required."
+            if receipt and receipt.get('reworkRevision', 0) != delivery.get('activityReworkRevision', 0):
+                reason = 'A new rework round requires a fresh activity attempt; earlier receipts remain history.'
         elif not receipt:
             if any(dep["status"] in {"failed", "blocked"} for dep in dependencies):
                 status, reason = "blocked", "A prerequisite failed or is blocked."
@@ -387,6 +400,8 @@ def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at,
                             status="running", at=at, updatedAt=at, scopeSha256=delivery["scopeSha256"],
                             dependencies=[dict(activityId=dep, attempt=latest[dep]["attempt"],
                                                receiptSha256=_digest(latest[dep])) for dep in task["dependsOn"]]))
+        if 'activityReworkRevision' in delivery:
+            records[-1]['reworkRevision'] = delivery['activityReworkRevision']
         if 'dispatchId' in request:
             _require(isinstance(request['dispatchId'], str) and re.fullmatch(r'[0-9a-f]{64}', request['dispatchId']), 'Invalid dispatch identity.')
             records[-1]['dispatchId'] = request['dispatchId']
@@ -395,6 +410,8 @@ def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at,
         return
     _require('reassessment' not in request, 'Reassessment belongs to the new attempt, not its outcome.')
     _require(previous is not None and previous["status"] == "running", "Activity has no running attempt.")
+    _require(previous.get('reworkRevision', 0) == delivery.get('activityReworkRevision', 0),
+             'Activity belongs to an earlier rework round; its result cannot complete current work.')
     _require(type(request.get("attempt")) is int and request["attempt"] == previous["attempt"]
              and request["session"] == previous["session"], "Activity session or attempt is stale.")
     if request["status"] == "completed":

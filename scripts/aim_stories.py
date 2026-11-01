@@ -639,6 +639,8 @@ def validate_document(document):
     require(sum(item["status"] not in {"accepted", "cancelled"} for item in document["deliveries"]) <= 1,
             "Only one nonterminal delivery may run at a time.")
     for delivery in document["deliveries"]:
+        require('activityReworkRevision' not in delivery or 'executionPlan' in delivery,
+                'Activity rework revision requires an execution plan.')
         if "executionPlan" in delivery:
             try:
                 validate_execution_plan(delivery["executionPlan"], delivery["stories"])
@@ -1270,7 +1272,13 @@ def _change(repo, document, command, request, *, cache=None):
         delivery.update(status="cancelled", reason=text(request["reason"], "Cancellation reason"))
     elif command == "rework":
         prior_phase = delivery.get("blockedFrom") if status == "blocked" else status
-        require(prior_phase in {"review", "validation", "acceptance"}, "Rework requires an unaccepted review/validation/acceptance phase.")
+        latest = {r['activityId']: r for r in delivery.get('activityReceipts', [])}
+        recovery = (prior_phase == 'in_progress' and 'executionPlan' in delivery
+                    and bool(delivery.get('reworkHistory')) and 'activityReworkRevision' not in delivery)
+        require(prior_phase in {"review", "validation", "acceptance"} or recovery,
+                "Rework requires an unaccepted review/validation/acceptance phase or explicit recovery of an older rework round.")
+        require(not any(r['status'] == 'running' for r in latest.values()),
+                'Rework cannot invalidate an actual running activity; reconcile that worker first.')
         record = {"reason": text(request["reason"], "Rework reason"), "from": prior_phase, "at": now()}
         if status == "blocked":
             record["blockedReason"] = delivery.pop("reason")
@@ -1279,6 +1287,8 @@ def _change(repo, document, command, request, *, cache=None):
             if key in delivery:
                 record[key] = delivery.pop(key)
         delivery.setdefault("reworkHistory", []).append(record)
+        if 'executionPlan' in delivery:
+            delivery['activityReworkRevision'] = len(delivery['reworkHistory'])
         delivery["status"] = "in_progress"
     elif command == "block":
         require(status in {"in_progress", "review", "validation", "acceptance"}, "Only active delivery work can be blocked.")

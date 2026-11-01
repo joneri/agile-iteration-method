@@ -838,7 +838,8 @@
                 "enum": [
                   "review",
                   "validation",
-                  "acceptance"
+                  "acceptance",
+                  "in_progress"
                 ]
               },
               "at": {
@@ -1026,6 +1027,10 @@
             "type": "object"
           },
           "maxItems": 128
+        },
+        "activityReworkRevision": {
+          "type": "integer",
+          "description": "Opt-in current rework history index, set only by supported rework; validated against retained history."
         }
       },
       "required": [
@@ -1766,6 +1771,10 @@
         "dispatchId": {
           "type": "string",
           "pattern": "^[0-9a-f]{64}$"
+        },
+        "reworkRevision": {
+          "type": "integer",
+          "description": "Work round at this attempt start; missing means the historical pre-marker round."
         }
       },
       "required": [
