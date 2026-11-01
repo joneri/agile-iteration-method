@@ -5,11 +5,11 @@
   "pages": [
     {
       "path": "index.html",
-      "sha256": "424b1f503944c5bb8c6e6027456051b46cf8352bb59ed9e974ced1df94c92902"
+      "sha256": "732a0fe50ef1f530210e786b9fa94985bd073039ed390725def1c642e51afe40"
     },
     {
       "path": "school.html",
-      "sha256": "c376f93d5e9b4e61ecc581fa999c5db449f08d02a7aed832ee8216221396ebc4"
+      "sha256": "f2b3500efe98e1d6bbd5ae0c877f251451788d6ce4b7693c62d1eedb76b482b6"
     }
   ],
   "sources": [
@@ -53,7 +53,7 @@
   "assessments": {
     "installationAndStart": {
       "conclusion": "current",
-      "summary": "Homepage terminal/chat installation and School quick start use the complete public agile-iteration-method skill via the standard skills CLI, with maintained Codex/Claude Code/Copilot choices. Same-start missing/stale calibration and role preparation, provisional empty-project facts, conditional session reload and later explicit refreshes match current startup/install contracts. Upgrade preserves active runtime and accepted history; the reviewed-source adaptive dry-run is separate from portable installation."
+      "summary": "Homepage terminal/chat installation and School quick start use the complete public agile-iteration-method skill via the standard skills CLI, with maintained Codex/Claude Code/Copilot choices. Same-start missing/stale calibration and role preparation, provisional empty-project facts, conditional session reload and later explicit refreshes match current startup/install contracts. Upgrade preserves active runtime and accepted history; the reviewed-source adaptive dry-run is separate from portable installation. The existing-repository School route and linked product guide explain same-start relevant calibration then canonical role/skill preparation, reuse and refresh, explicit optional preparation commands, verified versus provisional facts, applicable storage, preserved overrides, actual readable skill instructions and host reload requirements. The default Strict plan decision and final acceptance remain with the designated owner."
     },
     "deliveryModes": {
       "conclusion": "current",

@@ -105,6 +105,12 @@ For preview only, use `--dry-run`.
 
 ## 2. Start with intent
 
+**Working in an existing repository?** Open that project and describe the
+change you need. Follow [Use AIM in an existing repository](existing-repositories.md)
+for the complete path from calibration through project-specific PO, TDO, Dev
+and Reviewer skills to a verified delivery. The start below includes needed
+preparation; separate setup commands are optional refreshes.
+
 Describe the problem or desired result:
 
 ```text

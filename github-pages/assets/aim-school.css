@@ -53,6 +53,7 @@
 .lesson-nav a { text-decoration: none; }
 .lesson-nav a:hover { text-decoration: underline; }
 .back-to-start { color: var(--muted); font-size: .75rem; }
+.lesson-nav > .back-to-start { display: block; margin-top: 14px; }
 .lesson { padding-bottom: 46px; scroll-margin-top: 32px; }
 .lesson + .lesson { padding-top: 46px; border-top: 1px solid var(--line); }
 .lesson > .eyebrow { color: var(--blue); margin-bottom: 16px; }
@@ -82,6 +83,7 @@
 .model-example dd span { color: var(--muted); font-size: .78rem; }
 .model-example > p:last-child { margin-top: 18px; font-size: .8rem; color: var(--muted); }
 .school-table-wrap { overflow-x: auto; margin-top: 26px; }
+.quick-step .school-table-wrap { margin-bottom: 18px; }
 .school-table { width: 100%; border-collapse: collapse; font-size: .83rem; }
 .school-table caption { text-align: left; font-size: .75rem; color: var(--muted); padding-bottom: 16px; }
 .school-table td, .school-table th { padding: 15px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }

@@ -71,6 +71,10 @@ Start with [AIM School and Professor AIM](https://joneri.github.io/agile-iterati
 
 For full installation choices and operating details, follow the [First-time journey](getting-started.md).
 
+Already have a codebase? Read [Use AIM in an existing repository](existing-repositories.md)
+to see how calibration verifies project knowledge, how the four canonical roles
+get relevant skills, and how preparation leads into delivery.
+
 It takes you through:
 
 1. choosing the portable public Agent Skill or adaptive installer
