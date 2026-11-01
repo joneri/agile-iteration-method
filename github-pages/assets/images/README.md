@@ -2,6 +2,18 @@
 
 Source images intended for the AIM website published through the validated GitHub Pages artifact.
 
+## Graph engineering
+
+`graph-engineering.webp` (1254 × 1254) and `graph-engineering-640.webp`
+(640 × 640) are responsive WebP exports of the illustration supplied by
+Jonas Eriksson for the Graph engineering section on 1 November 2026.
+The original `graph-engineering.png` is also used in his LinkedIn posts;
+its SHA-256 is `bf588c5c9ab8c11d4799ab76821e88567a98d4b35e6d14746fb51a469da01258`.
+Exports preserve the whole composition, without cropping or retouching,
+using Pillow with WebP quality 86 and method 6; the smaller export uses
+Lanczos resizing. The scene illustrates coordination, building, review and
+feedback; its paths and characters do not define an exact AIM workflow.
+
 ## AIM School
 
 `professor-aim.png` is an original cartoon robot teacher generated with the
