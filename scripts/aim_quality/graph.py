@@ -10,6 +10,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
+from .binding_relocation import effective_bindings, validate_records as validate_relocations
 
 from .delegation import check_delegation, _overlap, _scope
 from .files import read_evidence
@@ -120,6 +121,7 @@ def validate_activity_receipts(delivery):
                  'Activity rework revision must name the current rework history.')
     records = delivery.get("activityReceipts", [])
     _require("executionPlan" in delivery or not records, "Activity receipts require an execution plan.")
+    validate_relocations(delivery)
     if not records:
         return
     tasks = {a["id"]: a for a in delivery["executionPlan"]["activities"]}
@@ -236,11 +238,13 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
                           for dep in task["dependsOn"])
             obsolete = obsolete or changed or any(dep["status"] != "completed" for dep in dependencies)
             if receipt["status"] == "completed" and not _fresh(
-                    repo, receipt["sourceBindings"] + receipt["evidence"], cache, check_reference):
+                    repo, effective_bindings(delivery, receipt) + receipt["evidence"], cache, check_reference):
                 obsolete = True
             status, reason = receipt["status"], receipt.get("reason", "Recorded activity receipt.")
         if obsolete:
-            status, reason = "stale", "Source, proof or prerequisite receipt changed; a new attempt is required."
+            status, reason = "stale", "Source, proof or prerequisite receipt changed; resolve stale prerequisite proof or start a fresh attempt for changed work."
+            if task["kind"] == "read" and receipt and receipt["status"] == "completed":
+                reason = "Historical read input or proof changed. Use relocate-bindings for verified identical baseline inputs, or a fresh assessment for changed content/proof."
             if receipt and receipt.get('reworkRevision', 0) != delivery.get('activityReworkRevision', 0):
                 reason = 'A new rework round requires a fresh activity attempt; earlier receipts remain history.'
         elif not receipt:
@@ -276,7 +280,12 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
                  "reason": reason, "evidence": copy.deepcopy(receipt.get("evidence", [])) if receipt else [],
                  "session": receipt["session"] if receipt else None,
                  "attempt": receipt["attempt"] if receipt else None,
-                 "sourceBindings": copy.deepcopy(receipt.get("sourceBindings", [])) if receipt else [],
+                 "sourceBindings": effective_bindings(delivery, receipt) if receipt else [],
+                 **({"originalSourceBindings": copy.deepcopy(receipt["sourceBindings"]),
+                     "bindingRelocationIds": [r["requestSha256"] for r in delivery.get("bindingRelocations", [])
+                                              if r["activityId"] == identifier and r["attempt"] == receipt["attempt"]]}
+                    if receipt and any(r["activityId"] == identifier and r["attempt"] == receipt["attempt"]
+                                       for r in delivery.get("bindingRelocations", [])) else {}),
                  "layer": max((dep["layer"] + 1 for dep in dependencies), default=0),
                  "assignment": assignment}
         nodes[identifier] = value
@@ -421,7 +430,7 @@ def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at,
              and request["session"] == previous["session"], "Activity session or attempt is stale.")
     if request["status"] == "completed":
         _require("reason" not in request, "Completed activity does not take a failure reason.")
-        _require(state["status"] == "running", "Activity inputs changed since start; restart the stale attempt.")
+        _require(state["status"] == "running", "Activity inputs changed since start; resolve stale prerequisites with relocate-bindings only for identical historical read inputs, otherwise restart for changed work.")
         _source_scope(task, request.get("sourcePaths"))
         previous["sourceBindings"] = bind_sources(request["sourcePaths"])
         previous["evidence"] = bind_evidence(request.get("evidence"))

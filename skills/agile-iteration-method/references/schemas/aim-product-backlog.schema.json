@@ -228,6 +228,133 @@
       ],
       "type": "object"
     },
+    "bindingRelocation": {
+      "additionalProperties": false,
+      "description": "Append-only identical-byte historical input location. Original activity receipt and all attempt/resource history remain unchanged.",
+      "properties": {
+        "activityId": {
+          "maxLength": 100,
+          "minLength": 1,
+          "type": "string"
+        },
+        "at": {
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+        },
+        "attempt": {
+          "description": "Positive exact original receipt attempt, enforced by the trusted helper.",
+          "type": "integer"
+        },
+        "coordinatorSession": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array"
+        },
+        "mappings": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "from": {
+                "additionalProperties": false,
+                "properties": {
+                  "path": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "sha256": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path",
+                  "sha256"
+                ],
+                "type": "object"
+              },
+              "to": {
+                "additionalProperties": false,
+                "properties": {
+                  "path": {
+                    "maxLength": 1000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "sha256": {
+                    "pattern": "^[a-f0-9]{64}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path",
+                  "sha256"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "type": "object"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array"
+        },
+        "reason": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "receiptSha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "requestSha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "reworkRevision": {
+          "description": "Original receipt generation, enforced against retained activity history.",
+          "type": "integer"
+        },
+        "scopeSha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "version": {
+          "const": 1
+        }
+      },
+      "required": [
+        "version",
+        "activityId",
+        "attempt",
+        "receiptSha256",
+        "scopeSha256",
+        "reworkRevision",
+        "requestSha256",
+        "reason",
+        "coordinatorSession",
+        "at",
+        "evidence",
+        "mappings"
+      ],
+      "type": "object"
+    },
     "caseCoverage": {
       "additionalProperties": false,
       "properties": {
@@ -410,6 +537,13 @@
         },
         "approval": {
           "$ref": "#/$defs/authority"
+        },
+        "bindingRelocations": {
+          "items": {
+            "$ref": "#/$defs/bindingRelocation"
+          },
+          "maxItems": 128,
+          "type": "array"
         },
         "blockedFrom": {
           "enum": [

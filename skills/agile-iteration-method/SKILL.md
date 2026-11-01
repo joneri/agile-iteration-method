@@ -174,6 +174,11 @@ results. Complete-result latency needs its own justified goal or technical
 non-applicability; responsiveness alone cannot cover it. Do not invent convenient
 metrics or quietly omit quality because Stories describe only features.
 
+Bind early read/challenge inputs to preserved baselines before planned writes.
+For existing verified identical-byte input-location corrections, use
+`relocate-bindings` in `references/native-orchestration.md`; retain original
+receipts/attempts and keep actual output/review proof fresh.
+
 Measure the first working core before expanding it. For material domain/state
 logic with an unproved oracle, the coordinator brings the same separate Reviewer
 in now for one bounded reference/variant challenge, before costly expansion and

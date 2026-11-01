@@ -41,7 +41,7 @@ COLUMNS = (("backlog", "Backlog"), ("ready", "Ready"),
            ("done", "Done"))
 PHASES = {"planned", "in_progress", "review", "validation", "acceptance", "accepted", "cancelled", "blocked"}
 COMMANDS = ("import", "refine", "plan", "approve", "review", "validate", "acceptance",
-            "accept", "measure", "rework", "cancel", "replace", "block", "unblock", "close-epic", "activity", "orchestrate", "reconcile")
+            "accept", "measure", "rework", "cancel", "replace", "block", "unblock", "close-epic", "activity", "orchestrate", "reconcile", "relocate-bindings")
 
 
 class StoryError(ValueError):
@@ -641,6 +641,8 @@ def validate_document(document):
     require(sum(item["status"] not in {"accepted", "cancelled"} for item in document["deliveries"]) <= 1,
             "Only one nonterminal delivery may run at a time.")
     for delivery in document["deliveries"]:
+        require("bindingRelocations" not in delivery or "executionPlan" in delivery,
+                "Binding relocation history requires the original execution plan.")
         require('activityReworkRevision' not in delivery or 'executionPlan' in delivery,
                 'Activity rework revision requires an execution plan.')
         if "executionPlan" in delivery:
@@ -760,6 +762,9 @@ def verify_evidence(repo, document, *, cache=None):
             if "disposition" in delivery:
                 _verify_disposition(repo, delivery["disposition"], cache=cache)
             continue
+        from aim_quality.binding_relocation import verify_records as verify_relocations
+        verify_relocations(delivery, lambda ref: _ref(repo, ref, product=True, cache=cache),
+                           lambda refs: _refs(repo, refs, cache=cache))
         _refs(repo, delivery["planEvidence"], cache=cache)
         owner = delivery.get("deliveryPolicy", {}).get("owner", {})
         if owner.get("kind") == "agent":
@@ -1427,6 +1432,23 @@ def execute(repo, command, request, expected_sha256=None):
                 validate_document(candidate)
                 verify_evidence(repo, candidate, cache=cache)
                 return {**status_result(candidate, current_hash), "reconciliation": copy.deepcopy(record), "idempotent": True}
+        elif command == "relocate-bindings":
+            from aim_quality.binding_relocation import relocate
+            try:
+                record, changed = relocate(candidate, request,
+                    check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache),
+                    bind_evidence=lambda refs: _refs(repo, refs, cache=cache), at=now())
+            except ValueError as exc:
+                raise StoryError(str(exc)) from exc
+            if not changed:
+                validate_document(candidate)
+                verify_evidence(repo, candidate, cache=cache)
+                result = status_result(candidate, current_hash)
+                result.update(bindingRelocation=record, idempotent=True,
+                    executionGraph=project_graph(repo, candidate, current_hash, request["deliveryId"],
+                        check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache)))
+                _finish_verification(repo, cache)
+                return result
         else:
             _change(repo, candidate, command, request, cache=cache)
         if command in {"cancel", "replace"}:
@@ -1463,7 +1485,9 @@ def execute(repo, command, request, expected_sha256=None):
         if command == "reconcile":
             result["reconciliation"] = copy.deepcopy(record)
             result["idempotent"] = False
-        if command in {"activity", "orchestrate"}:
+        if command == "relocate-bindings":
+            result.update(bindingRelocation=record, idempotent=False)
+        if command in {"activity", "orchestrate", "relocate-bindings"}:
             result["executionGraph"] = project_graph(repo, candidate, result["storeSha256"], request["deliveryId"],
                                                      check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
         _finish_verification(repo, cache)
@@ -1552,7 +1576,8 @@ def compact_result(result, *, receipt=False, delivery_id=None):
                 "nextStep": result["nextStep"], **({"quality": result["quality"]} if "quality" in result else {}),
                 **({"executionGraph": result["executionGraph"]} if "executionGraph" in result else {}),
                 **({"orchestration": result["orchestration"]} if "orchestration" in result else {}),
-                **({"reconciliation": result["reconciliation"], "idempotent": result["idempotent"]} if "reconciliation" in result else {})}
+                **({"reconciliation": result["reconciliation"], "idempotent": result["idempotent"]} if "reconciliation" in result else {}),
+                **({"bindingRelocation": result["bindingRelocation"], "idempotent": result["idempotent"]} if "bindingRelocation" in result else {})}
     active = [d for d in document["deliveries"] if d["status"] not in {"accepted", "cancelled"}]
     selected = {s["id"] for d in active for s in d["stories"]}
     visible = ([s for s in document["stories"] if s["id"] in selected] if active else

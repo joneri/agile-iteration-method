@@ -62,6 +62,7 @@
     "scripts/aim_portfolio.py",
     "scripts/aim_portfolio_run.py",
     "scripts/aim_quality/__init__.py",
+    "scripts/aim_quality/binding_relocation.py",
     "scripts/aim_quality/delegation.py",
     "scripts/aim_quality/delivery.py",
     "scripts/aim_quality/delivery_policy.py",
@@ -109,7 +110,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.8.5",
+  "productVersion": "4.8.6",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -122,12 +123,12 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "4c1c6244e9b7b126f75a777e6a3027a041b4298c5e0d0ea611fb8cb799510359"
+      "sourceSha256": "09eee0a81fc4208d3ab2c0562f6c76b028c8a629091442fd62f6f3c9bcf98d3c"
     },
     {
       "output": "references/native-orchestration.md",
       "source": "docs/workflow/native-orchestration.md",
-      "sourceSha256": "0c8db8fed0bfa643178e7bd21e1b1d05392d24a27de33e85477a0823aef0d797"
+      "sourceSha256": "57f3eb9ae3028d1d3b18bcc8e7b30d0955795664953b048a6058a320065f118d"
     },
     {
       "output": "references/tool-efficiency.md",
@@ -137,7 +138,7 @@
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "f3e6eed02d60066663cea88feb3e06966f8daa6bc8ac9d6194044be7821f9db3"
+      "sourceSha256": "74b2097be2d178a4b7c367be6f75cde1ffe4cce6a4f584bacbd545036e5d725e"
     },
     {
       "output": "references/local-runtime-access.md",
@@ -177,7 +178,7 @@
     {
       "output": "references/role-skill-tdo.md",
       "source": "docs/workflow/role-skill-tdo.md",
-      "sourceSha256": "b2c5205795f3d173ac8e6c4987b661da8cbf64886ee018cd59e399236ce9a084"
+      "sourceSha256": "2aab68c4f351ada217f3929392d554489b841d0133a2f93e2a34780e9691e488"
     },
     {
       "output": "references/role-skill-dev.md",
@@ -187,7 +188,7 @@
     {
       "output": "references/role-skill-reviewer.md",
       "source": "docs/workflow/role-skill-reviewer.md",
-      "sourceSha256": "66d5d965805fa3ea49515049b05f9d5b425ed45604fdcd854430f14d211221e2"
+      "sourceSha256": "173e65ded44e7b73d6f944ecf44963d4f26f37f3bc455a987afc61626f32b74e"
     },
     {
       "output": "references/skill-user-guide.md",
@@ -297,12 +298,12 @@
     {
       "output": "references/schemas/aim-product-backlog.schema.json",
       "source": "schemas/aim-product-backlog.schema.json",
-      "sourceSha256": "d7e7b778728ab3782674da6faf02facb2d4bd4f0b37fbcbf8db3108ae939003e"
+      "sourceSha256": "b18b6f0b2eefa7da22ae69361b877b6868fe5e9dd30e347d5031ed93b045f26c"
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
       "source": "install/aim-install-manifest.yaml",
-      "sourceSha256": "d78687aebff94276189f1c5a2d3adf83c5e6aac01fbd8e95d520e98a859a8043"
+      "sourceSha256": "5ec8978e3f98bf913de87e0af7e248263170215d11e23e422950bed1f8d66560"
     },
     {
       "output": "references/LICENSE-DOCS",
@@ -312,7 +313,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "94ef5b71af3be19e6e7922ca642259722fda69aa87244244c8eceef30b2b9aa5"
+      "sourceSha256": "bf773a33d4945969257cd7c2994ae7d6271fd1cf0a1f4963f00feb93937254dd"
     },
     {
       "output": "references/version-and-installation.md",
@@ -322,12 +323,12 @@
     {
       "output": "manifest.json",
       "source": "scripts/build_public_skill.py",
-      "sourceSha256": "3174970ecca056a646b61c3241d6645d92d6dc60f994615fb525f51fc781292f"
+      "sourceSha256": "a4a4a72a7d688804886dc2eeaf1b9b6855abdd7d70c204207d52f51eba8df006"
     },
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "42834a1a85d62166246992d207e2399f1a2c606785705132c38bae3e97cc5197"
+      "sourceSha256": "17918d37804d2ef41f8de2d22e54b6827192ab00e39fcf2761606928257f0752"
     },
     {
       "output": "scripts/aim_observations.py",
@@ -412,7 +413,7 @@
     {
       "output": "scripts/aim_quality/graph.py",
       "source": "scripts/aim_quality/graph.py",
-      "sourceSha256": "85f33c01a3c382cbe6d5bee1db76a2fc0de812cc7aa58b7b3e32711f2f31f904"
+      "sourceSha256": "7b34c102a7692b392a8804c074d95f6ad7d32a7eb08d0fe7c436413104176eae"
     },
     {
       "output": "scripts/aim_quality/orchestration.py",
@@ -422,7 +423,7 @@
     {
       "output": "scripts/aim_quality/orchestration_runtime.py",
       "source": "scripts/aim_quality/orchestration_runtime.py",
-      "sourceSha256": "e104658e4e82d8f3518f2bf4e615b66f9b61c07df037f5044b81b7d15dfb719d"
+      "sourceSha256": "01592045736f4f6f07feffa74256e239ddfc53cbdd3c6dec4d144c6fe96ad839"
     },
     {
       "output": "scripts/aim_orchestrate.py",
@@ -443,6 +444,11 @@
       "output": "scripts/aim_quality/disposition.py",
       "source": "scripts/aim_quality/disposition.py",
       "sourceSha256": "587fc578e87a571846aab612f96c7a9371039729ae65fa31723cfe2cdabe9d6f"
+    },
+    {
+      "output": "scripts/aim_quality/binding_relocation.py",
+      "source": "scripts/aim_quality/binding_relocation.py",
+      "sourceSha256": "42221d40ecccfe5d404c344a93b09b2cc087743bdad2e8c0318256412fff3f5b"
     },
     {
       "output": "scripts/aim_quality/knowledge.py",

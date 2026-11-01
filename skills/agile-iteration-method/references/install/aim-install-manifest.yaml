@@ -143,6 +143,7 @@ aimInstallManifest:
         - scripts/aim_quality/review.py
         - scripts/aim_quality/reconciliation.py
         - scripts/aim_quality/disposition.py
+        - scripts/aim_quality/binding_relocation.py
         - scripts/aim_quality/knowledge.py
         - scripts/aim_quality/patterns.py
         - scripts/aim_quality/learning.py

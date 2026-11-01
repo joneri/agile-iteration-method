@@ -198,6 +198,7 @@ JSON
 | `acceptance` | Present current validation `evidence` and coverage for every selected criterion. |
 | `accept` | Record actual user or explicitly delegated owner Gate E `authority`; mark Stories Done. |
 | `rework` | Correct the same scope and invalidate obsolete product/review/validation bindings. |
+| `relocate-bindings` | Append verified identical-byte baseline locations for a completed current read receipt, retaining history and attempts; see Native input bindings. |
 | `block` / `unblock` | Record or resolve a blocker without changing scope. |
 | `disposition-context` | Preview approved-work `deliveryId`, `operation` (`cancel`/`replace`), `reason` and optional `replacement` plan; returns exact owner decision scope and current CAS without writing. |
 | `cancel` / `replace` | With exact present human `authority`, retire approved work; `replace` atomically creates a separate unapproved plan. Unapproved `cancel` still needs only `deliveryId` and `reason`. |
@@ -226,6 +227,11 @@ applicable `scopeSha256`. The helper checks scope/freshness, not human identity.
 Have the actual instruction, preserve its scope and record it truthfully; never
 invent approval evidence. Existing legacy Portfolio mandates do not authorize
 new Story work.
+
+For historical read-input location corrections with identical saved bytes, use
+[relocate-bindings](native-orchestration.md#historical-input-bindings-and-identical-baseline-copies).
+It leaves the original receipt/dependency identities and attempts unchanged.
+Current product outputs and final proof still need normal fresh verification.
 
 For execution-plan corrections, rework marks a new activity round without
 discarding receipts, changing the approved scope or renewing resources. See

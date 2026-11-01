@@ -1042,6 +1042,13 @@
         },
         "disposition": {
           "$ref": "#/$defs/deliveryDisposition"
+        },
+        "bindingRelocations": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/bindingRelocation"
+          }
         }
       },
       "required": [
@@ -1969,6 +1976,133 @@
       },
       "additionalProperties": false,
       "description": "Terminal owner cancellation or replacement; frozen original delivery fingerprint and typed present human decision retained. Never acceptance or resource renewal."
+    },
+    "bindingRelocation": {
+      "type": "object",
+      "required": [
+        "version",
+        "activityId",
+        "attempt",
+        "receiptSha256",
+        "scopeSha256",
+        "reworkRevision",
+        "requestSha256",
+        "reason",
+        "coordinatorSession",
+        "at",
+        "evidence",
+        "mappings"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "activityId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "attempt": {
+          "type": "integer",
+          "description": "Positive exact original receipt attempt, enforced by the trusted helper."
+        },
+        "receiptSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "scopeSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "reworkRevision": {
+          "type": "integer",
+          "description": "Original receipt generation, enforced against retained activity history."
+        },
+        "requestSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000,
+          "pattern": "\\S"
+        },
+        "coordinatorSession": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "at": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        },
+        "mappings": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "required": [
+              "from",
+              "to"
+            ],
+            "properties": {
+              "from": {
+                "type": "object",
+                "required": [
+                  "path",
+                  "sha256"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "additionalProperties": false
+              },
+              "to": {
+                "type": "object",
+                "required": [
+                  "path",
+                  "sha256"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1000
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false,
+      "description": "Append-only identical-byte historical input location. Original activity receipt and all attempt/resource history remain unchanged."
     }
   }
 }

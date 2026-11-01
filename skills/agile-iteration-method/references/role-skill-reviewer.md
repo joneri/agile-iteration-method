@@ -129,3 +129,8 @@ remain ambiguous. No routine companion-document read or agent per role.
 For changed decision/authority behavior choose a relevant independent counterexample:
 stale answers, changed dependencies, silent/default responses or unaffected work.
 Fewer questions cannot compensate for fabricated authority.
+
+For early read/challenge input proof, distinguish preserved original baselines
+from the later current product. Verify identical-byte relocations through the
+Native contract; a location correction is not a new assessment, development
+attempt or proof that changed live outputs remain valid.

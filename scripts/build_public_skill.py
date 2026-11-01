@@ -90,6 +90,7 @@ UI_PAYLOAD_SOURCES: tuple[Path, ...] = (
     Path("scripts/aim_quality/review.py"),
     Path("scripts/aim_quality/reconciliation.py"),
     Path("scripts/aim_quality/disposition.py"),
+    Path("scripts/aim_quality/binding_relocation.py"),
     Path("scripts/aim_quality/knowledge.py"),
     Path("scripts/aim_quality/patterns.py"),
     Path("scripts/aim_quality/learning.py"),
