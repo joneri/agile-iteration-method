@@ -134,6 +134,27 @@ When a knowledge freshness check fails, recheck the claim against the changed
 sources before refreshing its fingerprints. Unchanged hashes are not a semantic
 review. Do not update fingerprints merely to make CI pass.
 
+### Website and school review for every release
+
+Treat public guidance as part of the release. Follow the
+[public guidance review checklist](docs/workflow/release-publication-model.md#public-guidance-review)
+before publishing a new AIM version or changing a bound source contract.
+Review `index.html` and `school.html` against the affected rules and try any
+changed startup prompts through their supported entry path. Update the actual
+instructions, visible edition and review date where needed; preserve historical
+benchmark versions, capture dates and limitations.
+
+Only after that review, update
+`github-pages/assets/aim-guidance-review.json` with the current version, exact
+page/source fingerprints and the seven short topic assessments. Reuse
+unchanged assessments and checks when they still apply. Do not regenerate
+fingerprints as a substitute for reviewing changed behavior. Material changes
+retain the normal independent review requirement.
+
+`python3 scripts/audit_documentation.py .` checks this record. Pages and tagged
+releases consume the same check and verify it again in the publication builder.
+The existing release gate blocks publication if the review is missing or stale.
+
 Before submitting:
 - spell-check changed sections
 - keep terms consistent (Epic, Done Increment, Gate A-E)

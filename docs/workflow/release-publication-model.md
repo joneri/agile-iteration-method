@@ -73,6 +73,46 @@ through the official CLI makes it eligible for skills.sh discovery. Anonymous
 aggregate install telemetry may be indexed asynchronously and must never be
 artificially inflated.
 
+## Public guidance review
+
+Every AIM release includes a review of the homepage and AIM School. The record
+at `github-pages/assets/aim-guidance-review.json` binds the exact product version,
+review date, `index.html`, `school.html` and the named canonical source inputs.
+It also retains short assessments of these seven teaching topics:
+
+1. Installation, updates and starting from an empty or existing repository.
+2. Ship/Loop and Strict/Auto, including the actual defaults.
+3. Graph engineering, assignments, host capabilities and follow-up.
+4. Delegated decisions, resource renewal and reserved human acceptance.
+5. Resource accounting, cost profiles and limits across agents.
+6. Independent review, integrated checks and acceptance of the actual result.
+7. Optional model examples and the provenance and limits of public evidence.
+
+Before refreshing the record, compare the release changes with the affected
+lessons, startup prompts and website claims. Correct any stale instructions;
+try changed command/prompt examples through the supported entry path. Update
+the visible school edition and review date when reviewing for a new version.
+Check changed rendered content on desktop and mobile, and use independent
+review for material changes. Reuse still-current assessments and evidence;
+the checklist does not require a full course rewrite or repeated benchmarks.
+
+Keep model recipes conditional on the actual host and account. An observed
+working arrangement is not a general cost guarantee. Keep historical test-build
+versions, dates, scores, failures and UI-capture labels attached to their original
+evidence; a new product release never inherits a new measured result.
+
+The documentation audit and publication source check reject a missing review,
+wrong version, changed page or source bytes, or incomplete assessments. The
+assembled artifact contains the same review record and verifies its page hashes
+without requiring the source checkout. Both Pages and tagged-release workflows
+already depend on these gates. Changing the version label alone is insufficient.
+
+Fingerprints detect stale inputs; they do not authenticate a reviewer or prove
+semantic correctness. Refresh them only after the actual review and record its
+observations through the normal AIM/project review evidence. This release-time
+check uses the existing workflow, without a separate polling service or approval
+round for each page.
+
 ## GitHub Release Workflow
 
 `.github/workflows/release.yml` publishes versioned release assets from an
