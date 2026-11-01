@@ -86,10 +86,36 @@ def _decision_context(campaign, owner_priority):
     return digest(dict(campaign={k: v for k, v in campaign.items() if k != 'decisions'}, ownerPriority=owner_priority))
 
 
+def latest_observation(campaign, *, kinds=None, checkpoint=False):
+    """Select logical newest proof without reordering the arrival journal."""
+    candidates = ((index, record) for index, record in enumerate(campaign['observations'])
+                  if (kinds is None or record['observation']['kind'] in kinds)
+                  and (not checkpoint or 'sourceCheckpoint' in record))
+    item = max(candidates, key=lambda pair: (pair[1]['observation']['attempt'], pair[0]), default=None)
+    return item[1] if item else None
+
+
+def _check_receipt_dependencies(delivery, receipt, check_reference, checked=None):
+    if checked is None:
+        checked = set()
+    for dependency in receipt['dependencies']:
+        current = next((r for r in reversed(delivery.get('activityReceipts', []))
+                        if r['activityId'] == dependency['activityId']), None)
+        _need(current is not None and current['status'] == 'completed'
+              and current['attempt'] == dependency['attempt']
+              and digest(current) == dependency['receiptSha256'],
+              'Observation activity dependency is no longer current.')
+        identity = (current['activityId'], current['attempt'])
+        if identity not in checked:
+            checked.add(identity)
+            for ref in current['sourceBindings'] + current['evidence']:
+                check_reference(ref)
+            _check_receipt_dependencies(delivery, current, check_reference, checked)
+
+
 def assessment(campaign, check_reference=None, *, owner_priority=None):
     result = assess_campaign(campaign['campaign'])
-    latest = next((r for r in reversed(campaign['observations'])
-                   if r['observation']['kind'] in {'baseline', 'integrated_progress'}), None)
+    latest = latest_observation(campaign, kinds={'baseline', 'integrated_progress'})
     result['currentEvidenceFresh'] = None
     if latest is not None and check_reference is not None:
         try:
@@ -337,16 +363,23 @@ def change_orchestration(document, delivery, request, *, bind_evidence, bind_sou
     if action == 'observe':
         _fields(request, common + ('outcomeId', 'observation', 'evidence', 'sourcePaths'), ('sourceCommit',), label='Observation request')
         observation = copy.deepcopy(request['observation'])
-        _validate_observation(observation, c['outcomeId'], c['campaign']['observations'][-1]['attempt'] if c['campaign']['observations'] else 0)
+        _validate_observation(observation, c['outcomeId'], 0)
         if observation['kind'] == 'baseline' and not c['attempts']:
             _need(observation['attempt'] == 0, 'Initial baseline must precede the first actual attempt.')
             _need(observation['session'] == request['coordinatorSession'], 'Baseline session differs from coordinator.')
         else:
-            _need(bool(c['attempts']) and observation['attempt'] == len(c['attempts']), 'Observation is not from the current campaign attempt.')
-            attempt = c['attempts'][-1]
+            _need(1 <= observation['attempt'] <= len(c['attempts']), 'Observation is not from a recorded campaign attempt.')
+            attempt = c['attempts'][observation['attempt'] - 1]
             _need(attempt['deliveryId'] == delivery['id'] and observation['session'] == attempt['session']
                   and observation.get('activityId') == attempt['activityId'], 'Observation worker/activity binding is stale.')
-            receipt = next(r for r in delivery['activityReceipts'] if r['activityId'] == attempt['activityId'] and r['attempt'] == attempt['attempt'])
+            receipt = next((r for r in reversed(delivery.get('activityReceipts', []))
+                            if r['activityId'] == attempt['activityId']), None)
+            _need(receipt is not None and receipt['attempt'] == attempt['attempt']
+                  and receipt['session'] == attempt['session'] and receipt['scopeSha256'] == delivery['scopeSha256'],
+                  'Observation activity attempt has been superseded or its scope is stale.')
+        if 'graphRevision' in observation:
+            _need(observation['graphRevision'] == delivery['scopeSha256'], 'Observation graph revision is stale.')
+        if c['attempts']:
             if observation['kind'] in {'baseline', 'integrated_progress', 'component_pass', 'falsifier'}:
                 _need(receipt['status'] == 'completed', 'Positive observation needs a completed, evidenced actual attempt.')
         _need(observation not in c['campaign']['observations'], 'Observation has already been recorded.')
@@ -355,7 +388,13 @@ def change_orchestration(document, delivery, request, *, bind_evidence, bind_sou
         _need(all(any(r['path'] == p or r['path'].startswith(p + '/') for p in allowed) for r in sources),
               'Observation source exceeds original outcome ownership.')
         if c['attempts'] and observation['kind'] in {'baseline', 'integrated_progress', 'component_pass', 'falsifier'}:
-            _need(sources == receipt.get('sourceBindings'), 'Observation sources differ from the completed actual attempt.')
+            scoped_sources = [ref for ref in receipt['sourceBindings']
+                              if any(ref['path'] == path or ref['path'].startswith(path + '/') for path in allowed)]
+            _need({r['path']: r['sha256'] for r in sources} == {r['path']: r['sha256'] for r in scoped_sources},
+                  'Observation sources differ from the completed actual attempt for this outcome.')
+            for ref in scoped_sources + receipt['evidence']:
+                check_reference(ref)
+            _check_receipt_dependencies(delivery, receipt, check_reference)
         evidence = bind_evidence(request['evidence'])
         if observation['kind'] in {'baseline', 'integrated_progress', 'falsifier'}:
             _need(read_reference is not None, 'Observation needs a verified raw report reader.')
@@ -426,8 +465,7 @@ def summary(document, delivery=None):
         current = delivery or next((d for d in document['deliveries']
             if d['status'] not in {'accepted', 'cancelled'} and native_graph(d)
             and c['outcomeId'] in {o['id'] for o in native_graph(d)['outcomes']}), None)
-        baseline = next((r for r in reversed(c['observations'])
-                         if r['observation']['kind'] == 'baseline' and r['observation']['usable']), None)
+        baseline = latest_observation(c, checkpoint=True)
         item['latestUsableSourceCheckpoint'] = (dict(kind=baseline['sourceCheckpoint']['kind'],
             sourcePaths=[r['path'] for r in baseline['sourceBindings']],
             commit=baseline['sourceCheckpoint'].get('commit')) if baseline else None)

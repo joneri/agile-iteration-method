@@ -166,14 +166,29 @@ array for `sourcePaths`, using UTF-8 JSON with sorted object keys,
 come from the actual verification entry, not from an intended success flag.
 Attach the report's hash-bound reference in `evidence`. Before work, a baseline
 uses the coordinator session and attempt zero. After work begins, a baseline
-uses the latest actual worker, activity and campaign attempt, completed source
+uses its matching actual worker, activity and campaign attempt, completed source
 bindings and raw proof. This lets the first working core establish a usable
 checkpoint in an initially empty project. Later baselines retain high-water
 results and counters; creating a checkpoint does not reset stagnation.
 Other positive results also need a completed actual activity/worker attempt
 and matching source snapshot;
-old raw proof cannot be relabelled as a fresh result. The normal quality and
-independent review contracts still determine semantic validity.
+old raw proof cannot be relabelled as a fresh result. For an activity serving
+several outcomes, supply every receipt source owned by this outcome, with the
+same hashes, and omit the other outcomes' sources. Reference order may differ;
+the raw report still binds the exact supplied reference array. Positive proof
+checks this outcome's sources, the completed receipt's evidence and its current
+prerequisite receipts. It does not assert freshness of unrelated outcome files.
+
+Concurrent activities can finish in either order. An observation keeps its
+original campaign attempt, worker and activity; a newer start of a different
+activity does not invalidate it. A newer attempt of the same activity, changed
+sources, stale prerequisites or mismatching scope still prevent reuse. The
+ledger retains arrival order. Assessments use launch-attempt order without
+rewriting that journal, so delayed success cannot erase newer failure or work,
+and a delayed falsifier cannot renew information gain already consumed by a
+newer start. Current proof and checkpoint views select the newest logical
+attempt rather than the last-arriving report. The normal quality and independent
+review contracts still determine semantic validity.
 
 Record resource deltas once, in actual units; unknown tokens, cost or elapsed
 agent work remain unknown. Account-wide usage percentages are not a campaign's

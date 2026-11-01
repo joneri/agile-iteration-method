@@ -367,7 +367,8 @@ def _better(value, baseline_value, direction):
 def assess_campaign(campaign):
     """Return a concrete continuation recommendation without changing authority.
 
-    Observation list order is the chronology. Only a numerically better
+    The stored list preserves arrival order. Evaluate a stable copy by launch
+    attempt so delayed results cannot erase newer work or failures. Only a numerically better
     integrated measurement against the latest usable, same-identity best value
     can reset the no-progress streak and active checkpoint budget. Work is
     counted by distinct attempt number; heartbeat observations are metadata.
@@ -383,7 +384,6 @@ def assess_campaign(campaign):
     total_attempts = 0
     work_attempts = set()
     review_attempts = set()
-    last_observed_attempt = 0
     active_blocking_failure = None
     blocking_failure_history = []
     information_gain_pending = False
@@ -392,9 +392,9 @@ def assess_campaign(campaign):
     unknown_units = set()
     resource_coverage = True
     for item in campaign["observations"]:
-        previous_attempt = last_observed_attempt
-        attempt = _validate_observation(item, outcome_id, previous_attempt)
-        last_observed_attempt = attempt
+        _validate_observation(item, outcome_id, 0)
+    for item in sorted(campaign["observations"], key=lambda observation: observation["attempt"]):
+        attempt = item["attempt"]
         if not item.get("resourceDelta"):
             resource_coverage = False
         for unit, amount in item.get("resourceDelta", {}).items():
