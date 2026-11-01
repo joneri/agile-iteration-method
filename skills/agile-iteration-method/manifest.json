@@ -107,7 +107,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.8.0",
+  "productVersion": "4.8.1",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -310,7 +310,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "4938ef88cd76dd7f6297a3d1d0c57af9c8e420e9359e778f3fc3725a8781af0a"
+      "sourceSha256": "446b9ff40300e993b0d4f9d437080d725228176b8ef4b7b8fc71e2a5b8acf4ea"
     },
     {
       "output": "references/version-and-installation.md",
@@ -330,7 +330,7 @@
     {
       "output": "scripts/aim_observations.py",
       "source": "scripts/aim_observations.py",
-      "sourceSha256": "2be3b7cb2d89e6833f1a2995b239742c99bd6dd502ab5f177c6343ce91d935d9"
+      "sourceSha256": "c743ac67b13cd1bfc9ab64a2de254e45b1d80e0602297d966348d60c509179d2"
     },
     {
       "output": "scripts/aim_story_links.py",

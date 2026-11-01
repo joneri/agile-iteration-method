@@ -21,6 +21,7 @@ from aim_runtime_lock import runtime_lock
 FILE = '.aim/delivery-observations.json'
 LEDGER = '.aim/product-backlog.json'
 LIMIT = 2_000_000
+HISTORY_LIMIT = 128
 STATES = {'pending', 'running', 'completed', 'failed', 'blocked'}
 
 
@@ -135,7 +136,7 @@ def load(repo):
     data = json.loads(raw)
     fields(data, ('observationVersion', 'revision', 'currentId', 'entries'), ('decisions',))
     require(data['observationVersion'] == 1 and type(data['revision']) is int and data['revision'] > 0, 'Invalid observation version/revision.')
-    require(isinstance(data['entries'], list) and 1 <= len(data['entries']) <= 32, 'Bounded observation history required.')
+    require(isinstance(data['entries'], list) and 1 <= len(data['entries']) <= HISTORY_LIMIT, 'Bounded observation history required.')
     ids = set(); stories = {}; epics = {}
     for record in data['entries']:
         fields(record, ('entry', 'importedAt', 'ledgerSha256'))
@@ -186,7 +187,7 @@ def import_entry(repo, request, expected_sha256=None):
         from aim_story_links import validate_links
         validate_links(entry['stories'], native, data)
         raw = (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode()
-        require(len(raw) <= LIMIT and len(data['entries']) <= 32, 'Observation history limit reached.')
+        require(len(raw) <= LIMIT and len(data['entries']) <= HISTORY_LIMIT, 'Observation history limit reached.')
         # Validate the aggregate before writing, without touching the original ledger.
         require(len({r['entry']['id'] for r in data['entries']}) == len(data['entries']), 'Snapshot identity already imported.')
         story_owners = {}; epic_owners = {}

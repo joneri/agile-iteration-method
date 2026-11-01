@@ -1,5 +1,27 @@
 # Changelog
 
+## 2026-11-01 - AIM release v4.8.1
+
+Correct Native outcome observations and retain bounded observation history.
+
+- Match positive proof to the complete outcome-owned portion of a completed
+  activity receipt, allowing cohesive activities to cover several outcomes.
+- Accept concurrent results in either completion order while retaining actual
+  worker/activity/attempt identities and the append-only arrival journal.
+  Evaluate progress by launch attempt so a delayed result cannot erase newer
+  failure, reset newer work or renew consumed diagnostic information.
+- Select logically newest proof and checkpoints. Preserve superseded-attempt,
+  source, receipt-evidence, prerequisite and scope fences, with bounded shared
+  dependency checks.
+- Support up to 128 imported observation snapshots, retaining full validation,
+  the existing 2,000,000-byte limit and atomic rejection at either limit.
+- Regenerate the portable skill and align release metadata and public assets.
+
+Compatibility: existing ledgers and approved scopes are preserved. No schema
+migration or new owner authority is introduced. The history limit is finite;
+Native source-checkpoint and host-enforcement limits remain unchanged.
+
+
 ## 2026-10-31 - AIM release v4.8.0
 
 Connect original outcomes to executable work graphs and durable continuation.
