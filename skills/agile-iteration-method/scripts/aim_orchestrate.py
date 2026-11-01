@@ -26,11 +26,11 @@ def main():
                 raise ValueError("--repo is required for ledger operations.")
             document, store_hash = load(args.repo)
             if args.operation == 'checkpoint':
-                from aim_quality.orchestration_runtime import campaign_for
+                from aim_quality.orchestration_runtime import campaign_for, latest_observation
                 campaign = campaign_for(document, args.outcome)
                 if campaign is None:
                     raise ValueError('Choose an existing original --outcome.')
-                record = next((r for r in reversed(campaign['observations']) if 'sourceCheckpoint' in r), None)
+                record = latest_observation(campaign, checkpoint=True)
                 if record is None:
                     raise ValueError('No usable source checkpoint was recorded.')
                 checkpoint = record['sourceCheckpoint']
