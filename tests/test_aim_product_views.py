@@ -87,6 +87,21 @@ class ProductViewTests(unittest.TestCase):
         delivery["deliveryPolicy"]["owner"]["decisions"] = ["approve"]
         self.assertEqual(self.evaluate(f"productDeliveryDetail({json.dumps(delivery)}).acceptance"), "Awaiting user acceptance")
         self.assertEqual(self.evaluate(f"productCheckpoint({json.dumps(delivery)})"), "Gate E · user acceptance pending")
+
+    def test_approved_cancellation_and_replacement_are_not_acceptance(self):
+        delivery=self.delivery("cancelled")
+        delivery["approval"]={"kind":"user","path":"plan.md"}
+        context=dict(operation="cancel",reason="Owner no longer wants the optional time box.")
+        delivery["disposition"]={"context":context}
+        detail=self.evaluate(f"productDeliveryDetail({json.dumps(delivery)})")
+        self.assertEqual(detail["plan"],"Approved scope")
+        self.assertEqual(detail["acceptance"],"Not accepted · cancelled")
+        self.assertIn("owner cancelled this approved delivery",detail["next"])
+        self.assertIn(context["reason"],detail["next"])
+        context.update(operation="replace",replacement=dict(id="DI-NEW"))
+        detail=self.evaluate(f"productDeliveryDetail({json.dumps(delivery)})")
+        self.assertIn("DI-NEW",detail["next"])
+        self.assertIn("new plan needs its own approval",detail["next"])
         delivery.update(status="blocked", blockedFrom="acceptance")
         self.assertEqual(self.evaluate(f"productCheckpoint({json.dumps(delivery)})"), "Gate E · user acceptance pending")
 

@@ -155,14 +155,16 @@ cases and real delivered behavior. A passing suite or file hash proves only its
 bounded claim. Preserve relevant counterevidence and limitations. Correct within
 scope, recheck affected behavior and reuse still-current results.
 
-The helper has **no approved-scope replanning transition**. `rework` corrects
-implementation against the frozen scope; `cancel` releases only an unapproved
-plan. If an approved commitment cannot be met, preserve completed work/history,
-use `block` with the obstacle and remaining commitment, and present the concrete
-owner decision and tooling limitation. Even explicit scope-change authority does
-not authorize unsupported ledger edits. Acceptance covers the complete selected
-delivery together; no silent partial acceptance, discarded Stories or fabricated
-migration. Done means accepted behavior, not deployment, publication or Epic closure.
+`rework` corrects implementation against the frozen scope; it does not change
+requirements. An actual human owner can instead **cancel or replace an approved,
+unaccepted delivery**, including one that is blocked. Use `disposition-context`
+and the exact scoped `cancel` or `replace` operation below. Preserve the original
+scope, decisions, proof, failures and work/resource history. This is a terminal
+owner decision, never Gate E acceptance. Accepted deliveries remain immutable.
+If authority is missing or an actual worker is still running, retain/block the
+commitment and present the concrete owner choice. Never edit the ledger by hand,
+silently discard Stories or fabricate migration. Done means accepted behavior,
+not deployment, publication or Epic closure.
 
 ## Ledger and trusted helper
 
@@ -203,7 +205,9 @@ JSON
 | `acceptance` | Present current validation `evidence` and coverage for every selected criterion. |
 | `accept` | Record actual user or explicitly delegated owner Gate E `authority`; mark Stories Done. |
 | `rework` | Correct the same scope and invalidate obsolete product/review/validation bindings. |
-| `block` / `unblock` / `cancel` | Record/resolve a blocker or release an unapproved plan. |
+| `block` / `unblock` | Record or resolve a blocker without changing scope. |
+| `disposition-context` | Preview approved-work `deliveryId`, `operation` (`cancel`/`replace`), `reason` and optional `replacement` plan; returns exact owner decision scope and current CAS without writing. |
+| `cancel` / `replace` | With exact present human `authority`, retire approved work; `replace` atomically creates a separate unapproved plan. Unapproved `cancel` still needs only `deliveryId` and `reason`. |
 | `status` / `quality` | Inspect requirements/next step or measured quality without writing. |
 | `closure-preview` / `close-epic` | Derive the separate Epic closure scope, then record authorized closure. |
 
@@ -236,6 +240,53 @@ discarding receipts, changing the approved scope or renewing resources. See
 for the bounded explicit recovery of older stuck rounds. Reading an old ledger
 alone does not migrate it. New work, current independent review and real owner
 acceptance are still required; manual feedback is not a fabricated gate receipt.
+
+## Cancel or replace approved work
+
+Use the installed `aim_stories.py disposition-context` with, for example:
+
+```json
+{"deliveryId":"DI-OLD","operation":"cancel","reason":"The owner no longer wants the optional time box."}
+```
+
+The read-only result returns `storeSha256`, `scopeSha256`, the full decision
+`context` and the exact typed JSON `decisionEvidence`. Preserve the actual human
+instruction, then save that returned decision only when it faithfully represents
+the human's authorized choice. Reference the file with ordinary `authority`
+(`kind: "user"`, `path`, `sha256`, and the returned disposition `scopeSha256`).
+Call `cancel` with `deliveryId`, the identical `reason`, that `authority` and
+`--expected-sha256` from the preview. An existing plan approval, acceptance,
+Auto setting or delegated approve/accept/orchestrate mandate cannot supply this
+new decision. The helper verifies declared scope and evidence, not human identity.
+
+For `operation: "replace"`, also supply `replacement`: the complete normal
+`plan` request with a fresh delivery ID, ready Story IDs, plan evidence, quality
+contract and applicable execution plan/policy. Import fresh replacement Stories
+before preview when their requirements differ. Apply `replace` with the same
+`deliveryId`, `reason`, `replacement` and scoped `authority`. Cancellation and
+creation of the replacement plan commit in one CAS write; an invalid replacement
+or changed decision leaves the original untouched. The new plan is **planned**,
+not approved, activated or accepted. It needs its own normal Gate A/B decision.
+
+Both operations retain the original delivery in the ledger with terminal
+`status: "cancelled"` and a `disposition` distinguishing cancellation from
+replacement. Its context fingerprints the complete prior delivery, old phase,
+reason and any replacement's frozen scope. Original requirements, approval,
+blocked reason, source/proof references and attempts stay unchanged. Its released
+current Story cards return to `draft`, not Done; they can be refined for a later
+plan while the historical snapshots remain frozen. No automatic Epic closure is
+implied. Unaccepted product evidence may be stale: it is preserved as history,
+not misrepresented as current passing proof.
+
+Reconcile **all raw running activity receipts** before disposal, including older
+attempts whose projection is stale. The helper does not stop host sessions.
+Disposition removes only the retired delivery's Intent IDs from the current
+Native owner-priority list, retaining before/after priority in its decision.
+Unrelated priorities and all campaign observations, attempts, budgets and pending
+resource choices survive. A later delivery on the same outcome still inherits
+its exhausted resources; retiring work never renews a budget. The next unrelated
+Native delivery can be planned, approved, activated and dispatched normally.
+
 
 ## Frozen quality plan
 
@@ -636,12 +687,11 @@ fresh context. The original scoped decision changes only its named Stories; it
 never accepts the correction or siblings implicitly. Historical decisions retain
 their captured context and prior acceptance.
 
-An unfinished original leaves ordinary work only through an existing supported
-actual acceptance. `replacesDeliveryIds`, correction links, changed focus and
-technical completion cannot dispose of it. Approved-scope cancellation/replacement
-is still unsupported; preserve/block the original commitment and disclose that
-limitation instead of inventing a ledger transition. A `corrects` link is neither
-scope replacement authority nor execution/acceptance authority.
+An unfinished original leaves ordinary work through actual supported acceptance
+or an explicit human owner cancellation/replacement. `replacesDeliveryIds`,
+correction links, changed focus and technical completion alone cannot dispose of
+it. Use the disposition helper described earlier for a changed commitment; a `corrects` link
+is neither scope replacement authority nor execution/acceptance authority.
 
 At final Ship readiness, present **one** scoped original-delivery owner question,
 using the host's structured question tool when available: approve the named

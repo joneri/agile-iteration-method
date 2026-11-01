@@ -393,3 +393,13 @@ The paired level-building experiment informed the owner's choice of Native;
 it did not establish general superiority, universal agent adherence or lower
 subscription usage. Validation proves bounded executable contracts and retained
 regressions, not future product quality by itself.
+
+## Retire an obsolete approved commitment
+
+An actual human owner can cancel or replace an unaccepted approved delivery
+through the [Story disposition contract](user-stories.md#cancel-or-replace-approved-work).
+Keep its frozen graph, activity attempts, negative proof and campaign/resource
+history. Reconcile every raw running worker first. Retire the old outcome's
+current dispatch priority explicitly; record before/after priority without
+deleting its original campaign or granting more attempts. A replacement is a
+new unapproved plan. Cancellation is terminal history, never Gate E acceptance.

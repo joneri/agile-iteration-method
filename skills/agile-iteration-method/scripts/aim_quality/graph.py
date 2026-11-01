@@ -210,12 +210,12 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
         return result
     result.update(deliveryId=delivery["id"], title=delivery["title"], goal=delivery["goal"],
                   scopeSha256=delivery["scopeSha256"], phase=delivery["status"],
+                  historical=delivery["status"] in {"accepted", "cancelled"},
                   stories=copy.deepcopy(delivery["stories"]))
     if "executionPlan" not in delivery:
         return _lifecycle(result, delivery)
     plan = delivery["executionPlan"]
     result["configured"] = True
-    result["historical"] = delivery["status"] == "accepted"
     result["identityVerified"] = False
     result["reviewIdentityVerified"] = False
     result["speedupVerified"] = False
@@ -252,6 +252,9 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
                 status, reason = "ready", "Prerequisites have current completion evidence."
         if status in {"ready", "pending"} and not approved:
             status, reason = "blocked", "Activity starts require an approved delivery in progress."
+        if delivery["status"] == "cancelled":
+            status = receipt["status"] if receipt else "blocked"
+            reason = "Cancelled delivery; recorded activity is historical and cannot resume."
         selected_stories = [s for s in delivery["stories"] if s["id"] in task["storyIds"]]
         checks = [check for check in delivery.get("qualityPlan", {}).get("checks", [])
                   if not check.get("criteria") or any(
@@ -352,6 +355,8 @@ def _lifecycle(result, delivery):
         status = "completed" if i < current else "blocked" if delivery["status"] == "blocked" and i == current else "running" if i == current else "pending"
         if phase == "accepted":
             status = "completed"
+        if delivery["status"] == "cancelled" and status == "running":
+            status = "blocked"
         result["activities"].append(dict(id="lifecycle-" + identifier, title=title, kind="lifecycle",
             role=None, skills=[], storyIds=[s["id"] for s in delivery["stories"]], paths=[],
             dependsOn=[] if i == 0 else ["lifecycle-" + phases[i-1]], status=status,

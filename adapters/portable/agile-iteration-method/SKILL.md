@@ -254,9 +254,10 @@ bounded authorized work, never invented acceptance. Keep the entire increment
 commitment across sessions and verify every selected criterion plus the integrated
 outcome. No full gate loop per Story, technical-task requirements or automatic
 Epic closure. PO separately judges whole-Epic outcomes and scoped closure.
-Use supported rework/block paths; scope expansion beyond Gate B needs the applicable owner
-decision. Preserve approved criteria and accepted evidence; disclose unsupported
-transitions instead of inventing them.
+Use supported rework/block paths for the same scope. Any scope expansion beyond Gate B needs explicit owner authority. Changed approved
+scope can use explicit human cancellation/replacement from `references/user-stories.md`: retain
+the old commitment as terminal history, then require a separately approved new plan.
+Preserve accepted evidence and resource history; never invent acceptance or transitions.
 
 For legacy workspaces only, load their runtime contract and persist live entry:
 before Dev work begins, `increment_in_progress`, `currentRole: Dev`;

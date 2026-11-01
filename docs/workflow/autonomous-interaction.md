@@ -196,8 +196,9 @@ source and history. Identify declared Story, criterion and evidence links. TDO
 also checks plausible unrecorded consequences and states uncertainty; a link list
 is not complete semantic impact analysis. Use only supported rework/replan paths
 for affected unaccepted work: Story `rework` keeps approved scope frozen, and an
-approved scope change requires blocking and disclosing the helper limitation in
-`user-stories.md`, not rewriting the ledger. Keep unaffected independent work and historical acceptance intact;
+approved scope change uses the explicit human cancellation/replacement contract
+in `user-stories.md`, retaining the old delivery as terminal history and requiring
+a separately approved new plan. Never rewrite the ledger by hand. Keep unaffected independent work and historical acceptance intact;
 new work still needs its own applicable authority.
 
 For a material decision, Reviewer derives a counterexample independently. Record

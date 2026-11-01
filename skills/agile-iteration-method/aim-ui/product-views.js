@@ -123,7 +123,12 @@ function productDeliveryDetail(delivery) {
         validation: "TDO verifies the integrated outcome and records evidence for the selected criteria.",
         acceptance: "Review the result and evidence, then accept or request corrections in AIM chat.",
         accepted: "This increment is accepted. Further work requires a new commitment.",
-        cancelled: "This unapproved selection was cancelled. Its history is retained." }[delivery.status]
+        cancelled: delivery.disposition
+          ? (delivery.disposition.context.operation === "replace"
+            ? `The owner replaced this delivery with ${delivery.disposition.context.replacement.id}. The new plan needs its own approval. `
+            : "The owner cancelled this approved delivery. ")
+            + delivery.disposition.context.reason + " History is retained; this is not acceptance."
+          : "This unapproved selection was cancelled. Its history is retained." }[delivery.status]
         || "Ask AIM chat to inspect this checkpoint." };
 }
 

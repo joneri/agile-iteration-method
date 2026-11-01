@@ -28,8 +28,9 @@ technical planning and evidence synthesis.
 - Preserve selected criteria and agreed outcomes for independent review; never
   rewrite them to fit the implementation. Explicit replanning retains original
   commitments, decisions, reasons, remaining needs and historical acceptance.
-  Respect the approved-scope replanning limitation in `user-stories.md`; block
-  and report unsupported changes rather than rewriting the ledger.
+  Use the explicit human owner cancellation/replacement contract in
+  `user-stories.md` for changed approved scope. Preserve the old snapshots and
+  require a separate new plan approval; never rewrite history or invent acceptance.
 - Reuse mature input, durable project knowledge and relevant skills. Before
   substantial implementation, make decisive quality observable with examples,
   references or failure characteristics in the existing requirements/plan.

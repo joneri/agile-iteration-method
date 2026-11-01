@@ -451,6 +451,9 @@
         "deliveryPolicy": {
           "$ref": "#/$defs/deliveryPolicy"
         },
+        "disposition": {
+          "$ref": "#/$defs/deliveryDisposition"
+        },
         "epics": {
           "items": {
             "$ref": "#/$defs/epicSnapshot"
@@ -713,6 +716,110 @@
         "scopeSha256",
         "planEvidence",
         "intents"
+      ],
+      "type": "object"
+    },
+    "deliveryDisposition": {
+      "additionalProperties": false,
+      "description": "Terminal owner cancellation or replacement; frozen original delivery fingerprint and typed present human decision retained. Never acceptance or resource renewal.",
+      "properties": {
+        "at": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "authority": {
+          "$ref": "#/$defs/authority"
+        },
+        "context": {
+          "additionalProperties": false,
+          "properties": {
+            "deliveryId": {
+              "pattern": "^DI-[A-Z0-9]+(?:-[A-Z0-9]+)*$",
+              "type": "string"
+            },
+            "deliverySha256": {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            "fromStatus": {
+              "enum": [
+                "in_progress",
+                "review",
+                "validation",
+                "acceptance",
+                "blocked"
+              ]
+            },
+            "operation": {
+              "enum": [
+                "cancel",
+                "replace"
+              ]
+            },
+            "ownerPriorityAfter": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 256,
+              "type": "array"
+            },
+            "ownerPriorityBefore": {
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 256,
+              "type": "array"
+            },
+            "reason": {
+              "maxLength": 2000,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            "replacement": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "pattern": "^DI-[A-Z0-9]+(?:-[A-Z0-9]+)*$",
+                  "type": "string"
+                },
+                "scopeSha256": {
+                  "pattern": "^[a-f0-9]{64}$",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "scopeSha256"
+              ],
+              "type": "object"
+            },
+            "version": {
+              "const": 1
+            }
+          },
+          "required": [
+            "version",
+            "deliveryId",
+            "operation",
+            "reason",
+            "fromStatus",
+            "deliverySha256"
+          ],
+          "type": "object"
+        },
+        "scopeSha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "context",
+        "scopeSha256",
+        "authority",
+        "at"
       ],
       "type": "object"
     },

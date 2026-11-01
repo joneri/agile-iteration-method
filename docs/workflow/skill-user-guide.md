@@ -204,7 +204,7 @@ state transitions through the platform's native skill route.
 | --- | --- | --- | --- |
 | `/aim mode strict\|auto` | You want to change how AIM pauses at hard gates. | Selects explicit approval pauses or transparent automatic continuation. | The role loop continues under the selected approval policy. |
 | `/aim cost standard\|control\|deep` | Work needs a different context and review depth. | Selects normal, budget-focused, or risk-focused execution without weakening AIM roles or gates. | AIM uses that depth; material resource changes require applicable authority. |
-| `/aim replan` | A legacy Epic/DI increment needs a different plan. | Returns that unaccepted legacy increment to Gate B with its reason and accepted history preserved. | Review the revised legacy plan. Story deliveries preserve their approved scope; see the blocked-commitment limitation in [User Stories](user-stories.md). |
+| `/aim replan` | A legacy Epic/DI increment needs a different plan. | Returns that unaccepted legacy increment to Gate B with its reason and accepted history preserved. | Review the revised legacy plan. Story rework preserves approved scope; changed commitments use explicit human cancellation/replacement in [User Stories](user-stories.md). |
 
 ### Control a multi-Epic portfolio
 

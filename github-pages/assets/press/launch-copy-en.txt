@@ -1,9 +1,9 @@
 AIM
 Turn your intent into a complete product.
 
-Suggested announcement copy · AIM 4.8.4 · 1 November 2026.
+Suggested announcement copy · AIM 4.8.5 · 1 November 2026.
 
-AIM 4.8.4 Native checks approved activity starts before supported dispatch and provides explicit reconciliation for work that was already completed and approved without an original delivery. The same Story IDs receive a current acceptance record with original requirements, missing activation and historical evidence preserved. Current human authority, independent review and complete criterion evidence are required; repeating the same operation makes no second write. Earlier Native corrections and cumulative resource limits remain in force.
+AIM 4.8.5 lets the human owner cancel or replace an obsolete approved delivery, including blocked work. The old scope, decisions, proof and attempts remain as history. A replacement starts as its own unapproved plan; cancellation does not mean acceptance or renew resources. Native dispatch can move to the next authorized delivery without leaving the old priority in its way.
 
 Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 

@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-11-01 - AIM release v4.8.5
+
+Let the human owner retire obsolete approved work without losing its history.
+
+- Add read-only disposition context, present-authorized cancellation and atomic
+  replacement of an approved, unaccepted delivery, including blocked work.
+  Keep the full frozen delivery, prior phase/reason, decisions, proof and attempts.
+- Release current Story cards to draft and the single active delivery slot;
+  create replacements as separate unapproved plans. Never imply acceptance,
+  new execution authority, resource renewal or Epic closure.
+- Bind exact operation, reason, prior delivery and replacement scope to a typed
+  human decision and CAS. Reject old gate decisions, changed scope, running
+  workers and invalid replacement plans without partial writes.
+- Retire only the obsolete Native owner priority with recorded before/after
+  context. Preserve all campaign and resource history. Show cancelled work as
+  history in the board/graph and explain approved cancellation/replacement in UI.
+
+Verification: focused lifecycle, authority, CLI, board/graph and actual next
+Native dispatch regressions; complete repository/package validation and separate
+review. Global installation uses the validated local source, not a published tag.
+
 ## 2026-11-01 - AIM release v4.8.4
 
 Record actual owner approval of existing Native work without inventing past gates.

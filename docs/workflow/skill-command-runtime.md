@@ -363,8 +363,9 @@ skill does not invoke either one. Never assume the original AIM source
 repository exists beside an installed public skill.
 `/aim replan` applies only to a legacy Epic/DI increment: it returns the active
 unaccepted increment to Gate B and preserves the reason and accepted history.
-Story deliveries have no approved-scope replan transition; preserve the commitment
-and follow the block/rework limitations in `user-stories.md`.
+Story `rework` keeps approved scope frozen. To change the commitment, use the
+explicit human cancellation/replacement contract in `user-stories.md`, preserve
+old history and separately approve the new plan.
 
 ### Targeted action envelopes
 
