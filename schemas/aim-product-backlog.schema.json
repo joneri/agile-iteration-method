@@ -1039,6 +1039,9 @@
         "activityReworkRevision": {
           "type": "integer",
           "description": "Opt-in current rework history index, set only by supported rework; validated against retained history."
+        },
+        "disposition": {
+          "$ref": "#/$defs/deliveryDisposition"
         }
       },
       "required": [
@@ -1585,7 +1588,7 @@
         },
         "maxWorkers": {
           "type": "integer",
-          "description": "1\u20138; enforced by delegation validator."
+          "description": "1–8; enforced by delegation validator."
         },
         "parallelBenefit": {
           "type": "string",
@@ -1655,7 +1658,7 @@
         },
         "attempt": {
           "type": "integer",
-          "description": "Sequential attempts 1\u20138 per activity; enforced by helper."
+          "description": "Sequential attempts 1–8 per activity; enforced by helper."
         },
         "status": {
           "enum": [
@@ -1862,6 +1865,110 @@
         "owner"
       ],
       "additionalProperties": false
+    },
+    "deliveryDisposition": {
+      "type": "object",
+      "required": [
+        "context",
+        "scopeSha256",
+        "authority",
+        "at"
+      ],
+      "properties": {
+        "context": {
+          "type": "object",
+          "required": [
+            "version",
+            "deliveryId",
+            "operation",
+            "reason",
+            "fromStatus",
+            "deliverySha256"
+          ],
+          "properties": {
+            "version": {
+              "const": 1
+            },
+            "deliveryId": {
+              "type": "string",
+              "pattern": "^DI-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+            },
+            "operation": {
+              "enum": [
+                "cancel",
+                "replace"
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000,
+              "pattern": "\\S"
+            },
+            "fromStatus": {
+              "enum": [
+                "in_progress",
+                "review",
+                "validation",
+                "acceptance",
+                "blocked"
+              ]
+            },
+            "deliverySha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "replacement": {
+              "type": "object",
+              "required": [
+                "id",
+                "scopeSha256"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^DI-[A-Z0-9]+(?:-[A-Z0-9]+)*$"
+                },
+                "scopeSha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "ownerPriorityBefore": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 256
+            },
+            "ownerPriorityAfter": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 256
+            }
+          },
+          "additionalProperties": false
+        },
+        "scopeSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "authority": {
+          "$ref": "#/$defs/authority"
+        },
+        "at": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "\\S"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Terminal owner cancellation or replacement; frozen original delivery fingerprint and typed present human decision retained. Never acceptance or resource renewal."
     }
   }
 }

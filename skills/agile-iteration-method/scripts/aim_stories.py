@@ -43,7 +43,7 @@ COLUMNS = (("backlog", "Backlog"), ("ready", "Ready"),
            ("done", "Done"))
 PHASES = {"planned", "in_progress", "review", "validation", "acceptance", "accepted", "cancelled", "blocked"}
 COMMANDS = ("import", "refine", "plan", "approve", "review", "validate", "acceptance",
-            "accept", "measure", "rework", "cancel", "block", "unblock", "close-epic", "activity", "orchestrate", "reconcile")
+            "accept", "measure", "rework", "cancel", "replace", "block", "unblock", "close-epic", "activity", "orchestrate", "reconcile")
 
 
 class StoryError(ValueError):
@@ -668,6 +668,8 @@ def validate_document(document):
                 "Delivery Epic snapshots do not match its Stories.")
         require({item["intentId"] for item in delivery["epics"]} == {item["id"] for item in delivery["intents"]},
                 "Delivery Intent snapshots do not match its Epics.")
+        from aim_quality.disposition import validate_record
+        validate_record(document, delivery)
         if delivery["status"] == "cancelled":
             continue
         effective = delivery.get("blockedFrom") if delivery["status"] == "blocked" else delivery["status"]
@@ -757,6 +759,8 @@ def verify_evidence(repo, document, *, cache=None):
             _ref(repo, cache.measurement_references[path], cache=cache)
     for delivery in document["deliveries"]:
         if delivery["status"] == "cancelled":
+            if "disposition" in delivery:
+                _verify_disposition(repo, delivery["disposition"], cache=cache)
             continue
         _refs(repo, delivery["planEvidence"], cache=cache)
         owner = delivery.get("deliveryPolicy", {}).get("owner", {})
@@ -1118,9 +1122,63 @@ def closure_preview(repo, request):
     return {"storeSha256": store_hash, "scopeSha256": digest(_closure_scope(document, epic, evidence))}
 
 
+def _verify_disposition(repo, record, *, cache=None):
+    from aim_quality.disposition import verify_decision
+    authority = record["authority"]
+    _authority(repo, authority, record["scopeSha256"], cache=cache)
+    payload = read_evidence(repo, authority["path"], 16384)
+    require(hashlib.sha256(payload).hexdigest() == authority["sha256"],
+            "Owner disposition decision changed while reading.")
+    try:
+        verify_decision(record, payload)
+    except ValueError as exc:
+        raise StoryError(str(exc)) from exc
+
+
+def disposition_context(repo, request):
+    """Preview exact owner scope even when the obsolete product proof is stale."""
+    from aim_quality.disposition import prepare, decision
+    document, store_hash = load(repo, check_evidence=False)
+    cache = _verification_cache(document)
+    context, _ = prepare(document, request,
+                         lambda candidate, plan: _change(repo, candidate, "plan", plan, cache=cache))
+    scope = digest(context)
+    _finish_verification(repo, cache)
+    return {"storeSha256": store_hash, "context": context, "scopeSha256": scope,
+            "decisionEvidence": decision(dict(context=context, scopeSha256=scope)),
+            "nextStep": "Record the actual human decision as decisionEvidence, then apply the identical cancel/replace request with authority and this CAS; no acceptance, new approval or resource renewal is implied."}
+
+
+def _dispose(repo, document, command, request, *, cache=None):
+    from aim_quality.disposition import prepare
+    fields(request, ("deliveryId", "reason", "authority"), ("replacement",))
+    raw = {key: value for key, value in request.items() if key != "authority"}
+    raw["operation"] = command
+    try:
+        context, candidate = prepare(document, raw,
+                                     lambda target, plan: _change(repo, target, "plan", plan, cache=cache))
+    except ValueError as exc:
+        raise StoryError(str(exc)) from exc
+    record = dict(context=context, scopeSha256=digest(context),
+                  authority=copy.deepcopy(request["authority"]), at=now())
+    _verify_disposition(repo, record, cache=cache)
+    delivery = _by_id(candidate, "deliveries", request["deliveryId"])
+    delivery["disposition"] = record
+    document.clear()
+    document.update(candidate)
+
+
 def _change(repo, document, command, request, *, cache=None):
     if command in {"import", "refine"}:
         _import(document, request)
+        return
+    if command in {"cancel", "replace"}:
+        delivery = _by_id(document, "deliveries", request.get("deliveryId"))
+        if command == "cancel" and delivery["status"] == "planned":
+            fields(request, ("deliveryId", "reason"))
+            delivery.update(status="cancelled", reason=text(request["reason"], "Cancellation reason"))
+        else:
+            _dispose(repo, document, command, request, cache=cache)
         return
     if command == "plan":
         fields(request, ("id", "title", "goal", "storyIds", "planEvidence", "qualityPlan"), ("qualityGoals", "executionPlan", "deliveryPolicy"))
@@ -1199,7 +1257,7 @@ def _change(repo, document, command, request, *, cache=None):
         return
     required = {"approve": ("authority",), "review": (), "validate": ("evidence",),
                 "acceptance": ("evidence",), "accept": ("authority",), "measure": ("qualityMeasurements",),
-                "rework": ("reason",), "cancel": ("reason",), "block": ("reason",), "unblock": ("reason",)}
+                "rework": ("reason",), "block": ("reason",), "unblock": ("reason",)}
     require(command in required, "Unknown Story command.")
     optional = {"review": ("bindings", "sourcePaths"),
                 "measure": ("bindings", "sourcePaths", "response"),
@@ -1282,9 +1340,6 @@ def _change(repo, document, command, request, *, cache=None):
         delivery["acceptance"] = _authority(repo, request["authority"], delivery["acceptanceSha256"], cache=cache,
                                            delivery=delivery, operation="accept")
         delivery.update(status="accepted", acceptedAt=now())
-    elif command == "cancel":
-        require(status == "planned", "Only an unapproved plan can be cancelled.")
-        delivery.update(status="cancelled", reason=text(request["reason"], "Cancellation reason"))
     elif command == "rework":
         prior_phase = delivery.get("blockedFrom") if status == "blocked" else status
         latest = {r['activityId']: r for r in delivery.get('activityReceipts', [])}
@@ -1376,14 +1431,24 @@ def execute(repo, command, request, expected_sha256=None):
                 return {**status_result(candidate, current_hash), "reconciliation": copy.deepcopy(record), "idempotent": True}
         else:
             _change(repo, candidate, command, request, cache=cache)
+        if command in {"cancel", "replace"}:
+            # The retired delivery's failed/stale reports are history, not
+            # active quality consumers. Keep evidence read stamps for the
+            # decision/plan, but discover retained quality from the candidate.
+            current = _verification_cache(candidate)
+            cache.retained_paths = current.retained_paths
+            cache.measurement_paths = current.measurement_paths
+            cache.measurement_references = current.measurement_references
         candidate["revision"] += 1
         candidate["updatedAt"] = now()
         validate_document(candidate)
         from aim_story_links import validate_links
+        selected_delivery_id = (request.get('replacement', {}).get('id') if command == 'replace'
+                                else request.get('deliveryId', request.get('id')))
         changed_links = [story for story in candidate['stories'] if story.get('corrects') and
-                         ((command in {'plan', 'approve', 'review', 'acceptance', 'accept'} and
+                         ((command in {'plan', 'replace', 'approve', 'review', 'acceptance', 'accept'} and
                            any(story['id'] in [item['id'] for item in delivery['stories']]
-                               for delivery in candidate['deliveries'] if delivery['id'] == request.get('deliveryId', request.get('id'))
+                               for delivery in candidate['deliveries'] if delivery['id'] == selected_delivery_id
                                and delivery['status'] != 'cancelled')) or
                           next((s.get('corrects') for s in document['stories'] if s['id'] == story['id']), None) != story['corrects'])]
         if changed_links:
@@ -1477,7 +1542,7 @@ def compact_result(result, *, receipt=False, delivery_id=None):
             d for d in document["deliveries"] if d["status"] not in {"accepted", "cancelled"}]
         deliveries = []
         for delivery in selected:
-            entry = {k: delivery[k] for k in ("id", "status", "scopeSha256", "acceptanceSha256", "deliveryPolicy") if k in delivery}
+            entry = {k: delivery[k] for k in ("id", "status", "scopeSha256", "acceptanceSha256", "deliveryPolicy", "disposition") if k in delivery}
             if "productBindings" in delivery:
                 entry["productBindingsSha256"] = digest(delivery["productBindings"])
             if "coreVerification" in delivery:
@@ -1612,7 +1677,7 @@ def _project_observations(repo, result):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, required=True)
-    parser.add_argument("command", choices=(*COMMANDS, "status", "quality", "graph", "closure-preview", "review-record", "reconciliation-context", "dispatch-check"))
+    parser.add_argument("command", choices=(*COMMANDS, "status", "quality", "graph", "closure-preview", "review-record", "reconciliation-context", "dispatch-check", "disposition-context"))
     parser.add_argument("--input", default="-", help="JSON file, or - for stdin")
     parser.add_argument("--expected-sha256", help="Digest returned by the last successful read or write")
     parser.add_argument("--compact", action="store_true", help="Current context for status; confirmed receipt for mutations; full history stays in the ledger")
@@ -1638,7 +1703,9 @@ def main(argv=None):
                     result[key] = value
                 return result
             request = json.loads(raw, object_pairs_hook=pairs)
-            if args.command == "reconciliation-context":
+            if args.command == "disposition-context":
+                result = disposition_context(args.repo, request)
+            elif args.command == "reconciliation-context":
                 result = reconciliation_context(args.repo, request)
             elif args.command == "dispatch-check":
                 result = dispatch_check(args.repo, request, args.expected_sha256)

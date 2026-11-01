@@ -1,9 +1,9 @@
 AIM
 Från din idé till en komplett produkt.
 
-Förslag till lanseringstext · AIM 4.8.4 · 1 november 2026.
+Förslag till lanseringstext · AIM 4.8.5 · 1 november 2026.
 
-AIM 4.8.4 Native kontrollerar godkända aktivitetsstarter före stödd delegering och ger en uttrycklig avstämningsväg för arbete som redan är utfört och godkänt utan ursprunglig leverans. Samma Story-ID får ett aktuellt acceptanskvitto med bevarade originalkrav, saknad aktivering och historiska bevis. Aktuell mänsklig auktorisering, oberoende granskning och evidens för samtliga kriterier krävs; en identisk upprepning skriver inget nytt. Tidigare Native-rättningar och samlade resursgränser behålls.
+AIM 4.8.5 låter den mänskliga ägaren avbryta eller ersätta en föråldrad godkänd leverans, även blockerad. Gamla krav, beslut, bevis och arbetsförsök sparas som historik. En ersättning börjar som en egen ännu inte godkänd plan; avbrottet räknas inte som acceptans och förnyar inga resurser. Native kan gå vidare med nästa auktoriserade leverans utan att den gamla prioriteringen ligger kvar och blockerar.
 
 Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 

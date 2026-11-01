@@ -62,7 +62,8 @@ def requirements_scope(delivery, story):
 def catalog(native, observations):
     result = {}
     for delivery in native.get('deliveries', []):
-        if delivery['status'] != 'cancelled':
+        # Approved owner disposition retires execution, not historical provenance.
+        if delivery['status'] != 'cancelled' or 'disposition' in delivery:
             for story in delivery['stories']:
                 result[(delivery['id'], story['id'])] = (delivery, story)
     latest = {r['entry']['deliveryId']: r['entry'] for r in (observations or {}).get('entries', [])}

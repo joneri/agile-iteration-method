@@ -21,6 +21,18 @@ class DocumentationAuditTests(unittest.TestCase):
     def test_current_repository_passes(self) -> None:
         self.assertEqual([], audit(ROOT))
 
+    def test_local_patch_does_not_require_a_false_public_availability_claim(self) -> None:
+        version = (ROOT / "VERSION").read_text().strip()
+        with tempfile.TemporaryDirectory() as temporary:
+            copied = self._copy(temporary)
+            index = copied / "index.html"
+            content = index.read_text().replace(f"AIM {version} is available now.",
+                                               f"AIM {version} is a local patch; not published.")
+            index.write_text(content)
+            self.assertFalse(any("stale current release claim" in e for e in audit(copied)))
+            index.write_text(content.replace(f"AIM {version} is a local patch; not published.", "Availability unknown."))
+            self.assertTrue(any("stale current release claim" in e for e in audit(copied)))
+
     def test_stable_release_preserves_candidate_history_but_rejects_duplicate_release(self) -> None:
         version = (ROOT / "VERSION").read_text().strip()
         with tempfile.TemporaryDirectory() as temporary:

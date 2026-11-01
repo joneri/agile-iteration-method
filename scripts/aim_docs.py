@@ -125,7 +125,7 @@ def audit(repo_root: Path) -> list[str]:
     # Check current claims locally; historical release and capture labels stay intact.
     release_url = f"https://github.com/joneri/agile-iteration-method/releases/tag/v{version}"
     current_publication = {
-        "index.html": (release_url, f"AIM {version} is available now."),
+        "index.html": (release_url,),
         "docs/product/platforms-and-adoption.md": (release_url,),
         "github-pages/assets/press/aim-4-press-kit.txt": (f"Release version: {version}\n", release_url),
         "github-pages/assets/press/launch-copy-en.txt": (f"AIM {version} ·",),
@@ -136,6 +136,13 @@ def audit(repo_root: Path) -> list[str]:
         for marker in markers:
             if marker not in content:
                 errors.append(f"{relative}: stale current release claim; expected {marker!r}")
+    # A validated local patch can precede public publication. Do not force
+    # maintainers to assert availability just to identify its current version.
+    index = read(repo_root / "index.html")
+    availability = (f"AIM {version} is available now.",
+                    f"AIM {version} is a local patch; not published.")
+    if not any(marker in index for marker in availability):
+        errors.append("index.html: stale current release claim; declare current availability or an unpublished local patch")
 
     for relative in ("docs/product/README.md", "docs/product/what-is-aim.md", "docs/product/features.md"):
         content = read(repo_root / relative)

@@ -115,7 +115,7 @@ its existing mandate. A session preference cannot amend that approved scope.
 | `/aim upgrade` | inspect installed AIM-owned packages, plan a reviewed refresh, and report follow-up calibration or resume actions | must not rewrite active `.aim/` state |
 | `/aim mode strict\|auto` | select execution mode within the current mandate; legacy Epic mode changes use its selected workspace | never approves a gate or rewrites a frozen native delivery policy |
 | `/aim cost standard\|control\|deep` | select runtime depth within resource authority; legacy changes use the selected workspace | never changes scope, model or agent count, approves a gate, or rewrites frozen native policy |
-| `/aim replan` | legacy Epic/DI only: return the active, unaccepted increment to Gate B planning with the reason preserved | updates that legacy checkpoint; never rewrites accepted history. Story deliveries have no approved-scope replan transition; use the blocked-commitment guidance in `user-stories.md`. |
+| `/aim replan` | legacy Epic/DI only: return the active, unaccepted increment to Gate B planning with the reason preserved | updates that legacy checkpoint; never rewrites accepted history. Story deliveries keep frozen scope; use explicit human cancellation/replacement in `user-stories.md`, then a separately approved new plan. |
 
 Startup follows [runtime source routing](#runtime-source-routing) before selecting cost.
 The following persisted cost-profile rules apply to legacy Epic workspaces.
