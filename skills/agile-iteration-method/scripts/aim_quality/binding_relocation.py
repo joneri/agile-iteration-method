@@ -129,12 +129,16 @@ def relocate(document, request, *, check_reference, bind_evidence, at):
     require(request["receiptSha256"] == digest(receipt), "Stale or different original receipt fingerprint.")
     existing = next((r for r in delivery.get("bindingRelocations", [])
                      if r["requestSha256"] == digest(request)), None)
+    bindings = effective_bindings(delivery, receipt)
     if existing is None:
-        apply_mappings(effective_bindings(delivery, receipt), request["mappings"])
+        apply_mappings(bindings, request["mappings"])
     # The old live path may have changed or vanished. Verify the preserved
     # original bytes at the new location and the unchanged actual review proof.
-    for mapping in request["mappings"]:
-        check_reference(mapping["to"])
+    # A retry acknowledges retained history; subsequent moves may have retired
+    # its destinations. Verify the receipt's current locations instead.
+    references = bindings if existing is not None else [m["to"] for m in request["mappings"]]
+    for ref in references:
+        check_reference(ref)
     bind_evidence(receipt["evidence"])
     evidence = bind_evidence(request["evidence"])
     if existing is not None:

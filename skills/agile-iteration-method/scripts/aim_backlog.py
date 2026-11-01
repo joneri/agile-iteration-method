@@ -191,9 +191,12 @@ def normalize_import(value: Any, timestamp: str) -> list[dict[str, Any]]:
             "epicId": epic_id,
             "epicTitle": epic_title,
             "title": title,
-            "priority": priority,
             "createdAt": timestamp,
         }
+        # Preserve omission until merge: a batch position defaults only a new
+        # candidate, never an existing candidate's priority on retry.
+        if "priority" in raw:
+            item["priority"] = priority
         if summary:
             item["summary"] = summary
         if "sources" in raw:
@@ -321,7 +324,7 @@ def merge_backlog(repo: Path, imported: list[dict[str, Any]], timestamp: str) ->
     skipped: list[str] = []
     conflicts: list[str] = []
 
-    for incoming in imported:
+    for index, incoming in enumerate(imported, start=1):
         candidate_id = incoming["id"]
         incoming_sources = incoming.get("sources", [])
         for source in incoming_sources:
@@ -331,7 +334,7 @@ def merge_backlog(repo: Path, imported: list[dict[str, Any]], timestamp: str) ->
                 conflicts.append(f"{key[0]}:{key[1]} belongs to {owner}")
         current = by_id.get(candidate_id)
         if current is None:
-            by_id[candidate_id] = incoming
+            by_id[candidate_id] = {**incoming, "priority": incoming.get("priority", index)}
             added.append(candidate_id)
             for source in incoming_sources:
                 source_owners[_source_key(source)] = candidate_id

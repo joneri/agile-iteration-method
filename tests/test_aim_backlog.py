@@ -51,7 +51,12 @@ class AimBacklogTests(unittest.TestCase):
                 "INC-ONBOARDING-SHOW-THE-FIRST-USEFUL-STEP",
             ],
         )
-        self.assertEqual([item["priority"] for item in first], [1, 2])
+        self.assertTrue(all("priority" not in item for item in first))
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = Path(temporary)
+            merge_backlog(repo, first, NOW)
+            saved = json.loads((repo / ".aim/portfolio-backlog.json").read_text())
+            self.assertEqual([item["priority"] for item in saved["items"]], [1, 2])
         self.assertEqual(
             [item["id"] for item in first], [item["id"] for item in second]
         )
@@ -63,6 +68,32 @@ class AimBacklogTests(unittest.TestCase):
         )[0]
         self.assertLessEqual(len(item["epicId"]), 120)
         self.assertLessEqual(len(item["id"]), 80)
+
+    def test_implicit_priority_retry_preserves_bytes_across_batch_positions(self) -> None:
+        first = {"epicTitle": "Research", "title": "First"}
+        second = {"epicTitle": "Research", "title": "Second",
+                  "sources": [self._research_source("P-SECOND")]}
+        with tempfile.TemporaryDirectory() as temporary:
+            repo = Path(temporary)
+            merge_backlog(repo, normalize_import({"items": [first, second]}, NOW), NOW)
+            path = repo / ".aim/portfolio-backlog.json"
+            before = path.read_bytes()
+            later = "2026-11-01T12:00:00Z"
+            for batch in ([second], [second, first]):
+                result = merge_backlog(repo, normalize_import({"items": batch}, later), later)
+                self.assertEqual(result["updated"], [])
+                self.assertEqual(before, path.read_bytes())
+            # Omission also preserves priority on a real content update.
+            merge_backlog(repo, normalize_import({"items": [{**second, "summary": "New detail"}]}, later), later)
+            item = next(i for i in json.loads(path.read_text())["items"] if i["title"] == "Second")
+            self.assertEqual(item["priority"], 2)
+            self.assertEqual(item["summary"], "New detail")
+            self.assertEqual(item["createdAt"], NOW)
+            # Explicit priorities still permit intentional reprioritization.
+            result = merge_backlog(repo, normalize_import({"items": [{**second, "priority": 5}]}, later), later)
+            item = next(i for i in json.loads(path.read_text())["items"] if i["title"] == "Second")
+            self.assertEqual(len(result["updated"]), 1)
+            self.assertEqual(item["priority"], 5)
 
     def test_merges_idempotently_and_updates_related_content(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -190,7 +221,7 @@ class AimBacklogTests(unittest.TestCase):
 
     def test_schema_rejects_unsafe_source_paths_also_rejected_by_import(self) -> None:
         source = self._research_source("P-20261004-002")
-        item = normalize_import({"items": [{"epicTitle": "One", "title": "First",
+        item = normalize_import({"items": [{"epicTitle": "One", "title": "First", "priority": 1,
                                              "sources": [source]}]}, NOW)[0]
         schema = json.loads((REPO_ROOT / "schemas/aim-ui-backlog.schema.json").read_text())
         backlog = {"backlogVersion": "1.0", "updatedAt": NOW, "items": [item]}

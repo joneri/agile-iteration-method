@@ -110,7 +110,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.8.6",
+  "productVersion": "4.8.7",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -313,7 +313,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "bf773a33d4945969257cd7c2994ae7d6271fd1cf0a1f4963f00feb93937254dd"
+      "sourceSha256": "b867ffacf5548d36088765c83762c72aa1f93194b7c8e3248bc5ce5595b76242"
     },
     {
       "output": "references/version-and-installation.md",
@@ -338,7 +338,7 @@
     {
       "output": "scripts/aim_story_links.py",
       "source": "scripts/aim_story_links.py",
-      "sourceSha256": "73969ed8a1d3c3dfa396e30daf9f59abac65dba8d9838f5b171d1ff55a1d79a6"
+      "sourceSha256": "171c9d0868629b7d8ed4e0f69fb6484032f37bfec43e4f1a41ad9863d37ad586"
     },
     {
       "output": "scripts/aim_interaction.py",
@@ -448,7 +448,7 @@
     {
       "output": "scripts/aim_quality/binding_relocation.py",
       "source": "scripts/aim_quality/binding_relocation.py",
-      "sourceSha256": "42221d40ecccfe5d404c344a93b09b2cc087743bdad2e8c0318256412fff3f5b"
+      "sourceSha256": "6abc7065a78ded94a16f723e15105e15908de4e08b96d8a5c8d0d8e692243596"
     },
     {
       "output": "scripts/aim_quality/knowledge.py",
@@ -533,7 +533,7 @@
     {
       "output": "scripts/aim_backlog.py",
       "source": "scripts/aim_backlog.py",
-      "sourceSha256": "bbffea07034d6f2426e20bd2dcf50308b04c12a0fc0f1850ac5013a7855fe69f"
+      "sourceSha256": "cbc967ec0feb8a1e5d8bee13cfcbb4d94e46b0e9178e9ac3bbed593ba5efae08"
     },
     {
       "output": "scripts/aim_actions.py",
@@ -553,7 +553,7 @@
     {
       "output": "scripts/aim_ui.py",
       "source": "scripts/aim_ui.py",
-      "sourceSha256": "a1e7512ef8d23c612d9312c4ec6e66bc72b6d401ce98a1ad166128814f2832c4"
+      "sourceSha256": "47d246d18e2deb97f23d12050cd2b9578d28901b4c20d31b45a24f3c4280efa3"
     },
     {
       "output": "scripts/aim_ui_product.py",
@@ -568,7 +568,7 @@
     {
       "output": "scripts/aim_ui_control.py",
       "source": "scripts/aim_ui_control.py",
-      "sourceSha256": "2e3ff9c28d030d5de7875bed7d5244cd05624f7341fb8c17e4ccefccc341919f"
+      "sourceSha256": "a609613028a0d5130e0474cb70d2b7697fd5f42a7dba096989fab645aacdbfc4"
     },
     {
       "output": "scripts/aim_codex_bridge.py",

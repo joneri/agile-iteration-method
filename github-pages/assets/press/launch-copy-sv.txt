@@ -1,9 +1,9 @@
 AIM
 Från din idé till en komplett produkt.
 
-Förslag till lanseringstext · AIM 4.8.6 · 1 november 2026.
+Förslag till lanseringstext · AIM 4.8.7 · 1 november 2026.
 
-AIM 4.8.6 kan flytta verifierade indata från en tidig läsaktivitet till identiska, bevarade baslinjekopior utan nya utvecklingsförsök. Ursprungligt granskningskvitto, beroenden, försök och resurshistorik behålls. Utvecklaren kan avsluta samma försök; slutgranskning och kontroller av den aktuella produkten kräver fortfarande aktuella bevis. Stödet för ägarens avbrott och ersättning från 4.8.5 finns kvar.
+AIM 4.8.7 rättar fyra fel: kedjade baslinjeflyttar kan återförsökas efter att gamla kopior tagits bort, avbrutna rättningar blockerar inte längre originalets ägarbeslut, upprepade backloggimporter behåller implicit prioritet och uppdaterade hjälpfiler ersätter en gammal UI-server. Leverans- och aktivitetshistoriken bevaras.
 
 Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 

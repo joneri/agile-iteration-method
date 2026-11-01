@@ -8,8 +8,8 @@ import unittest
 
 import test_aim_observation_decisions as fixtures
 import aim_observations as obs
-from aim_stories import project_story_board, execute, load
-from aim_story_links import link_context, requirements_scope
+from aim_stories import project_story_board, execute, load, disposition_context
+from aim_story_links import link_context, requirements_scope, incoming_context
 
 
 class StoryLinkTests(unittest.TestCase):
@@ -226,6 +226,78 @@ class StoryLinkTests(unittest.TestCase):
         self.assertFalse(cards['US-OBS']['corrections'][0]['ready'])
         with self.assertRaisesRegex(ValueError, 'Evidence changed'):
             obs.decision_context(self.repo, dict(deliveryId='LOOP-EXCEPTION', storyIds=['US-OBS']))
+
+    def test_cancelled_native_correction_retains_history_without_blocking_original(self):
+        self.check_disposed_native_correction('cancel')
+
+    def test_replaced_native_correction_retains_history_without_blocking_original(self):
+        self.check_disposed_native_correction('replace')
+
+    def check_disposed_native_correction(self, operation):
+        f = self.case.fixture
+        story = copy.deepcopy(f.request['stories'][0])
+        story['corrects'] = [self.link()]
+        f.mutate('refine', dict(stories=[story]))
+        f.approve()
+        f.mutate('review', dict(deliveryId='DI-1', bindings=[f.binding]))
+        original = copy.deepcopy(f.document['deliveries'][0])
+        reason = 'Synthetic owner abandons this correction; original requirements remain.'
+        request = dict(deliveryId='DI-1', operation=operation, reason=reason)
+        if operation == 'replace':
+            later = copy.deepcopy(f.request['stories'][2])
+            later['status'] = 'ready'
+            f.mutate('refine', dict(stories=[later]))
+            quality = copy.deepcopy(original['qualityPlan'])
+            quality['checks'][0]['criteria'] = ['US-LATER/AC-1']
+            request['replacement'] = dict(id='DI-2', title='New unrelated direction', goal='Preserve original scope',
+                storyIds=['US-LATER'], planEvidence=[f.plan_evidence], qualityPlan=quality)
+        context = disposition_context(self.repo, request)
+        evidence = f.artifact('owner-cancel-correction.json', json.dumps(context['decisionEvidence']))
+        f.mutate(operation, {k:v for k,v in request.items() if k != 'operation'} |
+                 dict(authority=f.authority(context['scopeSha256'], evidence)))
+        disposed = copy.deepcopy(f.document['deliveries'][0])
+        restored = copy.deepcopy(disposed)
+        restored.pop('disposition')
+        restored['status'] = original['status']
+        self.assertEqual(restored, original)
+        # Retained requirements remain valid provenance targets.
+        link_context(self.repo, dict(deliveryId='DI-1', storyId='US-BUYER', criterionIds=['AC-1']))
+        request = copy.deepcopy(self.case.request)
+        request['ledgerSha256'] = obs.fingerprint(self.repo, obs.LEDGER)
+        request['entry']['id'] = 'original-after-cancelled-correction'
+        self.publish(request)
+        (self.repo / 'app.py').write_text('New work after owner cancellation')
+        self.assertEqual(incoming_context(self.repo, 'LOOP-EXCEPTION', ['US-OBS']), [])
+        context = obs.decision_context(self.repo, dict(deliveryId='LOOP-EXCEPTION', storyIds=['US-OBS']))
+        self.assertEqual(context['storyIds'], ['US-OBS'])
+        handoff = self.case.board()['US-OBS']['ownerHandoff']
+        self.assertTrue(handoff['ready'])
+        self.assertEqual(handoff['corrections'], [])
+        self.assertEqual(load(self.repo)[0]['deliveries'][0], disposed)
+
+    def test_reused_disposed_story_still_requires_current_active_correction_proof(self):
+        self.check_disposed_native_correction('cancel')
+        f = self.case.fixture
+        story = copy.deepcopy(f.request['stories'][0])
+        story['corrects'] = f.document['stories'][0]['corrects']
+        story['status'] = 'ready'
+        f.mutate('refine', dict(stories=[story]))
+        f.mutate('plan', dict(id='DI-2', title='A fresh correction', goal='Reassess original outcome',
+                             storyIds=['US-BUYER'], planEvidence=[f.plan_evidence]))
+        f.mutate('approve', dict(deliveryId='DI-2', authority=f.authority(f.document['deliveries'][-1]['scopeSha256'])))
+        f.mutate('review', dict(deliveryId='DI-2', sourcePaths=['app.py']))
+        incoming = incoming_context(self.repo, 'LOOP-EXCEPTION', ['US-OBS'])
+        self.assertEqual([c['deliveryId'] for c in incoming], ['DI-2'])
+        request = copy.deepcopy(self.case.request)
+        request['ledgerSha256'] = obs.fingerprint(self.repo, obs.LEDGER)
+        request['entry']['id'] = 'original-with-active-correction-again'
+        self.publish(request)
+        handoff = self.case.board()['US-OBS']['ownerHandoff']
+        self.assertEqual([c['deliveryIds'] for c in handoff['corrections']], [['DI-2']])
+        (self.repo / 'app.py').write_text('Changed active correction after review')
+        with self.assertRaisesRegex(ValueError, 'Evidence changed'):
+            incoming_context(self.repo, 'LOOP-EXCEPTION', ['US-OBS'])
+        self.assertFalse(self.case.board()['US-OBS']['ownerHandoff']['ready'])
 
     def test_correction_context_is_inside_owner_scope_not_only_request_envelope(self):
         self.ready_correction()
