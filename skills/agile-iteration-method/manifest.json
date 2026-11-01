@@ -77,6 +77,7 @@
     "scripts/aim_quality/orchestration_runtime.py",
     "scripts/aim_quality/patterns.py",
     "scripts/aim_quality/profiles.py",
+    "scripts/aim_quality/reconciliation.py",
     "scripts/aim_quality/review.py",
     "scripts/aim_quality/skills.py",
     "scripts/aim_quality/timing.py",
@@ -107,7 +108,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.8.3",
+  "productVersion": "4.8.4",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -120,12 +121,12 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "fe73b12bd6120ce313c8a8eeeecda9ac65c046bf555e5ca19ca5b82fd9554060"
+      "sourceSha256": "5df80b3036339ae2c9cc58214fc25d9faac59433cbe96cf2163788ff3599aa2f"
     },
     {
       "output": "references/native-orchestration.md",
       "source": "docs/workflow/native-orchestration.md",
-      "sourceSha256": "0045cbe51b05b30d55661ea6c9f1434370a744e2148e15d2d0274e21f6c8cf79"
+      "sourceSha256": "27d49027d71607280bdc68db5795787300b527f65e5f34cbb19416288bb634a7"
     },
     {
       "output": "references/tool-efficiency.md",
@@ -135,7 +136,7 @@
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "f976ebdae161ef6965d0a2fb27619a849f94520847f5dcafd3f21d2c8d88863d"
+      "sourceSha256": "26b95ab7fdeba471f414a1ada097baaf13d193eb7b1b1d9c8f0f71a553b712e2"
     },
     {
       "output": "references/local-runtime-access.md",
@@ -295,12 +296,12 @@
     {
       "output": "references/schemas/aim-product-backlog.schema.json",
       "source": "schemas/aim-product-backlog.schema.json",
-      "sourceSha256": "ab18ef3eda178363f6f6d916208c1cef5c4b4a35cb9dbe9c68a2edef292f478b"
+      "sourceSha256": "8405ac94aae22c6d961a71a6115a90cd3d13fb935e614d872f75360c10973a3c"
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
       "source": "install/aim-install-manifest.yaml",
-      "sourceSha256": "9b8969f2b2cf7de0af9f53df18b969af78ccb38f7129edd164a403571fa21b15"
+      "sourceSha256": "bbab1cf848555cb2f5fd0d4d4b40e4759b100652f311b5371cf0fc4f483275f7"
     },
     {
       "output": "references/LICENSE-DOCS",
@@ -310,7 +311,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "00454f29247de581cee62dc867a330c6fcdab32b36dccb02881779512425558b"
+      "sourceSha256": "8831a51fa0536bd403ef4586d0553d431ec271dbcd31541f3ef5d735f43139a6"
     },
     {
       "output": "references/version-and-installation.md",
@@ -320,12 +321,12 @@
     {
       "output": "manifest.json",
       "source": "scripts/build_public_skill.py",
-      "sourceSha256": "bd05978c23e78b708584c29cb8fd5739117ae4a07d876f054ba417c86c44cbae"
+      "sourceSha256": "478bc7977613ed0ca02e08d4a55a81ea71ed850463997738e10b54fdcfdd3ac5"
     },
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "797a9d7dff53cbd0726677726039c7b42ea35ee31b56416439bdb6fd7f64e5d0"
+      "sourceSha256": "558bc11ef08eb9a7e5e6c3b8173af4fbd3a57410742ceb2454f17cd298e56d1d"
     },
     {
       "output": "scripts/aim_observations.py",
@@ -431,6 +432,11 @@
       "output": "scripts/aim_quality/review.py",
       "source": "scripts/aim_quality/review.py",
       "sourceSha256": "aa067a711be130c90386365eb35b1ac73781bf1baa63b25d8edd686cfff9d0b5"
+    },
+    {
+      "output": "scripts/aim_quality/reconciliation.py",
+      "source": "scripts/aim_quality/reconciliation.py",
+      "sourceSha256": "9bd65b8d6389da2225ddabc76925876f8063af5af85ab0c9a8fae7be1ba974b0"
     },
     {
       "output": "scripts/aim_quality/knowledge.py",

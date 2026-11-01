@@ -297,6 +297,22 @@ source/evidence freshness and session/attempt fences remain applicable. The
 supported Codex bridge's explicit Native activity path checks the same ledger
 before dispatch. The host launches agents; the helper does not create them.
 
+Before a normal host Dev dispatch, use the Story helper's read-only
+`dispatch-check` with the exact proposed `activity` running request and current
+`--expected-sha256`. It simulates the same start checks: actual delivery and
+approval, scope, Native activation/coordinator, dependencies, capacity, ownership,
+fresh evidence and cumulative campaign/resource policy. A ready Story or plan
+file is insufficient. On success it returns `eligible: true`, `committed: false`,
+the scope and prospective attempt. It neither reserves nor launches a worker.
+Record the exact actual `activity` start under that unchanged CAS before host
+dispatch; the mutation repeats the checks under the ledger lock. A stale check
+cannot authorize a launch. Preserve the confirmed activity receipt in the Dev
+handoff. On an unknown launch/result, reconcile before retrying.
+
+Already executed unactivated Native work requires the explicit present-authorized
+[reconciliation operation](user-stories.md#present-authorized-reconciliation-of-undelivered-native-work),
+not fabricated past gates or a fresh normal plan implying earlier activation.
+
 The loopback UI service exposes `POST /api/actions/dispatch` for an explicit
 Native envelope:
 

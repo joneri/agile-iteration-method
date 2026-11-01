@@ -141,7 +141,12 @@ Reconcile unknown outcomes before retrying. Historical scope/acceptance stays
 immutable; no automatic migration. Only the main AIM thread mutates runtime;
 delegates write assigned product files or `.aim/analysis/` evidence.
 Before Dev implementation, the main AIM session establishes or recovers the
-approved native delivery (or its explicit existing legacy continuation). Pass
+approved native delivery (or its explicit existing legacy continuation). Before
+normal Native host dispatch, use `aim_stories.py dispatch-check` on the exact
+activity start and current CAS, then record the checked actual start. The check
+neither launches nor reserves work. Already executed undelivered Native Stories
+need the explicit present-authorized reconciliation contract in
+`references/user-stories.md`; never invent past gates or duplicate observation IDs. Pass
 that confirmed scope/phase receipt to Dev; reading roles alone is not activation
 of the delivery gates. Reuse the receipt instead of another status round.
 

@@ -1,33 +1,33 @@
 {
   "guidanceReviewVersion": 1,
-  "productVersion": "4.8.3",
+  "productVersion": "4.8.4",
   "reviewedOn": "2026-11-01",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "7a13884626448b8165b3e273950ff1aaabf194b9e0949244b9d25420e8568a0c"
+      "sha256": "d308d4944ff3796436b2fae25261dd54536f3eab0feba13cd600314f0564117e"
     },
     {
       "path": "school.html",
-      "sha256": "0c67d85e2023fc92956efaec33a47c60e4a775612302edc4085ee00ec1a5b42d"
+      "sha256": "c376f93d5e9b4e61ecc581fa999c5db449f08d02a7aed832ee8216221396ebc4"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "fe4f6b70d00c760af95cdd90a9e689c4cf7a55ca492c910407107ad78d7b212d"
+      "sha256": "9dd685833e27247a89e075c83e6b1a4a326a2f630845fb65c05e2183979ec6aa"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sha256": "fe73b12bd6120ce313c8a8eeeecda9ac65c046bf555e5ca19ca5b82fd9554060"
+      "sha256": "5df80b3036339ae2c9cc58214fc25d9faac59433cbe96cf2163788ff3599aa2f"
     },
     {
       "path": "docs/workflow/user-stories.md",
-      "sha256": "f976ebdae161ef6965d0a2fb27619a849f94520847f5dcafd3f21d2c8d88863d"
+      "sha256": "26b95ab7fdeba471f414a1ada097baaf13d193eb7b1b1d9c8f0f71a553b712e2"
     },
     {
       "path": "docs/workflow/native-orchestration.md",
-      "sha256": "0045cbe51b05b30d55661ea6c9f1434370a744e2148e15d2d0274e21f6c8cf79"
+      "sha256": "27d49027d71607280bdc68db5795787300b527f65e5f34cbb19416288bb634a7"
     },
     {
       "path": "docs/workflow/skill-command-runtime.md",
@@ -53,31 +53,31 @@
   "assessments": {
     "installationAndStart": {
       "conclusion": "current",
-      "summary": "The homepage installation/start sections and school quick start use the complete public agile-iteration-method skill through the standard skills CLI. Intent-led starts conditionally prepare missing or stale project knowledge and role instructions in the same start, including provisional empty repositories. Natural-language fallback, session reload when needed, separate later refreshes and reviewed adaptive installation remain consistent with the installation and command contracts; upgrades preserve existing delivery history."
+      "summary": "Homepage terminal/chat installation and School quick start use the complete public agile-iteration-method skill via the standard skills CLI, with maintained Codex/Claude Code/Copilot choices. Same-start missing/stale calibration and role preparation, provisional empty-project facts, conditional session reload and later explicit refreshes match current startup/install contracts. Upgrade preserves active runtime and accepted history; the reviewed-source adaptive dry-run is separate from portable installation."
     },
     "deliveryModes": {
       "conclusion": "current",
-      "summary": "Homepage Ship/Loop guidance and school quick start/decision lesson keep delivery style separate from approval mode and cost depth. Ship is the new-work default; Loop uses actual owner feedback on useful increments. The school explicitly selects Ship/Auto for its example and separately delegates bounded plan approval. Strict remains the unselected default. Auto alone grants neither acceptance nor a resource increase, and existing approved policies remain preserved."
+      "summary": "Homepage and School consistently default new work to Ship, reserve Loop for actual feedback on useful increments, and separate delivery style from Strict/Auto and cost depth. School explicitly chooses Ship/Auto and grants bounded plan approval only after confirming scope/resources. This is an explicit example mandate, not an unselected default or invented acceptance. Existing frozen deliveries retain their original policy."
     },
     "orchestration": {
       "conclusion": "current",
-      "summary": "Homepage Graph guidance and school work-planning lesson describe Native graphs derived from outcomes, explicit dependencies and assignments, and a small graph without an automatic agent per activity. The school setup names the main product owner/orchestrator, delegated delivery coordinator and separate reviewer. Actual host launch/message capabilities remain required; copied assignments and graph projections alone do not launch agents. Current rework rules retain the same approved scope and campaign history rather than resetting the delivery."
+      "summary": "Homepage Native graph descriptions and School planning lesson preserve outcome/dependency/proof ownership, cohesive implementation and a genuinely separate reviewer. Host tools actually launch/message agents; assignments and UI Graph do not. Current installed entry requires read-only dispatch-check plus the same exact CAS activity start before normal host dispatch. Beginner guidance does not replace approved/activated delivery with a ready card or diagram; its linked Native contract explains those checks and arbitrary-host interception limits."
     },
     "delegatedDecisions": {
       "conclusion": "current",
-      "summary": "The school setup delegates plan approval and routine implementation choices only within scope/resources confirmed before implementation, reserving scope changes, resource increases, publication and final acceptance. The decisions lesson distinguishes approve, accept and separately capped orchestrate authority; a role or Auto setting does not create those permissions. Homepage internal-escalation wording requires an explicitly delegated owner. Actual owner decisions, human reservations and separate Epic closure remain consistent with the owner/Native contracts."
+      "summary": "School setup reserves scope changes, resource increases, publication and final acceptance, while permitting scoped plan approval and routine choices. Lesson4 distinguishes approve, accept and separately capped orchestrate permission; Auto and an orchestrator role alone grant no acceptance or budget. Homepage escalation explicitly requires a delegated owner. AIM4.8.4 present reconciliation requires actual new human authorization and does not broaden ordinary agent-owner powers or invent prior authority."
     },
     "resourceUse": {
       "conclusion": "current",
-      "summary": "School resource guidance includes planning, implementation, delegated work, review and corrections, retains unavailable usage as unknown, and distinguishes work-start caps from tokens, elapsed time, subscription allowance and money. Cost Control narrows context/narration while retaining quality and independent material review. Homepage focused-tool and knowledge-reuse claims qualify savings by actual task/platform. Neither a session, rework nor a model/profile label renews cumulative resources or establishes a fixed saving."
+      "summary": "School resource lesson counts planning, authoring, delegation, review, integration and corrections, distinguishes attempts/tokens/subscription/time/money, and retains unavailable measurements as unknown. Its failed-persistence example requires a changed bounded next step, not a session/heartbeat budget reset. Cost Control keeps quality and independent material review. Homepage tool-context savings remain task/host dependent; dispatch checks, reconciliation and upgrade grant no additional resources."
     },
     "verificationAndAcceptance": {
       "conclusion": "current",
-      "summary": "Homepage method guidance and the school testing lesson preserve early core checks, a separate reviewer, integrated user journeys and evidence matching the actual delivered version. The Pocket Board example checks persistence, invalid input, keyboard behavior and phone layout. Corrections retain the agreed criteria, and acceptance stays with the human unless explicitly delegated for that decision. Continue and upgrade do not approve pending decisions or transfer historical acceptance to a new build."
+      "summary": "Ordinary homepage/School flow retains early core proof, independent review, delivered-version user journeys, correction against unchanged criteria and actual final owner acceptance. The current linked Story contract separately permits present-human-authorized reconciliation of already executed undelivered Native IDs, binding independent evidence and preserving missing original activation/history. No tutorial instruction infers past gates, duplicates Stories or transfers old approval to a new build. Current release evidence proves only bounded method behavior; Epic closure remains separate."
     },
     "modelsAndEvidence": {
-      "conclusion": "updated",
-      "summary": "The homepage evidence section now visibly dates the retained AIM assessment to 18 October 2026 and Luna-only baseline to 30 September 2026, preserves their scores and linked exact test-build provenance, and explains the differing conditions, unfinished Native delivery and lack of a new paired experiment or general quality/cost conclusion. Later releases do not inherit measured performance. Existing AIM UI 4.7.5 captures remain dated 29 October 2026. The school Sol/Luna recipe remains an optional creator experience, conditional on actual host/account controls, without current pricing or guaranteed-savings claims."
+      "conclusion": "current",
+      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.4 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is optional creator experience, conditional on actual host/account controls, with no current price, universal savings or model-availability guarantee."
     }
   }
 }

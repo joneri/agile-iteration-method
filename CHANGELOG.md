@@ -1,5 +1,30 @@
 # Changelog
 
+## 2026-11-01 - AIM release v4.8.4
+
+Record actual owner approval of existing Native work without inventing past gates.
+
+- Add explicit present-authorized reconciliation for already implemented,
+  independently reviewed and human-approved Stories without an original delivery.
+  Keep the original IDs, requirements, missing activation and evidence chronology;
+  commit the typed journal and original cards together.
+- Require exact current scope, actual human authority, separate review, complete
+  criterion coverage and fresh source/package evidence. Reject stale or unrelated
+  requests atomically; an identical current-CAS retry returns the original receipt
+  without a second write. Existing deliveries and resources retain their history.
+- Provide read-only dispatch-check using the actual activity-start checks. Record
+  the real approved start before host dispatch; a plan or ready card alone is not
+  activation. Hosts remain responsible for arbitrary direct tool calls.
+- Keep Epic closure a separate owner decision, supported by the typed disposition.
+  Package the helper in both public skill and adaptive distributions. Preserve
+  the current AIM School and website guidance with a release-specific review.
+
+Verification: maintained positive and rejection regressions, full repository and
+package checks, genuine independent review, and an actual three-Story acceptance
+reconciliation with unchanged history and an idempotent replay. Product approval
+and current reconciliation authority remain separate; manually launched binary
+identity was not independently observed. No general model, cost or quality claim.
+
 ## 2026-11-01 - AIM release v4.8.3
 
 Continue the same Native delivery after a requested correction without a deadlock.

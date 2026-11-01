@@ -43,7 +43,7 @@ COLUMNS = (("backlog", "Backlog"), ("ready", "Ready"),
            ("done", "Done"))
 PHASES = {"planned", "in_progress", "review", "validation", "acceptance", "accepted", "cancelled", "blocked"}
 COMMANDS = ("import", "refine", "plan", "approve", "review", "validate", "acceptance",
-            "accept", "measure", "rework", "cancel", "block", "unblock", "close-epic", "activity", "orchestrate")
+            "accept", "measure", "rework", "cancel", "block", "unblock", "close-epic", "activity", "orchestrate", "reconcile")
 
 
 class StoryError(ValueError):
@@ -636,8 +636,10 @@ def validate_document(document):
         criteria(story["originalAcceptanceCriteria"])
     from aim_quality.orchestration_runtime import validate_native_document
     validate_native_document(document)
+    from aim_quality.reconciliation import validate_records
+    reconciled = validate_records(document)
     ownership = {}
-    accepted = {}
+    accepted = dict(reconciled)
     require(sum(item["status"] not in {"accepted", "cancelled"} for item in document["deliveries"]) <= 1,
             "Only one nonterminal delivery may run at a time.")
     for delivery in document["deliveries"]:
@@ -674,6 +676,7 @@ def validate_document(document):
             require(snapshot["id"] in stories, "Delivery references an unknown Story.")
             story = stories[snapshot["id"]]
             require(snapshot == _story_snapshot(story), "Selected Story changed after planning.")
+            require(story["id"] not in reconciled, "Reconciled Story also belongs to a delivery.")
             require(story["id"] not in ownership, "A Story belongs to overlapping deliveries.")
             ownership[story["id"]] = delivery["id"]
             expected_status = "done" if effective == "accepted" else "ready" if effective == "planned" else effective
@@ -712,7 +715,7 @@ def validate_document(document):
                     "Delivery has no matching user acceptance.")
     for story in stories.values():
         if story["status"] not in {"draft", "ready"}:
-            require(story["id"] in ownership, "Story lifecycle has no delivery evidence.")
+            require(story["id"] in ownership or story["id"] in reconciled, "Story lifecycle has no delivery or reconciliation evidence.")
     for epic in epics.values():
         if epic["status"] == "closed":
             require(epic.get("closure", {}).get("authority", {}).get("kind") == "user",
@@ -807,6 +810,9 @@ def verify_evidence(repo, document, *, cache=None):
             for item in record["criteria"]:
                 _refs(repo, item["evidence"], cache=cache)
 
+    from aim_quality.reconciliation import verify_record
+    for record in document.get("reconciliations", []):
+        verify_record(repo, record, cache)
     _finish_verification(repo, cache)
 
 
@@ -1088,9 +1094,16 @@ def _closure_scope(document, epic, evidence):
     for story in stories:
         matches = [delivery for delivery in document["deliveries"] if delivery["status"] == "accepted"
                    and any(item["id"] == story["id"] for item in delivery["stories"])]
-        require(story["status"] == "done" and len(matches) == 1, "Every Epic Story must be accepted before closure.")
-        delivered.append({"story": _story_snapshot(story), "acceptanceSha256": matches[0]["acceptanceSha256"],
-                          "authority": matches[0]["acceptance"]})
+        reconciled = [r for r in document.get("reconciliations", []) if story["id"] in r["context"]["storyIds"]]
+        require(story["status"] == "done" and len(matches) + len(reconciled) == 1,
+                "Every Epic Story must be accepted before closure.")
+        if matches:
+            delivered.append({"story": _story_snapshot(story), "acceptanceSha256": matches[0]["acceptanceSha256"],
+                              "authority": matches[0]["acceptance"]})
+        else:
+            record = reconciled[0]
+            delivered.append({"story": _story_snapshot(story), "reconciliationId": record["id"],
+                              "scopeSha256": record["scopeSha256"], "decisionEvidence": record["request"]["decisionEvidence"]})
     require(bool(stories), "An Epic without accepted Stories cannot close.")
     return {"epic": _epic_snapshot(epic), "delivered": delivered, "criteria": evidence}
 
@@ -1305,6 +1318,37 @@ def _change(repo, document, command, request, *, cache=None):
             _by_id(document, "stories", snapshot["id"])["status"] = "done" if effective == "accepted" else effective
 
 
+def reconciliation_context(repo, request):
+    from aim_quality.reconciliation import build_context
+    repo = Path(repo).resolve()
+    document, store_hash = load(repo, check_evidence=False)
+    cache = _verification_cache(document)
+    context = build_context(repo, document, request, cache)
+    _finish_verification(repo, cache)
+    return {"storeSha256": store_hash, **context,
+            "qualification": "Present authorization only; no original activation or past gates asserted."}
+
+
+def dispatch_check(repo, request, expected_sha256=None):
+    """Read-only start simulation; a fresh CAS activity start is still required."""
+    repo = Path(repo).resolve()
+    document, store_hash = load(repo, check_evidence=False)
+    require(store_hash == expected_sha256, "Stale dispatch check digest; recover current receipt.")
+    require(request.get("status") == "running", "Dispatch check requires an activity start request.")
+    cache = _verification_cache(document)
+    verify_evidence(repo, document, cache=cache)
+    candidate = copy.deepcopy(document)
+    _change(repo, candidate, "activity", request, cache=cache)
+    validate_document(candidate)
+    verify_evidence(repo, candidate, cache=cache)
+    delivery = _by_id(candidate, "deliveries", request["deliveryId"])
+    _finish_verification(repo, cache)
+    return {"eligible": True, "committed": False, "storeSha256": store_hash,
+            "deliveryId": delivery["id"], "scopeSha256": delivery["scopeSha256"],
+            "prospectiveAttempt": delivery["activityReceipts"][-1],
+            "nextStep": "Record this exact activity start under the unchanged CAS digest before host dispatch; this check neither launches nor reserves a worker."}
+
+
 def execute(repo, command, request, expected_sha256=None):
     """Apply one CAS mutation under a process lock, atomically replacing one file."""
     repo = Path(repo).resolve()
@@ -1323,7 +1367,15 @@ def execute(repo, command, request, expected_sha256=None):
         # artifact changed. Rework removes those bindings, then validates all
         # remaining authority and evidence before committing.
         candidate = copy.deepcopy(document)
-        _change(repo, candidate, command, request, cache=cache)
+        if command == "reconcile":
+            from aim_quality.reconciliation import apply
+            record, changed = apply(repo, candidate, request, cache)
+            if not changed:
+                validate_document(candidate)
+                verify_evidence(repo, candidate, cache=cache)
+                return {**status_result(candidate, current_hash), "reconciliation": copy.deepcopy(record), "idempotent": True}
+        else:
+            _change(repo, candidate, command, request, cache=cache)
         candidate["revision"] += 1
         candidate["updatedAt"] = now()
         validate_document(candidate)
@@ -1345,6 +1397,9 @@ def execute(repo, command, request, expected_sha256=None):
         payload = (json.dumps(candidate, ensure_ascii=False, indent=2) + "\n").encode()
         require(len(payload) <= MAX_BYTES, "Product backlog exceeds the bounded store size.")
         result = status_result(candidate, hashlib.sha256(payload).hexdigest(), quality=quality)
+        if command == "reconcile":
+            result["reconciliation"] = copy.deepcopy(record)
+            result["idempotent"] = False
         if command in {"activity", "orchestrate"}:
             result["executionGraph"] = project_graph(repo, candidate, result["storeSha256"], request["deliveryId"],
                                                      check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
@@ -1433,7 +1488,8 @@ def compact_result(result, *, receipt=False, delivery_id=None):
         return {"view": "receipt", "storeSha256": result["storeSha256"], "document": confirmed,
                 "nextStep": result["nextStep"], **({"quality": result["quality"]} if "quality" in result else {}),
                 **({"executionGraph": result["executionGraph"]} if "executionGraph" in result else {}),
-                **({"orchestration": result["orchestration"]} if "orchestration" in result else {})}
+                **({"orchestration": result["orchestration"]} if "orchestration" in result else {}),
+                **({"reconciliation": result["reconciliation"], "idempotent": result["idempotent"]} if "reconciliation" in result else {})}
     active = [d for d in document["deliveries"] if d["status"] not in {"accepted", "cancelled"}]
     selected = {s["id"] for d in active for s in d["stories"]}
     visible = ([s for s in document["stories"] if s["id"] in selected] if active else
@@ -1502,6 +1558,12 @@ def _project_readable_stories(repo, result, document):
                     evidence.extend({"label": record["criterionId"], "path": ref["path"],
                                      "url": "/api/evidence?path=" + quote(ref["path"], safe="")}
                                     for ref in record["evidence"])
+        reconciliations = [r for r in document.get("reconciliations", []) if story["id"] in r["context"]["storyIds"]]
+        for record in reconciliations:
+            for key in ("decisionEvidence", "reviewRecord"):
+                ref = record["request"][key]
+                evidence.append({"label": "Present reconciliation: " + key, "path": ref["path"],
+                                 "url": "/api/evidence?path=" + quote(ref["path"], safe="")})
         # The accepted native receipt resolves final owner assessment in the read
         # model without rewriting frozen prerequisite bytes or treating input as received.
         projected = copy.deepcopy(story)
@@ -1514,6 +1576,7 @@ def _project_readable_stories(repo, result, document):
                                   "ownerDecisionState": 'awaiting_owner' if story['status'] == 'acceptance' else
                                                         'approved' if story['status'] == 'done' else None,
                                   "deliveryIds": [item["id"] for item in related], "evidence": evidence,
+                                  "reconciliationIds": [r["id"] for r in reconciliations],
                                   "attention": next((item["reason"] for item in related if item["status"] == "blocked"), None)})
     return _project_observations(repo, result)
 
@@ -1549,7 +1612,7 @@ def _project_observations(repo, result):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, required=True)
-    parser.add_argument("command", choices=(*COMMANDS, "status", "quality", "graph", "closure-preview", "review-record"))
+    parser.add_argument("command", choices=(*COMMANDS, "status", "quality", "graph", "closure-preview", "review-record", "reconciliation-context", "dispatch-check"))
     parser.add_argument("--input", default="-", help="JSON file, or - for stdin")
     parser.add_argument("--expected-sha256", help="Digest returned by the last successful read or write")
     parser.add_argument("--compact", action="store_true", help="Current context for status; confirmed receipt for mutations; full history stays in the ledger")
@@ -1574,8 +1637,12 @@ def main(argv=None):
                     require(key not in result, "Review input has duplicate JSON keys.")
                     result[key] = value
                 return result
-            request = json.loads(raw, object_pairs_hook=pairs) if args.command == "review-record" else json.loads(raw)
-            if args.command == "review-record":
+            request = json.loads(raw, object_pairs_hook=pairs)
+            if args.command == "reconciliation-context":
+                result = reconciliation_context(args.repo, request)
+            elif args.command == "dispatch-check":
+                result = dispatch_check(args.repo, request, args.expected_sha256)
+            elif args.command == "review-record":
                 result = review_record(args.repo, request, args.expected_sha256)
             elif args.command == "closure-preview":
                 result = closure_preview(args.repo, request)
