@@ -1818,8 +1818,7 @@
         },
         "maxAdditionalAttempts": {
           "type": "integer",
-          "minimum": 1,
-          "maximum": 128
+          "description": "Positive cumulative additional-attempt allowance from 1 through 128; enforced by the native delivery-policy validator."
         }
       },
       "required": [

@@ -739,8 +739,7 @@
           "$ref": "#/$defs/evidence"
         },
         "maxAdditionalAttempts": {
-          "maximum": 128,
-          "minimum": 1,
+          "description": "Positive cumulative additional-attempt allowance from 1 through 128; enforced by the native delivery-policy validator.",
           "type": "integer"
         },
         "session": {

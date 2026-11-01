@@ -295,7 +295,7 @@
     {
       "output": "references/schemas/aim-product-backlog.schema.json",
       "source": "schemas/aim-product-backlog.schema.json",
-      "sourceSha256": "80584bd3101734154090f9b5102a3f76b56b6e4232569193e7656b8197284c00"
+      "sourceSha256": "79350c33f2d00ad82c2c03ee2e6c6c3fad886215d4d02e84c3f43b4d3bed5d6d"
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
