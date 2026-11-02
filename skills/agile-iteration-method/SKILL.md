@@ -31,6 +31,13 @@ are documented in `references/local-runtime-access.md`; load it when starting,
 inspecting or troubleshooting those features. These capabilities confer no
 additional task authority.
 
+Before the first Python helper, verify that an existing Python 3 interpreter
+actually runs in the agent's execution environment. Reuse a working interpreter;
+if unavailable, follow Python and installation readiness in
+`references/version-and-installation.md`: help with platform-specific setup and
+recheck before continuing. Do not assume the user already knows how to install
+Python or mistake skill installation for helper readiness.
+
 ## Ship, Loop and Graph engineering
 
 Default new delivery plans to **AIM 4.8 Native**. Small work uses a small graph;

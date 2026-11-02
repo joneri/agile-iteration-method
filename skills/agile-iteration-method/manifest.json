@@ -123,7 +123,7 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "09eee0a81fc4208d3ab2c0562f6c76b028c8a629091442fd62f6f3c9bcf98d3c"
+      "sourceSha256": "88257783d045aa655a856fe687eab5ed3103da08fe06b4a81589871cd95a1a20"
     },
     {
       "output": "references/native-orchestration.md",
@@ -268,7 +268,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "docs/workflow/version-and-installation.md",
-      "sourceSha256": "9d1e5826c549c2683a685f2d76c8f782e2aec623c6d625cd3b43316494e8656b"
+      "sourceSha256": "713b15e574db5ba5643ee6c6559463dda4ce7dfc3ee9c05f41a99cd76ac69fdc"
     },
     {
       "output": "references/schemas/aim-repo-profile.schema.json",

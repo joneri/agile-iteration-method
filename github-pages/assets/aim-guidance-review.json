@@ -1,15 +1,15 @@
 {
   "guidanceReviewVersion": 1,
   "productVersion": "4.8.7",
-  "reviewedOn": "2026-11-01",
+  "reviewedOn": "2026-11-02",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "17e28f4fefe46d34d8cf4cf38fb5b3f76b21ccc9ee12a38004dceb942fd677b2"
+      "sha256": "2165ceac176263aedad85ffd4db36d44481cb9ce81aaf66b03ae7a7c1b25f706"
     },
     {
       "path": "school.html",
-      "sha256": "826adbbe0873decc119efbdfbc5f4f76c8cbdea31dadcd51316f0c1c0898cad4"
+      "sha256": "c0af0f3c518ae323bd233e9d7f2cdabf70a9166cf591222bf6294f3c4aaa2768"
     }
   ],
   "sources": [
@@ -19,7 +19,7 @@
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sha256": "09eee0a81fc4208d3ab2c0562f6c76b028c8a629091442fd62f6f3c9bcf98d3c"
+      "sha256": "88257783d045aa655a856fe687eab5ed3103da08fe06b4a81589871cd95a1a20"
     },
     {
       "path": "docs/workflow/user-stories.md",
@@ -39,7 +39,7 @@
     },
     {
       "path": "docs/workflow/version-and-installation.md",
-      "sha256": "9d1e5826c549c2683a685f2d76c8f782e2aec623c6d625cd3b43316494e8656b"
+      "sha256": "713b15e574db5ba5643ee6c6559463dda4ce7dfc3ee9c05f41a99cd76ac69fdc"
     },
     {
       "path": "docs/workflow/cost-control-mode.md",
@@ -53,7 +53,7 @@
   "assessments": {
     "installationAndStart": {
       "conclusion": "updated",
-      "summary": "Reviewed public AIM 4.8.7 installation, upgrade and School empty/existing-repository paths. Standard skills CLI retrieves the complete GitHub package; project start calibrates missing/stale repository knowledge and configures role skills without treating global installation as project setup. Existing-repository guide remains read-only until a supplied intent, preserves user files and accepted history, and routes approved-scope changes to the explicit human disposition contract. Public release follows the reviewed source/tag/Actions gates; no automatic project-ledger mutation. Helper-only backlog changes now invalidate both UI payload fingerprints; actual process replacement is covered without changing VERSION."
+      "summary": "Reviewed the two-route preparation section before Lesson 1. Separate accessible tabs select starting from scratch or using an existing codebase; each contains its own installation/preflight prompt, project request and preparation steps in a bounded scroll area. Tab controls and the Lesson 1 link remain outside the scroll area. Direct links select the right guide; keyboard navigation, reduced-motion settings and JavaScript-free access are preserved. Both routes keep chat-first setup, Python/Node/npx checks, platform help and real user authorization for system installation. Homepage installation copy and its downloadable instructions remain synchronized; existing scope/history and final acceptance stay intact."
     },
     "deliveryModes": {
       "conclusion": "current",
@@ -76,8 +76,8 @@
       "summary": "Early baseline/challenge inputs are preserved before planned writes; final review and measurements assess the actual current product. Verified same-byte input relocation is an append-only reference correction, not a new assessment or acceptance. Write/final-review/product/measurement/progress bindings cannot be replaced with historical aliases. Changed baseline proof still becomes stale; later generations cannot inherit old aliases. Actual human/delegated final acceptance, independent review and separate Epic closure remain."
     },
     "modelsAndEvidence": {
-      "conclusion": "current",
-      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.7 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is optional creator experience, conditional on actual host/account controls, with no current price, universal savings or model-availability guarantee."
+      "conclusion": "updated",
+      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.7 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is explicitly a suggested setup; other combinations of models, reasoning levels and responsibilities may work better for the task, complexity and available resources. Actual host/account availability still applies. The personal project anecdote is removed; the example claims no measured comparison or universal benefit."
     }
   }
 }

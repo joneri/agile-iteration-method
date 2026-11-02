@@ -97,6 +97,15 @@
             <div class="command-box">
             <pre class="agent-prompt"><code id="agent-prompt">Set up Agile Iteration Method (AIM) for this repository.
 
+First check that Python 3 runs in the environment where you will execute AIM's
+helpers, and that Node.js/npm and npx are available for the skills CLI. Reuse
+working installations. If something is missing, identify that environment’s operating system,
+explain the next step and help me install it from the official source. Ask before
+installing system software. If you cannot perform the installation, walk me
+through it. Recheck the executable and version afterward before continuing;
+tell me if a terminal or agent restart is needed. Use the working Python command
+for subsequent AIM helpers; do not replace system Python or add pip packages.
+
 1. Install the complete skill with project scope:
    npx skills add joneri/agile-iteration-method --skill agile-iteration-method --agent &lt;agent&gt; --yes
    Choose codex, claude-code, or github-copilot for &lt;agent&gt;.
