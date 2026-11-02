@@ -12,12 +12,12 @@
   <script defer src="github-pages/assets/aim-school.js"></script>
 </head>
 <body class="school-page" data-aim-version="4.8.7">
-  <a class="skip-link" href="#main">Skip to lessons</a>
+  <a class="skip-link" href="#lesson-1">Skip to Lesson 1</a>
   <header class="site-nav">
     <nav class="container nav-inner" aria-label="Main navigation">
       <a class="brand" href="index.html" aria-label="AIM home"><img src="github-pages/assets/images/aim-4-logo.png" width="2172" height="724" alt="AIM — Agile Iteration Method"><span class="brand-version">School</span></a>
-      <div class="nav-links"><a href="#quick-start">Quick start</a><a href="#lessons">Lessons</a><a href="index.html#graph-engineering">About AIM</a></div>
-      <a class="button button-small" href="#install">Install AIM</a>
+      <div class="nav-links"><a href="#quick-start">Project setup</a><a href="#lessons">Lessons</a><a href="index.html#graph-engineering">About AIM</a></div>
+      <a class="button button-small" href="#quick-start">Set up AIM</a>
     </nav>
   </header>
   <main id="main">
@@ -26,9 +26,9 @@
         <div class="school-intro">
           <p class="eyebrow">AIM SCHOOL</p>
           <h1 id="school-title">Getting started with AIM</h1>
-          <p class="school-lead">Build a small task board from scratch, or bring AIM into an existing codebase. Learn how AIM prepares project knowledge and role skills, plans work, sets resource limits and checks the result.</p>
-          <div class="school-actions"><a class="button" href="#quick-start">Start the example <span aria-hidden="true">↓</span></a><a class="text-link" href="#existing-repo">Use your existing repo</a></div>
-          <p class="edition-note">For AIM 4.8.7 · Guidance checked <time datetime="2026-11-01">1 November 2026</time><br>Choose the empty-project example or the existing-repository guide below.</p>
+          <p class="school-lead">First prepare a project using one of the two setup guides. Then follow six lessons on requirements, planning, agent roles, resource limits and testing. The lessons use Pocket Board, a small task board, as their example.</p>
+          <div class="school-actions"><a class="button" href="#quick-start">Prepare a project <span aria-hidden="true">↓</span></a><a class="text-link" href="#existing-repo">Already have code?</a></div>
+          <p class="edition-note">For AIM 4.8.7 · Guidance checked <time datetime="2026-11-02">2 November 2026</time><br>Two project setup guides, followed by six lessons.</p>
         </div>
         <figure class="professor-intro">
           <div class="professor-stage"><img src="github-pages/assets/images/professor-aim.png" width="512" height="768" alt="Professor AIM, a friendly cartoon robot teacher with round glasses, a notebook and a yellow bow tie."></div>
@@ -37,46 +37,86 @@
       </div>
     </section>
 
-    <section class="quick-start" id="quick-start" aria-labelledby="quick-title">
+    <section class="project-preparation" id="quick-start" aria-labelledby="quick-title" data-preparation>
       <div class="container">
-        <div class="school-section-heading"><p class="eyebrow">START HERE</p><h2 id="quick-title">Example project: Pocket Board</h2><p>Pocket Board is a task board for personal use. You can add tasks and mark them complete. The tasks and their completed state should remain after a page reload. Each lesson uses this project to explain a part of the AIM workflow.</p></div>
+        <header class="school-section-heading preparation-heading">
+          <p class="eyebrow">BEFORE LESSON 1 · PROJECT PREPARATION</p>
+          <h2 id="quick-title">First, get some code to work with.</h2>
+          <p>Choose one of the two guides below. Build a small app from scratch, or work with a codebase you already have. Each guide helps you set up AIM and gives you an example request. Then continue to Lesson 1.</p>
+        </header>
+        <div class="preparation-shell">
+          <div class="preparation-tabs" aria-label="Choose how to prepare your project" data-preparation-tabs hidden>
+            <button type="button" id="new-project-tab" data-preparation-tab="new-project"><strong>Start from scratch</strong><span>Build the Pocket Board example</span></button>
+            <button type="button" id="existing-repo-tab" data-preparation-tab="existing-repo"><strong>Use an existing codebase</strong><span>Work with your current application</span></button>
+          </div>
+          <p class="preparation-scroll-hint" data-preparation-scroll-hint hidden>Scroll inside the guide to follow the steps. You can switch guides at any time.</p>
+          <section class="preparation-panel" id="new-project" aria-labelledby="new-project-title" data-preparation-panel>
+            <div class="preparation-panel-heading"><p class="eyebrow">FROM AN EMPTY PROJECT</p><h3 id="new-project-title">Build Pocket Board with AIM</h3><p>Pocket Board is a small task board for personal use. Add tasks, mark them complete and keep them after a page reload. Let your coding agent build it using the steps below, then use it as your example throughout the lessons.</p></div>
         <div class="quick-grid">
           <div class="quick-instructions">
-            <section class="quick-step" id="install" aria-labelledby="install-title"><span class="step-mark">1</span><div><h3 id="install-title">Install AIM in your project</h3><p>Create an empty project folder and open it in your coding agent. Run this in the project’s terminal, then select your agent and project in the installer.</p>
-              <div class="school-command"><p class="command-label">PROJECT TERMINAL</p><pre id="school-install"><code>npx skills add joneri/agile-iteration-method --skill agile-iteration-method</code></pre><button hidden class="school-copy" data-school-copy="school-install" data-copy-label="installation command" data-copy-target="terminal">Copy command</button><p class="school-copy-status" role="status" aria-live="polite"></p></div>
-              <p class="small-note">You need a supported coding agent, Node.js/npm for installation and Python 3 for AIM’s helpers. Codex, Claude Code and GitHub Copilot have maintained adapters. Reopen your agent session if the new skill does not appear.</p>
+            <section class="quick-step" id="install" aria-labelledby="install-title"><span class="step-mark">1</span><div><h4 id="install-title">Start in your AI tool’s chat</h4><p>Create or open an empty project in your AI tool, such as Codex, Claude Code or GitHub Copilot. Start a new chat in that project and paste this message. Your agent can handle installation if it has terminal access.</p>
+              <div class="school-command"><p class="command-label">AGENT CHAT · INSTALL AIM</p><pre id="school-install-chat"><code>Install Agile Iteration Method (AIM) in this project from
+joneri/agile-iteration-method using the official skills CLI.
+First check that Python 3 runs and that Node.js/npm and npx are available
+in the environment where you will run AIM. Reuse what already works.
+If anything is missing, explain how to install it on that environment’s operating
+system and help me through it. Ask before installing system software.
+Check again afterward before continuing.
+Select the agile-iteration-method skill, the adapter for this AI tool
+and project scope. Reuse AIM if it is already installed.
+Load the installed skill and confirm its version.
+Tell me if I need to reopen this chat before continuing.</code></pre><button hidden class="school-copy" data-school-copy="school-install-chat" data-copy-label="installation prompt" data-copy-target="chat">Copy installation prompt</button><p class="school-copy-status" role="status" aria-live="polite"></p></div>
+              <details><summary>Prefer to install in a terminal?</summary><p>Run this in the project’s terminal, then select your agent and project scope in the installer.</p>
+                <div class="school-command"><p class="command-label">PROJECT TERMINAL</p><pre id="school-install"><code>npx skills add joneri/agile-iteration-method --skill agile-iteration-method</code></pre><button hidden class="school-copy" data-school-copy="school-install" data-copy-label="installation command" data-copy-target="terminal">Copy command</button><p class="school-copy-status" role="status" aria-live="polite"></p></div>
+              </details>
+              <p class="small-note">You do not need to know whether Python is already installed. Your agent checks Python 3 and Node.js/npm and helps you with anything missing. It verifies the installation before continuing. If your agent cannot run commands, it can guide you through the <a href="https://www.python.org/downloads/">official Python installer</a> and the <a href="https://nodejs.org/en/download">Node.js installer</a>. Reopen your agent session if the installed skill does not appear.</p>
             </div></section>
-            <section class="quick-step" aria-labelledby="intent-title"><span class="step-mark">2</span><div><h3 id="intent-title">Set up orchestration and describe the project</h3><p>For this example, use <strong>Ship / Auto</strong>. Ship means completing the agreed project before final acceptance. Auto lets the agent continue authorized work without asking you to relay routine decisions. Start by pasting this setup prompt into your coding agent’s chat:</p>
-              <div class="school-command"><p class="command-label">AGENT CHAT · FIRST MESSAGE</p><pre id="school-mandate"><code>Use AIM in Ship / Auto. Act as my product owner and orchestrator.
+            <section class="quick-step" aria-labelledby="intent-title"><span class="step-mark">2</span><div><h4 id="intent-title">Set up orchestration and describe the project</h4><p>For this example, use <strong>Ship / Auto</strong>. Ship means completing the agreed project before final acceptance. Auto lets the agent continue authorized work without asking you to relay routine decisions. Start by pasting this setup prompt into your coding agent’s chat:</p>
+              <div class="school-command"><p class="command-label">AGENT CHAT · SET UP AIM</p><pre id="school-mandate"><code>Use AIM in Ship / Auto. Act as my product owner and orchestrator.
 Delegate delivery and arrange a separate reviewer.
 You may approve delivery plans and resolve routine implementation questions
 within the scope and resource limit we agree.
 Confirm that scope and limit with me before implementation.
 I retain scope changes, resource increases, publication and final acceptance.</code></pre><button hidden class="school-copy" data-school-copy="school-mandate" data-copy-label="orchestration setup" data-copy-target="chat">Copy setup prompt</button><p class="school-copy-status" role="status" aria-live="polite"></p></div>
-              <p>Then describe the project in a second message. AIM uses this request to prepare the project context, requirements and work graph. In an empty repository, information about the technology and project starts as provisional and is checked as the project develops.</p>
-              <div class="school-command"><p class="command-label">AGENT CHAT · SECOND MESSAGE</p><pre id="school-intent"><code>/aim start "Build Pocket Board: a local task board where I can add tasks, mark them complete and keep them after a page reload. Make it keyboard accessible and usable on a phone. No accounts or server. Plan the work and verify the result; I will give final acceptance."</code></pre><button hidden class="school-copy" data-school-copy="school-intent" data-copy-label="Pocket Board intent" data-copy-target="chat">Copy start prompt</button><p class="school-copy-status" role="status" aria-live="polite"></p></div>
+              <p>Then describe the project in your next message. AIM uses this request to prepare the project context, requirements and work graph. In an empty repository, information about the technology and project starts as provisional and is checked as the project develops.</p>
+              <div class="school-command"><p class="command-label">AGENT CHAT · DESCRIBE THE PROJECT</p><pre id="school-intent"><code>/aim start "Build Pocket Board: a local task board where I can add tasks, mark them complete and keep them after a page reload. Make it keyboard accessible and usable on a phone. No accounts or server. Plan the work and verify the result; I will give final acceptance."</code></pre><button hidden class="school-copy" data-school-copy="school-intent" data-copy-label="Pocket Board intent" data-copy-target="chat">Copy start prompt</button><p class="school-copy-status" role="status" aria-live="polite"></p></div>
               <p class="small-note">If your agent does not support slash commands, write the same request in plain language and name AIM. New delivery plans use Native Graph engineering by default. AIM creates the graph from the requirements.</p>
             </div></section>
-            <section class="quick-step" aria-labelledby="assess-title"><span class="step-mark">3</span><div><h3 id="assess-title">Agree the limits, then test the result</h3><p>Agree the project’s scope and resource limit with the agent before implementation. With the setup above, the agent can approve delivery plans within that agreement, coordinate the work and handle routine implementation questions. It returns to you when it needs a reserved decision or presents the verified result for your acceptance.</p><p>Test Pocket Board by adding “Buy milk,” completing it and reloading the page. Try the same actions with the keyboard and on a phone. Accept the delivery when it meets the agreed criteria; otherwise describe what needs correcting.</p><p class="small-note">Use <code>/aim ui</code> to inspect Stories and evidence or <code>/aim status</code> in chat. Use <code>/aim continue</code> to resume authorized work. A continue command does not approve a pending decision.</p></div></section>
+            <section class="quick-step" aria-labelledby="assess-title"><span class="step-mark">3</span><div><h4 id="assess-title">Agree the limits, then test the result</h4><p>Agree the project’s scope and resource limit with the agent before implementation. With the setup above, the agent can approve delivery plans within that agreement, coordinate the work and handle routine implementation questions. It returns to you when it needs a reserved decision or presents the verified result for your acceptance.</p><p>Test Pocket Board by adding “Buy milk,” completing it and reloading the page. Try the same actions with the keyboard and on a phone. Accept the delivery when it meets the agreed criteria; otherwise describe what needs correcting.</p><p class="small-note">Use <code>/aim ui</code> to inspect Stories and evidence or <code>/aim status</code> in chat. Use <code>/aim continue</code> to resume authorized work. A continue command does not approve a pending decision.</p></div></section>
           </div>
           <aside class="quick-companion" aria-label="Pocket Board example and Professor AIM’s tip">
             <div class="board-example"><div class="board-example-heading"><strong>Pocket Board</strong><span>Illustration</span></div><p class="board-task"><span class="example-check" aria-hidden="true">✓</span><s>Buy milk</s></p><p class="board-task"><span class="example-check empty" aria-hidden="true"></span>Try the keyboard route</p><p class="board-caption">Illustration of the task board described in the example.</p></div>
             <div class="professor-note"><p class="note-label">PROFESSOR AIM / WRITING THE FIRST REQUEST</p><p>Describe the main behavior, the quality requirements and any restrictions. For Pocket Board, this means saving tasks between page reloads, supporting keyboard use and keeping the application local. AIM uses these requirements when planning and checking the work.</p><a href="#lesson-1">Read about requirements →</a></div>
           </aside>
         </div>
-      </div>
-    </section>
-
-    <section class="quick-start" id="existing-repo" aria-labelledby="existing-repo-title">
-      <div class="container">
-        <div class="school-section-heading"><p class="eyebrow">ALREADY HAVE A CODEBASE?</p><h2 id="existing-repo-title">Make AIM fit your existing project.</h2><p>Open your repository. Reuse an installed AIM skill, or install it using the command above. Start with the change you need. AIM checks the project knowledge and role configuration relevant to that change, refreshes what is missing or stale, and continues into planning.</p></div>
+          </section>
+          <section class="preparation-panel" id="existing-repo" aria-labelledby="existing-repo-title" data-preparation-panel>
+            <div class="preparation-panel-heading"><p class="eyebrow">FROM YOUR EXISTING CODE</p><h3 id="existing-repo-title">Bring AIM into your application</h3><p>Use a project you already have. The example below improves checkout recovery; replace it with a change that fits your application. AIM checks the relevant project knowledge and role skills before planning the work.</p></div>
         <div class="quick-grid">
           <div class="quick-instructions">
-            <section class="quick-step" aria-labelledby="existing-intent-title"><span class="step-mark">1</span><div><h3 id="existing-intent-title">Describe a change in the current application</h3><p>Name the behavior you need and the constraints AIM should preserve.</p>
+            <section class="quick-step" id="existing-install" aria-labelledby="existing-install-title"><span class="step-mark">1</span><div><h4 id="existing-install-title">Open your codebase and prepare AIM</h4><p>Open your existing project folder in your AI tool, such as Codex, Claude Code or GitHub Copilot. Start a new chat in that project and paste this message. Your agent can handle installation if it has terminal access.</p>
+              <div class="school-command"><p class="command-label">AGENT CHAT · INSTALL AIM</p><pre id="school-existing-install-chat"><code>Install Agile Iteration Method (AIM) in this project from
+joneri/agile-iteration-method using the official skills CLI.
+First check that Python 3 runs and that Node.js/npm and npx are available
+in the environment where you will run AIM. Reuse what already works.
+If anything is missing, explain how to install it on that environment’s operating
+system and help me through it. Ask before installing system software.
+Check again afterward before continuing.
+Preserve my project files and existing AIM history.
+Select the agile-iteration-method skill, the adapter for this AI tool
+and project scope. Reuse AIM if it is already installed.
+Load the installed skill and confirm its version.
+Tell me if I need to reopen this chat before continuing.</code></pre><button hidden class="school-copy" data-school-copy="school-existing-install-chat" data-copy-label="installation prompt" data-copy-target="chat">Copy installation prompt</button><p class="school-copy-status" role="status" aria-live="polite"></p></div>
+              <details><summary>Prefer to install in a terminal?</summary><p>Run this in the project’s terminal, then select your agent and project scope in the installer.</p>
+                <div class="school-command"><p class="command-label">PROJECT TERMINAL</p><pre id="school-existing-install"><code>npx skills add joneri/agile-iteration-method --skill agile-iteration-method</code></pre><button hidden class="school-copy" data-school-copy="school-existing-install" data-copy-label="installation command" data-copy-target="terminal">Copy command</button><p class="school-copy-status" role="status" aria-live="polite"></p></div>
+              </details>
+              <p class="small-note">You do not need to know whether Python is already installed. Your agent checks Python 3 and Node.js/npm and helps you with anything missing. It verifies the installation before continuing. If your agent cannot run commands, it can guide you through the <a href="https://www.python.org/downloads/">official Python installer</a> and the <a href="https://nodejs.org/en/download">Node.js installer</a>. Reopen your agent session if the installed skill does not appear.</p>
+            </div></section>
+            <section class="quick-step" aria-labelledby="existing-intent-title"><span class="step-mark">2</span><div><h4 id="existing-intent-title">Describe a change in the current application</h4><p>Name the behavior you need and the constraints AIM should preserve.</p>
               <div class="school-command"><p class="command-label">EXISTING REPOSITORY · AGENT CHAT</p><pre id="school-existing-intent"><code>/aim start "Improve checkout recovery in this existing application. Customers must be able to check a delayed payment confirmation without placing a duplicate order. Use the current stack, architecture and test tools. Preserve existing checkout behavior and unrelated local changes. Verify the recovery journey and relevant regressions. I retain scope changes, publication and final acceptance."</code></pre><button hidden class="school-copy" data-school-copy="school-existing-intent" data-copy-label="existing repository intent" data-copy-target="chat">Copy existing-repo prompt</button><p class="school-copy-status" role="status" aria-live="polite"></p></div>
             </div></section>
-            <section class="quick-step" aria-labelledby="calibration-title"><span class="step-mark">2</span><div><h3 id="calibration-title">Build verified project knowledge</h3><p>AIM inspects relevant code, project instructions, build metadata, tests and maintained documentation. Calibration records the stack, architecture, conventions, verification commands, important code areas and risks, with sources and recheck triggers. Uncertain facts stay provisional.</p><p>With repository sharing, compact knowledge lives in <code>aim.profile.yaml</code>. Other setups can use permitted external storage or session context. Existing verified knowledge is reused and affected facts are refreshed when the project changes.</p></div></section>
-            <section class="quick-step" aria-labelledby="role-skills-title"><span class="step-mark">3</span><div><h3 id="role-skills-title">Equip the four canonical roles</h3><p>AIM uses that knowledge to prepare relevant role responsibilities, skills and checks. Where the setup includes it, <code>aim.roles.yaml</code> holds the project-specific configuration.</p>
+            <section class="quick-step" aria-labelledby="calibration-title"><span class="step-mark">3</span><div><h4 id="calibration-title">Build verified project knowledge</h4><p>AIM inspects relevant code, project instructions, build metadata, tests and maintained documentation. Calibration records the stack, architecture, conventions, verification commands, important code areas and risks, with sources and recheck triggers. Uncertain facts stay provisional.</p><p>With repository sharing, compact knowledge lives in <code>aim.profile.yaml</code>. Other setups can use permitted external storage or session context. Existing verified knowledge is reused and affected facts are refreshed when the project changes.</p></div></section>
+            <section class="quick-step" aria-labelledby="role-skills-title"><span class="step-mark">4</span><div><h4 id="role-skills-title">Equip the four canonical roles</h4><p>AIM uses that knowledge to prepare relevant role responsibilities, skills and checks. Where the setup includes it, <code>aim.roles.yaml</code> holds the project-specific configuration.</p>
               <div class="school-table-wrap" tabindex="0" role="region" aria-label="Canonical roles and project skills"><table class="school-table"><caption>The roles stay the same; their project expertise changes.</caption><thead><tr><th scope="col">Role</th><th scope="col">What it needs for this project</th></tr></thead><tbody><tr><th scope="row">PO · Product Owner</th><td>Users, product purpose and domain rules to frame outcomes and priority.</td></tr><tr><th scope="row">TDO · Technical Delivery Owner</th><td>Architecture, dependencies and verification methods to plan Stories and validate delivery.</td></tr><tr><th scope="row">Dev</th><td>The affected framework, implementation conventions and development skills to build the approved change.</td></tr><tr><th scope="row">Reviewer</th><td>Requirements, regression risks and testing skills to independently challenge material changes.</td></tr></tbody></table></div>
               <p>Each role has a bundled engineering skill. Project skills are selected from actual available instructions and read before use. Missing capabilities are reported with a fallback. Native role files are prepared where permitted; the coding platform must load them and may need a session reload.</p>
               <p>Review the proposed scope, checks and resource limits before implementation. The default Strict mode keeps plan approval with you. Dev builds, a separate Reviewer checks material work, and TDO validates the integrated result before PO assesses it. Final acceptance stays with you unless explicitly delegated.</p>
@@ -87,11 +127,14 @@ I retain scope changes, resource increases, publication and final acceptance.</c
             <div class="professor-note"><p class="note-label">REFRESH WHEN THE PROJECT CHANGES</p><p>Normal starts already include needed preparation. Use <code>/aim calibrate-repo</code> for a separate knowledge refresh, then <code>/aim configure-agents</code> to refresh affected roles and skill bindings. AIM preserves user-edited settings and the selected storage policy.</p><a href="https://github.com/joneri/agile-iteration-method/blob/main/docs/product/existing-repositories.md">Read the full existing-repository guide →</a></div>
           </aside>
         </div>
+          </section>
+          <footer class="preparation-next"><div><strong>Your project is the starting point.</strong><p>Once you have code to work with, the six lessons show how to guide AIM.</p></div><a class="button" href="#lesson-1">Go to Lesson 1 <span aria-hidden="true">→</span></a></footer>
+        </div>
       </div>
     </section>
 
     <div class="container classroom" id="lessons">
-      <nav class="lesson-nav" aria-label="Lesson navigation"><p class="eyebrow">CONTENTS</p><p class="lesson-nav-title">The AIM workflow</p><a class="back-to-start" href="#existing-repo">Prepare an existing repo</a><ol><li><a href="#lesson-1">Requirements</a></li><li><a href="#lesson-2">Work planning</a></li><li><a href="#lesson-3">Models and reasoning</a></li><li><a href="#lesson-4">Decision authority</a></li><li><a href="#lesson-5">Resource use</a></li><li><a href="#lesson-6">Testing and acceptance</a></li></ol><a class="back-to-start" href="#quick-start">↑ Back to quick start</a></nav>
+      <nav class="lesson-nav" aria-label="Lesson navigation"><p class="eyebrow">CONTENTS</p><p class="lesson-nav-title">The AIM workflow</p><a class="back-to-start" href="#existing-repo">Prepare an existing repo</a><ol><li><a href="#lesson-1">Requirements</a></li><li><a href="#lesson-2">Work planning</a></li><li><a href="#lesson-3">Models and reasoning</a></li><li><a href="#lesson-4">Decision authority</a></li><li><a href="#lesson-5">Resource use</a></li><li><a href="#lesson-6">Testing and acceptance</a></li></ol><a class="back-to-start" href="#quick-start">↑ Back to project setup</a></nav>
       <div class="lesson-content">
         <section class="lesson" id="lesson-1" data-lesson aria-labelledby="lesson-1-title">
           <p class="eyebrow">LESSON 1 / INTENT</p><h2 id="lesson-1-title">Describing requirements</h2>
@@ -115,7 +158,7 @@ I retain scope changes, resource increases, publication and final acceptance.</c
         <section class="lesson" id="lesson-3" data-lesson aria-labelledby="lesson-3-title">
           <p class="eyebrow">LESSON 3 / MODEL ALLOCATION</p><h2 id="lesson-3-title">Choosing models and reasoning levels</h2>
           <p>Model choice depends on the work. A more capable model can help with ambiguous requirements, difficult planning or diagnosis. An implementer may be able to use a less costly model when its assignment is well specified. The reviewer needs enough capability to evaluate the relevant behavior and risks. It can use the same model as the implementer, provided it is a separate agent.</p>
-          <div class="model-example"><p class="note-label">AN OPTIONAL CODEX SETUP</p><dl><div><dt>Coordinator</dt><dd>GPT-6.1 Sol · Extra High<br><span>Plans, assigns, follows up and integrates.</span></dd></div><div><dt>Implementer</dt><dd>GPT-6 Luna · Max<br><span>Builds the bounded assignment and returns evidence.</span></dd></div><div><dt>Reviewer</dt><dd>A separate agent<br><span>Independently checks requirements, behavior and regressions.</span></dd></div></dl><p>This arrangement has been useful in the AIM creator’s Paraclones work. It is an experience report, not a controlled comparison or a general cost or quality guarantee. Pocket Board may need a simpler allocation.</p></div>
+          <div class="model-example"><p class="note-label">AN OPTIONAL CODEX SETUP</p><dl><div><dt>Coordinator</dt><dd>GPT-6.1 Sol · Extra High<br><span>Plans, assigns, follows up and integrates.</span></dd></div><div><dt>Implementer</dt><dd>GPT-6 Luna · Max<br><span>Builds the bounded assignment and returns evidence.</span></dd></div><div><dt>Reviewer</dt><dd>A separate agent<br><span>Independently checks requirements, behavior and regressions.</span></dd></div></dl><p>This is one suggested setup. Other combinations of models, reasoning levels and responsibilities may work better depending on the task, its complexity and the resources available.</p></div>
           <p>Select only models and reasoning levels your account and coding platform actually offer. Set the coordinator in the host’s model controls; ask it to use the chosen implementer when delegation controls support that. A prompt cannot create a missing model, change a host limit or guarantee that a requested setting was applied. Have the coordinator report the actual allocation.</p>
           <aside class="professor-note"><p class="note-label">PROFESSOR AIM / CHOOSING A REASONING LEVEL</p><p>Reasoning levels affect the effort a model spends on a task. A higher level may help with difficult planning or diagnosis and may also increase time and resource use. For Pocket Board, implementing an agreed task-saving format may need less reasoning than diagnosing why completed tasks disappear after a reload. Include planning and supervision when comparing the total resource use.</p></aside>
           <p class="source-note">Model controls and availability change. Check <a href="https://learn.chatgpt.com/guides/best-practices">OpenAI’s current Codex guidance</a> and your host’s actual selector. This is an optional example; AIM also works through its Claude Code and GitHub Copilot adapters.</p>

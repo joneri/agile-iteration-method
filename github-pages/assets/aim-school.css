@@ -13,14 +13,37 @@
 .professor-intro figcaption { position: relative; margin: -3px 0 0; padding: 20px 24px; background: var(--navy); color: white; border-radius: 6px; }
 .professor-intro figcaption strong { display: block; color: #f6d47c; font: .75rem var(--mono); margin-bottom: 10px; }
 .professor-intro figcaption span { display: block; font-size: 1rem; line-height: 1.5; }
-.quick-start { padding: 68px 0 76px; border-bottom: 1px solid var(--line); }
+.project-preparation { padding: 68px 0 76px; border-bottom: 1px solid var(--line); scroll-margin-top: 24px; }
 .school-section-heading { max-width: 770px; margin-bottom: 42px; }
 .school-section-heading > p:last-child { margin-top: 18px; color: var(--muted); }
+.preparation-heading .eyebrow { color: var(--blue); }
+.preparation-shell { border: 1px solid #b7cce5; border-radius: 8px; overflow: hidden; background: white; }
+.preparation-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); background: #eaf3ff; border-bottom: 1px solid #b7cce5; }
+.preparation-tabs[hidden], .preparation-panel[hidden], .preparation-scroll-hint[hidden] { display: none; }
+.preparation-tabs button { position: relative; min-width: 0; padding: 22px 28px; text-align: left; background: transparent; border: 0; border-radius: 0; color: var(--navy); cursor: pointer; }
+.preparation-tabs button + button { border-left: 1px solid #b7cce5; }
+.preparation-tabs button strong { display: block; font: 650 1.12rem/1.35 var(--body); }
+.preparation-tabs button span { display: block; margin-top: 5px; font-size: .78rem; color: var(--muted); }
+.preparation-tabs button[aria-selected="true"] { background: white; box-shadow: inset 0 4px 0 var(--blue); }
+.preparation-tabs button:hover { background: #f4f8fd; }
+.preparation-tabs button:focus-visible { outline: 3px solid var(--blue); outline-offset: -5px; }
+.preparation-scroll-hint { padding: 12px 28px; margin: 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .75rem; background: var(--paper); }
+.preparation-panel { padding: 32px; }
+[data-preparation-ready] .preparation-panel { height: clamp(18rem, 45vh, 30rem); overflow-y: auto; scrollbar-gutter: stable; scroll-padding-top: 24px; }
+.preparation-panel:focus-visible { outline: 3px solid var(--blue); outline-offset: -4px; }
+.preparation-panel-heading { max-width: 750px; margin-bottom: 30px; }
+.preparation-panel-heading h3 { font: 650 1.85rem/1.25 var(--display); margin-top: 12px; }
+.preparation-panel-heading > p:last-child { margin-top: 14px; color: var(--muted); }
+.preparation-panel .quick-grid { grid-template-columns: minmax(0, 1.7fr) minmax(0, .8fr); gap: 34px; }
+.preparation-next { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 28px; border-top: 1px solid #b7cce5; background: #eaf3ff; }
+.preparation-next strong { color: var(--navy); font-size: .95rem; }
+.preparation-next p { margin-top: 6px; font-size: .8rem; color: var(--muted); }
+.preparation-next .button { flex-shrink: 0; gap: 24px; }
 .quick-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, .8fr); gap: 56px; align-items: start; }
 .quick-step { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 18px; }
 .quick-step + .quick-step { margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--line); }
 .step-mark { display: grid; place-items: center; width: 30px; height: 30px; background: var(--navy); color: white; border-radius: 50%; font: .8rem var(--mono); }
-.quick-step h3 { margin-bottom: 12px; }
+.quick-step h4 { margin: 0 0 12px; font: 650 1.08rem/1.4 var(--body); }
 .quick-step p + p { margin-top: 12px; }
 .school-command { margin: 20px 0 12px; padding: 18px; border: 1px solid var(--line); background: var(--paper); border-radius: 5px; }
 .command-label { font: .65rem/1.5 var(--mono); color: var(--muted); letter-spacing: .04em; }
@@ -122,7 +145,16 @@
   .professor-stage::before { inset: 38px -5px 0 0; }
   .professor-intro figcaption { margin: 0 0 20px -10px; padding: 18px; }
   .professor-intro figcaption span { font-size: .85rem; }
-  .quick-start { padding: 42px 0; }
+  .project-preparation { padding: 42px 0; }
+  .preparation-tabs button { padding: 18px 14px; }
+  .preparation-tabs button strong { font-size: .95rem; }
+  .preparation-tabs button span { font-size: .7rem; }
+  .preparation-scroll-hint { padding: 12px 16px; }
+  .preparation-panel { padding: 24px 16px; }
+  .preparation-panel-heading h3 { font-size: 1.5rem; }
+  .preparation-panel .quick-grid { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+  .preparation-next { display: block; padding: 20px 16px; }
+  .preparation-next .button { margin-top: 18px; width: 100%; justify-content: space-between; }
   .quick-grid { grid-template-columns: minmax(0, 1fr); gap: 30px; }
   .quick-step { grid-template-columns: 26px minmax(0, 1fr); gap: 12px; }
   .step-mark { width: 26px; height: 26px; }

@@ -3,6 +3,11 @@
 
 # Install AIM with the adaptive installer
 
+New to Python or installation tools? Ask your coding agent to check the
+[Python and installation prerequisites](version-and-installation.md#python-and-installation-readiness)
+and help you install anything missing before proceeding. The check runs in the
+same environment as AIM; a working existing interpreter is reused.
+
 This guide covers AIM's guided repository setup. For the standard portable Agent
 Skill installation, run:
 

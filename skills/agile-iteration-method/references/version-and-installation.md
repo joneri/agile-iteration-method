@@ -36,6 +36,51 @@ that generated directory are never edited as independent method truth.
 The public skill name is `agile-iteration-method`. The GitHub source is
 `joneri/agile-iteration-method`.
 
+### Python and installation readiness
+
+The coding agent helps establish prerequisites rather than leaving a beginner
+to interpret a failed helper launch. Before the first Python helper or AIM UI,
+verify an existing Python 3 interpreter in the environment where the agent
+executes commands. A Python installed on the user's desktop does not establish
+readiness in a separate remote workspace or container. If the host supplies a
+working interpreter, reuse it.
+
+Run a harmless check that prints the actual executable and version, for example:
+
+```bash
+python3 -c "import sys; print(sys.executable); print(sys.version)"
+```
+
+On Windows, an existing interpreter may instead be available through `py -3`
+or `python`. Require successful execution and a Python 3 version; a command name,
+Store shortcut or installer prompt is not a verified interpreter. Use the
+working command for subsequent helpers, even when examples show `python3`.
+Do not repeatedly try helper launches while the prerequisite is unresolved.
+
+If Python is missing or cannot run, identify the operating system and explain
+the next concrete step in plain language. Use current official instructions:
+
+- [Windows](https://docs.python.org/3/using/windows.html): guide the user through
+  the Python install manager from python.org or the Microsoft Store.
+- [macOS](https://docs.python.org/3/using/mac.html): guide the user through the
+  signed Python installer from python.org.
+- [Linux](https://docs.python.org/3/using/unix.html): identify the distribution
+  and its supported package-manager route; many distributions already provide Python.
+
+Offer to perform the concrete installation when the host permits it and the
+user authorizes it. Otherwise walk the user through the official installer.
+Do not silently replace a working Python, change system Python or install a
+new package manager. After installation, reopen the terminal/agent session if
+needed and repeat the executable/version check in the actual execution
+environment. Continue from the same requested AIM setup when it succeeds;
+otherwise state what remains missing without claiming readiness.
+
+The standard skills CLI additionally needs Node.js/npm. Check the existing
+`node`, `npm` and `npx` commands before a CLI installation; if missing, guide the
+user through the [official Node.js installer](https://nodejs.org/en/download)
+and recheck. AIM's bundled Python helpers use the standard library; prerequisite
+setup does not require project pip packages or a new virtual environment.
+
 ```bash
 npx skills add joneri/agile-iteration-method \
   --skill agile-iteration-method
