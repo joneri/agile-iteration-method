@@ -328,7 +328,7 @@
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "17918d37804d2ef41f8de2d22e54b6827192ab00e39fcf2761606928257f0752"
+      "sourceSha256": "4eb4bf6ba08b4f415d0e24e5f5c8f6f756e1aef3f7dc18a6db8c8cd74d51f1c2"
     },
     {
       "output": "scripts/aim_observations.py",
