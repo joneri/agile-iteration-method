@@ -9,7 +9,7 @@
     },
     {
       "path": "school.html",
-      "sha256": "a62ba8776c0f1118f5c5c2a676611b9dc0551675ccfff52e321a84fab96912b5"
+      "sha256": "2930f5ec4cdb3431f98cb010e473c87d5b85428d375b2a5d2e91ae71cbcb0c5d"
     }
   ],
   "sources": [
@@ -73,7 +73,7 @@
     },
     "verificationAndAcceptance": {
       "conclusion": "updated",
-      "summary": "Early baseline/challenge inputs are preserved before planned writes; final review and measurements assess the actual current product. Verified same-byte input relocation is an append-only reference correction, not a new assessment or acceptance. Write/final-review/product/measurement/progress bindings cannot be replaced with historical aliases. Changed baseline proof still becomes stale; later generations cannot inherit old aliases. Actual human/delegated final acceptance, independent review and separate Epic closure remain. School now provides a direct learning-from-mistakes reference: checks and human reports, attempt/source traceability versus causal diagnosis, evidence-linked learning share and contextual recall, revision/withdrawal, local registry boundaries and later verification of benefit. Checked against engineering-delivery Shared local learning, reflection Method feedback, and aim_quality/learning.py. The generic duplicate date-helper example is illustrative, not an observed delivery. No automatic team synchronization, daily system-prompt rewriting, model retraining or universal host interception is claimed."
+      "summary": "School explains prevention through repository knowledge/localities and learning through checks, feedback, source/attempt traceability, diagnosis, evidence-linked sharing and contextual recall. The Pocket Board archiving example connects existing task state, persistence and verification to new behavior. Checked against repo-awareness, calibration consumer checks/targeted refresh, engineering-delivery Shared local learning, reflection Method feedback and aim_quality/learning.py. Discovery pointers require code inspection and affected knowledge refresh; they do not constitute a full function catalogue or guaranteed semantic duplicate detection. Local sharing is distinct from cross-machine synchronization. Advice and source fingerprints do not prove general prevention; later benefit requires observation. No model retraining, daily prompt rewriting or universal host interception is claimed. Existing current-source final review, original criteria and actual owner acceptance remain unchanged."
     },
     "modelsAndEvidence": {
       "conclusion": "updated",
