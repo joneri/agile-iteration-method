@@ -19,9 +19,9 @@ import tempfile
 from datetime import datetime, timezone
 from aim_quality.files import read_evidence
 from aim_runtime_lock import runtime_lock
+from aim_stories import FILE as LEDGER, MAX_PRODUCT_BACKLOG_BYTES
 
 FILE = '.aim/delivery-observations.json'
-LEDGER = '.aim/product-backlog.json'
 LIMIT = 2_000_000
 HISTORY_LIMIT = 128
 STATES = {'pending', 'running', 'completed', 'failed', 'blocked'}
@@ -46,7 +46,8 @@ def identifier(value):
 
 
 def fingerprint(repo, path):
-    return hashlib.sha256(read_evidence(repo, path, LIMIT)).hexdigest()
+    maximum = MAX_PRODUCT_BACKLOG_BYTES if path == LEDGER else LIMIT
+    return hashlib.sha256(read_evidence(repo, path, maximum)).hexdigest()
 
 
 def reference(repo, ref, verify=True):
@@ -172,7 +173,7 @@ def import_entry(repo, request, expected_sha256=None):
             require(request['entry']['deliveryId'] != current['deliveryId'],
                     'Use a current import to refresh the current delivery.')
         require(fingerprint(repo, LEDGER) == request['ledgerSha256'], 'Native ledger changed before import.')
-        native = json.loads(read_evidence(repo, LEDGER, LIMIT))
+        native = json.loads(read_evidence(repo, LEDGER, MAX_PRODUCT_BACKLOG_BYTES))
         from aim_stories import validate_document
         validate_document(native)
         entry = request['entry']; validate_entry(repo, entry)

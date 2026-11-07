@@ -35,7 +35,8 @@ from aim_runtime_lock import runtime_lock
 from aim_validator.schema_subset import validate as schema_validate
 
 FILE = ".aim/product-backlog.json"
-MAX_BYTES = 1_000_000
+MAX_PRODUCT_BACKLOG_BYTES = 10_000_000
+MAX_REQUEST_BYTES = 1_000_000
 MAX_ITEMS = 256
 COLUMNS = (("backlog", "Backlog"), ("ready", "Ready"),
            ("in_progress", "In progress"), ("review", "Review"),
@@ -187,7 +188,7 @@ def _by_id(document, collection, identifier):
     return matches[0]
 
 
-RAW_OBSERVATION_CACHE_BYTES = 4 * MAX_BYTES
+RAW_OBSERVATION_CACHE_BYTES = 4 * EVIDENCE_MAX_BYTES
 
 
 class _EvidenceCache(dict):
@@ -351,7 +352,7 @@ def _ref(repo, reference, *, product=False, cache=None):
         require(not ledger.exists() or not ledger.samefile(Path(repo) / path),
                 "Evidence must be independent of the product backlog file identity.")
         before = _evidence_stamp(repo, path)
-        payload = read_evidence(repo, path, MAX_BYTES)
+        payload = read_evidence(repo, path, EVIDENCE_MAX_BYTES)
         require(before == _evidence_stamp(repo, path), f"Evidence changed while reading: {path}.")
         actual_hash = hashlib.sha256(payload).hexdigest()
         if cache is not None:
@@ -540,7 +541,7 @@ def _source_bindings(repo, paths, *, cache=None):
                 require(before == cache[path][0], f"Source changed while binding: {path}.")
                 fingerprint = cache[path][1]
             else:
-                payload = read_evidence(repo, path, MAX_BYTES)
+                payload = read_evidence(repo, path, EVIDENCE_MAX_BYTES)
                 fingerprint = hashlib.sha256(payload).hexdigest()
                 if cache is not None:
                     _remember_quality_context(cache, path, payload)
@@ -902,7 +903,7 @@ def review_record(repo, request, expected_sha256=None):
     for key in ("exception", "notes", "observations"):
         if key in request:
             record[key] = copy.deepcopy(request[key])
-    require(len((json.dumps(record, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode()) <= MAX_BYTES,
+    require(len((json.dumps(record, ensure_ascii=False, indent=2, allow_nan=False) + "\n").encode()) <= EVIDENCE_MAX_BYTES,
             "Review record exceeds the bounded evidence size.")
     cache = _EvidenceCache(())
     def reviewed_reference(root, reference):
@@ -1039,7 +1040,7 @@ def load(repo, *, check_evidence=True, cache=None):
     if not path.exists():
         return _empty(), None
     try:
-        payload = read_evidence(repo, FILE, MAX_BYTES)
+        payload = read_evidence(repo, FILE, MAX_PRODUCT_BACKLOG_BYTES)
         document = json.loads(payload)
     except (OSError, ValueError, UnicodeError) as exc:
         raise StoryError(f"Cannot read product backlog: {exc}") from exc
@@ -1482,7 +1483,7 @@ def execute(repo, command, request, expected_sha256=None):
         # never make a confirmed write look like a rejected operation.
         quality = quality_result(repo, candidate, cache=cache) if command == "measure" else None
         payload = (json.dumps(candidate, ensure_ascii=False, indent=2) + "\n").encode()
-        require(len(payload) <= MAX_BYTES, "Product backlog exceeds the bounded store size.")
+        require(len(payload) <= MAX_PRODUCT_BACKLOG_BYTES, "Product backlog exceeds the bounded store size.")
         result = status_result(candidate, hashlib.sha256(payload).hexdigest(), quality=quality)
         if command == "reconcile":
             result["reconciliation"] = copy.deepcopy(record)
@@ -1719,8 +1720,8 @@ def main(argv=None):
             require("executionGraph" in board, "; ".join(board["issues"]) or "Execution graph unavailable.")
             result = board["executionGraph"]
         else:
-            raw = sys.stdin.buffer.read(MAX_BYTES + 1) if args.input == "-" else Path(args.input).read_bytes()
-            require(len(raw) <= MAX_BYTES, "Request exceeds input size limit.")
+            raw = sys.stdin.buffer.read(MAX_REQUEST_BYTES + 1) if args.input == "-" else Path(args.input).read_bytes()
+            require(len(raw) <= MAX_REQUEST_BYTES, "Request exceeds input size limit.")
             def pairs(items):
                 result = {}
                 for key, value in items:

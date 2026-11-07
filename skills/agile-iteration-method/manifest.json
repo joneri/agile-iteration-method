@@ -328,12 +328,12 @@
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "17918d37804d2ef41f8de2d22e54b6827192ab00e39fcf2761606928257f0752"
+      "sourceSha256": "1eea16514e39ffd79577edf573b3cd0a443589e40b8734ccce6cc5d1b8b3fd2d"
     },
     {
       "output": "scripts/aim_observations.py",
       "source": "scripts/aim_observations.py",
-      "sourceSha256": "c743ac67b13cd1bfc9ab64a2de254e45b1d80e0602297d966348d60c509179d2"
+      "sourceSha256": "dc332cc81bc14763a88f8f05dea50c093576fa6d21b8f9f42e98708617c05d77"
     },
     {
       "output": "scripts/aim_story_links.py",

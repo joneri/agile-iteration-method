@@ -139,6 +139,57 @@ class StoryDeliveryTests(unittest.TestCase):
             self.mutate(command, request)
         self.assertEqual(before, (self.repo / FILE).read_bytes())
 
+    def test_import_can_grow_compact_backlog_past_one_mb_and_preserve_accepted_history(self):
+        self.accept()
+        historical = copy.deepcopy(self.document["deliveries"])
+        template = self.document["stories"][-1]
+        criteria = [{"id": f"AC-{i}", "text": f"Criterion {i}: " + "observable " * 13}
+                    for i in range(1, 26)]
+        for i in range(100):
+            self.document["stories"].append({
+                **template, "id": f"US-FILLER-{i}", "priority": i + 10,
+                "acceptanceCriteria": criteria, "originalAcceptanceCriteria": criteria,
+            })
+        compact = json.dumps(self.document, separators=(",", ":")).encode()
+        self.assertLess(len(compact), 1_000_000)
+        path = self.repo / FILE
+        path.write_bytes(compact)
+        request = {"intents": [{"id": "INT-NEXT", "statement": "Preserve the next requirement."}]}
+        result = subprocess.run([
+            sys.executable, str(ROOT / "scripts/aim_stories.py"), "--repo", str(self.repo),
+            "import", "--compact", "--expected-sha256", hashlib.sha256(compact).hexdigest(),
+        ], input=json.dumps(request), capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        stored = path.read_bytes()
+        self.assertGreater(len(stored), 1_000_000)
+        document, token = load(self.repo)
+        self.assertEqual(token, json.loads(result.stdout)["storeSha256"])
+        self.assertEqual(document["revision"], self.document["revision"] + 1)
+        self.assertEqual(document["deliveries"], historical)
+        self.assertEqual(document["stories"], self.document["stories"])
+        self.assertEqual(document["intents"][-1]["id"], "INT-NEXT")
+        board = build_board(self.repo)["storyBoard"]
+        self.assertTrue(board["valid"], board["issues"])
+        self.assertEqual(board["storeSha256"], token)
+
+    def test_native_store_and_cli_request_keep_separate_byte_limits(self):
+        path = self.repo / FILE
+        original = path.read_bytes()
+        path.write_bytes(original.ljust(10_000_000, b" "))
+        self.assertEqual(load(self.repo)[0], self.document)
+        oversized = original.ljust(10_000_001, b" ")
+        path.write_bytes(oversized)
+        with self.assertRaisesRegex(StoryError, "Cannot read product backlog"):
+            load(self.repo)
+        path.write_bytes(original)
+        result = subprocess.run([
+            sys.executable, str(ROOT / "scripts/aim_stories.py"), "--repo", str(self.repo),
+            "import", "--expected-sha256", self.token,
+        ], input=b"{}".ljust(1_000_001, b" "), capture_output=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(b"Request exceeds input size limit.", result.stderr)
+        self.assertEqual(path.read_bytes(), original)
+
     def test_final_owner_assessment_does_not_block_ready_and_native_acceptance_resolves_it(self):
         story = copy.deepcopy(self.request['stories'][0])
         story['prerequisites'] = [dict(id='OWNER',text='Owner assesses delivered recovery',resolved=False,kind='owner_assessment'),

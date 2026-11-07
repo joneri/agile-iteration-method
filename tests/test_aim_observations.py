@@ -42,6 +42,18 @@ class ObservationTests(unittest.TestCase):
         (self.repo / FILE).write_text(json.dumps(data, indent=2) + '\n')
         return data
 
+    def test_observation_accepts_a_native_ledger_above_the_observation_limit(self):
+        path = self.repo / aim_observations.LEDGER
+        native = self.original.ljust(2_000_001, b" ")
+        path.write_bytes(native)
+        self.request["ledgerSha256"] = hashlib.sha256(native).hexdigest()
+        import_entry(self.repo, self.request)
+        projected = project(self.repo, json.loads(native))
+        self.assertEqual(projected["currentId"], self.entry["id"])
+        self.assertEqual(projected["issues"], [])
+        self.assertFalse(projected["entries"][0]["stale"])
+        self.assertEqual(path.read_bytes(), native)
+
     def test_existing_128_snapshot_history_is_readable_without_rewriting(self):
         expected = self._seed_history(128)
         before = (self.repo / FILE).read_bytes()
