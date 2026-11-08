@@ -1483,6 +1483,10 @@ def execute(repo, command, request, expected_sha256=None):
         # never make a confirmed write look like a rejected operation.
         quality = quality_result(repo, candidate, cache=cache) if command == "measure" else None
         payload = (json.dumps(candidate, ensure_ascii=False, indent=2) + "\n").encode()
+        if len(payload) > MAX_PRODUCT_BACKLOG_BYTES:
+            # Keep the complete history within the same byte limit when
+            # only indentation would prevent the write.
+            payload = (json.dumps(candidate, ensure_ascii=False, separators=(",", ":")) + "\n").encode()
         require(len(payload) <= MAX_PRODUCT_BACKLOG_BYTES, "Product backlog exceeds the bounded store size.")
         result = status_result(candidate, hashlib.sha256(payload).hexdigest(), quality=quality)
         if command == "reconcile":

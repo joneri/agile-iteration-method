@@ -501,6 +501,52 @@ class StoryDeliveryTests(unittest.TestCase):
         self.assertEqual((self.repo / FILE).read_bytes(), before)
         self.assertEqual(list((self.repo / ".aim").glob(".product-backlog-*")), [])
 
+    def test_indentation_limit_preserves_full_history_and_atomic_cas(self):
+        before = (self.repo / FILE).read_bytes()
+        original = json.loads(before)
+        addition = {**copy.deepcopy(self.request['stories'][2]),
+                    'id': 'US-RETURN', 'title': 'Återkomst 💪'}
+        limit = len(before) + 1
+        with patch('aim_stories.MAX_PRODUCT_BACKLOG_BYTES', limit):
+            with patch('aim_stories.os.replace', side_effect=OSError('disk unavailable')):
+                with self.assertRaisesRegex(OSError, 'disk unavailable'):
+                    execute(self.repo, 'refine', {'stories': [addition]}, self.token)
+            self.assertEqual((self.repo / FILE).read_bytes(), before)
+            self.assertEqual(list((self.repo / '.aim').glob('.product-backlog-*')), [])
+            result = execute(self.repo, 'refine', {'stories': [addition]}, self.token)
+            committed = (self.repo / FILE).read_bytes()
+            self.assertLessEqual(len(committed), limit)
+            self.assertGreater(len(json.dumps(json.loads(committed), ensure_ascii=False, indent=2).encode()), limit)
+            self.assertEqual(result['storeSha256'], hashlib.sha256(committed).hexdigest())
+            document = json.loads(committed)
+            self.assertEqual(document, result['document'])
+            for key, value in original.items():
+                if key not in {'revision', 'updatedAt', 'stories'}:
+                    self.assertEqual(document[key], value, key)
+            self.assertEqual(document['stories'][:-1], original['stories'])
+            for key, value in addition.items():
+                self.assertEqual(document['stories'][-1][key], value, key)
+            self.assertEqual(document['revision'], original['revision'] + 1)
+            with self.assertRaisesRegex(StoryError, 'Stale'):
+                execute(self.repo, 'refine', {'stories': []}, self.token)
+            self.assertEqual((self.repo / FILE).read_bytes(), committed)
+            execute(self.repo, 'refine', {'stories': []}, result['storeSha256'])
+
+
+    def test_oversized_compact_document_still_rejects_before_commit(self):
+        before = (self.repo / FILE).read_bytes()
+        limit = len(before) + 1
+        addition = {**copy.deepcopy(self.request['stories'][2]),
+                    'id': 'US-LARGE', 'need': 'x' * 2000}
+        request = {'stories': [addition]}
+        self.assertLessEqual(len(json.dumps(request).encode()), limit)
+        with patch('aim_stories.MAX_PRODUCT_BACKLOG_BYTES', limit):
+            with self.assertRaisesRegex(StoryError, 'bounded store size'):
+                execute(self.repo, 'refine', request, self.token)
+        self.assertEqual((self.repo / FILE).read_bytes(), before)
+        self.assertEqual(list((self.repo / '.aim').glob('.product-backlog-*')), [])
+
+
     def test_symlink_evidence_and_escape_are_rejected(self):
         linked = self.repo / ".aim/evidence/link.md"
         linked.symlink_to(self.repo / self.plan_evidence["path"])
