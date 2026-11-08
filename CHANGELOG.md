@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-08 - AIM release v4.8.8
+
+Preserve Native Story history within independent storage and input limits.
+
+- Write the complete compact JSON document when indentation would exceed the
+  Native history limit. Keep string content, retained decisions, atomic writes
+  and stale revision checks. Reject compact documents that still exceed the cap.
+- Use a 10 MB Native history limit for writes, reads and observation consumers.
+  Keep request and evidence limits separate.
+
+Verification: five existing boundary and history regressions on the combined
+portable package, plus independent review and an exact UTF-8 boundary check.
+
 ## 2026-11-01 - AIM release v4.8.7
 
 Correct four reported P2 defects in retries, retired corrections and UI freshness.

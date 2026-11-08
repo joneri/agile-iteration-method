@@ -1,21 +1,21 @@
 {
   "guidanceReviewVersion": 1,
-  "productVersion": "4.8.7",
-  "reviewedOn": "2026-11-04",
+  "productVersion": "4.8.8",
+  "reviewedOn": "2026-11-08",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "2165ceac176263aedad85ffd4db36d44481cb9ce81aaf66b03ae7a7c1b25f706"
+      "sha256": "6850df8bd21dbb7c6d0e10be4e5f40f2571bd0d8d31bdff984777a206fba4b32"
     },
     {
       "path": "school.html",
-      "sha256": "2930f5ec4cdb3431f98cb010e473c87d5b85428d375b2a5d2e91ae71cbcb0c5d"
+      "sha256": "6e210599f3687915966df8140931c21f9236e0807cc569acaadcbea381e90def"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "21d0c3df3f626de309b32f7233773ec854aa956ebe168a12db0ba838a7af9e76"
+      "sha256": "c1436316f2b5c8062db0e98c10bc002ae6e6b2f4ac39c309eaea1b1a7ae4cde9"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
@@ -77,7 +77,7 @@
     },
     "modelsAndEvidence": {
       "conclusion": "updated",
-      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.7 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is explicitly a suggested setup; other combinations of models, reasoning levels and responsibilities may work better for the task, complexity and available resources. Actual host/account availability still applies. The personal project anecdote is removed; the example claims no measured comparison or universal benefit."
+      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.8 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is explicitly a suggested setup; other combinations of models, reasoning levels and responsibilities may work better for the task, complexity and available resources. Actual host/account availability still applies. The personal project anecdote is removed; the example claims no measured comparison or universal benefit."
     }
   }
 }
