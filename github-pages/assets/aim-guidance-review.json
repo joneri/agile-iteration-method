@@ -1,7 +1,7 @@
 {
   "guidanceReviewVersion": 1,
   "productVersion": "4.8.7",
-  "reviewedOn": "2026-11-04",
+  "reviewedOn": "2026-11-12",
   "pages": [
     {
       "path": "index.html",
@@ -9,7 +9,7 @@
     },
     {
       "path": "school.html",
-      "sha256": "2930f5ec4cdb3431f98cb010e473c87d5b85428d375b2a5d2e91ae71cbcb0c5d"
+      "sha256": "a3b35c4863d4c113e76e9bbd63b5a92ae067809045b57612ef69788fea0c7aae"
     }
   ],
   "sources": [
@@ -19,23 +19,23 @@
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sha256": "88257783d045aa655a856fe687eab5ed3103da08fe06b4a81589871cd95a1a20"
+      "sha256": "b5f513c16efd2a85d993c06b87824c0b56066df8fbb9cda6fec07c15072a62e9"
     },
     {
       "path": "docs/workflow/user-stories.md",
-      "sha256": "74b2097be2d178a4b7c367be6f75cde1ffe4cce6a4f584bacbd545036e5d725e"
+      "sha256": "f788e16a27ed04546a9d5177ee27af15f1b2c63e82bc9ed538fd525a0acc2764"
     },
     {
       "path": "docs/workflow/native-orchestration.md",
-      "sha256": "57f3eb9ae3028d1d3b18bcc8e7b30d0955795664953b048a6058a320065f118d"
+      "sha256": "5f06fc1d641fbebdb8791b4c8c339634d7b6612aae8c1fc70359351b6c67baad"
     },
     {
       "path": "docs/workflow/skill-command-runtime.md",
-      "sha256": "d73107b7c5fc2b8fd181537a26458b55e304656e3d10d90afdfaa8810710e66a"
+      "sha256": "5ae299f60cc21b95a8a1aa86ec051d5cf813db122bee254b90b36eb94140d42b"
     },
     {
       "path": "docs/workflow/adapter-command-contract.md",
-      "sha256": "17391a68fc956c2509209c03871eb5ff59b99a8da34b2fe2a811d6f2d1059823"
+      "sha256": "ec779e067aea95168244167a7705c0fcbc050783d71db5f0ee510192846e49cd"
     },
     {
       "path": "docs/workflow/version-and-installation.md",
@@ -53,7 +53,7 @@
   "assessments": {
     "installationAndStart": {
       "conclusion": "updated",
-      "summary": "Reviewed the two-route preparation section before Lesson 1. Separate accessible tabs select starting from scratch or using an existing codebase; each contains its own installation/preflight prompt, project request and preparation steps in a bounded scroll area. Tab controls and the Lesson 1 link remain outside the scroll area. Direct links select the right guide; keyboard navigation, reduced-motion settings and JavaScript-free access are preserved. Both routes keep chat-first setup, Python/Node/npx checks, platform help and real user authorization for system installation. Homepage installation copy and its downloadable instructions remain synchronized; existing scope/history and final acceptance stay intact."
+      "summary": "Reviewed the two-route preparation section before Lesson 1. Separate accessible tabs select starting from scratch or using an existing codebase; each contains its own installation/preflight prompt, project request and preparation steps in a bounded scroll area. Tab controls and the Lesson 1 link remain outside the scroll area. Direct links select the right guide; keyboard navigation, reduced-motion settings and JavaScript-free access are preserved. Both routes keep chat-first setup, Python/Node/npx checks, platform help and real user authorization for system installation. Homepage installation copy and its downloadable instructions remain synchronized; existing scope/history and final acceptance stay intact. Each lesson now has a Pocket Board prompt and an illustrative reply. All six prompt copy targets were checked in the browser at desktop and phone widths, and the prompt text is visible without JavaScript."
     },
     "deliveryModes": {
       "conclusion": "current",
@@ -61,23 +61,23 @@
     },
     "orchestration": {
       "conclusion": "updated",
-      "summary": "Homepage and School preserve outcome/dependency/proof ownership, cohesive implementation and separate review. The linked Native contract now distinguishes preserved early read inputs from later current product outputs. Its relocate-bindings command verifies identical original bytes and appends location history without changing receipts/dependency digests or activity starts. Supported actual dispatch-check and recorded starts still precede host work. No alias can authorize a new attempt or stand in for current final product proof. Chained identical-byte retries use effective current destinations while retaining obsolete locations only as history; current bytes and actual proof remain required."
+      "summary": "Homepage and School preserve outcome/dependency/proof ownership, cohesive implementation and separate review. The linked Native contract now distinguishes preserved early read inputs from later current product outputs. Its relocate-bindings command verifies identical original bytes and appends location history without changing receipts/dependency digests or activity starts. Supported actual dispatch-check and recorded starts still precede host work. No alias can authorize a new attempt or stand in for current final product proof. Chained identical-byte retries use effective current destinations while retaining obsolete locations only as history; current bytes and actual proof remain required. The work-graph conversation asks for one implementer for task state and saving, an early reload check, a separate reviewer and evidence for the owner. Issue #25: receivers retain coordination; explicit scoped handoff makes the former layer a relay. School setup/Lesson 2 agree. Mandates bind the preceding activation to reject replay. Host settings imply no transfer; CLI declarations do not authenticate identity or police host messages."
     },
     "delegatedDecisions": {
       "conclusion": "updated",
-      "summary": "Homepage escalation and School delegation preserve explicit scope, resources and owner acceptance boundaries. The linked Story contract now permits only an actual present human to cancel or replace approved unaccepted work through a scoped typed decision. Existing approve/accept/orchestrate delegation and Auto cannot authorize this changed commitment. Each replacement is a separately unapproved plan; no past gate or final acceptance is invented. Cancelled/replaced corrections remain provenance targets but no longer contribute outgoing current proof/readiness obligations; a new active correction retains normal checks."
+      "summary": "Homepage escalation and School delegation preserve explicit scope, resources and owner acceptance boundaries. The linked Story contract now permits only an actual present human to cancel or replace approved unaccepted work through a scoped typed decision. Existing approve/accept/orchestrate delegation and Auto cannot authorize this changed commitment. Each replacement is a separately unapproved plan; no past gate or final acceptance is invented. Cancelled/replaced corrections remain provenance targets but no longer contribute outgoing current proof/readiness obligations; a new active correction retains normal checks. The Pocket Board conversation requires agreement on scope and resources before implementation and explicitly reserves changes to those limits, publication and acceptance for the human."
     },
     "resourceUse": {
       "conclusion": "updated",
-      "summary": "School still accounts for planning, authoring, review, corrections and integration with known/unknown tokens/time/money. Identical historical input-location relocation creates no activity start and does not alter campaign attempts, observed history or exhausted allowance. Actual administrative cost remains accounted when known. A new work attempt still needs existing resources/authority; owner cancellation/replacement remains non-renewing. No universal cost-saving measurement is claimed."
+      "summary": "School still accounts for planning, authoring, review, corrections and integration with known/unknown tokens/time/money. Identical historical input-location relocation creates no activity start and does not alter campaign attempts, observed history or exhausted allowance. Actual administrative cost remains accounted when known. A new work attempt still needs existing resources/authority; owner cancellation/replacement remains non-renewing. No universal cost-saving measurement is claimed. The elapsed-time example first checks whether the host can track the limit. It includes all delivery phases, marks unavailable figures as unknown and requires owner authority to increase the limit."
     },
     "verificationAndAcceptance": {
       "conclusion": "updated",
-      "summary": "School explains prevention through repository knowledge/localities and learning through checks, feedback, source/attempt traceability, diagnosis, evidence-linked sharing and contextual recall. The Pocket Board archiving example connects existing task state, persistence and verification to new behavior. Checked against repo-awareness, calibration consumer checks/targeted refresh, engineering-delivery Shared local learning, reflection Method feedback and aim_quality/learning.py. Discovery pointers require code inspection and affected knowledge refresh; they do not constitute a full function catalogue or guaranteed semantic duplicate detection. Local sharing is distinct from cross-machine synchronization. Advice and source fingerprints do not prove general prevention; later benefit requires observation. No model retraining, daily prompt rewriting or universal host interception is claimed. Existing current-source final review, original criteria and actual owner acceptance remain unchanged."
+      "summary": "School explains prevention through repository knowledge/localities and learning through checks, feedback, source/attempt traceability, diagnosis, evidence-linked sharing and contextual recall. The Pocket Board examples test the agreed result through archiving and keyboard completion followed by reload. Checked against repo-awareness, calibration consumer checks/targeted refresh, engineering-delivery Shared local learning, reflection Method feedback and aim_quality/learning.py. Discovery pointers require code inspection and affected knowledge refresh; they do not constitute a full function catalogue or guaranteed semantic duplicate detection. Local sharing is distinct from cross-machine synchronization. Advice and source fingerprints do not prove general prevention; later benefit requires observation. No model retraining, daily prompt rewriting or universal host interception is claimed. Existing current-source final review, original criteria and actual owner acceptance remain unchanged. The example conversations connect observable acceptance criteria to a correction request that specifies the tested version, steps, observed and expected result, independent review and owner retest."
     },
     "modelsAndEvidence": {
       "conclusion": "updated",
-      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.7 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is explicitly a suggested setup; other combinations of models, reasoning levels and responsibilities may work better for the task, complexity and available resources. Actual host/account availability still applies. The personal project anecdote is removed; the example claims no measured comparison or universal benefit."
+      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.7 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is explicitly a suggested setup; other combinations of models, reasoning levels and responsibilities may work better for the task, complexity and available resources. Actual host/account availability still applies. The personal project anecdote is removed; the example claims no measured comparison or universal benefit. The model conversation asks the agent to distinguish proposed settings from the actual allocation and mark unavailable settings as unknown."
     }
   }
 }

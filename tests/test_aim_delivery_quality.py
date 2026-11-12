@@ -256,8 +256,7 @@ class DeliveryQualityTests(unittest.TestCase):
                    dict(sources=[dict(valid['sources'][0],sha256='0'*64),valid['sources'][1]]),
                    dict(reviewer=dict(id='fixture-author',session='separate-session')),
                    dict(reviewer=dict(id='separate-id',session='fixture-implementation')),
-                   dict(reviewMode='self'), dict(reviewMode='unavailable',reviewer=None),
-                   dict(findings=[dict(id='F1',severity='material',status='open',description='A required counterexample fails.')])]
+                   dict(reviewMode='self'), dict(reviewMode='unavailable',reviewer=None)]
         variants += [self.artifact(f'rejected-review-{i}.json',json.dumps(dict(valid,**change)))
                      for i,change in enumerate(changes)]
         duplicate = json.dumps(valid)[:-1]+',"scopeSha256":"0"}'
@@ -268,6 +267,23 @@ class DeliveryQualityTests(unittest.TestCase):
                                        'structured review|Review requirements')
         self.mutate('validate',dict(deliveryId='DI-1',evidence=[fixture.review_evidence(self)]))
         self.assertEqual(self.document['deliveries'][0]['status'],'validation')
+
+    def test_open_intent_finding_blocks_validation_even_when_frozen_checks_pass(self):
+        self.start()
+        self.measure_core()
+        self.mutate('review', dict(deliveryId='DI-1', sourcePaths=['app.py']))
+        entry = self.report('entry.json', core=False)
+        result = self.mutate('measure', dict(deliveryId='DI-1', qualityMeasurements=[entry]))
+        checks = result['quality']['deliveries'][0]['checks']
+        self.assertEqual({check['checkId']: check['state'] for check in checks},
+                         {'QC-CORE': 'passed', 'QC-TIME': 'passed', 'QC-ENTRY': 'passed'})
+
+        review = fixture.review_evidence(self, findings=[dict(
+            id='F1', severity='material', status='open',
+            description='INT-ACCESS: with two open orders, recovery restores the wrong order. '
+                        'Check the restored order ID against the buyer’s selected order.')])
+        self.unchanged_failure('validate', dict(deliveryId='DI-1', evidence=[review]),
+                               'Unresolved material finding: F1')
 
     def test_native_review_reuses_safe_source_and_report_reads_in_one_invocation(self):
         from unittest.mock import patch

@@ -18,6 +18,9 @@ and acceptance. Read binding requirements and the current acceptance evidence.
   correctness. Keep Strict/Auto and resource depth separate from delivery style.
 - Explain agent-led work with Graph engineering: an owner coordinates outcome,
   dependencies and feedback; the AIM delivery coordinator owns its ledger.
+  The receiving agent keeps coordination by default. A separate coordinator
+  needs an explicit user mandate; after handoff the former layer only relays
+  instructions, facts and escalations unless a scoped owner decision was retained.
   A human can explicitly delegate approve/accept decisions to a named actual
   owner agent under `deliveryPolicy`. A role/profile assignment alone never
   supplies that mandate. Preserve actual owner decision evidence and all human

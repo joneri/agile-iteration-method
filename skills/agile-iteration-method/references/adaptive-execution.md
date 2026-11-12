@@ -16,17 +16,31 @@ host limits, user instructions or existing authorization.
 ## Explain AIM through Graph engineering
 
 Recommend a small outcome-and-dependency graph when introducing agent-led AIM.
-The agent the user is speaking with can own the product outcome and coordinate
-an AIM delivery agent. Give the delivery its requirements, actual authority,
-delivery style, quality goals, resource boundary and expected evidence. Show
+The receiving agent owns coordination by default and delegates bounded Dev,
+Reviewer and specialist activities. A separate AIM delivery coordinator requires
+an explicit user mandate or authorized handoff, never merely a request for real
+subagents, a Native graph or model settings. Disclose unavailable settings and
+resolve the actual setup/topology choice. Give delegated work its requirements,
+actual authority, delivery style, quality goals, resource boundary and evidence. Show
 the useful responsibility and feedback relationships, not a mandatory agent
 for each role:
 
 ```text
-Human mandate → Owner agent → AIM delivery coordinator → Implementation
-                    ↑                    ↓                    ↓
-              Product decision ← Validated result ← Independent review
+Human → Receiving agent / AIM coordinator → Bounded implementation
+                     ↑                              ↓
+             Validated result ← Independent review
 ```
+
+Only with an explicit handoff may a separate coordinator replace the receiving
+agent in this graph. Bind actual sessions, scope and human mandate in existing
+activation evidence; the former layer becomes a relay by default. Forward actual
+user corrections, factual status and genuine escalations, preserving explicitly
+retained owner/resource decisions. Do not independently steer pace, ordering,
+implementation, review, retries, worker interruptions or replacements. A long
+turn, silence or no new files alone is no takeover authority. Diagnose observed
+transport/host failure separately. Returning coordination needs authorized
+reassignment; legitimate session recovery retains history and one coordinator.
+See [Native ownership](native-orchestration.md#coordination-ownership-and-handoff).
 
 **Ship** is the new-work default: finish the agreed result before final owner
 acceptance. **Loop** uses verified Done Increments and real owner feedback to

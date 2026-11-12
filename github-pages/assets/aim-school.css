@@ -52,6 +52,8 @@
 .school-copy:hover { border-color: var(--blue); color: var(--blue); }
 .school-copy-status { margin-top: 8px; font-size: .75rem; color: var(--muted); }
 .school-copy-status:empty { display: none; }
+.lesson-conversation h3 { margin: 0 0 12px; font: 650 1.08rem/1.4 var(--body); color: var(--navy); }
+.lesson-reply { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); font-size: .9rem; }
 .small-note, .source-note { font-size: .8rem; color: var(--muted); }
 .board-example { padding: 22px; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 12px 30px #06142d08; }
 .board-example-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 24px; }
@@ -89,9 +91,6 @@
 .lesson details p { margin-bottom: 18px; }
 .lesson details li + li { margin-top: 8px; }
 .lesson details ul { padding-left: 22px; margin-bottom: 20px; }
-.example-strip { margin: 24px 0; padding: 18px 22px; background: var(--paper); border-radius: 4px; }
-.example-strip > span { display: block; color: var(--blue); font: .65rem var(--mono); margin-bottom: 10px; }
-.example-strip p { font-size: .9rem; }
 .teaching-graph { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; padding: 0; margin: 28px 0; counter-reset: graph; list-style: none; background: var(--line); border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
 .teaching-graph li { background: var(--paper); padding: 20px; counter-increment: graph; }
 .teaching-graph li::before { content: "0" counter(graph); display: block; color: var(--blue); font: .7rem var(--mono); margin-bottom: 12px; }

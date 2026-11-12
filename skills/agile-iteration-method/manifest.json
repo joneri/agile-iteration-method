@@ -123,12 +123,12 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "88257783d045aa655a856fe687eab5ed3103da08fe06b4a81589871cd95a1a20"
+      "sourceSha256": "b5f513c16efd2a85d993c06b87824c0b56066df8fbb9cda6fec07c15072a62e9"
     },
     {
       "output": "references/native-orchestration.md",
       "source": "docs/workflow/native-orchestration.md",
-      "sourceSha256": "57f3eb9ae3028d1d3b18bcc8e7b30d0955795664953b048a6058a320065f118d"
+      "sourceSha256": "5f06fc1d641fbebdb8791b4c8c339634d7b6612aae8c1fc70359351b6c67baad"
     },
     {
       "output": "references/tool-efficiency.md",
@@ -138,7 +138,7 @@
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "74b2097be2d178a4b7c367be6f75cde1ffe4cce6a4f584bacbd545036e5d725e"
+      "sourceSha256": "f788e16a27ed04546a9d5177ee27af15f1b2c63e82bc9ed538fd525a0acc2764"
     },
     {
       "output": "references/local-runtime-access.md",
@@ -163,7 +163,7 @@
     {
       "output": "references/adaptive-execution.md",
       "source": "docs/workflow/adaptive-execution.md",
-      "sourceSha256": "1c95a6b790ac4e1b27ee8ff1ba6c9502bd4725cc93dbccce87f007e1916921a1"
+      "sourceSha256": "590c295c1b830540d0314806d40efe2a49ff43c56b199cd8647bfbac2070d5ff"
     },
     {
       "output": "references/engineering-delivery.md",
@@ -173,12 +173,12 @@
     {
       "output": "references/role-skill-po.md",
       "source": "docs/workflow/role-skill-po.md",
-      "sourceSha256": "7aa843adc4ba427c1a44037d74469e8eff5495d7343cef73e66aaac0348e6c81"
+      "sourceSha256": "fa74631c63c25fd429b31b2cb7dd2f80e87b635868bc203f92467644ae01ba57"
     },
     {
       "output": "references/role-skill-tdo.md",
       "source": "docs/workflow/role-skill-tdo.md",
-      "sourceSha256": "2aab68c4f351ada217f3929392d554489b841d0133a2f93e2a34780e9691e488"
+      "sourceSha256": "8333ee80e6e8e7036787812a977fdb94ba5eb5200339a67b2484d8143482e87b"
     },
     {
       "output": "references/role-skill-dev.md",
@@ -188,17 +188,17 @@
     {
       "output": "references/role-skill-reviewer.md",
       "source": "docs/workflow/role-skill-reviewer.md",
-      "sourceSha256": "173e65ded44e7b73d6f944ecf44963d4f26f37f3bc455a987afc61626f32b74e"
+      "sourceSha256": "bf6a6299488b49f7a2646c12be5ad9ec1491384b48fd038566ea02696e45502e"
     },
     {
       "output": "references/skill-user-guide.md",
       "source": "docs/workflow/skill-user-guide.md",
-      "sourceSha256": "42366ef0dd4e638d72b127c2933a5db12b68bb2a188b637f5d0a181a3c4be292"
+      "sourceSha256": "19142a0baa8f63dd789c6b0cd174830bbd1cad5b403e733725cd0a9d2f53899f"
     },
     {
       "output": "references/skill-command-runtime.md",
       "source": "docs/workflow/skill-command-runtime.md",
-      "sourceSha256": "d73107b7c5fc2b8fd181537a26458b55e304656e3d10d90afdfaa8810710e66a"
+      "sourceSha256": "5ae299f60cc21b95a8a1aa86ec051d5cf813db122bee254b90b36eb94140d42b"
     },
     {
       "output": "references/skill-completion.md",
@@ -208,12 +208,12 @@
     {
       "output": "references/agile-iteration-method.md",
       "source": "docs/workflow/agile-iteration-method.md",
-      "sourceSha256": "f8841f3d0c4325974a8d7a5f406ee36b32f8d771a74ad32662e1961a95dd6064"
+      "sourceSha256": "a4db8d967d7b0a70189a0daed5dd3ef9081f91002324cdba885b2c264a2e3406"
     },
     {
       "output": "references/adapter-command-contract.md",
       "source": "docs/workflow/adapter-command-contract.md",
-      "sourceSha256": "17391a68fc956c2509209c03871eb5ff59b99a8da34b2fe2a811d6f2d1059823"
+      "sourceSha256": "ec779e067aea95168244167a7705c0fcbc050783d71db5f0ee510192846e49cd"
     },
     {
       "output": "references/adapter-entry-model.md",
@@ -238,7 +238,7 @@
     {
       "output": "references/operating-modes.md",
       "source": "docs/workflow/operating-modes.md",
-      "sourceSha256": "e99c630fc22e1eb72181002d12e21305efac02463b8a097ba412feb94c8f2fa6"
+      "sourceSha256": "3226ab4d3ba893fbed8fa99cd41fcbe739a06f95577f38eaae3f82dbffc5952f"
     },
     {
       "output": "references/product-coherence-validation.md",
@@ -328,7 +328,7 @@
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "8e5c02f46922aaa5ed6bb961a87f0db05bfc106054a53a485119eb150f60c249"
+      "sourceSha256": "9b057e68ad13cd3951c3113dac741174185ef2e5f91290655b1b4450c8681400"
     },
     {
       "output": "scripts/aim_observations.py",
@@ -423,7 +423,7 @@
     {
       "output": "scripts/aim_quality/orchestration_runtime.py",
       "source": "scripts/aim_quality/orchestration_runtime.py",
-      "sourceSha256": "01592045736f4f6f07feffa74256e239ddfc53cbdd3c6dec4d144c6fe96ad839"
+      "sourceSha256": "75eb4aa5e93a63b73890f7c22e3e013c87373499bdc52f8586b03671ff42e43c"
     },
     {
       "output": "scripts/aim_orchestrate.py",

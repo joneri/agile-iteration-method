@@ -142,12 +142,16 @@ depth. Existing deliveries keep their original policies.
 
 New delivery plans use **Native Graph engineering** by default. A short intent is enough to begin; AIM chooses the smallest useful graph. When asking your agent to coordinate other agents, name
 who owns the outcome, who delivers, their dependencies and the required evidence.
-The agent you are speaking with can act as product owner under an explicit
-mandate, while an AIM delivery coordinator executes and an independent reviewer
-checks the result. For example:
+The receiving agent keeps coordination and delegates bounded implementation and
+independent review. It can also act as product owner under an explicit mandate.
+A separate delivery coordinator requires an explicit user handoff; afterward the
+former layer relays instructions, status and genuine escalations, retaining only
+explicitly scoped owner decisions. Model settings and a request for subagents
+do not authorize that transfer. For example:
 
 ```text
-Use AIM in Strict Loop. Act as my product owner and delegate delivery.
+Use AIM in Strict Loop. Act as my product owner and keep coordination here.
+Delegate bounded implementation and arrange independent review.
 Assess each verified increment, request corrections when needed, and select
 what comes next. Your mandate covers [outcome and allowed decisions]
 within [resource limit]. Keep [reserved decisions] with me.

@@ -689,9 +689,12 @@ human or explicitly delegated agent owner. Ship and Loop preserve the same
 quality requirements and frozen commitments. Existing deliveries keep their
 original policies; an absent historical field is not new Ship or agent authority.
 
-Explain agent-led AIM using **Graph engineering**: the current agent can own the
-outcome, delegate delivery, name dependencies and assess evidence before the
-next step. Use real host identities and an explicit human mandate for agent
+Explain agent-led AIM using **Graph engineering**: the receiving agent keeps
+coordination, delegates bounded implementation and independent review, names
+dependencies and assesses evidence before the next step. A separate coordinator
+requires an explicit user mandate or authorized handoff; the former layer then
+relays instructions, facts and escalations, retaining only explicitly scoped
+owner decisions. Use real host identities and an explicit human mandate for agent
 product decisions. The AIM delivery coordinator alone writes its ledger;
 independent review is separate from owner acceptance. See
 [User Stories](user-stories.md) for the native `deliveryPolicy` and decision

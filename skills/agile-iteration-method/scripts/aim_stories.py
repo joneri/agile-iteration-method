@@ -801,7 +801,7 @@ def verify_evidence(repo, document, *, cache=None):
             _require_review(repo, delivery, cache=cache, document=document)
         if effective == "acceptance" and (delivery.get("qualityGoals") or delivery.get("qualityPlan")):
             _require_quality(repo, delivery, cache=cache)
-    from aim_quality.orchestration_runtime import campaigns
+    from aim_quality.orchestration_runtime import campaigns, validate_ownership
     for campaign in campaigns(document):
         for record in campaign['observations'] + campaign['decisions']:
             _refs(repo, record['evidence'], cache=cache)
@@ -809,10 +809,17 @@ def verify_evidence(repo, document, *, cache=None):
                 _ref(repo, {k: record['authority'][k] for k in ('path', 'sha256')}, cache=cache)
     for delivery in document['deliveries']:
         activations = delivery.get('orchestrationActivationHistory', []) + ([delivery['orchestrationActivation']] if 'orchestrationActivation' in delivery else [])
+        previous = None
         for activation in activations:
             _refs(repo, activation['evidence'], cache=cache)
             for actor in activation['dispatchers']:
                 _refs(repo, actor['evidence'], cache=cache)
+            try:
+                validate_ownership(delivery, activation, previous,
+                    read_reference=lambda ref: read_evidence(repo, _ref(repo, ref, cache=cache)['path']))
+            except ValueError as exc:
+                raise StoryError(str(exc)) from exc
+            previous = activation
     for epic in document["epics"]:
         if "closure" in epic:
             record = epic["closure"]
