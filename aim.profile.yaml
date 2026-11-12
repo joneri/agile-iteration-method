@@ -140,6 +140,9 @@ aimRepoProfile:
         path: scripts/aim_http.py
         reason: Host and Origin validation protect the local control room from hostile browser requests.
     habits:
+      - id: work-on-main
+        rule: Work directly on main in this repository. Do not create or switch to feature branches unless the user explicitly changes this instruction.
+        scope: shared
       - id: validate-before-gate-e
         rule: Run the AIM validator and git diff --check before Gate E.
         scope: shared

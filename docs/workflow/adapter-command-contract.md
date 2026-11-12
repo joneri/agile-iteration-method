@@ -33,9 +33,18 @@ ledger-backed continuation checks. Use the trusted packaged helper and its
 confirmed receipts before actual host dispatch. Host tools still launch agents;
 portable instructions cannot intercept arbitrary out-of-band calls.
 
-Recommend **Graph engineering** when explaining agent-led work: ask the current
-agent to coordinate outcome ownership, delivery dependencies, verification and
-owner feedback. In **Strict Loop**, a human or explicitly delegated agent owner
+Recommend **Graph engineering** when explaining agent-led work: the receiving
+agent retains coordination of outcome ownership, dependencies, verification and
+owner feedback by default. Real subagents, Native graphs and model/reasoning
+requests do not authorize a separate coordinator. Disclose unavailable settings;
+resolve the needed setup/topology decision instead of adding a coordinating
+layer. Only an explicit user mandate or authorized handoff transfers coordination,
+using the existing scoped activation evidence. The former layer becomes a relay
+unless specific owner decisions were explicitly retained; it cannot independently
+steer delivery because of slow turns or missing files. Legitimate session recovery
+preserves one coordinator and historical campaigns under `native-orchestration.md`.
+Ordinary bounded Dev/Reviewer delegation needs no additional approval.
+In **Strict Loop**, a human or explicitly delegated agent owner
 assesses each agreed increment. Use actual human mandate and owner decision
 evidence under the `deliveryPolicy` contract in [User Stories](user-stories.md).
 A role name or Auto setting grants no acceptance authority. Natural-language

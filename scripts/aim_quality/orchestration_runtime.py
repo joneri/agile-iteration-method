@@ -44,6 +44,69 @@ def native_graph(delivery):
     return delivery.get('executionPlan', {}).get('orchestration')
 
 
+def validate_ownership(delivery, activation, previous=None, *, read_reference=None):
+    """Bind ownership in existing activation evidence, without authenticating a host.
+
+    Older activations remain historical. Once explicitly bound, ownership cannot
+    be dropped on resume. Recovery is a declared continuation, never a mandate
+    inferred from a parent/dispatcher label.
+    """
+    ownership = activation.get('ownership')
+    prior = (previous or {}).get('ownership')
+    if 'ownership' not in activation:
+        _need(prior is None, 'Bound orchestration ownership cannot be omitted on resume.')
+        return
+    _fields(ownership, ('receivingSession', 'kind'), ('mandate',), 'Orchestration ownership')
+    receiver = ownership['receivingSession']
+    _text(receiver, 'Receiving session', 128)
+    kind = ownership['kind']
+    _need(isinstance(kind, str) and kind in {'receiving', 'handoff', 'recovery'},
+          'Unknown orchestration ownership transition.')
+    if prior:
+        _need(receiver == prior['receivingSession'], 'Receiving session cannot change on continuation.')
+    coordinator = activation['coordinatorSession']
+    if kind == 'receiving':
+        _need(coordinator == receiver, 'Receiving agent is the default coordinator; separate coordination requires a handoff mandate.')
+        _need(previous is None or previous['coordinatorSession'] == coordinator,
+              'Returning coordination requires an explicit handoff or legitimate recovery.')
+    elif kind == 'recovery':
+        _need(previous is not None, 'Recovery requires a previous coordinator activation.')
+    else:
+        _need('mandate' in ownership, 'Separate coordination requires an explicit human handoff mandate.')
+        source = previous['coordinatorSession'] if previous else receiver
+        _need(source != coordinator, 'Handoff must name a different coordinating session.')
+        mandate = ownership['mandate']
+        _fields(mandate, ('path', 'sha256'), label='Handoff mandate reference')
+        _text(mandate['path'], 'Handoff mandate path')
+        _need(isinstance(mandate['sha256'], str) and len(mandate['sha256']) == 64,
+              'Handoff mandate requires a SHA-256 digest.')
+        if read_reference is not None:
+            raw = read_reference(mandate)
+            _need(len(raw.encode('utf-8') if isinstance(raw, str) else raw) <= 16384,
+                  'Handoff mandate exceeds 16 KiB.')
+            try:
+                record = json.loads(raw)
+            except (ValueError, TypeError) as exc:
+                raise ValueError('Handoff mandate must be scoped human instruction JSON.') from exc
+            _fields(record, ('orchestrationHandoffVersion', 'deliveryId', 'scopeSha256',
+                             'receivingSession', 'fromSession', 'toSession', 'residualRole',
+                             'previousActivationSha256', 'originalMessage'), ('retainedDecisions',), 'Human handoff mandate')
+            _need(type(record['orchestrationHandoffVersion']) is int and record['orchestrationHandoffVersion'] == 1,
+                  'Unsupported human handoff mandate version.')
+            expected = dict(deliveryId=delivery['id'], scopeSha256=delivery['scopeSha256'],
+                            receivingSession=receiver, fromSession=source, toSession=coordinator,
+                            residualRole='relay', previousActivationSha256=digest(previous) if previous else None)
+            _need(all(record[k] == v for k, v in expected.items()), 'Human handoff mandate does not match this scope and receiving/coordinating sessions.')
+            _text(record['originalMessage'], 'Actual human handoff instruction', 8000)
+            retained = record.get('retainedDecisions', [])
+            _need(isinstance(retained, list) and len(retained) <= 16,
+                  'Retained owner decisions must be a bounded list.')
+            for decision in retained:
+                _text(decision, 'Explicitly retained owner decision', 1000)
+    if kind != 'handoff':
+        _need('mandate' not in ownership, 'Only an explicit handoff consumes a new mandate.')
+
+
 def validate_native_plan(delivery):
     graph = native_graph(delivery)
     if graph is None:
@@ -235,7 +298,7 @@ def validate_native_document(document):
         if activation is not None:
             graph = native_graph(delivery)
             _need(graph is not None, 'Native activation requires a frozen graph.')
-            _fields(activation, ('scopeSha256', 'coordinatorSession', 'dispatchers', 'evidence', 'at'), label='Activation')
+            _fields(activation, ('scopeSha256', 'coordinatorSession', 'dispatchers', 'evidence', 'at'), ('ownership',), label='Activation')
             _need(activation['scopeSha256'] == delivery['scopeSha256'], 'Stale activation scope.')
             history = delivery.get('orchestrationActivationHistory', [])
             _need(len(history) <= 128, 'Activation history is full.')
@@ -243,6 +306,10 @@ def validate_native_document(document):
             _need(first['coordinatorSession'] == graph['coordinator']['session'], 'Initial coordinator differs from frozen graph.')
             for prior in history:
                 _need(prior['scopeSha256'] == delivery['scopeSha256'], 'Historical activation scope mismatch.')
+            previous = None
+            for current in [*history, activation]:
+                validate_ownership(delivery, current, previous)
+                previous = current
             sessions = []
             for actor in activation['dispatchers']:
                 _fields(actor, ('session', 'capability', 'evidence'), label='Activated dispatcher')
@@ -258,6 +325,9 @@ def _activation(delivery, session):
     _need(activation is not None and activation['scopeSha256'] == delivery['scopeSha256'],
           'Activate the actual coordinator and upstream dispatchers for this frozen Native scope first.')
     _need(session in [a['session'] for a in activation['dispatchers']], 'Actual coordinator/dispatcher session is not activated.')
+    if 'ownership' in activation:
+        _need(session == activation['coordinatorSession'],
+              'Only the actual coordinator may steer delivery; former coordinators and upstream sessions are relays.')
     return activation
 
 
@@ -355,7 +425,7 @@ def change_orchestration(document, delivery, request, *, bind_evidence, bind_sou
     common = ('deliveryId', 'action', 'coordinatorSession')
     _need(delivery['status'] not in {'accepted', 'cancelled'}, 'Historical Native deliveries are immutable.')
     if action == 'activate':
-        _fields(request, common + ('dispatchers', 'evidence'), ('previousCoordinatorSession',), label='Activation request')
+        _fields(request, common + ('dispatchers', 'evidence'), ('previousCoordinatorSession', 'ownership'), label='Activation request')
         _need(delivery['status'] == 'in_progress', 'Activation requires approved work in progress.')
         previous = delivery.get('orchestrationActivation')
         if previous:
@@ -368,9 +438,16 @@ def change_orchestration(document, delivery, request, *, bind_evidence, bind_sou
         for actor in dispatchers:
             _fields(actor, ('session', 'capability', 'evidence'), label='Dispatcher')
             actor['evidence'] = bind_evidence(actor['evidence'])
-        delivery['orchestrationActivation'] = dict(scopeSha256=delivery['scopeSha256'],
+        activation = dict(scopeSha256=delivery['scopeSha256'],
             coordinatorSession=request['coordinatorSession'], dispatchers=dispatchers,
             evidence=bind_evidence(request['evidence']), at=at)
+        if 'ownership' in request:
+            activation['ownership'] = copy.deepcopy(request['ownership'])
+            ownership = activation['ownership']
+            if isinstance(ownership, dict) and 'mandate' in ownership:
+                ownership['mandate'] = bind_evidence([ownership['mandate']])[0]
+        validate_ownership(delivery, activation, previous, read_reference=read_reference)
+        delivery['orchestrationActivation'] = activation
         store = document.setdefault('orchestration', dict(version=1, campaigns=[]))
         for outcome in graph['outcomes']:
             if campaign_for(document, outcome['id']) is None:

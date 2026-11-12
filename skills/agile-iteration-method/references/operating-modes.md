@@ -44,8 +44,11 @@ correction. Strict/Auto controls gate decisions; it does not choose the delivery
 style. Ship is independent of publishing or deployment authority.
 
 Use **Graph engineering** to explain who owns the outcome, who executes, their
-dependencies and the proof/feedback needed to continue. The current agent can
-coordinate delivery as an owner only within an actual human delegation. A
+dependencies and the proof/feedback needed to continue. The receiving agent
+coordinates by default and delegates bounded work; a separate coordinator needs
+an explicit user mandate or authorized handoff, after which the former layer is
+a relay unless scoped owner decisions were retained. Acting as a delegated
+product owner separately requires actual human delegation. A
 **Strict Loop** owner may be human or an explicitly delegated agent; record its
 actual decisions with the native policy and evidence described in
 [User Stories](user-stories.md). Final human reservations remain binding.

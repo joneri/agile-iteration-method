@@ -81,8 +81,12 @@ Graph engineering is the recommended way to explain agent-led AIM delivery:
 define who owns the outcome, who executes, what depends on what, and where proof
 or feedback determines the next action. A graph does not require an agent per
 role. Use the host's actual delegation capabilities; keep simple work simple.
-The main agent can serve as product owner and delegate an AIM delivery
-coordinator. That coordinator alone writes its AIM ledger; Dev implements,
+The receiving agent normally coordinates and delegates bounded work. A separate
+AIM delivery coordinator requires an explicit user mandate or authorized handoff
+under [Native ownership](native-orchestration.md#coordination-ownership-and-handoff).
+The former layer then relays user instructions, facts and genuine escalations
+unless a specific owner decision was explicitly retained; it cannot independently
+steer delivery. That coordinator alone writes its AIM ledger; Dev implements,
 Reviewer judges independently, and the owner assesses the integrated result.
 Owner feedback and code review are distinct responsibilities.
 
@@ -302,6 +306,15 @@ Every new plan declares applicability in `qualityPlan`: `checks`,
 original intent, Epic outcome, selected criteria and relevant engineering rules;
 feature-only Stories do not remove quality obligations.
 
+Before freezing the plan, ask what plausible implementation could pass the
+selected criteria and still fail the user's main purpose within the agreed scope.
+Preserve any decisive obligation in `sharedRequirements` and make the existing
+criteria or linked check distinguish success from that failure. Base the expected
+behavior on the user's words, agreed context or credible domain references.
+Use the existing owner decision path when an interpretation would materially
+change the agreed result or scope. Reuse a check that already distinguishes the
+outcomes, including for a trivial edit.
+
 A check contains `id` (`QC-*`), `criteria` (`US-ID/AC-ID`), `kind` (`behavior`,
 `performance`, `journey`), `stage` (`core`, `delivery`, `both`), `workload`,
 `environment`, `method`, concrete `expected` observations and linked `goalIds`.
@@ -364,7 +377,11 @@ review; this extraction does not authenticate their producer.
 
 ## Measurements that change the next action
 
-Use `measure` as soon as the core works, **before expanding implementation**.
+Use `measure` on the smallest working core that can expose the decisive failure,
+**before expanding dependent implementation**. Use the real consumer path when
+available, or a justified core test followed by the integrated journey. When
+quality depends on the experience in use, specify the context and observable
+failure in the check, then observe actual interaction or representative output.
 In `in_progress`, supply `deliveryId`, `sourcePaths` (or `bindings`) and
 `qualityMeasurements`. Act on the confirmed receipt's assessment and instruction
 path without another `status`/`quality` call. Preserve failed/missing/stale results;
@@ -416,9 +433,14 @@ bytes with later code. No prevention report, KPI database or routine full benchm
 
 Give the separate reviewer the original requirements, complete changed source
 set and existing raw results. It checks applicability, representative variants,
-source/dependency coverage, the real entry and an independently chosen relevant
-counterexample. For UI changes examine actual rendered behavior, visible errors
-and relevant result states. Keep observations/findings in the original review;
+source/dependency coverage and the real entry. Look for a plausible failure of
+the agreed purpose that could pass the selected criteria. Reuse current evidence
+if it already distinguishes the intended result from plausible failures.
+Use an independent counterexample for a consequential gap. Inspect
+the actual result and relevant source, including rendered behavior, visible
+errors and result states for UI changes. Record missing or contradictory
+evidence for decisive in-scope behavior as an open material finding tied to the
+original obligation. Keep observations and findings in the original review;
 the coordinator adds only new validation facts or material limitations.
 
 For new plans, the first `validate.evidence` reference is that existing review

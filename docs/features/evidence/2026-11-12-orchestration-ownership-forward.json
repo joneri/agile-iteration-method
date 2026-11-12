@@ -1,0 +1,198 @@
+{
+  "evidenceVersion": 1,
+  "date": "2026-11-12",
+  "issue": "https://github.com/joneri/agile-iteration-method/issues/25",
+  "reviewer": {
+    "id": "/root/issue25_reviewer",
+    "session": "/root/issue25_reviewer"
+  },
+  "sourceBindings": [
+    {
+      "path": "adapters/portable/agile-iteration-method/SKILL.md",
+      "sha256": "b5f513c16efd2a85d993c06b87824c0b56066df8fbb9cda6fec07c15072a62e9"
+    },
+    {
+      "path": "docs/workflow/native-orchestration.md",
+      "sha256": "e0dc26b2d4e4cb42cb935c899d6fade647e550a6885d4819c22e1cb17ab95d0e"
+    },
+    {
+      "path": "docs/workflow/adaptive-execution.md",
+      "sha256": "590c295c1b830540d0314806d40efe2a49ff43c56b199cd8647bfbac2070d5ff"
+    },
+    {
+      "path": "docs/workflow/skill-command-runtime.md",
+      "sha256": "5ae299f60cc21b95a8a1aa86ec051d5cf813db122bee254b90b36eb94140d42b"
+    },
+    {
+      "path": "docs/workflow/user-stories.md",
+      "sha256": "f788e16a27ed04546a9d5177ee27af15f1b2c63e82bc9ed538fd525a0acc2764"
+    }
+  ],
+  "forwardExercise": {
+    "method": "Live independent Reviewer generated exact next-action/message responses from revised instructions for bounded realistic scenario prompts. Host calls are simulated action outputs, not real product dispatches. Original issue #25 scenarios are the oracle.",
+    "oracleSource": "https://github.com/joneri/agile-iteration-method/issues/25; original issue body provided in parent conversation",
+    "cases": [
+      {
+        "id": 1,
+        "name": "Normal request",
+        "prompt": "Host: receiving session rx-25; bounded agents are available. User: Use AIM to build Pocket Board; let the orchestrator formulate the assignment and delegate to real subagents. No prior handoff or plan approval.",
+        "exactResponse": {
+          "topology": "human -> rx-25 coordinator -> bounded Dev, then independent Reviewer",
+          "nextActions": [
+            "Keep rx-25 as coordinator and sole ledger writer.",
+            "Formulate the Pocket Board requirements and coherent plan in this receiving session.",
+            "Bind receiving ownership to rx-25 in the normal activation when the plan is approved.",
+            "After actual scoped approval, start a bounded Dev task and an independent review task through available host tools."
+          ],
+          "message": "I will coordinate Pocket Board here, formulate the assignment and delegate bounded implementation and independent review."
+        },
+        "oracle": "Receiver remains coordinator; ordinary Dev/Reviewer tasks require no extra topology confirmation.",
+        "assessment": "pass"
+      },
+      {
+        "id": 2,
+        "name": "Explicit separate coordinator",
+        "prompt": "Host: receiving session rx-25 and a target coord-25 may be created. User: Transfer Pocket Board coordination to a separate coordinator. You only relay messages after that transfer; I retain final acceptance.",
+        "exactResponse": {
+          "topology": "human -> rx-25 relay -> coord-25 coordinator -> bounded workers",
+          "nextActions": [
+            "Create only the explicitly requested coordinator target and capture its actual returned session identity.",
+            "Bind actual receiving rx-25, target coord-25, delivery scope and this actual human transfer instruction in existing plan/activation evidence.",
+            "If the plan is already activated, provide the exact previous coordinator binding.",
+            "After handoff, forward actual user corrections and factual status; let coord-25 own ordering, review, retries and worker lifecycle."
+          ],
+          "residualRole": "relay",
+          "message": "Coordination transfers to the separate coordinator under your scoped instruction. I will relay your messages and factual status; you retain final acceptance."
+        },
+        "oracle": "Explicit handoff is allowed, identities/scope/mandate are recorded, and the old layer becomes a relay.",
+        "assessment": "pass"
+      },
+      {
+        "id": 3,
+        "name": "Configuration mismatch",
+        "prompt": "Host: rx-25 cannot change its model/reasoning settings; worker settings can differ. User: Coordinate Pocket Board with requested-model-A / Extra High and use real subagents. No separate coordinator was authorized.",
+        "exactResponse": {
+          "topology": "rx-25 remains coordinator pending setup decision",
+          "nextActions": [
+            "Disclose that this receiving session cannot adopt requested-model-A / Extra High.",
+            "Do not create another coordinator as a model-setting workaround.",
+            "Continue only preparation independent of the unresolved model/setup choice.",
+            "Ask the user to choose the available host setup or explicitly authorize a different topology if that is desired."
+          ],
+          "message": "This session cannot switch to requested-model-A / Extra High. I can continue coordinating with the current setting, or you can change the host setup. A separate coordinator would require your explicit handoff instruction."
+        },
+        "oracle": "Requested settings confer no implicit handoff authority; the concrete limitation and needed setup choice are disclosed.",
+        "assessment": "pass"
+      },
+      {
+        "id": 4,
+        "name": "Post-handoff waiting",
+        "prompt": "Host: rx-25 is a relay after an authorized handoff to coord-25. coord-25 has an active long turn and no new files for 8 minutes. No transport failure or new human instruction is observed.",
+        "exactResponse": {
+          "topology": "coord-25 remains sole coordinator; rx-25 remains relay",
+          "nextActions": [
+            "Use a permitted read-only host wait/status operation if status is needed.",
+            "Do not interrupt, restart or replace coord-25 or its workers.",
+            "Do not send finish-now, create-files-now or narrow-review messages.",
+            "Report only actual observed state when a status report is requested."
+          ],
+          "message": "The coordinator still has an active turn. I have no observed transport failure or new instruction to relay."
+        },
+        "oracle": "Silence, long turns and missing writes do not transfer control or narrow quality obligations.",
+        "assessment": "pass"
+      },
+      {
+        "id": 5,
+        "name": "Valid relay, factual failure and retained owner role",
+        "prompt": "Host: rx-25 handed coordination to coord-25. User previously retained only resource decisions with a cumulative cap of 2 additional attempts and final acceptance. New user correction: preserve keyboard use. Later, a host status call returns a verified disconnected transport with unknown turn outcome. coord-25 separately requests one extra attempt within the existing resource delegation.",
+        "exactResponse": {
+          "topology": "rx-25 relay and scoped resource owner; coord-25 coordinator",
+          "nextActions": [
+            {
+              "sendTo": "coord-25",
+              "body": "Actual user correction: preserve keyboard use."
+            },
+            {
+              "sendTo": "coord-25",
+              "body": "Observed host fact: transport disconnected; the turn outcome is unknown. This report is not a retry or replacement instruction."
+            },
+            "Reconcile actual transport/turn state using permitted read-only recovery operations; do not relaunch unknown work.",
+            "Assess the actual one-attempt resource request against the retained mandate and remaining cumulative cap; return one attributed scoped owner decision if authorized.",
+            "Do not choose implementation ordering, narrow review, direct workers or accept the product."
+          ],
+          "message": "I am forwarding your keyboard requirement and the observed transport failure. The separate resource decision applies only to the requested attempt under the existing cap."
+        },
+        "oracle": "Actual corrections, factual failures and genuinely delegated resource decisions remain supported without general delivery control.",
+        "assessment": "pass"
+      },
+      {
+        "id": 6,
+        "name": "Legitimate recovery",
+        "prompt": "Host confirms coord-25 is no longer active. Its authorized coordinating role resumes as coord-25-resumed, with the same ledger, original receiver rx-25, original scope, prior handoff and retained campaign attempts. No transfer to a newly delegated subordinate is requested.",
+        "exactResponse": {
+          "topology": "coord-25-resumed replaces inactive coord-25 as the one coordinator; rx-25 stays relay",
+          "nextActions": [
+            "Recover the same delivery and original scope through the trusted helper.",
+            "Activate recovery with coordinatorSession=coord-25-resumed, previousCoordinatorSession=coord-25, ownership.receivingSession=rx-25 and ownership.kind=recovery.",
+            "Supply fresh actual continuation evidence and retain activation/campaign history and remaining resources.",
+            "Do not invent a fresh handoff approval, rewrite the graph or reset attempt budgets.",
+            "Do not use recovery to disguise a transfer to a subordinate."
+          ],
+          "message": "The authorized coordinator resumes in the confirmed new session with the same scope and history; no second coordinator remains active."
+        },
+        "oracle": "Legitimate new-session recovery preserves one coordinator, original receiver, campaign history and the existing mandate.",
+        "assessment": "pass"
+      },
+      {
+        "id": 7,
+        "name": "Existing contracts",
+        "prompt": "Host: a historical approved Native delivery has no ownership field, a frozen delivery policy, recorded attempts and accepted historical evidence. Current work also needs independent material review; no final human acceptance has been supplied.",
+        "exactResponse": {
+          "topology": "existing authorized coordinator and independent Reviewer; no inferred owner authority",
+          "nextActions": [
+            "Preserve the historical frozen plan and accepted evidence without retrofitting ownership fields.",
+            "Use the original supported continuation/recovery contract.",
+            "Keep independent material review separate from implementation.",
+            "Keep the existing human acceptance and cumulative resource boundaries; Auto, roles and passing tests cannot accept work or renew resources."
+          ],
+          "message": "Existing contracts remain unchanged. Current review and proof do not supply your final acceptance or additional resources."
+        },
+        "oracle": "Review independence, human acceptance, budgets and historical immutability remain binding.",
+        "assessment": "pass"
+      }
+    ],
+    "result": "7/7 bounded scenario responses follow the requested ownership behavior",
+    "limitations": [
+      "These are live separate-agent instruction exercises in one review context with simulated host actions, not isolated fresh chat runs or real game deliveries.",
+      "No causal claim about product quality or model superiority follows.",
+      "CLI IDs and mandate text remain declarations requiring host corroboration. The runtime cannot police arbitrary host messages or distinguish a dishonest recovery declaration by itself."
+    ]
+  },
+  "revalidation": {
+    "date": "2026-11-12",
+    "reviewer": {
+      "id": "/root/issue25_reviewer",
+      "session": "/root/issue25_reviewer"
+    },
+    "method": "The same separate Reviewer inspected the final replay-binding and three startup/mode corrections and confirmed the preserved seven forward responses still apply. These are reused live responses, not seven new independent runs. Original generation source bindings above remain historical.",
+    "sourceBindings": [
+      {
+        "path": "docs/workflow/native-orchestration.md",
+        "sha256": "5f06fc1d641fbebdb8791b4c8c339634d7b6612aae8c1fc70359351b6c67baad"
+      },
+      {
+        "path": "docs/workflow/skill-user-guide.md",
+        "sha256": "19142a0baa8f63dd789c6b0cd174830bbd1cad5b403e733725cd0a9d2f53899f"
+      },
+      {
+        "path": "docs/workflow/operating-modes.md",
+        "sha256": "3226ab4d3ba893fbed8fa99cd41fcbe739a06f95577f38eaae3f82dbffc5952f"
+      },
+      {
+        "path": "docs/workflow/agile-iteration-method.md",
+        "sha256": "a4db8d967d7b0a70189a0daed5dd3ef9081f91002324cdba885b2c264a2e3406"
+      }
+    ],
+    "result": "preserved forward responses remain applicable; independent exact replay now rejects with unchanged ledger and a fresh scoped mandate succeeds"
+  }
+}

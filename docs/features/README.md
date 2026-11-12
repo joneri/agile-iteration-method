@@ -1,6 +1,7 @@
 # Feature explanations
 
 - [AIM 4: User Stories from intent to acceptance](aim-4-user-stories.md)
+- [Receiving-agent orchestration ownership](aim-orchestration-ownership.md)
 - [AIM: latest assessed Enigma results and limits](aim-enigma-evaluation.md)
 
 This folder contains support and reference explanations.

@@ -33,6 +33,25 @@ Python or mistake skill installation for helper readiness.
 
 ## Ship, Loop and Graph engineering
 
+The agent receiving the user's AIM assignment is the default orchestrator and
+retains coordination while delegating bounded Dev, Reviewer or specialist work.
+Real subagents, "let the orchestrator formulate the assignment", Native graphs,
+model/reasoning requests, available slots and delegation flags do not authorize
+a separate orchestrator. If this session cannot adopt requested settings, disclose
+the concrete limitation and obtain the needed setup/topology decision; do not
+create a coordinating layer as a workaround. A separate coordinator requires an
+explicit user mandate or authorized handoff, bound to actual receiving and
+coordinating sessions, scope and human instruction in existing plan/activation
+evidence. Ordinary bounded subtask delegation needs no extra confirmation.
+
+After handoff, the former layer is a relay by default: forward actual user
+instructions, factual status and genuine escalations. Preserve explicitly
+retained scoped owner/resource decisions, but do not independently direct pace,
+ordering, implementation, review scope, retries, interruptions or replacement
+workers. Silence, a long turn or no new files alone grants no control. Diagnose
+actual transport/host failures separately. Returning coordination needs authorized
+reassignment; legitimate session recovery preserves history and one coordinator.
+
 Default new delivery plans to **AIM 4.8 Native**. Small work uses a small graph;
 no extra agent is implied. Before planning or dispatch,
 load `references/native-orchestration.md`: choose the smallest useful built-in graph or
@@ -47,8 +66,8 @@ before final owner acceptance. Explicit **Loop** uses useful Done Increments
 and actual owner feedback to select the next work. Keep delivery style separate
 from Strict/Auto and cost depth; preserve active and historical policies.
 
-Promote **Graph engineering** in startup guidance: the current agent can
-coordinate outcome ownership, delivery dependencies, proof and feedback. A
+Promote **Graph engineering** in startup guidance: the receiving agent normally
+coordinates outcome ownership, delivery dependencies, proof and feedback. A
 **Strict Loop** owner can be human or an agent with explicit human delegation.
 Use actual host identities, a frozen `deliveryPolicy` and scoped owner decision
 evidence from `references/user-stories.md`; a role or Auto setting cannot grant

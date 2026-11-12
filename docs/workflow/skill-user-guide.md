@@ -52,7 +52,10 @@ step. Strict/Auto controls gate decisions independently of delivery style.
 
 Use **Graph engineering** to put your agent in charge of coordinating the work:
 name the product owner, delivery responsibilities, dependencies and evidence.
-For example: "Use AIM in Strict Loop. Act as my product owner, delegate delivery,
+The receiving agent keeps coordination unless you explicitly authorize a separate
+coordinator; after handoff it becomes a relay, preserving only scoped retained
+owner decisions. For example: "Use AIM in Strict Loop. Act as my product owner,
+retain coordination here and delegate bounded implementation and independent review;
 assess each verified increment and give feedback before selecting the next.
 Your mandate covers [outcome and allowed decisions] within [resource limit]."
 An agent needs that explicit human mandate for owner decisions; it uses actual

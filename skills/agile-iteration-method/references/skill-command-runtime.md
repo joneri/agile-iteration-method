@@ -126,6 +126,18 @@ supply acceptance. In Strict Loop, obtain that owner's actual assessment before
 selecting the next increment. Ship completes the agreed result before final
 owner acceptance, with internal review and correction throughout.
 
+The receiving agent is the default coordinator. Requests for real subagents,
+Native graphs, "the orchestrator" or model/reasoning settings do not authorize
+a separate coordinator. Disclose unavailable settings and resolve the needed
+setup/topology choice. Only an explicit user mandate or authorized handoff moves
+coordination; bind actual sessions, scope and instruction using Native activation
+evidence. After transfer the former layer relays actual user instructions, facts
+and genuine escalations, retaining only explicitly scoped owner decisions. It
+does not independently steer pace, review scope, retries or worker lifecycle
+because of silence, slow turns or missing files. Preserve legitimate recovery
+and authorized reassignment under `native-orchestration.md`. Ordinary bounded
+Dev/Reviewer delegation adds no confirmation gate.
+
 New plain-intent `/aim start "<desired outcome>"` and natural-language starts
 follow `user-stories.md`. Once the intent is known, the main AIM thread performs
 this preparation as part of the same start, before PO frames Epics or TDO plans

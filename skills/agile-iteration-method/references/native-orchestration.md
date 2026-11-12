@@ -79,13 +79,42 @@ Preserve historical scope. An unsupported scope change needs a supported new
 plan and its applicable decision; it cannot edit accepted history or reset a
 campaign by renaming work.
 
-## Activate the actual coordinators
+## Coordination ownership and handoff
+
+The agent receiving a new AIM assignment remains its coordinator by default.
+Delegate bounded work to Dev, Reviewer and specialists without another approval
+per subtask. Native graphs, real subagents, "the orchestrator", model/reasoning
+preferences, host slots and delegation flags do not authorize another coordinator.
+When requested settings are unavailable in the receiving session, disclose that
+specific limitation and resolve the setup/topology choice with the user before
+using a separate coordinator.
+
+A separate coordinator requires an explicit user mandate or authorized handoff.
+Bind actual receiving/coordinating sessions, scope and the original instruction
+in the existing plan and activation evidence. After transfer the former layer
+only relays actual user corrections, factual status and genuine escalations by
+default. It cannot independently direct pace, work ordering, implementation,
+review scope, retries, interruptions or replacement workers. Silence, a long
+turn or missing file writes does not justify steering, narrowing quality or
+taking control. Diagnose an observed host/transport failure separately; factual
+failure reporting grants no product direction or retry authority. Any technical
+repair stays within actual host authority and preserves unknown outcomes.
+
+Explicitly retained owner decisions remain scoped to their human mandate,
+including resources and the frozen `deliveryPolicy`. A parent-created task or
+role label cannot supply that mandate. Returning coordination requires an
+authorized reassignment. Legitimate session recovery continues the same role
+with one actual coordinator and retained history; it does not transfer delivery
+to a subordinate or require a new human approval on every resume.
+
+## Activate the actual coordinator
 
 Use the product ledger's `orchestrate` operation before starting a Native
 activity. Bind the delivery coordinator's actual session, capability/version and
 current scope. Include upstream sessions that dispatch this delivery, with
-activation evidence showing the instructions they actually received. The parent
-can coordinate without maintaining its own product ledger or repository profile.
+activation evidence showing the instructions they actually received. An upstream
+session's activation declares loaded context, not authority to steer after handoff.
+The former layer keeps no second product ledger or repository profile.
 The delivery coordinator alone records product decisions and observations in the
 canonical ledger; child/parent messages are inputs to that operation.
 
@@ -110,6 +139,54 @@ Retain the confirmed receipt, revision and digests. Use the normal Story helper'
 stdin and compare-and-swap contract. Activation is scoped to the selected
 delivery; stale scope or session bindings cannot authorize a new attempt. A
 resume rebinds the real session while retaining original campaign history.
+
+For new assignments, supply `ownership` in `activate` using the existing ledger:
+
+```json
+{"receivingSession":"actual-receiving-session","kind":"receiving"}
+```
+
+`receiving` requires the coordinator to be the receiver. An explicit separate
+coordinator uses `kind: "handoff"` and `mandate: {"path":".aim/handoff.json",
+"sha256":"<actual digest>"}`. The mandate is a bounded JSON artifact (16 KiB):
+
+```json
+{
+  "orchestrationHandoffVersion": 1,
+  "deliveryId": "DI-CHECKOUT",
+  "scopeSha256": "<approved delivery scope>",
+  "receivingSession": "actual-receiving-session",
+  "fromSession": "actual-receiving-session",
+  "toSession": "actual-separate-coordinator",
+  "residualRole": "relay",
+  "previousActivationSha256": null,
+  "originalMessage": "<actual human instruction authorizing this transfer>"
+}
+```
+
+Optional `retainedDecisions` lists only explicitly retained scoped owner roles;
+it grants no ledger control or new acceptance/resource authority. On later
+handoffs `fromSession` is the current coordinator and `previousActivationSha256`
+is the canonical JSON digest of that exact current activation (null only for the
+initial handoff). It prevents replaying an older transfer after a round trip;
+returning control also requires the actual reassignment mandate. Legitimate
+recovery uses `kind: "recovery"`,
+the unchanged original `receivingSession`, `previousCoordinatorSession` and fresh
+activation evidence describing the actual continuation. Do not declare a transfer
+to a subordinate as recovery. Recovery after a handoff retains that handoff in
+activation history and consumes no new mandate. Only one current coordinator
+may steer through supported activity/observe/decide paths once ownership is bound;
+activated upstream relays cannot perform those operations.
+
+Ownership cannot be dropped or its receiver renamed on subsequent activations.
+Existing frozen plans and activations without this binding remain compatible;
+do not retrofit historical authority or require fresh approval for old recovery.
+The CLI checks declared bindings, scoped evidence and hashes, not human intent
+or authenticated host identities. The Codex bridge separately verifies its actual
+bound executing thread; it does not reliably know the original receiving session.
+Where a host reliably supplies that receiver, compare it before dispatch and
+reject an unmandated receiver/coordinator mismatch. Never treat a caller's IDs
+as that host proof or claim these checks police arbitrary host messages.
 
 Capability and authority fields are declarations linked to evidence, not
 identity authentication or a competence certificate. A role name, installed

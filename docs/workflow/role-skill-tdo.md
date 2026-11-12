@@ -28,10 +28,11 @@ technical planning and evidence synthesis.
   Use the explicit human owner cancellation/replacement contract in
   `user-stories.md` for changed approved scope. Preserve the old snapshots and
   require a separate new plan approval; never rewrite history or invent acceptance.
-- Reuse mature input, durable project knowledge and relevant skills. Before
-  substantial implementation, make decisive quality observable with examples,
-  references or failure characteristics in the existing requirements/plan.
-  Include relevant copy criteria and the coherence of the whole experience.
+- Before freezing the plan, ask how a plausible implementation could pass the
+  selected criteria and still fail the user's agreed purpose. Use the frozen
+  quality plan in `user-stories.md` to address any decisive gap in the existing
+  criteria or check. Pick the smallest early observation that distinguishes the
+  intended result from the failure, including how the experience works in use.
 
 - Read requirements and current code before relying on profile claims. Identify
   concrete uncertainties and consequences; use a bounded investigation or check
