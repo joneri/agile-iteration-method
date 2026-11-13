@@ -1,33 +1,33 @@
 {
   "guidanceReviewVersion": 1,
-  "productVersion": "4.8.9",
+  "productVersion": "4.8.10",
   "reviewedOn": "2026-11-13",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "d41b44755235d68f9d93a319b5e31b8225e88e8aeb86ab35fc17bac08cb9f4a7"
+      "sha256": "01d39b6498c4612014cf24ddd8d75d0138373049a3f3f67fbc432dbc3f6e9a8b"
     },
     {
       "path": "school.html",
-      "sha256": "6878f2b57e40699ddb8a42c6d902441d0be0506223321e5295c942fcf638c239"
+      "sha256": "d22a23d98d4bef1ae190eaa58f64591a2780c4859f925027a456317152aa2c10"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "218e9e9998bc60a498066c7588fe323d919d1b07697dcbaaf9931eb8e5a2838b"
+      "sha256": "e39a03e6485fa3591e416131b6d7c701375ac280593fdda3412bc87432791ea7"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sha256": "b79840502e0c401c67d06bf8ccedc7bf7f4f2700b72e4ebca0fa8941a5f9e666"
+      "sha256": "56462c32722032c97ad94258e7e9fb4bb6df1f021b24949bc58b0fe66b3f95d3"
     },
     {
       "path": "docs/workflow/user-stories.md",
-      "sha256": "80b54ad29b02a4b2639cc913d065b1e329072bdb3ecbdb10a8a3e08028cb2ab1"
+      "sha256": "e76c892ad8edf3bb9250e85001fcdecc310179c45b11176114fa5ef623ddb828"
     },
     {
       "path": "docs/workflow/native-orchestration.md",
-      "sha256": "cfa1841af7a1f523df48a0777a2d165ccefdc96dd4eb429fe3149ba0e9493b39"
+      "sha256": "9c43921c678a201bd48a780926d85d612aa7ed1c9034b9ec091229ae832f0824"
     },
     {
       "path": "docs/workflow/skill-command-runtime.md",
@@ -56,12 +56,12 @@
       "summary": "Reviewed the two-route preparation section before Lesson 1. Separate accessible tabs select starting from scratch or using an existing codebase; each contains its own installation/preflight prompt, project request and preparation steps in a bounded scroll area. Tab controls and the Lesson 1 link remain outside the scroll area. Direct links select the right guide; keyboard navigation, reduced-motion settings and JavaScript-free access are preserved. Both routes keep chat-first setup, Python/Node/npx checks, platform help and real user authorization for system installation. Homepage installation copy and its downloadable instructions remain synchronized; existing scope/history and final acceptance stay intact. Each lesson now has a Pocket Board prompt and an illustrative reply. All six prompt copy targets were checked in the browser at desktop and phone widths, and the prompt text is visible without JavaScript."
     },
     "deliveryModes": {
-      "conclusion": "current",
-      "summary": "Homepage and School consistently default new work to Ship, reserve Loop for actual feedback on useful increments, and separate delivery style from Strict/Auto and cost depth. School explicitly chooses Ship/Auto and grants bounded plan approval only after confirming scope/resources. This is an explicit example mandate, not an unselected default or invented acceptance. Existing frozen deliveries retain their original policy."
+      "conclusion": "updated",
+      "summary": "Homepage and School consistently default new work to Ship, reserve Loop for actual feedback on useful increments, and separate delivery style from Strict/Auto and cost depth. School explicitly chooses Ship/Auto and grants bounded plan approval only after confirming scope/resources. This is an explicit example mandate, not an unselected default or invented acceptance. Existing frozen deliveries retain their original policy. Release 4.8.10 makes the usable artifact available during Ship; optional early feedback adds no approval, routine stop or implied acceptance."
     },
     "orchestration": {
       "conclusion": "updated",
-      "summary": "Receiving-agent coordination and explicit session-bound handoff remain accurate. The homepage and School now explain approval-bound per-child model/reasoning choices without transferring coordination. Exact plan pairs and cumulative allowances authorize later choices; profile candidates alone do not. Supported native starts/preflight retain the actual child and rationale; the current bound-thread UI bridge cannot dispatch pooled children. Independent expectations before material plan freeze and early functioning-core scrutiny supplement final integrated review. Historical relocation and attempt rules remain unchanged; declarations authenticate neither host identity nor arbitrary host calls."
+      "summary": "Receiving-agent coordination and explicit session-bound handoff remain accurate. The homepage and School now explain approval-bound per-child model/reasoning choices without transferring coordination. Exact plan pairs and cumulative allowances authorize later choices; profile candidates alone do not. Supported native starts/preflight retain the actual child and rationale; the current bound-thread UI bridge cannot dispatch pooled children. Independent expectations before material plan freeze and early functioning-core scrutiny supplement final integrated review. Historical relocation and attempt rules remain unchanged; declarations authenticate neither host identity nor arbitrary host calls. Release 4.8.10 continues the same review from the usable core to final readiness and changes default review prompts to reuse current evidence and assess relevant deltas; graph authority and dependencies are unchanged."
     },
     "delegatedDecisions": {
       "conclusion": "updated",
@@ -73,11 +73,11 @@
     },
     "verificationAndAcceptance": {
       "conclusion": "updated",
-      "summary": "School explains repository knowledge/localities, contextual recall, checks, feedback, source/attempt traceability, diagnosis and evidence-linked sharing. Pocket Board checks archiving and keyboard completion through reload, then reports tested version, steps, observed/expected result, independent review and owner retest. Repo-awareness/calibration, engineering delivery, reflection and learning.py remain the reference trail. Discovery pointers need code inspection and affected refresh, not a full function catalogue or guaranteed duplicate detection. Local sharing is not cross-machine sync; advice/hashes do not prove prevention or later benefit. No model retraining or universal host interception is claimed. Delta review 2026-11-13: independent expectations and early real-route/core review cover relevant experience beyond algorithm oracles; unchanged page claims remain accurate. Current independent evidence may be reused; scope, final integrated review and actual owner acceptance stay binding. The full-page 2026-11-12 review and its evidence are reused."
+      "summary": "Release 4.8.10: homepage and Lesson 6 teach actual product use from the first usable core, early access during Ship, and one continuing independent review through final readiness. Existing checks and credible unchanged observations are reused; new automation addresses consequential risk or worthwhile repetition. A phase change alone needs no fresh campaign or new recipe/map. Historical frozen plans, numeric comparability, binding product quality and actual owner acceptance remain intact. Domain-supported implied core and explicit simplifications are preserved. Independent instruction-use and public-copy delta review found no material issues. The unchanged learning and repository-knowledge lessons retain their 2026-11-12 review evidence and limits: advice/hashes do not prove prevention or general benefit. Changed teaching copy was rendered in WebKit at 1280x900 and 390x844; School Lesson 6 was visually inspected and both pages had no horizontal overflow at those widths."
     },
     "modelsAndEvidence": {
       "conclusion": "updated",
-      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.9 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
+      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.10 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
     }
   }
 }

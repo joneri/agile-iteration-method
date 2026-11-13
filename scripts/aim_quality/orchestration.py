@@ -164,7 +164,7 @@ def construct_default_graph(pattern, outcomes, coordinator, policy):
             "integrate-review", "review", "reviewer", all_paths, deps, ids,
             ["All branch outputs and frozen original requirements"],
             ["Integrated outcome assessment"],
-            ["Run the original end-to-end expectations across selected outcomes."],
+            ["Assess the delivered outcomes against original expectations; reuse current independent observations and check consequential deltas."],
         ))
     elif pattern == "maintenance_repair":
         nodes.extend([
@@ -205,7 +205,7 @@ def construct_default_graph(pattern, outcomes, coordinator, policy):
             _node("integrate-review", "review", "reviewer", all_paths, ["implement"], ids,
                   ["Implementation candidate and original requirements"],
                   ["Integrated outcome assessment"],
-                  ["Run the original end-to-end expectations across selected outcomes."]),
+                  ["Assess the delivered outcomes against original expectations; reuse current independent observations and check consequential deltas."]),
         ])
     graph = {
         "version": VERSION,

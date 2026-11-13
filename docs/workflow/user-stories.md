@@ -309,8 +309,11 @@ feature-only Stories do not remove quality obligations.
 
 Before freezing a new material plan, obtain the independent expectation review
 in [Engineering delivery](engineering-delivery.md#independent-expectation-review-before-implementation).
-The separate Reviewer first derives expectations from the original intent and
-agreed context, then challenges the proposal: what plausible implementation
+The separate Reviewer first derives expectations from the original intent,
+agreed context and applicable domain references, distinguishing explicit outcomes,
+supported implied core, uncertain assumptions and optional details. Missing
+wording does not itself make a core convention optional; explicit simplifications
+remain controlling. Then challenge the proposal: what plausible implementation
 could pass the selected criteria and still fail the user's main purpose?
 Preserve any decisive obligation in `sharedRequirements` and make the existing
 criteria or linked check distinguish success from that failure. Base the expected
@@ -319,20 +322,25 @@ Use the existing owner decision path when an interpretation would materially
 change the agreed result or scope. Reuse a check that already distinguishes the
 outcomes, including for a trivial edit.
 
-Plan the smallest functioning-core observation before costly dependent
-expansion. Reuse the same Reviewer to judge its actual behavior and relevant
-experience against those expectations, even when the algorithm oracle is
-credible. Reuse current independent evidence for unchanged covered behavior;
-nonmaterial work retains its justified self-review policy. Keep the assessment,
-disposition and early findings in existing plan/core/review evidence. These are
-bounded checks within the existing gates, not extra owner approvals; final
-integrated review and owner acceptance remain required.
+Begin the same independent review by using the smallest functioning core before
+costly dependent expansion. Make the usable artifact/preview available while Ship
+continues; early feedback is optional and creates no approval or acceptance.
+Carry current observations into final integrated review, examining the delivered
+whole, changed behavior and consequential uncertainty rather than repeating a
+campaign. Nonmaterial work retains its justified self-review policy.
 
 A check contains `id` (`QC-*`), `criteria` (`US-ID/AC-ID`), `kind` (`behavior`,
 `performance`, `journey`), `stage` (`core`, `delivery`, `both`), `workload`,
 `environment`, `method`, concrete `expected` observations and linked `goalIds`.
-Cover every selected criterion and goal, an early core and the documented real
-entry/consumer journey. Shared requirements name `source`, `requirement` and
+Cover every selected criterion and goal with the smallest sufficient observations
+of the early core and real entry/consumer journey. Prefer `both` when unchanged
+source-bound evidence can serve early and final assessment. In new qualitative
+checks, freeze the outcome and proportionate observation alternatives, not a
+needlessly exhaustive route. Direct use or a controlled boundary case may suffice
+for the claim it establishes; no new harness/map is required. Numeric workload,
+environment, method and target comparisons remain exact. Historical frozen
+plans keep their contract; changed obligations use existing owner decisions.
+Shared requirements name `source`, `requirement` and
 `checkIds`. Reuse checks when they actually establish several claims.
 
 `primaryResult` identifies the complete useful operation:
@@ -434,7 +442,8 @@ or a blocked owner decision. First missing observations can be measured on that
 snapshot; replacing an existing report requires rework. New observations use
 new files; bound historical raw evidence stays immutable and hash-checked.
 
-Final readiness requires every check and goal. Reuse current core evidence when
+Final readiness requires every check and goal; it does not require a fresh run
+of unchanged covered behavior. Reuse current core evidence when
 its source/configuration bindings are contained in the final snapshot; still
 check the integrated real entry. Delivery-only checks cannot reuse core evidence;
 `both` checks can do so only with the complete bound source set unchanged.
@@ -449,7 +458,9 @@ set and existing raw results. It checks applicability, representative variants,
 source/dependency coverage and the real entry. Look for a plausible failure of
 the agreed purpose that could pass the selected criteria. Reuse current evidence
 if it already distinguishes the intended result from plausible failures.
-Use an independent counterexample for a consequential gap. Inspect
+Use an independent counterexample for a consequential gap. Stop adding checks
+when further verification is unlikely to improve the product or change readiness.
+Required project/release checks and unresolved decisive behavior still apply. Inspect
 the actual result and relevant source, including rendered behavior, visible
 errors and result states for UI changes. Record missing or contradictory
 evidence for decisive in-scope behavior as an open material finding tied to the

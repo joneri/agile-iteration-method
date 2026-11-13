@@ -28,14 +28,15 @@ usual delivery plan. A node describes work; it does not require another agent.
 
 Keep one cohesive author. Before freezing a new material plan, reuse the separate
 Reviewer for the independent expectation assessment in `engineering-delivery.md`;
-then reuse that reviewer for the first functioning-core challenge and final
-review. Early review covers the decisive real route and relevant experience,
-not only unproved algorithm oracles. Scale checks to risk and reuse current
-independent evidence for unchanged covered behavior; nonmaterial work keeps its
-justified self-review policy. Planning assessment precedes the frozen graph;
-core feedback can occur within implementation. Neither requires an extra node,
-owner approval or agent per role. Preserve the graph's actual dependencies and
-final review; correct material gaps before costly dependent expansion.
+then begin one continuing review with that reviewer on the first usable core.
+Use the decisive real route and relevant experience; make the usable result
+available for optional early user feedback while Ship continues. Final review
+assesses the delivered whole and relevant deltas, reusing current independent
+evidence without a fresh campaign for a phase change. Scale checks to risk;
+nonmaterial work keeps justified self-review. Planning assessment precedes the
+frozen graph and core feedback occurs within implementation. Preserve actual
+dependencies and final readiness records; add no node, owner approval or role.
+Correct material gaps before costly dependent expansion.
 
 Use the trusted package's `scripts/aim_orchestrate.py default --input graph-input.json`
 to construct a graph. Its input is:

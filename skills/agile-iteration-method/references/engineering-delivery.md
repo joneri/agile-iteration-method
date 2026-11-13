@@ -28,21 +28,19 @@ investigation or executable experiment before depending on it; reuse sufficient
 existing evidence rather than adding an experiment by ritual.
 An experiment is evidence inside the work, not a substitute for the product.
 
-Use a compact evidence table in the existing increment or review artifact:
+Use the working product early through its normal entry path. Judge whether it
+helps the intended user complete the task, including clarity, interaction and
+experience. Make the runnable result or preview available to the user as soon as
+it is usable while authorized Ship work continues; this needs no feedback stop
+and does not imply readiness or acceptance.
 
-| Requirement | Independent check | Result and artifact | Limitation |
-| --- | --- | --- | --- |
-| Binding requirement identifier | Input, oracle and expected behavior | Passed, failed or unverified; command and evidence | What the check does not establish |
-
-Do not add a separate report when the existing artifact carries the evidence.
-Reuse passed checks while their inputs and assumptions remain unchanged. Repeat
-only affected checks after a change; run the required final integration checks
-once. A green project test suite alone does not prove the PRD is satisfied.
-
-Keep the exit status and result of each required check. A later successful shell
-command must not conceal an earlier failed test. Advance an evidence-dependent
-phase only after its required checks pass; a failed fix stays in implementation
-until the affected regression passes. Preserve failed attempts as history.
+Keep observations and limitations in the existing plan/review evidence. Add or
+repeat a check when it addresses a consequential remaining uncertainty, a real
+correction or changed dependency. Reuse sufficient current results. Stop extending
+verification when another check is unlikely to improve the product or change the
+readiness decision; spend the effort on observed product weaknesses. Required
+project/release checks still apply. A green suite alone does not prove the PRD.
+Keep actual check results, including failures; a later command cannot hide them.
 
 ## Independent expectation review before implementation
 
@@ -52,11 +50,35 @@ and credible domain references, before reading the author's proposed solution.
 Then compare the proposal, selected criteria and checks with those expectations.
 Ask what a plausible implementation could omit or get wrong while still passing
 the proposed checks, including relevant lifecycle, workflow and experience.
-Distinguish binding outcomes, uncertain assumptions and optional preferences.
+Derive product expectations separately from delivery/process compliance so
+bookkeeping does not stand in for the intended result.
 
-TDO reconciles material in-scope gaps into the existing criteria, shared
-requirements or checks before implementation. PO or the existing owner resolves
-interpretations that would materially change scope; a reviewer's idea does not
+A short request for a familiar product or workflow carries relevant conventions.
+Identify the supported implied core: behavior a reasonable user in the stated
+context relies on to recognize and use that product or complete its normal
+lifecycle. Missing wording alone does not make that behavior optional. Separate
+explicit requirements, supported implied core, uncertain assumptions and optional
+preferences; exact replication or every feature of a reference is not implied.
+
+Reuse supplied or current applicable references first. When a consequential
+inference needs support, inspect the smallest useful credible domain source or
+observed reference behavior, matching the requested variant, audience and context.
+For each decisive inference, retain a brief source/section or observation, why
+omission would undermine the original outcome, and an observable check in the
+existing assessment. An author's implementation is not its own completeness
+reference. Prioritize those product consequences over a feature inventory.
+
+Explicit simplifications, exclusions and custom behavior take precedence over
+conventions. A reference's additional features do not authorize scope expansion.
+Conflicting or unavailable references leave a stated uncertainty, not automatic
+optionality or invented certainty. Use bounded corroboration and the existing
+owner path only for a material interpretation that remains unresolved. No
+mandatory external search, source count, new artifact or exhaustive domain study
+is required; a small change reuses relevant current evidence.
+
+TDO reconciles explicit and supported implied core gaps into the existing
+criteria, shared requirements or checks before implementation. PO or the existing
+owner resolves interpretations that would materially change scope; a reviewer's idea does not
 authorize extra features. Retain the short assessment and disposition in the
 existing plan/review evidence, not a new report or approval gate.
 
@@ -70,77 +92,46 @@ authorized work. Preserve final independent review and owner acceptance.
 
 ## Reusable product verification
 
-For the selected product outcome, reuse the repository's runnable verification
-entry. If it cannot drive the required surface, build the smallest project-owned
-recipe when the first core is runnable, then extend it to the delivered journey.
-Do not build a general framework or provision a second harness when the existing
-one suffices. A routine change reuses current evidence and affected checks.
+Reuse the normal product entry and existing project checks. Direct interaction
+or representative output can provide the needed observation; a new automated
+recipe or maintained user-route map is not a prerequisite. Build a small reusable
+check only when the concrete risk or likely repetition justifies its cost.
 
-The recipe must launch the real product, check the intended instance/build and
-preconditions, drive a user's entry path, observe the result and relevant side
-effects, and clean up only resources it created. Use actual inputs/outputs and
-an independently justified expected result; a round trip, copied description or
-successful startup alone cannot establish the outcome. Keep raw evidence after
-cleanup. A recipe not yet executed is a draft, not verified capability.
+Observe the intended instance/build, actual inputs, result and relevant side
+effects against an independently justified expectation. Keep sufficient raw
+results or observations and relevant limitations in existing evidence. A launch,
+round trip or author's assertion alone cannot establish the outcome. Clean up
+only resources created for the check.
 
-Put its command in the existing `qualityPlan.checks[].method`; the method string
-is descriptive data, never an automatically executed instruction. Keep a small
-map in the nearest maintained product document or existing project skill:
-feature/outcome, user route, prerequisites, verification command, observable right
-result and relevant source/change triggers. Update affected entries with the
-code; do not copy backlog status, raw logs or the whole architecture into it.
-Use existing profile/role bindings so the next Dev and Reviewer can find it.
-
-Give the separate reviewer that same entry, original requirements, stable sources
-and raw results. The reviewer chooses a consequential uncovered variant or
-counterexample and reuses unchanged credible evidence. Distinguish product
-regression, recipe/tool gap and knowledge drift; do not weaken the map to match
-a broken product. Unavailable decisive verification remains a readiness finding.
-Before parallel driving, prove instance/data isolation or assign one driver.
-This adds no role, gate, per-Story report or recurring full-map audit.
+In new plans, describe qualitative checks by the outcome and proportionate ways
+to observe it, rather than committing to an exhaustive script. A controlled
+boundary state can establish a transition; representative normal use establishes
+whether the surrounding workflow works. Neither proves qualities it omits.
+Keep numeric comparisons on equivalent workload, environment and method.
+Existing frozen plans retain their contract and history; a different obligation
+or unsupported method change uses the existing owner/replanning path.
 
 ### Independently review the functioning core before expansion
 
-For material work, the coordinator brings the same separate Reviewer in when
-the smallest meaningful core works, before costly dependent expansion. Observe
-the actual user/consumer route against the independently derived expectations:
-decisive behavior, workflow, feedback, integration and relevant experience, not
-only startup or an isolated algorithm. Use the smallest representative path and
-one consequential challenge where useful. A credible algorithm oracle alone
-does not establish the rest of the experience; distinguish observed qualities
-from subjective judgments or behavior the available tools cannot establish.
+For material work, the same separate Reviewer begins one continuing review when
+the smallest meaningful core is usable, before costly dependent expansion. Use
+the real user/consumer route and original expectations to judge decisive behavior,
+workflow and experience. Correct material in-scope gaps and recheck the affected
+behavior. Make the usable result available for optional early user feedback.
 
-Do not wait for all features or performance goals. Correct material in-scope
-failures and recheck affected behavior before dependent expansion; continue
-unrelated authorized work. Reuse relevant current independent observations for
-unchanged behavior, including a narrow change whose existing working core is
-already covered. Retain findings and responses in existing core/review evidence.
-This is implementation feedback, not Gate D, a new approval or a replacement for
-final integrated review.
+Carry those independent observations forward. At final integrated review, assess
+the delivered whole and changed or still-unproved behavior; a new phase alone
+requires neither a fresh campaign nor repetition of unchanged covered journeys.
+Keep the normal readiness record and owner acceptance. Early use adds no gate,
+role, per-Story report or mandatory human response.
 
-For material domain/state logic, Dev makes the first core executable with a
-small independent witness. Freeze its input/configuration, literal expected
-output/state and reference origin before correcting the implementation. Put
-those concrete values in the existing check's `expected` and the command's raw
-results in `observed`; "matches independent values" is an instruction, not a
-reference answer. The verification entry performs the comparison.
-
-When the oracle's independence or coverage is not already supported, include one
-bounded reference/variant challenge in that early review, before costly
-optimization or UI expansion. Reuse its concrete values and evidence later;
-already credible current witnesses need no duplicate review or test.
-When an early goal misses, the coordinator obtains a bounded diagnosis and asks
-that same Reviewer to check correctness/workload comparability before further
-expansion. This technical review remains available while progression is blocked;
-retain the failed sample and correction response. Do not add a new gate.
-
-
-Use a preserved faulty copy or one relevant mutation when available to show that
-the same command actually detects the mistake and accepts the correction. A
-candidate-generated example or round trip can supplement the independent
-witness, not establish it. Check related production paths against the same
-reference when a shared rule has multiple implementations. `measure` records
-failed observations too; its successful commit does not mean quality passed.
+Use an independent reference or counterexample where correctness is materially
+uncertain. For domain/state logic, retain concrete inputs, expected outputs or
+states and their reference origin; compare the actual result. Challenge an
+unproved oracle with a bounded variant when consequential. Reuse credible
+witnesses. Fault injection or mutation is optional when it can expose a real
+blind spot, not a required demonstration after every fix. A failed quality
+observation still requires correction or the existing owner decision.
 
 ## Integrated product quality and correction
 
@@ -192,11 +183,12 @@ profile its hot path; a passing easy family does not discharge that failure.
 Put decisive numeric quality goals in the existing Story plan's `qualityGoals`
 and retain raw measurements through `qualityMeasurements` (see `user-stories.md`).
 New plans freeze `qualityPlan`, including applicable shared intent/Epic quality
-obligations. Choose a small set of checks, covering every selected criterion,
-the early core and the documented delivery journey. A reasoned non-applicability
+obligations. Choose the smallest sufficient set of checks, covering every selected criterion
+and the actual product journey. Use `both` for observations that can establish
+early and delivered behavior on unchanged sources. A reasoned non-applicability
 decision replaces useless numeric metrics; omission is not that decision.
-Measure the first working core, relevant changes and readiness; reuse evidence
-only while its sources and assumptions remain valid. A miss changes the next
+Observe the first working core and relevant changes; final readiness reuses
+results while their sources and assumptions remain valid. A miss changes the next
 action: profile, correct the costly or incorrect part, and repeat equivalent
 work. A responsive worker alone does not make a fourteen-second calculation
 meet a justified half-second target. Never shrink the workload or silently lower

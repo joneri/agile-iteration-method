@@ -673,7 +673,9 @@ Front-door rule:
 **Ship is the default for new intent-led work.** Complete the agreed product
 outcome, including relevant experience quality, before final owner acceptance.
 Use internal implementation steps, independent review and correction without
-routine owner-feedback stops. Agree scope and resource limits before building;
+routine owner-feedback stops. Make the usable result or preview available early
+while work continues; optional user feedback adds no gate or implied acceptance.
+Agree scope and resource limits before building;
 a limit leaves unfinished work visible. Ship does not authorize publication.
 
 Choose **Loop** explicitly for useful Done Increments whose actual owner feedback
@@ -1007,9 +1009,11 @@ accept Stories or close Epics.
 
 ### Reviewer
 
-Reviewer independently checks whether the decomposition covers the agreed
-contribution to Epic intent, then current code, regressions, the integrated
-product and each selected Story’s preserved criteria. Findings identify affected Story IDs. Defects return
+Reviewer uses the working product to assess the agreed contribution to Epic
+intent and each selected Story’s preserved criteria, with relevant source and
+regression evidence. The same independent review continues from the usable core
+to final integrated readiness, reusing unchanged observations and checking deltas
+and consequential uncertainty. Findings identify affected Story IDs. Defects return
 to implementation and affected evidence is refreshed. Material review follows
 `adaptive-execution.md`. Review supplies evidence, not acceptance authority.
 

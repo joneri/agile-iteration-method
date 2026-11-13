@@ -211,38 +211,39 @@ metrics or quietly omit quality because Stories describe only features.
 
 Before freezing a new material plan, reuse the separate Reviewer for an
 independent expectation review: first derive decisive expectations from the
-original request/context, then challenge the proposed solution and checks.
+original request/context and applicable domain references, then challenge the
+proposed solution and checks. Distinguish supported implied core from uncertain
+assumptions and optional details; unspecified does not automatically mean optional.
+Preserve explicit simplifications and ground consequential inferences using the
+proportional reference contract in `references/engineering-delivery.md`.
 Reconcile in-scope gaps before implementation; preferences do not expand scope.
-Use the bounded contract in `references/engineering-delivery.md`. Reuse current
-independent evidence for unchanged covered risks; nonmaterial work keeps its
-justified self-review policy. Keep evidence in the existing plan/review.
+Reuse current independent evidence for unchanged covered risks; nonmaterial work
+keeps its justified self-review policy. Keep evidence in the existing plan/review.
 
 Bind early read/challenge inputs to preserved baselines before planned writes.
 For existing verified identical-byte input-location corrections, use
 `relocate-bindings` in `references/native-orchestration.md`; retain original
 receipts/attempts and keep actual output/review proof fresh.
 
-Measure the first working core before expanding it. For material work, bring
-the same separate Reviewer in now to observe the smallest meaningful real route
-against those expectations, including decisive workflow and experience as well
-as correctness. Review before costly dependent expansion, without waiting for
-all features/performance goals; correct material gaps and recheck affected
-behavior. Reuse credible current independent observations, the reviewer and
-evidence later; this is not Gate D or another approval. For an unproved
-domain/state oracle, include a bounded reference/variant challenge. Freeze
-literal expected outputs/states from the independent source; the runnable entry
-computes actual values.
-Missing, failed or stale
-observations require correction or a blocked owner choice; retain failures and
-responses. Never shrink work or lower a target to pass. Inspect algorithmic cost
-and the hot path when expensive. Verify the delivered real entry and decisive
-integrated journeys, including result/input identity, configuration and packaging
-when relevant. A build or author's assertion is insufficient. Reuse current raw
-results; rerun for changed dependencies or unresolved risk. No extra prevention
-report or KPI database.
-Reuse the project's runnable verification entry and maintained user-route map.
-If missing, load only Reusable product verification in
-`references/engineering-delivery.md`, then retain the resulting project recipe.
+Use the first working core through its real user/consumer route before costly
+expansion. For material work, the same separate Reviewer begins one continuing
+review of usefulness, workflow, experience and correctness. Make the usable
+artifact or preview available to the user now while Ship work continues, without
+another approval or mandatory feedback stop. Correct material gaps and recheck
+affected behavior. Final integrated review reuses current independent observations
+and examines the delivered whole, changes and consequential remaining uncertainty;
+a new phase alone does not require another test campaign.
+
+Choose the smallest sufficient checks for the product outcome. Reuse the normal
+entry and existing checks; direct use can suffice without a new harness or route
+map. Add automation, an independent witness or counterexample when a concrete
+risk or likely repetition justifies it. New qualitative check methods allow
+proportionate observations; historical frozen plans and comparable numeric
+measurements keep their contract. Preserve real failures and quality targets.
+Stop extending verification when it is unlikely to improve the product or change
+the readiness decision. Missing evidence for decisive behavior remains unresolved;
+required project/release checks still apply. See only the relevant section of
+`references/engineering-delivery.md` for a remaining engineering question.
 
 At new intent/planning, use `scripts/aim_engineering.py learning recall --text
 "<sanitized task and technical risks>" --phase planning` for the shared local
@@ -265,10 +266,10 @@ When maintaining AIM itself, use Method feedback from shared learning in
 `references/reflection.md` for relevant failure signals: distinguish repeated
 events from duplicate reports, then prefer executable prevention over more prose.
 
-Keep cohesive implementation with one author and delegate a separate final
+Keep cohesive implementation with one author and a separate continuing
 reviewer for material work. A role-name switch is self-review. Reviewer examines
 original intent, applicability, complete source/dependency coverage, actual raw
-results and an independently chosen relevant counterexample. Reuse that reviewer
+results; choose a counterexample for a consequential uncovered risk. Reuse that reviewer
 for affected corrections. Parallel work needs actual independence, disjoint
 ownership and existing authority; no automatic model/agent/cost escalation.
 

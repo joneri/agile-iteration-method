@@ -1,5 +1,30 @@
 # Changelog
 
+## 2026-11-13 - AIM release v4.8.10
+
+Use the working product early and keep verification proportionate.
+
+- Let actual use and the intended experience drive review. Make a usable result
+  or preview available while Ship continues, without a new gate or feedback stop.
+- Continue the same independent review from the first usable core through final
+  integrated readiness. Reuse current observations; a phase change alone does
+  not require another test campaign.
+- Remove mandatory creation of verification recipes and user-route maps. Use
+  existing checks and direct observations; add automation for consequential risks
+  or worthwhile repetition and stop expansion when it cannot improve the product
+  or change readiness.
+- Describe new qualitative checks by outcomes and proportionate observation
+  alternatives. Preserve historical frozen plans, numeric comparability, binding
+  product obligations and actual owner acceptance. No schema migration.
+- Include the recent domain-reference refinement: supported implied product core
+  remains relevant in short requests; explicit simplifications take precedence.
+- Align role instructions, Native graph prompts, homepage, School and portable
+  skill. All guidance is general across models and product domains.
+
+Verification: independent instruction-use review and affected existing checks;
+required repository, package, installation and publication validation. These
+changes carry no measured speed, cost or product-quality improvement claim.
+
 ## 2026-11-13 - AIM release v4.8.9
 
 Choose an approved model and reasoning pair for each child assignment.

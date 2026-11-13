@@ -32,17 +32,19 @@ See [User Stories and product backlog](../workflow/user-stories.md) and the
 ## Prove the important behavior early
 
 - Agree Story criteria and the relevant product quality goals before building.
-- Measure the first working core before expanding it. A separate reviewer
-  challenges a material core with an independent example while correction is
-  still small.
+- Use the first usable core before expanding it and make it available for early
+  feedback while Ship continues. The same independent review follows the product
+  through delivery without another approval or routine feedback stop.
 - Check the actual delivered entry point and important user journeys, including
   complete-result time when it matters to the product.
 - Keep raw observations behind the quality assessment. Missing, failed or stale
   evidence calls for correction or an explicit owner decision.
-- Maintain a map from user journeys to a runnable verification entry so future
-  changes can repeat the right checks.
+- Reuse the normal product route and existing checks. Direct observations need
+  no new automated recipe or route map; add automation for meaningful risk or
+  worthwhile repetition.
 - Reuse unchanged results and compact checkpoints when scope and dependencies
-  still match; recheck the affected behavior after changes or new risks.
+  still match; recheck affected changes and consequential uncertainty. Stop
+  extending verification when it cannot improve the product or change readiness.
 
 See [engineering delivery](../workflow/engineering-delivery.md).
 

@@ -9,13 +9,18 @@ and acceptance. Read binding requirements and the current acceptance evidence.
   conflicts together without silently lowering scope or quality. Assess the
   integrated product outcome; user acceptance and Epic closure remain separate.
 
-- Preserve requirement provenance. Separate requested behavior, implementation
-  assumptions and optional improvement ideas. Clarify only decisions that would
-  materially change the product or exceed existing authority.
+- Preserve requirement provenance. Separate explicit behavior, supported implied
+  core, uncertain assumptions and optional improvement ideas. Use the bounded
+  domain-reference contract in `engineering-delivery.md`: missing detail is not
+  automatically optional, and a reference's whole feature set is not a mandate.
+  Preserve explicit simplifications and custom intent. Clarify only material
+  unresolved interpretations or decisions beyond existing authority.
 - Choose delivery style before scope selection: Ship is the new-work default
   for the complete agreed product result; explicit Loop uses useful Done
   Increments and actual owner feedback. Define experience quality as well as
-  correctness. Keep Strict/Auto and resource depth separate from delivery style.
+  correctness. Make the usable result available early while Ship work continues;
+  optional feedback adds no approval, acceptance or routine stop. Keep Strict/Auto
+  and resource depth separate from delivery style.
 - Explain agent-led work with Graph engineering: an owner coordinates outcome,
   dependencies and feedback; the AIM delivery coordinator owns its ledger.
   The receiving agent keeps coordination by default. A separate coordinator

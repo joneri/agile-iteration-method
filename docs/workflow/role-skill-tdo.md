@@ -30,11 +30,14 @@ technical planning and evidence synthesis.
   require a separate new plan approval; never rewrite history or invent acceptance.
 - Before freezing a new material plan, obtain the separate Reviewer's expectation
   assessment: original intent/context first, proposed solution and checks second.
-  Reconcile decisive in-scope gaps into the existing quality plan; distinguish
-  assumptions and optional preferences from binding outcomes. Plan a bounded
-  review of the first functioning core, including relevant workflow/experience,
-  before costly dependent expansion. Reuse current independent evidence for
-  unchanged covered risks and the same Reviewer for later review. Apply
+  Reconcile explicit and domain-supported implied core into the existing quality
+  plan, retaining the reference, omission consequence and observable check.
+  Keep uncertain assumptions and optional preferences distinct; a short brief
+  neither erases core conventions nor overrides explicit simplifications. Plan a
+  continuing review from the first usable core, including workflow/experience,
+  before costly dependent expansion. Reuse current independent observations at
+  final readiness; phase changes alone need no fresh campaign. Make the usable
+  result available while Ship continues, without a mandatory feedback stop. Apply
   `engineering-delivery.md`; nonmaterial work keeps justified self-review, and
   these checks add no report, owner approval or acceptance authority.
 
@@ -58,10 +61,12 @@ technical planning and evidence synthesis.
   core-oracle independence is unproved, arrange one bounded early challenge by
   the same separate Reviewer before costly expansion; do not await green
   performance targets or add an approval/state transition.
-- Name the reusable project verification entry in `qualityPlan.checks[].method`.
-  If the selected real journey cannot be driven, plan the smallest runnable
-  recipe and maintained user-route map using the Reusable product verification
-  section of `engineering-delivery.md`. Verify isolation before parallel driving.
+- Plan the smallest sufficient observations of the intended outcome, using the
+  normal entry and existing checks. New qualitative `checks[].method` may name
+  proportionate alternatives, including direct use and controlled boundary cases.
+  Prefer `both` when unchanged observations can serve early and final assessment.
+  Build automation only when risk/repetition justifies it; no required new recipe
+  or user-route map. Preserve historical contracts and numeric comparability.
 - Bind the complete primary operation's latency decision to `qualityPlan.primaryResult`.
   Cancellation responsiveness is separate. For normalization-sensitive input,
   include a boundary case before case conversion/transliteration and reuse it
