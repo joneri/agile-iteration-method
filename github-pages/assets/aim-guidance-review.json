@@ -1,25 +1,25 @@
 {
   "guidanceReviewVersion": 1,
-  "productVersion": "4.8.10",
+  "productVersion": "4.8.11",
   "reviewedOn": "2026-11-13",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "01d39b6498c4612014cf24ddd8d75d0138373049a3f3f67fbc432dbc3f6e9a8b"
+      "sha256": "b4e1e3587883daec533c9e43d005d5441222ab0bb38636465c0ed6ec022428c1"
     },
     {
       "path": "school.html",
-      "sha256": "d22a23d98d4bef1ae190eaa58f64591a2780c4859f925027a456317152aa2c10"
+      "sha256": "904ae8b47b71e461d7fc18bcfef62f128b9e6d4b94af66e762b7b8e4421099c8"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "e39a03e6485fa3591e416131b6d7c701375ac280593fdda3412bc87432791ea7"
+      "sha256": "33bb739cc45d39a028d573514b212a52cdba9f34882a9bea404e4f230ff47b87"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sha256": "56462c32722032c97ad94258e7e9fb4bb6df1f021b24949bc58b0fe66b3f95d3"
+      "sha256": "e672c0dc4d4ab9e0db68e0280431b23978dd9270a4d0f3cdc0c90ff81c889388"
     },
     {
       "path": "docs/workflow/user-stories.md",
@@ -73,11 +73,11 @@
     },
     "verificationAndAcceptance": {
       "conclusion": "updated",
-      "summary": "Release 4.8.10: homepage and Lesson 6 teach actual product use from the first usable core, early access during Ship, and one continuing independent review through final readiness. Existing checks and credible unchanged observations are reused; new automation addresses consequential risk or worthwhile repetition. A phase change alone needs no fresh campaign or new recipe/map. Historical frozen plans, numeric comparability, binding product quality and actual owner acceptance remain intact. Domain-supported implied core and explicit simplifications are preserved. Independent instruction-use and public-copy delta review found no material issues. The unchanged learning and repository-knowledge lessons retain their 2026-11-12 review evidence and limits: advice/hashes do not prove prevention or general benefit. Changed teaching copy was rendered in WebKit at 1280x900 and 390x844; School Lesson 6 was visually inspected and both pages had no horizontal overflow at those widths."
+      "summary": "Release 4.8.11: Lesson 6 and the canonical/generated instructions explicitly default to restraint in new automated tests. Reuse or extend meaningful existing tests, add uncovered consequential regression checks, and allow zero new tests when current checks and actual use suffice. Behavior and independently justified expectations take precedence over quantity, coverage growth, implementation mirrors and mocks that remove the behavior under test. This is ordinary implementation/continuing-review judgment, with no new report, gate, mandatory mutation campaign or human cleanup step. Product obligations, normal-use evidence, meaningful boundary risks and existing required checks remain intact. The same independent reviewer applied the new wording to a covered wording/refactor case and an uncovered authorization/data risk; no issues. Prior use-first, unchanged layout/interaction and learning observations are reused."
     },
     "modelsAndEvidence": {
       "conclusion": "updated",
-      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.10 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
+      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.11 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
     }
   }
 }

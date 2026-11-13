@@ -42,6 +42,15 @@ readiness decision; spend the effort on observed product weaknesses. Required
 project/release checks still apply. A green suite alone does not prove the PRD.
 Keep actual check results, including failures; a later command cannot hide them.
 
+Default to restraint when writing new automated tests. Reuse or extend meaningful
+existing tests; add new ones for consequential regression risks not already
+covered. Zero new tests is valid when existing checks and actual use sufficiently
+establish the outcome. Test observable behavior against independently justified
+expectations. Avoid duplicate cases, implementation mirrors and mocks that remove
+the behavior being checked. Test count and coverage growth are not delivery goals;
+this judgment belongs in ordinary implementation and review, without a new report,
+mandatory mutation campaign or human cleanup step.
+
 ## Independent expectation review before implementation
 
 Before freezing a new material delivery plan, reuse the separate Reviewer to

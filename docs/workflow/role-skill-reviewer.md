@@ -37,6 +37,11 @@ counterexample without a consequential gap. Controlled boundary states establish
 only the behavior they exercise. A real defect merits correction and a targeted
 regression when useful. Stop expanding checks when they are unlikely to improve
 the product or change readiness; required project/release checks still apply.
+Accept zero new tests when existing checks and actual use sufficiently establish
+the outcome. Judge new tests by uncovered consequential regression risk and
+observable behavior with independent expectations, not quantity or coverage growth.
+Flag redundant cases, implementation mirrors and mocks that remove the behavior
+under test within the same review; no separate cleanup or mutation campaign.
 
 Inspect relevant source and actual observations, including rendered behavior and
 side effects. Missing credible evidence for decisive binding behavior remains an

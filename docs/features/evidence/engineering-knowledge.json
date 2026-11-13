@@ -19,15 +19,15 @@
         },
         {
           "path": "docs/workflow/role-skill-tdo.md",
-          "sha256": "353756dcc77275f78e329677823f6cfb488cd4e2813c7968d75c4232bfde9687"
+          "sha256": "8e48935b5e696a50e06d5ff32dc582e2963628fcd90bb8375804e592ae93fb77"
         },
         {
           "path": "docs/workflow/role-skill-dev.md",
-          "sha256": "68f345effffaeb7537860300a8ee450ee0f371a97eefaafab217f6af9f4a796c"
+          "sha256": "69b89706b0c12cb90b6f5bd48a42f00d141e4da4623cdbc41c5c4cdce1f5adb7"
         },
         {
           "path": "docs/workflow/role-skill-reviewer.md",
-          "sha256": "376625f9e79ba9a6e34b5f3177ebc79434a257e6f17c09a3ffa40c69825b1a6d"
+          "sha256": "5370858ea95a1316f183a40f888281b50c37011f34847bcf1fe6a4e49c3e7a30"
         }
       ]
     },

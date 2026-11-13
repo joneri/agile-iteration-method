@@ -161,7 +161,7 @@ AIM applies **audience-context integrity** to everything it generates: write the
 
 - **Native Graph engineering.** Choose a small default or supply a graph. Bind actual coordinating sessions and retain original campaign progress, priorities and recoverable source checkpoints across restarts.
 - **Quality and independent review.** Use the first usable core early. Continue the same independent review through delivery, reusing current observations and checking meaningful changes.
-- **Reusable project knowledge.** Reuse existing product routes, checks, compact receipts and unchanged evidence. Add automation when risk or repetition justifies it; recall and share verified reusable lessons.
+- **Reusable project knowledge.** Reuse existing product routes, checks, compact receipts and unchanged evidence. Add new tests for uncovered consequential regression risks; zero new tests can be the right result. Recall and share verified reusable lessons.
 - **Focused tools.** [Discover tools when needed and filter large MCP results](docs/workflow/tool-efficiency.md), keeping sources, counterevidence and permissions intact. Native support and actual savings depend on the host and task.
 
 These capabilities depend on agents using them and the project's verification coverage. See the [feature guide](docs/product/features.md) and [changelog](CHANGELOG.md).

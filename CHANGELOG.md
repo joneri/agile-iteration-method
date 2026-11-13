@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-11-13 - AIM release v4.8.11
+
+Make restraint the default when authoring new automated tests.
+
+- Reuse or extend meaningful existing tests. Add new tests for consequential
+  regression risks not already covered; zero additions is a valid outcome when
+  existing checks and actual use sufficiently establish the result.
+- Prefer observable behavior and independently justified expectations. Avoid
+  duplicate cases, implementation mirrors and mocks that remove the behavior
+  under test. Test quantity and coverage growth are not delivery goals.
+- Apply this judgment within normal implementation and continuing review, with
+  no new gate, report, mutation campaign or mandatory human cleanup step.
+- Preserve product obligations, meaningful risk coverage, existing required
+  project/release checks, historical plans and actual owner acceptance.
+- Align portable instructions, engineering/role guidance and public teaching.
+
+Verification uses the existing checks and independent review. No new automated
+tests, runtime/schema change or measured productivity claim accompanies this
+instruction refinement.
+
 ## 2026-11-13 - AIM release v4.8.10
 
 Use the working product early and keep verification proportionate.

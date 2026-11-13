@@ -41,7 +41,8 @@ See [User Stories and product backlog](../workflow/user-stories.md) and the
   evidence calls for correction or an explicit owner decision.
 - Reuse the normal product route and existing checks. Direct observations need
   no new automated recipe or route map; add automation for meaningful risk or
-  worthwhile repetition.
+  worthwhile repetition. Reuse meaningful existing tests; zero new tests is valid
+  when existing checks and actual use suffice.
 - Reuse unchanged results and compact checkpoints when scope and dependencies
   still match; recheck affected changes and consequential uncertainty. Stop
   extending verification when it cannot improve the product or change readiness.

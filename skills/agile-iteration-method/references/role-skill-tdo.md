@@ -73,7 +73,9 @@ technical planning and evidence synthesis.
   proportionate alternatives, including direct use and controlled boundary cases.
   Prefer `both` when unchanged observations can serve early and final assessment.
   Build automation only when risk/repetition justifies it; no required new recipe
-  or user-route map. Preserve historical contracts and numeric comparability.
+  or user-route map. Do not plan test quantities or automatic new test files;
+  zero new tests is valid when existing checks and actual use suffice. Preserve
+  historical contracts, product obligations and numeric comparability.
 - Bind the complete primary operation's latency decision to `qualityPlan.primaryResult`.
   Cancellation responsiveness is separate. For normalization-sensitive input,
   include a boundary case before case conversion/transliteration and reuse it

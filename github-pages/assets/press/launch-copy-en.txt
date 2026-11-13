@@ -1,9 +1,9 @@
 AIM
 Turn your intent into a complete product.
 
-Suggested announcement copy · AIM 4.8.10 · 13 November 2026.
+Suggested announcement copy · AIM 4.8.11 · 13 November 2026.
 
-AIM 4.8.10 puts actual product use at the centre of review. Make the usable result available early, continue the same independent review through delivery, and reuse credible observations instead of starting another verification campaign. Add automation for meaningful risks or worthwhile repetition. Existing requirements, owner acceptance, approved model pools and historical plans remain intact. No general speed or quality improvement is claimed.
+AIM 4.8.11 makes restraint the default when writing automated tests. Reuse meaningful existing tests, add new ones for consequential regression risks not already covered, and accept zero new tests when existing checks and actual use suffice. Observable behavior and independent expectations matter more than test quantity. Existing product obligations, review, required checks and owner acceptance remain intact. No new gate or measured productivity gain is claimed.
 
 Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 

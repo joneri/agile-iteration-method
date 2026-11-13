@@ -236,8 +236,13 @@ a new phase alone does not require another test campaign.
 
 Choose the smallest sufficient checks for the product outcome. Reuse the normal
 entry and existing checks; direct use can suffice without a new harness or route
-map. Add automation, an independent witness or counterexample when a concrete
-risk or likely repetition justifies it. New qualitative check methods allow
+map. Default to restraint in new automated tests: reuse or extend meaningful
+existing tests and add new ones for consequential regression risks not already
+covered. Zero new tests is valid when existing checks and actual use suffice.
+Test observable behavior with independent expectations; avoid duplicates,
+implementation mirrors and mocks that remove the behavior under test. Test count
+and coverage growth are not goals. Add a witness or counterexample for a concrete
+unresolved risk. New qualitative check methods allow
 proportionate observations; historical frozen plans and comparable numeric
 measurements keep their contract. Preserve real failures and quality targets.
 Stop extending verification when it is unlikely to improve the product or change
