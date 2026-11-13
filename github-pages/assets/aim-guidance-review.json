@@ -1,33 +1,33 @@
 {
   "guidanceReviewVersion": 1,
-  "productVersion": "4.8.8",
-  "reviewedOn": "2026-11-12",
+  "productVersion": "4.8.9",
+  "reviewedOn": "2026-11-13",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "6850df8bd21dbb7c6d0e10be4e5f40f2571bd0d8d31bdff984777a206fba4b32"
+      "sha256": "d41b44755235d68f9d93a319b5e31b8225e88e8aeb86ab35fc17bac08cb9f4a7"
     },
     {
       "path": "school.html",
-      "sha256": "49758184dddeb5c614796fd2840f41ce24c0f4de2c037d089bd36508ff6daf1a"
+      "sha256": "6878f2b57e40699ddb8a42c6d902441d0be0506223321e5295c942fcf638c239"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "c1436316f2b5c8062db0e98c10bc002ae6e6b2f4ac39c309eaea1b1a7ae4cde9"
+      "sha256": "218e9e9998bc60a498066c7588fe323d919d1b07697dcbaaf9931eb8e5a2838b"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sha256": "b5f513c16efd2a85d993c06b87824c0b56066df8fbb9cda6fec07c15072a62e9"
+      "sha256": "b79840502e0c401c67d06bf8ccedc7bf7f4f2700b72e4ebca0fa8941a5f9e666"
     },
     {
       "path": "docs/workflow/user-stories.md",
-      "sha256": "f788e16a27ed04546a9d5177ee27af15f1b2c63e82bc9ed538fd525a0acc2764"
+      "sha256": "80b54ad29b02a4b2639cc913d065b1e329072bdb3ecbdb10a8a3e08028cb2ab1"
     },
     {
       "path": "docs/workflow/native-orchestration.md",
-      "sha256": "5f06fc1d641fbebdb8791b4c8c339634d7b6612aae8c1fc70359351b6c67baad"
+      "sha256": "cfa1841af7a1f523df48a0777a2d165ccefdc96dd4eb429fe3149ba0e9493b39"
     },
     {
       "path": "docs/workflow/skill-command-runtime.md",
@@ -61,7 +61,7 @@
     },
     "orchestration": {
       "conclusion": "updated",
-      "summary": "Homepage and School preserve outcome/dependency/proof ownership, cohesive implementation and separate review. The linked Native contract now distinguishes preserved early read inputs from later current product outputs. Its relocate-bindings command verifies identical original bytes and appends location history without changing receipts/dependency digests or activity starts. Supported actual dispatch-check and recorded starts still precede host work. No alias can authorize a new attempt or stand in for current final product proof. Chained identical-byte retries use effective current destinations while retaining obsolete locations only as history; current bytes and actual proof remain required. The work-graph conversation asks for one implementer for task state and saving, an early reload check, a separate reviewer and evidence for the owner. Issue #25: receivers retain coordination; explicit scoped handoff makes the former layer a relay. School setup/Lesson 2 agree. Mandates bind the preceding activation to reject replay. Host settings imply no transfer; CLI declarations do not authenticate identity or police host messages."
+      "summary": "Receiving-agent coordination and explicit session-bound handoff remain accurate. The homepage and School now explain approval-bound per-child model/reasoning choices without transferring coordination. Exact plan pairs and cumulative allowances authorize later choices; profile candidates alone do not. Supported native starts/preflight retain the actual child and rationale; the current bound-thread UI bridge cannot dispatch pooled children. Independent expectations before material plan freeze and early functioning-core scrutiny supplement final integrated review. Historical relocation and attempt rules remain unchanged; declarations authenticate neither host identity nor arbitrary host calls."
     },
     "delegatedDecisions": {
       "conclusion": "updated",
@@ -69,15 +69,15 @@
     },
     "resourceUse": {
       "conclusion": "updated",
-      "summary": "School still accounts for planning, authoring, review, corrections and integration with known/unknown tokens/time/money. Identical historical input-location relocation creates no activity start and does not alter campaign attempts, observed history or exhausted allowance. Actual administrative cost remains accounted when known. A new work attempt still needs existing resources/authority; owner cancellation/replacement remains non-renewing. No universal cost-saving measurement is claimed. The elapsed-time example first checks whether the host can track the limit. It includes all delivery phases, marks unavailable figures as unknown and requires owner authority to increase the limit."
+      "summary": "Planning, authoring, review, corrections and integration still belong to the cumulative mandate. Approved pool starts include failure/retry/rework/reviewer history; optional finite-decimal cost reservations retain original estimates and maximum known charges. Running observations can block later starts. Neither unknown usage nor lower reports refund resources. Host-hidden model/effort/cost remains unknown, and reservations are not provider billing caps. School elapsed-time examples still require available host measurement and actual owner authority to raise limits. No universal cost-saving measurement is claimed."
     },
     "verificationAndAcceptance": {
       "conclusion": "updated",
-      "summary": "School explains prevention through repository knowledge/localities and learning through checks, feedback, source/attempt traceability, diagnosis, evidence-linked sharing and contextual recall. The Pocket Board examples test the agreed result through archiving and keyboard completion followed by reload. Checked against repo-awareness, calibration consumer checks/targeted refresh, engineering-delivery Shared local learning, reflection Method feedback and aim_quality/learning.py. Discovery pointers require code inspection and affected knowledge refresh; they do not constitute a full function catalogue or guaranteed semantic duplicate detection. Local sharing is distinct from cross-machine synchronization. Advice and source fingerprints do not prove general prevention; later benefit requires observation. No model retraining, daily prompt rewriting or universal host interception is claimed. Existing current-source final review, original criteria and actual owner acceptance remain unchanged. The example conversations connect observable acceptance criteria to a correction request that specifies the tested version, steps, observed and expected result, independent review and owner retest."
+      "summary": "School explains repository knowledge/localities, contextual recall, checks, feedback, source/attempt traceability, diagnosis and evidence-linked sharing. Pocket Board checks archiving and keyboard completion through reload, then reports tested version, steps, observed/expected result, independent review and owner retest. Repo-awareness/calibration, engineering delivery, reflection and learning.py remain the reference trail. Discovery pointers need code inspection and affected refresh, not a full function catalogue or guaranteed duplicate detection. Local sharing is not cross-machine sync; advice/hashes do not prove prevention or later benefit. No model retraining or universal host interception is claimed. Delta review 2026-11-13: independent expectations and early real-route/core review cover relevant experience beyond algorithm oracles; unchanged page claims remain accurate. Current independent evidence may be reused; scope, final integrated review and actual owner acceptance stay binding. The full-page 2026-11-12 review and its evidence are reused."
     },
     "modelsAndEvidence": {
       "conclusion": "updated",
-      "summary": "Homepage visibly dates the96.5/100 assessed AIM result to18October2026 and49.8 baseline to30September, links exact tested provenance, and retains differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost result. AIM4.8.8 inherits no new Enigma performance measurement. Dated4.7.5 UI screenshots remain historical. School Sol/Luna allocation is explicitly a suggested setup; other combinations of models, reasoning levels and responsibilities may work better for the task, complexity and available resources. Actual host/account availability still applies. The personal project anecdote is removed; the example claims no measured comparison or universal benefit. The model conversation asks the agent to distinguish proposed settings from the actual allocation and mark unavailable settings as unknown."
+      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.9 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
     }
   }
 }

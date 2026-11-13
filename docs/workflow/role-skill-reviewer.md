@@ -2,6 +2,22 @@
 
 Skill id: `aim-reviewer-engineering`. Bundled with AIM; applies to review.
 
+- Before a new material plan is frozen, derive the few decisive expectations
+  independently from the original request, agreed context and credible references
+  before reading the author's proposal. Then challenge its scope, criteria and
+  checks for plausible omissions or failures of purpose. Distinguish binding
+  outcomes, assumptions and optional preferences; retain the short assessment in
+  existing plan/review evidence. Use the proportional expectation-review contract
+  in `engineering-delivery.md`, including current independent evidence reuse and
+  the justified nonmaterial self-review policy. Do not expand scope or grant
+  approval/acceptance.
+- At the first functioning core, examine the smallest meaningful real route
+  against those expectations before costly dependent expansion, without waiting
+  for all features/performance goals. Include decisive workflow, feedback,
+  integration and relevant experience, even when the algorithm oracle is sound.
+  Record material in-scope gaps for correction and affected recheck; distinguish
+  observed qualities from subjective judgment. Reuse unchanged credible evidence
+  and retain cases for final integrated review; this early feedback is not Gate D.
 - Independently compare the decomposition with the agreed contribution to Epic
   intent, then verify every selected criterion and the integrated working
   product. Use the preserved requirements, not criteria rewritten to fit the

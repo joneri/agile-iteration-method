@@ -126,6 +126,14 @@ Never reinterpret an acceptance-only delegation as resource authority.
 
 ## Coherent delivery and gates
 
+An optional `executionPlan.modelPool` is part of the frozen plan and ordinary
+Gate B approval. Its exact model/reasoning pairs and resource boundary authorize
+the coordinator's later per-child choices without a new owner question per task.
+Use the real host launch parameters and keep requested and observed settings
+separate. Profile candidates, role labels and model names grant no authority.
+See [Model pools](model-pools.md) for running observations, conservative budget
+accounting and historical compatibility. Owner acceptance remains separate.
+
 TDO selects by PO priority, dependencies and capacity, naming the exact Stories,
 useful integrated outcome, implementation boundaries, files, checks and risks.
 The selection must deliver the agreed value, not merely an easy subset. Verified
@@ -299,14 +307,26 @@ Every new plan declares applicability in `qualityPlan`: `checks`,
 original intent, Epic outcome, selected criteria and relevant engineering rules;
 feature-only Stories do not remove quality obligations.
 
-Before freezing the plan, ask what plausible implementation could pass the
-selected criteria and still fail the user's main purpose within the agreed scope.
+Before freezing a new material plan, obtain the independent expectation review
+in [Engineering delivery](engineering-delivery.md#independent-expectation-review-before-implementation).
+The separate Reviewer first derives expectations from the original intent and
+agreed context, then challenges the proposal: what plausible implementation
+could pass the selected criteria and still fail the user's main purpose?
 Preserve any decisive obligation in `sharedRequirements` and make the existing
 criteria or linked check distinguish success from that failure. Base the expected
 behavior on the user's words, agreed context or credible domain references.
 Use the existing owner decision path when an interpretation would materially
 change the agreed result or scope. Reuse a check that already distinguishes the
 outcomes, including for a trivial edit.
+
+Plan the smallest functioning-core observation before costly dependent
+expansion. Reuse the same Reviewer to judge its actual behavior and relevant
+experience against those expectations, even when the algorithm oracle is
+credible. Reuse current independent evidence for unchanged covered behavior;
+nonmaterial work retains its justified self-review policy. Keep the assessment,
+disposition and early findings in existing plan/core/review evidence. These are
+bounded checks within the existing gates, not extra owner approvals; final
+integrated review and owner acceptance remain required.
 
 A check contains `id` (`QC-*`), `criteria` (`US-ID/AC-ID`), `kind` (`behavior`,
 `performance`, `journey`), `stage` (`core`, `delivery`, `both`), `workload`,

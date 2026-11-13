@@ -1,9 +1,9 @@
 AIM
 Från din idé till en komplett produkt.
 
-Förslag till lanseringstext · AIM 4.8.8 · 8 november 2026.
+Förslag till lanseringstext · AIM 4.8.9 · 13 november 2026.
 
-AIM 4.8.8 bevarar hela Story-historiken genom att skriva kompakt när indragen skulle överskrida lagringsgränsen. Historiken får en egen gräns på 10 MB. Anrop och bevis behåller sina separata gränser.
+AIM 4.8.9 låter koordinatorn välja ett godkänt par av modell och resonemangsnivå per underagent utifrån uppgift, risk och återstående utrymme. Explicita startinställningar, kumulativa reservationer och synlig okänd användning gör valen granskningsbara. Mottagande agents samordningsansvar och oberoende plan- och kärngranskning ingår. Värden måste stödja inställningarna; kontrollerna garanterar varken leverantörens debitering eller modellernas relativa kvalitet.
 
 Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 

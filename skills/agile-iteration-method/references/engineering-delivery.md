@@ -44,6 +44,30 @@ command must not conceal an earlier failed test. Advance an evidence-dependent
 phase only after its required checks pass; a failed fix stays in implementation
 until the affected regression passes. Preserve failed attempts as history.
 
+## Independent expectation review before implementation
+
+Before freezing a new material delivery plan, reuse the separate Reviewer to
+derive the few decisive expectations from the original request, agreed context
+and credible domain references, before reading the author's proposed solution.
+Then compare the proposal, selected criteria and checks with those expectations.
+Ask what a plausible implementation could omit or get wrong while still passing
+the proposed checks, including relevant lifecycle, workflow and experience.
+Distinguish binding outcomes, uncertain assumptions and optional preferences.
+
+TDO reconciles material in-scope gaps into the existing criteria, shared
+requirements or checks before implementation. PO or the existing owner resolves
+interpretations that would materially change scope; a reviewer's idea does not
+authorize extra features. Retain the short assessment and disposition in the
+existing plan/review evidence, not a new report or approval gate.
+
+Scale the assessment to consequence and reuse current independent evidence when
+it covers the same intent, scope and affected risks. A narrow material change may
+need only a brief delta review; nonmaterial work keeps its justified self-review
+policy. Do not add an agent per role, duplicate discovery, change frozen plans or
+silently substitute author self-review when independence is required. An
+unavailable required review blocks dependent implementation, not unrelated
+authorized work. Preserve final independent review and owner acceptance.
+
 ## Reusable product verification
 
 For the selected product outcome, reuse the repository's runnable verification
@@ -75,7 +99,24 @@ a broken product. Unavailable decisive verification remains a readiness finding.
 Before parallel driving, prove instance/data isolation or assign one driver.
 This adds no role, gate, per-Story report or recurring full-map audit.
 
-### Challenge an unproved core oracle before expansion
+### Independently review the functioning core before expansion
+
+For material work, the coordinator brings the same separate Reviewer in when
+the smallest meaningful core works, before costly dependent expansion. Observe
+the actual user/consumer route against the independently derived expectations:
+decisive behavior, workflow, feedback, integration and relevant experience, not
+only startup or an isolated algorithm. Use the smallest representative path and
+one consequential challenge where useful. A credible algorithm oracle alone
+does not establish the rest of the experience; distinguish observed qualities
+from subjective judgments or behavior the available tools cannot establish.
+
+Do not wait for all features or performance goals. Correct material in-scope
+failures and recheck affected behavior before dependent expansion; continue
+unrelated authorized work. Reuse relevant current independent observations for
+unchanged behavior, including a narrow change whose existing working core is
+already covered. Retain findings and responses in existing core/review evidence.
+This is implementation feedback, not Gate D, a new approval or a replacement for
+final integrated review.
 
 For material domain/state logic, Dev makes the first core executable with a
 small independent witness. Freeze its input/configuration, literal expected
@@ -84,13 +125,10 @@ those concrete values in the existing check's `expected` and the command's raw
 results in `observed`; "matches independent values" is an instruction, not a
 reference answer. The verification entry performs the comparison.
 
-The main coordinator owns the timing: when the oracle's independence or coverage
-is not already supported, ask the same separate Reviewer for one bounded
-reference/variant challenge now, before costly optimization or UI expansion.
-Do not wait for every core/performance goal to pass. This is a focused technical
-review during implementation, not Gate D or another approval/state transition.
-Keep its case and finding in existing core/review evidence and reuse them later.
-Already credible current witnesses need no duplicate review or test.
+When the oracle's independence or coverage is not already supported, include one
+bounded reference/variant challenge in that early review, before costly
+optimization or UI expansion. Reuse its concrete values and evidence later;
+already credible current witnesses need no duplicate review or test.
 When an early goal misses, the coordinator obtains a bounded diagnosis and asks
 that same Reviewer to check correctness/workload comparability before further
 expansion. This technical review remains available while progression is blocked;

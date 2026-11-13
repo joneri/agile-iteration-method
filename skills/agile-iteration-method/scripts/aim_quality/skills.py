@@ -34,6 +34,17 @@ def role_skill_issues(root: Path, profile: dict) -> list[str]:
     silently promoted to verified expertise.
     """
     issues = []
+    orchestration = profile.get('aimProjectRoles', {}).get('orchestration', {})
+    if not isinstance(orchestration, dict):
+        return ['orchestration must be a mapping']
+    if orchestration.get('modelPolicy') == 'approved-pool' and 'modelPool' not in orchestration:
+        issues.append('orchestration: approved-pool policy needs a modelPool candidate; configuration is not approval')
+    if 'modelPool' in orchestration:
+        from .model_pool import validate_pool
+        try:
+            validate_pool(orchestration['modelPool'])
+        except ValueError as exc:
+            issues.append('orchestration: ' + str(exc))
     roles = profile.get("aimProjectRoles", {}).get("roles", {})
     if not isinstance(roles, dict):
         return ["roles must be a mapping"]

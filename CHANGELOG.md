@@ -1,5 +1,30 @@
 # Changelog
 
+## 2026-11-13 - AIM release v4.8.9
+
+Choose an approved model and reasoning pair for each child assignment.
+
+- Freeze exact allowed pairs and cumulative child-start/cost-reservation limits
+  in the Native delivery plan. The coordinator chooses within approval by task,
+  risk and remaining resources, with an explicit rationale and native launch
+  parameters. Keep requested settings separate from reported or unknown usage.
+- Preserve failed/retried/reworked/reviewer attempts and maximum known charges.
+  Account finite decimal reservations exactly; a running observation can expose
+  an overrun before another start. These limits are not provider billing caps.
+- Reject pooled work in the current bound-thread UI bridge, which cannot launch
+  children with separate settings. Pool-absent historical plans keep their contract.
+- Include accepted issue #25: the receiving agent coordinates by default; explicit
+  handoff binds the real sessions, makes the former layer a relay and retains history.
+- Include accepted independent expectation review before material plan freeze and
+  early independent scrutiny of the first functioning core. Retain final integrated
+  review and actual owner acceptance. Refresh School, public guidance and package.
+
+Verification: Native ledger/CLI/launch-consumer regressions, three authorized
+short native child responses with distinct requested pairs, independent core and
+final review, full repository and release checks. Host model/effort/cost telemetry
+was unavailable in the live probes; no new quality, speed or cost benchmark.
+
+
 ## 2026-11-08 - AIM release v4.8.8
 
 Preserve Native Story history within independent storage and input limits.

@@ -252,6 +252,9 @@ class AimUiControlTests(unittest.TestCase):
     def test_backlog_dependency_change_replaces_stale_backend_without_version_change(self) -> None:
         self.check_payload_change("scripts/aim_backlog.py", "\n# upgraded backend fixture\n")
 
+    def test_model_pool_dependency_change_replaces_stale_backend_without_version_change(self) -> None:
+        self.check_payload_change("scripts/aim_quality/model_pool.py", "\n# upgraded model-pool fixture\n")
+
     def check_payload_change(self, relative: str, change: str) -> None:
         payload = self.root / "payload"
         shutil.copytree(REPO_ROOT / "scripts", payload / "scripts")

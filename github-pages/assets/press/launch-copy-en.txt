@@ -1,9 +1,9 @@
 AIM
 Turn your intent into a complete product.
 
-Suggested announcement copy · AIM 4.8.8 · 8 November 2026.
+Suggested announcement copy · AIM 4.8.9 · 13 November 2026.
 
-AIM 4.8.8 preserves complete Native Story history with compact writes when formatting would exceed the storage limit. The 10 MB history limit is separate from request and evidence limits.
+AIM 4.8.9 lets the coordinator choose an approved model and reasoning pair for each child according to the task, risk and remaining allowance. Explicit native launch settings, cumulative reservations and honest unknown telemetry keep the choices inspectable. Receiving-agent ownership and independent plan/core review are included. Host support is required; these checks do not guarantee provider billing or model superiority.
 
 Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 

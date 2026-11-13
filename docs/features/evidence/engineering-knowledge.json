@@ -11,23 +11,23 @@
       "sources": [
         {
           "path": "scripts/aim_quality/skills.py",
-          "sha256": "7d0ce5a5c3fa35166aed11d8f3d03a007e647cf65257fa7f9418fa97d2f8b011"
+          "sha256": "1403b59e8b2051aae711f9fe7224e2e66cd7cd0a42712e5bfdbd40c129a79e72"
         },
         {
           "path": "docs/workflow/role-skill-po.md",
-          "sha256": "7aa843adc4ba427c1a44037d74469e8eff5495d7343cef73e66aaac0348e6c81"
+          "sha256": "fa74631c63c25fd429b31b2cb7dd2f80e87b635868bc203f92467644ae01ba57"
         },
         {
           "path": "docs/workflow/role-skill-tdo.md",
-          "sha256": "2aab68c4f351ada217f3929392d554489b841d0133a2f93e2a34780e9691e488"
+          "sha256": "46b0f13af09c780316c55f72a2b1d0daeaa73a9a4c05ee300360f0f515ca8eea"
         },
         {
           "path": "docs/workflow/role-skill-dev.md",
-          "sha256": "40c6e88aa37a7336b54fbd0c1fd466ac1d7dd3c0ab6663969ced77c949b3e82e"
+          "sha256": "4a49df5bad981d601f0ae96251113167f934821ccafe3dc7b6234be0fba6d535"
         },
         {
           "path": "docs/workflow/role-skill-reviewer.md",
-          "sha256": "173e65ded44e7b73d6f944ecf44963d4f26f37f3bc455a987afc61626f32b74e"
+          "sha256": "bb212b77478ed67a8aecdd962b126dc9e3a0720e20e2d612ccce1f36c62c5afa"
         }
       ]
     },
@@ -36,7 +36,7 @@
       "claim": "The repository profile names an executable HTTP boundary regression check.",
       "document": {
         "path": "aim.profile.yaml",
-        "sha256": "5b2b9ede69ff235327143cee16abb0190565b711c1efe55719a174374e7fc50e"
+        "sha256": "9f70ffdde8ebaaca1f1d9870286c699654d118105fa15b180eb4c2cf97a29185"
       },
       "sources": [
         {

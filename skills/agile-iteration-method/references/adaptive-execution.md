@@ -84,8 +84,12 @@ does not authorize extra agents, a new cost profile or more scope.
 - Delegation is useful when it shortens the critical path or adds independent
   evidence worth its handoff cost. A serial dependency chain does not become
   faster by giving each link a different agent. Stay within available slots and
-  the project budget; do not switch model or reasoning without authority. Count
-  cumulative work across all agents, including preparation, experiments and
+  the project budget; do not switch model or reasoning without authority.
+  An explicitly approved [model pool](model-pools.md) supplies bounded authority
+  for per-child model/reasoning choices by task, risk and remaining resources;
+  pass the selected settings to the actual host launcher and distinguish requested
+  from reported/unknown configuration. It grants no coordinator transfer.
+  Count cumulative work across all agents, including preparation, experiments and
   rechecks. Splitting or delegating a larger undertaking cannot bypass limits.
   Concrete uncertainty can justify a bounded check; a complexity label alone
   cannot justify more agents, lower quality or changed product priority.

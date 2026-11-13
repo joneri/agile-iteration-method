@@ -19,6 +19,14 @@ Skill id: `aim-dev-engineering`. Bundled with AIM; applies to implementation.
 - Inspect the working product against agreed observable quality goals: function,
   clarity, visual expression, interaction and relevant experience. Tests alone
   do not prove good design; disclose qualities the available evidence cannot show.
+- Use the independently reviewed expectations in the approved plan. Give the
+  coordinator the smallest meaningful functioning core and its real user/consumer
+  route for early review by the same separate Reviewer, before costly dependent
+  expansion. Include decisive workflow/feedback and experience, even with a
+  credible algorithm oracle. Correct material in-scope gaps and recheck affected
+  behavior; reuse current independent evidence for unchanged covered behavior.
+  Follow the proportional contract in `engineering-delivery.md`; this adds no
+  approval gate and does not replace final integrated review.
 - Write concrete, useful copy in context. Remove repetition and decorative
   headings while retaining accessible names, navigation and semantic structure.
   Labels, status and errors must describe actual behavior and supported claims.

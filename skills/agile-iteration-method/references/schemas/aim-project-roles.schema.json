@@ -1,6 +1,92 @@
 {
   "$comment": "GENERATED FILE. DO NOT EDIT DIRECTLY. Generated from canonical Agile Iteration Method sources. Regenerate with: python3 scripts/build_public_skill.py",
   "$defs": {
+    "modelCost": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "unit": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit",
+        "amount"
+      ],
+      "type": "object"
+    },
+    "modelPool": {
+      "additionalProperties": false,
+      "properties": {
+        "budget": {
+          "additionalProperties": false,
+          "properties": {
+            "costLimit": {
+              "$ref": "#/$defs/modelCost"
+            },
+            "maxStarts": {
+              "maximum": 256,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "maxStarts"
+          ],
+          "type": "object"
+        },
+        "choices": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              },
+              "model": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              },
+              "reasoningEffort": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "model",
+              "reasoningEffort"
+            ],
+            "type": "object"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "type": "array"
+        },
+        "version": {
+          "const": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "version",
+        "choices",
+        "budget"
+      ],
+      "type": "object"
+    },
     "role": {
       "additionalProperties": true,
       "properties": {
@@ -119,6 +205,9 @@
             "modelPolicy": {
               "minLength": 1,
               "type": "string"
+            },
+            "modelPool": {
+              "$ref": "#/$defs/modelPool"
             },
             "parallelPolicy": {
               "minLength": 1,

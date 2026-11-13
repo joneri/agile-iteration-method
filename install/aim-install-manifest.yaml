@@ -135,6 +135,7 @@ aimInstallManifest:
         - scripts/aim_quality/graph.py
         - scripts/aim_quality/orchestration.py
         - scripts/aim_quality/orchestration_runtime.py
+        - scripts/aim_quality/model_pool.py
         - scripts/aim_orchestrate.py
         - scripts/aim_quality/review.py
         - scripts/aim_quality/reconciliation.py

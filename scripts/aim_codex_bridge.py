@@ -245,6 +245,8 @@ def capture_action_target(repo_root: Path, envelope: dict[str, Any]) -> dict[str
             delivery = next((d for d in document['deliveries'] if d['id'] == envelope['deliveryId']), None)
             if delivery is None or native_graph(delivery) is None or delivery['scopeSha256'] != envelope['scopeSha256']:
                 raise ValueError('Native action scope changed.')
+            if 'modelPool' in delivery['executionPlan']:
+                raise ValueError('Approved child model pools require native subagent dispatch; this bound-coordinator bridge cannot apply child model settings.')
             def check(ref):
                 if hashlib.sha256(read_evidence(repo_root, ref['path'])).hexdigest() != ref['sha256']:
                     raise ValueError('Native evidence changed.')

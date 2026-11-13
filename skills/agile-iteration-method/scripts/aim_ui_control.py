@@ -57,6 +57,7 @@ PAYLOAD_FILES = (
     "scripts/aim_observations.py",
     "scripts/aim_story_links.py",
     "scripts/aim_quality/graph.py",
+    "scripts/aim_quality/model_pool.py",
     "scripts/aim_ui_product.py",
     "scripts/aim_legacy_cleanup.py",
     "scripts/aim_runtime_lock.py",

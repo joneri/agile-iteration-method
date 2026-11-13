@@ -800,6 +800,13 @@ def verify_evidence(repo, document, *, cache=None):
         if effective == "acceptance" and (delivery.get("qualityGoals") or delivery.get("qualityPlan")):
             _require_quality(repo, delivery, cache=cache)
     from aim_quality.orchestration_runtime import campaigns, validate_ownership
+    from aim_quality.model_pool import validate_receipts as validate_model_receipts
+    for delivery in document['deliveries']:
+        try:
+            validate_model_receipts(delivery,
+                read_reference=lambda ref: read_evidence(repo, _ref(repo, ref, cache=cache)['path']))
+        except ValueError as exc:
+            raise StoryError(str(exc)) from exc
     for campaign in campaigns(document):
         for record in campaign['observations'] + campaign['decisions']:
             _refs(repo, record['evidence'], cache=cache)
@@ -1254,14 +1261,15 @@ def _change(repo, document, command, request, *, cache=None):
         delivery = _by_id(document, "deliveries", request["deliveryId"])
         try:
             from aim_quality.orchestration_runtime import check_activity, record_start
-            if request.get("status") == "running":
+            from aim_quality.model_pool import observation_update
+            if request.get("status") == "running" and not observation_update(request):
                 check_activity(document, delivery, request,
                                check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache))
             change_activity(repo, delivery, request,
                             bind_sources=lambda paths: _source_bindings(repo, paths, cache=cache),
                             bind_evidence=lambda refs: _refs(repo, refs, cache=cache), at=now(),
                             check_reference=lambda ref: _ref(repo, ref, product=True, cache=cache), document=document)
-            if request.get("status") == "running":
+            if request.get("status") == "running" and not observation_update(request):
                 record_start(document, delivery, request, delivery["activityReceipts"][-1])
         except ValueError as exc:
             raise StoryError(str(exc)) from exc
@@ -1401,6 +1409,7 @@ def dispatch_check(repo, request, expected_sha256=None):
     document, store_hash = load(repo, check_evidence=False)
     require(store_hash == expected_sha256, "Stale dispatch check digest; recover current receipt.")
     require(request.get("status") == "running", "Dispatch check requires an activity start request.")
+    require('modelObservation' not in request, 'Dispatch check validates a new start, not an observation update.')
     cache = _verification_cache(document)
     verify_evidence(repo, document, cache=cache)
     candidate = copy.deepcopy(document)

@@ -18,6 +18,7 @@ SUPPORTED_SCHEMA_KEYWORDS = {
     "$ref",
     "$schema",
     "additionalProperties",
+    "anyOf",
     "const",
     "description",
     "enum",
@@ -25,9 +26,11 @@ SUPPORTED_SCHEMA_KEYWORDS = {
     "maxItems",
     "maxLength",
     "maxProperties",
+    "maximum",
     "minItems",
     "minLength",
     "minProperties",
+    "minimum",
     "pattern",
     "properties",
     "required",
@@ -74,6 +77,10 @@ def _inspect_schema_node(
                     _inspect_schema_node(child, f"{path}.{keyword}.{name}", issues)
         elif keyword in {"items", "additionalProperties"} and isinstance(value, dict):
             _inspect_schema_node(value, f"{path}.{keyword}", issues)
+        elif keyword == "anyOf" and isinstance(value, list):
+            for index, child in enumerate(value):
+                if isinstance(child, dict):
+                    _inspect_schema_node(child, f"{path}.anyOf[{index}]", issues)
 
 
 def _resolve_ref(root_schema: dict[str, Any], reference: str) -> dict[str, Any]:
@@ -118,6 +125,15 @@ def _validate_node(
         _validate_node(instance, referenced, root_schema, path, issues)
         return
 
+    if "anyOf" in schema:
+        alternatives = []
+        for child in schema["anyOf"]:
+            child_issues: list[SchemaIssue] = []
+            _validate_node(instance, child, root_schema, path, child_issues)
+            alternatives.append(child_issues)
+        if not any(not result for result in alternatives):
+            issues.append(SchemaIssue(path, "must match at least one anyOf alternative"))
+
     if "const" in schema and instance != schema["const"]:
         issues.append(SchemaIssue(path, f"must equal {schema['const']!r}"))
 
@@ -129,6 +145,13 @@ def _validate_node(
     if expected_type is not None and not _matches_type(instance, expected_type):
         issues.append(SchemaIssue(path, f"must be a {expected_type}"))
         return
+
+    if isinstance(instance, (int, float)) and not isinstance(instance, bool):
+        minimum, maximum = schema.get("minimum"), schema.get("maximum")
+        if minimum is not None and instance < minimum:
+            issues.append(SchemaIssue(path, f"must be at least {minimum}"))
+        if maximum is not None and instance > maximum:
+            issues.append(SchemaIssue(path, f"must be at most {maximum}"))
 
     if isinstance(instance, dict):
         minimum = schema.get("minProperties")

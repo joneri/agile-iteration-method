@@ -52,6 +52,15 @@ workers. Silence, a long turn or no new files alone grants no control. Diagnose
 actual transport/host failures separately. Returning coordination needs authorized
 reassignment; legitimate session recovery preserves history and one coordinator.
 
+When the owner authorizes a model pool, load `references/model-pools.md` and
+freeze its exact model/reasoning pairs and allowance in the normal Native plan.
+Choose per child from task, risk and remaining budget; pass explicit settings
+to the real supported child launcher and keep requested/reported/unknown values
+distinct. A profile is only a candidate, not paid-model or resource authority.
+No extra question is needed for each in-pool choice. Preserve coordinator model,
+historical plans and cumulative resources; never silently substitute unsupported
+settings, infer missing cost as zero, or create a coordinating layer.
+
 Default new delivery plans to **AIM 4.8 Native**. Small work uses a small graph;
 no extra agent is implied. Before planning or dispatch,
 load `references/native-orchestration.md`: choose the smallest useful built-in graph or
@@ -193,17 +202,29 @@ results. Complete-result latency needs its own justified goal or technical
 non-applicability; responsiveness alone cannot cover it. Do not invent convenient
 metrics or quietly omit quality because Stories describe only features.
 
+Before freezing a new material plan, reuse the separate Reviewer for an
+independent expectation review: first derive decisive expectations from the
+original request/context, then challenge the proposed solution and checks.
+Reconcile in-scope gaps before implementation; preferences do not expand scope.
+Use the bounded contract in `references/engineering-delivery.md`. Reuse current
+independent evidence for unchanged covered risks; nonmaterial work keeps its
+justified self-review policy. Keep evidence in the existing plan/review.
+
 Bind early read/challenge inputs to preserved baselines before planned writes.
 For existing verified identical-byte input-location corrections, use
 `relocate-bindings` in `references/native-orchestration.md`; retain original
 receipts/attempts and keep actual output/review proof fresh.
 
-Measure the first working core before expanding it. For material domain/state
-logic with an unproved oracle, the coordinator brings the same separate Reviewer
-in now for one bounded reference/variant challenge, before costly expansion and
-without waiting for all performance goals. Reuse that reviewer/evidence later;
-this is not Gate D or another approval. Freeze literal expected outputs/states
-from the independent source; the runnable entry computes actual values.
+Measure the first working core before expanding it. For material work, bring
+the same separate Reviewer in now to observe the smallest meaningful real route
+against those expectations, including decisive workflow and experience as well
+as correctness. Review before costly dependent expansion, without waiting for
+all features/performance goals; correct material gaps and recheck affected
+behavior. Reuse credible current independent observations, the reviewer and
+evidence later; this is not Gate D or another approval. For an unproved
+domain/state oracle, include a bounded reference/variant challenge. Freeze
+literal expected outputs/states from the independent source; the runnable entry
+computes actual values.
 Missing, failed or stale
 observations require correction or a blocked owner choice; retain failures and
 responses. Never shrink work or lower a target to pass. Inspect algorithmic cost

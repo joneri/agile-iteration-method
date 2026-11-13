@@ -28,11 +28,15 @@ technical planning and evidence synthesis.
   Use the explicit human owner cancellation/replacement contract in
   `user-stories.md` for changed approved scope. Preserve the old snapshots and
   require a separate new plan approval; never rewrite history or invent acceptance.
-- Before freezing the plan, ask how a plausible implementation could pass the
-  selected criteria and still fail the user's agreed purpose. Use the frozen
-  quality plan in `user-stories.md` to address any decisive gap in the existing
-  criteria or check. Pick the smallest early observation that distinguishes the
-  intended result from the failure, including how the experience works in use.
+- Before freezing a new material plan, obtain the separate Reviewer's expectation
+  assessment: original intent/context first, proposed solution and checks second.
+  Reconcile decisive in-scope gaps into the existing quality plan; distinguish
+  assumptions and optional preferences from binding outcomes. Plan a bounded
+  review of the first functioning core, including relevant workflow/experience,
+  before costly dependent expansion. Reuse current independent evidence for
+  unchanged covered risks and the same Reviewer for later review. Apply
+  `engineering-delivery.md`; nonmaterial work keeps justified self-review, and
+  these checks add no report, owner approval or acceptance authority.
 
 - Read requirements and current code before relying on profile claims. Identify
   concrete uncertainties and consequences; use a bounded investigation or check

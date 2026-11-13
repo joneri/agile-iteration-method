@@ -149,6 +149,15 @@ assume that a named paid model is available. Users may pin a model, reasoning
 level, tools, skills, MCP servers, permissions, or hooks in the supplier-native
 file when their supplier and policy support it.
 
+An optional `orchestration.modelPolicy: approved-pool` and `modelPool` candidate
+can propose reusable exact model/effort pairs and start/estimate boundaries.
+Validate the candidate through the role-profile consumer, then freeze the intended
+pool in the normal Native delivery plan for actual owner approval. The profile
+does not authorize paid calls or renew resources. Default inheritance and existing
+custom pins remain supported. Follow [Model pools](model-pools.md) for launch,
+observation and budget behavior; supplier-native pins may override a request and
+must not be misreported as the selected actual configuration.
+
 Project mastery should come from verified, maintainable specificity:
 
 - framework architecture and idioms

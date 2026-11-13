@@ -1,6 +1,7 @@
 # Feature explanations
 
 - [AIM 4: User Stories from intent to acceptance](aim-4-user-stories.md)
+- [Approved child model pools](aim-approved-model-pool.md)
 - [Receiving-agent orchestration ownership](aim-orchestration-ownership.md)
 - [AIM: latest assessed Enigma results and limits](aim-enigma-evaluation.md)
 

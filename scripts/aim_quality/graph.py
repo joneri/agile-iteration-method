@@ -15,6 +15,7 @@ from .binding_relocation import effective_bindings, validate_records as validate
 from .delegation import check_delegation, _overlap, _scope
 from .files import read_evidence
 from .skills import BASE_SKILLS, role_skill_issues
+from . import model_pool
 
 MAX_ATTEMPTS = 8
 ROLES = set(BASE_SKILLS)
@@ -44,10 +45,13 @@ def _digest(value):
 
 def validate_execution_plan(plan, stories, repo=None):
     """Require the same bounded ownership DAG plus explicit product assignments."""
-    _fields(plan, ("version", "delegationAllowed", "maxWorkers", "activities"), ("parallelBenefit", "orchestration"))
+    _fields(plan, ("version", "delegationAllowed", "maxWorkers", "activities"), ("parallelBenefit", "orchestration", "modelPool"))
+    if 'modelPool' in plan:
+        _require('orchestration' in plan, 'Approved model pools require Native coordinator bindings.')
+        model_pool.validate_pool(plan['modelPool'])
     if "parallelBenefit" in plan:
         _text(plan["parallelBenefit"], "Parallel benefit", 2000)
-    assessed = check_delegation({k: v for k, v in plan.items() if k != "orchestration"})
+    assessed = check_delegation({k: v for k, v in plan.items() if k not in {"orchestration", "modelPool"}})
     _require(assessed["valid"], "Execution plan has incomplete review dependencies.")
     selected = {s["id"] for s in stories}
     for item in plan["activities"]:
@@ -120,6 +124,7 @@ def validate_activity_receipts(delivery):
         _require(revision > 0 and revision == len(delivery.get('reworkHistory', [])),
                  'Activity rework revision must name the current rework history.')
     records = delivery.get("activityReceipts", [])
+    model_pool.validate_receipts(delivery)
     _require("executionPlan" in delivery or not records, "Activity receipts require an execution plan.")
     validate_relocations(delivery)
     if not records:
@@ -291,6 +296,16 @@ def project_graph(repo, document, store_hash, delivery_id=None, *, check_referen
         nodes[identifier] = value
         return value
     result["activities"] = [node(identifier) for identifier in tasks]
+    if 'modelPool' in plan:
+        result['modelPool'] = model_pool.projection(delivery)
+        for item in result['activities']:
+            receipt = receipts.get(item['id'])
+            item['assignment']['modelPoolSha256'] = model_pool.digest(plan['modelPool'])
+            item['assignment']['modelSelectionRequiredForChild'] = True
+            if receipt and 'modelSelection' in receipt:
+                item['modelSelection'] = copy.deepcopy(receipt['modelSelection'])
+                item['modelObservation'] = copy.deepcopy(receipt.get('modelObservation', model_pool.unknown_observation()))
+                item['assignment']['spawnRequest'] = copy.deepcopy(receipt['modelSelection']['spawnRequest'])
     result["edges"] = [{"from": dep, "to": a["id"]} for a in plan["activities"] for dep in a["dependsOn"]]
     result["readyIds"] = [a["id"] for a in result["activities"] if a["status"] == "ready"]
     result["retryIds"] = [a["id"] for a in result["activities"]
@@ -376,7 +391,7 @@ def _lifecycle(result, delivery):
 
 def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at, check_reference=None, document=None):
     _fields(request, ("deliveryId", "activityId", "status", "session"),
-            ("attempt", "sourcePaths", "evidence", "reason", "reassessment", "coordinatorSession", "actionKey", "dispatchId"))
+            ("attempt", "sourcePaths", "evidence", "reason", "reassessment", "coordinatorSession", "actionKey", "dispatchId", "modelSelection", "modelObservation"))
     _require(delivery["status"] == "in_progress" and delivery.get("approval", {}).get("scopeSha256") == delivery["scopeSha256"],
              "Activity changes require an approved delivery in progress.")
     _require("executionPlan" in delivery, "Delivery has no approved execution plan.")
@@ -389,9 +404,31 @@ def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at,
     records = delivery.setdefault("activityReceipts", [])
     latest = {r["activityId"]: r for r in records}
     previous = latest.get(task["id"])
+    def observe_model():
+        ref = bind_evidence([request['modelObservation']])[0]
+        def read_model_observation(reference):
+            payload = read_evidence(Path(repo), reference['path'])
+            _require(hashlib.sha256(payload).hexdigest() == reference['sha256'], 'Model-observation evidence changed.')
+            return payload
+        return model_pool.read_observation(delivery, previous, ref, read_model_observation)
+    if model_pool.observation_update(request):
+        _fields(request, ('deliveryId','activityId','status','session','attempt','coordinatorSession','modelObservation'), ('actionKey',))
+        _require(previous is not None and previous['status'] == 'running' and 'modelSelection' in previous,
+                 'Model observations update only a running selected child attempt.')
+        _require(request['session'] == previous['session'] and type(request['attempt']) is int
+                 and request['attempt'] == previous['attempt']
+                 and previous.get('reworkRevision',0) == delivery.get('activityReworkRevision',0),
+                 'Model observation update has a stale session, attempt or generation.')
+        activation = delivery.get('orchestrationActivation', {})
+        _require(request['coordinatorSession'] == activation.get('coordinatorSession')
+                 and activation.get('scopeSha256') == delivery['scopeSha256'],
+                 'Only the current activated coordinator may record a running model observation.')
+        model_pool.record_observation(previous, observe_model())
+        previous['updatedAt'] = at
+        return
     if request["status"] == "running":
         validate_execution_plan(delivery["executionPlan"], delivery["stories"], repo)
-        _require(not any(k in request for k in ("attempt", "sourcePaths", "evidence", "reason")), "Starting an activity creates its attempt; do not supply outcome fields.")
+        _require(not any(k in request for k in ("attempt", "sourcePaths", "evidence", "reason", "modelObservation")), "Starting an activity creates its attempt; do not supply outcome fields.")
         _require(previous is None or state["status"] in {"failed", "stale"}, "Activity already has a current attempt.")
         _require(all(next(a for a in graph["activities"] if a["id"] == dep)["status"] == "completed" for dep in task["dependsOn"]),
                  "Activity prerequisites are not currently completed.")
@@ -410,10 +447,15 @@ def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at,
                      'Use an actual owner decision or independent work; this assessment does not authorize another retry.')
         attempt = previous["attempt"] + 1 if previous else 1
         _require(attempt <= MAX_ATTEMPTS, "Activity attempt history is full; retain evidence and plan a new delivery.")
+        selection = model_pool.prepare_selection(delivery, request)
         records.append(dict(activityId=task["id"], session=request["session"], attempt=attempt,
                             status="running", at=at, updatedAt=at, scopeSha256=delivery["scopeSha256"],
                             dependencies=[dict(activityId=dep, attempt=latest[dep]["attempt"],
                                                receiptSha256=_digest(latest[dep])) for dep in task["dependsOn"]]))
+        if 'modelPool' in plan:
+            records[-1]['coordinatorSession'] = request['coordinatorSession']
+        if selection is not None:
+            records[-1]['modelSelection'] = selection
         if 'activityReworkRevision' in delivery:
             records[-1]['reworkRevision'] = delivery['activityReworkRevision']
         if 'dispatchId' in request:
@@ -423,11 +465,25 @@ def change_activity(repo, delivery, request, *, bind_sources, bind_evidence, at,
             records[-1]['reassessment'] = copy.deepcopy(request['reassessment'])
         return
     _require('reassessment' not in request, 'Reassessment belongs to the new attempt, not its outcome.')
+    _require('modelSelection' not in request, 'A child model choice is frozen at start; use a new checked attempt.')
     _require(previous is not None and previous["status"] == "running", "Activity has no running attempt.")
     _require(previous.get('reworkRevision', 0) == delivery.get('activityReworkRevision', 0),
              'Activity belongs to an earlier rework round; its result cannot complete current work.')
     _require(type(request.get("attempt")) is int and request["attempt"] == previous["attempt"]
              and request["session"] == previous["session"], "Activity session or attempt is stale.")
+    if 'modelSelection' in previous:
+        if 'modelObservation' in request:
+            observed = observe_model()
+        else:
+            observed = previous.get('modelObservation', model_pool.unknown_observation())
+        if request['status'] == 'completed':
+            _require(not any(model_pool.observation_mismatch(previous['modelSelection'], o)
+                             for o in [*previous.get('modelObservationHistory',[]),
+                                       *([previous['modelObservation']] if 'modelObservation' in previous else []), observed]),
+                     'Known child model mismatch or rejected launch cannot be successful completion; retain it on a failed attempt.')
+        model_pool.record_observation(previous, observed)
+    else:
+        _require('modelObservation' not in request, 'Only a selected child can report model-pool observations.')
     if request["status"] == "completed":
         _require("reason" not in request, "Completed activity does not take a failure reason.")
         _require(state["status"] == "running", "Activity inputs changed since start; resolve stale prerequisites with relocate-bindings only for identical historical read inputs, otherwise restart for changed work.")

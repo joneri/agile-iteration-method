@@ -44,6 +44,12 @@
           "description": "Sequential attempts 1\u20138 per activity; enforced by helper.",
           "type": "integer"
         },
+        "coordinatorSession": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
         "dependencies": {
           "items": {
             "$ref": "#/$defs/activityDependency"
@@ -63,6 +69,20 @@
           "maxItems": 64,
           "minItems": 1,
           "type": "array"
+        },
+        "modelObservation": {
+          "$ref": "#/$defs/modelObservation"
+        },
+        "modelObservationHistory": {
+          "items": {
+            "$ref": "#/$defs/modelObservation"
+          },
+          "maxItems": 64,
+          "minItems": 0,
+          "type": "array"
+        },
+        "modelSelection": {
+          "$ref": "#/$defs/modelSelection"
         },
         "reason": {
           "maxLength": 2000,
@@ -1345,6 +1365,9 @@
           "description": "1\u20138; enforced by delegation validator.",
           "type": "integer"
         },
+        "modelPool": {
+          "$ref": "#/$defs/modelPool"
+        },
         "orchestration": {
           "description": "Frozen Native graph with explicit origin, outcomes and node contracts; helper validates full DAG and ownership.",
           "type": "object"
@@ -1390,6 +1413,255 @@
         "id",
         "statement",
         "revision"
+      ],
+      "type": "object"
+    },
+    "modelCost": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "minimum": 0,
+          "type": "number"
+        },
+        "unit": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit",
+        "amount"
+      ],
+      "type": "object"
+    },
+    "modelObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "actualCost": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/modelCost"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dispatchAccepted": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/evidence"
+          },
+          "maxItems": 1,
+          "minItems": 0,
+          "type": "array"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reasoningEffort": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source": {
+          "enum": [
+            "host",
+            "worker",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "source",
+        "dispatchAccepted",
+        "model",
+        "reasoningEffort",
+        "actualCost",
+        "evidence"
+      ],
+      "type": "object"
+    },
+    "modelPool": {
+      "additionalProperties": false,
+      "properties": {
+        "budget": {
+          "additionalProperties": false,
+          "properties": {
+            "costLimit": {
+              "$ref": "#/$defs/modelCost"
+            },
+            "maxStarts": {
+              "maximum": 256,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "maxStarts"
+          ],
+          "type": "object"
+        },
+        "choices": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              },
+              "model": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              },
+              "reasoningEffort": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "\\S",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "model",
+              "reasoningEffort"
+            ],
+            "type": "object"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "type": "array"
+        },
+        "version": {
+          "const": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "version",
+        "choices",
+        "budget"
+      ],
+      "type": "object"
+    },
+    "modelSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "budgetReason": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "choiceId": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "estimatedCost": {
+          "$ref": "#/$defs/modelCost"
+        },
+        "poolSha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "requested": {
+          "additionalProperties": false,
+          "properties": {
+            "model": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            "reasoningEffort": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            }
+          },
+          "required": [
+            "model",
+            "reasoningEffort"
+          ],
+          "type": "object"
+        },
+        "risk": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "spawnRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "fork_turns": {
+              "const": "none"
+            },
+            "model": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            },
+            "reasoning_effort": {
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "\\S",
+              "type": "string"
+            }
+          },
+          "required": [
+            "model",
+            "reasoning_effort",
+            "fork_turns"
+          ],
+          "type": "object"
+        },
+        "task": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "pattern": "\\S",
+          "type": "string"
+        }
+      },
+      "required": [
+        "choiceId",
+        "task",
+        "risk",
+        "budgetReason",
+        "poolSha256",
+        "requested",
+        "spawnRequest"
       ],
       "type": "object"
     },

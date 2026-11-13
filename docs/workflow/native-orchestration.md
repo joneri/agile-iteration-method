@@ -19,10 +19,16 @@ usual delivery plan. A node describes work; it does not require another agent.
 | `independent_branches` | Outcomes have genuinely disjoint writes | Independent branches followed by integrated review |
 | `bounded_investigation` | A consequential uncertainty needs a discriminating experiment | Investigation, bounded change, integrated review |
 
-Keep one cohesive author and reuse a separate reviewer for the first material
-core challenge and final review. Intermediate feedback may happen within an
-activity; it need not create a node or approval for every coding step. Measure
-the smallest working route before expanding it.
+Keep one cohesive author. Before freezing a new material plan, reuse the separate
+Reviewer for the independent expectation assessment in `engineering-delivery.md`;
+then reuse that reviewer for the first functioning-core challenge and final
+review. Early review covers the decisive real route and relevant experience,
+not only unproved algorithm oracles. Scale checks to risk and reuse current
+independent evidence for unchanged covered behavior; nonmaterial work keeps its
+justified self-review policy. Planning assessment precedes the frozen graph;
+core feedback can occur within implementation. Neither requires an extra node,
+owner approval or agent per role. Preserve the graph's actual dependencies and
+final review; correct material gaps before costly dependent expansion.
 
 Use the trusted package's `scripts/aim_orchestrate.py default --input graph-input.json`
 to construct a graph. Its input is:
@@ -71,6 +77,18 @@ Plan approval freezes the graph, original requirements and quality obligations.
 Preserve historical scope. An unsupported scope change needs a supported new
 plan and its applicable decision; it cannot edit accepted history or reset a
 campaign by renaming work.
+
+## Approved child model pools
+
+New plans may freeze `executionPlan.modelPool` under the existing Gate B approval.
+Follow [Model pools](model-pools.md) for exact approved pairs, task/risk/budget
+selection, explicit native child launch settings and honest attempt-bound model
+observations. The receiving coordinator's model stays unchanged; configuration
+alone grants no authority. Existing plans without a pool retain inherited behavior.
+Count child reservations and reported overruns across failed/retried/reworked
+attempts; a running observation update is not a new campaign/work attempt.
+The bound-coordinator bridge cannot perform per-child dispatch and rejects it
+explicitly; this does not authorize another coordinator or a parent model switch.
 
 ## Coordination ownership and handoff
 
