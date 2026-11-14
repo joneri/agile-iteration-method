@@ -1,29 +1,29 @@
 {
   "guidanceReviewVersion": 1,
-  "productVersion": "4.8.11",
-  "reviewedOn": "2026-11-13",
+  "productVersion": "4.8.12",
+  "reviewedOn": "2026-11-14",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "b4e1e3587883daec533c9e43d005d5441222ab0bb38636465c0ed6ec022428c1"
+      "sha256": "5dd84d4fe8c131a18baed591e0abcd56c972df907fd222e1db563c9034767044"
     },
     {
       "path": "school.html",
-      "sha256": "904ae8b47b71e461d7fc18bcfef62f128b9e6d4b94af66e762b7b8e4421099c8"
+      "sha256": "792045671fb7b60b442547db5ccf42f8265ca8932610121c1057fd104ba88110"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "33bb739cc45d39a028d573514b212a52cdba9f34882a9bea404e4f230ff47b87"
+      "sha256": "b239d5b8777600214f0c062f4e3a5b1f4eee6b1845cff2a8a2d6bbd59942d63b"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sha256": "e672c0dc4d4ab9e0db68e0280431b23978dd9270a4d0f3cdc0c90ff81c889388"
+      "sha256": "2eae7ea1d929c7d08780963e7ae0d66d701ae50dbe74f215ed14211da4add8f2"
     },
     {
       "path": "docs/workflow/user-stories.md",
-      "sha256": "e76c892ad8edf3bb9250e85001fcdecc310179c45b11176114fa5ef623ddb828"
+      "sha256": "4ed28a0e972a695dc6c86ac2deec69156333ae41d9ebbd4edcbb7a83bb6f90eb"
     },
     {
       "path": "docs/workflow/native-orchestration.md",
@@ -73,11 +73,11 @@
     },
     "verificationAndAcceptance": {
       "conclusion": "updated",
-      "summary": "Release 4.8.11: Lesson 6 and the canonical/generated instructions explicitly default to restraint in new automated tests. Reuse or extend meaningful existing tests, add uncovered consequential regression checks, and allow zero new tests when current checks and actual use suffice. Behavior and independently justified expectations take precedence over quantity, coverage growth, implementation mirrors and mocks that remove the behavior under test. This is ordinary implementation/continuing-review judgment, with no new report, gate, mandatory mutation campaign or human cleanup step. Product obligations, normal-use evidence, meaningful boundary risks and existing required checks remain intact. The same independent reviewer applied the new wording to a covered wording/refactor case and an uncovered authorization/data risk; no issues. Prior use-first, unchanged layout/interaction and learning observations are reused."
+      "summary": "AIM 4.8.12 retains restraint in new automated tests, reuse of meaningful evidence and zero-new-test delivery when sufficient. This release clarifies that reduced test volume does not reduce scrutiny of original outcomes. Reviewer/TDO, default Native review assignments and the Copilot adapter classify findings by consequence; advisory labels or green checks cannot waive material defects or missing decisive evidence. The adapter no longer marks a delivery ready merely by listing remaining manual checks. Independent bounded scenarios produced correction for a missing required CSV column, readiness with zero new tests for covered help text, and a targeted restore observation for missing core evidence without assuming a product defect. Homepage and Lesson 6 agree; unchanged startup prompts, layout, interaction and learning observations are reused. No new gate, report, exhaustive journey or test quota is introduced. This supports instruction coherence, not a measured future quality gain."
     },
     "modelsAndEvidence": {
       "conclusion": "updated",
-      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.11 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
+      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.12 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
     }
   }
 }

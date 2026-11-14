@@ -7,7 +7,7 @@ Source: docs/workflow/version-and-installation.md
 
 ## Resolved package metadata
 
-- AIM product release: `4.8.11`
+- AIM product release: `4.8.12`
 - Runtime contract: `2.0`
 - Runtime-state schema: `1.0`
 - Installer manifest: `1.0`

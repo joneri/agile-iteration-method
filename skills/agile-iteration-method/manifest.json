@@ -112,7 +112,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.8.11",
+  "productVersion": "4.8.12",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -125,7 +125,7 @@
     {
       "output": "SKILL.md",
       "source": "adapters/portable/agile-iteration-method/SKILL.md",
-      "sourceSha256": "e672c0dc4d4ab9e0db68e0280431b23978dd9270a4d0f3cdc0c90ff81c889388"
+      "sourceSha256": "2eae7ea1d929c7d08780963e7ae0d66d701ae50dbe74f215ed14211da4add8f2"
     },
     {
       "output": "references/native-orchestration.md",
@@ -145,7 +145,7 @@
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "e76c892ad8edf3bb9250e85001fcdecc310179c45b11176114fa5ef623ddb828"
+      "sourceSha256": "4ed28a0e972a695dc6c86ac2deec69156333ae41d9ebbd4edcbb7a83bb6f90eb"
     },
     {
       "output": "references/local-runtime-access.md",
@@ -175,7 +175,7 @@
     {
       "output": "references/engineering-delivery.md",
       "source": "docs/workflow/engineering-delivery.md",
-      "sourceSha256": "c05cec3b7d1631ef5424f9ca2d94ee9e917fa8013c80380f373ad69385328113"
+      "sourceSha256": "9498178cc56e2cf8a1cba76c5fcbcb8f732bb335d7b79f213d4cd47b5143df25"
     },
     {
       "output": "references/role-skill-po.md",
@@ -185,7 +185,7 @@
     {
       "output": "references/role-skill-tdo.md",
       "source": "docs/workflow/role-skill-tdo.md",
-      "sourceSha256": "8e48935b5e696a50e06d5ff32dc582e2963628fcd90bb8375804e592ae93fb77"
+      "sourceSha256": "c3a18f86faad3d4e7f6ca09c64d1ddf4df662374014e3f9c25a04f3a65a8b752"
     },
     {
       "output": "references/role-skill-dev.md",
@@ -195,7 +195,7 @@
     {
       "output": "references/role-skill-reviewer.md",
       "source": "docs/workflow/role-skill-reviewer.md",
-      "sourceSha256": "5370858ea95a1316f183a40f888281b50c37011f34847bcf1fe6a4e49c3e7a30"
+      "sourceSha256": "d413d62c98ff4b196f1028d86bc0635109ba2b6be075ff8edb3adbb343d13f62"
     },
     {
       "output": "references/skill-user-guide.md",
@@ -320,7 +320,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "41dd910a14d317b064b2d9a21922eff24f28948c43356d00d541ee5d65275c7c"
+      "sourceSha256": "323ead49d8ce3e390bcc2d4e0b21e5a9fa46f684936c5ad61c7231c06519f0f5"
     },
     {
       "output": "references/version-and-installation.md",
@@ -425,7 +425,7 @@
     {
       "output": "scripts/aim_quality/orchestration.py",
       "source": "scripts/aim_quality/orchestration.py",
-      "sourceSha256": "e29e55f0847334b2826195c779b895028c9464933c3704d74efe00d48d65a342"
+      "sourceSha256": "d4935cbabe5b857d6dafb32f9317b04141da9b88ab9b1fe7f8e10d8ee6d77507"
     },
     {
       "output": "scripts/aim_quality/orchestration_runtime.py",

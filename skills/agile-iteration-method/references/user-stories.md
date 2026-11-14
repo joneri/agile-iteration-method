@@ -473,6 +473,12 @@ errors and result states for UI changes. Record missing or contradictory
 evidence for decisive in-scope behavior as an open material finding tied to the
 original obligation. Keep observations and findings in the original review;
 the coordinator adds only new validation facts or material limitations.
+Before readiness, reconcile advisory findings with their described consequences
+to original obligations. An advisory label or green checks cannot waive a
+material gap; correct and re-review affected behavior or use the existing owner
+decision path for a real scope/quality/resource conflict. Do not defer required
+verification to user acceptance. This semantic judgment uses the same review;
+the helper checks declared evidence and cannot infer a misclassified defect.
 
 For new plans, the first `validate.evidence` reference is that existing review
 record in bounded version-1 form. When preparing it, use the read-only

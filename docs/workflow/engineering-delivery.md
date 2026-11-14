@@ -44,6 +44,13 @@ the behavior being checked. Test count and coverage growth are not delivery goal
 this judgment belongs in ordinary implementation and review, without a new report,
 mandatory mutation campaign or human cleanup step.
 
+Proportion reduces redundant verification, not scrutiny of the agreed outcome.
+Select observations for their ability to distinguish a working result from a
+plausible consequential failure. A brief successful route supports only what it
+actually exercises; use relevant source and dependencies to identify gaps, then
+investigate a consequential gap with the smallest useful observation. Reuse
+sufficient evidence; this requires neither exhaustive journeys nor a new test.
+
 ## Independent expectation review before implementation
 
 Before freezing a new material delivery plan, reuse the separate Reviewer to
@@ -151,11 +158,27 @@ Do not hide a failure of the whole behind individually satisfied Story criteria.
 Keep human/AI code readability, appropriate components, maintainability, loading
 and runtime performance, and security in scope where relevant.
 
+Classify findings by their consequence to binding outcomes and agreed quality,
+including supported implied core. A defect that prevents required use, makes
+results or feedback misleading, or breaks a consequential interaction is material.
+Missing credible evidence for decisive behavior is an unresolved material
+readiness gap, not proof that the product is defective. Passing tests, a short
+check budget, late discovery or repair effort do not make these findings advisory.
+Optional polish and preference-only improvements remain advisory; not every
+unobserved variant or cosmetic difference needs investigation.
+
 Correct material requirement and quality defects within the mandate, then
 re-review and verify affected criteria and integrations. A final defects list is
 insufficient when correction is authorized and feasible. Reuse still-relevant
 unchanged evidence. Distinguish agreed quality defects from optional improvements
 or reviewer taste; suggestions do not become requirements without authority.
+Before claiming readiness, Reviewer and TDO reconcile findings labelled advisory
+with their stated consequences and the original obligations. Resolve a mismatch
+through correction and affected re-review, or the existing explicit owner
+decision path if scope, quality or resources must change. Do not downgrade the
+finding, narrow the obligation or defer required verification to user acceptance.
+Keep the finding and disposition in the existing review; no additional gate,
+report or universal test checklist is required.
 If tools and evidence cannot assess a decisive experience quality, mark it
 unverified; working code or a still image cannot prove what they do not show.
 If quality and resources conflict, expose the conflict and recommend a concrete

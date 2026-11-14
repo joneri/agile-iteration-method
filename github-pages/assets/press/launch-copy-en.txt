@@ -1,9 +1,9 @@
 AIM
 Turn your intent into a complete product.
 
-Suggested announcement copy · AIM 4.8.11 · 13 November 2026.
+Suggested announcement copy · AIM 4.8.12 · 14 November 2026.
 
-AIM 4.8.11 makes restraint the default when writing automated tests. Reuse meaningful existing tests, add new ones for consequential regression risks not already covered, and accept zero new tests when existing checks and actual use suffice. Observable behavior and independent expectations matter more than test quantity. Existing product obligations, review, required checks and owner acceptance remain intact. No new gate or measured productivity gain is claimed.
+AIM 4.8.12 keeps restraint in new automated tests while preserving substantive review of the agreed outcome. Classify findings by consequence: green checks or advisory labels cannot waive material defects or missing decisive evidence. Correct material gaps and re-review affected behavior; reuse sufficient observations and allow zero new tests. Optional polish stays advisory. No new gate, report, test quota or measured productivity gain is claimed.
 
 Describe the product you want. AIM plans, builds and verifies the complete agreed result with your coding agent. Ship is the default. Choose Loop when you want to assess useful Done Increments and shape the next step through recurring feedback.
 

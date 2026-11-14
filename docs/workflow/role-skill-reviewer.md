@@ -30,8 +30,12 @@ tests as its completeness reference. Identify affected Story IDs in findings.
 An unrequested bound that excludes required use is a product gap. Preserve
 requirements, justified quality targets and source/instance identity.
 
-Choose the smallest sufficient observation for the remaining risk. Reuse current
-independent evidence and existing checks. Direct use can suffice; do not require
+Choose the smallest sufficient observation that can distinguish the intended
+outcome from a plausible consequential failure. Reduced test volume does not
+reduce scrutiny: a short happy path cannot establish behavior it does not cover.
+Inspect relevant source and dependencies to select any needed observation, rather
+than increasing test quantity or accepting the author's success signal.
+Reuse current independent evidence and existing checks. Direct use can suffice; do not require
 a new automated harness, user-route map, exhaustive successful journey or fresh
 counterexample without a consequential gap. Controlled boundary states establish
 only the behavior they exercise. A real defect merits correction and a targeted
@@ -50,6 +54,17 @@ sufficiently covered route is not automatically a product defect. Do not hide
 central usability failures behind technical passes or call them taste. Keep
 preference-only findings advisory. Review copy in its actual context for purpose,
 clarity, supported claims and accessibility.
+
+Classify by consequence to the original binding outcome and agreed quality.
+Required-use failures, misleading results/feedback and broken consequential
+interactions are material even when tests pass, the fix is costly or the finding
+arrives late. Optional polish remains advisory. Before concluding, reconcile any
+advisory finding whose described consequence contradicts a binding obligation;
+do not use that label to waive correction or missing decisive evidence. Return
+material findings for authorized correction and affected re-review; an actual
+scope/quality/resource conflict uses the existing owner decision path. User
+acceptance is not a substitute for required engineering verification. Retain
+findings and dispositions in the same review without a new form or test quota.
 
 Use domain checks only where they address the changed behavior or a concrete
 unresolved risk. For algorithms/state logic, use independent expected results

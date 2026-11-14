@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-11-14 - AIM release v4.8.12
+
+Preserve substantive outcome review while keeping restraint in new tests.
+
+- Choose observations that distinguish the agreed outcome from consequential
+  failures; reuse sufficient evidence and allow zero new automated tests.
+- Classify findings by consequence to binding outcomes and agreed quality.
+  Green tests, repair effort or an advisory label cannot waive material defects
+  or missing decisive evidence before readiness.
+- Route material gaps to authorized correction and affected re-review. Preserve
+  the existing owner path for actual scope, quality or resource conflicts;
+  required engineering verification cannot be deferred to user acceptance.
+- Align Reviewer/TDO instructions, Native review assignments, the Copilot
+  readiness instruction, the portable skill and public guidance.
+
+Compatibility: runtime and schema contracts are unchanged. No new gate,
+report, test quota or active-project migration is introduced. Existing plans
+and acceptance authority remain intact.
+
+Verification reuses the existing suite and an independent review with bounded
+decision scenarios. The method still depends on semantic review judgment;
+these observations do not establish future defect-rate or productivity gains.
+
 ## 2026-11-13 - AIM release v4.8.11
 
 Make restraint the default when authoring new automated tests.

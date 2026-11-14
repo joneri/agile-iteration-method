@@ -103,6 +103,13 @@ technical planning and evidence synthesis.
 - Pick the smallest sufficient validation. Reuse current evidence; widen checks
   for integration risk or a demonstrated gap. Do not replace measurement with
   a large plan or demand a full repository rescan at every handoff.
+- Before readiness, reconcile findings and limitations with original obligations,
+  including advisory findings whose consequences affect required use or agreed
+  quality. A green check or advisory label cannot waive a material defect or
+  missing decisive evidence. Route these to authorized correction and affected
+  re-review; use the existing owner path only for a real scope/quality/resource
+  decision. Do not transfer required verification to the user's acceptance test
+  or restart unchanged checks. Keep disposition in the existing review.
 - Reconcile architecture, commands and role bindings with the final code.
   Retire stale copied status. Surface unresolved claims before acceptance.
 

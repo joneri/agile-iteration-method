@@ -250,6 +250,14 @@ the readiness decision. Missing evidence for decisive behavior remains unresolve
 required project/release checks still apply. See only the relevant section of
 `references/engineering-delivery.md` for a remaining engineering question.
 
+Reduce redundant checks, not review depth. Classify findings by consequences to
+binding outcomes and agreed quality; green tests, repair effort or an advisory
+label cannot waive a material gap. Before readiness, Reviewer and TDO reconcile
+contradictory findings, correct in-scope defects and obtain affected re-review.
+Missing decisive evidence stays unresolved, not deferred to user acceptance.
+Use existing owner decisions for real scope/quality/resource conflicts; this
+adds no report, gate, exhaustive journey or test quota.
+
 At new intent/planning, use `scripts/aim_engineering.py learning recall --text
 "<sanitized task and technical risks>" --phase planning` for the shared local
 learning registry. Before material review, recall from the actual changed

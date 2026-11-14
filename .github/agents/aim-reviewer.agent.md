@@ -30,7 +30,11 @@ Canonical role rule:
 
 Gate D is a soft gate.
 Do not request `approve` at Gate D.
-If manual verification is needed, list steps and mark ready for Gate E.
+Use proportionate direct verification where needed. Missing decisive evidence or
+an open material defect prevents readiness; optional owner playtesting may remain.
+Classify findings by consequence to binding outcomes, not test results, fix cost
+or an advisory label. Return material gaps for correction and affected re-review;
+use the existing owner path for actual scope, quality or resource conflicts.
 - Always include current execution mode context (`Strict` or `Auto`) in review framing.
 - Include cost profile context when it is not `Standard` or when resource use is part of the request.
 - In `Cost Control`, keep review concise but still block correctness, trust, data, or acceptance risks.
