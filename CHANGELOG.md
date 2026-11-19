@@ -1,6 +1,6 @@
 # Changelog
 
-## 2026-11-19 - AIM release v4.8.13
+## 2026-11-19 - AIM release v4.8.14
 
 Extend an exhausted model-pool start allowance within the same delivery.
 
@@ -15,6 +15,9 @@ Extend an exhausted model-pool start allowance within the same delivery.
   exceeded cumulative mandates. Existing monetary caps and unknown costs remain
   binding; extra starts do not grant extra money or product acceptance.
 - Include the helper, schema and documentation in the complete portable package.
+- Include the new module in every adaptive installation footprint as well.
+  The unpublished v4.8.13 candidate was stopped by existing installed-package
+  checks; its tag and failed release evidence remain preserved.
 
 Compatibility: existing deliveries require no migration. An extension needs an
 actual new scoped owner decision; upgrading alone renews no resources. Legacy

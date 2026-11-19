@@ -113,7 +113,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.8.13",
+  "productVersion": "4.8.14",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -311,7 +311,7 @@
     {
       "output": "references/install/aim-install-manifest.yaml",
       "source": "install/aim-install-manifest.yaml",
-      "sourceSha256": "2f5b899812b89caa9a0c6d61be2a51ef99ed96742f5d62517f753c55397f1a6a"
+      "sourceSha256": "7b7af5cee4c0280fea8287f6b76efeeb0f93bfd91e8bae5fbe9940efc627cd16"
     },
     {
       "output": "references/LICENSE-DOCS",
@@ -321,7 +321,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "3e89e6a13d0de5be172cc4cfee89053207ca733e4595e6c9f2dafb3f4e67ec05"
+      "sourceSha256": "e0b8a0c0f853df13da980e34b8644839e2158e4f40f96ab49aba6a616e4c2535"
     },
     {
       "output": "references/version-and-installation.md",

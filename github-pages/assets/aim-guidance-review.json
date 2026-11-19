@@ -1,21 +1,21 @@
 {
   "guidanceReviewVersion": 1,
-  "productVersion": "4.8.13",
+  "productVersion": "4.8.14",
   "reviewedOn": "2026-11-19",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "2892c468442562b7885384f34564163e771e92a4e9854e217bc6f36583eee8b9"
+      "sha256": "8af84472df218ef0f5101116f84aef4f194ef9389b3e6b6b63dfd27a30c9662d"
     },
     {
       "path": "school.html",
-      "sha256": "e852e55d79a68d1325f8982cc4dc2a2e7a193348df1b3be17d9d7c7940e1980d"
+      "sha256": "76db775afdeb2674e0091cb73b724475fe50d94dd0164f3431f0dff5a0f8b30c"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "38c6c05a661dbf846f239b88d25a2ea221554c96b85461717754863e1f0786a3"
+      "sha256": "f93765eba037034dc36093db8bee4f121d255ebb5beaa389562d578616ebf1d8"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
@@ -53,7 +53,7 @@
   "assessments": {
     "installationAndStart": {
       "conclusion": "updated",
-      "summary": "Reviewed the two-route preparation section before Lesson 1. Separate accessible tabs select starting from scratch or using an existing codebase; each contains its own installation/preflight prompt, project request and preparation steps in a bounded scroll area. Tab controls and the Lesson 1 link remain outside the scroll area. Direct links select the right guide; keyboard navigation, reduced-motion settings and JavaScript-free access are preserved. Both routes keep chat-first setup, Python/Node/npx checks, platform help and real user authorization for system installation. Homepage installation copy and its downloadable instructions remain synchronized; existing scope/history and final acceptance stay intact. Each lesson now has a Pocket Board prompt and an illustrative reply. All six prompt copy targets were checked in the browser at desktop and phone widths, and the prompt text is visible without JavaScript."
+      "summary": "Existing installation/start prompts and two preparation routes keep their semantics; reuse their prior browser interactions. This patch includes model_budget.py in both the portable public skill and the adaptive installation manifest. Existing real-distribution and installed-recovery checks exercise helpers away from source across all footprints. The first tagged candidate exposed an adaptive-only omission and was not published; retain that failed evidence and correct the payload before publication. Upgrading preserves active project state and cannot renew scope or resources."
     },
     "deliveryModes": {
       "conclusion": "updated",
@@ -69,7 +69,7 @@
     },
     "resourceUse": {
       "conclusion": "updated",
-      "summary": "AIM 4.8.13 appends bounded model-start extensions without rewriting frozen pools or historical receipts. Explicitly linked Native grants count once and retain pre-amendment spending. All activity starts after an extension consume slots, including coordinator and reviewer work. Reject overlapping allowances, replay, wrong owners and exceeded cumulative mandates. Original cost caps and unknown costs remain binding. The School adds this distinction beside its existing pool explanation; its human-reserved example mandate remains unchanged. No new cost or speed measurement is claimed."
+      "summary": "AIM 4.8.14 appends bounded model-start extensions without rewriting frozen pools or historical receipts. Explicitly linked Native grants count once and retain pre-amendment spending. All activity starts after an extension consume slots, including coordinator and reviewer work. Reject overlapping allowances, replay, wrong owners and exceeded cumulative mandates. Original cost caps and unknown costs remain binding. The School adds this distinction beside its existing pool explanation; its human-reserved example mandate remains unchanged. No new cost or speed measurement is claimed."
     },
     "verificationAndAcceptance": {
       "conclusion": "current",
@@ -77,7 +77,7 @@
     },
     "modelsAndEvidence": {
       "conclusion": "updated",
-      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.13 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
+      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.14 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
     }
   }
 }
