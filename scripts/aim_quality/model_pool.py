@@ -112,6 +112,17 @@ def usage(pool, records, *, actual=True):
                 actualCostKnown=unknown == 0, billingLimitVerified=False)
 
 
+
+def effective_budget(delivery, records=None):
+    pool = delivery['executionPlan']['modelPool']
+    records = delivery.get('activityReceipts', []) if records is None else records
+    history = [r for r in delivery.get('modelPoolExtensions', []) if r['context']['receiptCount'] <= len(records)]
+    if not history:
+        return copy.deepcopy(pool['budget'])
+    grant = history[-1]['context']
+    remaining = max(0, grant['additionalStarts'] - (len(records) - grant['receiptCount']))
+    return {**pool['budget'], 'maxStarts': len(_children(records)) + remaining}
+
 def _check_allowance(pool, records, estimate, *, actual):
     current = usage(pool, records, actual=actual)
     _need(current['remainingStarts'] > 0, 'Approved model-pool start allowance is exhausted; retries do not renew it.')
@@ -124,18 +135,20 @@ def _check_allowance(pool, records, estimate, *, actual):
               'Approved model-pool cost allowance is exhausted or overrun.')
 
 
-def _selection(pool, selection, records, *, actual, stored=False):
+def _selection(pool, selection, records, *, actual, stored=False, budget=None, revision=0):
     _fields(selection, ('choiceId', 'task', 'risk', 'budgetReason'),
-            ('estimatedCost', 'poolSha256', 'requested', 'spawnRequest') if stored else ('estimatedCost',))
+            ('estimatedCost', 'poolSha256', 'requested', 'spawnRequest', 'budgetRevision') if stored else ('estimatedCost',))
     for key in ('choiceId', 'task', 'risk', 'budgetReason'):
         _text(selection[key], 'Model selection ' + key)
     choice = next((c for c in pool['choices'] if c['id'] == selection['choiceId']), None)
     _need(choice is not None, 'Model selection is outside the approved pool.')
-    _check_allowance(pool, records, selection.get('estimatedCost'), actual=actual)
+    _check_allowance({**pool, 'budget': budget or pool['budget']}, records, selection.get('estimatedCost'), actual=actual)
     result = {key: copy.deepcopy(selection[key]) for key in ('choiceId', 'task', 'risk', 'budgetReason', 'estimatedCost') if key in selection}
     result.update(poolSha256=digest(pool),
                   requested={key: choice[key] for key in ('model', 'reasoningEffort')},
                   spawnRequest=dict(model=choice['model'], reasoning_effort=choice['reasoningEffort'], fork_turns='none'))
+    if revision:
+        result['budgetRevision'] = revision
     if stored:
         _need(selection == result, 'Recorded model selection differs from the approved pair or launch parameters.')
     return result
@@ -154,7 +167,8 @@ def prepare_selection(delivery, request):
         return None
     _need(delivery['executionPlan']['delegationAllowed'], 'A model pool does not authorize forbidden subagent delegation.')
     _need('modelSelection' in request, 'Choose an approved model/effort pair for this child activity.')
-    return _selection(pool, request['modelSelection'], delivery.get('activityReceipts', []), actual=True)
+    return _selection(pool, request['modelSelection'], delivery.get('activityReceipts', []), actual=True,
+                      budget=effective_budget(delivery), revision=len(delivery.get('modelPoolExtensions', [])))
 
 
 def unknown_observation():
@@ -246,7 +260,9 @@ def validate_receipts(delivery, *, read_reference=None):
         child = receipt['session'] != receipt['coordinatorSession']
         if child:
             _need('modelSelection' in receipt, 'Pooled child receipt has no approved selection.')
-            _selection(pool, receipt['modelSelection'], previous, actual=False, stored=True)
+            revision = sum(r['context']['receiptCount'] <= len(previous) for r in delivery.get('modelPoolExtensions', []))
+            _selection(pool, receipt['modelSelection'], previous, actual=False, stored=True,
+                       budget=effective_budget(delivery, previous), revision=revision)
             observation = receipt.get('modelObservation')
             history = receipt.get('modelObservationHistory', [])
             _need(isinstance(history, list) and len(history) <= 64, 'Model-observation history must be bounded.')
@@ -272,8 +288,11 @@ def projection(delivery, receipt=None):
     if pool is None:
         return None
     result = dict(poolSha256=digest(pool), choices=copy.deepcopy(pool['choices']),
-                  budget=copy.deepcopy(pool['budget']), usage=usage(pool, delivery.get('activityReceipts', [])),
-                  authority='approved-delivery-plan', hostIdentityAuthenticated=False)
+                  budget=copy.deepcopy(pool['budget']), effectiveBudget=effective_budget(delivery),
+                  budgetRevision=len(delivery.get('modelPoolExtensions', [])),
+                  usage=usage({**pool, 'budget': effective_budget(delivery)}, delivery.get('activityReceipts', [])),
+                  authority='approved-delivery-plan-and-budget-decisions' if delivery.get('modelPoolExtensions') else 'approved-delivery-plan',
+                  hostIdentityAuthenticated=False)
     if receipt and 'modelSelection' in receipt:
         result['selection'] = copy.deepcopy(receipt['modelSelection'])
         result['observation'] = copy.deepcopy(receipt.get('modelObservation', unknown_observation()))

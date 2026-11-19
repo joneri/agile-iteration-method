@@ -317,6 +317,12 @@ that authority reference with `kind: "user"` and the same scope for a human answ
 validation does not authenticate the human response; the host must preserve its
 provenance. Never generate an owner's answer from the template yourself.
 
+Model-pool start allowances are a separate bound. Use the same-delivery
+[budget extension](model-pools.md#extend-an-exhausted-start-allowance-in-the-same-delivery)
+for an actual owner answer. A pool extension may explicitly share an existing
+finite campaign grant; the original grant is debited once and retains its
+activity-start boundary. Campaign renewal alone never changes a pool allowance.
+
 ### Route internal escalations to the actual owner
 
 Freeze the actual delegated owner in `deliveryPolicy`, with the human mandate,

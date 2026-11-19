@@ -638,6 +638,14 @@
           "minItems": 1,
           "type": "array"
         },
+        "modelPoolExtensions": {
+          "items": {
+            "description": "Append-only original-pool budget context and actual scoped owner decision. Validated by the runtime.",
+            "type": "object"
+          },
+          "maxItems": 128,
+          "type": "array"
+        },
         "orchestrationActivation": {
           "description": "Scope-bound actual dispatcher activation evidence; never grants owner authority.",
           "type": "object"
@@ -1579,6 +1587,11 @@
           "minLength": 1,
           "pattern": "\\S",
           "type": "string"
+        },
+        "budgetRevision": {
+          "maximum": 128,
+          "minimum": 1,
+          "type": "integer"
         },
         "choiceId": {
           "maxLength": 128,

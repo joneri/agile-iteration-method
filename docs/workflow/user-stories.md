@@ -131,6 +131,9 @@ Gate B approval. Its exact model/reasoning pairs and resource boundary authorize
 the coordinator's later per-child choices without a new owner question per task.
 Use the real host launch parameters and keep requested and observed settings
 separate. Profile candidates, role labels and model names grant no authority.
+A supported `model-budget` decision can append a bounded start allowance to the
+same approved delivery without changing that frozen plan or its historical
+receipts. It uses the actual scoped resource owner and current decision context.
 See [Model pools](model-pools.md) for running observations, conservative budget
 accounting and historical compatibility. Owner acceptance remains separate.
 

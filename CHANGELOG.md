@@ -1,5 +1,33 @@
 # Changelog
 
+## 2026-11-19 - AIM release v4.8.13
+
+Extend an exhausted model-pool start allowance within the same delivery.
+
+- Route a bounded extension to the actual resource owner using
+  `model-budget-context` and `model-budget`. Delegated owners need the existing
+  scoped `orchestrate` permission and remaining `maxAdditionalAttempts`.
+- Append the decision and allowance without rewriting the original pool, scope,
+  approvals, model choices, observations or historical receipts.
+- Link a shared Native campaign grant explicitly and count it once. Preserve
+  earlier spending; all activity starts after an extension consume its slots.
+- Reject wrong owners, stale or replayed answers, overlapping extensions and
+  exceeded cumulative mandates. Existing monetary caps and unknown costs remain
+  binding; extra starts do not grant extra money or product acceptance.
+- Include the helper, schema and documentation in the complete portable package.
+
+Compatibility: existing deliveries require no migration. An extension needs an
+actual new scoped owner decision; upgrading alone renews no resources. Legacy
+campaign grants without an original start anchor are reused only when unchanged
+context proves that none of their starts was spent; otherwise a separately
+approved allowance is required. Arbitrary host calls and provider billing remain
+outside helper enforcement.
+
+Verification: 28 model-pool controls, six existing delegation controls, a separate
+review with an independent counterexample, and actual packaged CLI preview/apply.
+Reuse these source-correction results with the required release checks; no new
+Enigma run or general productivity claim accompanies this patch.
+
 ## 2026-11-14 - AIM release v4.8.12
 
 Preserve substantive outcome review while keeping restraint in new tests.

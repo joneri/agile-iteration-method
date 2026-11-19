@@ -14,12 +14,14 @@ import sys
 import unittest
 
 import test_aim_orchestration_runtime as runtime_fixture
-from aim_stories import FILE, dispatch_check, execute
+from aim_stories import FILE, dispatch_check, execute, model_budget_context
 from aim_quality.orchestration import construct_default_graph
 from aim_quality.orchestration_runtime import prepare_plan
 from aim_quality.model_pool import projection, validate_pool
 from aim_codex_bridge import capture_action_target, CodexBridgeError
 
+
+ROOT = Path(__file__).resolve().parents[1]
 
 CHOICES = [dict(id='luna', model='gpt-6-luna', reasoningEffort='xhigh'),
            dict(id='sol', model='gpt-6.1-sol', reasoningEffort='medium'),
@@ -33,12 +35,12 @@ class ModelPoolTests(unittest.TestCase):
     authority = runtime_fixture.NativeRuntimeTests.authority
     activate = runtime_fixture.NativeRuntimeTests.activate
 
-    def plan_pool(self, max_starts=6, cost_limit=None, pool=True):
+    def plan_pool(self, max_starts=6, cost_limit=None, pool=True, owner=None, campaign_budget=8):
         graph = construct_default_graph('cohesive_delivery',
             [dict(id='INT-ACCESS', requirement=self.document['intents'][0]['statement'], paths=['app.py'])],
             dict(session='native-coordinator', capability=dict(id='aim-native-orchestrator', version='4.8.0'),
                  permittedDecisions=['continue_bounded', 'request_owner_choice']),
-            dict(delegationAllowed=True, maxWorkers=3, checkpointAttemptBudget=8,
+            dict(delegationAllowed=True, maxWorkers=3, checkpointAttemptBudget=campaign_budget,
                  parallelBenefit='Independent read-only worker fixtures with disjoint results.'))
         original, review = graph['nodes']
         graph['origin'] = dict(kind='custom', reference='approved-three-child-fixture')
@@ -52,9 +54,136 @@ class ModelPoolTests(unittest.TestCase):
                 budget['costLimit'] = dict(unit='credits', amount=cost_limit)
             plan['modelPool'] = dict(version=1, choices=copy.deepcopy(CHOICES), budget=budget)
         self.mutate('plan', dict(id='DI-1', title='Approved child routing', goal='Use the right approved settings',
-            storyIds=['US-BUYER'], planEvidence=[self.plan_evidence], executionPlan=plan))
+            storyIds=['US-BUYER'], planEvidence=[self.plan_evidence], executionPlan=plan,
+            **({'deliveryPolicy':dict(mode='ship',owner=owner)} if owner else {})))
         self.mutate('approve', dict(deliveryId='DI-1', authority=self.authority(self.document['deliveries'][0]['scopeSha256'])))
         self.activate()
+
+    def delegated_pool(self, campaign_budget=8, cost_limit=None):
+        mandate = self.artifact('resource-mandate.md', 'Synthetic human mandate: owner-root / owner-session may authorize at most two additional starts, including explicitly shared campaign/pool grants. No monetary increase.')
+        owner = dict(kind='agent', id='owner-root', session='owner-session', mandate=mandate,
+                     decisions=['orchestrate'], maxAdditionalAttempts=2)
+        self.plan_pool(max_starts=1, owner=owner, campaign_budget=campaign_budget, cost_limit=cost_limit)
+        proof = self.artifact('upstream.md', 'Synthetic actual owner activation.')
+        self.mutate('orchestrate',dict(deliveryId='DI-1', action='activate', coordinatorSession='native-coordinator',
+            previousCoordinatorSession='native-coordinator', evidence=[proof], dispatchers=[
+                dict(session=session, capability=dict(id='aim-native-orchestrator',version='4.8.0'),evidence=[proof])
+                for session in ['native-coordinator','owner-session']]))
+        return owner
+
+    def budget_answer(self, count=2, grant=None):
+        request = dict(deliveryId='DI-1',coordinatorSession='native-coordinator',additionalStarts=count,
+                       reason='Synthetic actual scoped resource owner authorizes this bounded continuation.')
+        if grant:
+            request['resourceGrant'] = grant
+        preview = model_budget_context(self.repo, request)
+        proof = self.artifact('pool-answer-'+str(self.document['revision'])+'.json', json.dumps(preview['decisionEvidence']))
+        authority = dict(kind='user', **proof, scopeSha256=preview['scopeSha256'])
+        owner = self.document['deliveries'][0].get('deliveryPolicy',{}).get('owner',{})
+        if owner.get('kind') == 'agent':
+            authority.update(kind='agent',id=owner['id'],session=owner['session'])
+        return {**request,'authority':authority}
+
+    def campaign_grant(self):
+        from aim_quality.orchestration_runtime import summary,digest,campaign_for
+        context = summary(self.document)['pendingDecisions'][0]['context']
+        context.update(id='owner-root',session='owner-session',additionalAttempts=2,
+                       decision='continue_bounded',actionKey='bounded-pool-correction')
+        proof = self.artifact('campaign-answer.json',json.dumps(context))
+        request = {key:context[key] for key in ['outcomeId','contextSha256','decision','actionKey','additionalAttempts']}
+        request.update(deliveryId='DI-1',action='decide',coordinatorSession='native-coordinator',
+                       reason='Synthetic actual owner grants two starts shared with the pool.',evidence=[proof],
+                       authority=dict(kind='agent',id='owner-root',session='owner-session',scopeSha256=context['scopeSha256'],**proof))
+        self.mutate('orchestrate',request)
+        grant = campaign_for(self.document,'INT-ACCESS')['decisions'][-1]
+        return dict(outcomeId='INT-ACCESS',decisionSha256=digest(grant))
+
+    def next_diagnostic(self, index):
+        from aim_quality.orchestration_runtime import assessment,campaign_for
+        current=assessment(campaign_for(self.document,'INT-ACCESS'),owner_priority=[])
+        action='explicit-next-'+str(index)
+        self.mutate('orchestrate',dict(deliveryId='DI-1',action='decide',coordinatorSession='native-coordinator',
+            outcomeId='INT-ACCESS',contextSha256=current['contextSha256'],decision='continue_bounded',
+            actionKey=action,reason='Synthetic consequential transition to the next independent input.',evidence=[self.evidence]))
+        request=self.start_request(index=index);request['actionKey']=action
+        self.mutate('activity',request)
+
+    def test_pool_extension_preserves_frozen_history_and_rejects_stale_owner_and_cap(self):
+        from aim_quality.orchestration_runtime import _delegated_grants
+        owner = self.delegated_pool()
+        self.start(); self.end()
+        before = copy.deepcopy(self.document['deliveries'][0])
+        answer = self.budget_answer()
+        preview_request={k:v for k,v in answer.items() if k!='authority'}
+        cli=subprocess.run([sys.executable,str(ROOT/'scripts/aim_stories.py'),'--repo',str(self.repo),
+                            'model-budget-context','--input','-'],input=json.dumps(preview_request),
+                           text=True,capture_output=True,check=True)
+        self.assertEqual(json.loads(cli.stdout)['scopeSha256'],answer['authority']['scopeSha256'])
+        bad = copy.deepcopy(answer); bad['authority']['session']='wrong-owner'
+        self.assert_rejected_without_write_command('model-budget',bad,'identity')
+        with self.assertRaisesRegex(ValueError,'delegated resource allowance'):
+            self.budget_answer(count=3)
+        stale=copy.deepcopy(answer);stale['authority']['scopeSha256']='0'*64
+        self.assert_rejected_without_write_command('model-budget',stale,'stale context')
+        self.mutate('model-budget',answer)
+        delivery = self.document['deliveries'][0]
+        self.assertEqual(delivery['executionPlan'],before['executionPlan'])
+        self.assertEqual(delivery['scopeSha256'],before['scopeSha256'])
+        self.assertEqual(delivery['activityReceipts'],before['activityReceipts'])
+        self.assertEqual(_delegated_grants(self.document,owner),2)
+        self.assert_rejected_without_write_command('model-budget',answer,'remaining model allowance')
+        self.start(index=2); self.end(index=2)
+        self.next_diagnostic(index=3); self.end(index=3)
+        request=self.start_request(); request['activityId']='integrate-review'
+        self.assert_rejected_without_write(request,'allowance is exhausted')
+        with self.assertRaisesRegex(ValueError,'delegated resource allowance'):
+            self.budget_answer(count=1)
+
+    def assert_rejected_without_write_command(self, command, request, pattern):
+        before=(self.repo/FILE).read_bytes()
+        with self.assertRaisesRegex(ValueError,pattern):
+            self.mutate(command,request)
+        self.assertEqual((self.repo/FILE).read_bytes(),before)
+
+    def test_shared_campaign_pool_grant_counts_once_and_third_start_rejects(self):
+        from aim_quality.orchestration_runtime import _delegated_grants
+        owner=self.delegated_pool(campaign_budget=1)
+        self.start(); self.end()
+        grant=self.campaign_grant()
+        self.mutate('model-budget',self.budget_answer(grant=grant))
+        self.assertEqual(_delegated_grants(self.document,owner),2)
+        request=self.start_request(index=2);request['actionKey']='bounded-pool-correction'
+        self.mutate('activity',request);self.end(index=2)
+        self.next_diagnostic(index=3);self.end(index=3)
+        request=self.start_request();request['activityId']='integrate-review'
+        self.assert_rejected_without_write(request,'allowance is exhausted')
+        with self.assertRaisesRegex(ValueError,'remaining linked resource grant|already funds'):
+            self.budget_answer(count=1,grant=grant)
+
+    def test_shared_grant_retains_pre_amendment_coordinator_consumption(self):
+        self.delegated_pool(campaign_budget=1)
+        self.start();self.end()
+        grant=self.campaign_grant()
+        request=self.start_request(index=2,session='native-coordinator')
+        request.pop('modelSelection');request['actionKey']='bounded-pool-correction'
+        self.mutate('activity',request);self.end(index=2)
+        with self.assertRaisesRegex(ValueError,'remaining linked resource grant'):
+            self.budget_answer(count=2,grant=grant)
+        self.mutate('model-budget',self.budget_answer(count=1,grant=grant))
+        self.next_diagnostic(index=3);self.end(index=3)
+        self.assertEqual(projection(self.document['deliveries'][0])['usage']['remainingStarts'],0)
+
+    def test_start_extension_cannot_raise_cost_limit_or_erase_unknown_spend(self):
+        self.plan_pool(max_starts=1,cost_limit=1)
+        self.start(estimate=1);self.end()
+        with self.assertRaisesRegex(ValueError,'not delegated'):
+            model_budget_context(self.repo,dict(deliveryId='DI-1',coordinatorSession='native-coordinator',
+                additionalStarts=1,reason='Synthetic denied undelegated resource decision.',ownerKind='agent'))
+        self.mutate('model-budget',self.budget_answer(count=1))
+        self.assert_rejected_without_write(self.start_request(index=2,estimate=.01),'cost allowance')
+        state=projection(self.document['deliveries'][0])
+        self.assertEqual(state['budget']['costLimit'],dict(unit='credits',amount=1))
+        self.assertEqual(state['usage']['unknownActualCosts'],1)
 
     def start_request(self, index=1, choice='luna', estimate=None, session=None):
         selected = dict(choiceId=choice, task='Inspect the assigned recovery input',

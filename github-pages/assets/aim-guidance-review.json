@@ -1,21 +1,21 @@
 {
   "guidanceReviewVersion": 1,
-  "productVersion": "4.8.12",
-  "reviewedOn": "2026-11-14",
+  "productVersion": "4.8.13",
+  "reviewedOn": "2026-11-19",
   "pages": [
     {
       "path": "index.html",
-      "sha256": "5dd84d4fe8c131a18baed591e0abcd56c972df907fd222e1db563c9034767044"
+      "sha256": "2892c468442562b7885384f34564163e771e92a4e9854e217bc6f36583eee8b9"
     },
     {
       "path": "school.html",
-      "sha256": "792045671fb7b60b442547db5ccf42f8265ca8932610121c1057fd104ba88110"
+      "sha256": "e852e55d79a68d1325f8982cc4dc2a2e7a193348df1b3be17d9d7c7940e1980d"
     }
   ],
   "sources": [
     {
       "path": "CHANGELOG.md",
-      "sha256": "b239d5b8777600214f0c062f4e3a5b1f4eee6b1845cff2a8a2d6bbd59942d63b"
+      "sha256": "38c6c05a661dbf846f239b88d25a2ea221554c96b85461717754863e1f0786a3"
     },
     {
       "path": "adapters/portable/agile-iteration-method/SKILL.md",
@@ -23,11 +23,11 @@
     },
     {
       "path": "docs/workflow/user-stories.md",
-      "sha256": "4ed28a0e972a695dc6c86ac2deec69156333ae41d9ebbd4edcbb7a83bb6f90eb"
+      "sha256": "b2a9c15ee5494a06213a268e23057f028dd3c9aca1ddf495cd369d1f7d3c9231"
     },
     {
       "path": "docs/workflow/native-orchestration.md",
-      "sha256": "9c43921c678a201bd48a780926d85d612aa7ed1c9034b9ec091229ae832f0824"
+      "sha256": "a157a7347ac1cedbcfb4f7160b2e1fa17878120e889b69e6f3afdf69dac35200"
     },
     {
       "path": "docs/workflow/skill-command-runtime.md",
@@ -65,19 +65,19 @@
     },
     "delegatedDecisions": {
       "conclusion": "updated",
-      "summary": "Homepage escalation and School delegation preserve explicit scope, resources and owner acceptance boundaries. The linked Story contract now permits only an actual present human to cancel or replace approved unaccepted work through a scoped typed decision. Existing approve/accept/orchestrate delegation and Auto cannot authorize this changed commitment. Each replacement is a separately unapproved plan; no past gate or final acceptance is invented. Cancelled/replaced corrections remain provenance targets but no longer contribute outgoing current proof/readiness obligations; a new active correction retains normal checks. The Pocket Board conversation requires agreement on scope and resources before implementation and explicitly reserves changes to those limits, publication and acceptance for the human."
+      "summary": "The School and homepage examples intentionally retain resource increases with the human. The generic supported pool extension also permits a delegated resource owner only with actual scoped orchestrate authority and remaining cumulative maxAdditionalAttempts. A fresh explicit answer is required; a plan, template, Auto or upgrade is no decision. Cancel/replace and final acceptance keep their separate authority. The extension supplies starts only, retaining the monetary cap."
     },
     "resourceUse": {
       "conclusion": "updated",
-      "summary": "Planning, authoring, review, corrections and integration still belong to the cumulative mandate. Approved pool starts include failure/retry/rework/reviewer history; optional finite-decimal cost reservations retain original estimates and maximum known charges. Running observations can block later starts. Neither unknown usage nor lower reports refund resources. Host-hidden model/effort/cost remains unknown, and reservations are not provider billing caps. School elapsed-time examples still require available host measurement and actual owner authority to raise limits. No universal cost-saving measurement is claimed."
+      "summary": "AIM 4.8.13 appends bounded model-start extensions without rewriting frozen pools or historical receipts. Explicitly linked Native grants count once and retain pre-amendment spending. All activity starts after an extension consume slots, including coordinator and reviewer work. Reject overlapping allowances, replay, wrong owners and exceeded cumulative mandates. Original cost caps and unknown costs remain binding. The School adds this distinction beside its existing pool explanation; its human-reserved example mandate remains unchanged. No new cost or speed measurement is claimed."
     },
     "verificationAndAcceptance": {
-      "conclusion": "updated",
-      "summary": "AIM 4.8.12 retains restraint in new automated tests, reuse of meaningful evidence and zero-new-test delivery when sufficient. This release clarifies that reduced test volume does not reduce scrutiny of original outcomes. Reviewer/TDO, default Native review assignments and the Copilot adapter classify findings by consequence; advisory labels or green checks cannot waive material defects or missing decisive evidence. The adapter no longer marks a delivery ready merely by listing remaining manual checks. Independent bounded scenarios produced correction for a missing required CSV column, readiness with zero new tests for covered help text, and a targeted restore observation for missing core evidence without assuming a product defect. Homepage and Lesson 6 agree; unchanged startup prompts, layout, interaction and learning observations are reused. No new gate, report, exhaustive journey or test quota is introduced. This supports instruction coherence, not a measured future quality gain."
+      "conclusion": "current",
+      "summary": "The substantive review and proportionate verification guidance from 4.8.12 remains unchanged. Reuse its independent instruction observations and prior rendered interaction checks. This patch has separate source acceptance, 28 pool controls, six existing delegation controls, independent review and a packaged CLI preview/apply. Required release checks still apply. More starts grant neither product acceptance nor a new monetary mandate; existing scope, readiness requirements and final owner decisions remain binding."
     },
     "modelsAndEvidence": {
       "conclusion": "updated",
-      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.12 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
+      "summary": "Homepage retains the dated 18 October 2026 AIM assessment (96.5/100), 30 September baseline (49.8), differing conditions, unfinished Native delivery and absence of a fresh paired or general quality/cost claim. AIM 4.8.13 inherits no new Enigma score. Dated 4.7.5 screenshots remain historical. School keeps its optional model setup as a suggestion, then explains exact approved pairs, task/risk/budget judgment and separate review. The revised conversation proposes a pool before approval, then distinguishes requested settings from reported/unknown settings. Actual host/account controls remain binding; a prompt cannot create capability. Three short native probes establish explicit requests and returned responses only; unavailable telemetry and relative model performance are not inferred."
     }
   }
 }

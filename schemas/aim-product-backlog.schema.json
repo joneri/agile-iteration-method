@@ -1049,6 +1049,14 @@
           "items": {
             "$ref": "#/$defs/bindingRelocation"
           }
+        },
+        "modelPoolExtensions": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "object",
+            "description": "Append-only original-pool budget context and actual scoped owner decision. Validated by the runtime."
+          }
         }
       },
       "required": [
@@ -1595,7 +1603,7 @@
         },
         "maxWorkers": {
           "type": "integer",
-          "description": "1\u20138; enforced by delegation validator."
+          "description": "1–8; enforced by delegation validator."
         },
         "parallelBenefit": {
           "type": "string",
@@ -1668,7 +1676,7 @@
         },
         "attempt": {
           "type": "integer",
-          "description": "Sequential attempts 1\u20138 per activity; enforced by helper."
+          "description": "Sequential attempts 1–8 per activity; enforced by helper."
         },
         "status": {
           "enum": [
@@ -2294,6 +2302,11 @@
             "fork_turns"
           ],
           "additionalProperties": false
+        },
+        "budgetRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
         }
       },
       "required": [

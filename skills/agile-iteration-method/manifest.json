@@ -76,6 +76,7 @@
     "scripts/aim_quality/knowledge.py",
     "scripts/aim_quality/learning.py",
     "scripts/aim_quality/localities.py",
+    "scripts/aim_quality/model_budget.py",
     "scripts/aim_quality/model_pool.py",
     "scripts/aim_quality/orchestration.py",
     "scripts/aim_quality/orchestration_runtime.py",
@@ -112,7 +113,7 @@
     "validatedVersion": "1.5.17"
   },
   "productBacklogVersion": "1.0",
-  "productVersion": "4.8.12",
+  "productVersion": "4.8.13",
   "profileSchemaVersions": {
     "personalHints": "0.1",
     "projectRoles": "0.1",
@@ -130,12 +131,12 @@
     {
       "output": "references/native-orchestration.md",
       "source": "docs/workflow/native-orchestration.md",
-      "sourceSha256": "9c43921c678a201bd48a780926d85d612aa7ed1c9034b9ec091229ae832f0824"
+      "sourceSha256": "a157a7347ac1cedbcfb4f7160b2e1fa17878120e889b69e6f3afdf69dac35200"
     },
     {
       "output": "references/model-pools.md",
       "source": "docs/workflow/model-pools.md",
-      "sourceSha256": "6024cbc25d9c5c4cfb8c52b89e79568777f35a7aebc950cf6b5b5692fad68b5e"
+      "sourceSha256": "edc1c33b7b3b4b550f54609f4e1a6e1ddf0792a57365737e4d2976b8ad535c4f"
     },
     {
       "output": "references/tool-efficiency.md",
@@ -145,7 +146,7 @@
     {
       "output": "references/user-stories.md",
       "source": "docs/workflow/user-stories.md",
-      "sourceSha256": "4ed28a0e972a695dc6c86ac2deec69156333ae41d9ebbd4edcbb7a83bb6f90eb"
+      "sourceSha256": "b2a9c15ee5494a06213a268e23057f028dd3c9aca1ddf495cd369d1f7d3c9231"
     },
     {
       "output": "references/local-runtime-access.md",
@@ -305,7 +306,7 @@
     {
       "output": "references/schemas/aim-product-backlog.schema.json",
       "source": "schemas/aim-product-backlog.schema.json",
-      "sourceSha256": "6434d0003b38348a26637c3e75f755499bda7165786b72fcb910f6d27f9c3791"
+      "sourceSha256": "5b3b3cb724ff967a9ca045f02a126d56bcd9727b8abd021be729ca227bbb0674"
     },
     {
       "output": "references/install/aim-install-manifest.yaml",
@@ -320,7 +321,7 @@
     {
       "output": "references/version-and-installation.md",
       "source": "VERSION",
-      "sourceSha256": "323ead49d8ce3e390bcc2d4e0b21e5a9fa46f684936c5ad61c7231c06519f0f5"
+      "sourceSha256": "3e89e6a13d0de5be172cc4cfee89053207ca733e4595e6c9f2dafb3f4e67ec05"
     },
     {
       "output": "references/version-and-installation.md",
@@ -330,12 +331,12 @@
     {
       "output": "manifest.json",
       "source": "scripts/build_public_skill.py",
-      "sourceSha256": "8ab17ae46694d62686ece44e93061a65ff200e5a5a4bca312be3350815ebedd1"
+      "sourceSha256": "60c84b921d9305f5f482c47f8eb3fffa8a05676536b9bb5a99d195944e5e7383"
     },
     {
       "output": "scripts/aim_stories.py",
       "source": "scripts/aim_stories.py",
-      "sourceSha256": "5ac122b6a62ff284c4a8a515a026971a4796114c9758604d8e097f989ab0287b"
+      "sourceSha256": "155f2c8e2086de6f5ab5523459c48b7b33e2b26490eaa14c25ec9e464c1535e2"
     },
     {
       "output": "scripts/aim_observations.py",
@@ -430,12 +431,17 @@
     {
       "output": "scripts/aim_quality/orchestration_runtime.py",
       "source": "scripts/aim_quality/orchestration_runtime.py",
-      "sourceSha256": "75eb4aa5e93a63b73890f7c22e3e013c87373499bdc52f8586b03671ff42e43c"
+      "sourceSha256": "9887cf6d7829c6dad0375be1a653f65a0f3fd766edeac164394169815bbddc7e"
     },
     {
       "output": "scripts/aim_quality/model_pool.py",
       "source": "scripts/aim_quality/model_pool.py",
-      "sourceSha256": "07018d74cde3dd5515bed09e35ead018bacf987c5c880d69ddeca00057084e11"
+      "sourceSha256": "396c30468a5bb7c729ba265e855e7a94a754d5615b3a9092971a9d191e2e6146"
+    },
+    {
+      "output": "scripts/aim_quality/model_budget.py",
+      "source": "scripts/aim_quality/model_budget.py",
+      "sourceSha256": "67b5846dea397bf236af2509c43a33b55ea41f01a2ff8f45fcf8cc65bd84d6d2"
     },
     {
       "output": "scripts/aim_orchestrate.py",

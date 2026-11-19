@@ -44,7 +44,7 @@ COLUMNS = (("backlog", "Backlog"), ("ready", "Ready"),
            ("done", "Done"))
 PHASES = {"planned", "in_progress", "review", "validation", "acceptance", "accepted", "cancelled", "blocked"}
 COMMANDS = ("import", "refine", "plan", "approve", "review", "validate", "acceptance",
-            "accept", "measure", "rework", "cancel", "replace", "block", "unblock", "close-epic", "activity", "orchestrate", "reconcile", "relocate-bindings")
+            "accept", "measure", "rework", "cancel", "replace", "block", "unblock", "close-epic", "activity", "orchestrate", "reconcile", "relocate-bindings", "model-budget")
 
 
 class StoryError(ValueError):
@@ -637,6 +637,8 @@ def validate_document(document):
         criteria(story["originalAcceptanceCriteria"])
     from aim_quality.orchestration_runtime import validate_native_document
     validate_native_document(document)
+    from aim_quality.model_budget import validate_extensions
+    validate_extensions(document)
     from aim_quality.reconciliation import validate_records
     reconciled = validate_records(document)
     ownership = {}
@@ -801,6 +803,8 @@ def verify_evidence(repo, document, *, cache=None):
             _require_review(repo, delivery, cache=cache, document=document)
         if effective == "acceptance" and (delivery.get("qualityGoals") or delivery.get("qualityPlan")):
             _require_quality(repo, delivery, cache=cache)
+    from aim_quality.model_budget import validate_extensions
+    validate_extensions(document, lambda ref: read_evidence(repo, _ref(repo, ref, cache=cache)['path']))
     from aim_quality.orchestration_runtime import campaigns, validate_ownership
     from aim_quality.model_pool import validate_receipts as validate_model_receipts
     for delivery in document['deliveries']:
@@ -1247,6 +1251,13 @@ def _change(repo, document, command, request, *, cache=None):
         authority = _authority(repo, request["authority"], digest(_closure_scope(document, epic, evidence)), cache=cache)
         epic.update(status="closed", closure={"criteria": evidence, "authority": authority, "closedAt": now()})
         return
+    if command == "model-budget":
+        from aim_quality.model_budget import apply
+        delivery = _by_id(document, "deliveries", request.get("deliveryId"))
+        apply(document, delivery, request,
+              bind_evidence=lambda refs: _refs(repo, refs, cache=cache),
+              read_reference=lambda ref: read_evidence(repo, _ref(repo, ref, cache=cache)["path"]), at=now())
+        return
     if command == "orchestrate":
         from aim_quality.orchestration_runtime import change_orchestration
         delivery = _by_id(document, "deliveries", request.get("deliveryId"))
@@ -1393,6 +1404,16 @@ def _change(repo, document, command, request, *, cache=None):
         for snapshot in delivery["stories"]:
             _by_id(document, "stories", snapshot["id"])["status"] = "done" if effective == "accepted" else effective
 
+
+
+def model_budget_context(repo, request):
+    from aim_quality.model_budget import context, decision_payload
+    document, store_hash = load(Path(repo).resolve())
+    delivery = _by_id(document, 'deliveries', request['deliveryId'])
+    value = context(document, delivery, request)
+    return dict(storeSha256=store_hash, scopeSha256=digest(value), context=value,
+                decisionEvidence=decision_payload(value),
+                qualification='Preview only. Record the actual scoped owner answer before applying model-budget.')
 
 def reconciliation_context(repo, request):
     from aim_quality.reconciliation import build_context
@@ -1723,7 +1744,7 @@ def _project_observations(repo, result):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, required=True)
-    parser.add_argument("command", choices=(*COMMANDS, "status", "quality", "graph", "closure-preview", "review-record", "reconciliation-context", "dispatch-check", "disposition-context"))
+    parser.add_argument("command", choices=(*COMMANDS, "status", "quality", "graph", "closure-preview", "review-record", "reconciliation-context", "dispatch-check", "disposition-context", "model-budget-context"))
     parser.add_argument("--input", default="-", help="JSON file, or - for stdin")
     parser.add_argument("--expected-sha256", help="Digest returned by the last successful read or write")
     parser.add_argument("--compact", action="store_true", help="Current context for status; confirmed receipt for mutations; full history stays in the ledger")
@@ -1749,7 +1770,9 @@ def main(argv=None):
                     result[key] = value
                 return result
             request = json.loads(raw, object_pairs_hook=pairs)
-            if args.command == "disposition-context":
+            if args.command == "model-budget-context":
+                result = model_budget_context(args.repo, request)
+            elif args.command == "disposition-context":
                 result = disposition_context(args.repo, request)
             elif args.command == "reconciliation-context":
                 result = reconciliation_context(args.repo, request)

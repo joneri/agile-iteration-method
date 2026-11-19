@@ -1,9 +1,9 @@
 AIM
 Från din idé till en komplett produkt.
 
-Förslag till lanseringstext · AIM 4.8.12 · 14 november 2026.
+Förslag till lanseringstext · AIM 4.8.13 · 19 november 2026.
 
-AIM 4.8.12 behåller återhållsamheten med nya automatiserade tester och stärker granskningen av det överenskomna resultatet. Fynd bedöms efter konsekvens: gröna kontroller eller etiketten rådgivande får inte släppa igenom materiella fel eller saknat avgörande underlag. Rätta materiella fel och granska berört beteende igen; återanvänd tillräckliga observationer och tillåt noll nya tester. Smakfrågor förblir rådgivande. Inga nya gates, rapportkrav, testkvoter eller uppmätta produktivitetsvinster påstås.
+AIM 4.8.13 låter en uttryckligen behörig resursägare godkänna fler modellstarter i samma leverans. Ursprunglig plan, historik och förbrukning bevaras. Gemensamma resursbeslut räknas en gång och befintliga kostnadstak gäller fortsatt. En uppgradering ger varken nya resurser eller acceptans. Rättelsen omfattar hjälpprogram och dokumentation i den kompletta skillen.
 
 Beskriv produkten du vill ha. AIM planerar, bygger och verifierar hela det överenskomna resultatet med din kodagent. Ship är standard. Välj Loop när du vill bedöma användbara Done Increments och låta återkommande feedback styra nästa steg.
 

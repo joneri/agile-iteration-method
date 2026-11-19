@@ -146,8 +146,13 @@ def campaign_for(document, outcome):
 
 def _delegated_grants(document, owner):
     # One human resource mandate is shared across its outcomes and deliveries.
-    return sum(d.get('additionalAttempts', 0) for c in campaigns(document) for d in c['decisions']
-               if d.get('delegation', {}).get('sha256') == owner['mandate']['sha256'])
+    campaign_grants = sum(d.get('additionalAttempts', 0) for c in campaigns(document) for d in c['decisions']
+                          if d.get('delegation', {}).get('sha256') == owner['mandate']['sha256'])
+    pool_grants = sum(r['context']['additionalStarts'] for delivery in document['deliveries']
+                      for r in delivery.get('modelPoolExtensions', [])
+                      if not r['context'].get('resourceGrant') and r['authority']['kind'] == 'agent'
+                      and (r['context'].get('delegation') or {}).get('sha256') == owner['mandate']['sha256'])
+    return campaign_grants + pool_grants
 
 
 def _decision_context(campaign, owner_priority):
@@ -280,7 +285,7 @@ def validate_native_document(document):
                     _need(actual_sources == expected_sources, 'Checkpoint must retain every explicitly bound baseline source.')
                 _need(record['observation'] in c['campaign']['observations'], 'Stored observation lost chronology binding.')
             for decision in c['decisions']:
-                _fields(decision, ('decision', 'actionKey', 'reason', 'contextSha256', 'evidence', 'at'), ('authority', 'priority', 'targetOutcomeId', 'additionalAttempts', 'delegation', 'deliveryId'), 'Campaign decision')
+                _fields(decision, ('decision', 'actionKey', 'reason', 'contextSha256', 'evidence', 'at'), ('authority', 'priority', 'targetOutcomeId', 'additionalAttempts', 'delegation', 'deliveryId', 'grantReceiptCount'), 'Campaign decision')
                 _need(decision['decision'] in DECISIONS, 'Unknown orchestration decision.')
                 if 'additionalAttempts' in decision:
                     _need(type(decision['additionalAttempts']) is int and 1 <= decision['additionalAttempts'] <= 128,
@@ -561,6 +566,8 @@ def change_orchestration(document, delivery, request, *, bind_evidence, bind_sou
             _need(result['budgetExhausted'] and type(request['additionalAttempts']) is int
                   and 1 <= request['additionalAttempts'] <= 128, 'Additional attempts require an exhausted bounded checkpoint.')
             decision['additionalAttempts'] = request['additionalAttempts']
+            decision['grantReceiptCount'] = len(delivery.get('activityReceipts', []))
+            decision['deliveryId'] = delivery['id']
         decision['authority'] = bind_authority(request['authority'], request)
         c['ownerChoicePending'] = False
         if result['budgetExhausted']:

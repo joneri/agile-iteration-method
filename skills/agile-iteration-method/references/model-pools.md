@@ -119,6 +119,50 @@ valid starts; retain and report it without rewriting their dependency hashes.
 Different cost units are not silently converted. Follow the actual resource
 owner/escalation path when the remaining mandate cannot support the work.
 
+## Extend an exhausted start allowance in the same delivery
+
+Use the trusted `aim_stories.py model-budget-context` with the active delivery,
+actual coordinator, positive `additionalStarts` and a bounded `reason`:
+
+```json
+{"deliveryId":"DI-EXAMPLE","coordinatorSession":"actual-coordinator","additionalStarts":2,"reason":"Complete the reviewed in-scope correction and independent review."}
+```
+
+The read-only preview returns current CAS, decision scope and exact
+`decisionEvidence`. Route it to the actual delegated resource owner. Preserve
+that owner's actual answer as the returned JSON only when it faithfully records
+the answer. Apply `model-budget` with the same request and ordinary `authority`
+reference to that answer, using the preview's CAS. An agent authority uses its
+exact `id`/`session`, frozen `orchestrate` delegation and remaining cumulative
+`maxAdditionalAttempts`. A human answer can use `ownerKind: "user"` in both
+preview and mutation. A template, upstream label or original mandate is not an
+actual answer. Host identity and real mandate still require corroboration.
+
+The operation appends `modelPoolExtensions`; original pool, pool hash, scope,
+model choices, receipts and approvals stay historical. New selections bind their
+budget revision; old selections validate against their original allowance.
+An extension supplies start slots only. Original cost caps, unknown costs and
+maximum known reservations continue to constrain every start.
+
+When a Native campaign also needs resources, first record its actual bounded
+owner answer through the existing `orchestrate/decide` contract. To use that same
+grant for the pool, include `resourceGrant: {"outcomeId":"INT-EXAMPLE",
+"decisionSha256":"<digest of the exact stored decision>"}` in the pool preview.
+Obtain the actual explicit pool answer. This shares the finite grant rather than
+debiting the same mandate twice. The helper subtracts activity starts since the
+original grant and rejects repeated links, other owners/mandates or superseded
+grants. Older unanchored grants are reusable only when unchanged campaign context
+and all-node outcome coverage establish that none of their starts was spent.
+Otherwise retain the grant and obtain a separately authorized allowance.
+
+Every activity start after a pool extension, including coordinator and reviewer
+starts, consumes a slot of that extension. This prevents a combined grant from
+funding both extra coordinator work and the same number of extra children.
+Spend the current extension before requesting another; overlapping extensions
+are rejected. Standalone pool grants count alongside campaign grants across the
+same mandate and all retained deliveries. Rework and recovery preserve them.
+This operation supplies neither product acceptance nor a new monetary mandate.
+
 ## Observe the actual result honestly
 
 Attach a hash-bound `modelObservation` JSON reference to a running observation
